@@ -57,7 +57,9 @@ Template.vatreturnlist.onRendered(function() {
 
     templateObject.getAllVatReturnData = function() {
         getVS1Data('TVATReturn').then(function(dataObject) {
-            if (dataObject.length == 0) {
+            let userdata = JSON.parse(dataObject[0].data) || [];
+            userdata = userdata.tvatreturns || [];
+            if (userdata.length == 0) {
                 reportService.getAllVATReturn().then(function(data) {
                     addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
                     for (let i = 0; i < data.tvatreturns.length; i++) {

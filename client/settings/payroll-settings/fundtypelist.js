@@ -13,7 +13,7 @@ import { autoTable } from "jspdf-autotable";
 import 'jquery-editable-select';
 import { SideBarService } from "../../js/sidebar-service";
 import '../../lib/global/indexdbstorage.js';
-
+import { Template } from 'meteor/templating';
 import './fundtypelist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
@@ -35,9 +35,9 @@ Template.fundtypelistpop.onRendered(function() {
     let utilityService = new UtilityService();
     let rateTypeService = new RateTypeService();
     let description = '';
-    var splashArrayFundTypeList = new Array(); 
+    var splashArrayFundTypeList = new Array();
     var currentLoc = FlowRouter.current().route.path;
-   
+
     tempObj.getAllFundType = function() {
         getVS1Data('TSuperType').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -51,20 +51,20 @@ Template.fundtypelistpop.onRendered(function() {
                       } else {
                         description = "";
                       }
-                      var dataList = [                   
-                      	data.tsupertype[i].fields.Description || '',    
-                        data.tsupertype[i].fields.ID || ''                
-                      ];                 
+                      var dataList = [
+                      	data.tsupertype[i].fields.Description || '',
+                        data.tsupertype[i].fields.ID || ''
+                      ];
                       splashArrayFundTypeList.push(dataList);
                     }
-            
+
                     if(splashArrayFundTypeList) {
                        $('#tblfundtypelist').dataTable({
                             data: splashArrayFundTypeList,
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             columnDefs: [
-                                { className: "thfundDescription", "targets": [0] },                                     
-                                { className: "thfundID hiddenColumn", "targets": [1]}                            
+                                { className: "thfundDescription", "targets": [0] },
+                                { className: "thfundID hiddenColumn", "targets": [1]}
                             ],
                             select: true,
                             destroy: true,
@@ -83,10 +83,10 @@ Template.fundtypelistpop.onRendered(function() {
 
                     }
                 });
-              } 
+              }
               else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsupertype;           
+                let useData = data.tsupertype;
                 let records = [];
                 let inventoryData = [];
                 for (let i = 0; i < useData.length; i++) {
@@ -98,9 +98,9 @@ Template.fundtypelistpop.onRendered(function() {
                     var dataList = [
                         useData[i].fields.Description || '-',
                         useData[i].fields.ID || ''
-                    ];                  
+                    ];
                     splashArrayFundTypeList.push(dataList);
-                   
+
 
                 }
                 if (splashArrayFundTypeList) {
@@ -112,8 +112,8 @@ Template.fundtypelistpop.onRendered(function() {
                         "aaSorting": [],
                         "orderMulti": true,
                         columnDefs: [
-                            { className: "thfundDescription", "targets": [0] },                                     
-                            { className: "thfundID hiddenColumn", "targets": [1]}   
+                            { className: "thfundDescription", "targets": [0] },
+                            { className: "thfundID hiddenColumn", "targets": [1]}
                         ],
                         colReorder: true,
                         "order": [
@@ -146,12 +146,12 @@ Template.fundtypelistpop.onRendered(function() {
                     Description = '';
                   }
                   var dataList = [
-      
-                    data.tsupertype[i].fields.Description || '',          
+
+                    data.tsupertype[i].fields.Description || '',
                     data.tsupertype[i].fields.ID || ''
-                  ];            
+                  ];
                   splashArrayFundTypeList.push(dataList);
-                
+
 
               }
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -166,8 +166,8 @@ Template.fundtypelistpop.onRendered(function() {
                         "aaSorting": [],
                         "orderMulti": true,
                         columnDefs: [
-                            { className: "thfundDescription", "targets": [0] },                                     
-                            { className: "thfundID hiddenColumn", "targets": [1]}   
+                            { className: "thfundDescription", "targets": [0] },
+                            { className: "thfundID hiddenColumn", "targets": [1]}
                         ],
                         colReorder: true,
 
@@ -198,7 +198,7 @@ Template.fundtypelistpop.onRendered(function() {
 
 
 Template.fundtypelistpop.helpers({
-   
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -209,8 +209,8 @@ Template.fundtypelistpop.helpers({
             return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
         });
     },
-  
-   
+
+
     isMobileDevices: () => {
         var isMobile = false;
 
@@ -221,14 +221,14 @@ Template.fundtypelistpop.helpers({
 
         return isMobile;
     },
-   
+
 });
 
 Template.fundtypelistpop.events({
     'click .btnAddFundType': function(event) {
       $('#add-fundtype-title').text('Add New Fund Type');
       $('#edtFundID').val('');
-   
+
     },
 
     'click .btnRefreshFundType': function (event) {
@@ -238,7 +238,7 @@ Template.fundtypelistpop.events({
         const clientList = [];
         let salesOrderTable;
         var splashArray = new Array();
-        var splashArrayFundTypeList = new Array(); 
+        var splashArrayFundTypeList = new Array();
         let utilityService = new UtilityService();
         const dataTableList = [];
         const tableHeaderList = [];
@@ -252,13 +252,13 @@ Template.fundtypelistpop.events({
                 let lineItemObj = {};
                 if (data.tsupertype.length > 0) {
                   for (let i = 0; i < data.tsupertype.length; i++) {
-                    var dataList = [                  
+                    var dataList = [
                     	data.tsupertype[i].fields.Description || '',
                         data.tsupertype[i].fields.ID || ''
                     ];
-                
+
                     splashArrayFundTypeList.push(dataList);
-                    
+
 
                     }
                     var datatable = $('#tblfundtypelist').DataTable();
@@ -299,14 +299,14 @@ Template.fundtypelistpop.events({
                   let inventoryData = [];
                   for (let i = 0; i < data.tsupertype.length; i++) {
                       var dataList = [
-                  
+
                           data.tsupertype[i].fields.Description || '',
                           data.tsupertype[i].fields.ID || ''
                       ];
 
                       splashArrayFundTypeList.push(dataList);
                   }
-                  
+
                   var datatable = $('#tblfundtypelist').DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayFundTypeList);
@@ -328,7 +328,7 @@ Template.fundtypelistpop.events({
             $('#statusModal').modal();
         }
     },
- 
+
     'click .lineDescription': function(event) {
         $('#tblCreditLine tbody tr .lineDescription').attr("data-toggle", "modal");
         $('#tblCreditLine tbody tr .lineDescription').attr("data-target", "#rateTypeListModel");
@@ -346,7 +346,7 @@ Template.fundtypelistpop.events({
         templateObject.getAllFundType();
 
     },
- 
+
 
     'click .btnRemove': function(event) {
         let templateObject = Template.instance();
@@ -456,7 +456,7 @@ Template.fundtypelistpop.events({
             }
         }
     },
-   
+
 });
 
 Template.registerHelper('equals', function(a, b) {

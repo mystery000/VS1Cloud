@@ -8,7 +8,7 @@ import PaidLeaveRequest from "../../js/Api/Model/PaidLeaveRequest";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
+import { Template } from 'meteor/templating';
 import './leaveTypes.html';
 
 Template.leaveTypeSettings.onCreated(function() {
@@ -19,11 +19,11 @@ Template.leaveTypeSettings.onCreated(function() {
     templateObject.countryData = new ReactiveVar();
     templateObject.Ratetypes = new ReactiveVar([]);
     templateObject.imageFileData=new ReactiveVar();
-    templateObject.currentDrpDownID = new ReactiveVar(); 
+    templateObject.currentDrpDownID = new ReactiveVar();
     templateObject.leaveRequestInfos = new ReactiveVar();
 
-    
-   // templateObject.Accounts = new ReactiveVar([]);   
+
+   // templateObject.Accounts = new ReactiveVar([]);
 });
 
 Template.leaveTypeSettings.onRendered(function() {
@@ -40,7 +40,7 @@ Template.leaveTypeSettings.onRendered(function() {
         // $('#edtPayPeriod').editableSelect('add','Weekly');
         // $('#edtPayPeriod').editableSelect('add','Monthly');
 
-        
+
         $("#edtFirstPayDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -69,13 +69,13 @@ Template.leaveTypeSettings.onRendered(function() {
                 employeePayrolApis.collectionNames.TUnpaidLeave
             );
         }
-        
+
 
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
         if (employeePayrolEndpointResponse.ok == true) {
             employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
@@ -90,7 +90,7 @@ Template.leaveTypeSettings.onRendered(function() {
                 }
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
@@ -110,14 +110,14 @@ Template.leaveTypeSettings.onRendered(function() {
             if( data.tpaidleave.length > 0 ){
                 let useData = PaidLeaveRequest.fromList(
                     data.tpaidleave
-                ).filter((item) => {       
+                ).filter((item) => {
                     if ( item.fields.LeavePaidActive == true ) {
                         return item;
                     }
-                });            
+                });
                 // templateObject.leaveRequestInfos.set(useData);
                 for (let i = 0; i < useData.length; i++) {
-            
+
                     var dataListAllowance = [
                         useData[i].fields.ID || '',
                         useData[i].fields.LeavePaidName || '',
@@ -127,7 +127,7 @@ Template.leaveTypeSettings.onRendered(function() {
                         'paid',
                         useData[i].fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
                     ];
-            
+
                     splashArrayLeaveList.push(dataListAllowance);
                 }
             }
@@ -140,7 +140,7 @@ Template.leaveTypeSettings.onRendered(function() {
             }else{
                 unPaidData = JSON.parse(dataUnObject[0].data);
             }
-            
+
 
             if( unPaidData.tunpaidleave.length > 0 ){
                 let useData = UnPaidLeaveRequest.fromList(
@@ -150,7 +150,7 @@ Template.leaveTypeSettings.onRendered(function() {
                         return item;
                     }
                 });
-    
+
                 // templateObject.leaveRequestInfos.set(useData);
                 for (let i = 0; i < useData.length; i++) {
 
@@ -181,7 +181,7 @@ Template.leaveTypeSettings.onRendered(function() {
             templateObject.datatablerecords.set(splashArrayLeaveList);
             $('.fullScreenSpin').css('display', 'none');
             setTimeout(function () {
-                $('#tblLeaves').DataTable({  
+                $('#tblLeaves').DataTable({
                     data: splashArrayLeaveList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
@@ -231,24 +231,24 @@ Template.leaveTypeSettings.onRendered(function() {
                         $('#tblLeaves_ellipsis').addClass('disabled');
                         if (oSettings._iDisplayLength == -1) {
                             if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                             }
                         } else {
-    
+
                         }
                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                             $('.paginate_button.page-item.next').addClass('disabled');
                         }
-    
+
                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
                             .on('click', function () {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 var splashArrayLeaveListDupp = new Array();
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblLeaves_filter input').val();
-    
+
                                 sideBarService.getPaidLeaveByName(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-    
+
                                     for (let i = 0; i < data.tpaidleave.length; i++) {
                                         var dataListAllowance = [
                                             useData[i].fields.ID || '',
@@ -261,7 +261,7 @@ Template.leaveTypeSettings.onRendered(function() {
                                             `<button type="button" class="btn btn-success btnEditPaidLeaveType"><i class="fas fa-edit"></i></button>
                                             <button type="button" class="btn btn-danger btnDeletePaidLeaveType" id="btnDeletePaidLeaveType" data-id="`+ useData[i].fields.ID +`"><i class="fas fa-trash"></i></button>`
                                         ];
-                        
+
                                         splashArrayLeaveList.push(dataListAllowance);
                                     }
 
@@ -273,14 +273,14 @@ Template.leaveTypeSettings.onRendered(function() {
                                     setTimeout(function () {
                                         $("#tblLeaves").dataTable().fnPageChange('last');
                                     }, 400);
-    
+
                                     $('.fullScreenSpin').css('display', 'none');
-    
-    
+
+
                                 }).catch(function (err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-    
+
                             });
                         setTimeout(function () {
                             MakeNegative();
@@ -290,27 +290,27 @@ Template.leaveTypeSettings.onRendered(function() {
                         $("<button class='btn btn-primary btnAddordinaryTimeLeave' data-dismiss='modal' data-toggle='modal' data-target='#leaveModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaves_filter");
                         $("<button class='btn btn-primary btnRefreshLeave' type='button' id='btnRefreshLeave' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaves_filter");
                     }
-    
+
                 }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-    
+
                 }).on('column-reorder', function () {
-    
+
                 }).on('length.dt', function (e, settings, len) {
                     //$('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayLeaveList = [];
                     if (dataLenght == -1) {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
                             sideBarService.getPaidLeave(dataLenght, 0).then(function (dataNonBo) {
-    
+
                                 addVS1Data('TPaidLeave', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     // templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
@@ -331,8 +331,8 @@ Template.leaveTypeSettings.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }
     };
-    
-    
+
+
     templateObject.getLeaves();
 
     $(document).ready(function(){
@@ -363,10 +363,10 @@ Template.leaveTypeSettings.onRendered(function() {
                     if( data.tpaidleave.length > 0 ){
                         useData = PaidLeaveRequest.fromList(
                             data.tpaidleave
-                        ).filter((item) => {   
+                        ).filter((item) => {
                             if( item.fields.LeavePaidName == searchName ){
                                 return item;
-                            }   
+                            }
                         });
                         if( useData.length > 0 ){
                             $('#leaveID').val(useData[0].fields.ID)
@@ -408,7 +408,7 @@ Template.leaveTypeSettings.onRendered(function() {
                         $('#leaveModal').modal('show');
                         return true;
                     }
-                        
+
                 }
             });
 
@@ -439,7 +439,7 @@ Template.leaveTypeSettings.events({
         $('#leaveRateForm')[0].reset();
         $('#leaveTypeSettingsModal').modal('hide');
     },
-    'click .btnSearchAlert':function(event){      
+    'click .btnSearchAlert':function(event){
         let templateObject = Template.instance();
         var splashArrayLeaveList = new Array();
         const lineExtaSellItems = [];
@@ -448,7 +448,7 @@ Template.leaveTypeSettings.events({
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getPaidLeaveByName(dataSearchName).then(function (data) {
                 $(".btnRefreshLeave").removeClass('btnSearchAlert');
-                let lineItems = [];                
+                let lineItems = [];
                 if (data.tpaidleave.length > 0) {
                     for (let i = 0; i < data.tpaidleave.length; i++) {
                         let dataListAllowance = {
@@ -460,7 +460,7 @@ Template.leaveTypeSettings.events({
                             type:true,
                             payonslip:data.tpaidleave[i].fields.LeavePaidShowBalanceOnPayslip || false,
                         };
-        
+
                         splashArrayLeaveList.push(dataListAllowance);
                     }
                     let uniqueChars = [...new Set(splashArrayLeaveList)];
@@ -473,10 +473,10 @@ Template.leaveTypeSettings.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Leave does not exist, would you like to create it?",
@@ -504,7 +504,7 @@ Template.leaveTypeSettings.events({
     'click .saveLeave': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         let leaveName=$("#edtLeaveName").val();
@@ -568,11 +568,11 @@ Template.leaveTypeSettings.events({
             swal({
                 title: "Success",
                 text: "Leave has been saved",
-                type: 'success',   
+                type: 'success',
                 showCancelButton: false,
-                confirmButtonText: 'Done'             
+                confirmButtonText: 'Done'
             }).then((result) => {
-                if (result.value) {                    
+                if (result.value) {
                     window.location.reload();
                 }
             });
@@ -582,10 +582,10 @@ Template.leaveTypeSettings.events({
                 title: "Error",
                 text: "Leave failed to saved",
                 type: 'error',
-                
+
             })
         }
-        
+
         return false;
         // We need api's with fields to update this API
 
@@ -609,7 +609,7 @@ Template.leaveTypeSettings.events({
         // /**
         //  * Saving Earning Object in localDB
         // */
-        
+
         // let deductionRateSettings = {
         //     type: "TLeave",
         //     fields: {
@@ -633,7 +633,7 @@ Template.leaveTypeSettings.events({
         //     headers: ApiService.getPostHeaders(),
         //     body: JSON.stringify(deductionRateSettings),
         // });
-    
+
         // if (ApiResponse.ok == true) {
         //     const jsonResponse = await ApiResponse.json();
         //     $('#leaveRateForm')[0].reset();
@@ -644,8 +644,8 @@ Template.leaveTypeSettings.events({
         // }else{
         //     $('.fullScreenSpin').css('display', 'none');
         // }
-        
-        
+
+
     },
     "click #btnDeleteUnpaidLeaveType": function (e){
         let templateObject = Template.instance();
@@ -659,13 +659,13 @@ Template.leaveTypeSettings.events({
         }).then(async (result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'block');
-    
+
                 const employeePayrolApis = new EmployeePayrollApi();
                 // now we have to make the post request to save the data in database
                 const apiEndpoint = employeePayrolApis.collection.findByName(
                     employeePayrolApis.collectionNames.TPaySlips
                 );
-            
+
                 let leaveSettings =  new L({
                     type: "TUnpaidLeave",
                     fields: new PaySlipsFields({
@@ -673,15 +673,15 @@ Template.leaveTypeSettings.events({
                         Active: false
                     }),
                 })
-    
+
                 const ApiResponse = await apiEndpoint.fetch(null, {
                     method: "POST",
                     headers: ApiService.getPostHeaders(),
                     body: JSON.stringify(leaveSettings),
                 });
-    
+
                 let dataObject = await getVS1Data('TUnpaidLeave')
-                
+
                 if ( dataObject.length > 0) {
                     data = JSON.parse(dataObject[0].data);
                     let updatedLines = LeaveRequest.fromList(
@@ -701,14 +701,14 @@ Template.leaveTypeSettings.events({
                             await addVS1Data('TUnpaidLeave', JSON.stringify(leaveObj))
                             await templateObject.getLeaves();
                             // await templateObject.paySlipInfos.set(updatedLines);
-    
-                        } 
+
+                        }
                         $('.fullScreenSpin').hide();
-    
+
                     }
                     catch(e){
                         $('.fullScreenSpin').hide();
-    
+
                     }
                 }
             }

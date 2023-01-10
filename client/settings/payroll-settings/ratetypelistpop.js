@@ -16,7 +16,7 @@ import '../../lib/global/indexdbstorage.js';
 import { getRateTypes } from "./payrollrules";
 import LoadingOverlay from "../../LoadingOverlay";
 import TableHandler from "../../js/Table/TableHandler";
-
+import { Template } from 'meteor/templating';
 import './ratetypelistpop.html';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -34,7 +34,7 @@ Template.ratetypelistpop.onCreated(function() {
 
 Template.ratetypelistpop.onRendered(function() {
     const currentLoc = FlowRouter.current().route.path;
-   
+
     // tempObj.getAllRateType = function() {
     //     getVS1Data('TRateTypes').then(function(dataObject) {
     //         if (dataObject.length == 0) {
@@ -48,19 +48,19 @@ Template.ratetypelistpop.onRendered(function() {
     //                   } else {
     //                     description = "";
     //                   }
-    //                   var dataList = [                   
-    //                   	data.tpayratetype[i].fields.Description || '',                    
-    //                   ];                 
+    //                   var dataList = [
+    //                   	data.tpayratetype[i].fields.Description || '',
+    //                   ];
     //                     splashArrayRateTypeList.push(dataList);
     //                 }
-            
+
     //                 if(splashArrayRateTypeList) {
     //                    $('#tblratetypelist').dataTable({
     //                         data: splashArrayRateTypeList,
     //                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
     //                         columnDefs: [
-    //                             { className: "thDescription", "targets": [0] },                                     
-    //                             { className: "thRateID hiddenColumn", "targets": [1] }                              
+    //                             { className: "thDescription", "targets": [0] },
+    //                             { className: "thRateID hiddenColumn", "targets": [1] }
     //                         ],
     //                         select: true,
     //                         destroy: true,
@@ -79,10 +79,10 @@ Template.ratetypelistpop.onRendered(function() {
 
     //                 }
     //             });
-    //           } 
+    //           }
     //           else {
     //             let data = JSON.parse(dataObject[0].data);
-    //             let useData = data.tpayratetype;           
+    //             let useData = data.tpayratetype;
     //             let records = [];
     //             let inventoryData = [];
     //             for (let i = 0; i < useData.length; i++) {
@@ -94,9 +94,9 @@ Template.ratetypelistpop.onRendered(function() {
     //                 var dataList = [
     //                     useData[i].fields.Description || '-',
     //                     useData[i].fields.ID || ''
-    //                 ];                  
+    //                 ];
     //                 splashArrayRateTypeList.push(dataList);
-                   
+
 
     //             }
     //             if (splashArrayRateTypeList) {
@@ -108,9 +108,9 @@ Template.ratetypelistpop.onRendered(function() {
     //                     "aaSorting": [],
     //                     "orderMulti": true,
     //                     columnDefs: [
-                               
-    //                             { className: "thDescription", "targets": [0] },                                     
-    //                             { className: "thRateID hiddenColumn", "targets": [1]}   
+
+    //                             { className: "thDescription", "targets": [0] },
+    //                             { className: "thRateID hiddenColumn", "targets": [1]}
     //                     ],
     //                     colReorder: true,
     //                     "order": [
@@ -143,12 +143,12 @@ Template.ratetypelistpop.onRendered(function() {
     //                 Description = '';
     //               }
     //               var dataList = [
-      
-    //                 data.tpayratetype[i].fields.Description || '',          
+
+    //                 data.tpayratetype[i].fields.Description || '',
     //                 data.tpayratetype[i].fields.ID || ''
-    //               ];            
+    //               ];
     //               splashArrayRateTypeList.push(dataList);
-                
+
 
     //           }
     //             //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -163,8 +163,8 @@ Template.ratetypelistpop.onRendered(function() {
     //                     "aaSorting": [],
     //                     "orderMulti": true,
     //                     columnDefs: [
-    //                         { className: "thDescription", "targets": [0] },                                     
-    //                         { className: "thRateID hiddenColumn", "targets": [1]}   
+    //                         { className: "thDescription", "targets": [0] },
+    //                         { className: "thRateID hiddenColumn", "targets": [1]}
     //                     ],
     //                     colReorder: true,
 
@@ -193,11 +193,11 @@ Template.ratetypelistpop.onRendered(function() {
     this.loadRateTypes = async (refresh = false) => {
         let rates = await getRateTypes(refresh);
         await this.rateTypes.set(rates);
-        
-     
+
+
 
         setTimeout(() => {
-           
+
             $("#tblratetypelist").dataTable({
                 ...TableHandler.getDefaultTableConfiguration("tblratetypelist"),
                 fnInitComplete: function () {
@@ -220,7 +220,7 @@ Template.ratetypelistpop.onRendered(function() {
 });
 
 Template.ratetypelistpop.helpers({
-   
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -231,8 +231,8 @@ Template.ratetypelistpop.helpers({
             return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
         });
     },
-  
-   
+
+
     isMobileDevices: () => {
         var isMobile = false;
 
@@ -245,15 +245,15 @@ Template.ratetypelistpop.helpers({
     },
     rateTypes: () => {
         return Template.instance().rateTypes.get();
-    }, 
-   
+    },
+
 });
 
 Template.ratetypelistpop.events({
     'click .btnAddRateType': function(event) {
       $('#add-rateype-title').text('Add New Rate Type');
       $('#edtRateID').val('');
-   
+
     },
 
     'click .btnRefreshRateType': async (event, ui) => {
@@ -264,7 +264,7 @@ Template.ratetypelistpop.events({
         // const clientList = [];
         // let salesOrderTable;
         // var splashArray = new Array();
-        // var splashArrayRateTypeList = new Array(); 
+        // var splashArrayRateTypeList = new Array();
         // let utilityService = new UtilityService();
         // const dataTableList = [];
         // const tableHeaderList = [];
@@ -278,13 +278,13 @@ Template.ratetypelistpop.events({
         //         let lineItemObj = {};
         //         if (data.tratetypes.length > 0) {
         //           for (let i = 0; i < data.tratetypes.length; i++) {
-        //             var dataList = [                  
+        //             var dataList = [
         //             	data.tratetypes[i].fields.Description || '',
         //                 data.tratetypes[i].fields.ID || ''
         //             ];
-                
+
         //               splashArrayRateTypeList.push(dataList);
-                    
+
 
         //             }
         //             var datatable = $('#tblratetypelist').DataTable();
@@ -325,14 +325,14 @@ Template.ratetypelistpop.events({
         //           let inventoryData = [];
         //           for (let i = 0; i < data.tratetypes.length; i++) {
         //               var dataList = [
-                  
+
         //                   data.tratetypes[i].fields.Description || '',
         //                   data.tratetypes[i].fields.ID || ''
         //               ];
 
         //               splashArrayRateTypeList.push(dataList);
         //           }
-                  
+
         //           var datatable = $('#tblratetypelist').DataTable();
         //             datatable.clear();
         //             datatable.rows.add(splashArrayRateTypeList);
@@ -354,7 +354,7 @@ Template.ratetypelistpop.events({
             $('#statusModal').modal();
         }
     },
- 
+
     'click .lineDescription': function(event) {
         $('#tblCreditLine tbody tr .lineDescription').attr("data-toggle", "modal");
         $('#tblCreditLine tbody tr .lineDescription').attr("data-target", "#rateTypeListModel");
@@ -373,7 +373,7 @@ Template.ratetypelistpop.events({
 
         ui.initData(true);
     },
- 
+
 
     'click .btnRemove': function(event) {
         let templateObject = Template.instance();
@@ -483,7 +483,7 @@ Template.ratetypelistpop.events({
             }
         }
     },
-   
+
 });
 
 Template.registerHelper('equals', function(a, b) {

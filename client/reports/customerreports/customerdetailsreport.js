@@ -89,7 +89,6 @@ Template.customerdetailsreport.onRendered(() => {
         reportService.getCustomerDetails(dateFrom, dateTo, ignoreDate).then(async function (data) {
           await addVS1Data('TCustomerDetailsReport', JSON.stringify(data));
           templateObject.displayCustomerDetailsData(data);
-          console.log("normal: ", data);
         }).catch(function (err) {
         });
       } else {
@@ -98,7 +97,6 @@ Template.customerdetailsreport.onRendered(() => {
       }
     }).catch(function (err) {
       reportService.getCustomerDetails(dateFrom, dateTo, ignoreDate).then(async function (data) {
-        console.log("error: ", data);
         await addVS1Data('TCustomerDetailsReport', JSON.stringify(data));
         templateObject.displayCustomerDetailsData(data);
       }).catch(function (err) {
@@ -166,7 +164,6 @@ Template.customerdetailsreport.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayCustomerDetailsReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -366,7 +363,7 @@ Template.customerdetailsreport.onRendered(() => {
 
 //   let taxRateService = new TaxRateService();
 //   let utilityService = new UtilityService();
-  
+
 //   templateObject.initDate = () => {
 //     Datehandler.initOneMonth();
 //   };
@@ -410,21 +407,20 @@ Template.customerdetailsreport.onRendered(() => {
 //     }else{
 //       data = JSON.parse(localStorage.getItem('VS1CustomerDetails_Report'));
 //     }
-//     console.log(data);
 //     let reportData = [];
 //     if( data.tcustomersummaryreport.length > 0 ){
-//         let reportGroups = []; 
-        
+//         let reportGroups = [];
+
 //         let reportSummary = data.tcustomersummaryreport.map(el => {
 //           let resultobj = {};
-//           Object.entries(el).map(([key, val]) => {      
+//           Object.entries(el).map(([key, val]) => {
 //               resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
 //               return resultobj;
 //           })
 //           return resultobj;
 //         })
 
-//         for (const item of reportSummary) {   
+//         for (const item of reportSummary) {
 //             let isExist = reportGroups.filter((subitem) => {
 //                 if( subitem.EMAIL == item.EMAIL ){
 //                   subitem.SubAccounts.push(item)
@@ -456,7 +452,7 @@ Template.customerdetailsreport.onRendered(() => {
 //             item.TotalInc = TotalInc;
 //             item.TotalGrossProfit = TotalGrossProfit;
 //             return item;
-//         });        
+//         });
 //     }
 
 //     templateObject.records.set(reportData);
@@ -483,7 +479,7 @@ Template.customerdetailsreport.onRendered(() => {
 //   //   LoadingOverlay.hide();
 //   // };
 
-  
+
 
 //   templateObject.initDate();
 //   templateObject.getCustomerDetailReportData(

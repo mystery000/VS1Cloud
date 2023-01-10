@@ -3,6 +3,8 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
 import { CountryService } from "../../js/country-service";
 import '../../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './reportsAccountant---.html';
 let sideBarService = new SideBarService();
 
 Template.reportsAccountantSettings123.onCreated(function(){

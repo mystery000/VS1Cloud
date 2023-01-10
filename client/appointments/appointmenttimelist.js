@@ -8,6 +8,10 @@ import { UtilityService } from "../utility-service";
 import { SalesBoardService } from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
+import { Template } from 'meteor/templating';
+import './appointmenttimelist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.appointmenttimelist.onCreated(function() {

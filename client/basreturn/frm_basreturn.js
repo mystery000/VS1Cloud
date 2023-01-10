@@ -3556,7 +3556,6 @@ Template.basreturn.events({
             let taxRateList = templateObject.taxRateList.get();
             let accountsList = templateObject.accountsList.get();
 
-            let dataArray = [];
             let description = $('#description').val();
             let allClass = true;
             let classID = 0;
@@ -3772,12 +3771,6 @@ Template.basreturn.events({
                 swal('BAS Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-                getVS1Data('TBASReturn').then(function(dataObject) {
-                    if (dataObject.length > 0) {
-                        dataArray = JSON.parse(dataObject[0].data);
-                    }
-                });
-
                 setTimeout(function() {
                     let jsonObj = {
                         type: "TBASReturn",

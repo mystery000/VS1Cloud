@@ -1,5 +1,6 @@
 import { EmployeeProfileService } from "../../js/profile-service";
-
+import { Template } from 'meteor/templating';
+import './trueERP-to-trueERP.html';
 Template.trueERPSettings.onRendered(function() {
   let mailBody =
     "Since we both use VS1Cloud, you can send invoices directly to my Sales or Purchases \n\nThis makes processing invoices much faster and easier. \n\nTo do this, simply edit the contact details you have for me in VS1Cloud and enter the following key: \n\nMANS6MOSAUCJJ0DCTI8PTDIEYSGGV9 \n\nRegards \nDemo Company(AU) ";

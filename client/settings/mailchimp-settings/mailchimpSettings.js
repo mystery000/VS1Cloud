@@ -3,6 +3,8 @@ import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let mailchimpService = new MailchimpService();
+import { Template } from 'meteor/templating';
+import './mailchimpSettings.html';
 
 Template.mailchimpSettings.onCreated(() => {
   const templateObject = Template.instance();
@@ -86,9 +88,9 @@ Template.mailchimpSettings.events({
     setTimeout(async function(){
     $('.fullScreenSpin').css('display', 'inline-block');
 
-    const allKeys = ["VS1MailchimpApiKey", "VS1MailchimpAudienceID", "VS1MailchimpCampaignID"]; 
+    const allKeys = ["VS1MailchimpApiKey", "VS1MailchimpAudienceID", "VS1MailchimpCampaignID"];
     for (const eKey of allKeys) {
-      let value = ''; 
+      let value = '';
       switch (eKey) {
         case "VS1MailchimpApiKey": value = $('#mailchimpApiKey').val(); break;
         case "VS1MailchimpCampaignID": value = $('#mailchimpCampaignID').val(); break;

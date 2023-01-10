@@ -4,10 +4,10 @@
             /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
             font-family: Calibri, sans-serif !important;
             width: 90%;
-            margin: 20px auto;
+            margin: 20px auto 0px;
         }
         .companyLogo {
-            height: 200px;
+            height: 180px;
             margin: 0px;
             padding: 0px;
             flex-wrap: wrap;
@@ -42,7 +42,7 @@
         }
         .print-header3 {
             font-family: Calibri, sans-serif !important;
-            font-size: 24px;
+            font-size: 36px !important;
             line-height: 50px !important;
             padding-right: 5px;
             text-align: right;
@@ -51,7 +51,7 @@
         .pdfCustomerAddress3 {
             font-family: Calibri, sans-serif !important;
             font-size: 18px;
-            padding-left: 10px;
+            padding-left: 0px;
             width: 100%;
             margin-bottom: 0px;
             color: rgb(0 0 0);
@@ -68,6 +68,29 @@
         }
     </style>
     <div class="template-preview-header3">
+        <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-bottom: 5px;">
+            <div class="col-4 col-md-4 col-sm-12">
+                
+            </div>
+            <div class="col-4 col-md-4 col-sm-12">
+                
+            </div>
+            <div class="col-4 col-md-4 col-sm-12">
+                <div style="width: 100%; text-align: right;"><svg id="lbl_barcode3"></svg></div>
+                <script>
+                    JsBarcode(
+                        "#lbl_barcode3", 
+                        "BI-751", 
+                        {
+                            width: 2,
+                            height: 50,
+                            margin: 0,
+                            displayValue: false
+                        }
+                    );
+                </script>
+            </div>
+        </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex">
             <div class="col-6 col-md-6 col-sm-12 d-flex companyLogo">
                 <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
@@ -80,25 +103,17 @@
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex headerTitle3">
                 <div class="titleBack3"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <p class="label-p print-header3">INVOICE</p>
+                    <p class="label-p print-header3" style="font-size: 36px !important;">INVOICE</p>
                 </div>
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
-            <div class="col-3 col-md-3 col-sm-12 d-flex">
+            <div class="col-6 col-md-6 col-sm-12 d-flex">
                 <div style="width: 100%;">
                     <p class="label-p3 toLabel3" style="color: #71c6a5;">INVOICE TO: </p>
                     <div style="width: 100%; min-height: 100px;">
                         <p class="label-p pdfCustomerAddress3"></p>
                     </div>
-                </div>
-            </div>
-            <div class="col-3 col-md-3 col-sm-12 d-flex">
-                <div style="width: 100%;">
-                <p><svg id="stockAdjustmentBarCode"></svg></p>
-                <script>
-                    JsBarcode("#stockAdjustmentBarCode", "BI-751",{displayValue: false});
-                </script>
                 </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex">
@@ -108,8 +123,8 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="width: 100%; height: 60px; font-size: 18px; margin: 20px auto;">
-            <div class="div_invoice3">
+        <div class="div_invoice3">
+        <div class="d-flex flex-row d-sm-flex d-md-flex" style="width: 100%; height: 60px; font-size: 18px; margin: 10px auto;">
             <div class="headerColumn3">
                 <p class="label-p invNumber3">INVOICE NUMBER</p>
                 <p class="label-p io3">1038</p>
@@ -129,8 +144,8 @@
             <div class="headerColumn3">
                 <p class="label-p">DUE DATE</p>
                 <p class="label-p due3"></p>
-            </div>
-            </div>
+            </div>    
+        </div>
         </div>
     </div>
 </template>

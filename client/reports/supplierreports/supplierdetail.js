@@ -95,7 +95,6 @@ Template.supplierdetail.onRendered(() => {
       if (dataObject.length == 0) {
         reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
           await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
-          console.log(data);
           templateObject.displaySupplierDetailData(data);
         }).catch(function (err) {
         });
@@ -172,7 +171,6 @@ Template.supplierdetail.onRendered(() => {
         MakeNegative();
       }, 100);
     }
-    console.log(splashArrayBalanceSheetReport);
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
@@ -1051,4 +1049,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-

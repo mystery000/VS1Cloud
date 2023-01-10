@@ -28,6 +28,7 @@ import '../mytaskswdiget/mytaskswidgetchart.html'
 
 import '../top10Customers/dsm_top10Customers.html'
 import '../../Dashboard/appointments-widget/dsm-appointments-widget.html'
+import '../../Dashboard/appointments-widget/ds-appointments-widget.html'
 
 
 let _ = require("lodash");
@@ -814,7 +815,6 @@ Template.allChartLists.helpers({
     },
 
     is_dashboard_check: (currentTemplate) => {
-        //console.log(FlowRouter.current().path, currentTemplate);
         return FlowRouter.current().path.includes(currentTemplate);
     },
 });

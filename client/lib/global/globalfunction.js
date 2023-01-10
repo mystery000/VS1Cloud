@@ -1156,6 +1156,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       $("#templatePreviewModal .pdfCustomerAddress3").html(txabillingAddress);
 
       if (object_invoce[0]["title"] == "Customer Payment") {
+        $("#templatePreviewModal .template-preview-body3").css("height", "140mm");
         $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase() + " # " + object_invoce[0]["value"]);
         $("#templatePreviewModal .toLabel3").text("CUSTOMER TO: ");
         $("#templatePreviewModal .div_invoice3").hide();
@@ -1163,6 +1164,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
         $("#templatePreviewModal .div_payment3").hide();
         $("#templatePreviewModal .div_company_info3").hide();
       } else {
+        $("#templatePreviewModal .template-preview-body3").css("height", "100mm");
         $("#templatePreviewModal .print-header3").text(object_invoce[0]["title"].toUpperCase());
         $("#templatePreviewModal .toLabel3").text(object_invoce[0]["title"].toUpperCase() + " TO: ");
         $("#templatePreviewModal .div_invoice3").show();

@@ -130,7 +130,6 @@ Template.customersummaryreport.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-    console.log(data);
     for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
       var dataList = [
         data.tcustomersummaryreport[i].Name || "",
@@ -398,7 +397,7 @@ Template.customersummaryreport.onRendered(() => {
 //   ]
 //   templateObject.customersummaryreportth.set(reset_data);
 
-  
+
 //   templateObject.setDateAs = ( dateFrom = null ) => {
 //     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
 //   };
@@ -423,15 +422,15 @@ Template.customersummaryreport.onRendered(() => {
 //     if( data.tcustomersummaryreport.length > 0 ){
 //         let reportSummary = data.tcustomersummaryreport.map(el => {
 //           let resultobj = {};
-//           Object.entries(el).map(([key, val]) => {      
+//           Object.entries(el).map(([key, val]) => {
 //               resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
 //               return resultobj;
 //           })
 //           return resultobj;
 //         })
 
-//       let reportGroups = []; 
-//       for (const item of reportSummary ) {   
+//       let reportGroups = [];
+//       for (const item of reportSummary ) {
 //         let isExist = reportGroups.filter((subitem) => {
 //           if( subitem.EMAIL == item.EMAIL ){
 //               subitem.SubAccounts.push(item)
@@ -448,9 +447,9 @@ Template.customersummaryreport.onRendered(() => {
 //       $(".fullScreenSpin").css("display", "none");
 
 //       }
-      
+
 //     }
-//     templateObject.records.set(reportData);    
+//     templateObject.records.set(reportData);
 //     LoadingOverlay.hide();
 //   };
 

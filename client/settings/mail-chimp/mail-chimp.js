@@ -2,6 +2,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 
 import { TaxRateService } from "../settings-service";
 import "../../lib/global/indexdbstorage.js";
+import { Template } from 'meteor/templating';
 import "./mail-chimp.html";
 
 const settingService = new TaxRateService();

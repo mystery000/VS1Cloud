@@ -287,7 +287,9 @@ Template.vatreturn.onRendered(function() {
 
         getVS1Data('TVATReturn').then(function(dataObject) {
             let taxRateList = templateObject.taxRateList.get();
-            if (dataObject.length == 0) {
+            let userdata = JSON.parse(dataObject[0].data) || [];
+            userdata = userdata.tvatreturns || [];
+            if (userdata.length == 0) {
                 reportService.getAllVATReturn().then(function(data) {
                     for (let i = 0; i < data.tvatreturn.length; i++) {
                         if (getid == "") {
@@ -1196,7 +1198,9 @@ Template.vatreturn.onRendered(function() {
                     getVS1Data('TVATReturn').then(function(dataObject) {
                         let taxRateList = templateObject.taxRateList.get();
                         let deptrecords = templateObject.deptrecords.get();
-                        if (dataObject.length == 0) {
+                        let userdata = JSON.parse(dataObject[0].data) || [];
+                        userdata = userdata.tvatreturns || [];
+                        if (userdata.length == 0) {
                             reportService.getOneVATReturn(getid[1]).then(function(data) {
                                 $("#description").val(data.tvatreturn[0].fields.VatSheetDesc);
                                 $("#vatreturnCategory1").prop('checked', data.tvatreturn[0].fields.HasTab1);
@@ -2446,12 +2450,6 @@ Template.vatreturn.events({
                             swal('VAT Return Description cannot be blank!', '', 'warning');
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
-                            getVS1Data('TVATReturn').then(function(dataObject) {
-                                if (dataObject.length > 0) {
-                                    dataArray = JSON.parse(dataObject[0].data);
-                                }
-                            });
-
                             setTimeout(function() {
                                 let jsonObj = {
                                     type: "TVATReturns",
@@ -2669,33 +2667,37 @@ Template.vatreturn.events({
                 }).then((result) => {
                     if (result.value) {
                         $('.fullScreenSpin').css('display', 'inline-block');
-                        getVS1Data('TVATReturn').then(function(dataObject) {
-                            if (dataObject.length > 0) {
-                                let dataArray = JSON.parse(dataObject[0].data);
-                                dataArray.forEach((item, j) => {
-                                    if (item.vatNumber == templateObject.getId.get()) {
-                                        dataArray.splice(j, 1);
-                                    }
-                                });
-                                addVS1Data('TVATReturn', JSON.stringify(dataArray)).then(function(datareturn) {
-                                    FlowRouter.go('/vatreturnlist');
-                                    $('.modal-backdrop').css('display', 'none');
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }).catch(function(err) {
-                                    swal({
-                                        title: 'Oooops...',
-                                        text: err,
-                                        type: 'error',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'Try Again'
-                                    }).then((result) => {
-                                        if (result.value) { if (err === checkResponseError) { window.open('/', '_self'); } } else if (result.dismiss === 'cancel') {
-
-                                        }
-                                    });
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
+                        let jsonObj = {
+                            type: "TVATReturns",
+                            fields: {
+                                ID: templateObject.getId.get(),
+                                Active: false,
                             }
+                        }
+
+                        reportService.saveVATReturn(jsonObj).then(function(res) {
+                            reportService.getAllVATReturn().then(function(data) {
+                                addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {
+                                    window.open("vatreturnlist", "_self");
+                                }).catch(function(err) {
+                                    window.open("vatreturnlist", "_self");
+                                });
+                            }).catch(function(err) {
+                                window.open("vatreturnlist", "_self");
+                            });
+                        }).catch(function(err) {
+                            swal({
+                                title: 'Oooops...',
+                                text: err,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                            }).then((result) => {
+                                if (result.value) {
+                                    // Meteor._reload.reload();
+                                } else if (result.dismiss === 'cancel') {}
+                            });
+                            $('.fullScreenSpin').css('display', 'none');
                         });
                     } else {}
                 });
@@ -2715,7 +2717,6 @@ Template.vatreturn.events({
             $('.fullScreenSpin').css('display', 'inline-block');
             let taxRateList = templateObject.taxRateList.get();
 
-            let dataArray = [];
             let description = $('#description').val();
             let allClass = true;
             let classID = 0;
@@ -2881,12 +2882,6 @@ Template.vatreturn.events({
                 swal('VAT Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
             } else {
-                getVS1Data('TVATReturn').then(function(dataObject) {
-                    if (dataObject.length > 0) {
-                        dataArray = JSON.parse(dataObject[0].data);
-                    }
-                });
-
                 setTimeout(function() {
                     let jsonObj = {
                         type: "TVATReturns",
@@ -2966,6 +2961,7 @@ Template.vatreturn.events({
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
 
+                    console.log("jsonObj=", jsonObj);
                     reportService.saveVATReturn(jsonObj).then(function(res) {
                         reportService.getAllVATReturn().then(function(data) {
                             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {
