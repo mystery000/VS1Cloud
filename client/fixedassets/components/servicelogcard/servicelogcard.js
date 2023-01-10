@@ -1,3 +1,6 @@
+import { ReactiveVar } from "meteor/reactive-var";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Template.servicelogcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
