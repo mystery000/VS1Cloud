@@ -597,29 +597,32 @@ getStoreToDelete = async function(email) {
     return await deleteStoreExists(objectStore, email);
 };
 
-openDbCheckVersion = async function() {
-    var promiseversion = new Promise((resolve, reject) => {
-        var versionExists = false;
-        let dbReqVersion = indexedDB.open('TDatabaseVersion', 200);
-        dbReqVersion.onsuccess = function() {
-            resolve(versionExists);
-        };
-        dbReqVersion.onupgradeneeded = function(event) {
-            let dbVersion = event.target.result;
-            if (event.oldVersion != 0) {
-                if (event.oldVersion != event.newVersion) {
-                    versionExists = true;
-                    resolve(versionExists);
-                } else {
-                    versionExists = false;
-                    resolve(versionExists);
-                }
-            } else {
-                versionExists = true;
-                resolve(versionExists);
-            }
-            //dbReqVersion.createObjectStore("TDatabaseVersion", { keyPath: "EmployeeEmail" });
+getStoreToDelete = async function (email) {
+  const db = await openDb2("TDatabase");
+  const transaction = await db.transaction(["TDatabases"], "readwrite");
+  const objectStore = await transaction.objectStore("TDatabases");
+  return await deleteStoreExists(objectStore, email);
+};
+
+openDbCheckVersion = async function () {
+  var promiseversion = new Promise((resolve, reject) => {
+    var versionExists = false;
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 201);
+    dbReqVersion.onsuccess = function () {
+      resolve(versionExists);
+    };
+    dbReqVersion.onupgradeneeded = function (event) {
+      let dbVersion = event.target.result;
+      if (event.oldVersion != 0) {
+        if (event.oldVersion != event.newVersion) {
+          versionExists = true;
+          resolve(versionExists);
+        } else {
+          versionExists = false;
+          resolve(versionExists);
         }
-    });
+      }
+    }
+  });
     return promiseversion;
 };
