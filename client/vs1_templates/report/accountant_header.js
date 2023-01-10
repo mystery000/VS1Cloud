@@ -29,7 +29,7 @@ Template.accountant_header.onRendered(function() {
 
 Template.accountant_header.events({
   'click .btnDocusign':  function () {
-    window.open('http://localhost:5000/', '_blank');
+    window.open('http://vs1docusign.eu-4.evennode.com/', '_blank');
   }
 });
 
