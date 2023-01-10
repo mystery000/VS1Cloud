@@ -3,7 +3,7 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SalesBoardService } from "../../js/sales-service";
-import { CoreService } from "../../js/core-service";
+import './dsm_top10Customers.html';
 
 let _ = require("lodash");
 let vs1chartService = new VS1ChartService();

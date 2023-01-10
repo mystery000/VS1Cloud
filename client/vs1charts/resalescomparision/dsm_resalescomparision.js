@@ -1,6 +1,8 @@
 import { VS1ChartService } from "../vs1charts-service";
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
+import './dsm_resalescomparision.html';
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
