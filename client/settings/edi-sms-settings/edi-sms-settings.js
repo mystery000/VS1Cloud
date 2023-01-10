@@ -2,6 +2,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SMSService } from "../../js/sms-settings-service";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import { Template } from 'meteor/templating';
 import "./edi-sms.html";
 
 let sideBarService = new SideBarService();

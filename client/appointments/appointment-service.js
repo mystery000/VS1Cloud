@@ -1,4 +1,5 @@
 import {BaseService} from '../js/base-service.js';
+import './appointments.html';
 export class AppointmentService extends BaseService {
 
     saveAppointment(data){

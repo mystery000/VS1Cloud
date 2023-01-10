@@ -4,6 +4,8 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
+import { Template } from 'meteor/templating';
+import './reportsAccountant.html';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
@@ -143,7 +145,7 @@ Template.reportsAccountantSettings.events({
     let templateObject = Template.instance();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-    
+
     let accountantID = 1;
     let firstName = $('#edtFirstName').val();
     let lastName = $('#edtLastName').val();

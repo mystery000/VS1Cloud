@@ -8,7 +8,7 @@ import { EmployeePayrollService } from '../../js/employeepayroll-service';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let employeePayrollService = new EmployeePayrollService();
-
+import { Template } from 'meteor/templating';
 import './deductions.html';
 
 Template.deductionSettings.onCreated(function() {
@@ -19,8 +19,8 @@ Template.deductionSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
-  templateObject.currentDrpDownID = new ReactiveVar(); 
-  // templateObject.Accounts = new ReactiveVar([]);   
+  templateObject.currentDrpDownID = new ReactiveVar();
+  // templateObject.Accounts = new ReactiveVar([]);
 });
 
 Template.deductionSettings.onRendered(function() {
@@ -41,8 +41,8 @@ Template.deductionSettings.onRendered(function() {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -51,7 +51,7 @@ Template.deductionSettings.onRendered(function() {
                 await addVS1Data('TDeduction', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
@@ -59,7 +59,7 @@ Template.deductionSettings.onRendered(function() {
         try {
             let data = {};
             let splashArrayDeductionList = new Array();
-            let dataObject = await getVS1Data('TDeduction')  
+            let dataObject = await getVS1Data('TDeduction')
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
@@ -107,7 +107,7 @@ Template.deductionSettings.onRendered(function() {
             templateObject.datatablerecords.set(splashArrayDeductionList);
             $('.fullScreenSpin').css('display', 'none');
             setTimeout(function () {
-                $('#tblDeductions').DataTable({  
+                $('#tblDeductions').DataTable({
                     data: splashArrayDeductionList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
@@ -160,24 +160,24 @@ Template.deductionSettings.onRendered(function() {
                         $('#tblDeductions_ellipsis').addClass('disabled');
                         if (oSettings._iDisplayLength == -1) {
                             if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                             }
                         } else {
-    
+
                         }
                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                             $('.paginate_button.page-item.next').addClass('disabled');
                         }
-    
+
                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
                             .on('click', function () {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 var splashArrayDeductionListDupp = new Array();
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblDeductions_filter input').val();
-    
+
                                 sideBarService.getDeduction(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-    
+
                                     for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
 
                                         let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
@@ -206,14 +206,14 @@ Template.deductionSettings.onRendered(function() {
                                     setTimeout(function () {
                                         $("#tblDeductions").dataTable().fnPageChange('last');
                                     }, 400);
-    
+
                                     $('.fullScreenSpin').css('display', 'none');
-    
-    
+
+
                                 }).catch(function (err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-    
+
                             });
                         setTimeout(function () {
                             MakeNegative();
@@ -223,27 +223,27 @@ Template.deductionSettings.onRendered(function() {
                         $("<button class='btn btn-primary btnAddordinaryTimeDeductions' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeDeductionsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblDeductions_filter");
                         $("<button class='btn btn-primary btnRefreshDeductions' type='button' id='btnRefreshDeductions' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDeductions_filter");
                     }
-    
+
                 }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-    
+
                 }).on('column-reorder', function () {
-    
+
                 }).on('length.dt', function (e, settings, len) {
                     //$('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayDeductionList = [];
                     if (dataLenght == -1) {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
                             sideBarService.getDeduction(dataLenght, 0).then(function (dataNonBo) {
-    
+
                                 addVS1Data('TDeduction', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     // templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
@@ -264,8 +264,8 @@ Template.deductionSettings.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }
     };
-    
-    
+
+
     templateObject.getDeductions();
 
     $('.deductionLineDropDown').editableSelect();
@@ -280,11 +280,11 @@ Template.deductionSettings.onRendered(function() {
             if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                 $('#deductionSettingsModal').modal('show');
             } else {
-                if (searchName.replace(/\s/g, '') == '') {               
+                if (searchName.replace(/\s/g, '') == '') {
                     $('#deductionSettingsModal').modal('show');
                     return false
                 }
-                let dataObject = await getVS1Data('TDeduction');   
+                let dataObject = await getVS1Data('TDeduction');
                 if ( dataObject.length == 0) {
                     data = await templateObject.saveDataLocalDB();
                 }else{
@@ -298,7 +298,7 @@ Template.deductionSettings.onRendered(function() {
                     });
                     $('#deductionRateForm')[0].reset();
                     $('#headerDeductionLabel').text('Edit Deduction');
-                    $('#deductionSettingsModal').modal('hide');  
+                    $('#deductionSettingsModal').modal('hide');
                     if( tDeduction.length > 0 ){
                         let deductionType = 'None';
                         if(tDeduction[0].fields.Taxexempt == true){
@@ -329,7 +329,7 @@ Template.deductionSettings.onRendered(function() {
                 }
             }
         });
-    
+
     //On Click Deduction List
     $(document).on("click", "#tblDeductions tbody tr", function (e) {
         var table = $(this);
@@ -364,7 +364,7 @@ Template.deductionSettings.events({
         $('#headerDeductionLabel').text('Add New Deduction');
         $('#noneModal').modal('show');
     },
-    'click .btnRefreshDeductions':function(event){      
+    'click .btnRefreshDeductions':function(event){
         let templateObject = Template.instance();
         var splashArrayDeductionList = new Array();
         const lineExtaSellItems = [];
@@ -404,10 +404,10 @@ Template.deductionSettings.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Deduction Rate does not exist, would you like to create it?",
@@ -428,7 +428,7 @@ Template.deductionSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-    
+
           $(".btnRefresh").trigger("click");
         }
 
@@ -438,7 +438,7 @@ Template.deductionSettings.events({
         let templateObject = Template.instance();
         setTimeout(async function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -464,7 +464,7 @@ Template.deductionSettings.events({
         let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
         let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
         let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
-        
+
         if(deductionDesctiption == ''){
             handleValidationError('Please select Deduction Name!', 'edtDeductionDesctiption');
             return false;
@@ -479,7 +479,7 @@ Template.deductionSettings.events({
             handleValidationError('Please select Account!', 'deductionAccount');
             return false;
         }
-        
+
         /**
          * Saving Earning Object in localDB
         */
@@ -508,7 +508,7 @@ Template.deductionSettings.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(deductionRateSettings),
             });
-        
+
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 $('#deductionRateForm')[0].reset();
@@ -527,7 +527,7 @@ Template.deductionSettings.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -539,7 +539,7 @@ Template.deductionSettings.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -551,7 +551,7 @@ Template.deductionSettings.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {}
-            });  
+            });
         }
     }, delayTimeAfterSound);
     },
@@ -562,4 +562,3 @@ Template.deductionSettings.helpers({
         return Template.instance().datatablerecords.get();
     }
 });
-

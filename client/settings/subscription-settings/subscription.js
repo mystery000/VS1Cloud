@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import './subscription.html';
 import {
     OrganisationService
 } from '../../js/organisation-service';
@@ -11,11 +13,9 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
-
-import { Template } from 'meteor/templating';
-import './subscription.html';
 
 Template.subscriptionSettings.onCreated(() => {});
 

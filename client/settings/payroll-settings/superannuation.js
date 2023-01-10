@@ -8,7 +8,7 @@ import { EmployeePayrollService } from '../../js/employeepayroll-service';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let employeePayrollService = new EmployeePayrollService();
-
+import { Template } from 'meteor/templating';
 import './superannuation.html';
 
 Template.superannuationSettings.onCreated(function() {
@@ -292,7 +292,7 @@ $('.superannuationDropDown').editableSelect()
                 });
                 $('#superannuationRateForm')[0].reset();
                 $('#newSuperannuationFundLabel').text('Edit Superannuation Fund')
-                $('#superannuationSettingsModal').modal('hide');  
+                $('#superannuationSettingsModal').modal('hide');
 
                 if( tSuperannuation.length > 0 ){
                     if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
@@ -480,7 +480,7 @@ Template.superannuationSettings.events({
                 let drpDownID = $('#edtSuperAnnuationDropDownID').val();
                 $('#' + drpDownID).val(fundName);
                 $('#newSuperannuationFundModal').modal('hide');
-                $('.fullScreenSpin').css('display', 'none');            
+                $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Superannuation has been saved',
                     text: '',
@@ -490,7 +490,7 @@ Template.superannuationSettings.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -502,7 +502,7 @@ Template.superannuationSettings.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
