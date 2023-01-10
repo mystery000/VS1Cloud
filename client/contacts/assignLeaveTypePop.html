@@ -30,7 +30,7 @@
                                 <tbody> 
                                     {{#if leaveTypesList}}
                                         {{#each leaveType in leaveTypesList}}
-                                            <tr leaveType-id="{{leaveType.fields.ID}}">
+                                            <tr leaveType-id="{{leaveType.fields.ID}}" class="colALType">
                                                 <td class="colALTypeID hiddenColumn">
                                                     {{leaveType.fields.ID}}
                                                     <input type="hidden" class="coledtEmpID" value="{{leaveType.fields.ID}}">
@@ -40,7 +40,7 @@
                                                 <td >{{leaveType.fields.HoursAccruedAnnually}}</td>
                                                 <td >{{leaveType.fields.HoursAccruedAnnuallyFullTimeEmp}}</td>
                                                 <td >{{leaveType.fields.HoursFullTimeEmpFortnightlyPay}}</td>
-                                                <td >{{leaveType.fields.HoursLeave}}</td>
+                                                <td class="colALTypeOpeningBalance">{{leaveType.fields.HoursLeave}}</td>
                                                 <td >{{leaveType.fields.OpeningBalance}}</td>
                                                 <td >{{ terminationBalance leaveType.fields.OnTerminationUnusedBalance}}</td>
                                                 <td >
