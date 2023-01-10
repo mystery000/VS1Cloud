@@ -1713,7 +1713,6 @@ Template.bankrecon.events({
                 selectedtransactionsdep.push(transactionObj);
             }
             var reconamounttrimdep = utilityService.convertSubstringParseFloat($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
-            console.log("selectedTransAmountdep=", reconamounttrimdep);
             //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
             selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
         });

@@ -2960,8 +2960,6 @@ Template.vatreturn.events({
                     if (templateObject.getId.get()) {
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
-
-                    console.log("jsonObj=", jsonObj);
                     reportService.saveVATReturn(jsonObj).then(function(res) {
                         reportService.getAllVATReturn().then(function(data) {
                             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {
