@@ -2269,7 +2269,7 @@ Template.templatesettings.onRendered(function () {
         duedate: "",
         paylink: "",
         supplier_type: "Customer",
-        supplier_name: "<p>Brand New <br> Company </p>",
+        supplier_name: "Brand New Company",
         supplier_addr: "JHB\nA1515\nAustralia",
         fields: {
           Date: ["15", "left"],
@@ -2318,7 +2318,7 @@ Template.templatesettings.onRendered(function () {
         duedate: "",
         paylink: "",
         supplier_type: "Customer",
-        supplier_name: "<p>Brand New <br> Company </p>",
+        supplier_name: "Brand New Company",
         supplier_addr: "JHB\nA1515\nAustralia",
         fields: {
           Date: ["15", "left"],
@@ -2367,7 +2367,7 @@ Template.templatesettings.onRendered(function () {
         duedate: "",
         paylink: "",
         supplier_type: "Customer",
-        supplier_name: "<p>Brand New <br> Company </p>",
+        supplier_name: "Brand New Company",
         supplier_addr: "JHB\nA1515\nAustralia",
         fields: {
           Date: ["15", "left"],
