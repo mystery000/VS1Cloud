@@ -2087,6 +2087,7 @@ Template.customerscard.onRendered(function() {
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
             });
+            $('#editCustomerTitle').select();
             $('#editCustomerTitle').editableSelect();
 
             function setTermsVS1(data, termsDataName) {

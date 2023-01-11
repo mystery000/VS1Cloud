@@ -552,20 +552,20 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblRatePopList"){
             reset_data = [
-                { index: 0, label: "#ID", class: "colRateID", active: false, display: true, width: "" },
-                { index: 1, label: "Name", class: "colRateName", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colRateID", active: false, display: true, width: "10" },
+                { index: 1, label: "Name", class: "colRateName", active: true, display: true, width: "300" },
             ]
         }else if (currenttablename === "tblRateTypeList"){
             reset_data = [
-                { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "" },
-                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "10" },
+                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "300" },
             ]
         }else if (currenttablename === "tblOverTimeSheet"){
             reset_data = [
-                { index: 0, label: "#ID", class: "", active: false, display: true, width: "" },
-                { index: 1, label: "Rate", class: "", active: true, display: true, width: "" },
-                { index: 2, label: "Rule", class: "", active: true, display: true, width: "" },
-                { index: 3, label: "hourly Multiplier", class: "", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colOverTimeSheetID", active: false, display: true, width: "10" },
+                { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "500" },
+                { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
+                { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
             ]
         }
 
@@ -5229,7 +5229,7 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 1,
                         className: "colRateName",
-                        width: "100px",
+                        width: "300px",
                     }
                 ],
                 buttons: [{
@@ -5385,7 +5385,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "hiddenColumn",
+                        className: "colRateTypeID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5393,8 +5393,8 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "thDescription",
-                        width: "100px",
+                        className: "colRateName",
+                        width: "300px",
                     }
                 ],
                 buttons: [{
@@ -5553,7 +5553,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "hiddenColumn",
+                        className: "colOverTimeSheetID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5561,18 +5561,18 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "",
-                        width: "",
+                        className: "colRate",
+                        width: "300px",
                     },
                     {
                         targets: 2,
-                        className: "",
-                        width: "200px",
+                        className: "colRateRule",
+                        width: "500px",
                     },
                     {
                         targets: 3,
-                        className: "",
-                        width: "",
+                        className: "colHourlyAmount",
+                        width: "150px",
                     }
                 ],
                 buttons: [{
@@ -10486,11 +10486,11 @@ Template.non_transactional_list.onRendered(function() {
         const dateto = $("#dateTo").val();
         templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
     } else if (currenttablename === "tblRatePopList"){
-        templateObject.getRateListData(true);
+        templateObject.getRateListData();
     }else if (currenttablename === "tblRateTypeList"){
-        templateObject.getRateTypeListData(true);
+        templateObject.getRateTypeListData();
     }else if (currenttablename === "tblOverTimeSheet"){
-        templateObject.getOverTimeSheets(true);
+        templateObject.getOverTimeSheets();
     }
     tableResize();
 });
