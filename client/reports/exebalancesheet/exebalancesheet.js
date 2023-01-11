@@ -8,6 +8,10 @@ import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
 
+import { Template } from 'meteor/templating';
+import './exebalancesheet.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
@@ -55,7 +59,7 @@ Template.exebalancesheetreport.onRendered(() => {
         $(".titleMonth2").html(currMonth2);
     }
     templateObject.initDate = () => {
-        Datehandler.initOneMonth();
+        Datehandler.initCurrentMonth();
     };
 
     templateObject.setDateAs = ( dateFrom = null ) => {
