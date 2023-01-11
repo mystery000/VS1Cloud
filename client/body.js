@@ -122,7 +122,6 @@ import './vs1_templates/transaction_temp/transaction_header/components/customer_
 import './vs1_templates/transaction_temp/transaction_header/components/customer_email_input.html';
 import './vs1_templates/transaction_temp/transaction_header/components/sale_date_selector.html';
 import './vs1_templates/transaction_temp/transaction_header/components/po_number_input.html';
-import './vs1_templates/transaction_temp/transaction_header/components/default_input.html';
 import './vs1_templates/transaction_temp/transaction_button_top.html';
 import './vs1_templates/transaction_temp/transaction_footer/index.js';
 import './vs1_templates/transaction_temp/transaction_footer/template_footer_save_button.html';
@@ -470,6 +469,8 @@ import './settings/tax-rates-setting/AddTaxRateModal.html';
 import './overviews/salesoverview.js';
 import './vs1_templates/date_picker/daterangefromto_trans.js';
 import './fixedassets/components/costtypelistpop/costtypelistpop.js';
+import './vs1_templates/vs1_input/default_input.html';
+import './vs1_templates/vs1_select/default_select.html'
 /* Kelvin More */
 
 /* Stefan */
