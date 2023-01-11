@@ -516,29 +516,32 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === "tblLeadCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblCustomerCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSupplierCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSingleTouchPayroll") {
             reset_data = [
@@ -4487,31 +4490,29 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getBOMListData = async function() {
-        // var customerpage = 0;
-        // getVS1Data('"TProcTreeVS1"').then(function (dataObject) {
-        //     if (dataObject.length == 0) {
-        //         productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
-        //             await addVS1Data('TProcTreeVS1', JSON.stringify(data));
-        //             templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //         }).catch(function (err) {
-
-        //         });
-        //     } else {
-        //         let data = JSON.parse(dataObject[0].data);
-        //         templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //     }
-        // }).catch(function (err) {
-        //   productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
-        //       //await addVS1Data('TTermsVS1List', JSON.stringify(data));
-        //       templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //   }).catch(function (err) {
-
-        //   });
-        // });
-        let bomProducts = [];
-        let tempArray = localStorage.getItem('TProcTree');
-        bomProducts = tempArray ? JSON.parse(tempArray) : [];
-        templateObject.displayBOMListData(bomProducts)
+        var customerpage = 0;
+        getVS1Data('TProcTree').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TProcTree', JSON.stringify(data));
+                    templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+                }).catch(function (err) {
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+            }
+        }).catch(function (err) {
+          productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+              await addVS1Data('TProcTree', JSON.stringify(data));
+              templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+          }).catch(function (err) {
+          });
+        });
+        // let bomProducts = [];
+        // let tempArray = localStorage.getItem('TProcTree');
+        // bomProducts = tempArray ? JSON.parse(tempArray) : [];
+        // templateObject.displayBOMListData(bomProducts)
 
     }
     templateObject.displayBOMListData = async function(bomProducts) {
@@ -4523,21 +4524,23 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < bomProducts.length; i++) {
             // for (let i = 0; i < data.tproctree.length; i++) {
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
-            let subs = bomProducts[i].fields.subs;
-            let rawName = ""
-            for (let j = 0; j < subs.length; j++) {
-                if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+            let subs = bomProducts[i].fields.Details != '' ?JSON.parse(bomProducts[i].fields.Details)||[] : [];
+            let rawName = "";
+            if(subs.length > 0) {
+                for (let j = 0; j < subs.length; j++) {
+                    if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+                }
             }
 
             var dataList = [
                 bomProducts[i].fields.ID || "1",
-                bomProducts[i].fields.productName || "", //product name -- should be changed on TProcTree
-                bomProducts[i].fields.productDescription || "",
-                bomProducts[i].fields.process || "",
-                bomProducts[i].fields.totalQtyInStock || 0,
+                bomProducts[i].fields.Caption || "", //product name -- should be changed on TProcTree
+                bomProducts[i].fields.Description || "",
+                bomProducts[i].fields.Info || "",
+                bomProducts[i].fields.TotalQtyOriginal || 0,
                 // bomProducts[i].fields.subs || [],
                 rawName || '',
-                bomProducts[i].fields.attachments.length == 0 ? 'No Attachment' : bomProducts[i].fields.attachments.length > 0 ? bomProducts[i].fields.attachments.length.toString() + " attachments" : "no attachmetns"
+                bomProducts[i].fields.Value == '' ? 'No Attachment' : JSON.parse(bomProducts[i].fields.Value).length.toString() + " attachments"
             ];
 
             splashArrayBOMList.push(dataList);
@@ -4566,7 +4569,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "colTermsID colID hiddenColumn",
+                        className: "colBOMID colID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -7885,6 +7888,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -7915,26 +7919,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -8901,6 +8910,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -8931,26 +8941,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -9919,6 +9934,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -9949,26 +9965,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },

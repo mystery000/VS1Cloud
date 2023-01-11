@@ -26,6 +26,10 @@ export class ManufacturingService extends BaseService {
 
     saveProcessData(data) {
         return this.POST(this.ERPObjects.TProcessStep, data)
-      }
+    }
+
+    saveWorkOrder(data){
+      return this.POST(this.ERPObjects.TVS1Workorder, data)
+    }
   
 }

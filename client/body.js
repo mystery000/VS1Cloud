@@ -41,7 +41,7 @@ import './js/mailchimp-service.js';
 import './js/new_bom_temp.js';
 import './js/new_credit.js';
 import './js/new_invoice.js';
-// import './js/new_process.js';
+import './js/new_process.js';
 import './js/new_processpop.js';
 import './js/new_purchaseorder.js';
 import './js/new_quote.js';
@@ -291,6 +291,7 @@ import './shipping/shippinglist.js';
 import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
 import './journalEntry/journalentry_list.js';
+import './manufacture/processList.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -417,6 +418,7 @@ import './settings/payroll-settings/superannuation.js';
 import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
+import './vs1_templates/contact_title/contact_title.html';
 /*Vladyslav*/
 
 /* Roverto */

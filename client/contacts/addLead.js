@@ -2568,6 +2568,7 @@ Template.leadscard.events({
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
             </td>
+            <td class="colDate">${currentDate}</td>
             <td class="colType">Task</td>
             <td class="colTaskName" contenteditable="true"></td>
             <td class="colTaskDesc" contenteditable="true"></td>
@@ -2631,7 +2632,7 @@ Template.leadscard.events({
         $('#contactPhoneClient').val($('#edtLeadPhone').val());
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
 
-        $(document).on("click", "#tblLeadCrmListWithDate tbody .dnd-moved .colType", function(e) {
+        $(document).on("click", "#tblLeadCrmListWithDate tbody .dnd-moved .colDate, #tblLeadCrmListWithDate tbody .dnd-moved .colType", function(e) {
             $("#edtAccountName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
             $("#txaAccountDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
             $("#taskmodalDuedate").val($("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val());

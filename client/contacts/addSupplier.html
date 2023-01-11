@@ -368,9 +368,7 @@
                                                 </div>
                                                 <div class="col-6 col-md-1" style="padding: 0px 8px;">
                                                     <div class="form-group">
-                                                        <label for="editSupplierTitle">Title</label>
-                                                        <input type="search" class="form-control es-input" id="editSupplierTitle" name="editSupplierTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
-                                                        <!-- </select> -->
+                                                        {{> contact_title target="editSupplierTitle" value=record.title}}
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-3" style="padding: 0px 8px;">
@@ -482,20 +480,23 @@
                                                                     #tblSupplierCrmListWithDate{
                                                                         width:100% !important;
                                                                     }
+                                                                    #tblSupplierCrmListWithDate .colDate{
+                                                                        width:12% !important;
+                                                                    }
                                                                     #tblSupplierCrmListWithDate .colType{
-                                                                        width:15% !important;
+                                                                        width:12% !important;
                                                                     }
                                                                     #tblSupplierCrmListWithDate .colTaskName{
-                                                                        width:20% !important;
+                                                                        width:18% !important;
                                                                     }
                                                                     #tblSupplierCrmListWithDate .colTaskDesc{
-                                                                        width:35% !important;
+                                                                        width:30% !important;
                                                                     }
                                                                     #tblSupplierCrmListWithDate .colCompletedBy{
                                                                         width:15% !important;
                                                                     }
                                                                     #tblSupplierCrmListWithDate .colCompleteTask{
-                                                                        width:15% !important;
+                                                                        width:12% !important;
                                                                     }
                                                                 </style>
                                                                 {{> non_transactional_list tablename="tblSupplierCrmListWithDate"}}
