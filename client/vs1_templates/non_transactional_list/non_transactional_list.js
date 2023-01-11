@@ -563,9 +563,9 @@ Template.non_transactional_list.onRendered(function() {
         }else if (currenttablename === "tblOverTimeSheet"){
             reset_data = [
                 { index: 0, label: "#ID", class: "colOverTimeSheetID", active: false, display: true, width: "10" },
-                { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "300" },
+                { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "500" },
                 { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
-                { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "150" },
+                { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
             ]
         }
 
