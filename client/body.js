@@ -132,6 +132,7 @@ import './vs1_templates/transaction_temp/transaction_footer/template_footer_remo
 import './vs1_templates/transaction_temp/transaction_footer/template_footer_cancel_button.html';
 import './vs1_templates/transaction_temp/transaction_print_modal';
 import './vs1_templates/vs1_textarea/vs1_textarea.html';
+import "./vs1_templates/vs1_button/vs1_button.js";
 import './vs1_templates/drop_down/vs1_dropdown.html';
 import './vs1_templates/attachments/vs1_attachments.js';
 import './vs1_templates/init_form_page_script/init_form_page_script.html'
