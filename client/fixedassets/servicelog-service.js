@@ -8,6 +8,6 @@ export class ServiceLogService extends BaseService {
     return this.GET(this.ERPObjects.TServiceLogList);
   }
   saveServiceLog(data) {
-    return this.POST(this.ERPObjects.TServiceLogList, data);
+    return this.POST(this.ERPObjects.TServiceLog, data);
   }
 }

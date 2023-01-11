@@ -53,6 +53,11 @@
               <div class="form-group"><label>Asset Code</label>
                 <select type="search" class="form-control" id="edtAssetCode" name="edtAssetCode" suppid=" "
                   style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                  {{#if fixedAssets}}
+                    {{#each item in fixedAssets}}
+                      <option value="{{item.id}}">{{item.assetcode}}</option>
+                    {{/each}}
+                  {{/if}}
                 </select>
               </div>
             </div>

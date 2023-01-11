@@ -7,7 +7,7 @@ import "./fixedassetoverview.html";
 import "./modal/fixedassettype/fixedassettypelistpop.html";
 import "./modal/fixedassettype/fixedassettypelistpop.js";
 
-import "./components/fixedassetlist/fixedassetlist.html";
+import "./fixedassetlist/fixedassetlist.html";
 import "./components/fixedassetlistpop/fixedassetlistpop.html";
 import "./components/fixedassetlistpop/fixedassetlistpop.js";
 

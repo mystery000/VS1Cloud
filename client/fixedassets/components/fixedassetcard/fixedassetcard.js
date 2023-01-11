@@ -123,35 +123,41 @@ Template.fixedassetcard.events({
         Description: $('input#edtAssetDescription').val(),
         AssetType: $('input#edtAssetType').val(),
         BrandName: $('input#edtBrand').val(),
-        Model: '', //
-        // Number: '',
-        // RegistrationNo: '',
-        // Type:'',
-        // CapacityWeight: '',
-        // CapacityVolumn: '',
-        PurchDate: '', //
-        PurchCost: '', //
-        SupplierID: '', // 
-        RenewalDate:'',
-        InsuranceInfo: '', //?
-        // RenewalDate: '',
+        Model: $('input#edtModel').val(), //
+        CUSTFLD1: $('input#edtNumber').val(), // Number
+        CUSTFLD2: $('input#edtRegistrationNo').val(), // RegistrationNo
+        CUSTFLD3: $('input#edtType').val(), // Type
+        CUSTFLD4: $('input#edtCapacityWeight').val(), // CapacityWeight
+        CUSTFLD5: $('input#edtCapacityVolume').val(), // CapacityVolumn
+        CUSTDATE1: getDateStr(new Date($("#edtDateRegisterRenewal").datepicker("getDate"))), // RegisterRenewal Date
+        CUSTDATE2: getDateStr(new Date($("#edtDateRenewal").datepicker("getDate"))), // DateRenewal Date
+        PurchDate: getDateStr(new Date($("#edtDateofPurchase").datepicker("getDate"))), //
+        PurchCost: parseInt($('input#edtPurchCost').val()), //
+        // SupplierID: $('input#edtModel').val(), //
+        InsuranceInfo: $('input#edtInsuranceInfo').val(), //
 
         // -----------------Depreciation Information
-        DepreciationOption: '', //Depreciation Type
-        FixedAssetCostAccountID: '',
-        // FixedAssetBankAccountID: '', //ClearingAccountID
-        FixedAssetDepreciationAccountID: '', //FixedAssetDepreciationExpenseAccountID
-        FixedAssetDepreciationAssetAccountID: '',
-        Salvage: '',
-        SalvageType: '',
-        life: '',
-        BusinessUsePercent: '',
-        
-
-
+        DepreciationOption: parseInt($('input#edtDepreciationType').val()), //Depreciation Type
+        FixedAssetCostAccountID: parseInt($('select#edtCostAssetAccount').val()),
+  
+        CUSTFLD6: $('select#editBankAccount').val(), // FixedAssetBankAccountID: , //ClearingAccountID
+        FixedAssetDepreciationAccountID: parseInt($('select#edtDepreciationAssetAccount').val()), //FixedAssetDepreciationExpenseAccountID
+        FixedAssetDepreciationAssetAccountID: parseInt($('select#edtDepreciationExpenseAccount').val()),
+        Salvage: parseInt($('input#edtSalvageValue').val()),
+        SalvageType: parseInt($('input#edtSalvageValueType').val()),
+        life: parseInt($('input#edtAssetLife').val()),
+        BusinessUsePercent: parseInt($('input#edtBusinessUse').val()),
         Active: true
       }
     };
+    console.log(newFixedAsset);
+
+    function getDateStr(dateObj) {
+      var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
+      var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
+      var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
+      return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " " + hh + ":" + min + ":" + ss;
+    }
     // fixedassetSercie.saveTFixedAsset(newFixedAsset);
   },
   "click button.btnBack": function() {
