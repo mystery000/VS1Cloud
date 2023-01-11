@@ -1,5 +1,5 @@
 import { EmployeePayrollService } from '../js/employeepayroll-service';
-
+import { Template } from 'meteor/templating';
 import './assignLeaveTypePop.html';
 
 Template.assignLeaveTypePop.onCreated(function () {
