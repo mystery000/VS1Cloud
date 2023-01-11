@@ -57,8 +57,8 @@ Template.transaction_line.onRendered(function() {
           { index: 22, label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: true },
           { index: 23, label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: true },
       ];
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
-      let isBOnShippedQty = Session.get("CloudSalesQtyOnly") || false;
+      let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking || false;
+      let isBOnShippedQty = templateObject.data.includeBOnShippedQty || false;
       if (isBOnShippedQty == false) {
          let x;
          x = reset_data.find(x => x.class === 'Qty'); if(x != undefined) x.display = true;
@@ -198,8 +198,7 @@ Template.transaction_line.onRendered(function() {
                                     x = resetData.find(x => x.class == 'Memo');        {x.display = x.active = false};
                                     x = resetData.find(x => x.class == 'ProductName'); {x.display = x.active = true};
                                     x = resetData.find(x => x.class == 'Description'); {x.display = x.active = true};
-                                }
-                                console.dir(resetData);     
+                                } 
                                 templateObject.showCustomFieldDisplaySettings(resetData);
                           }
                       }
@@ -249,7 +248,7 @@ Template.transaction_line.events({
       let templateObject = Template.instance();
       let currenttranstablename = templateObject.data.tablename||"";
       let reset_data = templateObject.reset_data.get();
-      let isBatchSerialNoTracking = Session.get("CloudShowSerial") || false;
+      let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking || false;
       if (isBatchSerialNoTracking) {
         data = reset_data.find((x) => x.class === 'TaxRate');
         if(data != undefined) data = {...data, display: true, active: true};
