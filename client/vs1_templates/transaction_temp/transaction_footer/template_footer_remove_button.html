@@ -1,11 +1,12 @@
 <!-- Transaction footer remove button -->
 <!-- type -->
 <template name="template_footer_remove_button">
-  <button
-    class="btn btn-danger btnRemove btnFooter" 
-    type="button">
-    <i class="fa fa-remove"></i>
-    Delete
-  </button>
+  {{> vs1_button
+    color='danger'
+    classes='btnRemove btnFooter'
+    type='button'
+    iconName='remove'
+    title='Delete'
+  }}
   {{> deletepop formType=type}}
 </template>
