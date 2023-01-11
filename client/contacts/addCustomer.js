@@ -2087,6 +2087,7 @@ Template.customerscard.onRendered(function() {
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
             });
+            $('#editCustomerTitle').select();
             $('#editCustomerTitle').editableSelect();
 
             function setTermsVS1(data, termsDataName) {
@@ -4800,27 +4801,52 @@ Template.customerscard.events({
         }, delayTimeAfterSound);
     },
     "click #btnAddLine, click #btnAddLineTask": function(e) {
-        // let tokenid = Random.id();
-        // var rowData = `<tr class="dnd-moved" id="${tokenid}">
-        //     <td class="thProductName">
-        //         <input class="es-input highlightSelect lineProductName" type="search">
-        //     </td>
-        //     <td class="lineProductDesc colDescription"></td>
-        //     <td class="thCostPrice hiddenColumn" style="text-align: left!important;"></td>
-        //     <td class="thSalesPrice lineSalesPrice" style="text-align: left!important;"></td>
-        //     <td class="thQty hiddenColumn">Quantity</td>
-        //     <td class="thTax hiddenColumn" style="text-align: left!important;">Tax Rate</td>
-        //     <td>
-        //         <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
-        //         class="fa fa-remove"></i></button></span>
-        //     </td>
-        //     <td class="thExtraSellPrice hiddenColumn">Prouct ID</td>
-        // </tr>`;
+        let tokenid = "random";
+        let currentDate = new Date();
+        currentDate = moment(currentDate).format("DD/MM/YYYY");
+        var rowData = `<tr class="dnd-moved" id="${tokenid}">
+            <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
+                ${tokenid}
+            </td>
+            <td class="colType">Task</td>
+            <td class="colTaskName" contenteditable="true"></td>
+            <td class="colTaskDesc" contenteditable="true"></td>
+            <td class="colCompletedBy" style="padding:5px!important">
+                <div class="input-group date" style="width: 160px;">
+                    <input type="text" class="form-control" id="completeDate" name="completeDate" >
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+            </td>
+            <td class="colCompleteTask" align="right">
+                <span class="btnRemoveLine"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0" style="margin-top:0!important"><i class="fa fa-remove"></i></button></span>
+            </td>
+        </tr>`;
 
-        // $("#tblExtraProducts tbody").append(rowData);
-        // setTimeout(function() {
-        //     $("#" + tokenid + " .lineProductName").trigger("click");
-        // }, 200);
+        $("#tblCustomerCrmListWithDate tbody").prepend(rowData);
+
+        $("#completeDate").datepicker({
+            showOn: "button",
+            buttonText: "Show Date",
+            buttonImageOnly: true,
+            buttonImage: "/img/imgCal2.png",
+            dateFormat: "dd/mm/yy",
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+            onSelect: function(formated, dates) {
+            },
+            onChangeMonthYear: function(year, month, inst) {
+                // Set date to picker
+                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+            }
+        });
+
+        $(".btnAddLineGroup button").attr("disabled", true);
+        $(".btnCustomerTask").attr("disabled", true);
 
         $("#frmEditTaskModal")[0].reset();
         $("#txtCrmTaskID").val("");
@@ -4829,7 +4855,7 @@ Template.customerscard.events({
         $("#addProjectID").val("");
         $("#contactID").val("");
         $('#assignedID').val("");
-
+        
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
@@ -4845,7 +4871,25 @@ Template.customerscard.events({
         $('#contactPhoneClient').val($('#edtCustomerPhone').val());
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
 
-        $("#taskDetailModal").modal("toggle");
+        $(document).on("click", "#tblCustomerCrmListWithDate tbody .dnd-moved .colType", function(e) {
+            $("#edtAccountName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
+            $("#txaAccountDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+            $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
+            $("#taskDetailModal").modal("toggle");
+        });
+
+        $(document).on("change", "#edtAccountName, #txaAccountDescription, #taskmodalDuedate", function(e) {
+            $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html($("#edtAccountName").val());
+            $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html($("#txaAccountDescription").val());
+            $("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
+        });
+    },
+    "click .btnRemoveLine": function(event) {
+        var targetID = $(event.target).closest("tr").attr("id");
+        $(event.target).closest("tr").remove();
+        $(".btnAddLineGroup button").attr("disabled", false);
+        $(".btnCustomerTask").attr("disabled", false);
+        event.preventDefault();        
     },
 });
 
@@ -4928,7 +4972,7 @@ Template.customerscard.helpers({
         return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSalesOverview' });
     },
     currentdate: () => {
-        const currentDate = new Date();
+        let currentDate = new Date();
         return moment(currentDate).format("DD/MM/YYYY");
     },
     isJob: () => {
