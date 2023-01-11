@@ -122,7 +122,6 @@ import './vs1_templates/transaction_temp/transaction_header/components/customer_
 import './vs1_templates/transaction_temp/transaction_header/components/customer_email_input.html';
 import './vs1_templates/transaction_temp/transaction_header/components/sale_date_selector.html';
 import './vs1_templates/transaction_temp/transaction_header/components/po_number_input.html';
-import './vs1_templates/transaction_temp/transaction_header/components/default_input.html';
 import './vs1_templates/transaction_temp/transaction_button_top.html';
 import './vs1_templates/transaction_temp/transaction_footer/index.js';
 import './vs1_templates/transaction_temp/transaction_footer/template_footer_save_button.html';
@@ -132,6 +131,7 @@ import './vs1_templates/transaction_temp/transaction_footer/template_footer_remo
 import './vs1_templates/transaction_temp/transaction_footer/template_footer_cancel_button.html';
 import './vs1_templates/transaction_temp/transaction_print_modal';
 import './vs1_templates/vs1_textarea/vs1_textarea.html';
+import "./vs1_templates/vs1_button/vs1_button.js";
 import './vs1_templates/drop_down/vs1_dropdown.html';
 import './vs1_templates/attachments/vs1_attachments.js';
 import './vs1_templates/init_form_page_script/init_form_page_script.html'
@@ -469,6 +469,8 @@ import './settings/tax-rates-setting/AddTaxRateModal.html';
 import './overviews/salesoverview.js';
 import './vs1_templates/date_picker/daterangefromto_trans.js';
 import './fixedassets/components/costtypelistpop/costtypelistpop.js';
+import './vs1_templates/vs1_input/default_input.html';
+import './vs1_templates/vs1_select/default_select.html'
 /* Kelvin More */
 
 /* Stefan */

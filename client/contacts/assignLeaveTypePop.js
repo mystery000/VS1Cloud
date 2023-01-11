@@ -36,7 +36,7 @@ Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr("leavetype-id");
         const name = $(e.currentTarget).find(".leave-type-name").text(); 
-        let Hours = (e.currentTarget).find("..colALTypeOpeningBalance").text() ||'';
+        let Hours = (e.currentTarget).find(".colALTypeOpeningBalance").text() ||'';
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
         $('#edtLeaveTypeofRequest').val(name); 
@@ -150,29 +150,31 @@ Template.assignLeaveTypePop.onCreated(function () {
             }
         });
         $('#edtLeaveTypeofRequest').editableSelect();
-        // $('#edtLeaveTypeofRequest').editableSelect()
-        //     .on('click.editable-select', async function (e, li) {
-        //         let $search = $(this);
-        //         let dropDownID = $search.attr('id')
-        //         templateObject.currentDrpDownID.set(dropDownID);
-        //         let offset = $search.offset();
-        //         let searchName = e.target.value || '';
-        //         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-        //             $('#assignLeaveTypeSettingsModal').modal('show');
-        //         } else {
-        //             if (searchName.replace(/\s/g, '') == '') {
-        //                 $('#assignLeaveTypeSettingsModal').modal('show');
-        //                 return false
-        //             }
-        //             let dataObject = await getVS1Data('TAssignLeaveType');
-        //             if ( dataObject.length > 0) {
-        //                 data = JSON.parse(dataObject[0].data);
-        //                 let tAssignteavetype = data.tassignleavetype.filter((item) => {
-        //                     // if( item.fields.LeaveType == searchName ){
-        //                         return item;
-        //                     // }
-        //                 });
-
+        $('#edtLeaveTypeofRequest').editableSelect()
+            .on('click.editable-select', async function (e, li) {
+                let $search = $(this);
+                let dropDownID = $search.attr('id')
+                templateObject.currentDrpDownID.set(dropDownID);
+                let offset = $search.offset();
+                let searchName = e.target.value || '';
+                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                    $('#assignLeaveTypeSettingsModal').modal('show');
+                } else {
+                    if (searchName.replace(/\s/g, '') == '') {
+                        $('#assignLeaveTypeSettingsModal').modal('show');
+                        return false
+                    }
+                    let dataObject = await getVS1Data('TAssignLeaveType');
+                    if ( dataObject.length > 0) {
+                        data = JSON.parse(dataObject[0].data);
+                        let tAssignteavetype = data.tassignleavetype.filter((item) => {
+                            // if( item.fields.LeaveType == searchName ){
+                                return item;
+                            // }
+                        });
+                    }
+                }
+            });
         //                 if( tAssignteavetype.length > 0 ){
 
         //                     let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
@@ -241,7 +243,5 @@ Template.assignLeaveTypePop.helpers({
     },
     leaveTypesList: () => { 
         return Template.instance().leaveTypesList.get();
-    },
-
-    
-})
+    },  
+});
