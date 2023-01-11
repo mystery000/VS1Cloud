@@ -4,6 +4,8 @@ import 'colresizable/colResizable-1.6.min';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-ui-dist/jquery-ui.css';
+import { Template } from 'meteor/templating';
+import './linkTrueERP.html';
 let _ = require('lodash');
 Template.linktrueerp.onRendered(function(){
   var erpGet = erpDb();
@@ -54,7 +56,7 @@ Template.linktrueerp.events({
   playSaveAudio();
   var erpGet = erpDb();
   setTimeout(function(){
-  
+
   $('.fullScreenSpin').css('display','inline-block');
   let firstName = $('.edtFirstName').val();
   let lastName = $('.edtLastName').val();

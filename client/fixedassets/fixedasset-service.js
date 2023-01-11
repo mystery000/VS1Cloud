@@ -5,7 +5,6 @@ export class FixedAssetService extends BaseService {
       ListType: "Detail",
       select: "[Active]=true"
     };
-    console.log("fixedAssets");
     return this.getList(this.ERPObjects.TFixedAssets, options);
   }
 
@@ -35,7 +34,7 @@ export class FixedAssetService extends BaseService {
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TFixedAssetType, options);
-  } 
+  }
 
   getFixedAssetType(id) {
     return this.getOneById(this.ERPObjects.TFixedAssetType, id);

@@ -19,7 +19,7 @@ import '../../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './ds-appointments-widget.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import '../../vs1_templates/calender/calender.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();

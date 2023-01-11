@@ -33,13 +33,20 @@ Template.assignLeaveTypePop.onRendered(function () {
 });
 
 Template.assignLeaveTypePop.events({
-    'click #tblAssignLeaveTypes > tbody > tr': async function(event) {
-        $(".colALTypeID").html();
-        $(".leave-type-name").html(); 
-        
-         
-    },
+    "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).attr("leavetype-id");
+        const name = $(e.currentTarget).find(".leave-type-name").text(); 
+        let Hours = (e.currentTarget).find(".colALTypeOpeningBalance").text() ||'';
+        $('#edtLeaveRequestID').val(id);
+        $('#edtLeaveTypeofRequestID').val(id);
+        $('#edtLeaveTypeofRequest').val(name); 
+        $('#edtLeaveHours').val(Hours); 
 
+        $('#assignLeaveTypeSettingsModal').on('hidden.bs.modal', function(e) {
+            // window.open("/appointments", "_self");
+        });
+        $('#assignLeaveTypeSettingsModal').hide();
+    }
 });
 
 
@@ -161,9 +168,9 @@ Template.assignLeaveTypePop.onCreated(function () {
                     if ( dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
                         let tAssignteavetype = data.tassignleavetype.filter((item) => {
-                            if( item.fields.LeaveType == searchName ){
+                            // if( item.fields.LeaveType == searchName ){
                                 return item;
-                            }
+                            // }
                         });
 
                         if( tAssignteavetype.length > 0 ){

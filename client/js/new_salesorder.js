@@ -11243,10 +11243,10 @@ Template.new_salesorder.events({
                     addVS1Data('TSalesOrderEx', JSON.stringify(dataUpdated)).then(function(dataReturn) {
                         saveFunc()
                     }).catch((error) => {
-                        saveFunc()
+                        // saveFunc()
                     })
                 }).catch(errroorrrr => {
-                    saveFunc()
+                    // saveFunc()
                 })
                 // salesService.saveSalesOrderEx(objDetails).then(function(objDetails) {
 
@@ -11455,7 +11455,7 @@ Template.new_salesorder.events({
     } else {
         $('.colFixedAsset').addClass('hiddenColumn');
         $('.colFixedAsset').removeClass('showColumn');
-    } 
+    }
   },
   // display settings
 

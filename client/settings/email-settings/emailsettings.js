@@ -13,9 +13,8 @@ import { jsPDF } from "jspdf";
 import "jQuery.print/jQuery.print.js";
 import { cloneDeep, find, extend } from "lodash";
 import { Template } from 'meteor/templating';
-
 import './emailsettings.html';
-
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // import ldb from 'localdata';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
@@ -506,7 +505,7 @@ Template.emailsettings.onRendered(function () {
                     //   ? JSON.parse(basedOnTypeData).BasedOnType
                     //   : "";
                     let basedOnType = empData[i].fields.BasedOnType;
-                    
+
                     let basedOnTypeText = "";
                     if (basedOnType.split(",").includes("P"))
                       basedOnTypeText += "On Print, ";
@@ -1620,7 +1619,6 @@ Template.emailsettings.onRendered(function () {
     //           tempArray.push(item.fields);
     //         }
     //       });
-    //       console.log({ tempArray });
     //       templateObject.correspondences.set(tempArray);
     //     } else {
     //       sideBarService.getCorrespondences().then((dataObject) => {
@@ -1695,7 +1693,6 @@ Template.emailsettings.onRendered(function () {
     try {
       correspondencesFromVsData = await getVS1Data("TCorrespondence");
     } catch (error) {
-      console.log({ error })
     }
 
     if (smsSettingsFromService.terppreference.length > 0) {
@@ -1740,7 +1737,7 @@ Template.emailsettings.onRendered(function () {
           };
 
           await sideBarService.saveCorrespondence(newCorrespondence);
-          
+
           isUpdatedForSms = true;
         }
       }
@@ -1967,7 +1964,7 @@ Template.emailsettings.onRendered(function () {
                   if(useData.length == 0) resolve(temp)
                   for (let i = 0; i < useData.length; i++) {
                     if(useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID){
-                      attachmentExist = true; 
+                      attachmentExist = true;
                       // resolve(useData[i])
                       temp.push(useData[i]);
                     }
@@ -2645,7 +2642,7 @@ Template.emailsettings.onRendered(function () {
                       eventType += "EU";
                     }
                     for (let j = 0; j< documents.length; j++) {
-  
+
                       let existingAttachments = await checkAttachmentExist();
                       if(attachmentExist == false) {
                         let attachmentObject = {
@@ -2849,7 +2846,7 @@ Template.emailsettings.onRendered(function () {
                       eventType += "EU";
                     }
                     for (let j = 0; j< documents.length; j++) {
-  
+
                       let existingAttachments = await checkAttachmentExist();
                       if(attachmentExist == false) {
                         let attachmentObject = {
@@ -4468,9 +4465,7 @@ Template.emailsettings.events({
         await smsService.saveSMSSettings(settingObject);
         const globalSettings = await sideBarService.getGlobalSettings();
         await addVS1Data('TERPPreference', JSON.stringify(globalSettings));
-        console.log("successed done!")
       } catch (error) {
-        console.log({ error });
       }
     }
   },

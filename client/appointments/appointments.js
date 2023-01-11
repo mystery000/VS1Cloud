@@ -20,6 +20,12 @@ import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import { client } from "braintree-web";
 
+
+import { Template } from 'meteor/templating';
+import './appointments.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import '../overviews/Modal/newLeaveRequest.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();
@@ -181,7 +187,7 @@ async function sendAppointmentEmail() {
 }
 
 Template.appointments.onRendered(function() {
-    let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__');
+    let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
     let templateObject = Template.instance();
     let tempObj = Template.instance();
     let contactService = new ContactService();
@@ -928,7 +934,7 @@ Template.appointments.onRendered(function() {
                 bootstrapPlugin,
             ],
             themeSystem: "bootstrap",
-            initialView: "timeGridWeek",
+            initialView: "dayGridMonth",
             hiddenDays: hideDays, // hide Sunday and Saturday
             longPressDelay: 100,
             customButtons: {
@@ -1670,21 +1676,21 @@ Template.appointments.onRendered(function() {
             navLinks: true, // can click day/week names to navigate views
             selectable: true,
             selectMirror: true,
-            dayHeaderFormat: function(date) {
-                if (LoggedCountry == "United States") {
-                    return (
-                        moment(date.date.marker).format("ddd") +
-                        " " +
-                        moment(date.date.marker).format("MM/DD")
-                    );
-                } else {
-                    return (
-                        moment(date.date.marker).format("ddd") +
-                        " " +
-                        moment(date.date.marker).format("DD/MM")
-                    );
-                }
-            },
+            // dayHeaderFormat: function(date) {
+            //     if (LoggedCountry == "United States") {
+            //         return (
+            //             moment(date.date.marker).format("ddd") +
+            //             " " +
+            //             moment(date.date.marker).format("MM/DD")
+            //         );
+            //     } else {
+            //         return (
+            //             moment(date.date.marker).format("ddd") +
+            //             " " +
+            //             moment(date.date.marker).format("DD/MM")
+            //         );
+            //     }
+            // },
             select: function(info) {
                 $("#frmAppointment")[0].reset();
                 $(".paused").hide();
@@ -1998,6 +2004,8 @@ Template.appointments.onRendered(function() {
                         });
 
                         if (getLeaveInfo.length > 0) {
+                            $('#removeLeaveRequestBtn').show();
+                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
                             $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
                             $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
                             $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
@@ -2384,9 +2392,12 @@ Template.appointments.onRendered(function() {
                     title.style.color = "#ffffff";
                 } else {
                     var empid = event.event._def.publicId.split(':')[1];
-                    $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
 
-                    title.style.color = "#dddddd";
+                        title.style.color = "#dddddd";
+                    }
+                    
                 }
 
                 let arrayOfDomNodes = [title];
@@ -2525,7 +2536,7 @@ Template.appointments.onRendered(function() {
 
         calendar.render();
 
-        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="off" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
         new Draggable(draggableEl, {
@@ -12300,7 +12311,7 @@ Template.appointments.events({
                 }
                 document.getElementById("txtBookedHoursSpent").value =
                     hoursFormattedStartTime;
-                var endTime = moment(startTime, "HH:mm")
+                let endTime = moment(startTime, "HH:mm")
                     .add(parseInt(hoursFormattedStartTime), "hours")
                     .format("HH:mm");
                 document.getElementById("endTime").value = endTime;
@@ -14494,13 +14505,13 @@ Template.appointments.events({
             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
                 window.open(localStorage.getItem("appt_historypage"), "_self");
             } else {
-                window.open("/appointments", "_self");
+                window.open("/appointmentlist", "_self");
             }
         } else {
             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
                 window.open(localStorage.getItem("appt_historypage"), "_self");
             } else {
-                window.open("/appointments", "_self");
+                window.open("/appointmentlist", "_self");
             }
         }
     },
@@ -18806,19 +18817,14 @@ Template.appointments.events({
             cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.value) {
-                // FlowRouter.go("/employeescard?id=" + empID);
-                // localStorage.setItem("appt_historypage", "appointmentlist");
                 setTimeout(function() {
-                    // $('.payrollTab').tab('show');
-                    // $('a[href="#leave"]').tab('show');
-                    // $('#newLeaveRequestbtn').trigger('click');
-                    
+                    $("#edtEmpID").val(empID);
+                    $('#removeLeaveRequestBtn').hide();
                     $('#newLeaveRequestModal').modal('show');
                     $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                        // window.open("/appointments", "_self");
+                        window.open("/appointments", "_self");
                     });
                 }, 1000);
-                // $("#newLeaveRequestModal").modal("toggle");
             }
         });
     },
@@ -18870,7 +18876,6 @@ Template.appointments.events({
     },
     "click #addRow": (e, ui) => {
         let tokenid = Random.id();
-        // $(".lineProductName", rowData).val("");
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="thProductName">
                 <input class="es-input highlightSelect lineProductName" type="search">
