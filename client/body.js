@@ -168,7 +168,7 @@ import './packages/currency/modals/FxRateModal.js';
 import './salesorder/salesorderlistpop.js';
 import './inventory/productlistpop.js';
 import './manufacture/processListPopup.js';
-//import './manufacture/production_planner.js';
+import './manufacture/production_planner.js';
 
 import './accounts/expenseaccountlist.js';
 import './accounts/inventoryassetaccountpop.js';
@@ -248,7 +248,7 @@ import './inventory/newproductpop.js';
 import './inventory/payrollproductlistpop.js';
 import './inventory/productlistpopwithcheckboxes.js';
 import './inventory/employeeproductlistpop.js';
-//import './overviews/Modal/SelectPayCalendar.js';
+import './overviews/Modal/SelectPayCalendar.js';
 import './overviews/bankingoverview.js';
 
 import './basreturn/basreturn_list.js';
