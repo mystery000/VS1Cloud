@@ -290,6 +290,7 @@ import './settings/mailchimp-settings/mailchimpSettings.js';
 import './shipping/shippinglist.js';
 import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
+import './journalEntry/journalentry_list.js';
 /* Tinyiko */
 
 /* Rasheed */

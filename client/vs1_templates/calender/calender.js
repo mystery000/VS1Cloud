@@ -319,10 +319,8 @@ Template.calender.onRendered(function() {
             dayHeaderFormat: function(date) {
                 if (LoggedCountry == "United States") {
                     return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD');
-                    console.log("first",moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD'));
                 } else {
                     return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM');
-                    console.log("first",moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM'));
                 }
             },
             select: function(info) {
@@ -760,12 +758,10 @@ Template.calender.onRendered(function() {
             navLinks: true, // can click day/week names to navigate views
             selectable: true,
             selectMirror: true,
-            dayHeaderFormat: function(date) { 
+            dayHeaderFormat: function(date) {
                 if (LoggedCountry == "United States") {
-                    console.log("date===>>>>", date);
                     return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD');
                 } else {
-                    console.log("date===>>>>", date);
                     return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM');
                 }
             },
@@ -2342,10 +2338,8 @@ Template.calender.onRendered(function() {
             dayHeaderFormat: function(date) {
                 if (LoggedCountry == "United States") {
                     return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD');
-                    console.log("third",moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD'));
                 } else {
                     return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM');
-                    console.log("third",moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM'));
                 }
             },
             select: function(info) {
@@ -3306,10 +3300,8 @@ Template.calender.onRendered(function() {
                     dayHeaderFormat: function(date) {
                         if (LoggedCountry == "United States") {
                             return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD');
-                            console.log("forth",moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('MM/DD'));
                         } else {
                             return moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM');
-                            console.log("forth",moment(date.date.marker).format('ddd') + ' ' + moment(date.date.marker).format('DD/MM'));
                         }
                     },
                     select: function(info) {

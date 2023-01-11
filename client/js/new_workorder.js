@@ -107,7 +107,6 @@ Template.new_workorder.onRendered(function(){
             let workorders = [];
             let tempArray = templateObject.workOrderRecords.get();
             if (tempArray.length > 0) {
-                console.log("orderxxxxxxxx", templateObject.salesOrderId.get());
                 workorders = templateObject.workOrderRecords.get().filter(order=>{
                     return order.SalesOrderID == templateObject.salesOrderId.get();
                 })
@@ -133,7 +132,6 @@ Template.new_workorder.onRendered(function(){
                             }
                             record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
-                            console.log("templateObject.workorderrecord-111", record)
                             templateObject.showBOMModal.set(true)
                             let name = record.line.fields.ProductName;
                                 let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
@@ -164,7 +162,6 @@ Template.new_workorder.onRendered(function(){
                                 record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
 
                                 templateObject.workorderrecord.set(record);
-                                console.log("templateObject.workorderrecord-111", record)
                                 templateObject.showBOMModal.set(true)
                                 let name = record.line.fields.ProductName;
                                 let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
@@ -195,7 +192,6 @@ Template.new_workorder.onRendered(function(){
                         }
                         record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
-                        console.log("templateObject.workorderrecord-111", record)
                         templateObject.showBOMModal.set(true)
                         let name = record.line.fields.ProductName;
                         let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
@@ -356,7 +352,7 @@ Template.new_workorder.events({
                 if(isExisting == false) {
                     let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[]
                     let index = bomProducts.findIndex(product => {
-                        return product.fields.productName == lineItems[i].fields.ProductName; 
+                        return product.fields.productName == lineItems[i].fields.ProductName;
                     })
                     if(index > -1) {
                         templateObject.workOrderLineId.set(i);
@@ -402,7 +398,7 @@ Template.new_workorder.events({
                 getVS1Data('TProductVS1').then(function(dataObject) {
                     if(dataObject.length == 0) {
                         productService.getOneProductdatavs1byname(productName).then(function(data) {
-                            resolve(data.tproduct[0].fields.TotalQtyInStock)                            
+                            resolve(data.tproduct[0].fields.TotalQtyInStock)
                         })
                     }else {
                         let data = JSON.parse(dataObject[0].data);
@@ -415,7 +411,7 @@ Template.new_workorder.events({
                     }
                 }).catch(function(e) {
                     productService.getOneProductdatavs1byname(productName).then(function(data) {
-                        resolve(data.tproduct[0].fields.TotalQtyInStock)                            
+                        resolve(data.tproduct[0].fields.TotalQtyInStock)
                     })
                 })
             })
@@ -424,7 +420,7 @@ Template.new_workorder.events({
         async function getSupplierDetail ()  {
             return new Promise(async(resolve, reject)=>{
                 let supplierName = 'Misc Supplier';
-                
+
                 contactService.getOneSupplierDataExByName(supplierName).then(function(dataObject) {
                     let data = dataObject.tsupplier;
                     if(data.length > 0) {
@@ -434,7 +430,7 @@ Template.new_workorder.events({
                         let state = data[0].fields.State || '';
                         let zipCode = data[0].fields.Postcode || '';
                         let country = data[0].fields.Country || '';
-                        
+
                         let postalAddress = data[0].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
                         resolve(postalAddress)
                     }else {
@@ -491,9 +487,9 @@ Template.new_workorder.events({
                                         Lines: splashLineArray,
                                         OrderTo: billingAddress,
                                         OrderDate: date,
-            
+
                                         SupplierInvoiceDate: date,
-            
+
                                         SaleLineRef: '',
                                         TermsName: 'COD',
                                         Shipping: '',
@@ -525,7 +521,7 @@ Template.new_workorder.events({
                                 let stockQty = useData[i].fields.TotalQtyInStock;
                                 if(stockQty < neededQty) {
                                     let splashLineArray = [];
-            
+
                                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(useData[i].fields.BuyQty1Cost * 100) / 100);
                                     let lineItemObjForm = {
                                         type: "TPurchaseOrderLine",
@@ -540,12 +536,12 @@ Template.new_workorder.events({
                                             LineClassName: defaultDept
                                         }
                                     };
-            
+
                                     splashLineArray.push(lineItemObjForm);
                                     let billingAddress = await getSupplierDetail();
                                     let saledateTime = new Date();
                                     let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-            
+
                                     let objDetails = {
                                         type: "TPurchaseOrderEx",
                                         fields: {
@@ -555,9 +551,9 @@ Template.new_workorder.events({
                                             Lines: splashLineArray,
                                             OrderTo: billingAddress,
                                             OrderDate: date,
-                
+
                                             SupplierInvoiceDate: date,
-                
+
                                             SaleLineRef: '',
                                             TermsName: 'COD',
                                             Shipping: '',
@@ -618,9 +614,9 @@ Template.new_workorder.events({
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
                                     OrderDate: date,
-        
+
                                     SupplierInvoiceDate: date,
-        
+
                                     SaleLineRef: '',
                                     TermsName: 'COD',
                                     Shipping: '',
@@ -651,7 +647,7 @@ Template.new_workorder.events({
         async function saveSubOrders () {
             let record = templateObject.workorderrecord.get();
             let bomStructure = templateObject.bomStructure.get();
-    
+
             let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
             let savedworkorders = totalWorkOrders.filter(order => {
                 return order.SalesOrderID == templateObject.salesOrderId.get();
@@ -677,7 +673,7 @@ Template.new_workorder.events({
                                 }).catch(function(e) {
                                     resolve(returnVal)
                                 })
-                            }) 
+                            })
                         }
                         async function saveOneSubOrder() {
                             return new Promise(async(resolve, reject)=>{
@@ -720,18 +716,18 @@ Template.new_workorder.events({
                                     mainOrderStart = subEnd;
                                 }
 
-            
+
                                 getVS1Data('TProductVS1').then(function(dataObject) {
                                     if(dataObject.length == 0) {
                                         productService.getOneProductdatavs1byname(subProductName).then(function(data){
-            
+
                                             let line = JSON.parse(JSON.stringify(record.line));
                                             line.fields.ProductName = subProductName;
                                             line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
                                             line.fields.ProductID = data.tproduct[0].fields.ID;
                                             line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
                                             subDetail = {...subDetail, Line: line};
-            
+
                                             let tempArray = localStorage.getItem('TWorkorders');
                                             let workorders = tempArray?JSON.parse(tempArray): [];
                                             workorders = [...workorders, subDetail];
@@ -780,7 +776,7 @@ Template.new_workorder.events({
                         }
                         await saveOneSubOrder();
                     }
-    
+
                 }
             }
         }
@@ -794,7 +790,7 @@ Template.new_workorder.events({
             temp = {...temp, isStarted: true}
             templateObject.workorderrecord.set(temp);
             record = templateObject.workorderrecord.get();
-            
+
             let objDetail = {
                 ID: record.id,
                 Customer: $('#edtCustomerName').val() || '',
@@ -1215,7 +1211,7 @@ Template.new_workorder.events({
 
     // },
 
-   
+
     // 'click #BOMSetupModal .btnAddSubProduct': function(event) {
     //     let button  = $(event.target).closest('button.btnAddSubProduct');
     //     let tempObject = Template.instance();
@@ -1291,9 +1287,9 @@ Template.new_workorder.events({
             mainOrderSaved = false;
         }
 
-       
+
                 saveMainBOMStructure();
-           
+
     }, delayTimeAfterSound);
     async function saveMainBOMStructure() {
         let mainProductName = $('#edtMainProductName').val();
