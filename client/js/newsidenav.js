@@ -1106,8 +1106,8 @@ Template.newsidenav.onRendered(function() {
     }
 
     let isGreenTrack = localStorage.getItem('isGreenTrack')||false;
-    let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired')||false;
-    if (loggedUserEventFired === "true") {
+    let loggedUserEventFired = (localStorage.getItem('LoggedUserEventFired') == "true");
+    if (loggedUserEventFired) {
         $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
         $('.headerprogressbar').addClass('headerprogressbarShow');
         $('.headerprogressbar').removeClass('headerprogressbarHidden');
@@ -4498,6 +4498,7 @@ Template.newsidenav.onRendered(function() {
     }, 2500);
     /* Start Here */
     if (loggedUserEventFired) {
+        //alert(loggedUserEventFired);
         templateObject.getFollowedAllObjectPull = function() {
             setTimeout(function() {
                 if (isPayments) {
