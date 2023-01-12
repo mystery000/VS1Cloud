@@ -8561,7 +8561,13 @@ Template.purchaseordercard.events({
                     });
                     $('.fullScreenSpin').css('display', 'none');
                 });
+                if(isBORedirect == true){
+                    FlowRouter.go('/purchaseorderlistBO?success=true');
+                }else{
+                    FlowRouter.go('/purchaseorderlist?success=true');
+                };
             }
+
         }, delayTimeAfterSound);
     },
     'click .chkProductName': function(event) {

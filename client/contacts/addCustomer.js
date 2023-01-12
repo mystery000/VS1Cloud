@@ -2078,12 +2078,10 @@ Template.customerscard.onRendered(function() {
     }
 
     $(document).ready(function() {
-        console.log("modal here========2");
-        // setTimeout(function() {
+        setTimeout(function() {
             $('#sltTerms').editableSelect();
             $("#sltCurrency").editableSelect();
             $('#sltTerms').editableSelect().on('click.editable-select', function(e, li) {
-                console.log("modal here========asdfasdfasdf");
                 $('#selectLineID').val('sltTerms');
                 let $each = $(this);
                 let offset = $each.offset();
@@ -2432,7 +2430,7 @@ Template.customerscard.onRendered(function() {
                 const taxRateDataName = e.target.value || '';
                 editableTaxCode(e, $each, offset, taxRateDataName);
             });
-        // }, 1200);
+        }, 5000);
     });
 
     $(document).on('click', '#editCustomerTitle', function(e, li) {
