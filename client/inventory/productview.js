@@ -10,9 +10,9 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import '../vs1_templates/recentTransactionTable/recentTransactionTable.js';
+// import '../vs1_templates/recentTransactionTable/recentTransactionTable.js';
+import '../vs1_templates/non_transactional_list/non_transactional_list.js';
 import { Template } from 'meteor/templating';
-import './productview.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
