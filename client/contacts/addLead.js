@@ -2563,7 +2563,9 @@ Template.leadscard.events({
     "click #btnAddLine, click #btnAddLineTask": function(e) {
         let tokenid = "random";
         let currentDate = new Date();
+        let completeDate = new Date();
         currentDate = moment(currentDate).format("DD/MM/YYYY");
+        completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
@@ -2605,6 +2607,7 @@ Template.leadscard.events({
                 $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             }
         });
+        $("#completeDate").datepicker("setDate", completeDate);
 
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);

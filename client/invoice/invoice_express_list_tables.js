@@ -118,7 +118,8 @@ Template.invoicelist.onRendered(function () {
       if (reset_data[r].active == true) {
           $('#tblInvoicelist .' + reset_data[r].class).removeClass('hiddenColumn');
       } else if (reset_data[r].active == false) {
-          $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
+          if(reset_data[r].class)
+            $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
       };
     }
     templateObject.displayfields.set(custFields);

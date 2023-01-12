@@ -142,12 +142,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
             ];
-        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
             let bsbname = "Branch Code";
             if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
                 bsbname = "BSB";
             }
-            if (currenttablename == "tblAccountOverview") {
+            if (currenttablename == "tblAccountOverview" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
                     { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -1450,23 +1450,33 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     //Accounts Overview List Data
-    templateObject.getAccountsOverviewData = async function(deleteFilter = false) {
+    templateObject.getAccountsOverviewData = async function(deleteFilter = false, typeFilter = 'all') {
         var customerpage = 0;
         getVS1Data('TAccountVS1List').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                    await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                    if(typeFilter == 'all') {
+                        await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                    }
                     templateObject.displayAccountsOverviewListData(data);
                 }).catch(function(err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayAccountsOverviewListData(data);
+                if(typeFilter != 'all') {
+                    sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                        templateObject.displayAccountsOverviewListData(data);
+                    })                
+                }else {
+                    templateObject.displayAccountsOverviewListData(data);
+                }
             }
         }).catch(function(err) {
-            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TAccountVS1List', JSON.stringify(data));
+            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                if(typeFilter == 'all') {
+                    await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                }
                 templateObject.displayAccountsOverviewListData(data);
             }).catch(function(err) {
 
@@ -7380,8 +7390,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -8401,10 +8411,10 @@ Template.non_transactional_list.onRendered(function() {
 
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
-
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
+        
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
-
+        
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
@@ -8471,7 +8481,6 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
-                
                 for (let i = 0; i < all_records.length; i++) {
                     let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
                     due_date = new Date(due_date);
@@ -9110,6 +9119,12 @@ Template.non_transactional_list.onRendered(function() {
                         });
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
+
+                        $(document).on("click", "#btnRefreshList", function(e) {
+                            const datefrom = $("#dateFrom").val();
+                            const dateto = $("#dateTo").val();
+                            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+                        });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -9426,8 +9441,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {

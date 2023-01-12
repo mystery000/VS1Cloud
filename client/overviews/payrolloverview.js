@@ -25,6 +25,11 @@ import moment from "moment";
 import Datehandler from "../DateHandler";
 import PayRunHandler from "../js/ObjectManager/PayRunHandler";
 import TableHandler from "../js/Table/TableHandler";
+import { Template } from "meteor/templating";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import './payrolloverview.html';
+import '../overviews/Modal/AddPayRunModal.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -140,7 +145,7 @@ Template.payrolloverview.onRendered(function () {
         ],
         select: true,
         destroy: true,
-        colReorder: true,
+        // colReorder: true,
         colReorder: {
           fixedColumnsRight: 1
         },
@@ -226,7 +231,7 @@ Template.payrolloverview.onRendered(function () {
         ],
         select: true,
         destroy: true,
-        colReorder: true,
+        // colReorder: true,
         colReorder: {
           fixedColumnsRight: 1
         },
@@ -2208,7 +2213,7 @@ Template.payrolloverview.onRendered(function () {
   // templateObject.getJobs();
 
   templateObject.getAllProductData = function () {
-    productList = [];
+    let productList = [];
     templateObject.datatablerecords1.set([]);
     var splashArrayProductServiceList = new Array();
     //  $('#product-list').editableSelect('clear');
@@ -4638,7 +4643,7 @@ Template.payrolloverview.events({
                 contactService
                   .saveClockTimeSheet(updateTimeSheet)
                   .then(function (savedTimesheetData) {
-                    sideBarService.getAlltimeSheetList().then(function (data) {
+                    sideBarService.getAllTimeSheetList().then(function (data) {
                       addVS1Data("TTimeSheet", JSON.stringify(data));
                       setTimeout(function () {
                         templateObject.checkAccessSaveRedirect();
@@ -5042,7 +5047,7 @@ Template.payrolloverview.events({
       if (Array.isArray(clockList[clockList.length - 1].timelog)) {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog[
             clockList[clockList.length - 1].timelog.length - 1
           ].fields.ID || "";
@@ -5055,7 +5060,7 @@ Template.payrolloverview.events({
       } else {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog.fields.ID || "";
         checkStartTime =
           clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
@@ -5200,7 +5205,7 @@ Template.payrolloverview.events({
           };
           isPaused = "completed";
         } else if (checkEndTime != "") {
-          aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
+          let aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
         }
       } else {
         obj = {
@@ -5282,7 +5287,7 @@ Template.payrolloverview.events({
         .saveTimeSheet(data)
         .then(function (dataReturnRes) {
           $("#updateID").val(dataReturnRes.fields.ID);
-          sideBarService.getAlltimeSheetList().then(function (data) {
+          sideBarService.getAllTimeSheetList().then(function (data) {
             Bert.alert(
               $("#employee_name").val() + " you are now Clocked On",
               "now-success"
@@ -5381,7 +5386,7 @@ Template.payrolloverview.events({
                     .saveTimeSheetLog(updateData)
                     .then(function (data) {
                       sideBarService
-                        .getAlltimeSheetList()
+                        .getAllTimeSheetList()
                         .then(function (data) {
                           addVS1Data("TTimeSheet", JSON.stringify(data));
                           if (showTimesheetStatus == true) {
@@ -5402,7 +5407,7 @@ Template.payrolloverview.events({
               contactService
                 .saveTimeSheetLog(obj)
                 .then(function (data) {
-                  sideBarService.getAlltimeSheetList().then(function (data) {
+                  sideBarService.getAllTimeSheetList().then(function (data) {
                     addVS1Data("TTimeSheet", JSON.stringify(data));
                     setTimeout(function () {
                       if (showTimesheetStatus == true) {
@@ -5420,7 +5425,7 @@ Template.payrolloverview.events({
                 .catch(function (err) {});
             }
           } else {
-            sideBarService.getAlltimeSheetList().then(function (data) {
+            sideBarService.getAllTimeSheetList().then(function (data) {
               addVS1Data("TTimeSheet", JSON.stringify(data));
               if (showTimesheetStatus == true) {
                 setTimeout(function () {
@@ -5493,7 +5498,7 @@ Template.payrolloverview.events({
       if (Array.isArray(clockList[clockList.length - 1].timelog)) {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog[
             clockList[clockList.length - 1].timelog.length - 1
           ].fields.ID || "";
@@ -5506,7 +5511,7 @@ Template.payrolloverview.events({
       } else {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog.fields.ID || "";
         checkStartTime =
           clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
@@ -5607,7 +5612,7 @@ Template.payrolloverview.events({
           };
           isPaused = "completed";
         } else if (checkEndTime != "") {
-          aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
+          let aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
         }
       } else {
         obj = {
@@ -5671,7 +5676,7 @@ Template.payrolloverview.events({
                 Allowedit: true,
                 Logs: obj,
                 Hours: hours || 0.01,
-                Status: status,
+                // Status: status,
                 // OverheadRate: 90,
                 Job: jobName || "",
                 // ServiceName: "Test"|| '',
@@ -5690,7 +5695,7 @@ Template.payrolloverview.events({
       contactService
         .saveTimeSheet(data)
         .then(function (data) {
-          sideBarService.getAlltimeSheetList().then(function (data) {
+          sideBarService.getAllTimeSheetList().then(function (data) {
             addVS1Data("TTimeSheet", JSON.stringify(data));
             if (showTimesheetStatus == true) {
               setTimeout(function () {
@@ -5745,6 +5750,7 @@ Template.payrolloverview.events({
           if (Object.keys(obj).length > 0) {
             if (obj.fields.Description == "Timesheet Processed") {
               let endTime1 = endTime;
+              let toUpdateID;let updateData;
               if (Array.isArray(clockList[clockList.length - 1].timelog)) {
                 toUpdateID =
                   clockList[clockList.length - 1].timelog[
@@ -5770,7 +5776,7 @@ Template.payrolloverview.events({
                     .saveTimeSheetLog(updateData)
                     .then(function (data) {
                       sideBarService
-                        .getAlltimeSheetList()
+                        .getAllTimeSheetList()
                         .then(function (data) {
                           addVS1Data("TTimeSheet", JSON.stringify(data));
                           if (showTimesheetStatus == true) {
@@ -5791,7 +5797,7 @@ Template.payrolloverview.events({
               contactService
                 .saveTimeSheetLog(obj)
                 .then(function (data) {
-                  sideBarService.getAlltimeSheetList().then(function (data) {
+                  sideBarService.getAllTimeSheetList().then(function (data) {
                     addVS1Data("TTimeSheet", JSON.stringify(data));
                     if (showTimesheetStatus == true) {
                       setTimeout(function () {
@@ -5807,7 +5813,7 @@ Template.payrolloverview.events({
                 .catch(function (err) {});
             }
           } else {
-            sideBarService.getAlltimeSheetList().then(function (data) {
+            sideBarService.getAllTimeSheetList().then(function (data) {
               addVS1Data("TTimeSheet", JSON.stringify(data));
               if (showTimesheetStatus == true) {
                 setTimeout(function () {
@@ -6332,7 +6338,7 @@ Template.payrolloverview.events({
             contactService
               .saveTimeSheetLog(toUpdate)
               .then(function (data) {
-                sideBarService.getAlltimeSheetList().then(function (data) {
+                sideBarService.getAllTimeSheetList().then(function (data) {
                   addVS1Data("TTimeSheet", JSON.stringify(data));
                   setTimeout(function () {
                     templateObject.checkAccessSaveRedirect();
@@ -6433,7 +6439,7 @@ Template.payrolloverview.events({
           contactService
             .saveTimeSheetUpdate(data)
             .then(function (data) {
-              sideBarService.getAlltimeSheetList().then(function (data) {
+              sideBarService.getAllTimeSheetList().then(function (data) {
                 addVS1Data("TTimeSheet", JSON.stringify(data));
                 setTimeout(function () {
                   templateObject.checkAccessSaveRedirect();
@@ -6511,7 +6517,7 @@ Template.payrolloverview.events({
     //   });
 
     // sideBarService
-    //   .getAlltimeSheetList()
+    //   .getAllTimeSheetList()
     //   .then(function (data) {
     //     addVS1Data("TTimeSheet", JSON.stringify(data));
     //     setTimeout(function () {
@@ -6930,7 +6936,7 @@ Template.payrolloverview.helpers({
     return localStorage.getItem("CloudEditTimesheetHours") || false;
   },
   clockOnOff: () => {
-    return localStorage.getItem("CloudClockOnOff") || false;
+    return (localStorage.getItem("CloudClockOnOff") == "true");
   },
   launchClockOnOff: () => {
     return localStorage.getItem("launchClockOnOff") || false;
@@ -6939,7 +6945,7 @@ Template.payrolloverview.helpers({
     return localStorage.getItem("timesheetStartStop ") || false;
   },
   showTimesheet: () => {
-    return localStorage.getItem("CloudShowTimesheet") || false;
+    return (localStorage.getItem("CloudShowTimesheet") == "true");
   },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();

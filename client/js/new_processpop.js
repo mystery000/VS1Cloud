@@ -65,7 +65,9 @@ Template.new_processpop.helpers({
 });
 
 Template.new_processpop.events({
-    'click #btnSaveProcess': function(event) {
+    'click .btnSave': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
@@ -188,7 +190,9 @@ Template.new_processpop.events({
 
     },
 
-    'click #btnCancel': function(event) {
+    'click .btnCancel': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         $('#newProcessModal').modal('toggle');
         $('#processListModal').modal('toggle')
     },

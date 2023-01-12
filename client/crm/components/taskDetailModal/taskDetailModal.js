@@ -369,6 +369,9 @@ Template.taskDetailModal.events({
                 crmService.getAllTaskList().then(async function(data) {
                     if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                         await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                        if($("#btnRefreshList") != undefined){
+                            $("#btnRefreshList").trigger("click");
+                        }
                         Meteor._reload.reload();
                     }
                 }).catch(function(err) {
@@ -414,6 +417,9 @@ Template.taskDetailModal.events({
                         crmService.getAllTaskList().then(async function(data) {
                             if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                                 await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                                if($("#btnRefreshList") != undefined){
+                                    $("#btnRefreshList").trigger("click");
+                                }
                                 Meteor._reload.reload();
                             }
                         }).catch(function(err) {

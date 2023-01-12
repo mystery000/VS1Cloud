@@ -7554,7 +7554,7 @@ Template.new_salesorder.onRendered(function() {
                 getVS1Data('TProcTree').then(function(dataObject){
                     if(dataObject.length == 0) {
                         productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
-                            addVS1Data('TProcTree', JSON.parse(data)).then(function(){resolve(data.tproctree)})
+                            addVS1Data('TProcTree', JSON.stringify(data)).then(function(){resolve(data.tproctree)})
                         })
                     }else {
                         let data = JSON.parse(dataObject[0].data);
@@ -7562,7 +7562,7 @@ Template.new_salesorder.onRendered(function() {
                     }
                 }).catch(function(e) {
                     productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
-                        addVS1Data('TProcTree', JSON.parse(data)).then(function(){resolve(data.tproctree)})
+                        addVS1Data('TProcTree', JSON.stringify(data)).then(function(){resolve(data.tproctree)})
                     })
                 })
             })
