@@ -16,7 +16,9 @@ import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import {ManufacturingService} from "../manufacture/manufacturing-service";
-
+import { Template } from 'meteor/templating';
+import "../manufacture/frm_process.html";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let manufacturingService = new ManufacturingService()
@@ -48,7 +50,7 @@ Template.new_process.onRendered(() => {
                 if(dataObject.length == 0) {
                     manufacturingService.getOneProcessDataByID(id).then(function(data){
                         objDetail = data.fields
-                        templateObject.processrecord.set(objDetail); 
+                        templateObject.processrecord.set(objDetail);
                         $('.fullScreenSpin').css('display', 'none');
                     })
                 }else {
@@ -60,12 +62,12 @@ Template.new_process.onRendered(() => {
                            $('.fullScreenSpin').css('display', 'none');
                         }
                     }
-                    templateObject.processrecord.set(objDetail); 
+                    templateObject.processrecord.set(objDetail);
                 }
             }).catch(function(error) {
                 manufacturingService.getOneProcessDataByID(id).then(function(data){
                     objDetail = data.fields;
-                    templateObject.processrecord.set(objDetail); 
+                    templateObject.processrecord.set(objDetail);
                     $('.fullScreenSpin').css('display', 'none');
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -87,14 +89,14 @@ Template.new_process.onRendered(() => {
                         Wastage: ''
                     }
 
-                    templateObject.processrecord.set(objDetail); 
+                    templateObject.processrecord.set(objDetail);
                     $('.fullScreenSpin').css('display', 'none')
         }
     }
 
     templateObject.getProcessDetail();
 
-   
+
     setTimeout(()=>{
         $('#edtCOGS').editableSelect();
         $('#edtExpenseAccount').editableSelect();
@@ -103,7 +105,7 @@ Template.new_process.onRendered(() => {
         $('#edtWastage').editableSelect();
     }, 500)
             // templateObject.selectedInventoryAssetAccount.set('Inventory Asset Wastage')
-  
+
 });
 
 
@@ -181,7 +183,7 @@ Template.new_process.events({
             e.preventDefault();
             return false;
         }
-      
+
         let objDetail = {
             type: 'TProcessStep',
             fields: {
@@ -236,7 +238,7 @@ Template.new_process.events({
         // processes.push(objDetail);
         // localStorage.setItem('TProcesses', JSON.stringify(processes))
         // $('.fullScreenSpin').css('display', 'none');
-        
+
     },
 
     'click #btnCancel': function(event) {
@@ -293,7 +295,7 @@ Template.new_process.events({
     'click #edtWastage': function(e){
         $('#assetAccountListModal').modal();
     },
-    
+
     'click #accountListModal table tbody tr': function(e) {
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
@@ -301,11 +303,11 @@ Template.new_process.events({
             case 'cogs':
                 $('#edtCOGS').val(columnDataValue);
                 break;
-           
+
             case 'overheadCOGS':
                 $('#edtOverheadCOGS').val(columnDataValue);
                 break;
-           
+
             default:
                 break;
         }
@@ -325,7 +327,7 @@ Template.new_process.events({
                 break;
         }
         $('#expenseAccountListModal').modal('toggle');
-    }, 
+    },
 
     'click #assetAccountListModal table tr': function(e) {
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
@@ -345,7 +347,7 @@ Template.new_process.events({
     'blur #edtHourlyCost': function(e){
         e.preventDefault();
         e.stopPropagation();
-        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2)) 
+        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2))
     },
 
     'focus #edtHourlyCost': function(e){
@@ -357,7 +359,7 @@ Template.new_process.events({
     'blur #edtHourlyOverheadCost': function(e){
         e.preventDefault();
         e.stopPropagation();
-        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2)) 
+        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2))
     },
 
     'focus #edtHourlyOverheadCost': function(e){
@@ -366,9 +368,6 @@ Template.new_process.events({
         $('#edtHourlyOverheadCost').val($('#edtHourlyOverheadCost').val().replace('$', ''));
     },
     // 'click #edtCOGS': function (e) {
-      
+
     // }
 });
-
-
-

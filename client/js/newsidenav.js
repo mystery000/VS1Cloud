@@ -377,7 +377,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             } else if (currentLoc == "/dashboardexe") {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');

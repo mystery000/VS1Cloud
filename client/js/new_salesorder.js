@@ -7550,17 +7550,46 @@ Template.new_salesorder.onRendered(function() {
 
     tempObj.getSubTaxCodes();
 
-    tempObj.checkAbleToMakeWorkOrder = function() {
-        let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
-        let workorderList = [];
+    tempObj.checkAbleToMakeWorkOrder = async function() {
+        async function getAllBOMProducts() {
+            return new Promise(async(resolve, reject)=>{
+                getVS1Data('TProcTree').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                            addVS1Data('TProcTree', JSON.parse(data)).then(function(){resolve(data.tproctree)})
+                        })
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        resolve(data.tproctree)
+                    }
+                }).catch(function(e) {
+                    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                        addVS1Data('TProcTree', JSON.parse(data)).then(function(){resolve(data.tproctree)})
+                    })
+                })
+            })
+        }
+        let bomProducts = await getAllBOMProducts();
+
+        async function getAllWorkorders() {
+            return new Promise(async function(resolve, reject) {
+                getVS1Data('TVS1Workorder').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        resolve([]);
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        resolve(data.tvs1workorder)
+                    }
+                })
+            })
+        }
+        let workorderList = await getAllWorkorders();
 
         //await function to get all work order list data
-        let temp = localStorage.getItem('TWorkorders');
-        workorderList = temp?JSON.parse(temp): [];
 
     let returnvalue = false;
 
-    setTimeout(function () {
+    setTimeout(async function () {
       let lineTable = $("#tblSalesOrderLine");
       let orderlines = $(lineTable).find("tbody tr");
       for (let i = 0; i < orderlines.length; i++) {
@@ -7571,19 +7600,25 @@ Template.new_salesorder.onRendered(function() {
 
         let index = bomProducts.findIndex((product) => {
 
-          return product.fields.productName == productName;
+          return product.fields.Caption == productName;
         });
 
         if (index > -1) {
           existBOM = true;
+        }else {
+            await productService.getOneBOMProductByName(productName).then(function(data){
+                if(data.tproctree.length > 0) {
+                    existBOM = true
+                }
+            })
         }
 
         if (existBOM == true) {
           //check if the workorder is already exists
           let workOrderIndex = workorderList.findIndex((order) => {
               return (
-                order.SalesOrderID == tempObj.SalesOrderId.get() &&
-                order.line.fields.ProductName == productName
+                order.fields.SaleID == tempObj.SalesOrderId.get() &&
+                order.fields.ProductName == productName
               );
 
           });
@@ -13497,11 +13532,23 @@ Template.new_salesorder.events({
     'click #btnMakeWorkOrder': async function(event) {
         let templateObject = Template.instance();
         let productService = new ProductService();
-        let workorderList = [];
+        async function getAllWorkorder() {
+            return new Promise((resolve, reject)=>{
+                getVS1Data('TVS1Workorder').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        resolve([])
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        resolve(data.tvs1workorder)
+                    }
+                })
+            })
+        }
+        let workorderList = await getAllWorkorder();
 
-        //await function to get all work order list data
-        let temp = localStorage.getItem('TWorkorders');
-        workorderList = temp?JSON.parse(temp): [];
+        // //await function to get all work order list data
+        // let temp = localStorage.getItem('TWorkorders');
+        // workorderList = temp?JSON.parse(temp): [];
 
 
         //end get work order list data
@@ -13568,10 +13615,33 @@ Template.new_salesorder.events({
                 // }
             }
             if(changeAble == true) {
-                let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')): [];
-                let workorderList = [];
-                let temp = localStorage.getItem('TWorkorders');
-                workorderList = temp?JSON.parse(temp): [];
+
+                async function getBOMProducts() {
+                    return new Promise(async(resolve, reject)=>{
+                        getVS1Data('TProcTree').then(function(dataObject){
+                            if(dataObject.length == 0) {
+                                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data){
+                                    addVS1Data('TProcTree', JSON.parse(data)).then(function(){
+                                        resolve(data.tproctree)
+                                    })
+                                })
+                            }else {
+                                let data = JSON.parse(dataObject[0].data);
+                                resolve(data.tproctree)
+                            }
+                        }).catch(function(e){
+                            productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data){
+                                addVS1Data('TProcTree', JSON.parse(data)).then(function(){
+                                    resolve(data.tproctree)
+                                })
+                            })
+                        })
+                    })
+                }
+                let bomProducts = await getBOMProducts();
+                // let workorderList = [];
+                // let temp = localStorage.getItem('TWorkorders');
+                // workorderList = temp?JSON.parse(temp): [];
                 let isAvailable = true;
                 if(lines.length == 0) {
                     isAvailable = false
@@ -13582,16 +13652,22 @@ Template.new_salesorder.events({
 
 
                         let index = bomProducts.findIndex(product => {
-                            return product.fields.productName == lines[i].item
+                            return product.fields.Caption == lines[i].item
                         })
                         if(index > -1) {
                             isBOMProduct = true;
+                        }else {
+                            await productService.getOneBOMProductByName(lines[i].item).then(function(data){
+                                if(data.tproctree.length > 0) {
+                                    isBOMProduct = true;
+                                }
+                            })
                         }
 
                         if(isBOMProduct == true) {
                             //check if the workorder is already exists
                             workorderList.map(order => {
-                                if(order.SalesOrderID == salesOrderRecord.id && order.Line.fields.productName == lines[i].item) {
+                                if(order.fields.SaleID == salesOrderRecord.id && order.fields.ProductName == lines[i].item) {
                                     isExisting = true
                                     isAvailable = false;
                                 }
