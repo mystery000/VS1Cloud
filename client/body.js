@@ -41,7 +41,7 @@ import './js/mailchimp-service.js';
 import './js/new_bom_temp.js';
 import './js/new_credit.js';
 import './js/new_invoice.js';
-// import './js/new_process.js';
+import './js/new_process.js';
 import './js/new_processpop.js';
 import './js/new_purchaseorder.js';
 import './js/new_quote.js';
@@ -122,7 +122,6 @@ import './vs1_templates/transaction_temp/transaction_header/components/customer_
 import './vs1_templates/transaction_temp/transaction_header/components/customer_email_input.html';
 import './vs1_templates/transaction_temp/transaction_header/components/sale_date_selector.html';
 import './vs1_templates/transaction_temp/transaction_header/components/po_number_input.html';
-import './vs1_templates/transaction_temp/transaction_header/components/default_input.html';
 import './vs1_templates/transaction_temp/transaction_button_top.html';
 import './vs1_templates/transaction_temp/transaction_footer/index.js';
 import './vs1_templates/transaction_temp/transaction_footer/template_footer_save_button.html';
@@ -132,6 +131,7 @@ import './vs1_templates/transaction_temp/transaction_footer/template_footer_remo
 import './vs1_templates/transaction_temp/transaction_footer/template_footer_cancel_button.html';
 import './vs1_templates/transaction_temp/transaction_print_modal';
 import './vs1_templates/vs1_textarea/vs1_textarea.html';
+import "./vs1_templates/vs1_button/vs1_button.js";
 import './vs1_templates/drop_down/vs1_dropdown.html';
 import './vs1_templates/attachments/vs1_attachments.js';
 import './vs1_templates/init_form_page_script/init_form_page_script.html'
@@ -291,6 +291,7 @@ import './shipping/shippinglist.js';
 import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
 import './journalEntry/journalentry_list.js';
+import './manufacture/processList.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -349,6 +350,8 @@ import './Dashboard/appointments-widget/ds-appointments-widget.js';
 import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
+import './eft/eft.js';
+/* Sasa */
 
 /* Martin */
 import './contacts/addcustomerpop.js';
@@ -417,6 +420,7 @@ import './settings/payroll-settings/superannuation.js';
 import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
+import './vs1_templates/contact_title/contact_title.html';
 /*Vladyslav*/
 
 /* Roverto */
@@ -469,6 +473,8 @@ import './settings/tax-rates-setting/AddTaxRateModal.html';
 import './overviews/salesoverview.js';
 import './vs1_templates/date_picker/daterangefromto_trans.js';
 import './fixedassets/components/costtypelistpop/costtypelistpop.js';
+import './vs1_templates/vs1_input/default_input.html';
+import './vs1_templates/vs1_select/default_select.html'
 /* Kelvin More */
 
 /* Stefan */
@@ -526,19 +532,20 @@ import './vs1charts/resalescomparision/dsm_resalescomparision.js';
 /* Andrew */
 
 /* XiaoJang*/
-// import './overviews/payrolloverview.js';
-// import './overviews/payrollleave.js';
-// import './payroll/singletouchpayroll/singletouch.js';
-// import './payroll/singletouchpayroll/singletouchpayroll.js';
-// import './payroll/clockonoff/clockonoff.js';
-// import './payroll/paychexapi/paychexapi.js';
-// import './payroll/payrun/payrun.js';
-// import './payroll/payrun/payrundetails.js';
-// import './overviews/payrolloverview_tmp.html';
-// import './eft/exportModal/eftExportModal.js';
-// import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
-// import './eft/addNewEftModal/addNewEftModal.js';
+import './overviews/payrolloverview.js';
+import './overviews/payrollleave.js';
+import './payroll/singletouchpayroll/singletouch.js';
+import './payroll/singletouchpayroll/singletouchpayroll.js';
+import './payroll/clockonoff/clockonoff.js';
+import './payroll/paychexapi/paychexapi.js';
+import './payroll/payrun/payrun.js';
+import './payroll/payrun/payrundetails.js';
+import './overviews/payrolloverview_tmp.html';
+import './eft/exportModal/eftExportModal.js';
+import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
+
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
@@ -557,7 +564,7 @@ Template.body.onCreated(function bodyOnCreated() {
 
 Template.body.onRendered(function() {
     const templateObject = Template.instance();
-    let isSidePanel = Session.get('CloudSidePanelMenu');
+    let isSidePanel = localStorage.getItem('CloudSidePanelMenu');
     if (isSidePanel) {
         templateObject.isCloudSidePanelMenu.set(true);
         $("html").addClass("hasSideBar");
@@ -596,7 +603,7 @@ Template.body.helpers({
         return Template.instance().isCloudSidePanelMenu.get();
     },
     isGreenTrack: function() {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     }
 });

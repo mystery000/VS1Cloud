@@ -15,7 +15,9 @@ import GlobalFunctions from "../../GlobalFunctions";
 import Employee from "../../js/Api/Model/Employee";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
-
+import {Template} from 'meteor/templating';
+import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
+import './payrundetails.html';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 

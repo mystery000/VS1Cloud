@@ -19,12 +19,15 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import '../manufacture/frm_workorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { ManufacturingService } from '../manufacture/manufacturing-service';
+import { cloneDeep } from 'lodash';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new SalesBoardService();
 let productService = new ProductService();
 let contactService = new ContactService();
+let manufacturingService = new ManufacturingService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -49,9 +52,10 @@ Template.new_workorder.onCreated(function() {
     templateObject.bomStructure = new ReactiveVar();
     templateObject.quantityBuild = new ReactiveVar(true);
     templateObject.showBOMModal = new ReactiveVar(false);
+    templateObject.bomProducts = new ReactiveVar([]);
 })
 
-Template.new_workorder.onRendered(function(){
+Template.new_workorder.onRendered(async function(){
     const templateObject = Template.instance();
     let salesorderid = FlowRouter.current().queryParams.salesorderid;
     let lineId = FlowRouter.current().queryParams.lineId;
@@ -63,10 +67,45 @@ Template.new_workorder.onRendered(function(){
         templateObject.isMobileDevices.set(true);
     }
 
+    templateObject.getAllBOMProducts = async()=>{
+        return new Promise(async(resolve, reject)=> {
+            getVS1Data('TProcTree').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                        templateObject.bomProducts.set(data.tproctree);
+                        resolve();
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    templateObject.bomProducts.set(data.tproctree);
+                    resolve();
+                }
+            }).catch(function(e) {
+                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                    templateObject.bomProducts.set(data.tproctree);
+                    resolve()
+                })
+            })
+        })
+    }
+    //get all bom products
+    await templateObject.getAllBOMProducts();
 
     //get all work orders
-    let temp = localStorage.getItem('TWorkorders');
-    templateObject.workOrderRecords.set(temp?JSON.parse(temp):[]);
+    templateObject.getAllWorkorders = async function() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TVS1Workorder').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    resolve ([]);
+                }else  {
+                    let data = JSON.parse(dataObject[0].data);
+                    resolve(data.tvs1workorder)
+                }
+            })
+        })
+    }
+    let temp = await templateObject.getAllWorkorders()
+    templateObject.workOrderRecords.set(temp);
 
     templateObject.getWorkorderRecord = function() {
 
@@ -75,26 +114,29 @@ Template.new_workorder.onRendered(function(){
             $('.fullScreenSpin').css('display', 'inline-block')
             let orderid = FlowRouter.current().queryParams.id
             let workorderIndex = templateObject.workOrderRecords.get().findIndex(order => {
-                return order.ID == orderid
+                return order.fields.ID == orderid
             })
             let workorder = templateObject.workOrderRecords.get()[workorderIndex]
-            templateObject.salesOrderId.set(workorder.SalesOrderID)
+            templateObject.salesOrderId.set(workorder.fields.SaleID)
             let record = {
                 id: orderid,
-                salesorderid: workorder.SalesOrderID,
+                salesorderid: workorder.fields.SaleID,
                 lid: 'Edit Work Order ' + orderid,
-                customer: workorder.Customer || '',
-                invoiceToDesc: workorder.InvoiceToDesc || '',
-                ponumber: workorder.PONumber  || '',
-                saledate: workorder.SaleDate || "",
-                duedate: workorder.DueDate || "",
-                line: workorder.Line,
-                quantity: workorder.Quantity || 1,
-                isStarted: workorder.InProgress,
+                customer: workorder.fields.Customer || '',
+                invoiceToDesc: workorder.fields.OrderTo || '',
+                custPONumber: workorder.fields.PONumber  || '',
+                saledate: workorder.fields.SaleDate || "",
+                duedate: workorder.fields.DueDate || "",
+                // line: workorder.Line,
+                productname: workorder.fields.ProductName || "",
+                productDescription: workorder.fields.ProductDescription || "",
+                quantity: workorder.fields.Quantity || 1,
+                shipDate: workorder.fields.ShipDate || "",
+                isStarted: workorder.fields.InProgress,
 
             }
             templateObject.workorderrecord.set(record);
-            templateObject.bomStructure.set(workorder.BOM);
+            templateObject.bomStructure.set(JSON.parse(workorder.fields.BOMStructure));
             templateObject.showBOMModal.set(true)
             $('#edtCustomerName').val(record.customer)
             $('.fullScreenSpin').css('display', 'none');
@@ -108,12 +150,11 @@ Template.new_workorder.onRendered(function(){
             let tempArray = templateObject.workOrderRecords.get();
             if (tempArray.length > 0) {
                 workorders = templateObject.workOrderRecords.get().filter(order=>{
-                    return order.SalesOrderID == templateObject.salesOrderId.get();
+                    return order.fields.SaleID == templateObject.salesOrderId.get();
                 })
             }
             workordersCount = workorders.length
             //end checking
-
             if(templateObject.salesOrderId.get()) {
                 getVS1Data('TSalesOrderEx').then(function(dataObject){
                     if(dataObject.length == 0) {
@@ -125,21 +166,33 @@ Template.new_workorder.onRendered(function(){
                                 lid: 'Edit Work Order' + ' ' + data.fields.ID + ' - ' + (workordersCount+1).toString(),
                                 customer: data.fields.CustomerName,
                                 invoiceToDesc: data.fields.InvoiceToDesc,
-                                ponumber: data.fields.CustPONumber,
+                                custPONumber: data.fields.CustPONumber,
                                 saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
                                 duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
-                                line: data.fields.Lines[templateObject.workOrderLineId.get()]
+                                // line: data.fields.Lines[templateObject.workOrderLineId.get()],
+                                productname: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
+                                productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
+                                quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
+                                shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
                             }
-                            record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
+                            // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
                             templateObject.showBOMModal.set(true)
-                            let name = record.line.fields.ProductName;
-                                let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                            let name = record.productname;
+                                let bomProductsTemp = templateObject.bomProducts.get();
                                 let index = bomProductsTemp.findIndex(product=>{
-                                    return product.fields.productName == name;
+                                    return product.fields.Caption == name;
                                 })
-                            templateObject.bomStructure.set(bomProductsTemp[index].fields)
-                            $('#edtCustomerName').val(record.customer)
+                                if(index == -1) {
+                                    productService.getOneBOMProductByName(name).then(function(data){
+                                        if(data.tproctree.length>0) {
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                        }
+                                    })
+                                }else {
+                                    templateObject.bomStructure.set(bomProductsTemp[index].fields)
+                                }
+                            $('#edtCustomerName').val(record.fields.Customer)
                             $('.fullScreenSpin').css('display', 'none');
 
                         })
@@ -151,24 +204,36 @@ Template.new_workorder.onRendered(function(){
                                 let record = {
                                     id: useData[d].fields.ID + "_"+(workordersCount + 1).toString(),
                                     salesorderid: useData[d].fields.ID,
-                                    lid: 'Edit Work Order' + ' ' + useData[d].fields.ID + ' - ' + (workordersCount+1).toString(),
+                                    lid: 'Edit Work Order' + ' ' + useData[d].fields.ID + '_' + (workordersCount+1).toString(),
                                     customer: useData[d].fields.CustomerName,
                                     invoiceToDesc: useData[d].fields.InvoiceToDesc,
-                                    ponumber: useData[d].fields.CustPONumber,
+                                    custPONumber: useData[d].fields.CustPONumber,
                                     saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
                                     duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
-                                    line: useData[d].fields.Lines[templateObject.workOrderLineId.get()]
+                                    // line: useData[d].fields.Lines[templateObject.workOrderLineId.get()],
+                                    productname: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
+                                    productDescription: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
+                                    quantity: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
+                                    shipDate: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
                                 }
-                                record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
-
+                                // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                                 templateObject.workorderrecord.set(record);
                                 templateObject.showBOMModal.set(true)
-                                let name = record.line.fields.ProductName;
-                                let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                                let name = record.productname;
+                                let bomProductsTemp = templateObject.bomProducts.get();
                                 let index = bomProductsTemp.findIndex(product=>{
-                                    return product.fields.productName == name;
+                                    return product.fields.Caption == name;
                                 })
-                                templateObject.bomStructure.set(bomProductsTemp[index].fields)
+                                if(index == -1) {
+                                    productService.getOneBOMProductByName(name).then(function(data){
+                                        if(data.tproctree.length>0) {
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                        }
+                                    })
+                                }else {
+                                    templateObject.bomStructure.set(bomProductsTemp[index].fields)
+                                }
+                                // templateObject.bomStructure.set(bomProductsTemp[index].fields)
                                 $('#edtCustomerName').val(record.customer)
                                 setTimeout(()=>{
                                     $('.fullScreenSpin').css('display', 'none');
@@ -181,24 +246,37 @@ Template.new_workorder.onRendered(function(){
                         let currencySymbol = Currency;
                         let record = {
                             id: data.fields.ID + "_"+(workordersCount + 1).toString(),
-                            salesorderid: data.fields.ID,
-                            lid: 'Edit Work Order' + ' ' + data.fields.ID + ' - ' + (workordersCount+1).toString(),
-                            customer: data.fields.CustomerName,
-                            invoiceToDesc: data.fields.InvoiceToDesc,
-                            ponumber: data.fields.CustPONumber,
-                            saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
-                            duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
-                            line: data.fields.Lines[templateObject.workOrderLineId.get()]
+                                salesorderid: data.fields.ID,
+                                lid: 'Edit Work Order' + ' ' + data.fields.ID + '_' + (workordersCount+1).toString(),
+                                customer: data.fields.CustomerName,
+                                invoiceToDesc: data.fields.InvoiceToDesc,
+                                custPONumber: data.fields.CustPONumber,
+                                saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
+                                duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
+                                // line: data.fields.Lines[templateObject.workOrderLineId.get()],
+                                productname: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
+                                productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
+                                quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
+                                shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
                         }
-                        record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
+                        // record.shipDate = record.shipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
                         templateObject.showBOMModal.set(true)
-                        let name = record.line.fields.ProductName;
-                        let bomProductsTemp = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')) : [];
+                        let name = record.productname;
+                        let bomProductsTemp = templateObject.bomProducts.get() || [];
                         let index = bomProductsTemp.findIndex(product=>{
-                            return product.fields.productName == name;
+                            return product.fields.Caption == name;
                         })
-                        templateObject.bomStructure.set(bomProductsTemp[index].fields)
+
+                        if(index == -1) {
+                            productService.getOneBOMProductByName(name).then(function(data){
+                                if(data.tproctree.length>0) {
+                                    templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                }
+                            })
+                        }else {
+                            templateObject.bomStructure.set(bomProductsTemp[index].fields)
+                        }
                         $('#edtCustomerName').val(record.customer)
                         $('.fullScreenSpin').css('display', 'none');
                     })
@@ -230,12 +308,7 @@ Template.new_workorder.onRendered(function(){
         $("#edtCustomerName").editableSelect();
     }, 500)
 
-
-
-
     //end getting work orders
-
-
 
 })
 
@@ -253,21 +326,29 @@ Template.new_workorder.events({
                   for(let i = 0; i< lineItems.length; i ++ ) {
                     let isExisting = false;
                     workorderRecords.map(order => {
-                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
+                      if(order.fields.ProductName == lineItems[i].fields.ProductName && order.fields.SaleID == data.fields.ID) {
                           isExisting = true
                       }
                     })
                   //   if(lineItems[i].fields.isManufactured == true && isExisting == false) {
                     if(isExisting == false) {
-                        let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[]
+                        let bomProducts = templateObject.bomProducts.get() || []
                         let index = bomProducts.findIndex(product => {
-                          return product.fields.productName == lineItems[i].fields.ProductName;
+                          return product.fields.Caption == lineItems[i].fields.ProductName;
                         })
                       if(index > -1) {
                           templateObject.workOrderLineId.set(i);
                           templateObject.getWorkorderRecord()
                           $('#salesOrderListModal').modal('toggle');
                           break;
+                      } else {
+                        productService.getOneBOMProductByName(name).then(function(data){
+                            if(data.tproctree.length>0) {
+                                templateObject.workOrderLineId.set(i);
+                                templateObject.getWorkorderRecord()
+                                $('#salesOrderListModal').modal('toggle');
+                            }
+                        })
                       }
                     }
                   }
@@ -299,22 +380,30 @@ Template.new_workorder.events({
                             let isExisting = false;
                             if(workorderRecords.length> 0) {
                                     for(let j = 0; j< workorderRecords.length; j ++) {
-                                        if(workorderRecords[j].Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
+                                        if(workorderRecords[j].fields.ProductName == lineItems[i].fields.ProductName && workorderRecords[j].fields.SaleID == useData[d].fields.ID) {
                                             isExisting = true
                                         }
                                     }
                             }
                           //   if(lineItems[i].fields.isManufactured == true && isExisting == false) {
                             if(isExisting == false) {
-                                let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[];
+                                let bomProducts = templateObject.bomProducts.get();
                                 let index = bomProducts.findIndex(product => {
-                                    return product.fields.productName == lineItems[i].fields.ProductName;
+                                    return product.fields.Caption == lineItems[i].fields.ProductName;
                                 })
                                 if(index > -1) {
                                     templateObject.workOrderLineId.set(i);
                                     templateObject.getWorkorderRecord()
                                     $('#salesOrderListModal').modal('toggle');
                                     break
+                                } else {
+                                    productService.getOneBOMProductByName(name).then(function(data){
+                                        if(data.tproctree.length>0) {
+                                            templateObject.workOrderLineId.set(i);
+                                            templateObject.getWorkorderRecord()
+                                            $('#salesOrderListModal').modal('toggle');
+                                        }
+                                    })
                                 }
                             }
                           }
@@ -344,21 +433,29 @@ Template.new_workorder.events({
                for(let i = 0; i< lineItems.length; i ++ ) {
                 let isExisting = false;
                 workorderRecords.map(order => {
-                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
+                      if(order.fields.ProductName == lineItems[i].fields.ProductName && order.fields.SaleID == data.fields.ID) {
                       isExisting = true
                   }
                 })
               //   if(lineItems[i].fields.isManufactured == true && isExisting == false) {
                 if(isExisting == false) {
-                    let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[]
+                    let bomProducts = templateObject.bomProducts.get()
                     let index = bomProducts.findIndex(product => {
-                        return product.fields.productName == lineItems[i].fields.ProductName;
+                        return product.fields.Caption == lineItems[i].fields.ProductName;
                     })
                     if(index > -1) {
                         templateObject.workOrderLineId.set(i);
                         templateObject.getWorkorderRecord()
                         $('#salesOrderListModal').modal('toggle');
                         break
+                    }else {
+                        productService.getOneBOMProductByName(name).then(function(data){
+                            if(data.tproctree.length>0) {
+                                templateObject.workOrderLineId.set(i);
+                                templateObject.getWorkorderRecord()
+                                $('#salesOrderListModal').modal('toggle');
+                            }
+                        })
                     }
                 }
               }
@@ -387,6 +484,8 @@ Template.new_workorder.events({
     },
 
     'click .btnSave': function(event) {
+        event.stopPropagation();
+        event.preventDefault()
         let templateObject = Template.instance();
         playSaveAudio();
         setTimeout(async function(){
@@ -647,16 +746,40 @@ Template.new_workorder.events({
         async function saveSubOrders () {
             let record = templateObject.workorderrecord.get();
             let bomStructure = templateObject.bomStructure.get();
+            let bomProducts = templateObject.bomProducts.get();
 
-            let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
+            let totalWorkOrders = await templateObject.getAllWorkorders();
             let savedworkorders = totalWorkOrders.filter(order => {
-                return order.SalesOrderID == templateObject.salesOrderId.get();
+                return order.fields.SaleID == templateObject.salesOrderId.get();
             })
             let count = savedworkorders.length;
-            if(bomStructure.subs && bomStructure.subs.length > 0) {
-                for(let k = 0; k< bomStructure.subs.length; k++) {
-                    let subs = bomStructure.subs[k];
+            if(bomStructure.Details && JSON.parse(bomStructure.Details).length > 0) {
+                let subBOMs = JSON.parse(bomStructure.Details);
+                for(let k = 0; k< subBOMs.length; k++) {
+                    let subs = subBOMs[k];
                     if(subs.isBuild == true) {
+
+                        let subBOMIndex = bomProducts.findIndex(product=>{
+                            return product.fields.Caption == subs.productName
+                        })
+                        let duration = 0;
+                        if(subBOMIndex > -1) {
+                            duration = bomProducts[subBOMIndex].fields.QtyVariation
+                        }else {
+                           await productService.getOneBOMProductByName(subs.productName).then(function(dataObject){
+                                let d = JSON.parse(dataObject[0].data);
+                               duration = d.tproctree[0].fields.QtyVariation
+                           })
+                        }
+                        
+                        
+                        let subBOMStructure = {
+                            Caption: subs.productName,
+                            Info: subs.process,
+                            CustomInputClass: subs.processNote,
+                            Details: JSON.stringify(subs.subs),
+                            QtyVariation: duration
+                        }
                         async function getProductionPlanData() {
                             return new Promise(async(resolve, reject)=>{
                                 let returnVal = [];
@@ -679,7 +802,7 @@ Template.new_workorder.events({
                             return new Promise(async(resolve, reject)=>{
                                 let subProductName = subs.productName;
                                 let plans = await getProductionPlanData();
-                                let tempPlans = JSON.parse(JSON.stringify(plans));
+                                let tempPlans = cloneDeep(plans);
                                 tempPlans = tempPlans.filter(plan=>plan.resourceName == subs.process);
                                 let subStart = new Date();
                                 if (tempPlans.length > 0) {
@@ -689,18 +812,20 @@ Template.new_workorder.events({
                                 }
 
                                 let subDetail = {
-                                    ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                    ID: parseInt(templateObject.salesOrderId.get() + "_" + (count + k + 1).toString()),
+                                    LID: parseInt(templateObject.salesOrderId.get() + "_" + (count + k + 1).toString()),
                                     Customer: $('#edtCustomerName').val() || '',
                                     InvoiceToDesc: $('#txabillingAddress').val() || '',
                                     PONumber: $('#ponumber').val()||'',
-                                    SaleDate: $('#dtSODate').val() || '',
+                                    // SaleDate: new Date($('#dtSODate').val()) || '',
+                                    SaleDate: record.saledate,
                                     DueDate: record.duedate,
-                                    BOM: subs,
-                                    SalesOrderID: templateObject.salesOrderId.get(),
+                                    BOMStructure: JSON.stringify(subBOMStructure),
+                                    SaleID: templateObject.salesOrderId.get(),
                                     StartTime: subStart,
                                     OrderDate: new Date(),
                                     InProgress: record.isStarted,
-                                    Quantity: record.line.fields.Qty? record.line.fields.Qty* parseFloat(subs.qty) : subs.qty
+                                    Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
                                 }
 
                                 if(subs.subs&&subs.subs.length > 0) {
@@ -711,63 +836,103 @@ Template.new_workorder.events({
                                     }
                                 }
                                 let subEnd = new Date();
-                                subEnd.setTime(subStart.getTime() + subDetail.Quantity * subs.duration * 3600000);
+                                subEnd.setTime(subStart.getTime() + subDetail.Quantity * duration * 3600000);
                                 if(subEnd.getTime() > mainOrderStart.getTime()) {
                                     mainOrderStart = subEnd;
                                 }
 
 
-                                getVS1Data('TProductVS1').then(function(dataObject) {
+                                getVS1Data('TProductVS1').then(async function(dataObject) {
                                     if(dataObject.length == 0) {
-                                        productService.getOneProductdatavs1byname(subProductName).then(function(data){
+                                        productService.getOneProductdatavs1byname(subProductName).then(async function(data){
 
-                                            let line = JSON.parse(JSON.stringify(record.line));
-                                            line.fields.ProductName = subProductName;
-                                            line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
-                                            line.fields.ProductID = data.tproduct[0].fields.ID;
-                                            line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
-                                            subDetail = {...subDetail, Line: line};
+                                            // let line = JSON.parse(JSON.stringify(record.line));
+                                            let productname = subProductName;
+                                            let product_description = data.tproduct[0].fields.ProductDescription;
+                                            let productid = data.tproduct[0].fields.ID;
+                                            // let quantity = record.Quantity * parseFloat(subs.qty)
+                                            // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
+                                            subDetail.ProductName = productname;
+                                            subDetail.ProductDescription = product_description;
+                                            // subDetail.Quantity = quantity;
+                                            subDetail.ProductID = productid;
 
-                                            let tempArray = localStorage.getItem('TWorkorders');
-                                            let workorders = tempArray?JSON.parse(tempArray): [];
-                                            workorders = [...workorders, subDetail];
-                                            localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                                            resolve();
+                                            // let tempArray = localStorage.getItem('TWorkorders');
+                                            // let workorders = tempArray?JSON.parse(tempArray): [];
+                                            let workorders = await templateObject.getAllWorkorders();
+                                            let existIndex = workorders.findIndex(order=>{
+                                                return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
+                                            })
+                                            if(existIndex > -1) {
+                                                workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
+                                            }else {
+                                                workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
+                                            }
+                                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
+                                                resolve();
+                                            })
+                                            // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                                         })
                                     }else {
                                         let data = JSON.parse(dataObject[0].data);
                                         let useData = data.tproductvs1;
                                         for(let i=0 ; i< useData.length; i++) {
                                             if(useData[i].fields.ProductName == subProductName) {
-                                                    let line = JSON.parse(JSON.stringify(record.line));
-                                                    line.fields.ProductName = subProductName;
-                                                    line.fields.Product_Description = useData[i].fields.ProductDescription;
-                                                    line.fields.ProductID = useData[i].fields.ID;
-                                                    line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
-                                                    subDetail = {...subDetail, Line: line};
-                                                    let tempArray = localStorage.getItem('TWorkorders');
-                                                    let workorders = tempArray?JSON.parse(tempArray): [];
-                                                    workorders = [...workorders, subDetail];
-                                                    localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                                                    resolve();
+                                                    let productname = subProductName;
+                                                    let product_description = useData[i].fields.ProductDescription;
+                                                    let productid = useData[i].fields.ID;
+                                                    // let quantity = record.Quantity * parseFloat(subs.qty)
+                                                    // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
+                                                    subDetail.ProductName = productname;
+                                                    subDetail.ProductDescription = product_description;
+                                                    // subDetail.Quantity = quantity;
+                                                    subDetail.ProductID = productid;
+                                                    let workorders = await templateObject.getAllWorkorders();
+                                                    let existIndex = workorders.findIndex(order=>{
+                                                        return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
+                                                    })
+                                                    if(existIndex > -1) {
+                                                        workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
+                                                    }else {
+                                                        workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
+                                                    }
+                                                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+                                                        resolve();
+                                                    })
+                                                    // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                                             } else if (i == useData.length -1) {
                                                 resolve();
                                             }
                                         }
                                     }
                                 }).catch(function(err){
-                                    productService.getOneProductdatavs1byname(subProductName).then(function(data){
-                                        let line = JSON.parse(JSON.stringify(record.line));
-                                        line.fields.ProductName = subProductName;
-                                        line.fields.Product_Description = data.tproduct[0].fields.ProductDescription;
-                                        line.fields.ProductID = data.tproduct[0].fields.ID;
-                                        line.fields.Qty = record.line.fields.Qty * parseFloat(subs.qty)
-                                        subDetail = {...subDetail, Line: line};
-                                        let tempArray = localStorage.getItem('TWorkorders');
-                                        let workorders = tempArray?JSON.parse(tempArray): [];
-                                        workorders = [...workorders, subDetail];
-                                        localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                                        resolve();
+                                    productService.getOneProductdatavs1byname(subProductName).then(async function(data){
+                                        let productname = subProductName;
+                                        let product_description = data.tproduct[0].fields.ProductDescription;
+                                        let productid = data.tproduct[0].fields.ID;
+                                        // let quantity = record.Quantity * parseFloat(subs.qty)
+                                        // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
+                                        subDetail.ProductName = productname;
+                                        subDetail.ProductDescription = product_description;
+                                        // subDetail.Quantity = quantity;
+                                        subDetail.ProductID = productid;
+
+                                        // let tempArray = localStorage.getItem('TWorkorders');
+                                        // let workorders = tempArray?JSON.parse(tempArray): [];
+                                        let workorders = await templateObject.getAllWorkorders();
+                                        let existIndex = workorders.findIndex(order=>{
+                                            return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
+                                        })
+                                        if(existIndex > -1) {
+                                            workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
+                                        }else {
+                                            workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
+                                        }
+                                        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
+                                            resolve();    
+                                        })
+                                        // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                                        // resolve();
                                     }).catch(function(error){
                                         resolve();
                                     })
@@ -786,31 +951,51 @@ Template.new_workorder.events({
         async function saveMainOrders() {
 
             let record = templateObject.workorderrecord.get();
-            let temp = JSON.parse(JSON.stringify(record));
+            let temp = cloneDeep(record);
             temp = {...temp, isStarted: true}
             templateObject.workorderrecord.set(temp);
             record = templateObject.workorderrecord.get();
-
             let objDetail = {
-                ID: record.id,
+                LID: parseInt(templateObject.salesOrderId.get() + "_" + "1"),
                 Customer: $('#edtCustomerName').val() || '',
-                InvoiceToDesc: $('#txabillingAddress').val() || '',
+                OrderTo: $('#txabillingAddress').val() || '',
                 PONumber: $('#ponumber').val()||'',
-                SaleDate: $('#dtSODate').val() || '',
+                SaleDate: record.saledate,
                 DueDate: record.duedate,
-                Line: record.line,
-                BOM: templateObject.bomStructure.get(),
-                SalesOrderID: templateObject.salesOrderId.get(),
+                BOMStructure: JSON.stringify(templateObject.bomStructure.get()),
+                SaleID: templateObject.salesOrderId.get(),
                 OrderDate: new Date(),
                 StartTime: mainOrderStart,
-                Quantity: record.line.fields.Qty || 1,
+                ProductName: record.productname,
+                ProductDescription: record.product_description,
+                ShipDate: record.shipDate,
+                ProductID: record.productid,
+                Quantity: record.quantity || 1,
                 InProgress: record.isStarted,
+                ID: parseInt(templateObject.salesOrderId.get() + "_" + "1")
             }
-            let tempArray = localStorage.getItem('TWorkorders');
-            let workorders = tempArray?JSON.parse(tempArray): [];
-            objDetail.ID = objDetail.SalesOrderID+ "_" + (workorders.length + 1).toString();
-            workorders = [...workorders, objDetail];
-            localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+
+            // manufacturingService.saveWorkOrder({
+            //     type: 'TVS1Workorder',
+            //     fields: objDetail
+            // }).then(function(){
+            //     console.log("save workorder to erp suc")
+            // }).catch(function(er) {
+            //     console.log("*************", er)
+            // })
+
+
+            let workorders = await templateObject.getAllWorkorders();
+            let existIndex = workorders.findIndex(order=>{
+                return order.fields.SaleID == objDetail.SaleID && order.fields.ProductName == objDetail.ProductName
+            })
+            if(existIndex > -1) {
+                workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:objDetail})
+            }else {
+                workorders = [...workorders, {type:'TVS1Workorder', fields:objDetail}];
+            }
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
+            // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
         }
 
         await saveMainOrders();
@@ -844,134 +1029,8 @@ Template.new_workorder.events({
         event.stopPropagation();
         let templateObject = Template.instance();
         let productName = $(event.target).closest('tr').find('input.lineProductName').val()
-        let tempBOMs = localStorage.getItem('TProcTree');
-        // let bomProducts = tempBOMs?JSON.parse(tempBOMs):[];
-        // // let workorders = localStorage.getItem('TWorkorders')? JSON.parse(localStorage.getItem('TWorkorders')): []
-        // let bomIndex = bomProducts.findIndex(product=>{
-        //     return product.fields.productName == productName
-        // })
-        // let product;
-        // let bomstructure = templateObject.bomStructure.get();
-        // if( !bomstructure || bomstructure == null) {
-        //     $('#edtMainProductName').val(productName);
-        //     $('#BOMSetupModal').modal('toggle')
-        //     $('#edtProcess').editableSelect();
-        //     $('#BOMSetupModal .edtProductName').editableSelect();
-        //     if(bomIndex > -1) {
-        //         product = bomProducts[bomIndex].fields
-        //     }
-        // }else {
-        //     $('#edtMainProductName').val(productName);
-        //     $('#BOMSetupModal').modal('toggle')
-        //     $('#edtProcess').editableSelect();
-        //     $('#BOMSetupModal .edtProductName').editableSelect();
-        //     product = templateObject.bomStructure.get()
-        // }
-        // $('.edtProcess').val(product.process)
-        // $('.edtProcessNote').val(product.processNote)
-        // let subs = product.subs;
-        // if(!subs || subs.length == 0) {
-        //     return
-        // }
-        // for(let i = 0; i< subs.length; i++) {
-        //     let rows = $('#BOMSetupModal .modal-body').find('.product-content');
-        //     let lastrow = rows[rows.length-1]
-        //     let addedRow = "<div class='product-content'>"+
-        //     "<div class='d-flex productRow'>"+
-        //     "<div class='colProduct form-group d-flex'>";
-        //     if(subs[i].subs && subs[i].subs.length > 0) {
-        //         //check if this sub has already been built
-        //         let isBuilt = false;
-        //         let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
-        //         let workorderindex = workorders.findIndex(order => {
-        //             return order.SalesOrderID == templateObject.salesOrderId.get() && order.Line.fields.ProductName == subs[i].productName;
-        //         })
-        //         if(workorderindex > -1) {
-        //             isBuilt = true;
-        //         }
-        //         if(isBuilt == false) {
-        //             addedRow += "<div style='width: 29%'><button class='btn btn-danger btn-from-stock w-100 px-0'>FROM STOCK</button></div>" +
-        //                 "<select type='search' class='edtProductName form-control' style='width: 70%'></select>"+
-        //                 "</div>"+
-        //                 "<div class='colQty form-group'><input type='text' class='form-control edtQuantity w-100'/></div>"+
-        //                 "<div class='colProcess form-group'><select type='search' class='edtProcessName form-control w-100' disabled style='background-color: #ddd'></select></div>"+
-        //                 "<div class='colNote form-group'><input type='text' class='edtProcessNote form-control w-100' disabled style='background-color: #ddd'/></div>"+
-        //                 "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-MemoOnly' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>" +
-        //                 "<div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
-        //                 "</div>"+
-        //                 "</div>";
-        //         }else {
-        //             addedRow += "<div style='width: 29%'><button class='btn btn-success btn-product-build w-100 px-0'>Build</button></div>" +
-        //                 "<select type='search' class='edtProductName form-control' style='width: 70%'></select>"+
-        //                 "</div>"+
-        //                 "<div class='colQty form-group'><input type='text' class='form-control edtQuantity w-100'/></div>"+
-        //                 "<div class='colProcess form-group'><select type='search' class='edtProcessName form-control w-100' disabled style='background-color: #ddd'></select></div>"+
-        //                 "<div class='colNote form-group'><input type='text' class='edtProcessNote form-control w-100' disabled style='background-color: #ddd'/></div>"+
-        //                 "<div class='colAttachment form-group'><a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-MemoOnly' id='btn_Attachment' name='btn_Attachment'><i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div></div>" +
-        //                 "<div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
-        //                 "</div>";
-
-
-        //             for(let j = 0; j< subs[i].subs.length; j++) {
-        //                 let addRowHtml = "<div class='d-flex productRow'>" +
-        //                 "<div class= 'd-flex colProduct form-group'>" +
-        //                 "<div style='width: 60%'></div>" +
-        //                 "<input class='edtProductName edtRaw form-control es-input' autocomplete='false' type='search' style='width: 70%' value ='"+subs[i].subs[j].productName+"'/>" +
-        //                 "</div>" +
-        //                 "<div class='colQty form-group'>" +
-        //                 "<input type='text' class='edtQuantity w-100 form-control' value='" + subs[i].subs[j].qty + "'/>" +
-        //                 "</div>" +
-        //                 "<div class='colProcess form-group'>"+
-        //                 "<input type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' autocomplete = 'false' value='"+subs[i].subs[j].process+"'/>"+
-        //                 "</div>" +
-        //                 "<div class='colNote form-group'></div>" +
-        //                 "<div class='colAttachment'></div>" +
-        //                 "<div class='d-flex colDelete align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>" +
-        //                 "</div>";
-
-        //                 // $(lastrow).append(addRowHtml);
-        //                 // let elements = $(lastrow).find('.edtProductName')
-        //                 // $(elements[elements.length - 1]).editableSelect();
-        //                 // let inputElements = $(lastrow).find('input.edtProductName');
-        //                 // $(inputElements[inputElements.length - 1]).val(subs[i].subs[j].productName)
-        //                 // let processes = $(lastrow).find('.edtProcessName');
-        //                 // $(processes[processes.length - 1]).editableSelect();
-        //                 // let processElements = $(lastrow).find('input.edtProcessName');
-        //                 // $(processElements[processElements.length-1]).val(subs[i].subs[j].process);
-        //                 addedRow += addRowHtml;
-        //             }
-
-        //             addedRow += "</div>";
-        //         }
-        //     //end check
-        //     }else {
-        //         addedRow += "<div style='width: 29%'></div>" +
-        //         "<select type='search' class='edtProductName form-control' style='width: 70%'></select>"+
-        //         "</div>"+
-        //         "<div class='colQty form-group'><input type='text' class='form-control edtQuantity w-100'/></div>"+
-        //         "<div class='colProcess form-group'></div><div class='colNote form-group'></div><div class='colAttachment form-group'></div><div class='colDelete d-flex align-items-center justify-content-center'><button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button></div>"+
-        //         "</div>"+
-        //         "</div>";
-        //     }
-        //     $(lastrow).before(addedRow)
-        //     let productContents = $('#BOMSetupModal .modal-body').find('.product-content');
-        //     $(productContents[productContents.length-2]).find('.edtProductName').editableSelect();
-        //     $(productContents[productContents.length-2]).find('.edtProcessName').editableSelect();
-
-        //     let productNameElements = $(productContents[productContents.length-2]).find('input.edtProductName');
-        //     $(productNameElements[0]).val(subs[i].productName)
-        //     let productQuantityElements =  $(productContents[productContents.length-2]).find('input.edtQuantity');
-        //     $(productQuantityElements[0]).val(subs[i].qty);
-        //     let processNameElements = $(productContents[productContents.length-2]).find('input.edtProcessName');
-        //     $(processNameElements[0]).val(subs[i].process);
-        //     let processNoteElements = $(productContents[productContents.length-2]).find('input.edtProcessNote');
-        //     $(processNoteElements[0]).val(subs[i].processNote)
-        //     // $(productContents[productContents.length-2]).find('input.edtProductName').val(subs[i].productName)
-        //     // $(productContents[productContents.length-2]).find('input.edtQuantity').val(subs[i].qty)
-        //     // $(productContents[productContents.length-2]).find('input.edtProcessName').val(subs[i].process)
-        //     // $(productContents[productContents.length-2]).find('input.edtProcessNote').val(subs[i].processNote)
-
-        // }
+        let tempBOMs = templateObject.bomProducts.get();
+       
         $('#BOMSetupModal').modal('toggle')
     },
     'change .edtQuantity' : function(event) {
@@ -1005,297 +1064,44 @@ Template.new_workorder.helpers({
 })
 
 Template.new_workorder.events({
-    // 'click #BOMSetupModal .edtProductName': function(event) {
-    //     // let targetElement = $(event.target);
-    //     // let templateObject = Template.instance();
-    //     // templateObject.selectedInputElement.set(targetElement);
-    //     // $('#productListModal').modal('toggle');
-
-
-    //     let templateObject = Template.instance();
-    //     let colProduct = $(event.target).closest('div.colProduct');
-    //     $(event.target).editableSelect()
-    //     templateObject.selectedProductField.set($(colProduct).children('.edtProductName'))
-    //     // templateObject.selectedProductField.set($(event.target))
-    //     $('#productListModal').modal('toggle');
-    // },
-
-    // 'click #BOMSetupModal .edtProcessName': function(event) {
-    //     let targetElement = $(event.target);
-    //     let colProcess = $(event.target).closest('div.colProcess');
-    //     let templateObject = Template.instance();
-    //     $(event.target).editableSelect();
-    //     templateObject.selectedProcessField.set($(colProcess).children('.edtProcessName'));
-    //     $('#processListModal').modal('toggle');
-    // },
-
-    // 'click #productListModal table tbody tr': function(event) {
-    //     let name = $(event.target).closest('tr').find('.productName').text();
-    //     let templateObject = Template.instance();
-    //     let targetElement = templateObject.selectedProductField.get();
-    //     $(targetElement).val(name)
-    //     let temp = localStorage.getItem('TProcTree');
-    //     let bomProducts  = temp?JSON.parse(temp):[];
-    //     let index = bomProducts.findIndex(product => {
-    //         return product.fields.productName == name;
-    //     })
-    //     let removeDiv = $(targetElement).parent().find('div');
-    //     $(removeDiv).remove();
-    //     if(index > -1) {
-    //         $(targetElement).before("<div style='width: 29%'><button class='btn btn-danger btn-from-stock w-100 px-0'>FROM STOCK</button></div>")
-
-    //         let row = $(targetElement).closest('div.productRow');
-    //         $(row).find('.colProcess').empty();
-    //         $(row).find('.colProcess').append("<select type='search' class='form-control edtProcessName'></select>")
-    //         $(row).find('.colNote').empty()
-    //         $(row).find('.colNote').append("<input type='text' class='form-control edtProcessNote'/>")
-    //         $(row).find('.edtProcessName').editableSelect();
-    //         $(row).find('.edtProcessName').val(bomProducts[index].fields.process)
-    //         $(row).find('.edtProcessName').prop('disabled', true)
-    //         $(row).find('.edtProcessName').css('background', '#ddd')
-    //         $(row).find('.edtProcessNote').val(bomProducts[index].fields.processNote);
-    //         $(row).find('.edtProcessNote').prop('disabled', true)
-    //         $(row).find('.edtProcessNote').css('background', '#ddd');
-
-    //         let parent = row.parent();
-
-
-    //         let grandParent = parent.parent();
-    //         let modalElement = $(row).closest('.modal#BOMSetupModal');
-    //         let topParent = modalElement.parent();
-
-    //         let colAttachment = $(row).find('.colAttachment')
-
-
-    //         let productContentCount = $(grandParent).find('.product-content').length;
-    //         $(colAttachment).append("<a class='btn btn-primary btnAddAttachment' role='button' data-toggle='modal' href='#myModalAttachment-"+productContentCount+"' id='btn_Attachment' name='btn_Attachment'>"+
-    //                     "<i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments</a><div class='d-none attachedFiles'></div>")
-
-    //         let attachModalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+productContentCount+"'>" +
-    //         "<div class='modal-dialog modal-dialog-centered' role='document'>" +
-    //             "<div class='modal-content'>" +
-    //                 "<div class='modal-header'>" +
-    //                     "<h4>Upload Attachments</h4><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>" +
-    //                 "</div>" +
-    //                 "<div class='modal-body' style='padding: 0px;'>" +
-    //                     "<div class='divTable file-display'>" +
-    //                         "<div class='col inboxcol1'>" +
-    //                             "<img src='/icons/nofiles_icon.jpg' class=' style='width:100%;'>" +
-    //                         "</div>" +
-    //                         "<div class='col inboxcol2' style='text-align: center;'>" +
-    //                             "<div>Upload files or add files from the file library.</div>"
-    //                             if(templateObject.isMobileDevices.get() == true) {
-    //                                 attachModalHtml = attachModalHtml +"<div>Capture copies of receipt's or take photo's of completed jobs.</div>"
-    //                             }
-
-
-    //                                         attachModalHtml = attachModalHtml + "<p style='color: #ababab;'>Only users with access to your company can view these files</p>" +
-    //                                     "</div>" +
-    //                                 "</div>" +
-    //                             "</div>"+
-    //                             "<div class='modal-footer'>";
-    //                             if(templateObject.isMobileDevices.get() == true) {
-    //                                 attachModalHtml = attachModalHtml +"<input type='file' class='img-attachment-upload' id='img-attachment-upload' style='display:none' accept='image/*' capture='camera'>" +
-    //                                 "<button class='btn btn-primary btnUploadFile img_new_attachment_btn' type='button'><i class='fas fa-camera' style='margin-right: 5px;'></i>Capture</button>" +
-
-    //                                 "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png'>"
-    //                             }else {
-    //                                 attachModalHtml = attachModalHtml + "<input type='file' class='attachment-upload' id='attachment-upload' style='display:none' multiple accept='.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt," +
-    //                                 ".pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef," +
-    //                                 ".pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg," +
-    //                                 "image/gif,image/png,image/bmp,image/tiff,application/pdf," +
-    //                                 "application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document," +
-    //                                 "application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet," +
-    //                                 "application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation," +
-    //                                 "application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822," +
-    //                                 "application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet," +
-    //                                 "application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey," +
-    //                                 "application/vnd.apple.keynote,application/x-iwork-pages-sffpages," +
-    //                                 "application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers," +
-    //                                 "application/vnd.apple.numbers,application/zip,application/rar," +
-    //                                 "application/x-zip-compressed,application/x-zip,application/x-7z-compressed'>"
-    //                             }
-    //                             attachModalHtml = attachModalHtml +
-    //                                 "<button class='btn btn-primary btnUploadFile new_attachment_btn' type='button'><i class='fa fa-cloud-upload' style='margin-right: 5px;'></i>Upload</button>" +
-    //                                 "<button class='btn btn-success closeModal' data-dismiss='modal' type='button' style='margin-right: 5px;' autocomplete='off'>" +
-    //                                     "<i class='fa fa-save' style='padding-right: 8px;'></i>Save" +
-    //                                 "</button>" +
-    //                                 "<button class='btn btn-secondary' data-dismiss='modal' type='button'><i class='fa fa-remove' style='margin-right: 5px;'></i>Close</button>" +
-    //                             "</div>"+
-    //                         "</div>"+
-    //                     "</div>"+
-    //                 "</div>"
-    //                     topParent.append(attachModalHtml);
-
-    //             }else {
-    //                 $(targetElement).before("<div style='width: 29%'></div>")
-    //             }
-    //     $('#productListModal').modal('toggle')
-    // },
-
-    // 'click #processListModal table tr': function(event) {
-    //     let templateObject = Template.instance()
-    //     let processName = $(event.target).closest('tr').find('.colProcessName').text();
-    //     let selEle = templateObject.selectedProcessField.get();
-    //     selEle.val(processName);
-    //     $('#processListModal').modal('toggle')
-    // },
-
-
-    // 'click .btn-remove-raw': function(event) {
-    //     let row = $(event.target).closest('div.productRow');
-    //     let productName = $(row).find('.edtProductName').val();
-    //     let content = $(event.target).closest('div.product-content');
-    //     let rowCount = $(content).find('.productRow').length;
-    //     if (rowCount == 1 || $(content).first().find('.edtProductName').val() == productName) {
-    //         $(content).remove();
-    //     } else {
-    //         $(row).remove();
-    //     }
-    // },
-
-    // 'click #BOMSetupModal .btnAddProduct': function (event) {
-    //     let row = $(event.target).closest('.productRow');
-    //     let tempObject = Template.instance();
-    //     let parent = row.parent();
-
-
-    //     let grandParent = parent.parent();
-    //     let modalElement = $(row).closest('.modal#BOMSetupModal');
-    //     let topParent = modalElement.parent();
-
-    //     let count = $(grandParent).find('.product-content').length;
-    //     if(count > 1) {
-    //         let lastRow = $(grandParent).find('.product-content')[count-2];
-    //         if(lastRow && lastRow != null) {
-    //             if ($(lastRow).find('.edtProductName').val() == '' || $(lastRow).find('.edtProcessName').val()== '' || $(lastRow).find('.edtQuantity').val() == '') {
-    //                 return
-    //             }
-    //         }
-    //     }
-
-
-    //     let colProduct = row.find('.colProduct');
-    //     let colQty = row.find('.colQty');
-    //     let colProcess = row.find('.colProcess');
-    //     let colNote = row.find('.colNote');
-    //     let colAttachment = row.find('.colAttachment');
-    //     let colDelete = row.find('.colDelete');
-    //     $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 70%'></select>")
-    //     $(event.target).remove()
-    //     $(colProduct).find('.edtProductName').editableSelect()
-    //     $(colQty).append("<input type='text' class='form-control edtQuantity w-100'/>");
-    //     // $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
-    //     // $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
-    //     $(colProcess).find('.edtProcessName').editableSelect();
-    //     // $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
-    //     $(colDelete).addClass('d-flex align-items-center justify-content-center')
-    //     $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
-
-
-
-    //     grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
-    //                     "<div class='colProduct  d-flex form-group'>" +
-    //                     "<button class='btn btn-primary btnAddProduct' style='width: 29%;'>Product+</button>" +
-    //                     "</div>" +
-    //                     "<div class='colQty form-group'>" +
-    //                     "</div>" +
-    //                     "<div class='colProcess form-group'>" +
-    //                     "</div>" +
-    //                     "<div class='colNote form-group'>" +
-    //                     "</div>" +
-    //                     "<div class='colAttachment form-group'></div>" +
-    //                     "<div class='colDelete'>" +
-    //                     "</div>" +
-    //                     "</div></div>")
-
-    // },
-
-
-    // 'click #BOMSetupModal .btnAddSubProduct': function(event) {
-    //     let button  = $(event.target).closest('button.btnAddSubProduct');
-    //     let tempObject = Template.instance();
-    //     let row = $(event.target).closest('.productRow');
-    //     let colProduct = row.find('.colProduct');
-    //     let colQty = row.find('.colQty');
-    //     let colProcess = row.find('.colProcess');
-    //     let colNote = row.find('.colNote');
-    //     let colAttachment = row.find('.colAttachment');
-    //     let colDelete = row.find('.colDelete');
-
-    //     if($(colProduct).find('.edtProductName').val() != '') {
-    //         if($(colQty).find('.edtQuantity').val() != '') {
-    //             let quantity = $(colQty).find('.edtQuantity').val();
-    //             let edtRaw = colProduct.find('.edtProductName')
-    //             $(event.target).remove();
-    //             $(button).remove();
-    //             $(colDelete).addClass('d-flex align-items-center justify-content-center')
-    //             $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'><i class='fa fa-remove'></i></button>")
-    //             let parent = row.parent();
-
-    //             $(parent).append("<div class='d-flex productRow'>"+
-    //             "<div class='d-flex colProduct form-group'>"+
-    //             "<div class='d-flex align-items-center justify-content-end form-group' style='width: 60%'>"+
-    //             "<button class='btn btn-primary w-25 d-flex align-items-center justify-content-center form-control btnAddSubProduct'><span class='fas fa-plus'></span></button>" +
-    //             "</div>"+
-    //             "<select class='edtProductName edtRaw form-control' type='search' style='width: 40%'></select>" +
-    //             "</div>"+
-    //             "<div class='colQty'>" +
-    //             "<input type='text' class='edtQuantity w-100 form-control' />" +
-    //             "</div>"+
-    //             "<div class='colProcess form-group'>"+
-    //             "<select type='search' autocomplete='off' class='edtProcessName form-control w-100 es-input' ></select>"+
-    //             "</div>" +
-    //             "<div class='colNote form-group'></div>" +
-    //             "<div class='colAttachment'></div>" +
-    //             "<div class='colDelete'></div>"+
-    //             "</div>")
-    //             let eles = $(parent).find('.edtProductName')
-    //             $(eles[eles.length - 1]).editableSelect();
-    //             let procElements = $(parent).find('.edtProcessName')
-    //             $(procElements[procElements.length -1]).editableSelect()
-    //         }
-    //     }
-    // },
+   
 
     'click #BOMSetupModal .btn-save-bom': function(event) {
         let templateObject = Template.instance();
         playSaveAudio();
-        setTimeout(function(){
-        let finalStructure = {};
-        let bomProduct = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
-        let mainProductName = $('#tblWorkOrderLine tbody tr .lineProductName').val();
+        setTimeout(async function(){
+            let finalStructure = {};
+            let bomProduct = templateObject.bomProducts.get();
+            let mainProductName = $('#tblWorkOrderLine tbody tr .lineProductName').val();
 
-        let currentBOMIndex = bomProduct.findIndex(product => {
-            return product.fields.productName == mainProductName
-        })
-        let mainOrderSaved = false;
-        let currentBOMStructure = bomProduct[currentBOMIndex].fields;
+            // let currentBOMIndex = bomProduct.findIndex(product => {
+            //     return product.fields.productName == mainProductName
+            // })
+            let mainOrderSaved = false;
+            // let currentBOMStructure = bomProduct[currentBOMIndex].fields;
 
-        let builtCount = $('.btn-product-build').length;
-        let tempRecord = templateObject.workorderrecord.get();
-        let currentRecord = {... tempRecord}
-        let totalWorkOrders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
-        let savedworkorders = totalWorkOrders.filter(order => {
-            return order.SalesOrderID == templateObject.salesOrderId.get();
-        })
-        let count = savedworkorders.length;
-        let mainOrderId = currentRecord.id.split('_')[1];
-        if(mainOrderId <= count) {
-            mainOrderSaved = true;
-        }else {
-            mainOrderSaved = false;
-        }
+            let builtCount = $('.btn-product-build').length;
+            let tempRecord = templateObject.workorderrecord.get();
+            let currentRecord = cloneDeep(tempRecord)
+            let totalWorkOrders = await templateObject.getAllWorkorders();
+            let savedworkorders = totalWorkOrders.filter(order => {
+                return order.fields.SalesID == templateObject.salesOrderId.get();
+            })
+            let count = savedworkorders.length;
+            let mainOrderId = currentRecord.id.split('_')[1];
+            if(mainOrderId <= count) {
+                mainOrderSaved = true;
+            }else {
+                mainOrderSaved = false;
+            }
+            saveMainBOMStructure();
 
-
-                saveMainBOMStructure();
-
-    }, delayTimeAfterSound);
+        }, delayTimeAfterSound);
     async function saveMainBOMStructure() {
         let mainProductName = $('#edtMainProductName').val();
         let mainProcessName = $('#edtProcess').val();
-        let mainQuantity = $('#edtMainQty').val();
-        let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')) : []
+        // let mainQuantity = $('#edtMainQty').val();
+        let bomProducts = templateObject.bomProducts.get();
 
         if(mainProcessName == '') {
             swal('Please provide the process !', '', 'warning');
@@ -1345,21 +1151,21 @@ Template.new_workorder.events({
 
         let productInfo = await getDetailInfoFromName(mainProductName);
         let objDetails  = {
-            productName: mainProductName,
-            qty: mainQuantity,
-            process: mainProcessName,
-            processNote: $(products[0]).find('.edtProcessNote').val() || '',
-            attachments: JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [],
-            subs: [],
-            totalQtyInStock: productInfo.totalQtyInStock,
-            productDescription: productInfo.productDescription,
-            duration: $('.edtDuration').val() || ''
+            Caption: mainProductName,
+            // qty: mainQuantity,
+            Info: mainProcessName,
+            CustomInputClass: $(products[0]).find('.edtProcessNote').val() || '',
+            Value: JSON.stringify(JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray) || JSON.stringify([]),
+            Details: '',
+            TotalQtyOriginal: productInfo.totalQtyInStock,
+            Description: productInfo.productDescription,
+            QtyVariation: parseFloat($('.edtDuration').val()) || 1.00
 
         }
 
-
+        let mainSubs = [];
         for(let i = 1; i< products.length - 1; i ++) {
-            let productRows = products[i].querySelectorAll('.productRow')
+            let productRows = products[i].querySelectorAll('.productRow');
             let objectDetail;
                 let _name = $(productRows[0]).find('.edtProductName').val();
                 let _qty = $(productRows[0]).find('.edtQuantity').val();
@@ -1377,11 +1183,19 @@ Template.new_workorder.events({
                     isBuild: false
                 }
                 if(productRows.length > 1) {
-                    let boms = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[];
+                    let boms = templateObject.bomProducts.get();
                     let index = boms.findIndex(bom=>{
-                        return bom.fields.productName == _name;
+                        return bom.fields.Caption == _name;
                     })
-                    objectDetail.duration = boms[index].fields.duration
+                    if(index > -1) {
+                        objectDetail.duration = boms[index].fields.duration
+                    }else {
+                        await productService.getOneBOMProductByName(_name).then(function(data) {
+                            if(data.tproctree.length > 0) {
+                                objectDetail.duration = data.tproctree[0].fields.QtyVariation
+                            }
+                        })
+                    }
                     for(let j = 1; j<productRows.length; j++) {
                         let _productName = $(productRows[j]).find('.edtProductName').val();
                         let _productQty = $(productRows[j]).find('.edtQuantity').val();
@@ -1423,8 +1237,10 @@ Template.new_workorder.events({
                 }
 
             // }
-            objDetails.subs.push(objectDetail);
+            mainSubs.push(objectDetail);
         }
+
+        objDetails.Details = JSON.stringify(mainSubs)
         finalStructure = objDetails;
 
         //global save action
@@ -1445,7 +1261,7 @@ Template.new_workorder.events({
         // for (let l = 1; l < productContents.length -1; l++) {
         //     $(productContents[l]).remove();
         // }
-        $('#BOMSetupModal').modal('toggle');
+            $('#BOMSetupModal').modal('toggle');
         }, delayTimeAfterSound);
     },
 
@@ -1463,22 +1279,22 @@ Template.new_workorder.events({
         event.preventDefault();
         let templateObject = Template.instance();
         let record = JSON.parse(JSON.stringify(templateObject.workorderrecord.get()))
-        record.line.fields.Qty = parseFloat($(event.target).val())
+        record.quantity = parseFloat($(event.target).val())
         templateObject.workorderrecord.set(record);
     },
 
-    'click #btnCompleteProcess': function(event) {
+    'click #btnCompleteProcess': async function(event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block')
-        let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): [];
+        let workorders = await templateObject.getAllWorkorders()
         let currentworkorder;
 
         let workorderindex = workorders.findIndex(order => {
-            return order.SalesOrderID == templateObject.salesOrderId.get() && order.Line.fields.ProductName == templateObject.workorderrecord.get().line.fields.ProductName;
+            return order.fields.SaleID == templateObject.salesOrderId.get() && order.fields.ProductName == templateObject.workorderrecord.get().productname;
         })
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
-            let productName = currentworkorder.Line.fields.ProductName;
+            let productName = currentworkorder.fields.ProductName;
             getVS1Data('TProductVS1').then(function(dataObject) {
                 if(dataObject.length == 0) {
                     productService.getOneProductdatavs1byname(productName).then(function(dataDetail)  {
@@ -1487,7 +1303,7 @@ Template.new_workorder.events({
                             type: 'TProduct',
                             fields: {
                                 ...data.fields,
-                                TotalQtyInStock: currentworkorder.Line.fields.Qty + data.fields.TotalQtyInStock
+                                TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
                             }
                             // ID: data.fields.ID,
                         }).then(function(){
@@ -1506,7 +1322,7 @@ Template.new_workorder.events({
                                 fields: {
                                     // ...useData[i].fields,
                                     ID: useData[i].fields.ID,
-                                    TotalQtyInStock: currentworkorder.Line.fields.Qty + useData[i].fields.TotalQtyInStock
+                                    TotalQtyInStock: currentworkorder.fields.Quantity + useData[i].fields.TotalQtyInStock
                                 }
                             }).then(function(){
                                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
@@ -1524,7 +1340,7 @@ Template.new_workorder.events({
                         type: 'TProduct',
                         fields: {
                             ...data.fields,
-                            TotalQtyInStock: currentworkorder.Line.fields.Qty + data.fields.TotalQtyInStock
+                            TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
                         }
                     }).then(function(){
                         sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
@@ -1534,7 +1350,7 @@ Template.new_workorder.events({
                 })
             })
 
-            let subs = currentworkorder.BOM.subs;
+            let subs = JSON.parse(JSON.parse(currentworkorder.fields.BOMStructure).Details);
             for(let j = 0; j< subs.length; j++) {
                 let name = subs[j].productName;
                 getVS1Data('TProductVS1').then(function(dataObject) {
@@ -1545,7 +1361,7 @@ Template.new_workorder.events({
                                 type: 'TProduct',
                                 fields: {
                                     ...data.fields,
-                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
+                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
                                 }
                             }).then(function(){
                                 $('.fullScreenSpin').css('display', 'none')
@@ -1566,7 +1382,7 @@ Template.new_workorder.events({
                                     fields: {
                                         ...useData[i].fields,
                                         // ID: useData[i].fields.ID,
-                                        TotalQtyInStock: useData[i].fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
+                                        TotalQtyInStock: useData[i].fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
                                     }
                                 }).then(function(){
                                     $('.fullScreenSpin').css('display', 'none')
@@ -1586,7 +1402,7 @@ Template.new_workorder.events({
                             type: 'TProduct',
                             fields:{
                                 ...data.fields,
-                                TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
+                                TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
                             }
                             // ID: data.fields.ID,
                         }).then(function(){
@@ -1600,7 +1416,7 @@ Template.new_workorder.events({
                     })
                 })
             }
-            let tempworkorder = JSON.parse(JSON.stringify(currentworkorder));
+            let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder = {...tempworkorder, EndTime: new Date()}
             workorders.splice(workorderindex, 1, tempworkorder)
 
