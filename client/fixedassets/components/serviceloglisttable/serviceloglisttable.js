@@ -93,7 +93,7 @@ Template.serviceloglisttable.onRendered(function () {
   templateObject.initCustomFieldDisplaySettings("tblServiceLogList");
   // set initial table rest_data  //
   templateObject.getServiceLogList = function () {
-    getVS1Data("getServiceLogList").then(function (dataObject) {
+    getVS1Data("TServiceLogList").then(function (dataObject) {
       if (dataObject.length == 0) {
         serviceLogService.getServiceLogList().then(function (data) {
           setServiceLogList(data);
@@ -337,8 +337,8 @@ Template.serviceloglisttable.events({
   },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    fixedAssetService.getTFixedAssetsList().then(function (data) {
-      addVS1Data("TFixedAssets", JSON.stringify(data))
+    fixedAssetService.getServiceLogList().then(function (data) {
+      addVS1Data("TServiceLogList", JSON.stringify(data))
         .then(function (datareturn) {
           Meteor._reload.reload();
         })

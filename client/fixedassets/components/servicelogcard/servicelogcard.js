@@ -20,29 +20,19 @@ Template.servicelogcard.onRendered(function () {
   templateObject.getFixedAssetsList = function () {
     getVS1Data("TFixedAssets").then(function (dataObject) {
       if (dataObject.length == 0) {
-        fixedAssetService.getTFixedAssetsList().then(function (data) {
-          setFixedAssetsList(data);
-        }).catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-        });
+
       } else {
         let data = JSON.parse(dataObject[0].data);
         setFixedAssetsList(data);
       }
     }).catch(function (err) {
-      fixedAssetService.getTFixedAssetsList().then(function (data) {
-        setFixedAssetsList(data);
-      }).catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-      });
     });
   };
 
-  $(".fullScreenSpin").css("display", "inline-block");
+  // $(".fullScreenSpin").css("display", "inline-block");
   templateObject.getFixedAssetsList();
 
   function setFixedAssetsList(data) {
-    addVS1Data('TFixedAssets', JSON.stringify(data));
     console.log('TFxiedAssets', data);
     const dataTableList = [];
     for (const asset of data.tfixedassets) {
