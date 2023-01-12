@@ -13,7 +13,10 @@
                         </div>
                         <div class="col-12 product_recent_trans" style="display:block; margin-top: 16px;">
                             <h3>Recent Transactions</h3>
-                            {{>recentTransactionTable productID=productID type="On Order"}}
+                            <!-- {{>recentTransactionTable productID=productID type="On Order"}} -->
+                            {{#if productID}}
+                            {{>non_transactional_list tablename="productrecentlist" type="Invoice"}}
+                            {{/if}}
                         </div>
                     </div>
                 </div>
