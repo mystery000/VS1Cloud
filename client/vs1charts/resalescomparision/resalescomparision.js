@@ -1,6 +1,8 @@
 import { VS1ChartService } from "../vs1charts-service";
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
+import './resalescomparision.html'
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
@@ -68,188 +70,192 @@ Template.resalescomparision.onRendered(() => {
                 // topData.topTenData.set(data);
 
                 templateObject.topTenData.set(topTenData1);
-                var ctx = document.getElementById("employeeSalesComparisonChart").getContext("2d");
-                var myChart = new Chart(ctx, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: itemName,
-                        datasets: [{
-                            label: 'Amount #' + this.name,
-                            data: itemBalance,
+                if (document.getElementById("employeeSalesComparisonChart")) {
+                    var ctx = document.getElementById("employeeSalesComparisonChart").getContext("2d");
+                    var myChart = new Chart(ctx, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: itemName,
+                            datasets: [{
+                                label: 'Amount #' + this.name,
+                                data: itemBalance,
 
-                            backgroundColor: [
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e'
-                            ],
-                            borderColor: [
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        // 'onClick' : function (evt, item) {
-                        //   if(item[0]['_model'].label){
-                        //     var activePoints = item[0]['_model'].label;
-                        //     FlowRouter.go('/salesreport?contact=' + activePoints);
-                        //   }
-
-                        // },
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem, data) {
-                                    return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
-                                    // Currency + Number(tooltipItem.xLabel).toFixed(2).replace(/./g, function(c, i, a) {
-                                    //     return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-                                    // });
-                                }
-                            }
-                        },
-                        // bezierCurve : true,
-                        //                    animation: {
-                        //                        onComplete: done
-                        //                    },
-                        "legend": {
-                            "display": false
-                        },
-                        "title": {},
-                        "scales": {
-                            "xAxes": [{
-                                "gridLines": {
-                                    "color": "rgb(234, 236, 244)",
-                                    "zeroLineColor": "rgb(234, 236, 244)",
-                                    "drawBorder": false,
-                                    "drawTicks": false,
-                                    "borderDash": ["2"],
-                                    "zeroLineBorderDash": ["2"],
-                                    "drawOnChartArea": false
-                                },
-                                "ticks": {
-                                    "fontColor": "#858796",
-                                    "beginAtZero": true,
-                                    "padding": 20
-                                }
-                            }],
-                            "yAxes": [{
-                                "gridLines": {
-                                    "color": "rgb(234, 236, 244)",
-                                    "zeroLineColor": "rgb(234, 236, 244)",
-                                    "drawBorder": false,
-                                    "drawTicks": false,
-                                    "borderDash": ["2"],
-                                    "zeroLineBorderDash": ["2"]
-                                },
-                                "ticks": {
-                                    "fontColor": "#858796",
-                                    "beginAtZero": true,
-                                    "padding": 20
-                                }
+                                backgroundColor: [
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e'
+                                ],
+                                borderColor: [
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)'
+                                ],
+                                borderWidth: 1
                             }]
-                        }
-                    }
-                });
-                var dsm_ctx = document.getElementById("dsm_employeeSalesComparisonChart").getContext("2d");
-                var dsm_myChart = new Chart(dsm_ctx, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: itemName,
-                        datasets: [{
-                            label: 'Amount #' + this.name,
-                            data: itemBalance,
+                        },
+                        options: {
+                            // 'onClick' : function (evt, item) {
+                            //   if(item[0]['_model'].label){
+                            //     var activePoints = item[0]['_model'].label;
+                            //     FlowRouter.go('/salesreport?contact=' + activePoints);
+                            //   }
 
-                            backgroundColor: [
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e',
-                                '#f6c23e'
-                            ],
-                            borderColor: [
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)',
-                                'rgba(78,115,223,0)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        // 'onClick' : function (evt, item) {
-                        //   if(item[0]['_model'].label){
-                        //     var activePoints = item[0]['_model'].label;
-                        //     FlowRouter.go('/salesreport?contact=' + activePoints);
-                        //   }
-
-                        // },
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem, data) {
-                                    return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
-                                    // Currency + Number(tooltipItem.xLabel).toFixed(2).replace(/./g, function(c, i, a) {
-                                    //     return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-                                    // });
+                            // },
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
+                                        // Currency + Number(tooltipItem.xLabel).toFixed(2).replace(/./g, function(c, i, a) {
+                                        //     return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+                                        // });
+                                    }
                                 }
+                            },
+                            // bezierCurve : true,
+                            //                    animation: {
+                            //                        onComplete: done
+                            //                    },
+                            "legend": {
+                                "display": false
+                            },
+                            "title": {},
+                            "scales": {
+                                "xAxes": [{
+                                    "gridLines": {
+                                        "color": "rgb(234, 236, 244)",
+                                        "zeroLineColor": "rgb(234, 236, 244)",
+                                        "drawBorder": false,
+                                        "drawTicks": false,
+                                        "borderDash": ["2"],
+                                        "zeroLineBorderDash": ["2"],
+                                        "drawOnChartArea": false
+                                    },
+                                    "ticks": {
+                                        "fontColor": "#858796",
+                                        "beginAtZero": true,
+                                        "padding": 20
+                                    }
+                                }],
+                                "yAxes": [{
+                                    "gridLines": {
+                                        "color": "rgb(234, 236, 244)",
+                                        "zeroLineColor": "rgb(234, 236, 244)",
+                                        "drawBorder": false,
+                                        "drawTicks": false,
+                                        "borderDash": ["2"],
+                                        "zeroLineBorderDash": ["2"]
+                                    },
+                                    "ticks": {
+                                        "fontColor": "#858796",
+                                        "beginAtZero": true,
+                                        "padding": 20
+                                    }
+                                }]
                             }
-                        },
-                        // bezierCurve : true,
-                        //                    animation: {
-                        //                        onComplete: done
-                        //                    },
-                        "legend": {
-                            "display": false
-                        },
-                        "title": {},
-                        "scales": {
-                            "xAxes": [{
-                                "gridLines": {
-                                    "color": "rgb(234, 236, 244)",
-                                    "zeroLineColor": "rgb(234, 236, 244)",
-                                    "drawBorder": false,
-                                    "drawTicks": false,
-                                    "borderDash": ["2"],
-                                    "zeroLineBorderDash": ["2"],
-                                    "drawOnChartArea": false
-                                },
-                                "ticks": {
-                                    "fontColor": "#858796",
-                                    "beginAtZero": true,
-                                    "padding": 20
-                                }
-                            }],
-                            "yAxes": [{
-                                "gridLines": {
-                                    "color": "rgb(234, 236, 244)",
-                                    "zeroLineColor": "rgb(234, 236, 244)",
-                                    "drawBorder": false,
-                                    "drawTicks": false,
-                                    "borderDash": ["2"],
-                                    "zeroLineBorderDash": ["2"]
-                                },
-                                "ticks": {
-                                    "fontColor": "#858796",
-                                    "beginAtZero": true,
-                                    "padding": 20
-                                }
-                            }]
                         }
-                    }
-                });
+                    });
+                }
+                if (document.getElementById("dsm_employeeSalesComparisonChart")) {
+                    var dsm_ctx = document.getElementById("dsm_employeeSalesComparisonChart").getContext("2d");
+                    var dsm_myChart = new Chart(dsm_ctx, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: itemName,
+                            datasets: [{
+                                label: 'Amount #' + this.name,
+                                data: itemBalance,
+
+                                backgroundColor: [
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e',
+                                    '#f6c23e'
+                                ],
+                                borderColor: [
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)',
+                                    'rgba(78,115,223,0)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            // 'onClick' : function (evt, item) {
+                            //   if(item[0]['_model'].label){
+                            //     var activePoints = item[0]['_model'].label;
+                            //     FlowRouter.go('/salesreport?contact=' + activePoints);
+                            //   }
+
+                            // },
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            tooltips: {
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
+                                        // Currency + Number(tooltipItem.xLabel).toFixed(2).replace(/./g, function(c, i, a) {
+                                        //     return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+                                        // });
+                                    }
+                                }
+                            },
+                            // bezierCurve : true,
+                            //                    animation: {
+                            //                        onComplete: done
+                            //                    },
+                            "legend": {
+                                "display": false
+                            },
+                            "title": {},
+                            "scales": {
+                                "xAxes": [{
+                                    "gridLines": {
+                                        "color": "rgb(234, 236, 244)",
+                                        "zeroLineColor": "rgb(234, 236, 244)",
+                                        "drawBorder": false,
+                                        "drawTicks": false,
+                                        "borderDash": ["2"],
+                                        "zeroLineBorderDash": ["2"],
+                                        "drawOnChartArea": false
+                                    },
+                                    "ticks": {
+                                        "fontColor": "#858796",
+                                        "beginAtZero": true,
+                                        "padding": 20
+                                    }
+                                }],
+                                "yAxes": [{
+                                    "gridLines": {
+                                        "color": "rgb(234, 236, 244)",
+                                        "zeroLineColor": "rgb(234, 236, 244)",
+                                        "drawBorder": false,
+                                        "drawTicks": false,
+                                        "borderDash": ["2"],
+                                        "zeroLineBorderDash": ["2"]
+                                    },
+                                    "ticks": {
+                                        "fontColor": "#858796",
+                                        "beginAtZero": true,
+                                        "padding": 20
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
             }, 0)
         });
 
@@ -329,182 +335,186 @@ Template.resalescomparision.onRendered(() => {
             // topData.topTenData.set(data);
 
             templateObject.topTenData.set(topTenData1);
-            var ctx = document.getElementById("employeeSalesComparisonChart").getContext("2d");
-            var myChart = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: {
-                    labels: itemName,
-                    datasets: [{
-                        label: 'Amount #' + this.name,
-                        data: itemBalance,
+            if (document.getElementById("employeeSalesComparisonChart")) {
+                var ctx = document.getElementById("employeeSalesComparisonChart").getContext("2d");
+                var myChart = new Chart(ctx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: itemName,
+                        datasets: [{
+                            label: 'Amount #' + this.name,
+                            data: itemBalance,
 
-                        backgroundColor: [
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e'
-                        ],
-                        borderColor: [
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    // 'onClick' : function (evt, item) {
-                    //   if(item[0]['_model'].label){
-                    //     var activePoints = item[0]['_model'].label;
-                    //     FlowRouter.go('/salesreport?contact=' + activePoints);
-                    //   }
-
-                    // },
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
-                            }
-                        }
-                    },
-                    // bezierCurve : true,
-                    //                        animation: {
-                    //                            onComplete: done
-                    //                        },
-                    "legend": {
-                        "display": false
-                    },
-                    "title": {},
-                    "scales": {
-                        "xAxes": [{
-                            "gridLines": {
-                                "color": "rgb(234, 236, 244)",
-                                "zeroLineColor": "rgb(234, 236, 244)",
-                                "drawBorder": false,
-                                "drawTicks": false,
-                                "borderDash": ["2"],
-                                "zeroLineBorderDash": ["2"],
-                                "drawOnChartArea": false
-                            },
-                            "ticks": {
-                                "fontColor": "#858796",
-                                "beginAtZero": true,
-                                "padding": 20
-                            }
-                        }],
-                        "yAxes": [{
-                            "gridLines": {
-                                "color": "rgb(234, 236, 244)",
-                                "zeroLineColor": "rgb(234, 236, 244)",
-                                "drawBorder": false,
-                                "drawTicks": false,
-                                "borderDash": ["2"],
-                                "zeroLineBorderDash": ["2"]
-                            },
-                            "ticks": {
-                                "fontColor": "#858796",
-                                "beginAtZero": true,
-                                "padding": 20
-                            }
+                            backgroundColor: [
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e'
+                            ],
+                            borderColor: [
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)'
+                            ],
+                            borderWidth: 1
                         }]
-                    }
-                }
-            });
-            var dsm_ctx = document.getElementById("dsm_employeeSalesComparisonChart").getContext("2d");
-            var dsm_myChart = new Chart(dsm_ctx, {
-                type: 'horizontalBar',
-                data: {
-                    labels: itemName,
-                    datasets: [{
-                        label: 'Amount #' + this.name,
-                        data: itemBalance,
+                    },
+                    options: {
+                        // 'onClick' : function (evt, item) {
+                        //   if(item[0]['_model'].label){
+                        //     var activePoints = item[0]['_model'].label;
+                        //     FlowRouter.go('/salesreport?contact=' + activePoints);
+                        //   }
 
-                        backgroundColor: [
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e',
-                            '#f6c23e'
-                        ],
-                        borderColor: [
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)',
-                            'rgba(78,115,223,0)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    // 'onClick' : function (evt, item) {
-                    //   if(item[0]['_model'].label){
-                    //     var activePoints = item[0]['_model'].label;
-                    //     FlowRouter.go('/salesreport?contact=' + activePoints);
-                    //   }
-
-                    // },
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
+                        // },
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
+                                }
                             }
+                        },
+                        // bezierCurve : true,
+                        //                        animation: {
+                        //                            onComplete: done
+                        //                        },
+                        "legend": {
+                            "display": false
+                        },
+                        "title": {},
+                        "scales": {
+                            "xAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"],
+                                    "drawOnChartArea": false
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "beginAtZero": true,
+                                    "padding": 20
+                                }
+                            }],
+                            "yAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"]
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "beginAtZero": true,
+                                    "padding": 20
+                                }
+                            }]
                         }
-                    },
-                    // bezierCurve : true,
-                    //                        animation: {
-                    //                            onComplete: done
-                    //                        },
-                    "legend": {
-                        "display": false
-                    },
-                    "title": {},
-                    "scales": {
-                        "xAxes": [{
-                            "gridLines": {
-                                "color": "rgb(234, 236, 244)",
-                                "zeroLineColor": "rgb(234, 236, 244)",
-                                "drawBorder": false,
-                                "drawTicks": false,
-                                "borderDash": ["2"],
-                                "zeroLineBorderDash": ["2"],
-                                "drawOnChartArea": false
-                            },
-                            "ticks": {
-                                "fontColor": "#858796",
-                                "beginAtZero": true,
-                                "padding": 20
-                            }
-                        }],
-                        "yAxes": [{
-                            "gridLines": {
-                                "color": "rgb(234, 236, 244)",
-                                "zeroLineColor": "rgb(234, 236, 244)",
-                                "drawBorder": false,
-                                "drawTicks": false,
-                                "borderDash": ["2"],
-                                "zeroLineBorderDash": ["2"]
-                            },
-                            "ticks": {
-                                "fontColor": "#858796",
-                                "beginAtZero": true,
-                                "padding": 20
-                            }
-                        }]
                     }
-                }
-            });
+                });
+            }
+            if (document.getElementById("dsm_employeeSalesComparisonChart")) {
+                var dsm_ctx = document.getElementById("dsm_employeeSalesComparisonChart").getContext("2d");
+                var dsm_myChart = new Chart(dsm_ctx, {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: itemName,
+                        datasets: [{
+                            label: 'Amount #' + this.name,
+                            data: itemBalance,
+
+                            backgroundColor: [
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e',
+                                '#f6c23e'
+                            ],
+                            borderColor: [
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)',
+                                'rgba(78,115,223,0)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        // 'onClick' : function (evt, item) {
+                        //   if(item[0]['_model'].label){
+                        //     var activePoints = item[0]['_model'].label;
+                        //     FlowRouter.go('/salesreport?contact=' + activePoints);
+                        //   }
+
+                        // },
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel) || 0.00;
+                                }
+                            }
+                        },
+                        // bezierCurve : true,
+                        //                        animation: {
+                        //                            onComplete: done
+                        //                        },
+                        "legend": {
+                            "display": false
+                        },
+                        "title": {},
+                        "scales": {
+                            "xAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"],
+                                    "drawOnChartArea": false
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "beginAtZero": true,
+                                    "padding": 20
+                                }
+                            }],
+                            "yAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"]
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "beginAtZero": true,
+                                    "padding": 20
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
         }, 0)
     }
 

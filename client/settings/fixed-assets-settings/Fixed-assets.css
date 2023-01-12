@@ -586,7 +586,7 @@
 
 }
 
-.fixedAssetsSettings table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+.fixedAssetsSettings table.dataTable thead .sorting:after, .fixedAssetsSettings table.dataTable thead .sorting_asc:after, .fixedAssetsSettings table.dataTable thead .sorting_desc:after, .fixedAssetsSettings table.dataTable thead .sorting_asc_disabled:after, .fixedAssetsSettings table.dataTable thead .sorting_desc_disabled:after {
     position: initial !important;
     bottom: 8px;
     right: 8px;

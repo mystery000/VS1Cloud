@@ -517,28 +517,31 @@ Template.non_transactional_list.onRendered(function() {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
                 { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
-                { index: 2, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblCustomerCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
                 { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
-                { index: 2, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSupplierCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
                 { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
-                { index: 2, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSingleTouchPayroll") {
             reset_data = [
@@ -552,20 +555,20 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblRatePopList"){
             reset_data = [
-                { index: 0, label: "#ID", class: "colRateID", active: false, display: true, width: "" },
-                { index: 1, label: "Name", class: "colRateName", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colRateID", active: false, display: true, width: "10" },
+                { index: 1, label: "Name", class: "colRateName", active: true, display: true, width: "300" },
             ]
         }else if (currenttablename === "tblRateTypeList"){
             reset_data = [
-                { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "" },
-                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colRateTypeID", active: false, display: true, width: "10" },
+                { index: 1, label: "Description", class: "thDescription", active: true, display: true, width: "300" },
             ]
         }else if (currenttablename === "tblOverTimeSheet"){
             reset_data = [
-                { index: 0, label: "#ID", class: "", active: false, display: true, width: "" },
-                { index: 1, label: "Rate", class: "", active: true, display: true, width: "" },
-                { index: 2, label: "Rule", class: "", active: true, display: true, width: "" },
-                { index: 3, label: "hourly Multiplier", class: "", active: true, display: true, width: "" },
+                { index: 0, label: "#ID", class: "colOverTimeSheetID", active: false, display: true, width: "10" },
+                { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "500" },
+                { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
+                { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
             ]
         }
 
@@ -580,30 +583,30 @@ Template.non_transactional_list.onRendered(function() {
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
 
-        try {
-            getVS1Data("VS1_Customize").then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
-                        reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                        templateObject.showCustomFieldDisplaySettings(reset_data);
-                    }).catch(function(err) {});
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
-                        for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-                            if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType && listType != "tblAccountOverview") {
-                                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                                templateObject.showCustomFieldDisplaySettings(reset_data);
-                            }
-                        }
-                    };
-                }
-            });
+        // try {
+        //     getVS1Data("VS1_Customize").then(function(dataObject) {
+        //         if (dataObject.length == 0) {
+        //             sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
+        //                 reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+        //                 templateObject.showCustomFieldDisplaySettings(reset_data);
+        //             }).catch(function(err) {});
+        //         } else {
+        //             let data = JSON.parse(dataObject[0].data);
+        //             if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
+        //                 for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+        //                     if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType && listType != "tblAccountOverview") {
+        //                         reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+        //                         templateObject.showCustomFieldDisplaySettings(reset_data);
+        //                     }
+        //                 }
+        //             };
+        //         }
+        //     });
 
-        } catch (error) {
+        // } catch (error) {
 
-        }
-        return;
+        // }
+        // return;
     }
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
         //function showCustomFieldDisplaySettings(reset_data) {
@@ -4487,31 +4490,29 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getBOMListData = async function() {
-        // var customerpage = 0;
-        // getVS1Data('"TProcTreeVS1"').then(function (dataObject) {
-        //     if (dataObject.length == 0) {
-        //         productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
-        //             await addVS1Data('TProcTreeVS1', JSON.stringify(data));
-        //             templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //         }).catch(function (err) {
-
-        //         });
-        //     } else {
-        //         let data = JSON.parse(dataObject[0].data);
-        //         templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //     }
-        // }).catch(function (err) {
-        //   productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
-        //       //await addVS1Data('TTermsVS1List', JSON.stringify(data));
-        //       templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //   }).catch(function (err) {
-
-        //   });
-        // });
-        let bomProducts = [];
-        let tempArray = localStorage.getItem('TProcTree');
-        bomProducts = tempArray ? JSON.parse(tempArray) : [];
-        templateObject.displayBOMListData(bomProducts)
+        var customerpage = 0;
+        getVS1Data('TProcTree').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TProcTree', JSON.stringify(data));
+                    templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+                }).catch(function (err) {
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+            }
+        }).catch(function (err) {
+          productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+              await addVS1Data('TProcTree', JSON.stringify(data));
+              templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+          }).catch(function (err) {
+          });
+        });
+        // let bomProducts = [];
+        // let tempArray = localStorage.getItem('TProcTree');
+        // bomProducts = tempArray ? JSON.parse(tempArray) : [];
+        // templateObject.displayBOMListData(bomProducts)
 
     }
     templateObject.displayBOMListData = async function(bomProducts) {
@@ -4523,21 +4524,23 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < bomProducts.length; i++) {
             // for (let i = 0; i < data.tproctree.length; i++) {
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
-            let subs = bomProducts[i].fields.subs;
-            let rawName = ""
-            for (let j = 0; j < subs.length; j++) {
-                if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+            let subs = bomProducts[i].fields.Details != '' ?JSON.parse(bomProducts[i].fields.Details)||[] : [];
+            let rawName = "";
+            if(subs.length > 0) {
+                for (let j = 0; j < subs.length; j++) {
+                    if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+                }
             }
 
             var dataList = [
                 bomProducts[i].fields.ID || "1",
-                bomProducts[i].fields.productName || "", //product name -- should be changed on TProcTree
-                bomProducts[i].fields.productDescription || "",
-                bomProducts[i].fields.process || "",
-                bomProducts[i].fields.totalQtyInStock || 0,
+                bomProducts[i].fields.Caption || "", //product name -- should be changed on TProcTree
+                bomProducts[i].fields.Description || "",
+                bomProducts[i].fields.Info || "",
+                bomProducts[i].fields.TotalQtyOriginal || 0,
                 // bomProducts[i].fields.subs || [],
                 rawName || '',
-                bomProducts[i].fields.attachments.length == 0 ? 'No Attachment' : bomProducts[i].fields.attachments.length > 0 ? bomProducts[i].fields.attachments.length.toString() + " attachments" : "no attachmetns"
+                bomProducts[i].fields.Value == '' ? 'No Attachment' : JSON.parse(bomProducts[i].fields.Value).length.toString() + " attachments"
             ];
 
             splashArrayBOMList.push(dataList);
@@ -4566,7 +4569,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "colTermsID colID hiddenColumn",
+                        className: "colBOMID colID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5229,7 +5232,7 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 1,
                         className: "colRateName",
-                        width: "100px",
+                        width: "300px",
                     }
                 ],
                 buttons: [{
@@ -5385,7 +5388,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "hiddenColumn",
+                        className: "colRateTypeID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5393,8 +5396,8 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "thDescription",
-                        width: "100px",
+                        className: "colRateName",
+                        width: "300px",
                     }
                 ],
                 buttons: [{
@@ -5553,7 +5556,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "hiddenColumn",
+                        className: "colOverTimeSheetID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -5561,18 +5564,18 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "",
-                        width: "",
+                        className: "colRate",
+                        width: "300px",
                     },
                     {
                         targets: 2,
-                        className: "",
-                        width: "200px",
+                        className: "colRateRule",
+                        width: "500px",
                     },
                     {
                         targets: 3,
-                        className: "",
-                        width: "",
+                        className: "colHourlyAmount",
+                        width: "150px",
                     }
                 ],
                 buttons: [{
@@ -7377,8 +7380,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -7409,12 +7412,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.tprojecttasks[i].fields.ID || 0,
                                             priority: data.tprojecttasks[i].fields.priority || 0,
                                             date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                            taskName: 'Task',
+                                            taskName: data.tprojecttasks[i].fields.TaskName || '',
                                             projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                             description: taskDescription,
                                             labels: taskLabelArray,
-                                            category: 'task',
+                                            category: 'Task',
                                             completed: data.tprojecttasks[i].fields.Completed,
                                             completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                         };
@@ -7425,12 +7428,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
                                         date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                        taskName: 'Task',
+                                        taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                         description: taskDescription,
                                         labels: taskLabelArray,
-                                        category: 'task',
+                                        category: 'Task',
                                         completed: data.tprojecttasks[i].fields.Completed,
                                         completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                     };
@@ -7446,7 +7449,7 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
-
+                
                 for (let i = 0; i < all_records.length; i++) {
                     let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
                     due_date = new Date(due_date);
@@ -7471,12 +7474,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: all_records[i].fields.ID || 0,
                                     priority: all_records[i].fields.priority || 0,
                                     date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                    taskName: 'Task',
+                                    taskName: all_records[i].fields.TaskName || '',
                                     projectID: all_records[i].fields.ProjectID || '',
                                     projectName: all_records[i].fields.ProjectName || '',
                                     description: taskDescription,
                                     labels: taskLabelArray,
-                                    category: 'task',
+                                    category: 'Task',
                                     completed: all_records[i].fields.Completed,
                                     completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
                                 };
@@ -7487,12 +7490,12 @@ Template.non_transactional_list.onRendered(function() {
                                 id: all_records[i].fields.ID || 0,
                                 priority: all_records[i].fields.priority || 0,
                                 date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                taskName: 'Task',
+                                taskName: all_records[i].fields.TaskName || '',
                                 projectID: all_records[i].fields.ProjectID || '',
                                 projectName: all_records[i].fields.ProjectName || '',
                                 description: taskDescription,
                                 labels: taskLabelArray,
-                                category: 'task',
+                                category: 'Task',
                                 completed: all_records[i].fields.Completed,
                                 completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
                             };
@@ -7530,12 +7533,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
                                         date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                        taskName: 'Task',
+                                        taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                         description: taskDescription,
                                         labels: taskLabelArray,
-                                        category: 'task',
+                                        category: 'Task',
                                         completed: data.tprojecttasks[i].fields.Completed,
                                         completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                     };
@@ -7546,12 +7549,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: data.tprojecttasks[i].fields.ID || 0,
                                     priority: data.tprojecttasks[i].fields.priority || 0,
                                     date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                    taskName: 'Task',
+                                    taskName: data.tprojecttasks[i].fields.TaskName || '',
                                     projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                     projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                     description: taskDescription,
                                     labels: taskLabelArray,
-                                    category: 'task',
+                                    category: 'Task',
                                     completed: data.tprojecttasks[i].fields.Completed,
                                     completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                 };
@@ -7582,12 +7585,12 @@ Template.non_transactional_list.onRendered(function() {
                                                 id: data.fields.ID,
                                                 priority: 0,
                                                 date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                taskName: 'Appointment',
+                                                taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
                                                 description: '',
                                                 labels: '',
-                                                category: 'appointment',
+                                                category: 'Appointment',
                                                 completed: data.fields.Actual_EndTime ? true : false,
                                                 completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                             }
@@ -7598,12 +7601,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.fields.ID,
                                             priority: 0,
                                             date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                            taskName: 'Appointment',
+                                            taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
                                             description: '',
                                             labels: '',
-                                            category: 'appointment',
+                                            category: 'Appointment',
                                             completed: data.fields.Actual_EndTime ? true : false,
                                             completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         }
@@ -7629,12 +7632,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: useData[i].fields.ID,
                                         priority: 0,
                                         date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
-                                        taskName: 'Appointment',
+                                        taskName: '',
                                         projectID: useData[i].fields.ProjectID || '',
                                         projectName: '',
-                                        description: '',
+                                        description: useData[i].fields.Notes || '',
                                         labels: '',
-                                        category: 'appointment',
+                                        category: 'Appointment',
                                         completed: useData[i].fields.Actual_EndTime ? true : false,
                                         completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     }
@@ -7645,12 +7648,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: useData[i].fields.ID,
                                     priority: 0,
                                     date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
-                                    taskName: 'Appointment',
+                                    taskName: '',
                                     projectID: useData[i].fields.ProjectID || '',
                                     projectName: '',
-                                    description: '',
+                                    description: useData[i].fields.Notes || '',
                                     labels: '',
-                                    category: 'appointment',
+                                    category: 'Appointment',
                                     completed: useData[i].fields.Actual_EndTime ? true : false,
                                     completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                 }
@@ -7672,12 +7675,12 @@ Template.non_transactional_list.onRendered(function() {
                                                     id: data.fields.ID,
                                                     priority: 0,
                                                     date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                    taskName: 'Appointment',
+                                                    taskName: '',
                                                     projectID: data.fields.ProjectID || '',
                                                     projectName: '',
-                                                    description: '',
+                                                    description: data.fields.Notes || '',
                                                     labels: '',
-                                                    category: 'appointment',
+                                                    category: 'Appointment',
                                                     completed: data.fields.Actual_EndTime ? true : false,
                                                     completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                                 }
@@ -7688,12 +7691,12 @@ Template.non_transactional_list.onRendered(function() {
                                                 id: data.fields.ID,
                                                 priority: 0,
                                                 date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                taskName: 'Appointment',
+                                                taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
-                                                description: '',
+                                                description: data.fields.Notes || '',
                                                 labels: '',
-                                                category: 'appointment',
+                                                category: 'Appointment',
                                                 completed: data.fields.Actual_EndTime ? true : false,
                                                 completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                             }
@@ -7724,12 +7727,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.fields.ID,
                                             priority: 0,
                                             date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                            taskName: 'Appointment',
+                                            taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
-                                            description: '',
+                                            description: data.fields.Notes || '',
                                             labels: '',
-                                            category: 'appointment',
+                                            category: 'Appointment',
                                             completed: data.fields.Actual_EndTime ? true : false,
                                             completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         }
@@ -7740,12 +7743,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.fields.ID,
                                         priority: 0,
                                         date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                        taskName: 'Appointment',
+                                        taskName: '',
                                         projectID: data.fields.ProjectID || '',
                                         projectName: '',
-                                        description: '',
+                                        description: data.fields.Notes || '',
                                         labels: '',
-                                        category: 'appointment',
+                                        category: 'Appointment',
                                         completed: data.fields.Actual_EndTime ? true : false,
                                         completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     }
@@ -7781,12 +7784,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
                                         priority: 0,
                                         date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                        taskName: 'Email',
+                                        taskName: '',
                                         projectID: '',
                                         projectName: '',
                                         description: '',
                                         labels: '',
-                                        category: 'email',
+                                        category: 'Email',
                                         completed: false,
                                         completedby: "",
                                     }
@@ -7816,12 +7819,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: dataObj.tcorrespondence[i].fields.MessageId ? parseInt(dataObj.tcorrespondence[i].fields.MessageId) : 999999,
                                     priority: 0,
                                     date: dataObj.tcorrespondence[i].fields.Ref_Date !== '' ? moment(dataObj.tcorrespondence[i].fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                    taskName: 'Email',
+                                    taskName: '',
                                     projectID: '',
                                     projectName: '',
                                     description: '',
                                     labels: '',
-                                    category: 'email',
+                                    category: 'Email',
                                     completed: false,
                                     completedby: "",
                                 }
@@ -7854,12 +7857,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
                                     priority: 0,
                                     date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                    taskName: 'Email',
+                                    taskName: '',
                                     projectID: '',
                                     projectName: '',
                                     description: '',
                                     labels: '',
-                                    category: 'email',
+                                    category: 'Email',
                                     completed: false,
                                     completedby: "",
                                 }
@@ -7886,6 +7889,7 @@ Template.non_transactional_list.onRendered(function() {
             var dataList = [
                 data[i].id || "",
                 data[i].date || "",
+                data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
                 data[i].completedby || "",
@@ -7920,21 +7924,26 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -8392,10 +8401,10 @@ Template.non_transactional_list.onRendered(function() {
 
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
-
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
+        
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
-
+        
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
@@ -8425,12 +8434,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.tprojecttasks[i].fields.ID || 0,
                                             priority: data.tprojecttasks[i].fields.priority || 0,
                                             date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                            taskName: 'Task',
+                                            taskName: data.tprojecttasks[i].fields.TaskName || '',
                                             projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                             description: taskDescription,
                                             labels: taskLabelArray,
-                                            category: 'task',
+                                            category: 'Task',
                                             completed: data.tprojecttasks[i].fields.Completed,
                                             completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                         };
@@ -8441,12 +8450,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
                                         date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                        taskName: 'Task',
+                                        taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                         description: taskDescription,
                                         labels: taskLabelArray,
-                                        category: 'task',
+                                        category: 'Task',
                                         completed: data.tprojecttasks[i].fields.Completed,
                                         completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                     };
@@ -8462,7 +8471,6 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
-
                 for (let i = 0; i < all_records.length; i++) {
                     let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
                     due_date = new Date(due_date);
@@ -8487,12 +8495,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: all_records[i].fields.ID || 0,
                                     priority: all_records[i].fields.priority || 0,
                                     date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                    taskName: 'Task',
+                                    taskName: all_records[i].fields.TaskName || '',
                                     projectID: all_records[i].fields.ProjectID || '',
                                     projectName: all_records[i].fields.ProjectName || '',
                                     description: taskDescription,
                                     labels: taskLabelArray,
-                                    category: 'task',
+                                    category: 'Task',
                                     completed: all_records[i].fields.Completed,
                                     completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
                                 };
@@ -8503,12 +8511,12 @@ Template.non_transactional_list.onRendered(function() {
                                 id: all_records[i].fields.ID || 0,
                                 priority: all_records[i].fields.priority || 0,
                                 date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                taskName: 'Task',
+                                taskName: all_records[i].fields.TaskName || '',
                                 projectID: all_records[i].fields.ProjectID || '',
                                 projectName: all_records[i].fields.ProjectName || '',
                                 description: taskDescription,
                                 labels: taskLabelArray,
-                                category: 'task',
+                                category: 'Task',
                                 completed: all_records[i].fields.Completed,
                                 completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
                             };
@@ -8546,12 +8554,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
                                         date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                        taskName: 'Task',
+                                        taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                         description: taskDescription,
                                         labels: taskLabelArray,
-                                        category: 'task',
+                                        category: 'Task',
                                         completed: data.tprojecttasks[i].fields.Completed,
                                         completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                     };
@@ -8562,12 +8570,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: data.tprojecttasks[i].fields.ID || 0,
                                     priority: data.tprojecttasks[i].fields.priority || 0,
                                     date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                    taskName: 'Task',
+                                    taskName: data.tprojecttasks[i].fields.TaskName || '',
                                     projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                     projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                     description: taskDescription,
                                     labels: taskLabelArray,
-                                    category: 'task',
+                                    category: 'Task',
                                     completed: data.tprojecttasks[i].fields.Completed,
                                     completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                 };
@@ -8598,12 +8606,12 @@ Template.non_transactional_list.onRendered(function() {
                                                 id: data.fields.ID,
                                                 priority: 0,
                                                 date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                taskName: 'Appointment',
+                                                taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
-                                                description: '',
+                                                description: data.fields.Notes || '',
                                                 labels: '',
-                                                category: 'appointment',
+                                                category: 'Appointment',
                                                 completed: data.fields.Actual_EndTime ? true : false,
                                                 completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                             }
@@ -8614,12 +8622,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.fields.ID,
                                             priority: 0,
                                             date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                            taskName: 'Appointment',
+                                            taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
-                                            description: '',
+                                            description: data.fields.Notes || '',
                                             labels: '',
-                                            category: 'appointment',
+                                            category: 'Appointment',
                                             completed: data.fields.Actual_EndTime ? true : false,
                                             completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         }
@@ -8645,12 +8653,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: useData[i].fields.ID,
                                         priority: 0,
                                         date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
-                                        taskName: 'Appointment',
+                                        taskName: '',
                                         projectID: useData[i].fields.ProjectID || '',
                                         projectName: '',
-                                        description: '',
+                                        description: useData[i].fields.Notes || '',
                                         labels: '',
-                                        category: 'appointment',
+                                        category: 'Appointment',
                                         completed: useData[i].fields.Actual_EndTime ? true : false,
                                         completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     }
@@ -8661,12 +8669,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: useData[i].fields.ID,
                                     priority: 0,
                                     date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
-                                    taskName: 'Appointment',
+                                    taskName: '',
                                     projectID: useData[i].fields.ProjectID || '',
                                     projectName: '',
-                                    description: '',
+                                    description: useData[i].fields.Notes || '',
                                     labels: '',
-                                    category: 'appointment',
+                                    category: 'Appointment',
                                     completed: useData[i].fields.Actual_EndTime ? true : false,
                                     completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                 }
@@ -8688,12 +8696,12 @@ Template.non_transactional_list.onRendered(function() {
                                                     id: data.fields.ID,
                                                     priority: 0,
                                                     date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                    taskName: 'Appointment',
+                                                    taskName: '',
                                                     projectID: data.fields.ProjectID || '',
                                                     projectName: '',
-                                                    description: '',
+                                                    description: data.fields.Notes || '',
                                                     labels: '',
-                                                    category: 'appointment',
+                                                    category: 'Appointment',
                                                     completed: data.fields.Actual_EndTime ? true : false,
                                                     completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                                 }
@@ -8704,12 +8712,12 @@ Template.non_transactional_list.onRendered(function() {
                                                 id: data.fields.ID,
                                                 priority: 0,
                                                 date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                taskName: 'Appointment',
+                                                taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
-                                                description: '',
+                                                description: data.fields.Notes || '',
                                                 labels: '',
-                                                category: 'appointment',
+                                                category: 'Appointment',
                                                 completed: data.fields.Actual_EndTime ? true : false,
                                                 completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                             }
@@ -8740,12 +8748,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.fields.ID,
                                             priority: 0,
                                             date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                            taskName: 'Appointment',
+                                            taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
-                                            description: '',
+                                            description: data.fields.Notes || '',
                                             labels: '',
-                                            category: 'appointment',
+                                            category: 'Appointment',
                                             completed: data.fields.Actual_EndTime ? true : false,
                                             completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         }
@@ -8756,12 +8764,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.fields.ID,
                                         priority: 0,
                                         date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                        taskName: 'Appointment',
+                                        taskName: '',
                                         projectID: data.fields.ProjectID || '',
                                         projectName: '',
-                                        description: '',
+                                        description: data.fields.Notes || '',
                                         labels: '',
-                                        category: 'appointment',
+                                        category: 'Appointment',
                                         completed: data.fields.Actual_EndTime ? true : false,
                                         completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     }
@@ -8797,12 +8805,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
                                         priority: 0,
                                         date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                        taskName: 'Email',
+                                        taskName: '',
                                         projectID: '',
                                         projectName: '',
                                         description: '',
                                         labels: '',
-                                        category: 'email',
+                                        category: 'Email',
                                         completed: false,
                                         completedby: "",
                                     }
@@ -8832,12 +8840,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: dataObj.tcorrespondence[i].fields.MessageId ? parseInt(dataObj.tcorrespondence[i].fields.MessageId) : 999999,
                                     priority: 0,
                                     date: dataObj.tcorrespondence[i].fields.Ref_Date !== '' ? moment(dataObj.tcorrespondence[i].fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                    taskName: 'Email',
+                                    taskName: '',
                                     projectID: '',
                                     projectName: '',
                                     description: '',
                                     labels: '',
-                                    category: 'email',
+                                    category: 'Email',
                                     completed: false,
                                     completedby: "",
                                 }
@@ -8870,12 +8878,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
                                     priority: 0,
                                     date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                    taskName: 'Email',
+                                    taskName: '',
                                     projectID: '',
                                     projectName: '',
                                     description: '',
                                     labels: '',
-                                    category: 'email',
+                                    category: 'Email',
                                     completed: false,
                                     completedby: "",
                                 }
@@ -8902,6 +8910,7 @@ Template.non_transactional_list.onRendered(function() {
             var dataList = [
                 data[i].id || "",
                 data[i].date || "",
+                data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
                 data[i].completedby || "",
@@ -8936,21 +8945,26 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -9095,6 +9109,12 @@ Template.non_transactional_list.onRendered(function() {
                         });
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
+
+                        $(document).on("click", "#btnRefreshList", function(e) {
+                            const datefrom = $("#dateFrom").val();
+                            const dateto = $("#dateTo").val();
+                            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+                        });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -9411,8 +9431,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -9443,12 +9463,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.tprojecttasks[i].fields.ID || 0,
                                             priority: data.tprojecttasks[i].fields.priority || 0,
                                             date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                            taskName: 'Task',
+                                            taskName: data.tprojecttasks[i].fields.TaskName || '',
                                             projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                             description: taskDescription,
                                             labels: taskLabelArray,
-                                            category: 'task',
+                                            category: 'Task',
                                             completed: data.tprojecttasks[i].fields.Completed,
                                             completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                         };
@@ -9459,12 +9479,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
                                         date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                        taskName: 'Task',
+                                        taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                         description: taskDescription,
                                         labels: taskLabelArray,
-                                        category: 'task',
+                                        category: 'Task',
                                         completed: data.tprojecttasks[i].fields.Completed,
                                         completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                     };
@@ -9505,12 +9525,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: all_records[i].fields.ID || 0,
                                     priority: all_records[i].fields.priority || 0,
                                     date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                    taskName: 'Task',
+                                    taskName: all_records[i].fields.TaskName || '',
                                     projectID: all_records[i].fields.ProjectID || '',
                                     projectName: all_records[i].fields.ProjectName || '',
                                     description: taskDescription,
                                     labels: taskLabelArray,
-                                    category: 'task',
+                                    category: 'Task',
                                     completed: all_records[i].fields.Completed,
                                     completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
                                 };
@@ -9521,12 +9541,12 @@ Template.non_transactional_list.onRendered(function() {
                                 id: all_records[i].fields.ID || 0,
                                 priority: all_records[i].fields.priority || 0,
                                 date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                taskName: 'Task',
+                                taskName: all_records[i].fields.TaskName || '',
                                 projectID: all_records[i].fields.ProjectID || '',
                                 projectName: all_records[i].fields.ProjectName || '',
                                 description: taskDescription,
                                 labels: taskLabelArray,
-                                category: 'task',
+                                category: 'Task',
                                 completed: all_records[i].fields.Completed,
                                 completedby: all_records[i].fields.due_date ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : "",
                             };
@@ -9564,12 +9584,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
                                         date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                        taskName: 'Task',
+                                        taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                         description: taskDescription,
                                         labels: taskLabelArray,
-                                        category: 'task',
+                                        category: 'Task',
                                         completed: data.tprojecttasks[i].fields.Completed,
                                         completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                     };
@@ -9580,12 +9600,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: data.tprojecttasks[i].fields.ID || 0,
                                     priority: data.tprojecttasks[i].fields.priority || 0,
                                     date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                                    taskName: 'Task',
+                                    taskName: data.tprojecttasks[i].fields.TaskName || '',
                                     projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                     projectName: data.tprojecttasks[i].fields.ProjectName || '',
                                     description: taskDescription,
                                     labels: taskLabelArray,
-                                    category: 'task',
+                                    category: 'Task',
                                     completed: data.tprojecttasks[i].fields.Completed,
                                     completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
                                 };
@@ -9616,12 +9636,12 @@ Template.non_transactional_list.onRendered(function() {
                                                 id: data.fields.ID,
                                                 priority: 0,
                                                 date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                taskName: 'Appointment',
+                                                taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
-                                                description: '',
+                                                description: data.fields.Notes || '',
                                                 labels: '',
-                                                category: 'appointment',
+                                                category: 'Appointment',
                                                 completed: data.fields.Actual_EndTime ? true : false,
                                                 completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                             }
@@ -9632,12 +9652,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.fields.ID,
                                             priority: 0,
                                             date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                            taskName: 'Appointment',
+                                            taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
-                                            description: '',
+                                            description: data.fields.Notes || '',
                                             labels: '',
-                                            category: 'appointment',
+                                            category: 'Appointment',
                                             completed: data.fields.Actual_EndTime ? true : false,
                                             completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         }
@@ -9663,12 +9683,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: useData[i].fields.ID,
                                         priority: 0,
                                         date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
-                                        taskName: 'Appointment',
+                                        taskName: '',
                                         projectID: useData[i].fields.ProjectID || '',
                                         projectName: '',
-                                        description: '',
+                                        description: useData[i].fields.Notes || '',
                                         labels: '',
-                                        category: 'appointment',
+                                        category: 'Appointment',
                                         completed: useData[i].fields.Actual_EndTime ? true : false,
                                         completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     }
@@ -9679,12 +9699,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: useData[i].fields.ID,
                                     priority: 0,
                                     date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
-                                    taskName: 'Appointment',
+                                    taskName: '',
                                     projectID: useData[i].fields.ProjectID || '',
                                     projectName: '',
-                                    description: '',
+                                    description: useData[i].fields.Notes || '',
                                     labels: '',
-                                    category: 'appointment',
+                                    category: 'Appointment',
                                     completed: useData[i].fields.Actual_EndTime ? true : false,
                                     completedby: useData[i].fields.Actual_EndTime ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                 }
@@ -9706,12 +9726,12 @@ Template.non_transactional_list.onRendered(function() {
                                                     id: data.fields.ID,
                                                     priority: 0,
                                                     date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                    taskName: 'Appointment',
+                                                    taskName: '',
                                                     projectID: data.fields.ProjectID || '',
                                                     projectName: '',
-                                                    description: '',
+                                                    description: data.fields.Notes || '',
                                                     labels: '',
-                                                    category: 'appointment',
+                                                    category: 'Appointment',
                                                     completed: data.fields.Actual_EndTime ? true : false,
                                                     completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                                 }
@@ -9722,12 +9742,12 @@ Template.non_transactional_list.onRendered(function() {
                                                 id: data.fields.ID,
                                                 priority: 0,
                                                 date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                                taskName: 'Appointment',
+                                                taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
-                                                description: '',
+                                                description: data.fields.Notes || '',
                                                 labels: '',
-                                                category: 'appointment',
+                                                category: 'Appointment',
                                                 completed: data.fields.Actual_EndTime ? true : false,
                                                 completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                             }
@@ -9758,12 +9778,12 @@ Template.non_transactional_list.onRendered(function() {
                                             id: data.fields.ID,
                                             priority: 0,
                                             date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                            taskName: 'Appointment',
+                                            taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
-                                            description: '',
+                                            description: data.fields.Notes || '',
                                             labels: '',
-                                            category: 'appointment',
+                                            category: 'Appointment',
                                             completed: data.fields.Actual_EndTime ? true : false,
                                             completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         }
@@ -9774,12 +9794,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: data.fields.ID,
                                         priority: 0,
                                         date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                                        taskName: 'Appointment',
+                                        taskName: '',
                                         projectID: data.fields.ProjectID || '',
                                         projectName: '',
-                                        description: '',
+                                        description: data.fields.Notes || '',
                                         labels: '',
-                                        category: 'appointment',
+                                        category: 'Appointment',
                                         completed: data.fields.Actual_EndTime ? true : false,
                                         completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     }
@@ -9815,12 +9835,12 @@ Template.non_transactional_list.onRendered(function() {
                                         id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
                                         priority: 0,
                                         date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                        taskName: 'Email',
+                                        taskName: '',
                                         projectID: '',
                                         projectName: '',
                                         description: '',
                                         labels: '',
-                                        category: 'email',
+                                        category: 'Email',
                                         completed: false,
                                         completedby: "",
                                     }
@@ -9850,12 +9870,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: dataObj.tcorrespondence[i].fields.MessageId ? parseInt(dataObj.tcorrespondence[i].fields.MessageId) : 999999,
                                     priority: 0,
                                     date: dataObj.tcorrespondence[i].fields.Ref_Date !== '' ? moment(dataObj.tcorrespondence[i].fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                    taskName: 'Email',
+                                    taskName: '',
                                     projectID: '',
                                     projectName: '',
                                     description: '',
                                     labels: '',
-                                    category: 'email',
+                                    category: 'Email',
                                     completed: false,
                                     completedby: "",
                                 }
@@ -9888,12 +9908,12 @@ Template.non_transactional_list.onRendered(function() {
                                     id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
                                     priority: 0,
                                     date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                    taskName: 'Email',
+                                    taskName: '',
                                     projectID: '',
                                     projectName: '',
                                     description: '',
                                     labels: '',
-                                    category: 'email',
+                                    category: 'Email',
                                     completed: false,
                                     completedby: "",
                                 }
@@ -9920,6 +9940,7 @@ Template.non_transactional_list.onRendered(function() {
             var dataList = [
                 data[i].id || "",
                 data[i].date || "",
+                data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
                 data[i].completedby || "",
@@ -9954,21 +9975,26 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -10486,11 +10512,11 @@ Template.non_transactional_list.onRendered(function() {
         const dateto = $("#dateTo").val();
         templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
     } else if (currenttablename === "tblRatePopList"){
-        templateObject.getRateListData(true);
+        templateObject.getRateListData();
     }else if (currenttablename === "tblRateTypeList"){
-        templateObject.getRateTypeListData(true);
+        templateObject.getRateTypeListData();
     }else if (currenttablename === "tblOverTimeSheet"){
-        templateObject.getOverTimeSheets(true);
+        templateObject.getOverTimeSheets();
     }
     tableResize();
 });
