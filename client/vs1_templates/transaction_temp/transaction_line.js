@@ -191,6 +191,10 @@ Template.transaction_line.onRendered(function() {
                                     x = resetData.find(x => x.class == 'ProductName'); {x.display = x.active = true};
                                     x = resetData.find(x => x.class == 'Description'); {x.display = x.active = true};
                                 } 
+                                if(currenttranstablename == 'tblInvoiceLine') {
+                                    let x = resetData.find(x => x.class == 'Qty');
+                                    if(x != undefined) { x.display = x.active = true}
+                                }
                                 templateObject.showCustomFieldDisplaySettings(resetData);
                           }
                       }
