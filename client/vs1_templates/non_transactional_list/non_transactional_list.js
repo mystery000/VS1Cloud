@@ -11182,7 +11182,6 @@ Template.non_transactional_list.onRendered(function() {
     }else if (currenttablename === "tblRateTypeList"){
         templateObject.getRateTypeListData();
     }else if (currenttablename === "tblOverTimeSheet"){
-<<<<<<< HEAD
         templateObject.getOverTimeSheets(true);
     }else if( currenttablename === "productrecentlist"){
         templateObject.getAllProductRecentTransactions(currenttype);
@@ -11190,9 +11189,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getAllProductData();
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
-=======
         templateObject.getOverTimeSheets();
->>>>>>> main
     }
     tableResize();
 });
