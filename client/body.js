@@ -350,6 +350,8 @@ import './Dashboard/appointments-widget/ds-appointments-widget.js';
 import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
+import './eft/eft.js';
+/* Sasa */
 
 /* Martin */
 import './contacts/addcustomerpop.js';
@@ -543,6 +545,7 @@ import './eft/exportModal/eftExportModal.js';
 import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
+
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
