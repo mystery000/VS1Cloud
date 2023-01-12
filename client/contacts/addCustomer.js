@@ -18,6 +18,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './addCustomer.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { subtract } from "lodash";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -4803,7 +4804,11 @@ Template.customerscard.events({
     "click #btnAddLine, click #btnAddLineTask": function(e) {
         let tokenid = "random";
         let currentDate = new Date();
+        let completeDate = new Date();
         currentDate = moment(currentDate).format("DD/MM/YYYY");
+        completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
+        console.log("completeDate=", completeDate);
+
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
@@ -4845,7 +4850,8 @@ Template.customerscard.events({
                 $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             }
         });
-
+        $("#completeDate").datepicker("setDate", completeDate);
+        
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
 
