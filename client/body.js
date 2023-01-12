@@ -530,18 +530,18 @@ import './vs1charts/resalescomparision/dsm_resalescomparision.js';
 /* Andrew */
 
 /* XiaoJang*/
-// import './overviews/payrolloverview.js';
-// import './overviews/payrollleave.js';
-// import './payroll/singletouchpayroll/singletouch.js';
-// import './payroll/singletouchpayroll/singletouchpayroll.js';
-// import './payroll/clockonoff/clockonoff.js';
-// import './payroll/paychexapi/paychexapi.js';
-// import './payroll/payrun/payrun.js';
-// import './payroll/payrun/payrundetails.js';
-// import './overviews/payrolloverview_tmp.html';
-// import './eft/exportModal/eftExportModal.js';
-// import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
-// import './eft/addNewEftModal/addNewEftModal.js';
+import './overviews/payrolloverview.js';
+import './overviews/payrollleave.js';
+import './payroll/singletouchpayroll/singletouch.js';
+import './payroll/singletouchpayroll/singletouchpayroll.js';
+import './payroll/clockonoff/clockonoff.js';
+import './payroll/paychexapi/paychexapi.js';
+import './payroll/payrun/payrun.js';
+import './payroll/payrun/payrundetails.js';
+import './overviews/payrolloverview_tmp.html';
+import './eft/exportModal/eftExportModal.js';
+import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
