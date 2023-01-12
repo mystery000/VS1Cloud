@@ -292,12 +292,19 @@ import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
 import './journalEntry/journalentry_list.js';
 import './manufacture/processList.js';
+import './vs1shipping/shippingoverview.js';
+import './vs1shipping/shippingdocket.js';
 /* Tinyiko */
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import 'datatables.net-responsive-bs4';
+import './lib/global/globalShipping.js';
 /* Rasheed */
+
+/* Jeyhun */
+import './manufacture/workorderList.js';
+/* Jeyhun */
 
 /* DevTop/Dev Pioneer */
 import './vs1_templates/report/accountant_header.js';
@@ -350,6 +357,8 @@ import './Dashboard/appointments-widget/ds-appointments-widget.js';
 import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
+import './eft/eft.js';
+/* Sasa */
 
 /* Martin */
 import './contacts/addcustomerpop.js';
@@ -530,18 +539,18 @@ import './vs1charts/resalescomparision/dsm_resalescomparision.js';
 /* Andrew */
 
 /* XiaoJang*/
-// import './overviews/payrolloverview.js';
-// import './overviews/payrollleave.js';
-// import './payroll/singletouchpayroll/singletouch.js';
-// import './payroll/singletouchpayroll/singletouchpayroll.js';
-// import './payroll/clockonoff/clockonoff.js';
-// import './payroll/paychexapi/paychexapi.js';
-// import './payroll/payrun/payrun.js';
-// import './payroll/payrun/payrundetails.js';
-// import './overviews/payrolloverview_tmp.html';
-// import './eft/exportModal/eftExportModal.js';
-// import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
-// import './eft/addNewEftModal/addNewEftModal.js';
+import './overviews/payrolloverview.js';
+import './overviews/payrollleave.js';
+import './payroll/singletouchpayroll/singletouch.js';
+import './payroll/singletouchpayroll/singletouchpayroll.js';
+import './payroll/clockonoff/clockonoff.js';
+import './payroll/paychexapi/paychexapi.js';
+import './payroll/payrun/payrun.js';
+import './payroll/payrun/payrundetails.js';
+import './overviews/payrolloverview_tmp.html';
+import './eft/exportModal/eftExportModal.js';
+import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

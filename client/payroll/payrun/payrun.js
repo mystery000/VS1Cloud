@@ -17,6 +17,9 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import 'jquery-editable-select';
+import {Template} from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './payrun.html';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.payrun.onCreated(function() {
@@ -72,7 +75,7 @@ Template.payrun.onRendered(function() {
             ],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
             fixedColumnsRight: 1
             },
@@ -147,7 +150,7 @@ Template.payrun.onRendered(function() {
             ],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
             fixedColumnsRight: 1
             },
@@ -221,7 +224,7 @@ Template.payrun.onRendered(function() {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },

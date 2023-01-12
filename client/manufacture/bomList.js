@@ -1,11 +1,9 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { ProductService } from "../product/product-service";
-import { OrganisationService } from "../js/organisation-service";
 import { Template } from 'meteor/templating';
 import './bom_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let organisationService = new OrganisationService();
 Template.bom_list.inheritsHooksFrom('non_transactional_list');
 Template.bom_list.onCreated(function(){
     const templateObject = Template.instance()
@@ -27,7 +25,7 @@ Template.bom_list.onRendered(function(){
     if(dataObject.length == 0) {
       productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data){
         templateObject.bomProducts.set(data.tproctree);
-        addVS1Data('TProcTree', JSON.parse(data)).then(function(){})
+        addVS1Data('TProcTree', JSON.stringify(data)).then(function(){})
       })
     }else {
       let data = JSON.parse(dataObject[0].data);
@@ -36,7 +34,7 @@ Template.bom_list.onRendered(function(){
   }).catch(function(e){
     productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data){
       templateObject.bomProducts.set(data.tproctree);
-      addVS1Data('TProcTree', JSON.parse(data)).then(function(){})
+      addVS1Data('TProcTree', JSON.stringify(data)).then(function(){})
     })
   })
 //   templateObject.checkSetupWizardFinished = async function () {

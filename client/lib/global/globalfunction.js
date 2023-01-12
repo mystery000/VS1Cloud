@@ -1222,7 +1222,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       $("#templatePreviewModal .po3").text(object_invoce[0]["pqnumber"]);
       $("#templatePreviewModal .amountdue3").text(object_invoce[0]["bal_due"]);
 
-      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != "")
+      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != undefined)
           $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
       $("#templatePreviewModal .termdays").text($("#sltTerms").val());
       $("#templatePreviewModal .termdesc").text(localStorage.getItem("ERPTermDesc") || "-");

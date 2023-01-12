@@ -17,6 +17,9 @@
                     showSalesDate=true
                     showPONumber=true
                     showOrderNumber=true
+                    showTransactionButtons=true
+                    showQuantityBuild=true
+                    showCompleteProcess=workorderrecord.isStarted
                 }}
                 <!-- <div class="row">
                     <div class="col-12 col-xl-8">
@@ -639,7 +642,7 @@
                                     class="lineProductDesc colDescription ">
                                     {{workorderrecord.product_description}}</td>
                                   <td class="colQty "><input
-                                      class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.salesorderQty}}"></td>
+                                      class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.quantity}}"></td>
                                   
                                   <td contenteditable="false" class="lineShipDate colShipDate"
                                     style="text-align: right!important;">{{workorderrecord.shipDate}}</td>

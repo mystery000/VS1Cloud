@@ -1,5 +1,5 @@
 import { EmployeePayrollService } from '../js/employeepayroll-service';
-
+import { Template } from 'meteor/templating';
 import './assignLeaveTypePop.html';
 
 Template.assignLeaveTypePop.onCreated(function () {
@@ -35,8 +35,8 @@ Template.assignLeaveTypePop.onRendered(function () {
 Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr("leavetype-id");
-        const name = $(e.currentTarget).find(".leave-type-name").text(); 
-        let Hours = (e.currentTarget).find(".colALTypeOpeningBalance").text() ||'';
+        let name = $(e.currentTarget).attr("leave-type-name"); 
+        let Hours = $(e.currentTarget).attr("col-type-balance") ||''; 
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
         $('#edtLeaveTypeofRequest').val(name); 
