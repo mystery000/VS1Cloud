@@ -84,6 +84,7 @@ import './route.js';
 
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
+// import "../lib/global/indexdbstorage.js";
 // import '/imports/startup/client';
 // Transaction Header and Footer
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
@@ -418,6 +419,8 @@ import './contacts/leadlist.js';
 import './contacts/employeelist.js';
 import './contacts/addemployeepop.js';
 import './packages/currency/currencydropdown.js';
+
+
 import './accesslevel/accessleveldup.js';
 import './accesslevel/companyappsettingsdup.js';
 import './accesslevel/companyappsettings.js';
@@ -427,8 +430,12 @@ import './settings/payroll-settings/superannuation.js';
 import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
+<<<<<<< HEAD
+
+=======
 import './vs1_templates/contact_title/contact_title.html';
 /*Vladyslav*/
+>>>>>>> main
 
 /* Roverto */
 import './Dashboard/appointments-widget/dsm-appointments-widget.js';
