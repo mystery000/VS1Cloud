@@ -326,7 +326,9 @@ Template.production_planner.onRendered(async function() {
         },
         eventDidMount : function(arg) {
             let event = arg.event;
-            arg.el.ondblclick = (()=>{
+            arg.el.addEventListener('dblclick', (e)=>{
+                e.preventDefault();
+                e.stopPropagation();
                 let id = event.extendedProps.orderId;
                 FlowRouter.go('/workordercard?id=' + id)
             })
@@ -452,6 +454,7 @@ Template.production_planner.onRendered(async function() {
             // window.location.reload();
         },
         eventClick: function(info) {
+            setTimeout(()=>{
                 let title = info.event.title;
                 let orderIndex = workorders.findIndex(order => {
                     return order.fields.ProductName == title;
@@ -482,6 +485,7 @@ Template.production_planner.onRendered(async function() {
                     events: templateObject.events.get()
                 })
                 calendar.render();
+            }, 300)
             }
             // expandRows: true,
             // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
@@ -612,7 +616,7 @@ Template.production_planner.events({
                     // })
 
                     for(let n = 0; n < events.length; n++) {
-                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.toString().split('000')[0] == event.extendedProps.orderId.toString().split('000')[0]) {
+                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.toString().split('_')[0] == event.extendedProps.orderId.toString().split('_')[0]) {
                             buildSubs.push(events[n])
                         }
                     }
