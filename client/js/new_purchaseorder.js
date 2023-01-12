@@ -271,13 +271,13 @@ Template.purchaseordercard.onRendered(() => {
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
 
         title = $(this).parent().attr("data-id");
-        number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+        let number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
 
     });
 
     templateObject.generateInvoiceData = function (template_title,number) {
-        object_invoce = [];
+        let object_invoce = [];
         switch (template_title) {
 
             case "Purchase Orders":
@@ -292,7 +292,7 @@ Template.purchaseordercard.onRendered(() => {
         var array_data = [];
         let lineItems = [];
         let taxItems = {};
-        object_invoce = [];
+        let object_invoce = [];
         let item_invoices = '';
 
         let invoice_data =  templateObject.purchaseorderrecord.get();
@@ -393,7 +393,7 @@ Template.purchaseordercard.onRendered(() => {
         let customerEmail = $('#edtCustomerEmail').val();
         let id = $('.printID').attr("id") || "new";
         let currencyname = (CountryAbbr).toLowerCase();
-        stringQuery = "?";
+        let stringQuery = "?";
         var customerID = $('#edtCustomerEmail').attr('customerid');
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";

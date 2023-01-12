@@ -2077,10 +2077,12 @@ Template.customerscard.onRendered(function() {
     }
 
     $(document).ready(function() {
-        setTimeout(function() {
+        console.log("modal here========2");
+        // setTimeout(function() {
             $('#sltTerms').editableSelect();
             $("#sltCurrency").editableSelect();
             $('#sltTerms').editableSelect().on('click.editable-select', function(e, li) {
+                console.log("modal here========asdfasdfasdf");
                 $('#selectLineID').val('sltTerms');
                 let $each = $(this);
                 let offset = $each.offset();
@@ -2130,6 +2132,7 @@ Template.customerscard.onRendered(function() {
             }
 
             function editableTerms(e, $each, offset, termsDataName) {
+                console.log("modal here========");
                 $('#edtTermsID').val('');
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     $('#termsListModal').modal('toggle');
@@ -2428,7 +2431,7 @@ Template.customerscard.onRendered(function() {
                 const taxRateDataName = e.target.value || '';
                 editableTaxCode(e, $each, offset, taxRateDataName);
             });
-        }, 1200);
+        // }, 1200);
     });
 
     $(document).on('click', '#editCustomerTitle', function(e, li) {
