@@ -13,6 +13,7 @@ import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
 import { Template } from 'meteor/templating';
 import './journalentry_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
