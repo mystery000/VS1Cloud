@@ -17,6 +17,9 @@
                     showSalesDate=true
                     showPONumber=true
                     showOrderNumber=true
+                    showTransactionButtons=true
+                    showQuantityBuild=true
+                    showCompleteProcess=workorderrecord.isStarted
                 }}
                 <!-- <div class="row">
                     <div class="col-12 col-xl-8">
@@ -634,15 +637,15 @@
                               <tbody>
                                 <tr class="dnd-moved">
                                   <td contenteditable="false" class="colProductName"><input
-                                      class="es-input highlightSelect lineProductName" type="search" value="{{workorderrecord.line.fields.ProductName}}"></td>
+                                      class="es-input highlightSelect lineProductName" type="search" value="{{workorderrecord.productname}}"></td>
                                   <td contenteditable="false"
                                     class="lineProductDesc colDescription ">
-                                    {{workorderrecord.line.fields.Product_Description}}</td>
+                                    {{workorderrecord.product_description}}</td>
                                   <td class="colQty "><input
-                                      class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.line.fields.Qty}}"></td>
+                                      class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.quantity}}"></td>
                                   
                                   <td contenteditable="false" class="lineShipDate colShipDate"
-                                    style="text-align: right!important;">{{workorderrecord.line.fields.ShipDate}}</td>
+                                    style="text-align: right!important;">{{workorderrecord.shipDate}}</td>
                                   <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                           class="fa fa-remove"></i></button></span></td>
                                 </tr>

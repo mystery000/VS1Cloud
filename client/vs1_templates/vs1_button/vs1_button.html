@@ -1,0 +1,33 @@
+<!-- Bootstrap Button Template -->
+<!-- Parameters -->
+<!-- 
+  htmlType -> string: button, submit
+  outline -> boolean
+  size -> string: xl, lg, md, sm, xs
+  isBlock -> boolean
+  color -> string: primary, secondary, success, danger, warning, info, light, dark, link
+  classes -> string
+  id -> string
+  name -> string
+  disabled -> boolean
+  iconName -> string
+  iconStyle -> string
+  title -> string
+  tooltip
+ -->
+<template name="vs1_button">
+  <button
+    class="{{getClassNames}}" 
+    type="{{htmlType}}" 
+    id="{{id}}" 
+    name="{{name}}"
+    disabled="{{disabled}}"
+    title="{{tooltip}}"
+    >
+      {{#if iconName }}
+      <i class="fa fa-{{iconName}}" style="padding-right: 8px;"></i>
+      {{/if}}
+
+      {{title}}
+  </button>
+</template>

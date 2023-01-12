@@ -1,10 +1,7 @@
 import { Template } from "meteor/templating";
 import { ReactiveVar } from "meteor/reactive-var";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
-import { OrganisationService } from "../js/organisation-service";
 import "./settings.html";
-
-let organisationService = new OrganisationService();
 
 Template.settings.onRendered(function () {
   let isFxCurrencyLicence = localStorage.getItem("CloudUseForeignLicence");

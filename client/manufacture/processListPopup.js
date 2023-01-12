@@ -1,21 +1,9 @@
-import {SalesBoardService} from '../js/sales-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
-import {AccountService} from "../accounts/account-service";
-import {InvoiceService} from "../invoice/invoice-service";
-import {UtilityService} from "../utility-service";
-import { SideBarService } from '../js/sidebar-service';
-import {OrganisationService} from '../js/organisation-service';
-import { ManufacturingService } from './manufacturing-service';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './processListPopup.html';
-
-let manufacturingService = new ManufacturingService();
 
 Template.processlistpopup.onCreated(function(e){
     const templateObject = Template.instance();

@@ -1,6 +1,10 @@
 import './inventorylist.html';
 // import './inventorypopups/RecentTransactionPopUp.html';
-import './producttable/productTable.js';
+// import './producttable/productTable.js';
+import './inventorypopups/onBackOrderPopUp.html';
+import './inventorypopups/onOrderPopUp.html';
+import './inventorypopups/onSalesOrderPopUp.html';
+import './inventorypopups/RecentTransactionPopUp.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { CoreService } from "../js/core-service";
@@ -67,6 +71,7 @@ Template.inventorylist.onCreated(function() {
 
     templateObject.productDataList = new ReactiveVar();
     templateObject.columnData = new ReactiveVar();
+    templateObject.productID = new ReactiveVar();
 });
 
 Template.inventorylist.onRendered(function() {
@@ -378,6 +383,7 @@ Template.inventorylist.onRendered(function() {
                                     });
                                 }
                                 templateObject.productDataList.set(JSON.stringify(splashArrayProductList));
+                                
                                 templateObject.columnData.set(JSON.stringify(columnData));
                                 
                                 // $("#tblInventoryOverview").dataTable({
@@ -1266,6 +1272,9 @@ Template.inventorylist.helpers({
 
     isSetupFinished: () => {
         return Template.instance().setupFinished.get();
+    },
+    productID: () => {
+        return Template.instance().productID.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
@@ -2561,7 +2570,120 @@ Template.inventorylist.events({
             //$('.lblPriceEx').css('width','10%');
         }
     },
+    'click .OnBO' : function(event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+    if (listData) {
+        $('#onBackOrderPopUp').modal("show");
+        let templateObject = Template.instance();
+        templateObject.productID.set(listData);
+        $(".productNameOnBo").text(listProductName);
+    }
+  },
+  "click .InStock": function(event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+    if (listData) {
+        // FlowRouter.go("/stockmovementreport?id=" + listData);
+        let templateObject = Template.instance();
+        $('#recentTransactionPopUp').modal("show");
+        templateObject.productID.set(listData);
+        $('.productIDOnRT').text(listData);
+        $('.productNameOnRT').text(listProductName);
+        // Filter the stock movement report based on product ID
+    }
+  },
 
+  "click .OnSO": function(event) {
+      var listData = $(event.target).closest("tr").find(".colProductID").text();
+      var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+      if (listData) {
+          $('#onSalesOrderPopUp').modal("show");
+          let templateObject = Template.instance();
+          templateObject.productID.set(listData);
+          $(".productNameOnSO").text(listProductName);
+
+      }
+  },
+
+  "click .OnOrder": function(event) {
+      var listData = $(event.target).closest("tr").find(".colProductID").text();
+      var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+      if (listData) {
+          $('#onOrderPopUp').modal("show");
+          let templateObject = Template.instance();
+          templateObject.productID.set(listData);
+          $(".productNameOnOrder").text(listProductName);
+      }
+  },
+
+  "click .ProductName, .SalesDescription, ": function(event) {
+      var listData = $(event.target).closest("tr").find(".colProductID").text();
+      if (listData) {
+          FlowRouter.go("/productview?id=" + listData);
+      }
+  },
+  'click .th.colCostPrice': function(event) {
+    $('.colCostPrice').addClass('hiddenColumn');
+    $('.colCostPrice').removeClass('showColumn');
+
+    $('.colCostPriceInc').addClass('showColumn');
+    $('.colCostPriceInc').removeClass('hiddenColumn');
+
+    $('.chkCostPrice').prop("checked", false);
+    $('.chkCostPriceInc').prop("checked", true);
+},
+'click .th.colCostPriceInc': function(event) {
+    $('.colCostPriceInc').addClass('hiddenColumn');
+    $('.colCostPriceInc').removeClass('showColumn');
+
+    $('.colCostPrice').addClass('showColumn');
+    $('.colCostPrice').removeClass('hiddenColumn');
+
+    $('.CostPrice').addClass('showColumn');
+    $('.CostPrice').removeClass('hiddenColumn');
+
+    $('.chkCostPrice').prop("checked", true);
+    $('.chkCostPriceInc').prop("checked", false);
+},
+'click .th.colSalePrice': function(event) {
+    $('.colSalePrice').addClass('hiddenColumn');
+    $('.colSalePrice').removeClass('showColumn');
+
+    $('.colSalePriceInc').addClass('showColumn');
+    $('.colSalePriceInc').removeClass('hiddenColumn');
+
+    $('.chkSalePrice').prop("checked", false);
+    $('.chkSalePriceInc').prop("checked", true);
+},
+'click .th.colSalePriceInc': function(event) {
+    $('.colSalePriceInc').addClass('hiddenColumn');
+    $('.colSalePriceInc').removeClass('showColumn');
+
+    $('.colSalePrice').addClass('showColumn');
+    $('.colSalePrice').removeClass('hiddenColumn');
+
+    $('.chkSalePrice').prop("checked", true);
+    $('.chkSalePriceInc').prop("checked", false);
+
+},
+"keyup #tblInventoryOverview_filter input": function(event) {
+  if ($(event.target).val() != "") {
+      $(".btnRefreshProduct").addClass("btnSearchAlert");
+  } else {
+      $(".btnRefreshProduct").removeClass("btnSearchAlert");
+  }
+  if (event.keyCode == 13) {
+      $(".btnRefreshProduct").trigger("click");
+  }
+},
+"blur #tblInventoryOverview_filter input": function(event) {
+  if ($(event.target).val() != "") {
+      $(".btnRefreshProduct").addClass("btnSearchAlert");
+  } else {
+      $(".btnRefreshProduct").removeClass("btnSearchAlert");
+  }
+},
 
 });
 
