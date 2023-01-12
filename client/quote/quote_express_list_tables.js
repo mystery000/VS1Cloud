@@ -1,13 +1,9 @@
 import '../lib/global/indexdbstorage.js';
-import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import {SalesBoardService} from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
-import {InvoiceService} from "../invoice/invoice-service";
 import {AccountService} from "../accounts/account-service";
-import {EmployeeProfileService} from "../js/profile-service";
-import {OrganisationService} from '../js/organisation-service';
 
 import { Template } from 'meteor/templating';
 import './quote_express_list_tables.html';

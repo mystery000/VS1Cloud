@@ -12,7 +12,6 @@ import { SalesBoardService } from "../js/sales-service";
 import { EmployeeProfileService } from "../js/profile-service";
 import { AccountService } from "../accounts/account-service";
 import { InvoiceService } from "../invoice/invoice-service";
-import { OrganisationService } from "../js/organisation-service";
 
 import { Template } from 'meteor/templating';
 import './invoice_list.html';

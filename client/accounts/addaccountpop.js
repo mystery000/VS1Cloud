@@ -37,7 +37,6 @@ Template.addaccountpop.onRendered(function () {
     // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let accountService = new AccountService();
-    let organisationService = new OrganisationService();
     let purchaseService = new PurchaseBoardService();
     const accountTypeList = [];
     const taxCodesList = [];

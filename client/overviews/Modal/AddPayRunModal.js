@@ -1,21 +1,14 @@
 import {ReactiveVar} from "meteor/reactive-var";
 import moment from "moment";
-import {AccountService} from "../../accounts/account-service";
 import Datehandler from "../../DateHandler";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
-import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
-import {UtilityService} from "../../utility-service";
 
-let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-let accountService = new AccountService();
-let taxRateService = new TaxRateService();
-let organisationService = new OrganisationService();
 let payRunHandler = new PayRunHandler();
 
 Template.AddPayRunModal.onCreated(function () {

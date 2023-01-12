@@ -3,7 +3,6 @@ import {PurchaseBoardService} from './purchase-service';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../utility-service";
 import { ProductService } from "../product/product-service";
-import { OrganisationService } from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';

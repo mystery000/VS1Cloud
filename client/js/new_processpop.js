@@ -1,30 +1,16 @@
-import { SalesBoardService } from './sales-service';
-import {PurchaseBoardService} from './purchase-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { UtilityService } from "../utility-service";
-import { ProductService } from "../product/product-service";
-import { OrganisationService } from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import { Random } from 'meteor/random';
-import { jsPDF } from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
 import 'jquery-editable-select';
-import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import {ContactService} from "../contacts/contact-service";
-import { TaxRateService } from "../settings/settings-service";
 import {ManufacturingService} from '../manufacture/manufacturing-service';
 import { Template } from 'meteor/templating';
 import '../manufacture/frm_processpop.html';
-import {Session} from 'meteor/session';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
 let manufacturingService = new ManufacturingService();
-
 
 Template.new_processpop.onCreated(() => {
     const templateObject = Template.instance();
