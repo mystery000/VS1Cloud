@@ -585,7 +585,8 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
             ]
         } else if(currenttablename === "tblInventoryOverview"){
-            let reset_data = [
+
+            reset_data = [
                 { index: 0, label: "#ID", class: "ProductID", width: "30", active: false, display: true },
                 { index: 1, label: "Product Name", class: "ProductName", width: "200", active: true, display: true },
                 { index: 2, label: "Sales Description", class: "SalesDescription", width: "", active: true, display: true },
@@ -605,6 +606,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
                 { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
               ];
+              
         } 
         templateObject.reset_data.set(reset_data);
     }
@@ -616,7 +618,7 @@ Template.non_transactional_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
-
+        
         // try {
         //     getVS1Data("VS1_Customize").then(function(dataObject) {
         //         if (dataObject.length == 0) {
@@ -1984,7 +1986,6 @@ Template.non_transactional_list.onRendered(function() {
                     })
                 });
             }
-            
             $("#" + currenttablename).dataTable({
                 
                 data: splashArrayProductList,
@@ -11186,7 +11187,7 @@ Template.non_transactional_list.onRendered(function() {
     }else if( currenttablename === "productrecentlist"){
         templateObject.getAllProductRecentTransactions(currenttype);
     }else if(currenttablename === "tblInventoryOverview"){
-        templateObject.getAllProductData();
+        templateObject.getAllProductData("All");
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
     }
