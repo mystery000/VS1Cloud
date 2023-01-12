@@ -20,9 +20,34 @@ let productService =  new ProductService();
 let sideBarService = new SideBarService();
 Template.bom_setup.onRendered(function() {
     const templateObject = Template.instance();
-    let temp = localStorage.getItem('TProcTree');
-    let tempArray = temp?JSON.parse(temp): [];
-    templateObject.bomProducts.set(tempArray)
+    $('.fullScreenSpin').css('display', 'inline-block');
+    // let temp = localStorage.getItem('TProcTree');
+    getVS1Data('TProcTree').then(function(dataObject){
+        if(dataObject.length == 0) {
+            productService.getAllBOMProducts(initialDataLoad, 0).then(function(dataObject) {
+                let data = dataObject.tproctree;
+                templateObject.bomProducts.set(data);
+                
+                $('.fullScreenSpin').css('display', 'none');
+            })
+        }else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tproctree;
+            
+            templateObject.bomProducts.set(useData);
+            $('.fullScreenSpin').css('display', 'none');
+        }
+    }).catch(function(e) {
+        productService.getAllBOMProducts(initialDataLoad, 0).then(function(dataObject) {
+            let data = dataObject.tproctree;
+            templateObject.bomProducts.set(data);
+            $('.fullScreenSpin').css('display', 'none');
+        }).catch(function(e) {
+            $('.fullScreenSpin').css('display', 'none');
+            templateObject.bomProducts.set([])
+        })
+    })
+    // let tempArray = temp?JSON.parse(temp): [];
 
 
 
@@ -44,7 +69,8 @@ Template.bom_setup.events({
         $('.fullScreenSpin').css('display', 'inline-block')
         let mainProductName = $('#edtMainProductName').val();
         let mainProcessName = $('#edtProcess').val();
-        let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')) : []
+        // let bomProducts = localStorage.getItem('TProcTree')? JSON.parse(localStorage.getItem('TProcTree')) : []
+        let bomProducts = tempObject.bomProducts.get();
         if(mainProductName == '') {
             swal('Please provide the product name !', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
@@ -68,18 +94,30 @@ Template.bom_setup.events({
             $('.fullScreenSpin').css('display', 'none');
             return false;
         }
-        let objDetails  = {
-            productName: mainProductName,
-            qty: 1,
-            process: mainProcessName,
-            processNote: $(products[0]).find('.edtProcessNote').val() || '',
-            attachments: JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [],
-            subs: [],
-            productDescription:  '',
-            totalQtyInStock:  0,
-            duration: parseFloat($('.edtDuration').val())
-        }
+        // let objDetails  = {
+        //     productName: mainProductName,
+        //     qty: 1,
+        //     process: mainProcessName,
+        //     processNote: $(products[0]).find('.edtProcessNote').val() || '',
+        //     attachments: JSON.parse($(products[0]).find('.attachedFiles').text() != ''?$(products[0]).find('.attachedFiles').text(): '[]').uploadedFilesArray || [],
+        //     subs: [],
+        //     productDescription:  '',
+        //     totalQtyInStock:  0,
+        //     duration: parseFloat($('.edtDuration').val())
+        // }
 
+        let  objDetails= {
+            Caption: mainProductName,
+            Info: mainProcessName,
+            CustomInputClass: $(products[0]).find('.edtProcessNote').val() || '',
+            Description: '',
+            Details: '',
+            TotalQtyOriginal: 0,
+            QtyVariation: parseFloat($('.edtDuration').val()),
+            Value: '',
+            ProcStepItemRef: 'vs1BOM'
+        }
+        let subBOMs= [];
 
         for(let i = 1; i< products.length - 1; i ++) {
             let productRows = products[i].querySelectorAll('.productRow')
@@ -129,8 +167,10 @@ Template.bom_setup.events({
                     }
                 }
             // }
-            objDetails.subs.push(objectDetail);
+            subBOMs.push(objectDetail);
         }
+
+        objDetails.Details = JSON.stringify(subBOMs) || '';
 
         // tempObject.bomStructure.set(objDetails);
         // let object = {
@@ -142,8 +182,8 @@ Template.bom_setup.events({
         getVS1Data('TProductVS1').then(function(dataObject) {
             if(dataObject.length == 0) {
                 productService.getOneProductdatavs1byname($('#edtMainProductName').val()).then(function(data){
-                    objDetails.productDescription = data.tproduct[0].fields.SalesDescription;
-                    objDetails.totalQtyInStock = data.tproduct[0].fields.TotalQtyInStock;
+                    objDetails.Description = data.tproduct[0].fields.SalesDescription;
+                    objDetails.TotalQtyOriginal = data.tproduct[0].fields.TotalQtyInStock;
                     saveBOMStructure(objDetails)
                     // productService.saveProduct({
                     //     type: 'TProduct',
@@ -165,8 +205,8 @@ Template.bom_setup.events({
                 let useData = data.tproductvs1;
                 for(let i = 0; i< useData.length; i++) {
                     if(useData[i].fields.ProductName == $('#edtMainProductName').val() ) {
-                        objDetails.productDescription = useData[i].fields.SalesDescription;
-                        objDetails.totalQtyInStock = useData[i].fields.TotalQtyInStock;
+                        objDetails.Description = useData[i].fields.SalesDescription;
+                        objDetails.TotalQtyOriginal = useData[i].fields.TotalQtyInStock;
                         saveBOMStructure(objDetails)
                         // productService.saveProductVS1({
                         //     type: 'TProductVS1',
@@ -189,8 +229,8 @@ Template.bom_setup.events({
             }
         }).catch(function(e) {
             productService.getOneProductdatavs1byname($('#edtMainProductName').val()).then(function(data){
-                objDetails.productDescription = data.tproduct[0].fields.SalesDescription;
-                objDetails.totalQtyInStock = data.tproductp[0].fields.TotalQtyInStock;
+                objDetails.Description = data.tproduct[0].fields.SalesDescription;
+                objDetails.TotalQtyOriginal = data.tproduct[0].fields.TotalQtyInStock;
                 saveBOMStructure(objDetails)
                 // productService.saveProduct({
                 //     type: 'TProduct',
@@ -223,33 +263,45 @@ Template.bom_setup.events({
 
 
         function saveBOMStructure(objDetails) {
-            let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[];
+            // let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')):[];
     
-            let existIndex = bomProducts.findIndex(product =>{
-                return product.fields.productName == objDetails.productName;
-            })
+            // let existIndex = bomProducts.findIndex(product =>{
+            //     return product.fields.productName == objDetails.productName;
+            // })
     
-            let bomObject = {
-                type: 'TProcTree',
+            // let bomObject = {
+            //     type: 'TProcTree',
+            //     fields: objDetails
+            // }
+            // if(existIndex > -1) {
+            //     bomProducts.splice(existIndex, 1, bomObject)
+            // }else {
+            //     bomProducts.push(bomObject);
+            // }
+    
+            // localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
+            // $('.fullScreenSpin').css('display', 'none')
+            // swal('BOM Settings Successfully Saved', '', 'success');
+
+            // if (localStorage.getItem("enteredURL") != null) {
+            //     FlowRouter.go(localStorage.getItem("enteredURL"));
+            //     localStorage.removeItem("enteredURL");
+            //     return;
+            // }
+            if(FlowRouter.current().queryParams.id) {
+                objDetails.ID = FlowRouter.current().queryParams.id;
+            }
+            productService.saveBOMProduct({
+                type: "TProcTree",
                 fields: objDetails
-            }
-            if(existIndex > -1) {
-                bomProducts.splice(existIndex, 1, bomObject)
-            }else {
-                bomProducts.push(bomObject);
-            }
-    
-            localStorage.setItem('TProcTree', JSON.stringify(bomProducts));
-            $('.fullScreenSpin').css('display', 'none')
-            swal('BOM Settings Successfully Saved', '', 'success');
+            }).then(function(){
+                productService.getAllBOMProducts(initialDataLoad, 0).then(function(dataReturn){
+                    addVS1Data('TProcTree', JSON.stringify(dataReturn)).then(function(){
+                    })
+                    FlowRouter.go('/bomlist?success=true')
+                })
+            })
 
-            if (localStorage.getItem("enteredURL") != null) {
-                FlowRouter.go(localStorage.getItem("enteredURL"));
-                localStorage.removeItem("enteredURL");
-                return;
-            }
-
-            FlowRouter.go('/bomlist?success=true')
         }
 
         }, delayTimeAfterSound);

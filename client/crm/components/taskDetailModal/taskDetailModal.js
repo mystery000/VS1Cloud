@@ -293,11 +293,11 @@ Template.taskDetailModal.events({
                 return;
             }
 
-            let assignId = $('#assignedID').val();
+            let assignId = $('#assignedID').val() || 0;
             let assignName = $('#crmEditSelectEmployeeList').val();
             let assignPhone = $('#contactPhoneUser').val();
             let assignEmail = $('#contactEmailUser').val();
-            let contactID = $('#contactID').val();
+            let contactID = $('#contactID').val() || 0;
             let contactName = $('#crmEditSelectLeadList').val();
             let contactPhone = $('#contactPhoneClient').val();
             let contactEmail = $('#contactEmailClient').val();

@@ -23,12 +23,32 @@ Template.bom_template.onCreated(function() {
 let productService =  new ProductService();
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-Template.bom_template.onRendered(function() {
+Template.bom_template.onRendered(async function() {
     const templateObject = Template.instance();
-    let temp = localStorage.getItem('TProcTree');
-    let tempArray = temp?JSON.parse(temp): [];
-    templateObject.bomProducts.set(tempArray)
-
+   
+    templateObject.getAllBOMProducts = async() => {
+        return new Promise(async(resolve, reject)=> {
+            getVS1Data('TProcTree').then(function(dataObject) {
+                if(dataObject.length == 0) {
+                    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                        templateObject.bomProducts.set(data.tproctree);
+                        resolve()
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    templateObject.bomProducts.set(data.tproctree)
+                    resolve()
+                }
+            }).catch(function(e){
+                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                    templateObject.bomProducts.set(data.tproctree)
+                    resolve()
+                })
+            })
+        })
+    }
+    await templateObject.getAllBOMProducts();
+   
     if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
     /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))){
         templateObject.isMobileDevices.set(true);
@@ -102,15 +122,15 @@ Template.bom_template.onRendered(function() {
 
         let objectFields = await getObjectFields();
         templateObject.initialRecord.set(objectFields)
-        if (objectFields.attachments.length > 0) {
+        if (objectFields.Value != '' && JSON.parse(objectFields.Value).length > 0) {
             let productContents = $('.product-content')
             $(productContents[0]).find('.attachedFiles').text(JSON.stringify({totalAttachments: objectFields.attachments.length, uploadedFilesArray: objectFields.attachments}))
             let modalId = $('#myModalAttachment.modal').attr('id');
             utilityService.customShowUploadedAttachment(objectFields.attachments, modalId)
             $(productContents[0]).find('.btnAddAttachment').html(objectFields.attachments.length + "     <i class='fa fa-paperclip' style='padding-right: 8px;'></i>Add Attachments")
         }
-        if(objectFields.subs.length >0) {
-            let subs = objectFields.subs;
+        if(objectFields.Details != '' && JSON.parse(objectFields.Details).length >0) {
+            let subs = JSON.parse(objectFields.Details);
             for(let i=0; i< subs.length; i++) {
                 let html = '';
                 if(FlowRouter.current().path.includes('/workordercard') == false) {
@@ -120,10 +140,16 @@ Template.bom_template.onRendered(function() {
                             
                             let isBOM = false;
                             let bomProductIndex = bomProducts.findIndex(object => {
-                                return object.fields.productName == subs[i].productName;
+                                return object.fields.Caption == subs[i].productName;
                             })
                             if(bomProductIndex > -1) {
                                 isBOM = true
+                            }else {
+                                await productService.getOneBOMProductByName(subs[i].productName).then(function(data){
+                                    if(data.tproctree.length > 0) {
+                                        isBOM = true
+                                    }
+                                })
                             }
 
                             if(isBOM == true) {
@@ -154,10 +180,16 @@ Template.bom_template.onRendered(function() {
                 } else {
                         let subIsBOM = false;
                         let bomIndex = bomProducts.findIndex(product=>{
-                            return product.fields.productName == subs[i].productName
+                            return product.fields.Caption == subs[i].productName
                         })
                         if(bomIndex > -1) {
                             subIsBOM = true
+                        }else {
+                            await productService.getOneBOMProductByName(subs[i].productName).then(function(data) {
+                                if(data.tproctree.length > 0) {
+                                    subIsBOM = true
+                                }
+                            })
                         }
                         if(subIsBOM == true) {
                             // if(subs[i].subs && subs[i].subs.length > 0) {
@@ -255,14 +287,21 @@ Template.bom_template.onRendered(function() {
                 $(quantityElements[0]).val(subs[i].qty || 1)
                 let processElements = $(productContent).find('.edtProcessName')
                 let bomProcessIndex = bomProducts.findIndex(product => {
-                    return product.fields.productName == subs[i].productName;
+                    return product.fields.Caption == subs[i].productName;
                 })
                 if(bomProcessIndex > -1) {
-                    $(processElements[0]).val(subs[i].process || bomProducts[bomProcessIndex].fields.process || '')
-                    $(productContent).find('.edtProcessNote').val(subs[i].processNote || bomProducts[bomProcessIndex].processNote || '')
+                    $(processElements[0]).val(subs[i].process || bomProducts[bomProcessIndex].fields.Info || '')
+                    $(productContent).find('.edtProcessNote').val(subs[i].processNote || bomProducts[bomProcessIndex].CustomInputClass || '')
                 } else {
-                    $(processElements[0]).val(subs[i].process|| '')
-                    $(productContent).find('.edtProcessNote').val(subs[i].processNote || '')
+                    await productService.getOneBOMProductByName(subs[i].productName).then(function(data){
+                        if(data.tproctree.length == 0) {
+                            $(processElements[0]).val(subs[i].process|| '')
+                            $(productContent).find('.edtProcessNote').val(subs[i].processNote || '')
+                        } else {
+                            $(processElements[0]).val(subs[i].process || data.tproctree[0].fields.Info || '');
+                            $(productContent).find('.edtProcessNote').val(subs[i].processNote || data.tproctree[0].CustomInputClass || '')
+                        }
+                    })
                 }
                 // $(productContent).find('.edtProcessName').val(subs[i].process || "")
                 let modalHtml = "<div class='modal fade' role='dialog' tabindex='-1' id='myModalAttachment-"+subs[i].productName.replace(/[|&;$%@"<>()+," "]/g, '')+"'>" + templateObject.attachmentModalHtml.get();
@@ -294,87 +333,108 @@ Template.bom_template.onRendered(function() {
                         if(FlowRouter.current().path.includes('/bomsetupcard')) {
                             id = FlowRouter.current().queryParams.id;
                         }
-                        objectFields = bomProducts[id].fields;
-                        $('#edtMainProductName').val(objectFields.productName)
+                        let index = bomProducts.findIndex(product=>{
+                            return product.fields.ID == id;
+                        })
+                        if(index  == -1) {
+                            await productService.getOneBOMProductByID(id).then(
+                                function(data){
+                                    objectFields = data.tproctree[0].fields
+                                }
+                            )
+                        }else {
+                            objectFields = bomProducts[index].fields
+                        }
+                        // objectFields = bomProducts[id].fields;
+                        $('#edtMainProductName').val(objectFields.Caption)
                         $('#edtProcess').editableSelect();
-                        $('#edtProcess').val(objectFields.process);
-                        $('.edtDuration').val(objectFields.duration)
-                        resolve(bomProducts[id].fields)
+                        $('#edtProcess').val(objectFields.Info);
+                        $('.edtDuration').val(objectFields.QtyVariation)
+                        resolve(objectFields)
                         // templateObject.initialRecord.set(bomProducts[id].fields);
-                       
+                        
                         $('.fullScreenSpin').css('display', 'none')
                     } else if(FlowRouter.current().path.includes('/productview')) {
                         let name = $('#edtproductname').val();
                         let bomIndex = bomProducts.findIndex(product=>{
-                            return product.fields.productName == name
+                            return product.fields.Caption == name
                         })
                         if(bomIndex> -1) {
                             objectFields = bomProducts[bomIndex].fields;
-                            $('#edtMainProductName').val(objectFields.productName)
+                            $('#edtMainProductName').val(objectFields.Caption)
                             $('#edtProcess').editableSelect();
-                            $('#edtProcess').val(objectFields.process)
-                            $('.edtDuration').val(objectFields.duration)
+                            $('#edtProcess').val(objectFields.Info);
+                            $('.edtDuration').val(objectFields.QtyVariation)
                             resolve(objectFields)
                             // templateObject.initialRecord.set(bomProducts[bomIndex].fields);
                             
                         } else {
-                            getVS1Data('TProductVS1').then(dataObject => {
-                                if(dataObject.length == 0) {
-                                    productService.getOneProductdatavs1byname(name).then(function(data){
-                                        objectFields = {
-                                            productName: name,
-                                            qty: 1,
-                                            process: '',
-                                            processNote: '',
-                                            productDescription: data.tproduct[0].fields.SalesDescription || '',
-                                            totalQtyInStock: data.tproduct[0].fields.TotalQtyInStock,
-                                            attachments: [],
-                                            subs: [],
-                                            duration: ''
-                                        }
-                                        $('#edtMainProductName').val(objectFields.productName)
-                                        resolve(objectFields)
-
-                                    })
+                            productService.getOneBOMProductByName(name).then (async function(data){
+                                if(data.tproctree.length > 0) {
+                                    objectFields = data.tproctree[0].fields;
+                                    $('#edtMainProductName').val(objectFields.Caption)
+                                    $('#edtProcess').editableSelect();
+                                    $('#edtProcess').val(objectFields.Info)
+                                    $('.edtDuration').val(objectFields.QtyVariation)
+                                    resolve(objectFields)
                                 } else {
-                                    let data = JSON.parse(dataObject[0].data)
-                                    let useData = data.tproductvs1;
-                                    for(let k = 0; k< useData.length; k++) {
-                                        if(useData[k].fields.ProductName == name) {
+                                    getVS1Data('TProductVS1').then(async dataObject => {
+                                        if(dataObject.length == 0) {
+                                            await productService.getOneProductdatavs1byname(name).then(function(data){
+                                                objectFields = {
+                                                    Caption: name,
+                                                    Info: '',
+                                                    CustomInputClass: '',
+                                                    Description: data.tproduct[0].fields.SalesDescription || '',
+                                                    TotalQtyOriginal: data.tproduct[0].fields.TotalQtyInStock,
+                                                    Value: '',
+                                                    Details: '',
+                                                    QtyVariation: 1
+                                                }
+                                                $('#edtMainProductName').val(objectFields.Caption)
+                                                resolve(objectFields)
+        
+                                            })
+                                        } else {
+                                            let data = JSON.parse(dataObject[0].data)
+                                            let useData = data.tproductvs1;
+                                            for(let k = 0; k< useData.length; k++) {
+                                                if(useData[k].fields.ProductName == name) {
+                                                    objectFields = {
+                                                        Caption: name,
+                                                        qty: 1,
+                                                        Info: '',
+                                                        CustomInputClass: '',
+                                                        Description: useData[k].fields.SalesDescription || '',
+                                                        TotalQtyOriginal: useData[k].fields.TotalQtyInStock,
+                                                        Value: '',
+                                                        Details: '',
+                                                        QtyVariation: 1
+                                                    }
+                                                    $('#edtMainProductName').val(objectFields.Caption)
+                                                    resolve(objectFields)
+                                                }
+                                            }
+                                        }
+                                    }).catch(async function(err) {
+                                        await productService.getOneProductdatavs1byname(name).then(function(data){
                                             objectFields = {
-                                                productName: name,
+                                                Caption: name,
                                                 qty: 1,
-                                                process: '',
-                                                processNote: '',
-                                                productDescription: useData[k].fields.SalesDescription || '',
-                                                totalQtyInStock: useData[k].fields.TotalQtyInStock,
-                                                attachments: [],
-                                                subs: [],
-                                                duration: ''
+                                                Info: '',
+                                                CustomInputClass: '',
+                                                Description: data.tproduct[0].fields.SalesDescription || '',
+                                                TotalQtyOriginal: data.tproduct[0].fields.TotalQtyInStock,
+                                                Value: '',
+                                                Details:'',
+                                                QtyVariation: ''
                                             }
                                             $('#edtMainProductName').val(objectFields.productName)
                                             resolve(objectFields)
-                                        }
-                                    }
+                                        })
+                                    })
                                 }
-                            }).catch(function(err) {
-                                productService.getOneProductdatavs1byname(name).then(function(data){
-                                    objectFields = {
-                                        productName: name,
-                                        qty: 1,
-                                        process: '',
-                                        processNote: '',
-                                        productDescription: data.tproduct[0].fields.SalesDescription || '',
-                                        totalQtyInStock: data.tproduct[0].fields.TotalQtyInStock,
-                                        attachments: [],
-                                        subs:[],
-                                        duration: ''
-                                    }
-                                    $('#edtMainProductName').val(objectFields.productName)
-                                    resolve(objectFields)
-                                })
                             })
-                            
                         }
                     } else if(FlowRouter.current().path.includes('/workordercard')){
                         let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
@@ -401,15 +461,15 @@ Template.bom_template.onRendered(function() {
                         $('#edtMainProductName').val($('.colProductName .edtproductname').val())
                     }
                     objectFields = {
-                        productName: '',
-                        process: '',
-                        processNote: '',
-                        productDescription: '',
-                        attachments: [],
+                        Caption: '',
+                        Info: '',
+                        CustomInputClass: '',
+                        Description: '',
+                        Value: '',
                         qty:1,
-                        totalQtyInStock: 0,
-                        subs: [],
-                        duration: ''
+                        TotalQtyOriginal: 0,
+                        Details: '',
+                        QtyVariation: ''
                     }
                     if(FlowRouter.current().path.includes('/productview')) {
                         objectFields.productName = $('.colProductName .edtproductname').val() || '';
@@ -417,15 +477,23 @@ Template.bom_template.onRendered(function() {
                         // objectFields.productName = $('.colProductName .edtproductname').val() || '';
                         let prodname = $('#tblWorkOrderLine tr .colProductName .lineProductName').val();
                         let index = bomProducts.findIndex(product=>{
-                            return product.fields.productName == prodname;
+                            return product.fields.Caption == prodname;
                         })
-                        objectFields = bomProducts[index].fields;
+                        if(index > -1) {
+                            objectFields = bomProducts[index].fields;
+                        } else {
+                            await productService.getOneBOMProductByName(prodname).then(function(data){
+                                if(data.tproctree.length > 0) {
+                                    objectFields = data.tproctree[0].fields
+                                }
+                            })
+                        }
                         $('#BOMSetupModal #edtMainProductName').editableSelect();
                         $('#BOMSetupModal #edtProcess').editableSelect();
                         $('#BOMSetupModal #edtMainProductName').val(prodname);
-                        $('#BOMSetupModal #edtProcess').val(objectFields.process);
-                        $('#BOMSetupModal .edtProcessNote').val(objectFields.processNote);
-                        $('#BOMSetupModal .edtDuration').val(objectFields.duration);
+                        $('#BOMSetupModal #edtProcess').val(objectFields.Info);
+                        $('#BOMSetupModal .edtProcessNote').val(objectFields.CustomInputClass);
+                        $('#BOMSetupModal .edtDuration').val(objectFields.QtyVariation);
                     }
                     resolve(objectFields)
                    
@@ -543,17 +611,17 @@ Template.bom_template.events({
             let stockQty = $(event.target).closest('tr').find('td.prdQty').text();
 
             let objectDetail = {
-                productName: productName,
-                qty: 1,
-                process: '',
-                processNote: '',
-                productDescription: description,
-                totalQtyInStock: stockQty,
-                attachments: []
+                Caption: productName,
+                // qty: 1,
+                Info: '',
+                CustomInputClass: '',
+                Description: description,
+                TotalQtyOriginal: stockQty,
+                Value: '' 
             }
 
             templateObject.initialRecord.set(objectDetail);
-            $('#edtMainProductName').val(objectDetail.productName)
+            $('#edtMainProductName').val(objectDetail.Caption)
             $('#productListModal').modal('toggle')
            
         } else {
@@ -567,7 +635,7 @@ Template.bom_template.events({
             let bomProducts = templateObject.bomProducts.get();
         let isBOM = false;
         let existIndex = bomProducts.findIndex(product => {
-            return product.fields.productName == productName;
+            return product.fields.Caption == productName;
         })
         if(existIndex > -1) {
             isBOM = true
@@ -587,10 +655,10 @@ Template.bom_template.events({
 
             templateObject.showSubButton.set(true);
             let colProcess = $(selEle).closest('.productRow').find('.edtProcessName');
-            $(colProcess).val(bomProducts[existIndex].fields.process)
+            $(colProcess).val(bomProducts[existIndex].fields.Info)
             $(colProcess).attr('disabled', 'true');
             let colProcessNote = $(selEle).closest('.productRow').find('.edtProcessNote');
-            $(colProcessNote).val(bomProducts[existIndex].fields.processNote)
+            $(colProcessNote).val(bomProducts[existIndex].fields.CustomInputClass)
             $(colProcessNote).attr('disabled', 'true');
         }
             $('#productListModal').modal('toggle')
@@ -709,16 +777,16 @@ Template.bom_template.events({
         }
         $(event.target).closest('.productRow').find('.edtProductName').css('width', '70%')
         let bomIndex = bomProducts.findIndex(product=>{
-            return product.fields.productName == productName
+            return product.fields.Caption == productName
         })
-        
         if(bomIndex > -1) {
             let subIndex = -1;
             let parentBOM = bomProducts.find(product => {
-                return product.fields.productName == templateObject.initialRecord.get().productName;
+                return product.fields.Caption == templateObject.initialRecord.get().Caption;
             })
+
             if(parentBOM) {
-                subIndex = parentBOM.fields.subs.findIndex(sub=>{
+                subIndex = JSON.parse(parentBOM.fields.Details).findIndex(sub=>{
                     return sub.productName == productName;
                 })
             }
@@ -758,7 +826,7 @@ Template.bom_template.events({
                     }
             } else {
 
-                let subs = bomProducts[bomIndex].fields.subs
+                let subs = JSON.parse(bomProducts[bomIndex].fields.Details)
 
                     $(event.target).remove()
                     if(subs && subs.length) {
@@ -911,34 +979,35 @@ Template.bom_template.events({
     },
     
 
-    'click .btn-from-stock': function(event) {
+    'click .btn-from-stock': async function(event) {
+        let templateObject = Template.instance();
         event.preventDefault();
         event.stopPropagation();
         let row = $(event.target).closest('.product-content');
         // let templateObject = Template.instance();
-        let temp = localStorage.getItem('TProcTree');
-        let bomProducts = temp?JSON.parse(temp):[];
+        // let temp = localStorage.getItem('TProcTree');
+        let bomProducts = templateObject.bomProducts.get();
         let productName = $(event.target).closest('.productRow').find('.edtProductName').val();
         let processName = $(event.target).closest('.productRow').find('.edtProcessName').val();
         let quantity = $(event.target).closest('.productRow').find('.edtQuantity').val();
         let bomIndex = bomProducts.findIndex(product=>{
             let pContent = $('#BOMSetupModal').find('.product-content')[0];
-            return product.fields.productName == $(pContent).find('.edtMainProductName').val()
+            return product.fields.Caption == $(pContent).find('.edtMainProductName').val()
         })
         if(productName == '' || quantity == '') {
             return
         }
 
         if(bomIndex > -1) {
-            let index = bomProducts[bomIndex].fields.subs.findIndex(product => {
+            let index = JSON.parse(bomProducts[bomIndex].fields.Details).findIndex(product => {
                 return product.productName == productName;
             });
             let subs;
             if(index > -1) {
-                 subs = bomProducts[bomIndex].fields.subs[index].subs
+                 subs = JSON.parse(bomProducts[bomIndex].fields.Details)[index].subs
             }else{
-                let subIndex = bomProducts.findIndex(product=>{return product.fields.productName == productName})
-                subs = bomProducts[subIndex].fields.subs
+                let subIndex = bomProducts.findIndex(product=>{return product.fields.Caption == productName})
+                subs = JSON.parse(bomProducts[subIndex].fields.Details)
             }
                 // $(event.target).remove()
                 if(subs && subs.length) {
