@@ -302,6 +302,10 @@ import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
 /* Rasheed */
 
+/* Jeyhun */
+import './manufacture/workorderList.js';
+/* Jeyhun */
+
 /* DevTop/Dev Pioneer */
 import './vs1_templates/report/accountant_header.js';
 import './reports/AccountantReport/accountantCompany.js';
@@ -548,10 +552,6 @@ import './eft/exportModal/eftExportModal.js';
 import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
-
-/* Jeyhun */
-import './manufacture/workorderList.js';
-/* Jeyhun */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
