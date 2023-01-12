@@ -1,31 +1,16 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import moment from "moment";
-import { AccountService } from "../../accounts/account-service";
-import Datehandler from "../../DateHandler";
-import GlobalFunctions from "../../GlobalFunctions";
-import { OrganisationService } from "../../js/organisation-service";
 import { SideBarService } from "../../js/sidebar-service";
-import TableHandler from "../../js/Table/TableHandler";
-import CachedHttp from "../../lib/global/CachedHttp";
-import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
-import { TaxRateService } from "../../settings/settings-service";
-import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 import AssignLeaveType from "../../js/Api/Model/AssignLeaveType";
 import LeaveRequest from "../../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../../js/Api/Model/LeaveRequestFields";
 import ApiService from "../../js/Api/Module/ApiService";
-
-
 import { Template } from 'meteor/templating';
 import './newLeaveRequest.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-let utilityService = new UtilityService();
+
 let sideBarService = new SideBarService();
-let accountService = new AccountService();
-let taxRateService = new TaxRateService();
-let organisationService = new OrganisationService();
 
 Template.newLeaveRequestModal.onCreated(function() {
     const templateObject = Template.instance();
