@@ -84,6 +84,7 @@ import './route.js';
 
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
+// import "../lib/global/indexdbstorage.js";
 // import '/imports/startup/client';
 // Transaction Header and Footer
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
@@ -418,6 +419,8 @@ import './contacts/leadlist.js';
 import './contacts/employeelist.js';
 import './contacts/addemployeepop.js';
 import './packages/currency/currencydropdown.js';
+
+
 import './accesslevel/accessleveldup.js';
 import './accesslevel/companyappsettingsdup.js';
 import './accesslevel/companyappsettings.js';
