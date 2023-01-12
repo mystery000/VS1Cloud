@@ -39,7 +39,7 @@ Template.new_processpop.onRendered(() => {
         // let tempArray = localStorage.getItem('TProcesses');
         // let processList = tempArray?JSON.parse(tempArray):[];
         let processDetail = {};
-      
+
         let objDetail = {
             KeyValue: processDetail.name?processDetail.name: '',
             DailyHours: processDetail.dailyHours?processDetail.dailyHours: '',
@@ -54,12 +54,12 @@ Template.new_processpop.onRendered(() => {
             Wastage: processDetail.wastage?processDetail.wastage: ''
         }
 
-        templateObject.processrecord.set(objDetail);        
+        templateObject.processrecord.set(objDetail);
     }
 
     templateObject.getProcessDetail();
 
-   
+
     setTimeout(()=>{
         $('#edtCOGS').editableSelect();
         $('#edtExpenseAccount').editableSelect();
@@ -79,7 +79,9 @@ Template.new_processpop.helpers({
 });
 
 Template.new_processpop.events({
-    'click #btnSaveProcess': function(event) {
+    'click .btnSave': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         $('.fullScreenSpin').css('display', 'inline-block');
         let currentID = FlowRouter.current().queryParams.id;
         let tempArray = localStorage.getItem('TProcesses');
@@ -145,7 +147,7 @@ Template.new_processpop.events({
             e.preventDefault();
             return false;
         }
-       
+
 
         let objDetail = {
             type: 'TProcessStep',
@@ -199,10 +201,12 @@ Template.new_processpop.events({
             swal("Something went wrong!", "", "error");
         })
 
-     
+
     },
 
-    'click #btnCancel': function(event) {
+    'click .btnCancel': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         $('#newProcessModal').modal('toggle');
         $('#processListModal').modal('toggle')
     },
@@ -257,7 +261,7 @@ Template.new_processpop.events({
     'click #edtWastage': function(e){
         $('#assetAccountListModal').modal();
     },
-    
+
     'click #accountListModal table tbody tr': function(e) {
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
@@ -265,11 +269,11 @@ Template.new_processpop.events({
             case 'cogs':
                 $('#edtCOGS').val(columnDataValue);
                 break;
-           
+
             case 'overheadCOGS':
                 $('#edtOverheadCOGS').val(columnDataValue);
                 break;
-           
+
             default:
                 break;
         }
@@ -289,7 +293,7 @@ Template.new_processpop.events({
                 break;
         }
         $('#expenseAccountListModal').modal('toggle');
-    }, 
+    },
 
     'click #assetAccountListModal table tr': function(e) {
         let columnDataValue = $(e.target).closest('tr').find('.productName').text();
@@ -309,7 +313,7 @@ Template.new_processpop.events({
     'blur #edtHourlyCost': function(e){
         e.preventDefault();
         e.stopPropagation();
-        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2)) 
+        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2))
     },
 
     'focus #edtHourlyCost': function(e){
@@ -321,7 +325,7 @@ Template.new_processpop.events({
     'blur #edtHourlyOverheadCost': function(e){
         e.preventDefault();
         e.stopPropagation();
-        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2)) 
+        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2))
     },
 
     'focus #edtHourlyOverheadCost': function(e){
@@ -330,9 +334,6 @@ Template.new_processpop.events({
         $('#edtHourlyOverheadCost').val($('#edtHourlyOverheadCost').val().replace('$', ''));
     },
     // 'click #edtCOGS': function (e) {
-      
+
     // }
 });
-
-
-
