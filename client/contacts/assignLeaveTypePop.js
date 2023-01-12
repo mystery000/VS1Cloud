@@ -35,8 +35,9 @@ Template.assignLeaveTypePop.onRendered(function () {
 Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr("leavetype-id");
-        const name = $(e.currentTarget).find(".leave-type-name").text(); 
-        let Hours = (e.currentTarget).find(".colALTypeOpeningBalance").text() ||'';
+        const name = $(e.currentTarget).attr("leave-type-name"); 
+        let Hours = (e.currentTarget).attr("colALTypeOpeningBalance") ||'';
+        console.log(id, name, Hours,"------------------");
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
         $('#edtLeaveTypeofRequest').val(name); 
