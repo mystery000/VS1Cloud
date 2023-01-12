@@ -165,37 +165,23 @@
                     {{#each item in datatablerecords}}
                       <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                         <td contenteditable="false" class="colCostTypeId hiddenColumn">{{item.id}}</td>
-                        <td contenteditable="false"
-                          class="colAdministrativeCost {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
-                          {{item.assetname}}
-                        </td>
-                        <td contenteditable="false"
-                          class="colDepreciation {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.color}}
-                        </td>
-                        <td contenteditable="false"
-                          class="colFuel {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
-                          {{item.brandname}}</td>
-                        <td contenteditable="false"
-                          class="colInsurance {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"
-                          accounttype="{{item.accounttypeshort}}">
-                          {{item.manufacture}}
-                        </td>
-                        <td contenteditable="false"
-                          class="colLoan {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"
-                          style="text-align: right!important;">
-                          {{item.model}}
-                        </td>
-                        <td contenteditable="false"
-                          class="colMaintenance {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">
-                          {{item.assetcode}}
-                        </td>
-                        <td contenteditable="false"
-                          class="colRegistration {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
-                          {{item.assettype}}
-                        </td>
-                        <td contenteditable="false"
-                          class="colTolls {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}">
-                          {{item.department}}</td>
+                        <td contenteditable="false">{{item.assetCode}}</td>
+                        <td contenteditable="false">{{item.assetName}}</td>
+                        <td contenteditable="false">{{item.assetDescription}}</td>
+                        <td contenteditable="false">{{item.assetType}}</td>
+                        <td contenteditable="false">{{item.brand}}</td>
+                        <td contenteditable="false">{{item.model}}</td>
+                        <td contenteditable="false">{{item.number}}</td>
+                        <td contenteditable="false">{{item.regNo}}</td>
+                        <td contenteditable="false">{{item.type}}</td>
+                        <td contenteditable="false">{{item.capacityWeight}}</td>
+                        <td contenteditable="false">{{item.capacityVolume}}</td>
+                        <td contenteditable="false">{{item.purchasedDate}}</td>
+                        <td contenteditable="false">{{item.purchCost}}</td>
+                        <td contenteditable="false">{{item.supplier}}</td>
+                        <td contenteditable="false">{{item.registrationRenewalDate}}</td>
+                        <td contenteditable="false">{{item.insuranceInfo}}</td>
+                        <td contenteditable="false">{{item.depreciationStartDate}}</td>
                       </tr>
                     {{/each}}
                   {{/if}}

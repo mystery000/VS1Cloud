@@ -1,4 +1,5 @@
 import { ReactiveVar } from "meteor/reactive-var";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { FixedAssetService } from "../../fixedasset-service";
 import { SideBarService } from "../../../js/sidebar-service";
 import { UtilityService } from "../../../utility-service";
@@ -20,26 +21,25 @@ Template.assetregisteroverview.onRendered(function () {
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     let reset_data = [
-      { index: 0, label: 'ID', class: 'AssetRegisterId', active: false, display: false, width: "0" },
-      { index: 1, label: 'Asset Code', class: 'RegisterAssetCode', active: true, display: true, width: "" },
-      { index: 2, label: 'Asset Name', class: 'RegisterAssetName', active: true, display: true, width: "" },
-      { index: 3, label: 'Asset Description', class: 'RegisterAssetDescription', active: true, display: true, width: "" },
-      { index: 4, label: 'Asset Type', class: 'RegisterAssetType', active: true, display: true, width: "" },
-      { index: 5, label: 'Brand', class: 'RegisterAssetBrand', active: true, display: true, width: "" },
-      { index: 6, label: 'Model', class: 'RegisterAssetModel', active: true, display: true, width: "" },
-      { index: 7, label: 'Number', class: 'RegisterAssetNumber', active: true, display: true, width: "" },
-      { index: 8, label: 'Registration No', class: 'RegisterAssetRegistrationNo', active: true, display: true, width: "" },
-      { index: 9, label: 'Type', class: 'RegisterAssetType', active: true, display: true, width: "" },
-      { index: 10, label: 'Capacity Weight', class: 'RegisterAssetCapacityWeight', active: true, display: true, width: "" },
-      { index: 11, label: 'Capacity Volume', class: 'RegisterAssetCapacityVolume', active: true, display: true, width: "" },
-      { index: 12, label: 'Purchased Date', class: 'RegisterAssetPurchasedDate', active: true, display: true, width: "" },
-      { index: 13, label: 'Cost', class: 'RegisterAssetCost', active: true, display: true, width: "" },
-      { index: 14, label: 'Supplier', class: 'RegisterAssetSupplier', active: true, display: true, width: "" },
-      { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "" },
-      { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "" },
-      { index: 17, label: 'Renewal Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "" },
+      { index: 0, label: 'ID', class: 'AssetRegisterId', active: false, display: false, width: "0", keyname:'id' },
+      { index: 1, label: 'Asset Code', class: 'RegisterAssetCode', active: true, display: true, width: "", keyname:'assetCode'  },
+      { index: 2, label: 'Asset Name', class: 'RegisterAssetName', active: true, display: true, width: "", keyname:'assetName'  },
+      { index: 3, label: 'Asset Description', class: 'RegisterAssetDescription', active: true, display: true, width: "", keyname:'assetDescription'  },
+      { index: 4, label: 'Asset Type', class: 'RegisterAssetType', active: true, display: true, width: "", keyname:'assetType'  },
+      { index: 5, label: 'Brand', class: 'RegisterAssetBrand', active: true, display: true, width: "", keyname:'brand'  },
+      { index: 6, label: 'Model', class: 'RegisterAssetModel', active: true, display: true, width: "", keyname:'model'  },
+      { index: 7, label: 'Number', class: 'RegisterAssetNumber', active: true, display: true, width: "", keyname:'number'  },
+      { index: 8, label: 'Registration No', class: 'RegisterAssetRegistrationNo', active: true, display: true, width: "", keyname:'regNo'  },
+      { index: 9, label: 'Type', class: 'RegisterAssetType', active: true, display: true, width: "", keyname:'type'  },
+      { index: 10, label: 'Capacity Weight', class: 'RegisterAssetCapacityWeight', active: true, display: true, width: "", keyname:'capacityWeight'  },
+      { index: 11, label: 'Capacity Volume', class: 'RegisterAssetCapacityVolume', active: true, display: true, width: "", keyname:'capacityVolume'  },
+      { index: 12, label: 'Purchased Date', class: 'RegisterAssetPurchasedDate', active: true, display: true, width: "", keyname:'purchasedDate'  },
+      { index: 13, label: 'Cost', class: 'RegisterAssetCost', active: true, display: true, width: "", keyname:'purchCost'  },
+      { index: 14, label: 'Supplier', class: 'RegisterAssetSupplier', active: true, display: true, width: "", keyname:'supplier'  },
+      { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "", keyname:'registrationRenewalDate'  },
+      { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "", keyname:'insuranceInfo'  },
+      { index: 17, label: 'Depreciation Start Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "", keyname:'depreciationStartDate'  },
     ];
-
     let templateObject = Template.instance();
     templateObject.reset_data.set(reset_data);
   }
@@ -108,38 +108,27 @@ Template.assetregisteroverview.onRendered(function () {
     for (const asset of data.tfixedassets) {
       const dataList = {
         id: asset.fields.ID || "",
-        assetname: asset.fields.AssetName || "",
-        color: asset.fields.Colour || "",
-        brandname: asset.fields.BrandName || "",
-        manufacture: asset.fields.Manufacture || "",
+        assetCode: asset.fields.AssetCode || "",
+        assetName: asset.fields.AssetName || "",
+        assetDescription: asset.fields.Description || "",
+        assetType:  asset.fields.AssetType || "",
+        brand: asset.fields.BrandName || "",
         model: asset.fields.Model || "",
-        assetcode: asset.fields.AssetCode || "",
-        assettype: asset.fields.AssetType || "",
-        department: asset.fields.Department || "",   // tempcode how to get department
-        purchdate: asset.fields.PurchDate ? moment(asset.fields.PurchDate).format("DD/MM/YYYY") : "",
-        purchcost: utilityService.modifynegativeCurrencyFormat(asset.fields.PurchCost) || 0.0,
-        serial: asset.fields.Serial || "",
-        qty: asset.fields.Qty || 0,
-        assetcondition: asset.fields.AssetCondition || "",
-        locationdescription: asset.fields.LocationDescription || "",
-        notes: asset.fields.Notes || "",
-        size: asset.fields.Size || "",
-        shape: asset.fields.Shape || "",
-        status: asset.fields.Status || "",
-        businessuse: asset.fields.BusinessUsePercent || 0.0,
-        businessuse2: asset.fields.BusinessUsePercent2 || 0.0,
-        estimatedvalue: utilityService.modifynegativeCurrencyFormat(asset.fields.EstimatedValue) || 0.0,
-        replacementcost: utilityService.modifynegativeCurrencyFormat(asset.fields.ReplacementCost) || 0.0,
-        warrantytype: asset.fields.WarrantyType || "",
-        warrantyexpiresDate: asset.fields.WarrantyExpiresDate ? moment(asset.fields.WarrantyExpiresDate).format("DD/MM/YYYY") : "",
-        insuredby: asset.fields.InsuredBy || "",
-        insurancepolicy: asset.fields.InsurancePolicy || "",
-        insureduntil: asset.fields.InsuredUntil ? moment(asset.fields.InsuredUntil).format("DD/MM/YYYY") : "",
-        active: asset.fields.Active || false
+        number: asset.fields.CUSTFLD1 || "",
+        regNo: asset.fields.CUSTFLD2 || "",
+        type: asset.fields.CUSTFLD3 || "",
+        capacityWeight: asset.fields.CUSTFLD4 || "",
+        capacityVolume: asset.fields.CUSTFLD5 || "",
+        purchasedDate: asset.fields.PurchDate ? moment(asset.fields.PurchDate).format("DD/MM/YYYY") : "",
+        purchCost: asset.fields.PurchCost || "",
+        supplier: "",
+        registrationRenewalDate: asset.fields.CUSTDATE1 ? moment(asset.fields.CUSTDATE1).format("DD/MM/YYYY") : "",
+        insuranceInfo: '',
+        depreciationStartDate: asset.fields.DepreciationStartDate ? moment(asset.fields.DepreciationStartDate).format("DD/MM/YYYY") : ""
       };
       dataTableList.push(dataList);
     }
-
+    console.log(dataTableList);
     templateObject.datatablerecords.set(dataTableList);
 
     $(".fullScreenSpin").css("display", "none");
@@ -385,12 +374,12 @@ Template.assetregisteroverview.events({
 Template.assetregisteroverview.helpers({
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
-      if (a.assetname === "NA") {
+      if (a.assetName === "NA") {
         return 1;
-      } else if (b.assetname === "NA") {
+      } else if (b.assetName === "NA") {
         return -1;
       }
-      return a.assetname.toUpperCase() > b.assetname.toUpperCase() ? 1 : -1;
+      return a.assetName.toUpperCase() > b.assetName.toUpperCase() ? 1 : -1;
     });
   },
   // custom fields displaysettings
