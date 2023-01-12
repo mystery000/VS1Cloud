@@ -1,5 +1,5 @@
 import { EmployeePayrollService } from '../js/employeepayroll-service';
-
+import { Template } from 'meteor/templating';
 import './assignLeaveTypePop.html';
 
 Template.assignLeaveTypePop.onCreated(function () {
@@ -17,17 +17,17 @@ Template.assignLeaveTypePop.onRendered(function () {
 
 
     templateObject.getTLeaveTypes = async() => {
-        try { 
+        try {
             let data = [];
             let dataObject = await getVS1Data('TAssignLeaveType')
-            data = JSON.parse(dataObject[0].data);  
-            if (data.tassignleavetype.length > 0) { 
+            data = JSON.parse(dataObject[0].data);
+            if (data.tassignleavetype.length > 0) {
                 let useData = data.tassignleavetype;
                 templateObject.leaveTypesList.set(useData);
             }
-        } catch (err) {  
-        } 
-    } 
+        } catch (err) {
+        }
+    }
 
     templateObject.getTLeaveTypes();
 });
@@ -35,12 +35,12 @@ Template.assignLeaveTypePop.onRendered(function () {
 Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr("leavetype-id");
-        const name = $(e.currentTarget).find(".leave-type-name").text(); 
-        let Hours = (e.currentTarget).find("..colALTypeOpeningBalance").text() ||'';
+        const name = $(e.currentTarget).attr("leave-type-name");
+        let Hours = (e.currentTarget).attr("colALTypeOpeningBalance") ||'';
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
-        $('#edtLeaveTypeofRequest').val(name); 
-        $('#edtLeaveHours').val(Hours); 
+        $('#edtLeaveTypeofRequest').val(name);
+        $('#edtLeaveHours').val(Hours);
 
         $('#assignLeaveTypeSettingsModal').on('hidden.bs.modal', function(e) {
             // window.open("/appointments", "_self");
@@ -82,7 +82,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-        
+
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -150,74 +150,74 @@ Template.assignLeaveTypePop.onCreated(function () {
             }
         });
         $('#edtLeaveTypeofRequest').editableSelect();
-        // $('#edtLeaveTypeofRequest').editableSelect()
-        //     .on('click.editable-select', async function (e, li) {
-        //         let $search = $(this);
-        //         let dropDownID = $search.attr('id')
-        //         templateObject.currentDrpDownID.set(dropDownID);
-        //         let offset = $search.offset();
-        //         let searchName = e.target.value || '';
-        //         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-        //             $('#assignLeaveTypeSettingsModal').modal('show');
-        //         } else {
-        //             if (searchName.replace(/\s/g, '') == '') {
-        //                 $('#assignLeaveTypeSettingsModal').modal('show');
-        //                 return false
-        //             }
-        //             let dataObject = await getVS1Data('TAssignLeaveType');
-        //             if ( dataObject.length > 0) {
-        //                 data = JSON.parse(dataObject[0].data);
-        //                 let tAssignteavetype = data.tassignleavetype.filter((item) => {
-        //                     // if( item.fields.LeaveType == searchName ){
-        //                         return item;
-        //                     // }
-        //                 });
+        $('#edtLeaveTypeofRequest').editableSelect()
+            .on('click.editable-select', async function (e, li) {
+                let $search = $(this);
+                let dropDownID = $search.attr('id')
+                templateObject.currentDrpDownID.set(dropDownID);
+                let offset = $search.offset();
+                let searchName = e.target.value || '';
+                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                    $('#assignLeaveTypeSettingsModal').modal('show');
+                } else {
+                    if (searchName.replace(/\s/g, '') == '') {
+                        $('#assignLeaveTypeSettingsModal').modal('show');
+                        return false
+                    }
+                    let dataObject = await getVS1Data('TAssignLeaveType');
+                    if ( dataObject.length > 0) {
+                        data = JSON.parse(dataObject[0].data);
+                        let tAssignteavetype = data.tassignleavetype.filter((item) => {
+                            // if( item.fields.LeaveType == searchName ){
+                                return item;
+                            // }
+                        });
 
-        //                 if( tAssignteavetype.length > 0 ){
+                        if( tAssignteavetype.length > 0 ){
 
-        //                     let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
+                            let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
 
-        //                     $('#leaveCalcMethodSelect').val(leaveCalcMethod)
-        //                     switch(leaveCalcMethod){
-        //                         case 'Manually Recorded Rate':
-        //                             $('#hoursLeave').val('');
-        //                             $('.handleLeaveTypeOption').addClass('hideelement');
-        //                             $('.manuallyRecordedRate').removeClass('hideelement');
-        //                             $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
-        //                         break;
-        //                         case 'No Calculation Required':
-        //                             $('.handleLeaveTypeOption').addClass('hideelement')
-        //                         break;
-        //                         case 'Based on Ordinary Earnings':
-        //                             $('#hoursAccruedAnnuallyFullTimeEmp').val('');
-        //                             $('#hoursFullTimeEmpFortnightlyPay').val('');
-        //                             $('.handleLeaveTypeOption').addClass('hideelement');
-        //                             $('.basedonOrdinaryEarnings').removeClass('hideelement');
-        //                             $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
-        //                             $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
-        //                         break;
-        //                         default:
-        //                             $('#hoursAccruedAnnually').val('');
-        //                             $('.handleLeaveTypeOption').addClass('hideelement');
-        //                             $('.fixedAmountEachPeriodOption').removeClass('hideelement');
-        //                             $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
-        //                         break;
-        //                     }
+                            $('#leaveCalcMethodSelect').val(leaveCalcMethod)
+                            switch(leaveCalcMethod){
+                                case 'Manually Recorded Rate':
+                                    $('#hoursLeave').val('');
+                                    $('.handleLeaveTypeOption').addClass('hideelement');
+                                    $('.manuallyRecordedRate').removeClass('hideelement');
+                                    $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
+                                break;
+                                case 'No Calculation Required':
+                                    $('.handleLeaveTypeOption').addClass('hideelement')
+                                break;
+                                case 'Based on Ordinary Earnings':
+                                    $('#hoursAccruedAnnuallyFullTimeEmp').val('');
+                                    $('#hoursFullTimeEmpFortnightlyPay').val('');
+                                    $('.handleLeaveTypeOption').addClass('hideelement');
+                                    $('.basedonOrdinaryEarnings').removeClass('hideelement');
+                                    $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
+                                    $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
+                                break;
+                                default:
+                                    $('#hoursAccruedAnnually').val('');
+                                    $('.handleLeaveTypeOption').addClass('hideelement');
+                                    $('.fixedAmountEachPeriodOption').removeClass('hideelement');
+                                    $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
+                                break;
+                            }
 
-        //                     $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
-        //                     $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-                            
-        //                     $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
-        //                     $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
-        //                     $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
-        //                     $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
+                            $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
+                            $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
 
-        //                     $('#assignteavetypeID').val(tAssignteavetype[0].fields.ID) || 0 ;
-        //                 }
-        //                 $('#assignLeaveTypeModal').modal('show');
-        //             }
-        //         }
-        //     });
+                            $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
+                            $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
+                            $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
+                            $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
+
+                            $('#assignteavetypeID').val(tAssignteavetype[0].fields.ID) || 0 ;
+                        }
+                        $('#assignLeaveTypeModal').modal('show');
+                    }
+                }
+            });
     }, 1000);
 
     $(document).on("click", "#tblAssignLeaveTypes tbody tr .colALType", function (e) {
@@ -229,7 +229,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);
         $('#edtLeaveHours').val(Hours);
-        
+
         $('#assignLeaveTypeSettingsModal').modal('toggle');
     });
 
@@ -239,9 +239,9 @@ Template.assignLeaveTypePop.helpers({
     terminationBalance: (t) => {
         return t ?  'Paid Out': 'Not Paid Out';
     },
-    leaveTypesList: () => { 
+    leaveTypesList: () => {
         return Template.instance().leaveTypesList.get();
     },
 
-    
+
 })

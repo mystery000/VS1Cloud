@@ -1,5 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
 
+import { Template } from 'meteor/templating';
+import './eft.html';
 
 Template.eft_export.onCreated(function () {
   const templateObject = Template.instance();

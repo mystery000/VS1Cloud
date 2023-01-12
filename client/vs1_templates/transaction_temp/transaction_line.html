@@ -425,7 +425,7 @@
                         <td class="colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
                         {{/if}}
-                        {{#if equals isBatchSerialNoTracking true}}
+                        {{#if equals isBatchSerialNoTracking 'true'}}
                         <td class="th colSerialNo {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><i
                                 class="fas fa-plus-square text-success btnSnLotmodal"
                                 style="margin-left: 40px; font-size: 22px;"></i></td>

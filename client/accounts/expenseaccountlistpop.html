@@ -7,7 +7,7 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
                 <div class="card-body p-1 rounded" >
-                    <div class="table-responsive">
+                    <!-- <div class="table-responsive">
                         <style>
                             .thAccountName {
                                 width: 20% !important;
@@ -45,7 +45,8 @@
 
                             </tbody>
                         </table>
-                    </div>
+                    </div> -->
+                    {{> non_transactional_list tablename = "tblExpenseAccountList"}}
                 </div>
             </div>
             <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
