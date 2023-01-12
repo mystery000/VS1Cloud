@@ -1,21 +1,12 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
 import {AccountService} from "./account-service";
-import {UtilityService} from "../utility-service";
-import { SideBarService } from '../js/sidebar-service';
 import {OrganisationService} from '../js/organisation-service';
 import {PurchaseBoardService} from '../js/purchase-service';
 import '../lib/global/indexdbstorage.js';
-import XLSX from 'xlsx';
-
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './addaccountpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let utilityService = new UtilityService();
-let sideBarService = new SideBarService();
 Template.addaccountpop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -402,6 +393,7 @@ Template.addaccountpop.events({
         let templateObject = Template.instance();
         let accountService = new AccountService();
         let organisationService = new OrganisationService();
+
         setTimeout(function(){
         var url = FlowRouter.current().path;
         $('.fullScreenSpin').css('display', 'inline-block');
