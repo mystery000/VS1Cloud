@@ -487,7 +487,7 @@ Template.newreconrule.onRendered(function() {
         $(".colAccountName").removeClass('boldtablealertsborder');
         $(".colAccount").removeClass('boldtablealertsborder');
         const table = $(this);
-        let accountname = table.find(".productName").text();
+        let accountname = table.find(".colAccountName").text();
         let accountId = table.find(".colAccountID").text();
         $('#bankAccountListModal').modal('toggle');
         $('#sltBankAccount').val(accountname);
