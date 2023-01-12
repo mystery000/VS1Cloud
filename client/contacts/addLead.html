@@ -329,10 +329,7 @@
                                                 </div>
                                                 <div class="col-6 col-md-2" style="padding: 0px 4px;">
                                                     <div class="form-group">
-                                                        <label for="editLeadTitle">Title</label>
-                                                        <input type="search" class="form-control es-input" id="editLeadTitle" name="editLeadTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
-                                                        <!-- </select> -->
-                                                        <!-- <input type="text" class="form-control" id="edtTitle" name="edtTitle" value="{{record.title}}">-->
+                                                        {{> contact_title target="editLeadTitle" value=record.title}}
                                                     </div> 
                                                 </div>
                                                 <div class="col-6 col-md-4" style="padding: 0px 8px;">
@@ -480,19 +477,22 @@
                                                                         width:100% !important;
                                                                     }
                                                                     #tblLeadCrmListWithDate .colDate{
-                                                                        width:15% !important;
+                                                                        width:12% !important;
+                                                                    }
+                                                                    #tblLeadCrmListWithDate .colType{
+                                                                        width:12% !important;
                                                                     }
                                                                     #tblLeadCrmListWithDate .colTaskName{
-                                                                        width:20% !important;
+                                                                        width:18% !important;
                                                                     }
                                                                     #tblLeadCrmListWithDate .colTaskDesc{
-                                                                        width:35% !important;
+                                                                        width:30% !important;
                                                                     }
                                                                     #tblLeadCrmListWithDate .colCompletedBy{
                                                                         width:15% !important;
                                                                     }
                                                                     #tblLeadCrmListWithDate .colCompleteTask{
-                                                                        width:15% !important;
+                                                                        width:12% !important;
                                                                     }
                                                                 </style>
                                                                 {{> non_transactional_list tablename="tblLeadCrmListWithDate"}}

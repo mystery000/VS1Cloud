@@ -2,6 +2,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import {UtilityService} from "../../utility-service";
 import {ContactService} from "../../contacts/contact-service";
+import {Template} from 'meteor/templating';
+import './paychexapi.html';
+
 Template.paychexapi.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);

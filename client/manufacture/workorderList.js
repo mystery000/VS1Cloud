@@ -11,6 +11,13 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
 
+
+import {Session} from 'meteor/session';
+import { Template } from 'meteor/templating';
+import './workorderList.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new SalesBoardService();
@@ -23,9 +30,27 @@ Template.workorderlist.onCreated(function() {
 Template.workorderlist.onRendered (function() {
     const templateObject = Template.instance();
 
-    templateObject.getWorkorderRecords  = function(e) {
-        let tempArray = localStorage.getItem('TWorkorders');
-        templateObject.datatablerecords.set(tempArray?JSON.parse(tempArray): []);
+    templateObject.getWorkorderRecords  =  async function(e) {
+        
+
+        async function getWorkorders() {
+            return new Promise(async(resolve, reject)=>{
+                getVS1Data('TVS1Workorder').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        resolve([])
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        resolve(data.tvs1workorder)
+                    }
+                }).catch(function(e){
+                    resolve([])
+                })
+            })
+        }
+        let tempArray = await getWorkorders();;
+        templateObject.datatablerecords.set(tempArray);
+        
+
         if (templateObject.datatablerecords.get()) {
             Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblWorkorderList', function (error, result) {
                 if (error) {
@@ -288,104 +313,7 @@ Template.workorderlist.onRendered (function() {
     }
     templateObject.getWorkorderRecords();
 
-    // custom field displaysettings
-    templateObject.getCustomFieldData = function() {
-
-        let custFields = [];
-        let dispFields = [];
-        let customData = {};
-        let customFieldCount = 11;
-        let listType = "ltWorkorderList";
-
-        let reset_data = [
-          { label: 'Name', class: 'colName', active: true },
-          { label: 'Description', class: 'colDescription', active: true },
-          { label: 'Daily Hours', class: 'colDailyHours', active: true },
-          { label: 'Hourly Labour Cost', class: 'colHourlyLabourCost', active: true },
-          { label: 'Cost of Goods Sold', class: 'colCOGS', active: true },
-          { label: 'Expense Account', class: 'colExpense', active: true },
-          { label: 'Hourly Overhead Cost', class: 'colHourlyOverheadCost', active: true },
-          { label: 'Cost of Goods Sold(Overhead)', class: 'colOverCOGS', active: true },
-          { label: 'Expense Account(Overhead)', class: 'colOverExpense', active: false },
-          { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
-          { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
-        ];
-
-        sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
-          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-            if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              custFields.push(customData);
-            } else if (data.tcustomfieldlist[x].fields.ListType == listType) {
-              customData = {
-                active: data.tcustomfieldlist[x].fields.Active || false,
-                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-                datatype: data.tcustomfieldlist[x].fields.DataType || "",
-                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-              };
-              dispFields.push(customData);
-            }
-          }
-
-          if (custFields.length < 3) {
-            let remainder = 3 - custFields.length;
-            let getRemCustomFields = parseInt(custFields.length);
-            for (let r = 0; r < remainder; r++) {
-              getRemCustomFields++;
-              customData = {
-                active: false,
-                id: "",
-                custfieldlabel: "Custom Field " + getRemCustomFields,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              // count++;
-              custFields.push(customData);
-            }
-          }
-
-          if (dispFields.length < customFieldCount) {
-            let remainder = customFieldCount - dispFields.length;
-            let getRemCustomFields = parseInt(dispFields.length);
-            for (let r = 0; r < remainder; r++) {
-              customData = {
-                active: reset_data[getRemCustomFields].active,
-                id: "",
-                custfieldlabel: reset_data[getRemCustomFields].label,
-                datatype: "",
-                isempty: true,
-                iscombo: false,
-              };
-              getRemCustomFields++;
-              // count++;
-              dispFields.push(customData);
-            }
-          }
-
-          for (let index = 0; index < custFields.length; index++) {
-            const element = custFields[index];
-            dispFields.push(element);
-
-          }
-
-          templateObject.custfields.set(custFields);
-          templateObject.displayfields.set(dispFields);
-
-        })
-      }
-
+ 
 
 });
 

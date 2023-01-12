@@ -36,7 +36,7 @@ Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr("leavetype-id");
         let name = $(e.currentTarget).attr("leave-type-name"); 
-        let Hours = $(e.currentTarget).attr("col-type-balance") ||'';
+        let Hours = $(e.currentTarget).attr("col-type-balance") ||''; 
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
         $('#edtLeaveTypeofRequest').val(name); 

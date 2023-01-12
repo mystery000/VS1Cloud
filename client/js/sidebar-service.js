@@ -1083,7 +1083,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
-  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter) {
+  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, typeFilter = 'all') {
     let options = "";
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
       if (limitcount == "All") {
@@ -1092,6 +1092,13 @@ export class SideBarService extends BaseService {
           orderby: '"AccountName asc"',
           Search: "Active = true",
         };
+        if(typeFilter != 'all') {
+          options = {
+            IgnoreDates:true,
+            orderby: '"AccountName asc"',
+            Search: "Active = true and AccountType='" + typeFilter+"'",
+          };
+        }
       } else {
         options = {
           IgnoreDates:true,
@@ -1100,13 +1107,31 @@ export class SideBarService extends BaseService {
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
+
+        if(typeFilter != 'all') {
+          options = {
+            IgnoreDates:true,
+            orderby: '"AccountName asc"',
+            Search: "Active = true and AccountType='" + typeFilter+"'",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+          };
+        }
       }
+      
     }else{
       if (limitcount == "All") {
         options = {
           orderby: '"AccountName asc"',
           IgnoreDates:true,
         };
+        if(typeFilter != 'all') {
+          options = {
+            IgnoreDates:true,
+            orderby: '"AccountName asc"',
+            Search: "AccountType='" + typeFilter+"'",
+          };
+        }
       } else {
         options = {
           IgnoreDates:true,
@@ -1114,6 +1139,15 @@ export class SideBarService extends BaseService {
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
+        if(typeFilter != 'all') {
+          options = {
+            IgnoreDates:true,
+            orderby: '"AccountName asc"',
+            Search: "AccountType='" + typeFilter+"'",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+          };
+        }
       }
     }
 

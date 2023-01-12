@@ -17,6 +17,8 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './shippingOverview.html';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
