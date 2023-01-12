@@ -142,12 +142,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
             ];
-        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
             let bsbname = "Branch Code";
             if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
                 bsbname = "BSB";
             }
-            if (currenttablename == "tblAccountOverview") {
+            if (currenttablename == "tblAccountOverview" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
                     { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -1450,23 +1450,33 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     //Accounts Overview List Data
-    templateObject.getAccountsOverviewData = async function(deleteFilter = false) {
+    templateObject.getAccountsOverviewData = async function(deleteFilter = false, typeFilter = 'all') {
         var customerpage = 0;
         getVS1Data('TAccountVS1List').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                    await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                    if(typeFilter == 'all') {
+                        await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                    }
                     templateObject.displayAccountsOverviewListData(data);
                 }).catch(function(err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayAccountsOverviewListData(data);
+                if(typeFilter != 'all') {
+                    sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                        templateObject.displayAccountsOverviewListData(data);
+                    })                
+                }else {
+                    templateObject.displayAccountsOverviewListData(data);
+                }
             }
         }).catch(function(err) {
-            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TAccountVS1List', JSON.stringify(data));
+            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                if(typeFilter == 'all') {
+                    await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                }
                 templateObject.displayAccountsOverviewListData(data);
             }).catch(function(err) {
 

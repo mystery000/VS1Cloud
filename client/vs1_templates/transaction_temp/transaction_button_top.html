@@ -78,5 +78,18 @@
         id="btnMakeWorkOrder" name="btnMakeWorkOrder">Make Work Order</button>
     </div>
     {{/if}}
+    {{#if showQuantityBuild}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+      <button class="btn btn-secondary btnBuildQty float-right" id="btnBuildQty" type="button" style="margin: 12px 24px; width: 140px;"
+         name="btnBuildQty">Quantity Built</button>
+      <input type="text" class="form-control mt-3 text-center edtTotalQuantity" id="edtTotalQuantity" value="{{data.quantity}}"  style="margin: 12px 24px; width: 140px;"/>
+    </div>
+    {{/if}}
+    {{#if showCompleteProcess}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+      <button class="btn btn-success float-right" type="button" style="margin: 12px 24px; width: 140px;"
+        id="btnCompleteProcess" name="btnCompleteProcess">Complete Process</button>
+    </div>
+    {{/if}}
   {{/if}}
 </template>
