@@ -299,6 +299,7 @@ import './vs1shipping/shippingdocket.js';
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import 'datatables.net-responsive-bs4';
+import './lib/global/globalShipping.js';
 /* Rasheed */
 
 /* DevTop/Dev Pioneer */
