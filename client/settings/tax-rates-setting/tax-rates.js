@@ -3,6 +3,10 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
 import { OrganisationService } from "../../js/organisation-service";
 import '../../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import './tax-rates.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 

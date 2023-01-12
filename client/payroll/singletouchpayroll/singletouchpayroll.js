@@ -17,6 +17,9 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import 'jquery-editable-select';
+import {Template} from 'meteor/templating';
+import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
+import './singletouchpayroll.html';
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.singletouchpayroll.onCreated(function() {
@@ -67,7 +70,7 @@ Template.singletouchpayroll.onRendered(function() {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
+            // colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },

@@ -35,8 +35,6 @@ let manufacturingService = new ManufacturingService();
 Template.production_planner.onRendered(async function() {
     const templateObject = Template.instance();
 
-
-
     async function getResources() {
         return new Promise(async(resolve, reject) => {
             getVS1Data('TProcessStep').then(function(dataObject) {
@@ -81,7 +79,21 @@ Template.production_planner.onRendered(async function() {
     }
     let resources = await getResources();
     await templateObject.resources.set(resources);
-    let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : []
+
+    async function getWorkorders() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TVS1Workorder').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    resolve([])
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    resolve(data.tvs1workorder)
+                }
+            })
+        })
+    }
+    
+    let workorders = await getWorkorders();
         // templateObject.workorders.set(workorders);
     async function getPlanData() {
         return new Promise(async(resolve, reject)=> {
@@ -102,6 +114,14 @@ Template.production_planner.onRendered(async function() {
             })
         })
     }
+
+    function getRandomColor () {
+        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        if (randomColor.length == 5) {
+            randomColor = "0"+randomColor;
+        }
+        return randomColor;
+    }
     async function getEvents() {
         return new Promise(async function(resolve, reject) {
             // let events = [];
@@ -111,54 +131,56 @@ Template.production_planner.onRendered(async function() {
             if (eventsData.length == 0) {
 
                 let tempEvents = [];
-                for (let i = 0; i < workorders.length; i++) {
-                    let processName = workorders[i].BOM.process;
-                    let productName = workorders[i].BOM.productName;
-                    let index = resources.findIndex(resource => {
-                        return resource.title == processName;
-                    })
-                    let resourceId = resources[index].id;
-                    let startTime = new Date(workorders[i].StartTime);
-                    let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
-                    if(filteredEvents.length > 1) {
-                        filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
-                        startTime = filteredEvents[filteredEvents.length -1].end;
-                    }else if(filteredEvents.length == 1) {
-                        startTime = filteredEvents[0].end;
-                    }
-                    let duration = workorders[i].BOM.duration;
-                    let quantity = workorders[i].Quantity || 1;
-                    let buildSubs = [];
-                    let stockRaws = [];
-                    let subs = workorders[i].BOM.subs;
-                    if(subs.length > 1) {
-                        for(let j = 0; j < subs.length; j++ ) {
-                            if(subs[j].isBuild == true) {
-                                buildSubs.push(subs[j].productName)
-                            }else {
-                                stockRaws.push(subs[j].productName)
+                if(workorders && workorders.length > 0) {
+                    for (let i = 0; i < workorders.length; i++) {
+                        let processName = JSON.parse(workorders[i].fields.BOMStructure).Info;
+                        let productName = workorders[i].fields.ProductName;
+                        let index = resources.findIndex(resource => {
+                            return resource.title == processName;
+                        })
+                        let resourceId = resources[index].id;
+                        let startTime = new Date(workorders[i].fields.StartTime);
+                        let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
+                        if(filteredEvents.length > 1) {
+                            filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
+                            startTime = filteredEvents[filteredEvents.length -1].end;
+                        }else if(filteredEvents.length == 1) {
+                            startTime = filteredEvents[0].end;
+                        }
+                        let duration = JSON.parse(workorders[i].fields.BOMStructure).QtyVariation;
+                        let quantity = workorders[i].fields.Quantity;
+                        let buildSubs = [];
+                        let stockRaws = [];
+                        let subs = JSON.parse(JSON.parse(workorders[i].fields.BOMStructure).Details);
+                        if(subs.length > 1) {
+                            for(let j = 0; j < subs.length; j++ ) {
+                                if(subs[j].isBuild == true) {
+                                    buildSubs.push(subs[j].productName)
+                                }else {
+                                    stockRaws.push(subs[j].productName)
+                                }
                             }
                         }
-                    }
-                    if (workorders[i].Quantity) duration = duration * parseFloat(workorders[i].Quantity);
-                    let endTime = new Date();
-                    endTime.setTime(startTime.getTime() + duration * 3600000)
-                    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
-                    let event = {
-                        "resourceId": resourceId,
-                        "resourceName": resources[index].title,
-                        "title": productName,
-                        "start": startTime,
-                        "end": endTime,
-                        "color": "#" + randomColor,
-                        "extendedProps": {
-                            "orderId": workorders[i].ID,
-                            'quantity': quantity,
-                            "builds": buildSubs,
-                            "fromStocks": stockRaws
+                        if (workorders[i].fields.Quantity) duration = duration * parseFloat(workorders[i].fields.Quantity);
+                        let endTime = new Date();
+                        endTime.setTime(startTime.getTime() + duration * 3600000)
+                        var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+                        let event = {
+                            "resourceId": resourceId,
+                            "resourceName": resources[index].title,
+                            "title": productName,
+                            "start": startTime,
+                            "end": endTime,
+                            "color": "#" + randomColor,
+                            "extendedProps": {
+                                "orderId": workorders[i].fields.ID,
+                                'quantity': quantity,
+                                "builds": buildSubs,
+                                "fromStocks": stockRaws
+                            }
                         }
+                        tempEvents.push(event);
                     }
-                    tempEvents.push(event);
                 }
                 templateObject.events.set(tempEvents)
                 resolve(tempEvents);
@@ -204,7 +226,7 @@ Template.production_planner.onRendered(async function() {
         eventOverlap: true,
         eventResourceEditable: false,
         eventClassNames: function(arg) {
-            if (arg.event.extendedProps.orderId.split('_')[0] == templateObject.selectedEventSalesorderId.get()) {
+            if (arg.event.extendedProps.orderId.toString().split('000')[0] == templateObject.selectedEventSalesorderId.get()) {
                 return [ 'highlighted' ]
               } else {
                 return [ 'normal' ]
@@ -245,10 +267,10 @@ Template.production_planner.onRendered(async function() {
                     let filteredMainEvents = events.filter(e => getSeconds(e.start) <= getSeconds(event.start) && getSeconds(e.end) > getSeconds(new Date()) && e.extendedProps.builds.includes(buildSubs[i]))
                     for (let k = 0; k< filteredMainEvents.length; k++) {
                         let filteredOrder = workorders.findIndex(order => {
-                            return order.ID == filteredMainEvents[k].extendedProps.orderId
+                            return order.fields.ID == filteredMainEvents[k].extendedProps.orderId
                         })
                         if(filteredOrder > -1) {
-                            let bom = workorders[filteredOrder].BOM.subs;
+                            let bom = JSON.parse(JSON.parse(workorders[filteredOrder].fields.BOMStructure).Details);
                             let index = bom.findIndex(item=>{
                                 return item.productName == buildSubs[i];
                             })
@@ -304,7 +326,9 @@ Template.production_planner.onRendered(async function() {
         },
         eventDidMount : function(arg) {
             let event = arg.event;
-            arg.el.ondblclick = (()=>{
+            arg.el.addEventListener('dblclick', (e)=>{
+                e.preventDefault();
+                e.stopPropagation();
                 let id = event.extendedProps.orderId;
                 FlowRouter.go('/workordercard?id=' + id)
             })
@@ -430,27 +454,28 @@ Template.production_planner.onRendered(async function() {
             // window.location.reload();
         },
         eventClick: function(info) {
+            setTimeout(()=>{
                 let title = info.event.title;
                 let orderIndex = workorders.findIndex(order => {
-                    return order.BOM.productName == title;
+                    return order.fields.ProductName == title;
                 })
                 let percentage = 0;
                 if (new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
                     let overallTime = (new Date(info.event.end)).getTime() - (new Date(info.event.start)).getTime();
                     let processedTime = new Date().getTime() - (new Date(info.event.start)).getTime();
-                    percentage = (processedTime / overallTime) * 100;
+                    percentage = ((processedTime / overallTime) * 100).toFixed(2);
                 }
                 let object = {
-                    SONumber: workorders[orderIndex].SalesOrderID,
-                    Customer: workorders[orderIndex].Customer,
-                    OrderDate: workorders[orderIndex].OrderDate,
-                    ShipDate: workorders[orderIndex].Line.fields.ShipDate,
-                    JobNotes: workorders[orderIndex].BOM.processNote || '',
+                    SONumber: workorders[orderIndex].fields.SaleID,
+                    Customer: workorders[orderIndex].fields.Customer,
+                    OrderDate: new Date(workorders[orderIndex].fields.OrderDate).toLocaleDateString(),
+                    ShipDate: workorders[orderIndex].fields.ShipDate,
+                    JobNotes: JSON.parse(workorders[orderIndex].fields.BOMStructure).CustomInputClass || '',
                     Percentage: percentage + '%',
                 }
                 templateObject.viewInfoData.set(object);
                 let orderId = info.event.extendedProps.orderId;
-                let salesorderId = orderId.split('_')[0];
+                let salesorderId = orderId.toString().split('000')[0];
                 templateObject.selectedEventSalesorderId.set(salesorderId);
                 let dayIndex = info.event.start.getDay();
                 calendar.destroy();
@@ -460,6 +485,7 @@ Template.production_planner.onRendered(async function() {
                     events: templateObject.events.get()
                 })
                 calendar.render();
+            }, 300)
             }
             // expandRows: true,
             // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
@@ -590,7 +616,7 @@ Template.production_planner.events({
                     // })
 
                     for(let n = 0; n < events.length; n++) {
-                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.split('_')[0] == event.extendedProps.orderId.split('_')[0]) {
+                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.toString().split('_')[0] == event.extendedProps.orderId.toString().split('_')[0]) {
                             buildSubs.push(events[n])
                         }
                     }

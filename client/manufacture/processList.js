@@ -1,20 +1,11 @@
-import {SalesBoardService} from '../js/sales-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
-import {AccountService} from "../accounts/account-service";
-import {InvoiceService} from "../invoice/invoice-service";
-import {UtilityService} from "../utility-service";
-import { SideBarService } from '../js/sidebar-service';
-import {OrganisationService} from '../js/organisation-service';
-import { ManufacturingService } from './manufacturing-service';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
+import { Template } from 'meteor/templating';
+import './processList.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-let manufacturingService = new ManufacturingService();
 Template.processList.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -61,28 +52,28 @@ Template.processList.onRendered (function() {
     //                                     let columnClass = columHeaderUpdate.split('.')[1];
     //                                     let columnWidth = customcolumn[i].width;
     //                                     let columnindex = customcolumn[i].index + 1;
-            
+
     //                                     if (hiddenColumn == true) {
-            
+
     //                                         $("." + columnClass + "").addClass('hiddenColumn');
     //                                         $("." + columnClass + "").removeClass('showColumn');
     //                                     } else if (hiddenColumn == false) {
     //                                         $("." + columnClass + "").removeClass('hiddenColumn');
     //                                         $("." + columnClass + "").addClass('showColumn');
     //                                     }
-            
+
     //                                 }
     //                             }
-            
+
     //                         }
     //                     });
-            
+
     //                     // setTimeout(function () {
     //                     //     MakeNegative();
     //                     // }, 100);
-            
+
     //                 }
-            
+
     //                 $('.fullScreenSpin').css('display', 'none');
     //                 setTimeout(function () {
     //                     $('#tblProcessList').DataTable({
@@ -107,9 +98,9 @@ Template.processList.onRendered (function() {
     //                                                 var res = data.split("</span>");
     //                                                 data = res[1];
     //                                             }
-            
+
     //                                             return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-            
+
     //                                         }
     //                                     }
     //                                 }
@@ -141,29 +132,29 @@ Template.processList.onRendered (function() {
     //                         },
     //                         "fnDrawCallback": function (oSettings) {
     //                             let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-            
+
     //                             $('.paginate_button.page-item').removeClass('disabled');
     //                             $('#tblProcessList_ellipsis').addClass('disabled');
-            
+
     //                             if(oSettings._iDisplayLength == -1){
     //                             if(oSettings.fnRecordsDisplay() > 150){
     //                                 $('.paginate_button.page-item.previous').addClass('disabled');
     //                                 $('.paginate_button.page-item.next').addClass('disabled');
     //                             }
     //                             }else{
-            
+
     //                             }
     //                             if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
     //                                 $('.paginate_button.page-item.next').addClass('disabled');
     //                             }
-            
+
     //                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
     //                             .on('click', function(){
     //                                 $('.fullScreenSpin').css('display','inline-block');
     //                                 let dataLenght = oSettings._iDisplayLength;
-                                  
+
     //                             });
-            
+
     //                             // setTimeout(function () {
     //                             //     MakeNegative();
     //                             // }, 100);
@@ -175,10 +166,10 @@ Template.processList.onRendered (function() {
     //                         },
     //                         // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
     //                         //     let countTableData = data.Params.Count || 0; //get count from API data
-            
+
     //                         //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
     //                         // }
-            
+
     //                     }).on('page', function () {
     //                         // setTimeout(function () {
     //                         //     MakeNegative();
@@ -190,12 +181,12 @@ Template.processList.onRendered (function() {
     //                         //     MakeNegative();
     //                         // }, 100);
     //                     });
-            
+
     //                     // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
     //                     $('.fullScreenSpin').css('display', 'none');
-            
+
     //                 }, 0);
-            
+
     //                 var columns = $('#tblProcessList th');
     //                 let sTible = "";
     //                 let sWidth = "";
@@ -211,15 +202,15 @@ Template.processList.onRendered (function() {
     //                     if ((v.className.includes("hiddenColumn"))) {
     //                         columVisible = false;
     //                     }
-            
+
     //                     if ((v.className.includes("customFieldColumn"))) {
     //                         isCustomField = true;
     //                     } else {
     //                         isCustomField = false;
     //                     }
-            
+
     //                     sWidth = v.style.width.replace('px', "");
-            
+
     //                     let datatablerecordObj = {
     //                         custid: $(this).attr("custid") || 0,
     //                         sTitle: v.innerText || '',
@@ -252,28 +243,28 @@ Template.processList.onRendered (function() {
     //                                 let columnClass = columHeaderUpdate.split('.')[1];
     //                                 let columnWidth = customcolumn[i].width;
     //                                 let columnindex = customcolumn[i].index + 1;
-        
+
     //                                 if (hiddenColumn == true) {
-        
+
     //                                     $("." + columnClass + "").addClass('hiddenColumn');
     //                                     $("." + columnClass + "").removeClass('showColumn');
     //                                 } else if (hiddenColumn == false) {
     //                                     $("." + columnClass + "").removeClass('hiddenColumn');
     //                                     $("." + columnClass + "").addClass('showColumn');
     //                                 }
-        
+
     //                             }
     //                         }
-        
+
     //                     }
     //                 });
-        
+
     //                 // setTimeout(function () {
     //                 //     MakeNegative();
     //                 // }, 100);
-        
+
     //             }
-        
+
     //             $('.fullScreenSpin').css('display', 'none');
     //             setTimeout(function () {
     //                 $('#tblProcessList').DataTable({
@@ -298,9 +289,9 @@ Template.processList.onRendered (function() {
     //                                             var res = data.split("</span>");
     //                                             data = res[1];
     //                                         }
-        
+
     //                                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-        
+
     //                                     }
     //                                 }
     //                             }
@@ -332,29 +323,29 @@ Template.processList.onRendered (function() {
     //                     },
     //                     "fnDrawCallback": function (oSettings) {
     //                         let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-        
+
     //                         $('.paginate_button.page-item').removeClass('disabled');
     //                         $('#tblProcessList_ellipsis').addClass('disabled');
-        
+
     //                         if(oSettings._iDisplayLength == -1){
     //                         if(oSettings.fnRecordsDisplay() > 150){
     //                             $('.paginate_button.page-item.previous').addClass('disabled');
     //                             $('.paginate_button.page-item.next').addClass('disabled');
     //                         }
     //                         }else{
-        
+
     //                         }
     //                         if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
     //                             $('.paginate_button.page-item.next').addClass('disabled');
     //                         }
-        
+
     //                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
     //                         .on('click', function(){
     //                             $('.fullScreenSpin').css('display','inline-block');
     //                             let dataLenght = oSettings._iDisplayLength;
-                                
+
     //                         });
-        
+
     //                         // setTimeout(function () {
     //                         //     MakeNegative();
     //                         // }, 100);
@@ -366,10 +357,10 @@ Template.processList.onRendered (function() {
     //                     },
     //                     // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
     //                     //     let countTableData = data.Params.Count || 0; //get count from API data
-        
+
     //                     //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
     //                     // }
-        
+
     //                 }).on('page', function () {
     //                     // setTimeout(function () {
     //                     //     MakeNegative();
@@ -381,12 +372,12 @@ Template.processList.onRendered (function() {
     //                     //     MakeNegative();
     //                     // }, 100);
     //                 });
-        
+
     //                 // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
     //                 $('.fullScreenSpin').css('display', 'none');
-        
+
     //             }, 0);
-        
+
     //             var columns = $('#tblProcessList th');
     //             let sTible = "";
     //             let sWidth = "";
@@ -402,15 +393,15 @@ Template.processList.onRendered (function() {
     //                 if ((v.className.includes("hiddenColumn"))) {
     //                     columVisible = false;
     //                 }
-        
+
     //                 if ((v.className.includes("customFieldColumn"))) {
     //                     isCustomField = true;
     //                 } else {
     //                     isCustomField = false;
     //                 }
-        
+
     //                 sWidth = v.style.width.replace('px', "");
-        
+
     //                 let datatablerecordObj = {
     //                     custid: $(this).attr("custid") || 0,
     //                     sTitle: v.innerText || '',
@@ -445,28 +436,28 @@ Template.processList.onRendered (function() {
     //                                 let columnClass = columHeaderUpdate.split('.')[1];
     //                                 let columnWidth = customcolumn[i].width;
     //                                 let columnindex = customcolumn[i].index + 1;
-        
+
     //                                 if (hiddenColumn == true) {
-        
+
     //                                     $("." + columnClass + "").addClass('hiddenColumn');
     //                                     $("." + columnClass + "").removeClass('showColumn');
     //                                 } else if (hiddenColumn == false) {
     //                                     $("." + columnClass + "").removeClass('hiddenColumn');
     //                                     $("." + columnClass + "").addClass('showColumn');
     //                                 }
-        
+
     //                             }
     //                         }
-        
+
     //                     }
     //                 });
-        
+
     //                 // setTimeout(function () {
     //                 //     MakeNegative();
     //                 // }, 100);
-        
+
     //             }
-        
+
     //             $('.fullScreenSpin').css('display', 'none');
     //             setTimeout(function () {
     //                 $('#tblProcessList').DataTable({
@@ -491,9 +482,9 @@ Template.processList.onRendered (function() {
     //                                             var res = data.split("</span>");
     //                                             data = res[1];
     //                                         }
-        
+
     //                                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-        
+
     //                                     }
     //                                 }
     //                             }
@@ -525,29 +516,29 @@ Template.processList.onRendered (function() {
     //                     },
     //                     "fnDrawCallback": function (oSettings) {
     //                         let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-        
+
     //                         $('.paginate_button.page-item').removeClass('disabled');
     //                         $('#tblProcessList_ellipsis').addClass('disabled');
-        
+
     //                         if(oSettings._iDisplayLength == -1){
     //                         if(oSettings.fnRecordsDisplay() > 150){
     //                             $('.paginate_button.page-item.previous').addClass('disabled');
     //                             $('.paginate_button.page-item.next').addClass('disabled');
     //                         }
     //                         }else{
-        
+
     //                         }
     //                         if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
     //                             $('.paginate_button.page-item.next').addClass('disabled');
     //                         }
-        
+
     //                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
     //                         .on('click', function(){
     //                             $('.fullScreenSpin').css('display','inline-block');
     //                             let dataLenght = oSettings._iDisplayLength;
-                                
+
     //                         });
-        
+
     //                         // setTimeout(function () {
     //                         //     MakeNegative();
     //                         // }, 100);
@@ -559,10 +550,10 @@ Template.processList.onRendered (function() {
     //                     },
     //                     // "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
     //                     //     let countTableData = data.Params.Count || 0; //get count from API data
-        
+
     //                     //     return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
     //                     // }
-        
+
     //                 }).on('page', function () {
     //                     // setTimeout(function () {
     //                     //     MakeNegative();
@@ -574,12 +565,12 @@ Template.processList.onRendered (function() {
     //                     //     MakeNegative();
     //                     // }, 100);
     //                 });
-        
+
     //                 // $('#tblInvoicelist').DataTable().column( 0 ).visible( true );
     //                 $('.fullScreenSpin').css('display', 'none');
-        
+
     //             }, 0);
-        
+
     //             var columns = $('#tblProcessList th');
     //             let sTible = "";
     //             let sWidth = "";
@@ -595,15 +586,15 @@ Template.processList.onRendered (function() {
     //                 if ((v.className.includes("hiddenColumn"))) {
     //                     columVisible = false;
     //                 }
-        
+
     //                 if ((v.className.includes("customFieldColumn"))) {
     //                     isCustomField = true;
     //                 } else {
     //                     isCustomField = false;
     //                 }
-        
+
     //                 sWidth = v.style.width.replace('px', "");
-        
+
     //                 let datatablerecordObj = {
     //                     custid: $(this).attr("custid") || 0,
     //                     sTitle: v.innerText || '',
@@ -636,7 +627,7 @@ Template.processList.onRendered (function() {
     //     let customData = {};
     //     let customFieldCount = 11;
     //     let listType = "ltProcessList";
-  
+
     //     let reset_data = [
     //       { label: 'Name', class: 'colName', active: true },
     //       { label: 'Description', class: 'colDescription', active: true },
@@ -650,7 +641,7 @@ Template.processList.onRendered (function() {
     //       { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
     //       { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
     //     ];
-  
+
     //     sideBarService.getAllCustomFieldsWithQuery(listType).then(function (data) {
     //       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
     //         if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
@@ -677,7 +668,7 @@ Template.processList.onRendered (function() {
     //           dispFields.push(customData);
     //         }
     //       }
-  
+
     //       if (custFields.length < 3) {
     //         let remainder = 3 - custFields.length;
     //         let getRemCustomFields = parseInt(custFields.length);
@@ -695,7 +686,7 @@ Template.processList.onRendered (function() {
     //           custFields.push(customData);
     //         }
     //       }
-  
+
     //       if (dispFields.length < customFieldCount) {
     //         let remainder = customFieldCount - dispFields.length;
     //         let getRemCustomFields = parseInt(dispFields.length);
@@ -713,20 +704,20 @@ Template.processList.onRendered (function() {
     //           dispFields.push(customData);
     //         }
     //       }
-  
+
     //       for (let index = 0; index < custFields.length; index++) {
     //         const element = custFields[index];
     //         dispFields.push(element);
-  
+
     //       }
-  
+
     //       templateObject.custfields.set(custFields);
     //       templateObject.displayfields.set(dispFields);
-  
+
     //     })
     //   }
 
-    
+
 });
 
 Template.processList.helpers ({
@@ -739,7 +730,7 @@ Template.processList.helpers ({
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     }
-    
+
 })
 
 
@@ -798,7 +789,6 @@ Template.processList.events({
 
     'click .saveTable' : function(event) {
         let lineItems = [];
-        let organisationService = new OrganisationService();
         let listType = 'ltProcessList';
 
         $(".fullScreenSpin").css("display", "inline-block");
@@ -825,7 +815,7 @@ Template.processList.events({
         //         width: colWidth,
         //         thclass: colthClass
         //     }
-    
+
         //     lineItems.push(lineItemObj);
 
         //     if(fieldID && parseInt(fieldID) != 0){
@@ -893,16 +883,16 @@ Template.processList.events({
             { label: 'Total Hourly Costs', class: 'colTotalHourlyCosts', active: true },
             { label: 'Inventory Asset Wastage', class: 'colWastage', active: true },
         ];
-  
+
         $('.displaySettings').each(function(index) {
           var $tblrow = $(this);
           $tblrow.find(".divcolumn").text(reset_data[index].label);
           $tblrow.find(".custom-control-input").prop('checked', reset_data[index].active);
-  
+
           // var title = datable.column( index+1 ).header();
           var title = $('#tblProcessList').find('th').eq(index + 1);
           $(title).html(reset_data[index].label);
-  
+
           if (reset_data[index].active) {
             $('.' + reset_data[index].class).css('display', 'table-cell');
             $('.' + reset_data[index].class).css('padding', '.75rem');
@@ -910,13 +900,13 @@ Template.processList.events({
           } else {
             $('.' + reset_data[index].class).css('display', 'none');
           }
-  
+
         });
-  
+
       },
 
 
-      
+
     'click .processList .btnRefresh': function(e) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');

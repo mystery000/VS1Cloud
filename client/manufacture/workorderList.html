@@ -195,13 +195,13 @@
                             <tbody>
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.fields.id}}" style="cursor:pointer">
-                                    <td contenteditable="false" class="colId">{{item.ID}}</td>
-                                    <td contenteditable="false" class="colOrderNumber">{{item.SalesOrderID}}</td>
-                                    <td contenteditable="false" class="colCustomer">{{item.Customer}}</td>
-                                    <td contenteditable="false" class="colPONumber">{{item.PONumber}}</td>
-                                    <td contenteditable="false" class="colSaleDate">{{item.SaleDate}}</td>
-                                    <td contenteditable="false" class="colDueDate">{{item.DueDate}}</td>
+                                <tr class="dnd-moved" id="{{item.fields.ID}}" style="cursor:pointer">
+                                    <td contenteditable="false" class="colId">{{item.fields.ID}}</td>
+                                    <td contenteditable="false" class="colOrderNumber">{{item.fields.SaleID}}</td>
+                                    <td contenteditable="false" class="colCustomer">{{item.fields.Customer}}</td>
+                                    <td contenteditable="false" class="colPONumber">{{item.fields.PONumber}}</td>
+                                    <td contenteditable="false" class="colSaleDate">{{item.fields.SaleDate}}</td>
+                                    <td contenteditable="false" class="colDueDate">{{item.fields.DueDate}}</td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

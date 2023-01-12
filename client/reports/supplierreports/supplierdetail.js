@@ -8,6 +8,8 @@ import GlobalFunctions from "../../GlobalFunctions";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./supplierdetail.html"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -17,8 +19,9 @@ let defaultCurrencyCode = CountryAbbr;
 Template.supplierdetail.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();
-  templateObject.records = new ReactiveVar([]);
+  templateObject.transactiondatatablerecords = new ReactiveVar([]);
   templateObject.reportOptions = new ReactiveVar([]);
+  templateObject.supplierdetailth = new ReactiveVar([]);
 
   FxGlobalFunctions.initVars(templateObject);
 });
@@ -27,217 +30,555 @@ Template.supplierdetail.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
 
+  templateObject.init_reset_data = function () {
+    let reset_data = [];
+    reset_data = [
+      { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
+      { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "110" },
+      { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "140" },
+      { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
+      { index: 5, label: 'Amount (Ex)', class: 'colAmountEx', active: false, display: true, width: "120" },
+      { index: 6, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
+      { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
+      { index: 8, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+      { index: 9, label: 'Class ID', class: 'colClassID', active: true, display: true, width: "85" },
+      { index: 10, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
+      { index: 11, label: 'Credits (Ex)', class: 'colCreditEx', active: false, display: true, width: "120" },
+      { index: 12, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "120" },
+      { index: 13, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
+      { index: 14, label: 'Debits (Ex)', class: 'colDebitsEx', active: false, display: true, width: "120" },
+      { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "120" },
+      { index: 16, label: 'Details', class: 'colDetails', active: false, display: true, width: "85" },
+      { index: 17, label: 'FixedAsset ID', class: 'colFixedAssetID', active: false, display: true, width: "85" },
+      { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: true, display: true, width: "85" },
+      { index: 19, label: 'ID', class: 'colID', active: false, display: true, width: "50" },
+      { index: 20, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
+      { index: 21, label: 'Payment ID', class: 'colPaymentID', active: false, display: true, width: "85" },
+      { index: 22, label: 'PrepaymentID', class: 'colPrepaymentID', active: false, display: true, width: "85" },
+      { index: 23, label: 'Product Description', class: 'colCredit', active: true, display: true, width: "150" },
+      { index: 24, label: 'Product ID', class: 'colProductID', active: false, display: true, width: "120" },
+      { index: 25, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: true, display: true, width: "150" },
+      { index: 26, label: 'Ref No', class: 'colRefNo', active: false, display: true, width: "85" },
+      { index: 27, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "85" },
+      { index: 28, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "85" },
+      { index: 29, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "150" },
+      { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" },
+      { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+    ];
+    templateObject.supplierdetailth.set(reset_data);
+  }
+  templateObject.init_reset_data();
+
+  // await reportService.getBalanceSheetReport(dateAOsf) :
+
+  // --------------------------------------------------------------------------------------------------
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
-
-  templateObject.setDateAs = ( dateFrom = null ) => {
-    templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
-
-  templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-    let defaultOptions = templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.fromDate = formatDateFrom;
-      defaultOptions.toDate = formatDateTo;
-      defaultOptions.ignoreDate = ignoreDate;
-    } else {
-      defaultOptions = {
-        fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
-        toDate: moment().format("YYYY-MM-DD"),
-        ignoreDate: true
-      };
-    }
-    $('.edtReportDates').attr('disabled', false)
-    if( ignoreDate == true ){
-      $('.edtReportDates').attr('disabled', true);
-      templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
-    }
-    $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
-    $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getSupplierDetailReportData();
-
-    // await templateObject.loadReport(
-    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-    //   ignoreDate
-    // );
-  };
-
-
-  /**
-   * @deprecated since 23 septemeber 2022
-   */
-   templateObject.getSupplierDetailReportData = async function () {
-    let data = [];
-    if (!localStorage.getItem('VS1SupplierDetail_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
-      if( data.tsupplierproduct.length > 0 ){
-        localStorage.setItem('VS1SupplierDetail_Report', JSON.stringify(data)||'');
-      }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1SupplierDetail_Report'));
-    }
-
-    let reportSummary = data.tsupplierproduct.map(el => {
-      let resultobj = {};
-      Object.entries(el).map(([key, val]) => {
-          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
-          return resultobj;
-      })
-      return resultobj;
-    })
-    let reportData = [];
-    if( reportSummary.length > 0 ){
-      for (const item of reportSummary ) {
-        let isExist = reportData.filter((subitem) => {
-          if( subitem.Supplier_Name == item.Supplier_Name ){
-              subitem.SubAccounts.push(item)
-              return subitem
-          }
-        });
-
-        if( isExist.length == 0 ){
-          reportData.push({
-              TotalCostEx: 0,
-              TotalCostInc: 0,
-              TotalTax: 0,
-              SubAccounts: [item],
-              ...item
-          });
-        }
-       LoadingOverlay.hide();
-      }
-    }
-    let useData = reportData.filter((item) => {
-      let TotalCostEx = 0;
-      let TotalCostInc = 0;
-      let TotalTax = 0;
-      item.SubAccounts.map((subitem) => {
-        TotalCostEx += subitem.Line_Cost_Ex;
-        TotalCostInc += subitem.Line_Cost_Inc;
-        TotalTax += subitem.Line_Tax;
-      });
-      item.TotalCostEx = TotalCostEx;
-      item.TotalCostInc = TotalCostInc;
-      item.TotalTax = TotalTax;
-      return item;
-    });
-    templateObject.records.set(useData);
-
-
-    if (templateObject.records.get()) {
-      setTimeout(function () {
-        $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-        $("td").each(function () {
-          if ($(this).text().indexOf("-" + Currency) >= 0) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-       LoadingOverlay.hide();
-      }, 1000);
-    }
-  }
-
-  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
-    LoadingOverlay.show();
-    templateObject.setDateAs(dateFrom);
-    let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
-      return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
-    }, {
-      useIndexDb: true,
-      useLocalStorage: false,
-      validate: (cachedResponse) => {
-        return false;
-      }
-    });
-    data = data.response;
-
-    let reportSummary = data.tsupplierproduct.map(el => {
-      let resultobj = {};
-      Object.entries(el).map(([key, val]) => {
-          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
-          return resultobj;
-      })
-      return resultobj;
-    })
-    let reportData = [];
-    if( reportSummary.length > 0 ){
-      for (const item of reportSummary ) {
-        let isExist = reportData.filter((subitem) => {
-          if( subitem.Supplier_Name == item.Supplier_Name ){
-              subitem.SubAccounts.push(item)
-              return subitem
-          }
-        });
-
-        if( isExist.length == 0 ){
-          reportData.push({
-              TotalCostEx: 0,
-              TotalCostInc: 0,
-              TotalTax: 0,
-              SubAccounts: [item],
-              ...item
-          });
-        }
-       LoadingOverlay.hide();
-      }
-    }
-    let useData = reportData.filter((item) => {
-      let TotalCostEx = 0;
-      let TotalCostInc = 0;
-      let TotalTax = 0;
-      item.SubAccounts.map((subitem) => {
-        TotalCostEx += subitem.Line_Cost_Ex;
-        TotalCostInc += subitem.Line_Cost_Inc;
-        TotalTax += subitem.Line_Tax;
-      });
-      item.TotalCostEx = TotalCostEx;
-      item.TotalCostInc = TotalCostInc;
-      item.TotalTax = TotalTax;
-      return item;
-    });
-    templateObject.records.set(useData);
-
-
-    if (templateObject.records.get()) {
-      setTimeout(function () {
-        $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-        $("td").each(function () {
-          if ($(this).text().indexOf("-" + Currency) >= 0) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-       LoadingOverlay.hide();
-      }, 1000);
-    }
-  }
-
   templateObject.initDate();
-  templateObject.loadReport(
+
+  // let date = new Date();
+  // templateObject.currentYear.set(date.getFullYear());
+  // templateObject.nextYear.set(date.getFullYear() + 1);
+  // let currentMonth = moment(date).format("DD/MM/YYYY");
+  // templateObject.currentMonth.set(currentMonth);
+
+  // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
+
+  templateObject.getSupplierDetailData = async function (dateFrom, dateTo, ignoreDate) {
+
+    templateObject.setDateAs(dateFrom);
+    getVS1Data('TGeneralLedgerTReport').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+          templateObject.displaySupplierDetailData(data);
+        }).catch(function (err) {
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displaySupplierDetailData(data);
+      }
+    }).catch(function (err) {
+      reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+        templateObject.displaySupplierDetailData(data);
+      }).catch(function (err) {
+
+      });
+    });
+  }
+
+  templateObject.getSupplierDetailData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
+  templateObject.displaySupplierDetailData = async function (data) {
+    var splashArrayBalanceSheetReport = new Array();
+    let deleteFilter = false;
+    if (data.Params.Search.replace(/\s/g, "") == "") {
+      deleteFilter = true;
+    } else {
+      deleteFilter = false;
+    };
+
+    for (let i = 0; i < data.tgeneralledgerreport.length; i++) {
+      var dataList = [
+        data.tgeneralledgerreport[i].ACCOUNTID || "",
+        data.tgeneralledgerreport[i].ACCOUNTNAME || "",
+        data.tgeneralledgerreport[i].ACCOUNTNUMBER || "",
+        data.tgeneralledgerreport[i].ACCOUNTS || "",
+        data.tgeneralledgerreport[i].AMOUNTEX || "",
+        data.tgeneralledgerreport[i].AMOUNTINC || "",
+        data.tgeneralledgerreport[i].CHEQUENUMBER || "",
+        data.tgeneralledgerreport[i].CLASS || "",
+        data.tgeneralledgerreport[i].CLASSID || "",
+        data.tgeneralledgerreport[i]["CLIENT NAME"] || "",
+        data.tgeneralledgerreport[i].CREDITSEX || "",
+        data.tgeneralledgerreport[i].CREDITSINC || "",
+        data.tgeneralledgerreport[i].DATE || "",
+        data.tgeneralledgerreport[i].DEBITSEX || "",
+        data.tgeneralledgerreport[i].DEBITSINC || "",
+        data.tgeneralledgerreport[i].DETAILS || "",
+        data.tgeneralledgerreport[i].FIXEDASSETID || "",
+        data.tgeneralledgerreport[i].GLOBALREF || "",
+        data.tgeneralledgerreport[i].ID || "",
+        data.tgeneralledgerreport[i].MEMO || "",
+        data.tgeneralledgerreport[i].PAYMENTID || "",
+        data.tgeneralledgerreport[i].PREPAYMENTID || "",
+        data.tgeneralledgerreport[i].PRODUCTDESCRIPTION || "",
+        data.tgeneralledgerreport[i].PRODUCTNAME || "",
+        data.tgeneralledgerreport[i].PURCHASEORDERID || "",
+        data.tgeneralledgerreport[i].REFERENCENO || "",
+        data.tgeneralledgerreport[i].REPNAME || "",
+        data.tgeneralledgerreport[i].SALEID || "",
+        data.tgeneralledgerreport[i].TAXCODE || "",
+        data.tgeneralledgerreport[i].TAXRATE || "",
+        data.tgeneralledgerreport[i].TYPE || "",
+
+      ];
+      splashArrayBalanceSheetReport.push(dataList);
+      templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
+    }
+
+
+    if (templateObject.transactiondatatablerecords.get()) {
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+    }
+    //$('.fullScreenSpin').css('display','none');
+
+    setTimeout(function () {
+      $('#tblgeneralledger').DataTable({
+        data: splashArrayBalanceSheetReport,
+        searching: false,
+        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        columnDefs: [
+          {
+            targets: 0,
+            className: "colAccountID",
+          },
+          {
+            targets: 1,
+            className: "colAccountName"
+          },
+          {
+            targets: 2,
+            className: "colAccountNo"
+          },
+          {
+            targets: 3,
+            className: "colAccounts hiddenColumn",
+          },
+          {
+            targets: 4,
+            className: "colAmountEx hiddenColumn",
+          },
+          {
+            targets: 5,
+            className: "colAmountInc hiddenColumn",
+          },
+          {
+            targets: 6,
+            className: "colChequeNumber hiddenColumn",
+          },
+          {
+            targets: 7,
+            className: "colDepartment",
+          },
+          {
+            targets: 8,
+            className: "colClassID",
+          },
+          {
+            targets: 9,
+            className: "colProductDescription",
+          },
+          {
+            targets: 10,
+            className: "colCreditEx hiddenColumn",
+          },
+          {
+            targets: 11,
+            className: "colCreditInc hiddenColumn",
+          },
+          {
+            targets: 12,
+            className: "colDate",
+          },
+          {
+            targets: 13,
+            className: "colDebitsEx hiddenColumn",
+          },
+          {
+            targets: 14,
+            className: "colDebitsInc hiddenColumn",
+          },
+          {
+            targets: 15,
+            className: "colDetails hiddenColumn",
+          },
+          {
+            targets: 16,
+            className: "colFixedAssetID hiddenColumn",
+          },
+          {
+            targets: 17,
+            className: "colGlobalRef",
+          },
+          {
+            targets: 18,
+            className: "colID hiddenColumn",
+          },
+          {
+            targets: 19,
+            className: "colMemo hiddenColumn",
+          },
+          {
+            targets: 20,
+            className: "colPaymentID hiddenColumn",
+          },
+          {
+            targets: 21,
+            className: "colPrepaymentID hiddenColumn",
+          },
+          {
+            targets: 22,
+            className: "colCredit",
+          },
+          {
+            targets: 23,
+            className: "colProductID hiddenColumn",
+          },
+          {
+            targets: 24,
+            className: "colPurchaseOrderID",
+          },
+          {
+            targets: 25,
+            className: "colRefNo hiddenColumn",
+          },
+          {
+            targets: 26,
+            className: "colRepName",
+          },
+          {
+            targets: 27,
+            className: "colSaleID hiddenColumn",
+          },
+          {
+            targets: 28,
+            className: "colTaxCode hiddenColumn",
+          },
+          {
+            targets: 29,
+            className: "colTaxRate hiddenColumn",
+          },
+          {
+            targets: 30,
+            className: "colType",
+          },
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        pageLength: initialDatatableLoad,
+        lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+        info: true,
+        responsive: true,
+        "order": [[1, "asc"]],
+        action: function () {
+          $('#' + currenttablename).DataTable().ajax.reload();
+        },
+
+      }).on('page', function () {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      }).on('column-reorder', function () {
+
+      }).on('length.dt', function (e, settings, len) {
+
+        $(".fullScreenSpin").css("display", "inline-block");
+        let dataLenght = settings._iDisplayLength;
+        if (dataLenght == -1) {
+          if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+            $(".fullScreenSpin").css("display", "none");
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+          }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+        }
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      });
+      $(".fullScreenSpin").css("display", "none");
+    }, 0);
+
+    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+  }
+
+
+  // ------------------------------------------------------------------------------------------------------
+  $("#tblgeneralledger tbody").on("click", "tr", function () {
+    var listData = $(this).closest("tr").children('td').eq(8).text();
+    var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
+
+    if (listData) {
+      if (checkDeleted == "Deleted") {
+        swal("You Cannot View This Transaction", "Because It Has Been Deleted", "info");
+      } else {
+        FlowRouter.go("/journalentrycard?id=" + listData);
+      }
+    }
+  });
+
+
+  LoadingOverlay.hide();
 });
+
+// Template.supplierdetail.onRendered(() => {
+//   const templateObject = Template.instance();
+//   LoadingOverlay.show();
+
+//   templateObject.initDate = () => {
+//     Datehandler.initOneMonth();
+//   };
+
+//   templateObject.setDateAs = ( dateFrom = null ) => {
+//     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+//   };
+
+//   templateObject.setReportOptions = async function ( ignoreDate = true, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+//     let defaultOptions = templateObject.reportOptions.get();
+//     if (defaultOptions) {
+//       defaultOptions.fromDate = formatDateFrom;
+//       defaultOptions.toDate = formatDateTo;
+//       defaultOptions.ignoreDate = ignoreDate;
+//     } else {
+//       defaultOptions = {
+//         fromDate: moment().subtract(1, "months").format("YYYY-MM-DD"),
+//         toDate: moment().format("YYYY-MM-DD"),
+//         ignoreDate: true
+//       };
+//     }
+//     $('.edtReportDates').attr('disabled', false)
+//     if( ignoreDate == true ){
+//       $('.edtReportDates').attr('disabled', true);
+//       templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
+//     }
+//     $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+//     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+//     await templateObject.reportOptions.set(defaultOptions);
+//     await templateObject.getSupplierDetailReportData();
+
+//     // await templateObject.loadReport(
+//     //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//     //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+//     //   ignoreDate
+//     // );
+//   };
+
+
+//   /**
+//    * @deprecated since 23 septemeber 2022
+//    */
+//    templateObject.getSupplierDetailReportData = async function () {
+//     let data = [];
+//     if (!localStorage.getItem('VS1SupplierDetail_Report')) {
+//       const options = await templateObject.reportOptions.get();
+//       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+//       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+//       let ignoreDate = options.ignoreDate || false;
+//       data = await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+//       if( data.tsupplierproduct.length > 0 ){
+//         localStorage.setItem('VS1SupplierDetail_Report', JSON.stringify(data)||'');
+//       }
+//     }else{
+//       data = JSON.parse(localStorage.getItem('VS1SupplierDetail_Report'));
+//     }
+
+//     let reportSummary = data.tsupplierproduct.map(el => {
+//       let resultobj = {};
+//       Object.entries(el).map(([key, val]) => {
+//           resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+//           return resultobj;
+//       })
+//       return resultobj;
+//     })
+//     let reportData = [];
+//     if( reportSummary.length > 0 ){
+//       for (const item of reportSummary ) {
+//         let isExist = reportData.filter((subitem) => {
+//           if( subitem.Supplier_Name == item.Supplier_Name ){
+//               subitem.SubAccounts.push(item)
+//               return subitem
+//           }
+//         });
+
+//         if( isExist.length == 0 ){
+//           reportData.push({
+//               TotalCostEx: 0,
+//               TotalCostInc: 0,
+//               TotalTax: 0,
+//               SubAccounts: [item],
+//               ...item
+//           });
+//         }
+//        LoadingOverlay.hide();
+//       }
+//     }
+//     let useData = reportData.filter((item) => {
+//       let TotalCostEx = 0;
+//       let TotalCostInc = 0;
+//       let TotalTax = 0;
+//       item.SubAccounts.map((subitem) => {
+//         TotalCostEx += subitem.Line_Cost_Ex;
+//         TotalCostInc += subitem.Line_Cost_Inc;
+//         TotalTax += subitem.Line_Tax;
+//       });
+//       item.TotalCostEx = TotalCostEx;
+//       item.TotalCostInc = TotalCostInc;
+//       item.TotalTax = TotalTax;
+//       return item;
+//     });
+//     templateObject.records.set(useData);
+
+
+//     if (templateObject.records.get()) {
+//       setTimeout(function () {
+//         $("td a").each(function () {
+//           if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+//             $(this).addClass("text-danger");
+//             $(this).removeClass("fgrblue");
+//           }
+//         });
+//         $("td").each(function () {
+//           if ($(this).text().indexOf("-" + Currency) >= 0) {
+//             $(this).addClass("text-danger");
+//             $(this).removeClass("fgrblue");
+//           }
+//         });
+//        LoadingOverlay.hide();
+//       }, 1000);
+//     }
+//   }
+
+//   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+//     LoadingOverlay.show();
+//     templateObject.setDateAs(dateFrom);
+//     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
+//       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+//     }, {
+//       useIndexDb: true,
+//       useLocalStorage: false,
+//       validate: (cachedResponse) => {
+//         return false;
+//       }
+//     });
+//     data = data.response;
+
+//     let reportSummary = data.tsupplierproduct.map(el => {
+//       let resultobj = {};
+//       Object.entries(el).map(([key, val]) => {
+//           resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+//           return resultobj;
+//       })
+//       return resultobj;
+//     })
+//     let reportData = [];
+//     if( reportSummary.length > 0 ){
+//       for (const item of reportSummary ) {
+//         let isExist = reportData.filter((subitem) => {
+//           if( subitem.Supplier_Name == item.Supplier_Name ){
+//               subitem.SubAccounts.push(item)
+//               return subitem
+//           }
+//         });
+
+//         if( isExist.length == 0 ){
+//           reportData.push({
+//               TotalCostEx: 0,
+//               TotalCostInc: 0,
+//               TotalTax: 0,
+//               SubAccounts: [item],
+//               ...item
+//           });
+//         }
+//        LoadingOverlay.hide();
+//       }
+//     }
+//     let useData = reportData.filter((item) => {
+//       let TotalCostEx = 0;
+//       let TotalCostInc = 0;
+//       let TotalTax = 0;
+//       item.SubAccounts.map((subitem) => {
+//         TotalCostEx += subitem.Line_Cost_Ex;
+//         TotalCostInc += subitem.Line_Cost_Inc;
+//         TotalTax += subitem.Line_Tax;
+//       });
+//       item.TotalCostEx = TotalCostEx;
+//       item.TotalCostInc = TotalCostInc;
+//       item.TotalTax = TotalTax;
+//       return item;
+//     });
+//     templateObject.records.set(useData);
+
+
+//     if (templateObject.records.get()) {
+//       setTimeout(function () {
+//         $("td a").each(function () {
+//           if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+//             $(this).addClass("text-danger");
+//             $(this).removeClass("fgrblue");
+//           }
+//         });
+//         $("td").each(function () {
+//           if ($(this).text().indexOf("-" + Currency) >= 0) {
+//             $(this).addClass("text-danger");
+//             $(this).removeClass("fgrblue");
+//           }
+//         });
+//        LoadingOverlay.hide();
+//       }, 1000);
+//     }
+//   }
+
+//   templateObject.initDate();
+//   templateObject.loadReport(
+//     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+//     false
+//   );
+//   templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
+// });
 
 Template.supplierdetail.events({
   "click .btnRefresh": function () {
@@ -512,8 +853,11 @@ Template.supplierdetail.helpers({
   dateAsAt: () => {
     return Template.instance().dateAsAt.get() || "-";
   },
-  records: () => {
-    return Template.instance().records.get();
+  transactiondatatablerecords: () => {
+    return Template.instance().transactiondatatablerecords.get();
+  },
+  supplierdetailth: () => {
+    return Template.instance().supplierdetailth.get();
   },
   checkZero( value ){
     return ( value == 0 )? '': value;
@@ -705,4 +1049,3 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
-

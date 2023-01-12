@@ -12,6 +12,12 @@ import { SideBarService } from "../../js/sidebar-service";
 import { OrganisationService } from '../../js/organisation-service';
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
+import './accountantTrust.html';
+
+import { Template } from 'meteor/templating';
+import './accountantTrust.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 
 let sideBarService = new SideBarService();
 let reportService = new ReportService();

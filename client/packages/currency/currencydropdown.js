@@ -5,7 +5,10 @@ import "../../lib/global/indexdbstorage.js";
 import FxGlobalFunctions from "./FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import './currencydropdown.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
+
 Template.currencydropdown.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.currencyData = new ReactiveVar();

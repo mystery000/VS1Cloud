@@ -7,6 +7,8 @@ import 'jquery-ui-dist/jquery-ui';
 import 'jquery-ui-dist/jquery-ui.css';
 import '../../lib/global/erp-objects';
 import {UtilityService} from "../../utility-service";
+import { Template } from 'meteor/templating';
+import './new_stocktake_scan.html';
 const _ = require('lodash');
 let salesService = new SalesBoardService();
 

@@ -8,6 +8,8 @@ import { EmployeePayrollService } from '../../js/employeepayroll-service';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let employeePayrollService = new EmployeePayrollService();
+import { Template } from 'meteor/templating';
+import './reimbursement.html';
 
 Template.reimbursementSettings.onCreated(function() {
   const templateObject = Template.instance();
@@ -18,14 +20,14 @@ Template.reimbursementSettings.onCreated(function() {
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
   templateObject.currentDrpDownID = new ReactiveVar();
-  // templateObject.Accounts = new ReactiveVar([]);   
+  // templateObject.Accounts = new ReactiveVar([]);
 });
 
 Template.reimbursementSettings.onRendered(function() {
 
   const templateObject = Template.instance();
   var splashArrayReisument = new Array();
-  
+
   function MakeNegative() {
     $('td').each(function() {
         if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
@@ -42,8 +44,8 @@ Template.reimbursementSettings.onRendered(function() {
         employeePayrolEndpoint.url.searchParams.append(
             "ListType",
             "'Detail'"
-        );                
-        
+        );
+
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -52,7 +54,7 @@ Template.reimbursementSettings.onRendered(function() {
                 await addVS1Data('TReimbursement', JSON.stringify(employeePayrolEndpointJsonResponse))
             }
             return employeePayrolEndpointJsonResponse
-        }  
+        }
         return '';
     };
 
@@ -60,13 +62,13 @@ Template.reimbursementSettings.onRendered(function() {
     try {
         let data = {};
         let splashArrayReisument = new Array();
-        let dataObject = await getVS1Data('TReimbursement')  
+        let dataObject = await getVS1Data('TReimbursement')
         if ( dataObject.length == 0) {
             data = await templateObject.saveDataLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-        for (let i = 0; i < data.treimbursement.length; i++) {                
+        for (let i = 0; i < data.treimbursement.length; i++) {
             var dataListReimbursement = [
                 data.treimbursement[i].fields.ID || '',
                 data.treimbursement[i].fields.ReimbursementName || 0,
@@ -88,7 +90,7 @@ Template.reimbursementSettings.onRendered(function() {
         templateObject.datatablerecords.set(splashArrayReisument);
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function () {
-            $('#tblReimbursements').DataTable({  
+            $('#tblReimbursements').DataTable({
                 data: splashArrayReisument,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
@@ -99,7 +101,7 @@ Template.reimbursementSettings.onRendered(function() {
                     {
                         className: "colReimbursementName",
                         "targets": [1]
-                    },  
+                    },
                     {
                         className: "colReimbursementAccount",
                         "targets": [2]
@@ -139,7 +141,7 @@ Template.reimbursementSettings.onRendered(function() {
 
                             sideBarService.getReimbursement(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-                                for (let i = 0; i < data.treimbursement.length; i++) {                
+                                for (let i = 0; i < data.treimbursement.length; i++) {
                                     var dataListReimbursement = [
                                         data.treimbursement[i].fields.ID || '',
                                         data.treimbursement[i].fields.ReimbursementName || 0,
@@ -213,7 +215,7 @@ Template.reimbursementSettings.onRendered(function() {
         }, 1000);
     } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
-    } 
+    }
 };
 
 templateObject.getReimbursement();
@@ -230,11 +232,11 @@ $('.reimbursementDropDown').editableSelect()
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#reimbursementSettingsModal').modal('show');
         } else {
-            if (searchName.replace(/\s/g, '') == '') {               
+            if (searchName.replace(/\s/g, '') == '') {
                 $('#reimbursementSettingsModal').modal('show');
                 return false
             }
-            let dataObject = await getVS1Data('TReimbursement');   
+            let dataObject = await getVS1Data('TReimbursement');
             if ( dataObject.length == 0) {
                 data = await templateObject.saveDataLocalDB();
             }else{
@@ -250,7 +252,7 @@ $('.reimbursementDropDown').editableSelect()
                 $('#reimbursementRateForm')[0].reset();
                 $('#newReimbursementLabel').text('Edit Reiumbursement');
                 $('#reimbursementSettingsModal').modal('hide');
-                
+
                 if( tReimbursement.length > 0 ){
                     $('#res_id').val(tReimbursement[0].fields.ID) || 0 ;
                     $('#edtReimbursementName').val(tReimbursement[0].fields.ReimbursementName) || '';
@@ -294,7 +296,7 @@ Template.reimbursementSettings.events({
         $('#newReimbursementLabel').text('Add New Reiumbursement Fund');
         $('#newReimbursementModal').modal('hide');
     },
-    'click .btnRefreshReimbursement':function(event){      
+    'click .btnRefreshReimbursement':function(event){
         let templateObject = Template.instance();
         var splashArrayReisument = new Array();
         const lineExtaSellItems = [];
@@ -305,7 +307,7 @@ Template.reimbursementSettings.events({
                 $(".btnRefreshReimbursement").removeClass('btnSearchAlert');
                 let lineItems = [];
                 if (data.treimbursement.length > 0) {
-                    for (let i = 0; i < data.treimbursement.length; i++) {                
+                    for (let i = 0; i < data.treimbursement.length; i++) {
                         var dataListReimbursement = [
                             data.treimbursement[i].fields.ID || '',
                             data.treimbursement[i].fields.ReimbursementName || 0,
@@ -324,10 +326,10 @@ Template.reimbursementSettings.events({
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     swal({
                         title: 'Question',
                         text: "Reimbursement Rate does not exist, would you like to create it?",
@@ -348,7 +350,7 @@ Template.reimbursementSettings.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         } else {
-    
+
           $(".btnRefresh").trigger("click");
         }
 
@@ -356,7 +358,7 @@ Template.reimbursementSettings.events({
     'click .newreiumbursement': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -383,7 +385,7 @@ Template.reimbursementSettings.events({
         /**
          * Saving Earning Object in localDB
         */
-        
+
         let reimbursementRateSettings = {
             type: "TReimbursement",
             fields: {
@@ -400,8 +402,8 @@ Template.reimbursementSettings.events({
                 headers: ApiService.getPostHeaders(),
                 body: JSON.stringify(reimbursementRateSettings),
             });
-    
-        
+
+
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 $('#reimbursementRateForm')[0].reset();
@@ -420,7 +422,7 @@ Template.reimbursementSettings.events({
                 }).then((result) => {
                     if (result.value) {
                         if (result.value) { }
-                    } 
+                    }
                 });
             }else{
                 $('.fullScreenSpin').css('display', 'none');
@@ -432,7 +434,7 @@ Template.reimbursementSettings.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {}
-                });  
+                });
             }
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -445,7 +447,7 @@ Template.reimbursementSettings.events({
             }).then((result) => {
                 if (result.value) {}
             });
-        }        
+        }
     },
 });
 
@@ -454,4 +456,3 @@ Template.reimbursementSettings.helpers({
         return Template.instance().datatablerecords.get();
     }
 });
-

@@ -1,18 +1,16 @@
 import {ContactService} from "./contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import CachedHttp from "../lib/global/CachedHttp";
-import erpObject from "../lib/global/erp-objects";
-import LoadingOverlay from "../LoadingOverlay";
-import { OrganisationService } from "../js/organisation-service";
 
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-let organisationService = new OrganisationService();
+
+import { Template } from 'meteor/templating';
+import './employeelist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 Template.employeelist.inheritsHooksFrom('non_transactional_list');
 Template.employeelist.onCreated(function(){
     const templateObject = Template.instance();

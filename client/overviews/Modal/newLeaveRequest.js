@@ -1,24 +1,16 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import moment from "moment";
-import { AccountService } from "../../accounts/account-service";
-import Datehandler from "../../DateHandler";
-import GlobalFunctions from "../../GlobalFunctions";
-import { OrganisationService } from "../../js/organisation-service";
 import { SideBarService } from "../../js/sidebar-service";
-import TableHandler from "../../js/Table/TableHandler";
-import CachedHttp from "../../lib/global/CachedHttp";
-import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
-import { TaxRateService } from "../../settings/settings-service";
-import { UtilityService } from "../../utility-service";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 import AssignLeaveType from "../../js/Api/Model/AssignLeaveType";
+import LeaveRequest from "../../js/Api/Model/LeaveRequest";
+import LeaveRequestFields from "../../js/Api/Model/LeaveRequestFields";
+import ApiService from "../../js/Api/Module/ApiService";
+import { Template } from 'meteor/templating';
+import './newLeaveRequest.html';
 
-let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-let accountService = new AccountService();
-let taxRateService = new TaxRateService();
-let organisationService = new OrganisationService();
 
 Template.newLeaveRequestModal.onCreated(function() {
     const templateObject = Template.instance();
@@ -91,14 +83,14 @@ Template.newLeaveRequestModal.onRendered(() => {
             data = JSON.parse(dataObject[0].data);
         }
         let splashArrayAssignLeaveList = [];
+        
+        let employeeID = $("#edtEmpID").val();
 
         if (data.tassignleavetype.length > 0) {
             let useData = AssignLeaveType.fromList(
                 data.tassignleavetype
-            ).filter((item) => {
-                if (parseInt(item.fields.EmployeeID) == parseInt(employeeID) && item.fields.Active == true) {
-                    return item;
-                }
+            ).filter((item) => { 
+                    return item; 
             });
 
             templateObject.assignLeaveTypeInfos.set(useData);
@@ -240,7 +232,7 @@ Template.newLeaveRequestModal.onRendered(() => {
 
                         });
                     setTimeout(function() {
-                        MakeNegative();
+                        // MakeNegative();
                     }, 100);
                 },
                 "fnInitComplete": function() {
@@ -250,7 +242,7 @@ Template.newLeaveRequestModal.onRendered(() => {
 
             }).on('page', function() {
                 setTimeout(function() {
-                    MakeNegative();
+                    // MakeNegative();
                 }, 100);
 
             }).on('column-reorder', function() {
@@ -281,7 +273,7 @@ Template.newLeaveRequestModal.onRendered(() => {
                     }
                 }
                 setTimeout(function() {
-                    MakeNegative();
+                    // MakeNegative();
                 }, 100);
             });
         }, 300);
@@ -289,20 +281,22 @@ Template.newLeaveRequestModal.onRendered(() => {
 
     templateObject.getLeaveRequests = async() => {
         let data = []
-        let dataObject = await getVS1Data('TLeavRequest')
+        let dataObject = await getVS1Data('TLeavRequest');
         if (dataObject.length == 0) {
             data = await templateObject.saveLeaveRequestLocalDB();
         } else {
             data = JSON.parse(dataObject[0].data);
         }
         let splashArrayList = [];
+        let employeeID = $("#edtEmpID").val();
+
         if (data.tleavrequest.length > 0) {
             let useData = LeaveRequest.fromList(
                 data.tleavrequest
             ).filter((item) => {
-                if (parseInt(item.fields.EmployeeID) == parseInt(employeeID)) {
+                // if (parseInt(item.fields.EmployeeID) == parseInt(employeeID)) {
                     return item;
-                }
+                // }
             });
             for (let i = 0; i < useData.length; i++) {
                 let dataListAllowance = [
@@ -417,7 +411,7 @@ Template.newLeaveRequestModal.onRendered(() => {
 
                         });
                     setTimeout(function() {
-                        MakeNegative();
+                        // MakeNegative();
                     }, 100);
                 },
                 "fnInitComplete": function() {
@@ -427,7 +421,7 @@ Template.newLeaveRequestModal.onRendered(() => {
 
             }).on('page', function() {
                 setTimeout(function() {
-                    MakeNegative();
+                    // MakeNegative();
                 }, 100);
 
             }).on('column-reorder', function() {
@@ -458,13 +452,13 @@ Template.newLeaveRequestModal.onRendered(() => {
                     }
                 }
                 setTimeout(function() {
-                    MakeNegative();
+                    // MakeNegative();
                 }, 1000);
             });
         }, 1000);
-    };
+    }; 
 
-    templateObject.getAssignLeaveTypes();
+    // templateObject.getAssignLeaveTypes();
 
     setTimeout(function() {
         $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf,#edtLeaveStartDate,#edtLeaveEndDate,#edtPeriodPaymentDate,#paymentDate").datepicker({
@@ -498,98 +492,30 @@ Template.newLeaveRequestModal.onRendered(() => {
         $('#edtLeavePayStatus').editableSelect('add', 'Denied');
         $('#edtLeavePayStatus').editableSelect('add', 'Deleted');
 
-        $('#edtLeavePayStatus').val('Awaiting');
+        $('#edtLeavePayStatus').val('Awaiting'); 
 
         $('#period').editableSelect('add', 'Weekly');
         $('#period').editableSelect('add', 'Fortnightly');
         $('#period').editableSelect('add', 'Twice Monthly');
         $('#period').editableSelect('add', 'Four Weekly');
         $('#period').editableSelect('add', 'Monthly');
-        $('#period').editableSelect('add', 'Quarterly');
+        $('#period').editableSelect('add', 'Quarterly'); 
 
-        $('#edtLeaveTypeofRequest').editableSelect();
-        $('#edtLeaveTypeofRequest').editableSelect()
-            .on('click.editable-select', async function(e, li) {
-                let $search = $(this);
-                let dropDownID = $search.attr('id')
-                templateObject.currentDrpDownID.set(dropDownID);
-                let offset = $search.offset();
-                let searchName = e.target.value || '';
-                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                    $('#assignLeaveTypeSettingsModal').modal('show');
-                } else {
-                    if (searchName.replace(/\s/g, '') == '') {
-                        $('#assignLeaveTypeSettingsModal').modal('show');
-                        return false
-                    }
-                    let dataObject = await getVS1Data('TAssignLeaveType');
-                    if (dataObject.length > 0) {
-                        data = JSON.parse(dataObject[0].data);
-                        let tAssignteavetype = data.tassignleavetype.filter((item) => {
-                            if (item.fields.LeaveType == searchName) {
-                                return item;
-                            }
-                        });
-
-                        if (tAssignteavetype.length > 0) {
-
-                            let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
-
-                            $('#leaveCalcMethodSelect').val(leaveCalcMethod)
-                            switch (leaveCalcMethod) {
-                                case 'Manually Recorded Rate':
-                                    $('#hoursLeave').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement');
-                                    $('.manuallyRecordedRate').removeClass('hideelement');
-                                    $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
-                                    break;
-                                case 'No Calculation Required':
-                                    $('.handleLeaveTypeOption').addClass('hideelement')
-                                    break;
-                                case 'Based on Ordinary Earnings':
-                                    $('#hoursAccruedAnnuallyFullTimeEmp').val('');
-                                    $('#hoursFullTimeEmpFortnightlyPay').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement');
-                                    $('.basedonOrdinaryEarnings').removeClass('hideelement');
-                                    $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
-                                    $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
-                                    break;
-                                default:
-                                    $('#hoursAccruedAnnually').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement');
-                                    $('.fixedAmountEachPeriodOption').removeClass('hideelement');
-                                    $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
-                                    break;
-                            }
-
-                            $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
-                            $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-
-                            $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
-                            $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
-                            $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
-                            $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
-
-                            $('#assignteavetypeID').val(tAssignteavetype[0].fields.ID) || 0;
-                        }
-                        $('#assignLeaveTypeModal').modal('show');
-                    }
-                }
-            });
+        $('#edtLeaveTypeofRequest').editableSelect(); 
     }, 1000);
 
 });
 
 Template.newLeaveRequestModal.events({
     'click #btnSaveLeaveRequest': async function(event) {
-
+        
         playSaveAudio();
 
         let templateObject = Template.instance();
-
+        
         setTimeout(async function() {
 
-            let currentId     = FlowRouter.current().queryParams;
+            let currentId     = $("#edtEmpID").val();
             let employeeID    = (!isNaN(currentId.id)) ? currentId.id : 0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
@@ -663,7 +589,7 @@ Template.newLeaveRequestModal.events({
                         $('#newLeaveRequestModal').modal('hide');
                         $('#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus').val('');
                         $('.fullScreenSpin').css('display', 'none');
-
+                        
                         swal({
                             title: 'Leave request added successfully',
                             text: '',
@@ -674,11 +600,11 @@ Template.newLeaveRequestModal.events({
                             if (result.value) {
                                 if (result.value) {}
                             }
-                        });
+                        }); 
 
                         window.open("/appointments", "_self");
-                    }
-                    else
+                    } 
+                    else 
                     {
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
@@ -705,6 +631,91 @@ Template.newLeaveRequestModal.events({
                 }
             }
         }, delayTimeAfterSound);
+    },
+    "click .removeLeaveRequest": function(e) {
+        let templateObject = Template.instance();
+        const deleteID = $(e.target).data('id') || '';
+        swal({
+            title: 'Delete Leave Request',
+            text: "Are you sure you want to Delete this Leave Request?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then(async(result) => {
+            if (result.value) {
+                $('.fullScreenSpin').css('display', 'block');
+                const employeePayrolApis = new EmployeePayrollApi();
+                const apiEndpoint = employeePayrolApis.collection.findByName(
+                    employeePayrolApis.collectionNames.TLeavRequest
+                );
+
+                try {
+                    let leaveSetting = new LeaveRequest({
+                        type: "TLeavRequest",
+                        fields: new LeaveRequestFields({
+                            ID: parseInt(deleteID),
+                            Status: 'Deleted'
+                        }),
+                    })
+
+                    const ApiResponse = await apiEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(leaveSetting),
+                    });
+                    if (ApiResponse.ok == true) {
+                        let dataObject = await getVS1Data('TLeavRequest');
+                        if (dataObject.length > 0) {
+                            data = JSON.parse(dataObject[0].data);
+                            if (data.tleavrequest.length > 0) {
+                                let updatedLeaveRequest = data.tleavrequest.map((item) => {
+                                    if (deleteID == item.fields.ID) {
+                                        item.fields.Status = 'Deleted';
+                                    }
+                                    return item;
+                                });
+                                let leaveRequestObj = {
+                                    tleavrequest: updatedLeaveRequest
+                                }
+                                await addVS1Data('TLeavRequest', JSON.stringify(leaveRequestObj))
+                            }
+                        }
+                        await templateObject.getLeaveRequests();
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Leave request deleted successfully',
+                            text: '',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        });
+                        window.open("/appointments", "_self");
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
+                        swal({
+                            title: 'Oooops...',
+                            text: error,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {}
+                        });
+                    }
+                } catch (error) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: error,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {}
+                    });
+                }
+            }
+        });
     },
 
 });

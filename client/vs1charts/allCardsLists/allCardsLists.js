@@ -59,7 +59,7 @@ Template.allCardsLists.onRendered(function () {
             }
             if( Tvs1CardPref.length > 0 ){
                 let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
-                cardList = new Tvs1CardPreference.fromList(
+                cardList = Tvs1CardPreference.fromList(
                     Tvs1CardPreferenceData.tvs1cardpreference
                 ).filter((card) => {
                     if ( parseInt( card.fields.EmployeeID ) == employeeID && parseInt( card.fields.TabGroup ) == _tabGroup ) {

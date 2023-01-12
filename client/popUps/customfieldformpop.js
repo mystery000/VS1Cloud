@@ -3,12 +3,8 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../js/sidebar-service";
 import { Random } from "meteor/random";
 import "../lib/global/indexdbstorage.js";
-import { OrganisationService } from "../js/organisation-service";
-
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './customfieldformpop.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 Template.customfieldformpop.onCreated(function () {
@@ -459,7 +455,7 @@ Template.customfieldformpop.onRendered(function () {
         }
       })
       .catch(function (err) {
-        taxRateService
+        sideBarService
           .getAllLeadStatus()
           .then(function (data) {
             let lineItems = [];

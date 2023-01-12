@@ -1,3 +1,5 @@
+import { Template } from 'meteor/templating';
+import './productlist.html';
 import {ProductService} from "../product/product-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
@@ -8,6 +10,9 @@ import Chart from 'chart.js';
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+ 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.productlist.onCreated(function(){

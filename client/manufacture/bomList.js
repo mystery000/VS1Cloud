@@ -1,8 +1,9 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { ProductService } from "../product/product-service";
-import { OrganisationService } from "../js/organisation-service";
+import { Template } from 'meteor/templating';
+import './bom_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let organisationService = new OrganisationService();
 Template.bom_list.inheritsHooksFrom('non_transactional_list');
 Template.bom_list.onCreated(function(){
     const templateObject = Template.instance()
@@ -11,14 +12,31 @@ Template.bom_list.onCreated(function(){
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar()
+    templateObject.bomProducts = new ReactiveVar([]);
       
 })
 Template.bom_list.onRendered(function(){
   const templateObject  = Template.instance();
+  const productService = new ProductService();
   if(FlowRouter.current().queryParams.success){
     $('.btnRefresh').addClass('btnRefreshAlert');
   }
-
+  getVS1Data('TProcTree').then(function(dataObject) {
+    if(dataObject.length == 0) {
+      productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data){
+        templateObject.bomProducts.set(data.tproctree);
+        addVS1Data('TProcTree', JSON.stringify(data)).then(function(){})
+      })
+    }else {
+      let data = JSON.parse(dataObject[0].data);
+      templateObject.bomProducts.set(data.tproctree);
+    }
+  }).catch(function(e){
+    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data){
+      templateObject.bomProducts.set(data.tproctree);
+      addVS1Data('TProcTree', JSON.stringify(data)).then(function(){})
+    })
+  })
 //   templateObject.checkSetupWizardFinished = async function () {
 //     let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || "";
 //     if( setupFinished === null || setupFinished ===  "" ){
@@ -36,14 +54,23 @@ Template.bom_list.onRendered(function(){
   checkSetupFinished();
 })
 Template.bom_list.events({
-  'click #tblBOMList tbody tr': function(event) {
+  'click #tblBOMList tbody tr': async function(event) {
+    let templateObject = Template.instance();
+    let productService = new ProductService();
     let productName = $(event.target).closest('tr').find('td.colProductName').text();
-    let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): []
+    let bomProducts = templateObject.bomProducts.get();
     let index = bomProducts.findIndex(product => {
-      return product.fields.productName == productName;
+      return product.fields.Caption == productName;
     })
     if(index > -1) {
-      FlowRouter.go('/bomsetupcard?id='+ index)
+      FlowRouter.go('/bomsetupcard?id='+ bomProducts[index].fields.ID)
+    }else {
+      productService.getOneBOMProductByName(productName).then(function(data){
+        if(data.tproctree.length > 0) {
+          let id = data.tproctree[0].fields.ID;
+          FlowRouter.go('/bomsetupcard?id='+ id)
+        }
+      })
     }
   },
 

@@ -1,0 +1,35 @@
+<template name="recentTransactionPopUp">
+    <div class="modal fade" id="recentTransactionPopUp" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label class="productIDOnRT" style="display: none;">{{productID}}</label>
+                    <h4><span class="productNameOnRT"></span> - Recent Transactions</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <!-- <div class="fullScreenSpin" style="display:none;">
+                        <div class="spinner"></div>
+                    </div> -->
+                </div>
+                <div class="modal-body">
+                    <div class="row recenttrasaction">
+                        <div class="col-12">
+                            <label id="productID" style="display:none">{{productID}}</label>
+                            <!-- <button class="btn btn-primary loadrecenttransaction" type="button" id="loadrecenttransaction" name="loadrecenttransaction">Recent Transactions</button> -->
+                        </div>
+                        <div class="col-12 product_recent_trans" style="display:block; margin-top: 16px;">
+                            <h3>Recent Transactions</h3>
+                            <!-- {{>recentTransactionTable productID=productID type="all"}} -->
+                            {{#if productID}}
+                            {{>non_transactional_list tablename="productrecentlist" type="all"}}
+                            {{/if}}
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

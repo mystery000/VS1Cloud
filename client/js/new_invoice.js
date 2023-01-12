@@ -4,7 +4,6 @@ import { PurchaseBoardService } from "./purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { UtilityService } from "../utility-service";
 import { ProductService } from "../product/product-service";
-import { OrganisationService } from "../js/organisation-service";
 import "../lib/global/erp-objects";
 import "jquery-ui-dist/external/jquery/jquery";
 import "jquery-ui-dist/jquery-ui";
@@ -24,12 +23,14 @@ import CachedHttp from "../lib/global/CachedHttp";
 import erpObject from "../lib/global/erp-objects";
 import { foreignCols } from "../vs1_templates/transaction_temp/transaction_line";
 import {Session} from 'meteor/session';
-// import { CustomerCreationSourceFilter } from "square-connect";
+
+import { Template } from 'meteor/templating';
+import '../invoice/frm_invoice.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
-let organizationService = new OrganisationService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;

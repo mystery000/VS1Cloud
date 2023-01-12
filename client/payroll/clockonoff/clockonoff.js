@@ -3,6 +3,8 @@ import { CoreService } from '../../js/core-service';
 import { UtilityService } from "../../utility-service";
 import { ContactService } from "../../contacts/contact-service";
 import { AppointmentService } from '../../appointments/appointment-service';
+import {Template} from 'meteor/templating';
+import './employeetimeclock.html';
 let utilityService = new UtilityService();
 Template.employeetimeclock.onCreated(function () {
   const templateObject = Template.instance();

@@ -20,6 +20,8 @@ let productService = new ProductService();
 const taxCodesList = [];
 const splashArrayTaxRateList = [];
 let employeePayrollService = new EmployeePayrollService();
+import { Template } from 'meteor/templating';
+import './earningsRate.html';
 
 Template.earningRateSettings.onCreated(function() {
   const templateObject = Template.instance();

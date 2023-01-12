@@ -1,4 +1,6 @@
 import { EmployeePayrollService } from '../js/employeepayroll-service';
+import { Template } from 'meteor/templating';
+import './assignLeaveTypePop.html';
 
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
@@ -31,13 +33,20 @@ Template.assignLeaveTypePop.onRendered(function () {
 });
 
 Template.assignLeaveTypePop.events({
-    'click #tblAssignLeaveTypes > tbody > tr': async function(event) {
-        $(".colALTypeID").html();
-        $(".leave-type-name").html(); 
-        
-         
-    },
+    "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
+        const id = $(e.currentTarget).attr("leavetype-id");
+        let name = $(e.currentTarget).attr("leave-type-name"); 
+        let Hours = $(e.currentTarget).attr("col-type-balance") ||''; 
+        $('#edtLeaveRequestID').val(id);
+        $('#edtLeaveTypeofRequestID').val(id);
+        $('#edtLeaveTypeofRequest').val(name); 
+        $('#edtLeaveHours').val(Hours); 
 
+        $('#assignLeaveTypeSettingsModal').on('hidden.bs.modal', function(e) {
+            // window.open("/appointments", "_self");
+        });
+        $('#assignLeaveTypeSettingsModal').hide();
+    }
 });
 
 
@@ -159,9 +168,9 @@ Template.assignLeaveTypePop.onCreated(function () {
                     if ( dataObject.length > 0) {
                         data = JSON.parse(dataObject[0].data);
                         let tAssignteavetype = data.tassignleavetype.filter((item) => {
-                            if( item.fields.LeaveType == searchName ){
+                            // if( item.fields.LeaveType == searchName ){
                                 return item;
-                            }
+                            // }
                         });
 
                         if( tAssignteavetype.length > 0 ){

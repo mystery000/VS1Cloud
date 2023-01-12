@@ -13,7 +13,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './agedpayables.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
- 
+
 
 let _ = require('lodash');
 
@@ -27,7 +27,7 @@ let defaultCurrencyCode = CountryAbbr;
 
 Template.agedpayables.onCreated(() => {
     const templateObject = Template.instance();
-    templateObject.records = new ReactiveVar([]);
+    templateObject.transactiondatatablerecords = new ReactiveVar([]);
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
@@ -40,13 +40,15 @@ Template.agedpayables.onCreated(() => {
     templateObject.reportOptions = new ReactiveVar();
 });
 
+
 Template.agedpayables.onRendered(() => {
-    LoadingOverlay.show();
-    const templateObject = Template.instance();
+  const templateObject = Template.instance();
+  LoadingOverlay.show();
 
-
-    let reset_data = [
-      { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+  templateObject.init_reset_data = function () {
+    let reset_data = [];
+    reset_data = [
+            { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
       { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
       { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
       { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
@@ -69,656 +71,989 @@ Template.agedpayables.onRendered(() => {
       { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
       { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
       { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
-    ]
-
+    ];
     templateObject.agedpayablesth.set(reset_data);
+  }
+  templateObject.init_reset_data();
 
-    templateObject.initDate = () => {
-      Datehandler.initOneMonth();
-    };
+  // await reportService.getBalanceSheetReport(dateAOsf) :
 
-    templateObject.setDateAs = ( dateFrom = null ) => {
-      templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
-    };
+  // --------------------------------------------------------------------------------------------------
+  templateObject.initDate = () => {
+    Datehandler.initOneMonth();
+  };
+  templateObject.setDateAs = (dateFrom = null) => {
+    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
+  };
+  templateObject.initDate();
+
+  // let date = new Date();
+  // templateObject.currentYear.set(date.getFullYear());
+  // templateObject.nextYear.set(date.getFullYear() + 1);
+  // let currentMonth = moment(date).format("DD/MM/YYYY");
+  // templateObject.currentMonth.set(currentMonth);
+
+  // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
 
     let currenctURL = FlowRouter.current().queryParams;
     let contactName = FlowRouter.current().queryParams.contact ||'';
     let contactID = FlowRouter.current().queryParams.contactid ||'';
-    templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
-       LoadingOverlay.show();
-       templateObject.setDateAs( dateFrom );
-       if (!localStorage.getItem('VS1AgedPayables_Report')) {
-        sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(function (data) {
-            let totalRecord = [];
-            let grandtotalRecord = [];
-            // if(data.Params.IgnoreDates == true){
-            //   $('#dateFrom').attr('readonly', true);
-            //   $('#dateTo').attr('readonly', true);
-            // }else{
 
-            //   $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-            //   $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
-            // }
-            let allRecords = [];
-            if (data.tapreport.length) {
+  templateObject.getAgedPayablesData = async function (dateFrom, dateTo, ignoreDate, contactID) {
 
-                localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data) || '');
-                // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
-                let records = [];
-                let current = [];
-
-                let totalNetAssets = 0;
-                let GrandTotalLiability = 0;
-                let GrandTotalAsset = 0;
-                let incArr = [];
-                let cogsArr = [];
-                let expArr = [];
-                let accountData = data.tapreport;
-                let accountType = '';
-
-                for (let i = 0; i < accountData.length; i++) {
-
-                    let recordObj = {};
-                    recordObj.Id = data.tapreport[i].PurchaseOrderID;
-                    recordObj.type = data.tapreport[i].Type;
-                    recordObj.SupplierName = data.tapreport[i].Name;
-
-                    // recordObj.dataArr = [
-                    //     '',
-                    //     data.tapreport[i].Type,
-                    //     data.tapreport[i].PurchaseOrderID,
-                    //     // moment(data.tapreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
-                    //     data.tapreport[i].DueDate != '' ? moment(data.tapreport[i].DueDate).format("DD/MM/YYYY") : data.tapreport[i].DueDate,
-                    //     // data.tapreport[i].InvoiceNumber || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
-
-                    //
-                    // ];
-
-                    recordObj.entries = data.tapreport[i];
-
-                    records.push(recordObj);
-                    // if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
-                    //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
-                    //      || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
-                    //     if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
-                    //
-                    //         if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
-                    //             records.push(recordObj);
-                    //         }
-                    //     } else {
-                    //         records.push(recordObj);
-                    //     }
-                    // }
-
-                }
-                records = _.sortBy(records, 'SupplierName');
-                records = _.groupBy(records, 'SupplierName');
-
-                // i dont understand this...
-                for (let key in records) {
-                    // let obj = [{
-                    //         // key: key,
-                    //     }, {
-                    //         // data: records[key]
-                    //     }
-                    // ];
-
-                    let obj = {
-                        title: key,
-                        entries: records[key],
-                        total: {}
-                    }
-                    allRecords.push(obj);
-                }
-
-
-
-                allRecords.forEach((record) => {
-
-                    let amountduetotal = 0;
-                    let Currenttotal = 0;
-                    let lessTnMonth = 0;
-                    let oneMonth = 0;
-                    let twoMonth = 0;
-                    let threeMonth = 0;
-                    let Older = 0;
-
-                    record.entries.forEach((entry) => {
-                        amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
-                        Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
-                        oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
-                        twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
-                        threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
-                        Older = Older + parseFloat(entry.entries["120Days"]);
-
-                    });
-
-                    record.total = { // new
-                        Title: 'Total ' + record.title,
-                        TotalAmountDue: amountduetotal,
-                        TotalCurrent: Currenttotal,
-                        OneMonth: oneMonth,
-                        TwoMonth: twoMonth,
-                        ThreeMonth: threeMonth,
-                        OlderMonth: Older
-                    }
-
-                    // Used for grand total later
-                    current.push(record.total);
-
-                });
-
-
-
-                // let iterator = 0;
-                // for (let i = 0; i < allRecords.length; i++) {
-                //     let amountduetotal = 0;
-                //     let Currenttotal = 0;
-                //     let lessTnMonth = 0;
-                //     let oneMonth = 0;
-                //     let twoMonth = 0;
-                //     let threeMonth = 0;
-                //     let Older = 0;
-                //     const currencyLength = Currency.length;
-                //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
-                //         amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-                //         Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-                //         oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-                //         twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-                //         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-                //         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
-                //     }
-
-                //     // wont be used anymore
-                //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
-                //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
-                //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
-                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(Older)];
-
-
-                //     //current.push(val); // OLD
-
-                //     current.push({ // new
-                //         Title: 'Total ' + allRecords[i][0].key,
-                //         TotalAmountDue: amountduetotal,
-                //         TotalCurrent: Currenttotal,
-                //         OneMonth: oneMonth,
-                //         TwoMonth: twoMonth,
-                //         ThreeMonth: threeMonth,
-                //         OlderMonth: Older
-                //     });
-
-                // }
-
-
-
-                // grandtotalRecord
-                let grandamountduetotal = 0.0;
-                let grandCurrenttotal = 0.0;;
-                let grandlessTnMonth = 0.0;
-                let grandoneMonth = 0.0;
-                let grandtwoMonth = 0.0;
-                let grandthreeMonth = 0.0;
-                let grandOlder = 0.0;
-
-                current.forEach((total) => {
-                    grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
-                    grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
-                    // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
-                    grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
-                    grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
-                    grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
-                    grandOlder = grandOlder + parseFloat(total.OlderMonth);
-                });
-
-                // for (let n = 0; n < current.length; n++) {
-
-                //     const grandcurrencyLength = Currency.length;
-
-                //     //for (let m = 0; m < current[n].data.length; m++) {
-                //     grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
-                //     grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
-                //     // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
-                //     grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
-                //     grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
-                //     grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
-                //     grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
-                //     //}
-                //     // let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
-                //     // current.push(val);
-
-                // }
-
-                // old code
-                // let grandval = ['Grand Total ' + '', '', '', '',
-                //     utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
-                //     // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
-                //     utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
-                //     utilityService.modifynegativeCurrencyFormat(grandoneMonth),
-                //     utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
-                //     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
-                //     utilityService.modifynegativeCurrencyFormat(grandOlder)];
-
-                let grandValObj = {
-                    Title: 'Grand Total ',
-                    TotalAmountDue: grandamountduetotal,
-                    TotalCurrent: grandCurrenttotal,
-                    OneMonth: grandoneMonth,
-                    TwoMonth: grandtwoMonth,
-                    ThreeMonth: grandthreeMonth,
-                    OlderMonth: grandOlder
-                };
-
-                // i dont understand this
-                // for (let key in records) {
-                //     let dataArr = current[iterator]
-                //         let obj = [{
-                //                 key: key
-                //             }, {
-                //                 data: records[key]
-                //             }, {
-                //                 total: dataArr
-                //             }
-                //         ];
-                //     totalRecord.push(obj);
-                //     iterator += 1;
-                // }
-
-                templateObject.records.set(allRecords);
-                templateObject.grandrecords.set(grandValObj);
-
-                if (templateObject.records.get()) {
-
-                    setTimeout(function () {
-                        $('td a').each(function () {
-                            if ($(this).text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-danger')
-                        });
-                        $('td').each(function () {
-                            if ($(this).text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-danger')
-                        });
-
-                        $('td').each(function () {
-
-                            let lineValue = $(this).first().text()[0];
-                            if (lineValue != undefined) {
-                                if (lineValue.indexOf(Currency) >= 0)
-                                    $(this).addClass('text-right')
-                            }
-
-                        });
-
-                        $('td').each(function () {
-                            if ($(this).first().text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-right')
-                        });
-
-                        $('td:nth-child(4)').each(function () {
-                            $(this).addClass('text-right');
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 100);
-                }
-
-            }else{
-                templateObject.records.set(allRecords);
-            }
-            LoadingOverlay.hide();
-
-
+    templateObject.setDateAs(dateFrom);
+    getVS1Data('TAPReport').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
+          await addVS1Data('TAPReport', JSON.stringify(data));
+          templateObject.displayAgedPayablesData(data);
         }).catch(function (err) {
-            //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            LoadingOverlay.hide();
         });
-        } else {
-            let data = JSON.parse(localStorage.getItem('VS1AgedPayables_Report'));
-            let totalRecord = [];
-            let grandtotalRecord = [];
-            // if(data.Params.IgnoreDates == true){
-            //   $('#dateFrom').attr('readonly', true);
-            //   $('#dateTo').attr('readonly', true);
-            // }else{
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayAgedPayablesData(data);
+      }
+    }).catch(function (err) {
+      sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
+        await addVS1Data('TAPReport', JSON.stringify(data));
+        templateObject.displayAgedPayablesData(data);
+      }).catch(function (err) {
 
-            //   $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-            //   $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
-            // }
-            let allRecords = [];
-            if (data.tapreport.length) {
+      });
+    });
+  }
 
-                // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
-                let records = [];
-                let current = [];
-
-                let totalNetAssets = 0;
-                let GrandTotalLiability = 0;
-                let GrandTotalAsset = 0;
-                let incArr = [];
-                let cogsArr = [];
-                let expArr = [];
-                let accountData = data.tapreport;
-                let accountType = '';
-
-                for (let i = 0; i < accountData.length; i++) {
-
-                    let recordObj = {};
-                    recordObj.Id = data.tapreport[i].PurchaseOrderID;
-                    recordObj.type = data.tapreport[i].Type;
-                    recordObj.SupplierName = data.tapreport[i].Name;
-
-                    // recordObj.dataArr = [
-                    //     '',
-                    //     data.tapreport[i].Type,
-                    //     data.tapreport[i].PurchaseOrderID,
-                    //     // moment(data.tapreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
-                    //     data.tapreport[i].DueDate != '' ? moment(data.tapreport[i].DueDate).format("DD/MM/YYYY") : data.tapreport[i].DueDate,
-                    //     // data.tapreport[i].InvoiceNumber || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
-                    //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
-
-                    //
-                    // ];
-
-                    recordObj.entries = data.tapreport[i];
-
-                    records.push(recordObj);
-                    // if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
-                    //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
-                    //      || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
-                    //     if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
-                    //
-                    //         if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
-                    //             records.push(recordObj);
-                    //         }
-                    //     } else {
-                    //         records.push(recordObj);
-                    //     }
-                    // }
-
-                }
-                records = _.sortBy(records, 'SupplierName');
-                records = _.groupBy(records, 'SupplierName');
-
-                // i dont understand this...
-                for (let key in records) {
-                    // let obj = [{
-                    //         // key: key,
-                    //     }, {
-                    //         // data: records[key]
-                    //     }
-                    // ];
-
-                    let obj = {
-                        title: key,
-                        entries: records[key],
-                        total: {}
-                    }
-                    allRecords.push(obj);
-                }
-
-
-
-                allRecords.forEach((record) => {
-
-                    let amountduetotal = 0;
-                    let Currenttotal = 0;
-                    let lessTnMonth = 0;
-                    let oneMonth = 0;
-                    let twoMonth = 0;
-                    let threeMonth = 0;
-                    let Older = 0;
-
-                    record.entries.forEach((entry) => {
-                        amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
-                        Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
-                        oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
-                        twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
-                        threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
-                        Older = Older + parseFloat(entry.entries["120Days"]);
-
-                    });
-
-                    record.total = { // new
-                        Title: 'Total ' + record.title,
-                        TotalAmountDue: amountduetotal,
-                        TotalCurrent: Currenttotal,
-                        OneMonth: oneMonth,
-                        TwoMonth: twoMonth,
-                        ThreeMonth: threeMonth,
-                        OlderMonth: Older
-                    }
-
-                    // Used for grand total later
-                    current.push(record.total);
-
-                });
-
-
-
-                // let iterator = 0;
-                // for (let i = 0; i < allRecords.length; i++) {
-                //     let amountduetotal = 0;
-                //     let Currenttotal = 0;
-                //     let lessTnMonth = 0;
-                //     let oneMonth = 0;
-                //     let twoMonth = 0;
-                //     let threeMonth = 0;
-                //     let Older = 0;
-                //     const currencyLength = Currency.length;
-                //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
-                //         amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
-                //         Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
-                //         oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
-                //         twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
-                //         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
-                //         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
-                //     }
-
-                //     // wont be used anymore
-                //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
-                //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
-                //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
-                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(Older)];
-
-
-                //     //current.push(val); // OLD
-
-                //     current.push({ // new
-                //         Title: 'Total ' + allRecords[i][0].key,
-                //         TotalAmountDue: amountduetotal,
-                //         TotalCurrent: Currenttotal,
-                //         OneMonth: oneMonth,
-                //         TwoMonth: twoMonth,
-                //         ThreeMonth: threeMonth,
-                //         OlderMonth: Older
-                //     });
-
-                // }
-
-
-
-                // grandtotalRecord
-                let grandamountduetotal = 0.0;
-                let grandCurrenttotal = 0.0;;
-                let grandlessTnMonth = 0.0;
-                let grandoneMonth = 0.0;
-                let grandtwoMonth = 0.0;
-                let grandthreeMonth = 0.0;
-                let grandOlder = 0.0;
-
-                current.forEach((total) => {
-                    grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
-                    grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
-                    // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
-                    grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
-                    grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
-                    grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
-                    grandOlder = grandOlder + parseFloat(total.OlderMonth);
-                });
-
-                // for (let n = 0; n < current.length; n++) {
-
-                //     const grandcurrencyLength = Currency.length;
-
-                //     //for (let m = 0; m < current[n].data.length; m++) {
-                //     grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
-                //     grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
-                //     // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
-                //     grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
-                //     grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
-                //     grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
-                //     grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
-                //     //}
-                //     // let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
-                //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
-                //     // current.push(val);
-
-                // }
-
-                // old code
-                // let grandval = ['Grand Total ' + '', '', '', '',
-                //     utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
-                //     // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
-                //     utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
-                //     utilityService.modifynegativeCurrencyFormat(grandoneMonth),
-                //     utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
-                //     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
-                //     utilityService.modifynegativeCurrencyFormat(grandOlder)];
-
-                let grandValObj = {
-                    Title: 'Grand Total ',
-                    TotalAmountDue: grandamountduetotal,
-                    TotalCurrent: grandCurrenttotal,
-                    OneMonth: grandoneMonth,
-                    TwoMonth: grandtwoMonth,
-                    ThreeMonth: grandthreeMonth,
-                    OlderMonth: grandOlder
-                };
-
-                // i dont understand this
-                // for (let key in records) {
-                //     let dataArr = current[iterator]
-                //         let obj = [{
-                //                 key: key
-                //             }, {
-                //                 data: records[key]
-                //             }, {
-                //                 total: dataArr
-                //             }
-                //         ];
-                //     totalRecord.push(obj);
-                //     iterator += 1;
-                // }
-
-                templateObject.records.set(allRecords);
-                templateObject.grandrecords.set(grandValObj);
-
-                if (templateObject.records.get()) {
-
-                    setTimeout(function () {
-                        $('td a').each(function () {
-                            if ($(this).text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-danger')
-                        });
-                        $('td').each(function () {
-                            if ($(this).text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-danger')
-                        });
-
-                        $('td').each(function () {
-
-                            let lineValue = $(this).first().text()[0];
-                            if (lineValue != undefined) {
-                                if (lineValue.indexOf(Currency) >= 0)
-                                    $(this).addClass('text-right')
-                            }
-
-                        });
-
-                        $('td').each(function () {
-                            if ($(this).first().text().indexOf('-' + Currency) >= 0)
-                                $(this).addClass('text-right')
-                        });
-
-                        $('td:nth-child(4)').each(function () {
-                            $(this).addClass('text-right');
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 100);
-                }
-
-            }else{
-                templateObject.records.set(allRecords);
-            }
-            LoadingOverlay.hide();
-    }
+  templateObject.getAgedPayablesData(
+    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+    false
+  );
+  templateObject.displayAgedPayablesData = async function (data) {
+    var splashArrayAgedPayablesReport = new Array();
+    let deleteFilter = false;
+    if (data.Params.Search.replace(/\s/g, "") == "") {
+      deleteFilter = true;
+    } else {
+      deleteFilter = false;
     };
 
+    for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
+      var dataList = [
+        data.tcustomersummaryreport[i].ACCOUNTID || "",
+        data.tcustomersummaryreport[i].ACCOUNTNAME || "",
+        data.tcustomersummaryreport[i].ACCOUNTNUMBER || "",
+        data.tcustomersummaryreport[i].ACCOUNTS || "",
+        data.tcustomersummaryreport[i].AMOUNTEX || "",
+        data.tcustomersummaryreport[i].AMOUNTINC || "",
+        data.tcustomersummaryreport[i].CHEQUENUMBER || "",
+        data.tcustomersummaryreport[i].CLASS || "",
+        data.tcustomersummaryreport[i].CLASSID || "",
+        data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
+        data.tcustomersummaryreport[i].CREDITSEX || "",
+        data.tcustomersummaryreport[i].CREDITSINC || "",
+        data.tcustomersummaryreport[i].DATE || "",
+        data.tcustomersummaryreport[i].DEBITSEX || "",
+        data.tcustomersummaryreport[i].DEBITSINC || "",
+        data.tcustomersummaryreport[i].DETAILS || "",
+        data.tcustomersummaryreport[i].FIXEDASSETID || "",
+        data.tcustomersummaryreport[i].GLOBALREF || "",
+        data.tcustomersummaryreport[i].ID || "",
+        data.tcustomersummaryreport[i].MEMO || "",
+        data.tcustomersummaryreport[i].PAYMENTID || "",
+        data.tcustomersummaryreport[i].PREPAYMENTID || "",
+        data.tcustomersummaryreport[i].PRODUCTDESCRIPTION || "",
+        data.tcustomersummaryreport[i].PRODUCTNAME || "",
+        data.tcustomersummaryreport[i].PURCHASEORDERID || "",
+        data.tcustomersummaryreport[i].REFERENCENO || "",
+        data.tcustomersummaryreport[i].REPNAME || "",
+        data.tcustomersummaryreport[i].SALEID || "",
+        data.tcustomersummaryreport[i].TAXCODE || "",
+        data.tcustomersummaryreport[i].TAXRATE || "",
+        data.tcustomersummaryreport[i].TYPE || "",
 
-    let url = location.href;
-    if (url.indexOf("?dateFrom") > 0) {
-        url = new URL(window.location.href);
-        var getDateFrom = url.searchParams.get("dateFrom");
-        var getLoadDate = url.searchParams.get("dateTo");
-        if( typeof getDateFrom === undefined || getDateFrom == "" || getDateFrom === null){
-          let currentUrl = FlowRouter.current().queryParams;
-          getDateFrom = currentUrl.dateFrom
-          getLoadDate = currentUrl.dateTo
+      ];
+      splashArrayAgedPayablesReport.push(dataList);
+      templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
+    }
+
+
+    if (templateObject.transactiondatatablerecords.get()) {
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+    }
+    //$('.fullScreenSpin').css('display','none');
+
+    setTimeout(function () {
+      $('#tableExport').DataTable({
+        data: splashArrayAgedPayablesReport,
+        searching: false,
+        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        columnDefs: [
+          {
+            targets: 0,
+            className: "colAccountID",
+          },
+          {
+            targets: 1,
+            className: "colAccountName"
+          },
+          {
+            targets: 2,
+            className: "colAccountNo"
+          },
+          {
+            targets: 3,
+            className: "colAccounts hiddenColumn",
+          },
+          {
+            targets: 4,
+            className: "colAmountEx hiddenColumn",
+          },
+          {
+            targets: 5,
+            className: "colAmountInc hiddenColumn",
+          },
+          {
+            targets: 6,
+            className: "colChequeNumber hiddenColumn",
+          },
+          {
+            targets: 7,
+            className: "colDepartment",
+          },
+          {
+            targets: 8,
+            className: "colClassID",
+          },
+          {
+            targets: 9,
+            className: "colProductDescription",
+          },
+          {
+            targets: 10,
+            className: "colCreditEx hiddenColumn",
+          },
+          {
+            targets: 11,
+            className: "colCreditInc hiddenColumn",
+          },
+          {
+            targets: 12,
+            className: "colDate",
+          },
+          {
+            targets: 13,
+            className: "colDebitsEx hiddenColumn",
+          },
+          {
+            targets: 14,
+            className: "colDebitsInc hiddenColumn",
+          },
+          {
+            targets: 15,
+            className: "colDetails hiddenColumn",
+          },
+          {
+            targets: 16,
+            className: "colFixedAssetID hiddenColumn",
+          },
+          {
+            targets: 17,
+            className: "colGlobalRef",
+          },
+          {
+            targets: 18,
+            className: "colID hiddenColumn",
+          },
+          {
+            targets: 19,
+            className: "colMemo hiddenColumn",
+          },
+          {
+            targets: 20,
+            className: "colPaymentID hiddenColumn",
+          },
+          {
+            targets: 21,
+            className: "colPrepaymentID hiddenColumn",
+          },
+          {
+            targets: 22,
+            className: "colCredit",
+          },
+          {
+            targets: 23,
+            className: "colProductID hiddenColumn",
+          },
+          {
+            targets: 24,
+            className: "colPurchaseOrderID",
+          },
+          {
+            targets: 25,
+            className: "colRefNo hiddenColumn",
+          },
+          {
+            targets: 26,
+            className: "colRepName",
+          },
+          {
+            targets: 27,
+            className: "colSaleID hiddenColumn",
+          },
+          {
+            targets: 28,
+            className: "colTaxCode hiddenColumn",
+          },
+          {
+            targets: 29,
+            className: "colTaxRate hiddenColumn",
+          },
+          {
+            targets: 30,
+            className: "colType",
+          },
+        ],
+        select: true,
+        destroy: true,
+        colReorder: true,
+        pageLength: initialDatatableLoad,
+        lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+        info: true,
+        responsive: true,
+        "order": [[1, "asc"]],
+        action: function () {
+          $('#tableExport').DataTable().ajax.reload();
+        },
+
+      }).on('page', function () {
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      }).on('column-reorder', function () {
+
+      }).on('length.dt', function (e, settings, len) {
+
+        $(".fullScreenSpin").css("display", "inline-block");
+        let dataLenght = settings._iDisplayLength;
+        if (dataLenght == -1) {
+          if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+            $(".fullScreenSpin").css("display", "none");
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+          }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
         }
-        localStorage.setItem('VS1AgedPayables_Report', '');
-        Datehandler.domDateToUpdate(getLoadDate);
-        Datehandler.domDateFromUpdate(getDateFrom, templateObject);
-        templateObject.getAgedPayableReports(
-            GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-            GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-            false
-          );
-    }else{
-        templateObject.getAgedPayableReports(
-            GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-            GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-            false
-        );
-    }
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      });
+      $(".fullScreenSpin").css("display", "none");
+    }, 0);
 
-    templateObject.getDepartments = function () {
-        reportService.getDepartment().then(function (data) {
-            for (let i in data.tdeptclass) {
+    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+  }
 
-                let deptrecordObj = {
-                    id: data.tdeptclass[i].Id || ' ',
-                    department: data.tdeptclass[i].DeptClassName || ' ',
-                };
 
-                deptrecords.push(deptrecordObj);
-                templateObject.deptrecords.set(deptrecords);
+  // ------------------------------------------------------------------------------------------------------
+  // $("#tblgeneralledger tbody").on("click", "tr", function () {
+  //   var listData = $(this).closest("tr").children('td').eq(8).text();
+  //   var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
 
-            }
-        });
+  //   if (listData) {
+  //     if (checkDeleted == "Deleted") {
+  //       swal("You Cannot View This Transaction", "Because It Has Been Deleted", "info");
+  //     } else {
+  //       FlowRouter.go("/journalentrycard?id=" + listData);
+  //     }
+  //   }
+  // });
 
-    }
-    // templateObject.getAllProductData();
-    //templateObject.getDepartments();
-    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
-    LoadingOverlay.hide();
+
+  LoadingOverlay.hide();
 });
+
+// Template.agedpayables.onRendered(() => {
+//     LoadingOverlay.show();
+//     const templateObject = Template.instance();
+
+
+//     let reset_data = [
+//       { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
+//       { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
+//       { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
+//       { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
+//       { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "" },
+//       { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
+//       { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "" },
+//       { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "" },
+//       { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "" },
+//       { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
+//       { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "" },
+//       { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "" },
+//       { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "" },
+//       { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "" },
+//       { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "" },
+//       { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "" },
+//       { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "" },
+//       { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
+//       { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "" },
+//       { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
+//       { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
+//       { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
+//       { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
+//     ]
+
+//     templateObject.agedpayablesth.set(reset_data);
+
+//     templateObject.initDate = () => {
+//       Datehandler.initOneMonth();
+//     };
+
+//     templateObject.setDateAs = ( dateFrom = null ) => {
+//       templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+//     };
+
+//     let currenctURL = FlowRouter.current().queryParams;
+//     let contactName = FlowRouter.current().queryParams.contact ||'';
+//     let contactID = FlowRouter.current().queryParams.contactid ||'';
+//     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
+//        LoadingOverlay.show();
+//        templateObject.setDateAs( dateFrom );
+//        if (!localStorage.getItem('VS1AgedPayables_Report')) {
+//         sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(function (data) {
+//             let totalRecord = [];
+//             let grandtotalRecord = [];
+//             // if(data.Params.IgnoreDates == true){
+//             //   $('#dateFrom').attr('readonly', true);
+//             //   $('#dateTo').attr('readonly', true);
+//             // }else{
+
+//             //   $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+//             //   $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+//             // }
+//             let allRecords = [];
+//             if (data.tapreport.length) {
+
+//                 localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data) || '');
+//                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
+//                 let records = [];
+//                 let current = [];
+
+//                 let totalNetAssets = 0;
+//                 let GrandTotalLiability = 0;
+//                 let GrandTotalAsset = 0;
+//                 let incArr = [];
+//                 let cogsArr = [];
+//                 let expArr = [];
+//                 let accountData = data.tapreport;
+//                 let accountType = '';
+
+//                 for (let i = 0; i < accountData.length; i++) {
+
+//                     let recordObj = {};
+//                     recordObj.Id = data.tapreport[i].PurchaseOrderID;
+//                     recordObj.type = data.tapreport[i].Type;
+//                     recordObj.SupplierName = data.tapreport[i].Name;
+
+//                     // recordObj.dataArr = [
+//                     //     '',
+//                     //     data.tapreport[i].Type,
+//                     //     data.tapreport[i].PurchaseOrderID,
+//                     //     // moment(data.tapreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
+//                     //     data.tapreport[i].DueDate != '' ? moment(data.tapreport[i].DueDate).format("DD/MM/YYYY") : data.tapreport[i].DueDate,
+//                     //     // data.tapreport[i].InvoiceNumber || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
+
+//                     //
+//                     // ];
+
+//                     recordObj.entries = data.tapreport[i];
+
+//                     records.push(recordObj);
+//                     // if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
+//                     //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
+//                     //      || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
+//                     //     if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+//                     //
+//                     //         if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
+//                     //             records.push(recordObj);
+//                     //         }
+//                     //     } else {
+//                     //         records.push(recordObj);
+//                     //     }
+//                     // }
+
+//                 }
+//                 records = _.sortBy(records, 'SupplierName');
+//                 records = _.groupBy(records, 'SupplierName');
+
+//                 // i dont understand this...
+//                 for (let key in records) {
+//                     // let obj = [{
+//                     //         // key: key,
+//                     //     }, {
+//                     //         // data: records[key]
+//                     //     }
+//                     // ];
+
+//                     let obj = {
+//                         title: key,
+//                         entries: records[key],
+//                         total: {}
+//                     }
+//                     allRecords.push(obj);
+//                 }
+
+
+
+//                 allRecords.forEach((record) => {
+
+//                     let amountduetotal = 0;
+//                     let Currenttotal = 0;
+//                     let lessTnMonth = 0;
+//                     let oneMonth = 0;
+//                     let twoMonth = 0;
+//                     let threeMonth = 0;
+//                     let Older = 0;
+
+//                     record.entries.forEach((entry) => {
+//                         amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
+//                         Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
+//                         oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
+//                         twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
+//                         threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
+//                         Older = Older + parseFloat(entry.entries["120Days"]);
+
+//                     });
+
+//                     record.total = { // new
+//                         Title: 'Total ' + record.title,
+//                         TotalAmountDue: amountduetotal,
+//                         TotalCurrent: Currenttotal,
+//                         OneMonth: oneMonth,
+//                         TwoMonth: twoMonth,
+//                         ThreeMonth: threeMonth,
+//                         OlderMonth: Older
+//                     }
+
+//                     // Used for grand total later
+//                     current.push(record.total);
+
+//                 });
+
+
+
+//                 // let iterator = 0;
+//                 // for (let i = 0; i < allRecords.length; i++) {
+//                 //     let amountduetotal = 0;
+//                 //     let Currenttotal = 0;
+//                 //     let lessTnMonth = 0;
+//                 //     let oneMonth = 0;
+//                 //     let twoMonth = 0;
+//                 //     let threeMonth = 0;
+//                 //     let Older = 0;
+//                 //     const currencyLength = Currency.length;
+//                 //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
+//                 //         amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
+//                 //         Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+//                 //         oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+//                 //         twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+//                 //         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+//                 //         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+//                 //     }
+
+//                 //     // wont be used anymore
+//                 //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
+//                 //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
+//                 //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(Older)];
+
+
+//                 //     //current.push(val); // OLD
+
+//                 //     current.push({ // new
+//                 //         Title: 'Total ' + allRecords[i][0].key,
+//                 //         TotalAmountDue: amountduetotal,
+//                 //         TotalCurrent: Currenttotal,
+//                 //         OneMonth: oneMonth,
+//                 //         TwoMonth: twoMonth,
+//                 //         ThreeMonth: threeMonth,
+//                 //         OlderMonth: Older
+//                 //     });
+
+//                 // }
+
+
+
+//                 // grandtotalRecord
+//                 let grandamountduetotal = 0.0;
+//                 let grandCurrenttotal = 0.0;;
+//                 let grandlessTnMonth = 0.0;
+//                 let grandoneMonth = 0.0;
+//                 let grandtwoMonth = 0.0;
+//                 let grandthreeMonth = 0.0;
+//                 let grandOlder = 0.0;
+
+//                 current.forEach((total) => {
+//                     grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
+//                     grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
+//                     // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+//                     grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
+//                     grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
+//                     grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
+//                     grandOlder = grandOlder + parseFloat(total.OlderMonth);
+//                 });
+
+//                 // for (let n = 0; n < current.length; n++) {
+
+//                 //     const grandcurrencyLength = Currency.length;
+
+//                 //     //for (let m = 0; m < current[n].data.length; m++) {
+//                 //     grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
+//                 //     grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
+//                 //     // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+//                 //     grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
+//                 //     grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
+//                 //     grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
+//                 //     grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
+//                 //     //}
+//                 //     // let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+//                 //     // current.push(val);
+
+//                 // }
+
+//                 // old code
+//                 // let grandval = ['Grand Total ' + '', '', '', '',
+//                 //     utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+//                 //     // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandoneMonth),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandOlder)];
+
+//                 let grandValObj = {
+//                     Title: 'Grand Total ',
+//                     TotalAmountDue: grandamountduetotal,
+//                     TotalCurrent: grandCurrenttotal,
+//                     OneMonth: grandoneMonth,
+//                     TwoMonth: grandtwoMonth,
+//                     ThreeMonth: grandthreeMonth,
+//                     OlderMonth: grandOlder
+//                 };
+
+//                 // i dont understand this
+//                 // for (let key in records) {
+//                 //     let dataArr = current[iterator]
+//                 //         let obj = [{
+//                 //                 key: key
+//                 //             }, {
+//                 //                 data: records[key]
+//                 //             }, {
+//                 //                 total: dataArr
+//                 //             }
+//                 //         ];
+//                 //     totalRecord.push(obj);
+//                 //     iterator += 1;
+//                 // }
+
+//                 templateObject.records.set(allRecords);
+//                 templateObject.grandrecords.set(grandValObj);
+
+//                 if (templateObject.records.get()) {
+
+//                     setTimeout(function () {
+//                         $('td a').each(function () {
+//                             if ($(this).text().indexOf('-' + Currency) >= 0)
+//                                 $(this).addClass('text-danger')
+//                         });
+//                         $('td').each(function () {
+//                             if ($(this).text().indexOf('-' + Currency) >= 0)
+//                                 $(this).addClass('text-danger')
+//                         });
+
+//                         $('td').each(function () {
+
+//                             let lineValue = $(this).first().text()[0];
+//                             if (lineValue != undefined) {
+//                                 if (lineValue.indexOf(Currency) >= 0)
+//                                     $(this).addClass('text-right')
+//                             }
+
+//                         });
+
+//                         $('td').each(function () {
+//                             if ($(this).first().text().indexOf('-' + Currency) >= 0)
+//                                 $(this).addClass('text-right')
+//                         });
+
+//                         $('td:nth-child(4)').each(function () {
+//                             $(this).addClass('text-right');
+//                         });
+//                         $('.fullScreenSpin').css('display', 'none');
+//                     }, 100);
+//                 }
+
+//             }else{
+//                 templateObject.records.set(allRecords);
+//             }
+//             LoadingOverlay.hide();
+
+
+//         }).catch(function (err) {
+//             //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+//             LoadingOverlay.hide();
+//         });
+//         } else {
+//             let data = JSON.parse(localStorage.getItem('VS1AgedPayables_Report'));
+//             let totalRecord = [];
+//             let grandtotalRecord = [];
+//             // if(data.Params.IgnoreDates == true){
+//             //   $('#dateFrom').attr('readonly', true);
+//             //   $('#dateTo').attr('readonly', true);
+//             // }else{
+
+//             //   $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+//             //   $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+//             // }
+//             let allRecords = [];
+//             if (data.tapreport.length) {
+
+//                 // localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
+//                 let records = [];
+//                 let current = [];
+
+//                 let totalNetAssets = 0;
+//                 let GrandTotalLiability = 0;
+//                 let GrandTotalAsset = 0;
+//                 let incArr = [];
+//                 let cogsArr = [];
+//                 let expArr = [];
+//                 let accountData = data.tapreport;
+//                 let accountType = '';
+
+//                 for (let i = 0; i < accountData.length; i++) {
+
+//                     let recordObj = {};
+//                     recordObj.Id = data.tapreport[i].PurchaseOrderID;
+//                     recordObj.type = data.tapreport[i].Type;
+//                     recordObj.SupplierName = data.tapreport[i].Name;
+
+//                     // recordObj.dataArr = [
+//                     //     '',
+//                     //     data.tapreport[i].Type,
+//                     //     data.tapreport[i].PurchaseOrderID,
+//                     //     // moment(data.tapreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
+//                     //     data.tapreport[i].DueDate != '' ? moment(data.tapreport[i].DueDate).format("DD/MM/YYYY") : data.tapreport[i].DueDate,
+//                     //     // data.tapreport[i].InvoiceNumber || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
+//                     //     utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
+
+//                     //
+//                     // ];
+
+//                     recordObj.entries = data.tapreport[i];
+
+//                     records.push(recordObj);
+//                     // if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
+//                     //      || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
+//                     //      || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
+//                     //     if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+//                     //
+//                     //         if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
+//                     //             records.push(recordObj);
+//                     //         }
+//                     //     } else {
+//                     //         records.push(recordObj);
+//                     //     }
+//                     // }
+
+//                 }
+//                 records = _.sortBy(records, 'SupplierName');
+//                 records = _.groupBy(records, 'SupplierName');
+
+//                 // i dont understand this...
+//                 for (let key in records) {
+//                     // let obj = [{
+//                     //         // key: key,
+//                     //     }, {
+//                     //         // data: records[key]
+//                     //     }
+//                     // ];
+
+//                     let obj = {
+//                         title: key,
+//                         entries: records[key],
+//                         total: {}
+//                     }
+//                     allRecords.push(obj);
+//                 }
+
+
+
+//                 allRecords.forEach((record) => {
+
+//                     let amountduetotal = 0;
+//                     let Currenttotal = 0;
+//                     let lessTnMonth = 0;
+//                     let oneMonth = 0;
+//                     let twoMonth = 0;
+//                     let threeMonth = 0;
+//                     let Older = 0;
+
+//                     record.entries.forEach((entry) => {
+//                         amountduetotal = amountduetotal + parseFloat(entry.entries.AmountDue);
+//                         Currenttotal = Currenttotal + parseFloat(entry.entries.Current);
+//                         oneMonth = oneMonth + parseFloat(entry.entries["30Days"]);
+//                         twoMonth = twoMonth + parseFloat(entry.entries["60Days"]);
+//                         threeMonth = threeMonth + parseFloat(entry.entries["90Days"]);
+//                         Older = Older + parseFloat(entry.entries["120Days"]);
+
+//                     });
+
+//                     record.total = { // new
+//                         Title: 'Total ' + record.title,
+//                         TotalAmountDue: amountduetotal,
+//                         TotalCurrent: Currenttotal,
+//                         OneMonth: oneMonth,
+//                         TwoMonth: twoMonth,
+//                         ThreeMonth: threeMonth,
+//                         OlderMonth: Older
+//                     }
+
+//                     // Used for grand total later
+//                     current.push(record.total);
+
+//                 });
+
+
+
+//                 // let iterator = 0;
+//                 // for (let i = 0; i < allRecords.length; i++) {
+//                 //     let amountduetotal = 0;
+//                 //     let Currenttotal = 0;
+//                 //     let lessTnMonth = 0;
+//                 //     let oneMonth = 0;
+//                 //     let twoMonth = 0;
+//                 //     let threeMonth = 0;
+//                 //     let Older = 0;
+//                 //     const currencyLength = Currency.length;
+//                 //     for (let k = 0; k < allRecords[i][1].data.length; k++) {
+//                 //         amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
+//                 //         Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+//                 //         oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+//                 //         twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+//                 //         threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+//                 //         Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+//                 //     }
+
+//                 //     // wont be used anymore
+//                 //     // let val = ['Total ' + allRecords[i][0].key + '', '', '', '',
+//                 //     // utilityService.modifynegativeCurrencyFormat(amountduetotal),
+//                 //     // utilityService.modifynegativeCurrencyFormat(Currenttotal),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(twoMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(threeMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(Older)];
+
+
+//                 //     //current.push(val); // OLD
+
+//                 //     current.push({ // new
+//                 //         Title: 'Total ' + allRecords[i][0].key,
+//                 //         TotalAmountDue: amountduetotal,
+//                 //         TotalCurrent: Currenttotal,
+//                 //         OneMonth: oneMonth,
+//                 //         TwoMonth: twoMonth,
+//                 //         ThreeMonth: threeMonth,
+//                 //         OlderMonth: Older
+//                 //     });
+
+//                 // }
+
+
+
+//                 // grandtotalRecord
+//                 let grandamountduetotal = 0.0;
+//                 let grandCurrenttotal = 0.0;;
+//                 let grandlessTnMonth = 0.0;
+//                 let grandoneMonth = 0.0;
+//                 let grandtwoMonth = 0.0;
+//                 let grandthreeMonth = 0.0;
+//                 let grandOlder = 0.0;
+
+//                 current.forEach((total) => {
+//                     grandamountduetotal = grandamountduetotal + parseFloat(total.TotalAmountDue);
+//                     grandCurrenttotal = grandCurrenttotal + parseFloat(total.TotalCurrent);
+//                     // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+//                     grandoneMonth = grandoneMonth + parseFloat(total.OneMonth);
+//                     grandtwoMonth = grandtwoMonth + parseFloat(total.TwoMonth);
+//                     grandthreeMonth = grandthreeMonth + parseFloat(total.ThreeMonth);
+//                     grandOlder = grandOlder + parseFloat(total.OlderMonth);
+//                 });
+
+//                 // for (let n = 0; n < current.length; n++) {
+
+//                 //     const grandcurrencyLength = Currency.length;
+
+//                 //     //for (let m = 0; m < current[n].data.length; m++) {
+//                 //     grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
+//                 //     grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
+//                 //     // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+//                 //     grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
+//                 //     grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
+//                 //     grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
+//                 //     grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
+//                 //     //}
+//                 //     // let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
+//                 //     //     utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+//                 //     // current.push(val);
+
+//                 // }
+
+//                 // old code
+//                 // let grandval = ['Grand Total ' + '', '', '', '',
+//                 //     utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+//                 //     // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandoneMonth),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+//                 //     utilityService.modifynegativeCurrencyFormat(grandOlder)];
+
+//                 let grandValObj = {
+//                     Title: 'Grand Total ',
+//                     TotalAmountDue: grandamountduetotal,
+//                     TotalCurrent: grandCurrenttotal,
+//                     OneMonth: grandoneMonth,
+//                     TwoMonth: grandtwoMonth,
+//                     ThreeMonth: grandthreeMonth,
+//                     OlderMonth: grandOlder
+//                 };
+
+//                 // i dont understand this
+//                 // for (let key in records) {
+//                 //     let dataArr = current[iterator]
+//                 //         let obj = [{
+//                 //                 key: key
+//                 //             }, {
+//                 //                 data: records[key]
+//                 //             }, {
+//                 //                 total: dataArr
+//                 //             }
+//                 //         ];
+//                 //     totalRecord.push(obj);
+//                 //     iterator += 1;
+//                 // }
+
+//                 templateObject.records.set(allRecords);
+//                 templateObject.grandrecords.set(grandValObj);
+
+//                 if (templateObject.records.get()) {
+
+//                     setTimeout(function () {
+//                         $('td a').each(function () {
+//                             if ($(this).text().indexOf('-' + Currency) >= 0)
+//                                 $(this).addClass('text-danger')
+//                         });
+//                         $('td').each(function () {
+//                             if ($(this).text().indexOf('-' + Currency) >= 0)
+//                                 $(this).addClass('text-danger')
+//                         });
+
+//                         $('td').each(function () {
+
+//                             let lineValue = $(this).first().text()[0];
+//                             if (lineValue != undefined) {
+//                                 if (lineValue.indexOf(Currency) >= 0)
+//                                     $(this).addClass('text-right')
+//                             }
+
+//                         });
+
+//                         $('td').each(function () {
+//                             if ($(this).first().text().indexOf('-' + Currency) >= 0)
+//                                 $(this).addClass('text-right')
+//                         });
+
+//                         $('td:nth-child(4)').each(function () {
+//                             $(this).addClass('text-right');
+//                         });
+//                         $('.fullScreenSpin').css('display', 'none');
+//                     }, 100);
+//                 }
+
+//             }else{
+//                 templateObject.records.set(allRecords);
+//             }
+//             LoadingOverlay.hide();
+//     }
+//     };
+
+
+//     let url = location.href;
+//     if (url.indexOf("?dateFrom") > 0) {
+//         url = new URL(window.location.href);
+//         var getDateFrom = url.searchParams.get("dateFrom");
+//         var getLoadDate = url.searchParams.get("dateTo");
+//         if( typeof getDateFrom === undefined || getDateFrom == "" || getDateFrom === null){
+//           let currentUrl = FlowRouter.current().queryParams;
+//           getDateFrom = currentUrl.dateFrom
+//           getLoadDate = currentUrl.dateTo
+//         }
+//         localStorage.setItem('VS1AgedPayables_Report', '');
+//         Datehandler.domDateToUpdate(getLoadDate);
+//         Datehandler.domDateFromUpdate(getDateFrom, templateObject);
+//         templateObject.getAgedPayableReports(
+//             GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//             GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+//             false
+//           );
+//     }else{
+//         templateObject.getAgedPayableReports(
+//             GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+//             GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+//             false
+//         );
+//     }
+
+//     templateObject.getDepartments = function () {
+//         reportService.getDepartment().then(function (data) {
+//             for (let i in data.tdeptclass) {
+
+//                 let deptrecordObj = {
+//                     id: data.tdeptclass[i].Id || ' ',
+//                     department: data.tdeptclass[i].DeptClassName || ' ',
+//                 };
+
+//                 deptrecords.push(deptrecordObj);
+//                 templateObject.deptrecords.set(deptrecords);
+
+//             }
+//         });
+
+//     }
+//     // templateObject.getAllProductData();
+//     //templateObject.getDepartments();
+//     templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+//     LoadingOverlay.hide();
+// });
 
 Template.agedpayables.events({
     'click #btnSummary': function() {
@@ -1168,8 +1503,8 @@ Template.agedpayables.helpers({
   agedpayablesth: () => {
     return Template.instance().agedpayablesth.get();
   },
-  records: () => {
-    return Template.instance().records.get();
+  transactiondatatablerecords: () => {
+    return Template.instance().transactiondatatablerecords.get();
     //   .sort(function(a, b){
     //     if (a.accounttype == 'NA') {
     //   return 1;

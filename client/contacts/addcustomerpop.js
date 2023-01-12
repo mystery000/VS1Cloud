@@ -13,6 +13,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+const _ = require('lodash');
 
 Template.addcustomerpop.onCreated(function() {
     const templateObject = Template.instance();

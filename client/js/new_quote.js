@@ -3,7 +3,6 @@ import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
-import {OrganisationService} from '../js/organisation-service';
 import '../lib/global/erp-objects.js';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
@@ -17,10 +16,12 @@ import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
 import LoadingOverlay from '../LoadingOverlay';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget.js';
-import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard.js';
-import { getCurrentCurrencySymbol } from '../popUps/currnecypopup.js';
-import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions.js';
 import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line.js';
+
+import { Template } from 'meteor/templating';
+import '../quote/frm_quote.html'
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

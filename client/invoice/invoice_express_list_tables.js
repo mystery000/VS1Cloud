@@ -1,18 +1,21 @@
-import { SalesBoardService } from "../js/sales-service";
-import { ReactiveVar } from "meteor/reactive-var";
+import "../lib/global/indexdbstorage.js";
+import LoadingOverlay from "../LoadingOverlay";
+import GlobalFunctions from '../GlobalFunctions';
 import { CoreService } from "../js/core-service";
+import erpObject from "../lib/global/erp-objects";
+import CachedHttp from "../lib/global/CachedHttp";
+import { ReactiveVar } from "meteor/reactive-var";
+import { UtilityService } from "../utility-service";
+import TableHandler from "../js/Table/TableHandler";
+import { SideBarService } from "../js/sidebar-service";
+import { SalesBoardService } from "../js/sales-service";
 import { EmployeeProfileService } from "../js/profile-service";
 import { AccountService } from "../accounts/account-service";
 import { InvoiceService } from "../invoice/invoice-service";
-import { UtilityService } from "../utility-service";
-import { SideBarService } from "../js/sidebar-service";
-import "../lib/global/indexdbstorage.js";
-import { OrganisationService } from "../js/organisation-service";
-import CachedHttp from "../lib/global/CachedHttp";
-import erpObject from "../lib/global/erp-objects";
-import GlobalFunctions from '../GlobalFunctions';
-import TableHandler from "../js/Table/TableHandler";
-import LoadingOverlay from "../LoadingOverlay";
+
+import { Template } from 'meteor/templating';
+import './invoice_list.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -115,7 +118,8 @@ Template.invoicelist.onRendered(function () {
       if (reset_data[r].active == true) {
           $('#tblInvoicelist .' + reset_data[r].class).removeClass('hiddenColumn');
       } else if (reset_data[r].active == false) {
-          $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
+          if(reset_data[r].class)
+            $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
       };
     }
     templateObject.displayfields.set(custFields);

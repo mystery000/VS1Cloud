@@ -9,6 +9,10 @@ import '../lib/global/indexdbstorage.js';
 import { jsPDF } from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
 import { autoTable } from 'jspdf-autotable';
+
+import './statementlist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 

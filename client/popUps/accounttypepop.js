@@ -1,6 +1,4 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
 import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
@@ -24,7 +22,6 @@ Template.accounttypepop.onCreated(function () {
 Template.accounttypepop.onRendered(function () {
     let templateObject = Template.instance();
     let accountService = new AccountService();
-    let organisationService = new OrganisationService();
     const accountTypeList = [];
     const taxCodesList = [];
     let salesOrderTable;

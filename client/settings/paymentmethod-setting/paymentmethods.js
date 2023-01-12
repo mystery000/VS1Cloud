@@ -5,6 +5,9 @@ import { SideBarService } from '../../js/sidebar-service';
 import {UtilityService} from "../../utility-service";
 import '../../lib/global/indexdbstorage.js';
 import XLSX from 'xlsx';
+import { Template } from 'meteor/templating';
+import "./paymentmethods.html";
+
 let taxRateService = new TaxRateService();
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();

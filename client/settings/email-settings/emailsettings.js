@@ -13,9 +13,8 @@ import { jsPDF } from "jspdf";
 import "jQuery.print/jQuery.print.js";
 import { cloneDeep, find, extend } from "lodash";
 import { Template } from 'meteor/templating';
-
 import './emailsettings.html';
-
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // import ldb from 'localdata';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
@@ -502,9 +501,10 @@ Template.emailsettings.onRendered(function () {
                       `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                     );
 
-                    let basedOnType = basedOnTypeData
-                      ? JSON.parse(basedOnTypeData).BasedOnType
-                      : "";
+                    // let basedOnType = basedOnTypeData
+                    //   ? JSON.parse(basedOnTypeData).BasedOnType
+                    //   : "";
+                    let basedOnType = empData[i].fields.BasedOnType;
 
                     let basedOnTypeText = "";
                     if (basedOnType.split(",").includes("P"))
@@ -517,55 +517,59 @@ Template.emailsettings.onRendered(function () {
                       basedOnTypeText += "On Due Date, ";
                     if (basedOnType.split(",").includes("O"))
                       basedOnTypeText += "If Outstanding, ";
+                    if (basedOnType.split(",").includes("EN"))
+                      basedOnTypeText += "On Event(On Logon)"
+                    if (basedOnType.split(",").includes("EU"))
+                      basedOnTypeText += "On Event(On Logout)"
 
-                    async function getBasedOnTypeTextFromIndexDB() {
-                      return new Promise(async (resolve, reject) => {
-                        // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
-                        //     basedOnType = value? JSON.parse(value).BasedOnType: '';
-                        //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
-                        //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
-                        //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
-                        //     }
-                        //     resolve()
-                        // })
-                        getVS1Data("TBasedOnType")
-                          .then(function (dataObject) {
-                            if (dataObject.length != 0) {
-                              let temp = JSON.parse(dataObject[0].data);
-                              let tempIndex = temp.findIndex((item) => {
-                                return (
-                                  item.key ==
-                                  `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
-                                );
-                              });
-                              if (tempIndex > -1) {
-                                basedOnType =
-                                  temp[tempIndex].value.BasedOnType || "";
-                              }
-                              if (
-                                basedOnType.split(",").includes("EN") == true ||
-                                basedOnType.split(",").includes("EU") == true
-                              ) {
-                                if (
-                                  basedOnType.split(",").includes("EN") == true
-                                )
-                                  basedOnTypeText += "On Event(On Logon), ";
-                                if (
-                                  basedOnType.split(",").includes("EU") == true
-                                )
-                                  basedOnTypeText += "On Event(On Logout), ";
-                              }
-                              resolve();
-                            } else {
-                              resolve();
-                            }
-                          })
-                          .catch(function () {
-                            resolve();
-                          });
-                      });
-                    }
-                    await getBasedOnTypeTextFromIndexDB();
+                    // async function getBasedOnTypeTextFromIndexDB() {
+                    //   return new Promise(async (resolve, reject) => {
+                    //     // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                    //     //     basedOnType = value? JSON.parse(value).BasedOnType: '';
+                    //     //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                    //     //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                    //     //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                    //     //     }
+                    //     //     resolve()
+                    //     // })
+                    //     getVS1Data("TBasedOnType")
+                    //       .then(function (dataObject) {
+                    //         if (dataObject.length != 0) {
+                    //           let temp = JSON.parse(dataObject[0].data);
+                    //           let tempIndex = temp.findIndex((item) => {
+                    //             return (
+                    //               item.key ==
+                    //               `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
+                    //             );
+                    //           });
+                    //           if (tempIndex > -1) {
+                    //             basedOnType =
+                    //               temp[tempIndex].value.BasedOnType || "";
+                    //           }
+                    //           if (
+                    //             basedOnType.split(",").includes("EN") == true ||
+                    //             basedOnType.split(",").includes("EU") == true
+                    //           ) {
+                    //             if (
+                    //               basedOnType.split(",").includes("EN") == true
+                    //             )
+                    //               basedOnTypeText += "On Event(On Logon), ";
+                    //             if (
+                    //               basedOnType.split(",").includes("EU") == true
+                    //             )
+                    //               basedOnTypeText += "On Event(On Logout), ";
+                    //           }
+                    //           resolve();
+                    //         } else {
+                    //           resolve();
+                    //         }
+                    //       })
+                    //       .catch(function () {
+                    //         resolve();
+                    //       });
+                    //   });
+                    // }
+                    // await getBasedOnTypeTextFromIndexDB();
                     if (n.id == "6") {
                     }
                     if (
@@ -857,9 +861,10 @@ Template.emailsettings.onRendered(function () {
                         let basedOnTypeData = localStorage.getItem(
                           `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                         );
-                        let basedOnType = basedOnTypeData
-                          ? JSON.parse(basedOnTypeData).BasedOnType
-                          : "";
+                        // let basedOnType = basedOnTypeData
+                        //   ? JSON.parse(basedOnTypeData).BasedOnType
+                        //   : "";
+                        let basedOnType = empData[i].fields.BasedOnType;
                         let basedOnTypeText = "";
                         if (basedOnType.split(",").includes("P"))
                           basedOnTypeText += "On Print, ";
@@ -871,60 +876,64 @@ Template.emailsettings.onRendered(function () {
                           basedOnTypeText += "On Due Date, ";
                         if (basedOnType.split(",").includes("O"))
                           basedOnTypeText += "If Outstanding, ";
-                        async function getBasedOnTypeTextFromIndexDB() {
-                          return new Promise(async (resolve, reject) => {
-                            // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
-                            //     basedOnType = value? JSON.parse(value).BasedOnType: '';
-                            //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
-                            //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
-                            //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
-                            //     }
-                            //     resolve()
-                            // })
+                        if (basedOnType.split(",").includes("EN"))
+                          basedOnTypeText += "On Event(On Logon)";
+                        if (basedOnType.split(",").includes("EU"))
+                          basedOnTypeText += "On Event(On Logout)";
+                        // async function getBasedOnTypeTextFromIndexDB() {
+                        //   return new Promise(async (resolve, reject) => {
+                        //     // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                        //     //     basedOnType = value? JSON.parse(value).BasedOnType: '';
+                        //     //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                        //     //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                        //     //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                        //     //     }
+                        //     //     resolve()
+                        //     // })
 
-                            getVS1Data("TBasedOnType")
-                              .then(function (dataObject) {
-                                if (dataObject.length != 0) {
-                                  let temp = JSON.parse(dataObject[0].data);
-                                  let tempIndex = temp.findIndex((item) => {
-                                    return (
-                                      item.key ==
-                                      `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
-                                    );
-                                  });
-                                  if (tempIndex > -1) {
-                                    basedOnType =
-                                      temp[tempIndex].value.BasedOnType || "";
-                                  }
-                                  if (
-                                    basedOnType.split(",").includes("EN") ==
-                                      true ||
-                                    basedOnType.split(",").includes("EU") ==
-                                      true
-                                  ) {
-                                    if (
-                                      basedOnType.split(",").includes("EN") ==
-                                      true
-                                    )
-                                      basedOnTypeText += "On Event(On Logon), ";
-                                    if (
-                                      basedOnType.split(",").includes("EU") ==
-                                      true
-                                    )
-                                      basedOnTypeText +=
-                                        "On Event(On Logout), ";
-                                  }
-                                  resolve();
-                                } else {
-                                  resolve();
-                                }
-                              })
-                              .catch(function () {
-                                resolve();
-                              });
-                          });
-                        }
-                        await getBasedOnTypeTextFromIndexDB();
+                        //     getVS1Data("TBasedOnType")
+                        //       .then(function (dataObject) {
+                        //         if (dataObject.length != 0) {
+                        //           let temp = JSON.parse(dataObject[0].data);
+                        //           let tempIndex = temp.findIndex((item) => {
+                        //             return (
+                        //               item.key ==
+                        //               `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
+                        //             );
+                        //           });
+                        //           if (tempIndex > -1) {
+                        //             basedOnType =
+                        //               temp[tempIndex].value.BasedOnType || "";
+                        //           }
+                        //           if (
+                        //             basedOnType.split(",").includes("EN") ==
+                        //               true ||
+                        //             basedOnType.split(",").includes("EU") ==
+                        //               true
+                        //           ) {
+                        //             if (
+                        //               basedOnType.split(",").includes("EN") ==
+                        //               true
+                        //             )
+                        //               basedOnTypeText += "On Event(On Logon), ";
+                        //             if (
+                        //               basedOnType.split(",").includes("EU") ==
+                        //               true
+                        //             )
+                        //               basedOnTypeText +=
+                        //                 "On Event(On Logout), ";
+                        //           }
+                        //           resolve();
+                        //         } else {
+                        //           resolve();
+                        //         }
+                        //       })
+                        //       .catch(function () {
+                        //         resolve();
+                        //       });
+                        //   });
+                        // }
+                        // await getBasedOnTypeTextFromIndexDB();
                         // if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
                         if (
                           basedOnTypeText != "" &&
@@ -1237,9 +1246,10 @@ Template.emailsettings.onRendered(function () {
                       let basedOnTypeData = localStorage.getItem(
                         `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
                       );
-                      let basedOnType = basedOnTypeData
-                        ? JSON.parse(basedOnTypeData).BasedOnType
-                        : "";
+                      // let basedOnType = basedOnTypeData
+                      //   ? JSON.parse(basedOnTypeData).BasedOnType
+                      //   : "";
+                      let basedOnType = empData[i].fields.BasedOnType;
                       let basedOnTypeText = "";
                       if (basedOnType.split(",").includes("P"))
                         basedOnTypeText += "On Print, ";
@@ -1251,59 +1261,63 @@ Template.emailsettings.onRendered(function () {
                         basedOnTypeText += "On Due Date, ";
                       if (basedOnType.split(",").includes("O"))
                         basedOnTypeText += "If Outstanding, ";
-                      async function getBasedOnTypeTextFromIndexDB() {
-                        return new Promise(async (resolve, reject) => {
-                          // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
-                          //     basedOnType = value? JSON.parse(value).BasedOnType: '';
-                          //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
-                          //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
-                          //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
-                          //     }
-                          //     resolve()
-                          // })
+                      if (basedOnType.split(",").includes("EN"))
+                        basedOnTypeText += "On Event(On Logon)";
+                      if (basedOnType.split(",").includes("EU"))
+                        basedOnTypeText += "On Event(On Logout)";
+                      // async function getBasedOnTypeTextFromIndexDB() {
+                      //   return new Promise(async (resolve, reject) => {
+                      //     // ldb.get(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`, function(value){
+                      //     //     basedOnType = value? JSON.parse(value).BasedOnType: '';
+                      //     //     if (basedOnType.split(',').includes('EN') == true || basedOnType.split(',').includes('EU') == true) {
+                      //     //         if (basedOnType.split(',').includes('EN')== true) basedOnTypeText += 'On Event(On Logon), ';
+                      //     //         if (basedOnType.split(',').includes('EU') == true) basedOnTypeText += 'On Event(On Logout), ';
+                      //     //     }
+                      //     //     resolve()
+                      //     // })
 
-                          getVS1Data("TBasedOnType")
-                            .then(function (dataObject) {
-                              if (dataObject.length != 0) {
-                                let temp = JSON.parse(dataObject[0].data);
-                                let tempIndex = temp.findIndex((item) => {
-                                  return (
-                                    item.key ==
-                                    `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
-                                  );
-                                });
-                                if (tempIndex > -1) {
-                                  basedOnType =
-                                    temp[tempIndex].value.BasedOnType || "";
-                                }
+                      //     getVS1Data("TBasedOnType")
+                      //       .then(function (dataObject) {
+                      //         if (dataObject.length != 0) {
+                      //           let temp = JSON.parse(dataObject[0].data);
+                      //           let tempIndex = temp.findIndex((item) => {
+                      //             return (
+                      //               item.key ==
+                      //               `BasedOnType_${n.id}_${empData[i].fields.EmployeeID}`
+                      //             );
+                      //           });
+                      //           if (tempIndex > -1) {
+                      //             basedOnType =
+                      //               temp[tempIndex].value.BasedOnType || "";
+                      //           }
 
-                                if (
-                                  basedOnType.split(",").includes("EN") ==
-                                    true ||
-                                  basedOnType.split(",").includes("EU") == true
-                                ) {
-                                  if (
-                                    basedOnType.split(",").includes("EN") ==
-                                    true
-                                  )
-                                    basedOnTypeText += "On Event(On Logon), ";
-                                  if (
-                                    basedOnType.split(",").includes("EU") ==
-                                    true
-                                  )
-                                    basedOnTypeText += "On Event(On Logout), ";
-                                }
-                                resolve();
-                              } else {
-                                resolve();
-                              }
-                            })
-                            .catch(function () {
-                              resolve();
-                            });
-                        });
-                      }
-                      await getBasedOnTypeTextFromIndexDB();
+                      //           if (
+                      //             basedOnType.split(",").includes("EN") ==
+                      //               true ||
+                      //             basedOnType.split(",").includes("EU") == true
+                      //           ) {
+                      //             if (
+                      //               basedOnType.split(",").includes("EN") ==
+                      //               true
+                      //             )
+                      //               basedOnTypeText += "On Event(On Logon), ";
+                      //             if (
+                      //               basedOnType.split(",").includes("EU") ==
+                      //               true
+                      //             )
+                      //               basedOnTypeText += "On Event(On Logout), ";
+                      //           }
+                      //           resolve();
+                      //         } else {
+                      //           resolve();
+                      //         }
+                      //       })
+                      //       .catch(function () {
+                      //         resolve();
+                      //       });
+                      //   });
+                      // }
+                      // await getBasedOnTypeTextFromIndexDB();
                       if (
                         basedOnTypeText != "" &&
                         basedOnType.split(",").includes("F")
@@ -1605,7 +1619,6 @@ Template.emailsettings.onRendered(function () {
     //           tempArray.push(item.fields);
     //         }
     //       });
-    //       console.log({ tempArray });
     //       templateObject.correspondences.set(tempArray);
     //     } else {
     //       sideBarService.getCorrespondences().then((dataObject) => {
@@ -1680,7 +1693,6 @@ Template.emailsettings.onRendered(function () {
     try {
       correspondencesFromVsData = await getVS1Data("TCorrespondence");
     } catch (error) {
-      console.log({ error })
     }
 
     if (smsSettingsFromService.terppreference.length > 0) {
@@ -1725,7 +1737,7 @@ Template.emailsettings.onRendered(function () {
           };
 
           await sideBarService.saveCorrespondence(newCorrespondence);
-          
+
           isUpdatedForSms = true;
         }
       }
@@ -1823,14 +1835,16 @@ Template.emailsettings.onRendered(function () {
         }
       });
 
-      const oldSettings = templateObject.originScheduleData.get();
+
+
+      let oldSettings = templateObject.originScheduleData.get();
       // Filter old settings according to the types of email setting(Essential one or Automated one)
       if (!isEssential) {
         oldSettings = oldSettings.filter(
           (oldSetting) =>
-            oldSetting.fields.FormID != 54 &&
-            oldSetting.fields.FormID != 177 &&
-            oldSetting.fields.FormID != 129
+            oldSetting.fields.FormID != '54' &&
+            oldSetting.fields.FormID != '177' &&
+            oldSetting.fields.FormID != '129'
         );
       }
       try {
@@ -1910,6 +1924,55 @@ Template.emailsettings.onRendered(function () {
                     });
                 });
             });
+          }
+          let attachmentExist = false;
+          async function checkAttachmentExist() {
+            return new Promise(async(resolve, reject)=>{
+              getVS1Data("TAttachment").then(function(dataObject){
+                if(dataObject.length > 0) {
+                  let data = JSON.parse(dataObject[0].data);
+                  let useData = data.tattachment;
+                  let temp = [];
+                  if(useData.length == 0) resolve(temp)
+                  for(let i=0; i<useData.length; i++) {
+                    if(useData[i].fields.TableName == 'tblEmailsettings' && useData[i].fields.KeyValue.split('_')[0] == formID){
+                      attachmentExist = true;
+                      // resolve(useData[i]);
+                      temp.push(useData[i]);
+                    }
+                    if(i==useData.length-1)resolve(temp);
+                  }
+                }else {
+                  taxRateService.getEmailAttachments('tblEmailsettings').then(data=>{
+                    let useData = data.tattachment;
+                    let temp = [];
+                    if(useData.length == 0) resolve(temp)
+                    for (let i = 0; i < useData.length; i++) {
+                      if(useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID){
+                        attachmentExist = true;
+                        // resolve(useData[i]);
+                        temp.push(useData[i])
+                      }
+                      if(i==useData.length-1)resolve(temp);
+                    }
+                  })
+                }
+              }).catch(function(e) {
+                taxRateService.getEmailAttachments('tblEmailsettings').then(data=>{
+                  let useData = data.tattachment;
+                  let temp = []
+                  if(useData.length == 0) resolve(temp)
+                  for (let i = 0; i < useData.length; i++) {
+                    if(useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID){
+                      attachmentExist = true;
+                      // resolve(useData[i])
+                      temp.push(useData[i]);
+                    }
+                    if(i==useData.length-1)resolve(temp);
+                  }
+                })
+              })
+            })
           }
           if (!!recipients) {
             let attachments = [];
@@ -2250,6 +2313,7 @@ Template.emailsettings.onRendered(function () {
                     ID: scheduleID != 1 ? scheduleID : "",
                     Active: true,
                     BeginFromOption: "",
+                    BasedOnType: basedOnType,
                     ContinueIndefinitely: true,
                     EmployeeID: parseInt(recipientId),
                     // EmployeeEmailID: recipients[index],
@@ -2369,7 +2433,6 @@ Template.emailsettings.onRendered(function () {
                               object.fields,
                               (error, result) => {
                                 if (error) {
-                                  console.log("&&&&&&&&&", error);
                                   return reject(error);
                                 }
                                 resolve(result);
@@ -2538,39 +2601,83 @@ Template.emailsettings.onRendered(function () {
                     basedOnType.includes("EN") == true ||
                     basedOnType.includes("EU" == true)
                   ) {
-                    getVS1Data("TBasedOnType").then(function (dataObject) {
-                      let temp =
-                        dataObject.length > 0
-                          ? JSON.parse(dataObject[0].data)
-                          : [];
-                      let objectDetail = {
-                        key: `BasedOnType_${objDetail.fields.FormID}_${recipientId}`,
-                        value: {
-                          ...cloneObjDetailFields,
-                          BasedOnType: basedOnType,
-                          connectionInfo: connectionDetails,
-                        },
-                      };
-                      let tempIndex = temp.findIndex((item) => {
-                        return (
-                          item.key ==
-                          `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
-                        );
-                      });
-                      if (tempIndex > -1) {
-                        temp.splice(tempIndex, 1, objectDetail);
-                      } else {
-                        temp.push(objectDetail);
-                      }
-                      addVS1Data(
-                        "TBasedOnType",
-                        JSON.stringify(temp)
-                      ).then(function () {});
-                    });
+                    // getVS1Data("TBasedOnType").then(function (dataObject) {
+                    //   let temp =
+                    //     dataObject.length > 0
+                    //       ? JSON.parse(dataObject[0].data)
+                    //       : [];
+                    //   let objectDetail = {
+                    //     key: `BasedOnType_${objDetail.fields.FormID}_${recipientId}`,
+                    //     value: {
+                    //       ...cloneObjDetailFields,
+                    //       BasedOnType: basedOnType,
+                    //       connectionInfo: connectionDetails,
+                    //     },
+                    //   };
+                    //   let tempIndex = temp.findIndex((item) => {
+                    //     return (
+                    //       item.key ==
+                    //       `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
+                    //     );
+                    //   });
+                    //   if (tempIndex > -1) {
+                    //     temp.splice(tempIndex, 1, objectDetail);
+                    //   } else {
+                    //     temp.push(objectDetail);
+                    //   }
+                    //   addVS1Data(
+                    //     "TBasedOnType",
+                    //     JSON.stringify(temp)
+                    //   ).then(function () {});
+                    // });
                     // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                     //     ...cloneObjDetailFields.fields,
                     //     BasedOnType: basedOnType,
                     // }), function(){})
+                    let eventType = "";
+                    if(basedOnType.includes("EN") == true) {
+                      eventType += "EN";
+                    }
+                    if(basedOnType.includes("EU") == true) {
+                      eventType += "EU";
+                    }
+                    for (let j = 0; j< documents.length; j++) {
+
+                      let existingAttachments = await checkAttachmentExist();
+                      if(attachmentExist == false) {
+                        let attachmentObject = {
+                          Active: true,
+                          Attachment: documents[j].pdfObject.content,
+                          AttachmentName: "VS1 cloud report.pdf",
+                          KeyValue: `${objDetail.fields.FormID}_${eventType}`,
+                          Description: recipients[index],
+                          TableName: "tblEmailsettings"
+                        }
+                        contactService.saveCustomerAttachment(attachmentObject).then(function() {
+                          taxRateService.getAttachments().then(function(dataObject){
+                            addVS1Data('TAttachment', JSON.stringify(dataObject))
+                          })
+                        })
+                      } else {
+                        for(let m=0; m< existingAttachments.length; m++) {
+                          let id = existingAttachments[m].fields.ID;
+                          let updateObject = {
+                            type: "TAttchment",
+                            fields: {
+                              Active: true,
+                              ID: id,
+                              KeyValue:  `${objDetail.fields.FormID}_${eventType}`,
+                              Description: recipients[index]
+                            }
+                          }
+                          contactService.saveCustomerAttachment(updateObject).then(function() {
+                            taxRateService.getAttachments().then(function(dataObject){
+                              addVS1Data('TAttachment', JSON.stringify(dataObject))
+                            })
+                          })
+                        }
+                      }
+                    }
                   }
 
                   cloneObjDetailFields = {
@@ -2608,7 +2715,7 @@ Template.emailsettings.onRendered(function () {
                             addVS1Data(
                               "TReportSchedules",
                               JSON.stringify(dataUpdate)
-                            ).then(() => {});
+                            ).then(() => {}).catch(function(error){ });
                           })
                           .catch(function (error) {});
                       })
@@ -2629,7 +2736,6 @@ Template.emailsettings.onRendered(function () {
                       }
                     );
                   });
-
                   objDetail.fields.NextDueDate = nextDueDate;
 
                   // Add synced cron job here
@@ -2654,46 +2760,131 @@ Template.emailsettings.onRendered(function () {
                   await setBasedOnType();
                   let cloneObjDetailFields = cloneDeep(objDetail.fields);
                   cloneObjDetailFields.attachments = documents;
+                  // if (
+                  //   basedOnType.includes("EN") == true ||
+                  //   basedOnType.includes("EU" == true)
+                  // ) {
+                  //   // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                  //   //     ...cloneObjDetailFields,
+                  //   //     BasedOnType: basedOnType,
+                  //   // }), function(){ ldb.get(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, function(data){
+                  //   //     data
+                  //   // })})
+
+                  //   getVS1Data("TBasedOnType").then(function (dataObject) {
+                  //     let temp =
+                  //       dataObject.length > 0
+                  //         ? JSON.parse(dataObject[0].data)
+                  //         : [];
+                  //     let objectDetail = {
+                  //       key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`,
+                  //       value: {
+                  //         ...cloneObjDetailFields,
+                  //         BasedOnType: basedOnType,
+                  //         connectionInfo: connectionDetails,
+                  //       },
+                  //     };
+                  //     let tempIndex = temp.findIndex((item) => {
+                  //       return (
+                  //         item.key ==
+                  //         `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
+                  //       );
+                  //     });
+                  //     if (tempIndex > -1) {
+                  //       temp.splice(tempIndex, 1, objectDetail);
+                  //     } else {
+                  //       temp.push(objectDetail);
+                  //     }
+                  //     addVS1Data(
+                  //       "TBasedOnType",
+                  //       JSON.stringify(temp)
+                  //     ).then(function () {});
+                  //   });
+                  // }
                   if (
                     basedOnType.includes("EN") == true ||
                     basedOnType.includes("EU" == true)
                   ) {
+                    // getVS1Data("TBasedOnType").then(function (dataObject) {
+                    //   let temp =
+                    //     dataObject.length > 0
+                    //       ? JSON.parse(dataObject[0].data)
+                    //       : [];
+                    //   let objectDetail = {
+                    //     key: `BasedOnType_${objDetail.fields.FormID}_${recipientId}`,
+                    //     value: {
+                    //       ...cloneObjDetailFields,
+                    //       BasedOnType: basedOnType,
+                    //       connectionInfo: connectionDetails,
+                    //     },
+                    //   };
+                    //   let tempIndex = temp.findIndex((item) => {
+                    //     return (
+                    //       item.key ==
+                    //       `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
+                    //     );
+                    //   });
+                    //   if (tempIndex > -1) {
+                    //     temp.splice(tempIndex, 1, objectDetail);
+                    //   } else {
+                    //     temp.push(objectDetail);
+                    //   }
+                    //   addVS1Data(
+                    //     "TBasedOnType",
+                    //     JSON.stringify(temp)
+                    //   ).then(function () {});
+                    // });
                     // ldb.set(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
-                    //     ...cloneObjDetailFields,
+                    //     ...cloneObjDetailFields.fields,
                     //     BasedOnType: basedOnType,
-                    // }), function(){ ldb.get(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, function(data){
-                    //     data
-                    // })})
+                    // }), function(){})
+                    let eventType = "";
+                    if(basedOnType.includes("EN") == true) {
+                      eventType += "EN";
+                    }
+                    if(basedOnType.includes("EU") == true) {
+                      eventType += "EU";
+                    }
+                    for (let j = 0; j< documents.length; j++) {
 
-                    getVS1Data("TBasedOnType").then(function (dataObject) {
-                      let temp =
-                        dataObject.length > 0
-                          ? JSON.parse(dataObject[0].data)
-                          : [];
-                      let objectDetail = {
-                        key: `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`,
-                        value: {
-                          ...cloneObjDetailFields,
-                          BasedOnType: basedOnType,
-                          connectionInfo: connectionDetails,
-                        },
-                      };
-                      let tempIndex = temp.findIndex((item) => {
-                        return (
-                          item.key ==
-                          `BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeID}`
-                        );
-                      });
-                      if (tempIndex > -1) {
-                        temp.splice(tempIndex, 1, objectDetail);
+                      let existingAttachments = await checkAttachmentExist();
+                      if(attachmentExist == false) {
+                        let attachmentObject = {
+                          type: "TAttachment",
+                          fields: {
+                            Active: true,
+                            Attachment: documents[j].pdfObject.content,
+                            AttachmentName: "VS1 cloud report.pdf",
+                            KeyValue: `${objDetail.fields.FormID}_${eventType}`,
+                            Description: recipients[index],
+                            TableName: "tblEmailsettings"
+                          }
+                        }
+                        contactService.saveCustomerAttachment(attachmentObject).then(function() {
+                          taxRateService.getAttachments().then(function(dataObject){
+                            addVS1Data('TAttachment', JSON.stringify(dataObject))
+                          })
+                        })
                       } else {
-                        temp.push(objectDetail);
+                        for(let m=0; m< existingAttachments.length; m++) {
+                          let id = existingAttachments[m].fields.ID;
+                          let updateObject = {
+                            type: "TAttchment",
+                            fields: {
+                              Active: true,
+                              ID: id,
+                              KeyValue:  `${objDetail.fields.FormID}_${eventType}`,
+                              Description: recipients[index]
+                            }
+                          }
+                          contactService.saveCustomerAttachment(updateObject).then(function() {
+                            taxRateService.getAttachments().then(function(dataObject){
+                              addVS1Data('TAttachment', JSON.stringify(dataObject))
+                            })
+                          })
+                        }
                       }
-                      addVS1Data(
-                        "TBasedOnType",
-                        JSON.stringify(temp)
-                      ).then(function () {});
-                    });
+                    }
                   }
                   // objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
 
@@ -2750,6 +2941,26 @@ Template.emailsettings.onRendered(function () {
                     });
                   });
               }
+            }
+
+            let activedTemplate = await checkAttachmentExist();
+            for (let n = 0 ; n < activedTemplate.length; i++) {
+              let attachment = activedTemplate[n];
+              let id = attachment.fields.ID;
+              let removeObject = {
+                type: 'TAttachment',
+                fields: {
+                  ID: id,
+                  Active: false
+                }
+              }
+
+              contactService.saveCustomerAttachment(removeObject).then(function(){
+                taxRateService.getEmailAttachments('tblEmailsettings').then(function(dataObject){
+                  addVS1Data('TAttachment', JSON.stringify(dataObject)).then(function(){})
+                })
+              }).catch(function(error) {
+              })
             }
           }
         });
@@ -4254,9 +4465,7 @@ Template.emailsettings.events({
         await smsService.saveSMSSettings(settingObject);
         const globalSettings = await sideBarService.getGlobalSettings();
         await addVS1Data('TERPPreference', JSON.stringify(globalSettings));
-        console.log("successed done!")
       } catch (error) {
-        console.log({ error });
       }
     }
   },

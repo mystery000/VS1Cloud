@@ -11,8 +11,6 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './paymentmethodpopup.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -33,6 +31,7 @@ Template.paymentmethodpop.onCreated(function() {
     templateObject.includeAccountID.set(false);
 
     templateObject.accountID = new ReactiveVar();
+    templateObject.tablename = new ReactiveVar();
 });
 
 Template.paymentmethodpop.onRendered(function() {
@@ -43,6 +42,8 @@ Template.paymentmethodpop.onRendered(function() {
     const tableHeaderList = [];
     const deptrecords = [];
     let deptprodlineItems = [];
+    let currenttablename = templateObject.data.tablename || "paymentmethodList";
+    templateObject.tablename.set(currenttablename);
     Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'paymentmethodList', function(error, result) {
         if (error) {
 
@@ -168,7 +169,7 @@ Template.paymentmethodpop.onRendered(function() {
 
                     $('.fullScreenSpin').css('display', 'none');
                     setTimeout(function() {
-                        $('#paymentmethodList').DataTable({
+                        $('#'+currenttablename).DataTable({
                             data: splashArrayPaymentMethodList,
 
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -188,8 +189,8 @@ Template.paymentmethodpop.onRendered(function() {
                             responsive: true,
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddNewPaymentMethod' data-dismiss='modal' data-toggle='modal' data-target='#newPaymentMethodModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#paymentmethodList_filter");
-                              $("<button class='btn btn-primary btnRefreshPaymentMethod' type='button' id='btnRefreshPaymentMethod' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#paymentmethodList_filter");
+                              $("<button class='btn btn-primary btnAddNewPaymentMethod' data-dismiss='modal' data-toggle='modal' data-target='#newPaymentMethodModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
+                              $("<button class='btn btn-primary btnRefreshPaymentMethod' type='button' id='btnRefreshPaymentMethod' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
                             }
 
                         });
@@ -197,7 +198,7 @@ Template.paymentmethodpop.onRendered(function() {
                     }, 10);
 
 
-                    var columns = $('#paymentmethodList th');
+                    var columns = $('#'+currenttablename+' th');
                     let sTible = "";
                     let sWidth = "";
                     let sIndex = "";
@@ -300,7 +301,7 @@ Template.paymentmethodpop.onRendered(function() {
 
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
-                    $('#paymentmethodList').DataTable({
+                    $('#'+currenttablename).DataTable({
                         data: splashArrayPaymentMethodList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         paging: true,
@@ -319,8 +320,8 @@ Template.paymentmethodpop.onRendered(function() {
                         responsive: true,
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewPaymentMethod' data-dismiss='modal' data-toggle='modal' data-target='#newPaymentMethodModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#paymentmethodList_filter");
-                          $("<button class='btn btn-primary btnRefreshPaymentMethod' type='button' id='btnRefreshPaymentMethod' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#paymentmethodList_filter");
+                          $("<button class='btn btn-primary btnAddNewPaymentMethod' data-dismiss='modal' data-toggle='modal' data-target='#newPaymentMethodModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
+                          $("<button class='btn btn-primary btnRefreshPaymentMethod' type='button' id='btnRefreshPaymentMethod' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
                         }
 
                     });
@@ -328,7 +329,7 @@ Template.paymentmethodpop.onRendered(function() {
                 }, 10);
 
 
-                var columns = $('#paymentmethodList th');
+                var columns = $('#'+currenttablename+' th');
                 let sTible = "";
                 let sWidth = "";
                 let sIndex = "";
@@ -426,7 +427,7 @@ Template.paymentmethodpop.onRendered(function() {
 
                 $('.fullScreenSpin').css('display', 'none');
                 setTimeout(function() {
-                    $('#paymentmethodList').DataTable({
+                    $('#'+currenttablename).DataTable({
                         data: splashArrayPaymentMethodList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         paging: true,
@@ -445,8 +446,8 @@ Template.paymentmethodpop.onRendered(function() {
                         responsive: true,
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewPaymentMethod' data-dismiss='modal' data-toggle='modal' data-target='#newPaymentMethodModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#paymentmethodList_filter");
-                          $("<button class='btn btn-primary btnRefreshPaymentMethod' type='button' id='btnRefreshPaymentMethod' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#paymentmethodList_filter");
+                          $("<button class='btn btn-primary btnAddNewPaymentMethod' data-dismiss='modal' data-toggle='modal' data-target='#newPaymentMethodModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
+                          $("<button class='btn btn-primary btnRefreshPaymentMethod' type='button' id='btnRefreshPaymentMethod' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
                         }
 
                     });
@@ -454,7 +455,7 @@ Template.paymentmethodpop.onRendered(function() {
                 }, 10);
 
 
-                var columns = $('#paymentmethodList th');
+                var columns = $('#'+currenttablename+' th');
                 let sTible = "";
                 let sWidth = "";
                 let sIndex = "";
@@ -687,7 +688,7 @@ Template.paymentmethodpop.events({
     },
 
     'click .chkDatatable': function(event) {
-        var columns = $('#paymentmethodList th');
+        var columns = $('#'+currenttablename+' th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
         $.each(columns, function(i, v) {
@@ -818,9 +819,9 @@ Template.paymentmethodpop.events({
     },
     'blur .divcolumn': function(event) {
         let columData = $(event.target).text();
-
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#paymentmethodList').DataTable();
+        let currenttablename = templateObject.tablename.get() || '';
+        var datable = $('#'+currenttablename).DataTable();
         var title = datable.column(columnDatanIndex).header();
         $(title).html(columData);
 
@@ -831,7 +832,8 @@ Template.paymentmethodpop.events({
 
         let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#paymentmethodList th');
+        let currenttablename = templateObject.tablename.get() || '';
+        var datable = $('#'+currenttablename+' th');
         $.each(datable, function(i, v) {
 
             if (v.innerText == columnDataValue) {
@@ -845,7 +847,8 @@ Template.paymentmethodpop.events({
     },
     'click .btnOpenSettings': function(event) {
         let templateObject = Template.instance();
-        var columns = $('#paymentmethodList th');
+        let currenttablename = templateObject.tablename.get() || '';
+        var columns = $('#'+currenttablename+' th');
 
         const tableHeaderList = [];
         let sTible = "";
@@ -876,7 +879,8 @@ Template.paymentmethodpop.events({
     },
     'click #exportbtn': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#paymentmethodList_wrapper .dt-buttons .btntabletoexcel').click();
+        let currenttablename = templateObject.tablename.get() || '';
+        jQuery('#'+currenttablename+'_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display', 'none');
 
     },
@@ -904,7 +908,8 @@ Template.paymentmethodpop.events({
         const tableHeaderList = [];
         let sideBarService = new SideBarService();
         let taxRateService = new TaxRateService();
-        let dataSearchName = $('#paymentmethodList_filter input').val();
+        let currenttablename = templateObject.tablename.get() || '';
+        let dataSearchName = $('#'+currenttablename+'_filter input').val();
         var currentLoc = FlowRouter.current().route.path;
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getPaymentMethodVS1ByName(dataSearchName).then(function (data) {
@@ -925,7 +930,7 @@ Template.paymentmethodpop.events({
                 splashArrayPaymentMethodList.push(dataList);
                   }
 
-                    var datatable = $('#paymentmethodList').DataTable();
+                    var datatable = $('#'+currenttablename).DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayPaymentMethodList);
                     datatable.draw(false);
@@ -975,7 +980,7 @@ Template.paymentmethodpop.events({
                 splashArrayPaymentMethodList.push(dataList);
 
                   }
-        var datatable = $('#paymentmethodList').DataTable();
+        var datatable = $('#'+currenttablename).DataTable();
               datatable.clear();
               datatable.rows.add(splashArrayPaymentMethodList);
               datatable.draw(false);
@@ -1237,6 +1242,9 @@ Template.paymentmethodpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+    tablename: () => {
+        return Template.instance().tablename.get();
     }
 });
 

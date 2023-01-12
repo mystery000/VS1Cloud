@@ -778,31 +778,8 @@
                                 </div>
                                 <div class="col-12 product_recent_trans" style="display:none; margin-top: 16px;">
                                     <h3>Recent Transactions</h3>
-                                    <table id="productrecentlist" style="width: 100%" class="dataTable table table-striped table-bordered productrecentlist">
-                                        <thead>
-                                            <tr class="dnd-moved">
-                                                <th style="width:80px;">Date</th>
-                                                <th style="width: 130px;">Type</th>
-                                                <th style="width:30px;">Ref</th>
-                                                <th style="width:30px;">Qty</th>
-                                                <th style="width:80px;">Unit Price</th>
-                                                <th style="width:80px;">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{#each item in recentTrasactions}}
-                                            <tr id="{{item.transactionno}}">
-                                                <td>{{item.date}}</td>
-                                                <td id="transactiontype" class="transactiontype">{{item.type}}</td>
-                                                <td>{{item.reference}}</td>
-                                                <td style="text-align: right!important;">{{item.quantity}}</td>
-                                                <td style="text-align: right!important;">{{item.unitPrice}}</td>
-                                                <td style="text-align: right!important;">{{item.total}}</td>
-                                            </tr>
-                                            {{/each}}
-                                        </tbody>
-                                    </table>
-
+                                    <!-- {{>recentTransactionTable productID=productID type="all"}} -->
+                                    {{>non_transactional_list tablename="productrecentlist" productID=productID}}
                                 </div>
                             </div>
                             <div class="row mt-3">

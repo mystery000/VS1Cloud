@@ -28,6 +28,7 @@ import '../mytaskswdiget/mytaskswidgetchart.html'
 
 import '../top10Customers/dsm_top10Customers.html'
 import '../../Dashboard/appointments-widget/dsm-appointments-widget.html'
+import '../../Dashboard/appointments-widget/ds-appointments-widget.html'
 
 
 let _ = require("lodash");
@@ -56,6 +57,7 @@ let chartsPlaceList = {
 
     "DSMCharts_Overview": [
         "mytaskswidgetchart",
+        "dashboardManagerCharts",
         "dsmTop10Customers",
         "dsmAppointmentsWidget",
         "resalescomparision",
@@ -97,8 +99,8 @@ let sideBarService = new SideBarService();
  * Current User ID
  */
 const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-const _chartGroup = "";
-const _tabGroup = 0;
+var _chartGroup = "";
+var _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
     () => {
         $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
@@ -279,7 +281,7 @@ Template.allChartLists.onRendered(function() {
                     chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
                 }
             }
-            /*if (chartList.length > 0) {
+            if (chartList.length > 0) {
                 let my_tasksChart = {
                     fields: {
                         Active: true,
@@ -482,7 +484,7 @@ Template.allChartLists.onRendered(function() {
                     }
                 };
                 chartList.push(myBankAccountschart);
-            } */
+            }
         }
 
         if (chartList.length > 0) {
@@ -813,7 +815,6 @@ Template.allChartLists.helpers({
     },
 
     is_dashboard_check: (currentTemplate) => {
-        //console.log(FlowRouter.current().path, currentTemplate);
         return FlowRouter.current().path.includes(currentTemplate);
     },
 });

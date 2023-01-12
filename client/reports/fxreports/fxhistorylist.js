@@ -2,6 +2,8 @@ import { ReportService } from "../report-service";
 import 'jQuery.print/jQuery.print.js';
 import { UtilityService } from "../../utility-service";
 import GlobalFunctions from "../../GlobalFunctions";
+import { Template } from 'meteor/templating';
+import "./fxhistorylist.html"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
