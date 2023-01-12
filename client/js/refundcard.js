@@ -13,7 +13,6 @@ import "jquery-editable-select";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import { ContactService } from "../contacts/contact-service";
-import { OrganisationService } from "../js/organisation-service";
 import { TaxRateService } from "../settings/settings-service";
 import LoadingOverlay from "../LoadingOverlay";
 import { saveCurrencyHistory } from "../packages/currency/CurrencyWidget";

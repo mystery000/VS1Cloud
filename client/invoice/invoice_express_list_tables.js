@@ -12,7 +12,6 @@ import { SalesBoardService } from "../js/sales-service";
 import { EmployeeProfileService } from "../js/profile-service";
 import { AccountService } from "../accounts/account-service";
 import { InvoiceService } from "../invoice/invoice-service";
-import { OrganisationService } from "../js/organisation-service";
 
 import { Template } from 'meteor/templating';
 import './invoice_list.html';
@@ -119,7 +118,8 @@ Template.invoicelist.onRendered(function () {
       if (reset_data[r].active == true) {
           $('#tblInvoicelist .' + reset_data[r].class).removeClass('hiddenColumn');
       } else if (reset_data[r].active == false) {
-          $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
+          if(reset_data[r].class)
+            $('#tblInvoicelist .' + reset_data[r].class).addClass('hiddenColumn');
       };
     }
     templateObject.displayfields.set(custFields);

@@ -26,6 +26,9 @@ import {
     Random
 } from 'meteor/random';
 import {StockTransferService} from "../inventory/stockadjust-service";
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './shippingDocket.html';
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

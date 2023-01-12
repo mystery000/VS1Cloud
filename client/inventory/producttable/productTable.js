@@ -30,8 +30,6 @@ let utilityService = new UtilityService();
 // $("#tblInventoryOverview tbody").on("click", "td.OnBO", function() {
 //     var listData = $(this).closest("tr").find(".colProductID").text();
 //     var listProductName = $(this).closest("tr").find(".colProductName").text();
-//     console.log(listData);
-//     console.log(listProductName);
 //     if (listData) {
 //         $('#onBackOrderPopUp').modal("show");
 //         $(".productNameOnBo").text(listProductName);
@@ -92,18 +90,18 @@ Template.productTable.onCreated(function(){
   templateObject.productID = new ReactiveVar();
   templateObject.autorun(() => {
     const data = Template.currentData(); // creates a reactive dependency
-    
+
     if(data.productList){
       this.productList.set(data.productList);
-      this.columns.set(data.columns);      
+      this.columns.set(data.columns);
     }
   })
 });
 
 Template.productTable.onRendered(function() {
-  
+
   var templateObject = Template.instance();
-  splashArrayProductList = JSON.parse(templateObject.productList.get());      
+  splashArrayProductList = JSON.parse(templateObject.productList.get());
   columnData = JSON.parse(templateObject.columns.get());
 
   function MakeNegative() {
@@ -123,7 +121,7 @@ Template.productTable.onRendered(function() {
   templateObject.drawDataTable = function(splashArrayProductList , columData)
   {
     $("#tblInventoryOverview").dataTable({
-                                      
+
       data: splashArrayProductList,
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
       columnDefs: columData,
@@ -248,11 +246,11 @@ Template.productTable.onRendered(function() {
     });
   }
   templateObject.drawDataTable(splashArrayProductList,columnData);
-  
+
   // templateObject.productList.set(template.data.productList);
   // templateObject.columns.set(template.data.columns);
   // templateObject.fields.set(template.data.fields);
-  
+
 //   $("#tblInventoryOverview tbody").on("click", "td:not(.colAvailable, .colOnSO, .colOnBO, .colInStock, .colOnOrder, .colQuantity, .colSerialNo)", function() {
 //     var listData = $(this).closest("tr").find(".colProductID").text();
 //     if (listData) {
@@ -278,7 +276,7 @@ Template.productTable.onRendered(function() {
 });
 
 Template.productTable.helpers({
-  
+
   productID: () => {
     return Template.instance().productID.get();
 },
@@ -397,6 +395,3 @@ Template.productTable.events({
   }
 },
 });
-  
-
-    

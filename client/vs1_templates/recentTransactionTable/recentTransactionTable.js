@@ -20,21 +20,21 @@ Template.recentTransactionTable.onCreated(() => {
     templateObject.autorun(() => {
         const data = Template.currentData(); // creates a reactive dependency
         templateObject.productID.set(data.productID);
-        
+
 
         function MakeNegative() {
             $('td').each(function () {
                 if ($(this).text().indexOf('-' + Currency) >= 0)
                     $(this).addClass('text-danger')
             });
-        
+
             $('td.colAvailable, td.colOnSO, td.colOnBO, td.colInStock, td.colOnOrder').each(function(){
                 // if(parseInt($(this).text()) == 0) $(this).addClass('neutralVolume');
                 if (parseInt($(this).text()) > 0) $(this).addClass('positiveVolume');
                 if (parseInt($(this).text()) < 0) $(this).addClass('negativeVolume');
             });
         };
-        
+
         currentProductID = templateObject.productID.get();
         let transType = data.type;
         if(currentProductID){
@@ -98,7 +98,6 @@ Template.recentTransactionTable.onCreated(() => {
                 //             }
                 //             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                 //                 .on('click', function() {
-                //                     console.log('spin');
                 //                     $('.fullScreenSpin').css('display', 'inline-block');
                 //                     let dataLenght = oSettings._iDisplayLength;
 
@@ -171,8 +170,8 @@ Template.recentTransactionTable.onCreated(() => {
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-        
-    });    
+
+    });
 });
 
 Template.recentTransactionTable.onRendered(function() {
@@ -182,7 +181,7 @@ Template.recentTransactionTable.onRendered(function() {
                 if ($(this).text().indexOf('-' + Currency) >= 0)
                     $(this).addClass('text-danger')
             });
-        
+
             $('td.colAvailable, td.colOnSO, td.colOnBO, td.colInStock, td.colOnOrder').each(function(){
                 // if(parseInt($(this).text()) == 0) $(this).addClass('neutralVolume');
                 if (parseInt($(this).text()) > 0) $(this).addClass('positiveVolume');
@@ -297,18 +296,16 @@ Template.recentTransactionTable.onRendered(function() {
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
     if(currentProductID)
     {
-        
-        
+
+
         // let transactionList = templateObject.recentTrasactions.get();
-        // console.log(recentTransList);
         // if(recentTransList && recentTransList.length > 0){
         // // drawing DataTable
-        // console.log('spin');
         // $('.fullScreenSpin').css('display', 'inline-block');
         // setTimeout(function() {
         //             //$('.fullScreenSpin').css('display', 'none');
         //             let transactionList = templateObject.recentTrasactions.get();
-                    
+
         //             $('#productrecentlist').DataTable({
         //                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         //                 data : recentTransList,
@@ -347,7 +344,6 @@ Template.recentTransactionTable.onRendered(function() {
         //                     }
         //                     $('.paginate_button.next:not(.disabled)', this.api().table().container())
         //                         .on('click', function() {
-        //                             console.log('spin');
         //                             $('.fullScreenSpin').css('display', 'inline-block');
         //                             let dataLenght = oSettings._iDisplayLength;
 
@@ -417,15 +413,14 @@ Template.recentTransactionTable.onRendered(function() {
 
         //             }).on('page', function() {}).on('column-reorder', function() {});
         //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    
-                    
-                    
+
+
+
         //         }, 0);
-        // console.log('hide');
-        
+
         // $('.fullScreenSpin').css('display', 'none');
         // }
-                
+
             }
 });
 
@@ -439,5 +434,5 @@ Template.recentTransactionTable.helpers({
         // templateObject.getAllProductRecentTransactions();
         return Template.instance().productID.get();
     },
-    
+
 });
