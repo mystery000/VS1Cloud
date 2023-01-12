@@ -271,7 +271,7 @@ Template.expenseaccountlistpop.onRendered(function() {
             });
         });
     };
-    tempObj.getAllExpenseAccounts();
+    // tempObj.getAllExpenseAccounts();
 })
 
 Template.expenseaccountlistpop.helpers({

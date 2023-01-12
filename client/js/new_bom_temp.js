@@ -437,14 +437,31 @@ Template.bom_template.onRendered(async function() {
                             })
                         }
                     } else if(FlowRouter.current().path.includes('/workordercard')){
-                        let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): []
+                        
+                        async function getWorkorders () {
+                            return new Promise(async(resolve, reject)=> {
+                                getVS1Data('TVS1Workorder').then(function(dataObject){
+                                    if(dataObject.length == 0 ) {
+                                        resolve([])
+                                    }else {
+                                        let data = JSON.parse(dataObject[0].data);
+                                        resolve(data.tvs1workorder)
+                                    }
+                                }).catch(function(e){
+                                    resolve([])
+                                })
+                            })
+                        }
+
+                        let workorders = await getWorkorders();
+
                         let index = workorders.findIndex(workorder=>{
-                            return workorder.ID == FlowRouter.current().queryParams.id;
+                            return workorder.fields.ID == FlowRouter.current().queryParams.id;
                         })
-                        objectFields= workorders[index].BOM;
-                        $('#edtMainProductName').val(objectFields.productName)
+                        objectFields= JSON.parse(workorders[index].fields.BOMStructure);
+                        $('#edtMainProductName').val(objectFields.Caption)
                         $('#edtProcess').editableSelect();
-                        $('#edtProcess').val(objectFields.process);
+                        $('#edtProcess').val(objectFields.Info);
                         $('.edtProcessNote').val(objectFields.processNote);
                         $('.edtDuration').val(objectFields.duration) || ''
                         resolve(objectFields)
