@@ -185,7 +185,7 @@ Template.new_workorder.onRendered(async function(){
                                 }else {
                                     templateObject.bomStructure.set(bomProductsTemp[index].fields)
                                 }
-                            $('#edtCustomerName').val(record.fields.Customer)
+                            $('#edtCustomerName').val(record.customer)
                             $('.fullScreenSpin').css('display', 'none');
 
                         })
@@ -805,8 +805,8 @@ Template.new_workorder.events({
                                 }
 
                                 let subDetail = {
-                                    ID: parseInt(templateObject.salesOrderId.get() + "_" + (count + k + 1).toString()),
-                                    LID: parseInt(templateObject.salesOrderId.get() + "_" + (count + k + 1).toString()),
+                                    ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                    LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                     Customer: $('#edtCustomerName').val() || '',
                                     InvoiceToDesc: $('#txabillingAddress').val() || '',
                                     PONumber: $('#ponumber').val()||'',
@@ -820,6 +820,7 @@ Template.new_workorder.events({
                                     InProgress: record.isStarted,
                                     Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
                                 }
+
 
                                 if(subs.subs&&subs.subs.length > 0) {
                                     for(let n=0; n<subs.subs.length; n++) {
@@ -944,12 +945,17 @@ Template.new_workorder.events({
         async function saveMainOrders() {
 
             let record = templateObject.workorderrecord.get();
+            let totalWorkOrders = await templateObject.getAllWorkorders();
+            let savedworkorders = totalWorkOrders.filter(order => {
+                return order.fields.SaleID == templateObject.salesOrderId.get();
+            })
+            let count = savedworkorders.length;
             let temp = cloneDeep(record);
             temp = {...temp, isStarted: true}
             templateObject.workorderrecord.set(temp);
             record = templateObject.workorderrecord.get();
             let objDetail = {
-                LID: parseInt(templateObject.salesOrderId.get() + "_" + "1"),
+                LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
                 Customer: $('#edtCustomerName').val() || '',
                 OrderTo: $('#txabillingAddress').val() || '',
                 PONumber: $('#ponumber').val()||'',
@@ -965,7 +971,7 @@ Template.new_workorder.events({
                 ProductID: record.productid,
                 Quantity: record.quantity || 1,
                 InProgress: record.isStarted,
-                ID: parseInt(templateObject.salesOrderId.get() + "_" + "1")
+                ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString()
             }
 
             // manufacturingService.saveWorkOrder({
