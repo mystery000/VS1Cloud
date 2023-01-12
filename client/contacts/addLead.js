@@ -2563,11 +2563,14 @@ Template.leadscard.events({
     "click #btnAddLine, click #btnAddLineTask": function(e) {
         let tokenid = "random";
         let currentDate = new Date();
+        let completeDate = new Date();
         currentDate = moment(currentDate).format("DD/MM/YYYY");
+        completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
             </td>
+            <td class="colDate">${currentDate}</td>
             <td class="colType">Task</td>
             <td class="colTaskName" contenteditable="true"></td>
             <td class="colTaskDesc" contenteditable="true"></td>
@@ -2604,6 +2607,7 @@ Template.leadscard.events({
                 $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             }
         });
+        $("#completeDate").datepicker("setDate", completeDate);
 
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
@@ -2631,7 +2635,7 @@ Template.leadscard.events({
         $('#contactPhoneClient').val($('#edtLeadPhone').val());
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
 
-        $(document).on("click", "#tblLeadCrmListWithDate tbody .dnd-moved .colType", function(e) {
+        $(document).on("click", "#tblLeadCrmListWithDate tbody .dnd-moved .colDate, #tblLeadCrmListWithDate tbody .dnd-moved .colType", function(e) {
             $("#edtAccountName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
             $("#txaAccountDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
             $("#taskmodalDuedate").val($("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val());

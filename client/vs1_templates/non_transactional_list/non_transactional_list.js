@@ -142,12 +142,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
             ];
-        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
             let bsbname = "Branch Code";
             if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
                 bsbname = "BSB";
             }
-            if (currenttablename == "tblAccountOverview") {
+            if (currenttablename == "tblAccountOverview" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
                     { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -516,29 +516,32 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === "tblLeadCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblCustomerCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSupplierCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSingleTouchPayroll") {
             reset_data = [
@@ -1447,23 +1450,33 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     //Accounts Overview List Data
-    templateObject.getAccountsOverviewData = async function(deleteFilter = false) {
+    templateObject.getAccountsOverviewData = async function(deleteFilter = false, typeFilter = 'all') {
         var customerpage = 0;
         getVS1Data('TAccountVS1List').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                    await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                    if(typeFilter == 'all') {
+                        await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                    }
                     templateObject.displayAccountsOverviewListData(data);
                 }).catch(function(err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayAccountsOverviewListData(data);
+                if(typeFilter != 'all') {
+                    sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                        templateObject.displayAccountsOverviewListData(data);
+                    })                
+                }else {
+                    templateObject.displayAccountsOverviewListData(data);
+                }
             }
         }).catch(function(err) {
-            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TAccountVS1List', JSON.stringify(data));
+            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                if(typeFilter == 'all') {
+                    await addVS1Data('TAccountVS1List', JSON.stringify(data));
+                }
                 templateObject.displayAccountsOverviewListData(data);
             }).catch(function(err) {
 
@@ -4487,31 +4500,29 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getBOMListData = async function() {
-        // var customerpage = 0;
-        // getVS1Data('"TProcTreeVS1"').then(function (dataObject) {
-        //     if (dataObject.length == 0) {
-        //         productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
-        //             await addVS1Data('TProcTreeVS1', JSON.stringify(data));
-        //             templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //         }).catch(function (err) {
-
-        //         });
-        //     } else {
-        //         let data = JSON.parse(dataObject[0].data);
-        //         templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //     }
-        // }).catch(function (err) {
-        //   productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
-        //       //await addVS1Data('TTermsVS1List', JSON.stringify(data));
-        //       templateObject.displayBOMListData(data); //Call this function to display data on the table
-        //   }).catch(function (err) {
-
-        //   });
-        // });
-        let bomProducts = [];
-        let tempArray = localStorage.getItem('TProcTree');
-        bomProducts = tempArray ? JSON.parse(tempArray) : [];
-        templateObject.displayBOMListData(bomProducts)
+        var customerpage = 0;
+        getVS1Data('TProcTree').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TProcTree', JSON.stringify(data));
+                    templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+                }).catch(function (err) {
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+            }
+        }).catch(function (err) {
+          productService.getAllBOMProducts(initialBaseDataLoad, 0).then(async function (data) {
+              await addVS1Data('TProcTree', JSON.stringify(data));
+              templateObject.displayBOMListData(data.tproctree); //Call this function to display data on the table
+          }).catch(function (err) {
+          });
+        });
+        // let bomProducts = [];
+        // let tempArray = localStorage.getItem('TProcTree');
+        // bomProducts = tempArray ? JSON.parse(tempArray) : [];
+        // templateObject.displayBOMListData(bomProducts)
 
     }
     templateObject.displayBOMListData = async function(bomProducts) {
@@ -4523,21 +4534,23 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < bomProducts.length; i++) {
             // for (let i = 0; i < data.tproctree.length; i++) {
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
-            let subs = bomProducts[i].fields.subs;
-            let rawName = ""
-            for (let j = 0; j < subs.length; j++) {
-                if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+            let subs = bomProducts[i].fields.Details != '' ?JSON.parse(bomProducts[i].fields.Details)||[] : [];
+            let rawName = "";
+            if(subs.length > 0) {
+                for (let j = 0; j < subs.length; j++) {
+                    if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+                }
             }
 
             var dataList = [
                 bomProducts[i].fields.ID || "1",
-                bomProducts[i].fields.productName || "", //product name -- should be changed on TProcTree
-                bomProducts[i].fields.productDescription || "",
-                bomProducts[i].fields.process || "",
-                bomProducts[i].fields.totalQtyInStock || 0,
+                bomProducts[i].fields.Caption || "", //product name -- should be changed on TProcTree
+                bomProducts[i].fields.Description || "",
+                bomProducts[i].fields.Info || "",
+                bomProducts[i].fields.TotalQtyOriginal || 0,
                 // bomProducts[i].fields.subs || [],
                 rawName || '',
-                bomProducts[i].fields.attachments.length == 0 ? 'No Attachment' : bomProducts[i].fields.attachments.length > 0 ? bomProducts[i].fields.attachments.length.toString() + " attachments" : "no attachmetns"
+                bomProducts[i].fields.Value == '' ? 'No Attachment' : JSON.parse(bomProducts[i].fields.Value).length.toString() + " attachments"
             ];
 
             splashArrayBOMList.push(dataList);
@@ -4566,7 +4579,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                         targets: 0,
-                        className: "colTermsID colID hiddenColumn",
+                        className: "colBOMID colID hiddenColumn",
                         width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -7377,8 +7390,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -7885,6 +7898,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -7915,26 +7929,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -8392,10 +8411,10 @@ Template.non_transactional_list.onRendered(function() {
 
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
-
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
+        
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
-
+        
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName(customerName).then(async function(data) {
@@ -8462,7 +8481,6 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
-                
                 for (let i = 0; i < all_records.length; i++) {
                     let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
                     due_date = new Date(due_date);
@@ -8901,6 +8919,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -8931,26 +8950,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -9095,6 +9119,12 @@ Template.non_transactional_list.onRendered(function() {
                         });
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
+
+                        $(document).on("click", "#btnRefreshList", function(e) {
+                            const datefrom = $("#dateFrom").val();
+                            const dateto = $("#dateTo").val();
+                            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+                        });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -9411,8 +9441,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]);
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]);
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -9919,6 +9949,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -9949,26 +9980,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },

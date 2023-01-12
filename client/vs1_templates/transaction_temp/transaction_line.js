@@ -88,64 +88,56 @@ Template.transaction_line.onRendered(function() {
       try {
           getVS1Data("VS1_Customize").then(function(dataObject) {
               if (dataObject.length == 0) {
-                //   sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
-                //     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                //     if(listType != 'tblBillLine'){
-                //         resetData = templateObject.init_data.get().map((item) => {
-                //             data =  reset_data.find(x => x.class == item.class);
-                //             if(data != undefined && !data.display) data.active = false;
-                //             if(data != undefined) return {...item, active: data.active, display: data.display};
-                //             return {...item, active: false, display: false};
-                //         });                       
-                //         amtEx = resetData.find(x => x.class == "AmountEx");
-                //         amtInc = resetData.find(x => x.class == "AmountInc");
-                //         unitPriceEx = resetData.find(x => x.class == "UnitPriceEx");
-                //         unitPriceInc = resetData.find(x => x.class == "UnitPriceInc");
-                //         if(amtInc && amtEx) if(amtInc.display) amtInc.active = !amtEx.active;
-                //         if(unitPriceInc && unitPriceEx) if(unitPriceEx.display) unitPriceInc.active = !unitPriceEx.active; 
+                  sideBarService.getNewCustomFieldsWithQuery(parseInt(Session.get('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                        reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;      
+                        resetData = templateObject.init_data.get().map((item) => {
+                            data =  reset_data.find(x => x.class == item.class);
+                            if(data != undefined && !data.display) data.active = false;
+                            if(data != undefined) {
+                                if(currenttranstablename == 'tblBillLine') {
+                                    if(data.class == 'UnitPriceInc' || data.class=='AmountInc') return {...item, active: false, display: true };
+                                    return {...item, active: true, display: true};
+                                }
+                                return {...item, active: data.active, display: data.display};
+                            }
+                            return {...item, active: false, display: false};
+                        });
+                        canShowBackOrder = templateObject.data.canShowBackOrder || false;
+                        canShowUOM = templateObject.data.canShowUOM || false;
+                        includeBOnShippedQty = templateObject.data.includeBOnShippedQty || false;
+                        isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking || false;
 
-                //         canShowBackOrder = templateObject.data.canShowBackOrder;
-                //         canShowUOM = templateObject.data.canShowUOM;
-                //         includeBOnShippedQty = templateObject.data.includeBOnShippedQty;
-                //         isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking;
-
-
-                //         if(!canShowBackOrder || !includeBOnShippedQty) {
-                //             ordered = resetData.find(x => x.class == "Ordered");
-                //             shipped = resetData.find(x => x.class == "Shipped");
-                //             backorder = resetData.find(x => x.class == "BackOrder");
-
-                //             if(backorder != undefined){
-                //                 resetData.find(x => x.class == "BackOrder").display = false;
-                //                 resetData.find(x => x.class == "BackOrder").active = false;
-                //             }
-                //             if(ordered != undefined){
-                //                 resetData.find(x => x.class == "Ordered").display = false;
-                //                 resetData.find(x => x.class == "Ordered").active = false;
-                //             }
-                //             if(shipped != undefined){
-                //                 resetData.find(x => x.class == "Shipped").display = false;
-                //                 resetData.find(x => x.class == "Shipped").active = false;
-                //             }
-                //         }
-                //         if(!isBatchSerialNoTracking) {
-                //             serialNo = resetData.find(x => x.class == "SerialNo");
-                //             if(serialNo != undefined){
-                //                 resetData.find(x => x.class == "SerialNo").display = false;
-                //                 resetData.find(x => x.class == "SerialNo").active = false;
-                //             }
-                //         }
-                //         if(!canShowUOM) {
-                //             units = resetData.find(x => x.class == "Units");
-                //             if(units != undefined){
-                //                 resetData.find(x => x.class == "Units").display = false;
-                //                 resetData.find(x => x.class == "Units").active = false;
-                //             }
-                //         }
-
-                //         templateObject.showCustomFieldDisplaySettings(resetData);
-                //     }
-                //   }).catch(function(err) {});
+                        if(canShowBackOrder == false || includeBOnShippedQty == false) {
+                            ordered = resetData.find(x => x.class == "Ordered");
+                            shipped = resetData.find(x => x.class == "Shipped");
+                            backorder = resetData.find(x => x.class == "BackOrder");
+                            if(backorder != undefined) backorder.display = false;                             
+                            if(ordered != undefined) ordered.display = false;
+                            if(shipped != undefined) shipped.display = false;
+                        }
+                        if(isBatchSerialNoTracking == "false" || isBatchSerialNoTracking == false) {
+                            serialNo = resetData.find(x => x.class == "SerialNo");
+                            if(serialNo != undefined) serialNo.display = false;
+                        }
+                        if(canShowUOM == false) {
+                            units = resetData.find(x => x.class == "Units");
+                            if(units != undefined) units.display = false;
+                        }
+                        if(currenttranstablename == 'tblBillLine' || currenttranstablename == 'tblCreditLine') {
+                            let x;
+                            x = resetData.find(x => x.class == 'AccountName'); {x.display = x.active = true};
+                            x = resetData.find(x => x.class == 'Memo');        {x.display = x.active = true};
+                            x = resetData.find(x => x.class == 'ProductName'); {x.display = x.active = false};
+                            x = resetData.find(x => x.class == 'Description'); {x.display = x.active = false};
+                        } else {
+                            let x;
+                            x = resetData.find(x => x.class == 'AccountName'); {x.display = x.active = false};
+                            x = resetData.find(x => x.class == 'Memo');        {x.display = x.active = false};
+                            x = resetData.find(x => x.class == 'ProductName'); {x.display = x.active = true};
+                            x = resetData.find(x => x.class == 'Description'); {x.display = x.active = true};
+                        } 
+                        templateObject.showCustomFieldDisplaySettings(resetData);              
+                  }).catch(function(err) {});
               } else {
                   let data = JSON.parse(dataObject[0].data);
                   if (data.ProcessLog.Obj.CustomLayout.length > 0) {

@@ -3386,11 +3386,14 @@ Template.supplierscard.events({
     "click #btnAddLine, click #btnAddLineTask": function(e) {
         let tokenid = "random";
         let currentDate = new Date();
+        let completeDate = new Date();
         currentDate = moment(currentDate).format("DD/MM/YYYY");
+        completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
             </td>
+            <td class="colDate">${currentDate}</td>
             <td class="colType">Task</td>
             <td class="colTaskName" contenteditable="true"></td>
             <td class="colTaskDesc" contenteditable="true"></td>
@@ -3427,6 +3430,7 @@ Template.supplierscard.events({
                 $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             }
         });
+        $("#completeDate").datepicker("setDate", completeDate);
 
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
@@ -3454,7 +3458,7 @@ Template.supplierscard.events({
         $('#contactPhoneClient').val($('#edtSupplierPhone').val());
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
 
-        $(document).on("click", "#tblSupplierCrmListWithDate tbody .dnd-moved .colType", function(e) {
+        $(document).on("click", "#tblSupplierCrmListWithDate tbody .dnd-moved .colDate, #tblSupplierCrmListWithDate tbody .dnd-moved .colType", function(e) {
             $("#edtAccountName").val($("#tblSupplierCrmListWithDate tbody .dnd-moved .colTaskName").html());
             $("#txaAccountDescription").val($("#tblSupplierCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
             $("#taskmodalDuedate").val($("#tblSupplierCrmListWithDate tbody .dnd-moved #completeDate").val());
