@@ -17,17 +17,17 @@ Template.assignLeaveTypePop.onRendered(function () {
 
 
     templateObject.getTLeaveTypes = async() => {
-        try { 
+        try {
             let data = [];
             let dataObject = await getVS1Data('TAssignLeaveType')
-            data = JSON.parse(dataObject[0].data);  
-            if (data.tassignleavetype.length > 0) { 
+            data = JSON.parse(dataObject[0].data);
+            if (data.tassignleavetype.length > 0) {
                 let useData = data.tassignleavetype;
                 templateObject.leaveTypesList.set(useData);
             }
-        } catch (err) {  
-        } 
-    } 
+        } catch (err) {
+        }
+    }
 
     templateObject.getTLeaveTypes();
 });
@@ -35,13 +35,12 @@ Template.assignLeaveTypePop.onRendered(function () {
 Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr("leavetype-id");
-        const name = $(e.currentTarget).attr("leave-type-name"); 
+        const name = $(e.currentTarget).attr("leave-type-name");
         let Hours = (e.currentTarget).attr("colALTypeOpeningBalance") ||'';
-        console.log(id, name, Hours,"------------------");
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
-        $('#edtLeaveTypeofRequest').val(name); 
-        $('#edtLeaveHours').val(Hours); 
+        $('#edtLeaveTypeofRequest').val(name);
+        $('#edtLeaveHours').val(Hours);
 
         $('#assignLeaveTypeSettingsModal').on('hidden.bs.modal', function(e) {
             // window.open("/appointments", "_self");
@@ -83,7 +82,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-        
+
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -207,7 +206,7 @@ Template.assignLeaveTypePop.onCreated(function () {
 
                             $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
                             $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-                            
+
                             $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
                             $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
                             $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
@@ -230,7 +229,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);
         $('#edtLeaveHours').val(Hours);
-        
+
         $('#assignLeaveTypeSettingsModal').modal('toggle');
     });
 
@@ -240,9 +239,9 @@ Template.assignLeaveTypePop.helpers({
     terminationBalance: (t) => {
         return t ?  'Paid Out': 'Not Paid Out';
     },
-    leaveTypesList: () => { 
+    leaveTypesList: () => {
         return Template.instance().leaveTypesList.get();
     },
 
-    
+
 })

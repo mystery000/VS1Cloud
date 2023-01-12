@@ -292,6 +292,8 @@ import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
 import './journalEntry/journalentry_list.js';
 import './manufacture/processList.js';
+import './vs1shipping/shippingoverview.js';
+import './vs1shipping/shippingdocket.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -546,6 +548,9 @@ import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
 
+/* Jeyhun */
+import './manufacture/workorderList.js';
+/* Jeyhun */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

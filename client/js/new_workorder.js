@@ -186,7 +186,7 @@ Template.new_workorder.onRendered(async function(){
                                 if(index == -1) {
                                     productService.getOneBOMProductByName(name).then(function(data){
                                         if(data.tproctree.length>0) {
-                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)
                                         }
                                     })
                                 }else {
@@ -227,7 +227,7 @@ Template.new_workorder.onRendered(async function(){
                                 if(index == -1) {
                                     productService.getOneBOMProductByName(name).then(function(data){
                                         if(data.tproctree.length>0) {
-                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)
                                         }
                                     })
                                 }else {
@@ -271,7 +271,7 @@ Template.new_workorder.onRendered(async function(){
                         if(index == -1) {
                             productService.getOneBOMProductByName(name).then(function(data){
                                 if(data.tproctree.length>0) {
-                                    templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                    templateObject.bomStructure.set(data.tproctree[0].fields)
                                 }
                             })
                         }else {
@@ -771,8 +771,8 @@ Template.new_workorder.events({
                                duration = d.tproctree[0].fields.QtyVariation
                            })
                         }
-                        
-                        
+
+
                         let subBOMStructure = {
                             Caption: subs.productName,
                             Info: subs.process,
@@ -929,7 +929,7 @@ Template.new_workorder.events({
                                             workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
                                         }
                                         addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
-                                            resolve();    
+                                            resolve();
                                         })
                                         // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                                         // resolve();
@@ -979,9 +979,7 @@ Template.new_workorder.events({
             //     type: 'TVS1Workorder',
             //     fields: objDetail
             // }).then(function(){
-            //     console.log("save workorder to erp suc")
             // }).catch(function(er) {
-            //     console.log("*************", er)
             // })
 
 
@@ -1030,7 +1028,7 @@ Template.new_workorder.events({
         let templateObject = Template.instance();
         let productName = $(event.target).closest('tr').find('input.lineProductName').val()
         let tempBOMs = templateObject.bomProducts.get();
-       
+
         $('#BOMSetupModal').modal('toggle')
     },
     'change .edtQuantity' : function(event) {
@@ -1064,7 +1062,7 @@ Template.new_workorder.helpers({
 })
 
 Template.new_workorder.events({
-   
+
 
     'click #BOMSetupModal .btn-save-bom': function(event) {
         let templateObject = Template.instance();
