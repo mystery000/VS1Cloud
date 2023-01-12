@@ -516,29 +516,32 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === "tblLeadCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblCustomerCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSupplierCrmListWithDate") {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-                { index: 1, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-                { index: 2, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-                { index: 3, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-                { index: 4, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-                { index: 5, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+                { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+                { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
             ]
         } else if (currenttablename === "tblSingleTouchPayroll") {
             reset_data = [
@@ -7885,6 +7888,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -7915,26 +7919,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -8901,6 +8910,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -8931,26 +8941,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },
@@ -9919,6 +9934,7 @@ Template.non_transactional_list.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].id || "",
+                data[i].date || "",
                 data[i].category || "",
                 data[i].taskName || "",
                 data[i].description || "",
@@ -9949,26 +9965,31 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 1,
-                        className: "colType",
+                        className: "colDate",
                         width: "15%",
                     },
                     {
                         targets: 2,
+                        className: "colType",
+                        width: "15%",
+                    },
+                    {
+                        targets: 3,
                         className: "colTaskName",
                         width: "20%",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colTaskDesc",
                         width: "35%",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCompleteTask",
                         width: "15%",
                     },

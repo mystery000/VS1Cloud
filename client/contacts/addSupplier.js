@@ -3391,6 +3391,7 @@ Template.supplierscard.events({
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
             </td>
+            <td class="colDate">${currentDate}</td>
             <td class="colType">Task</td>
             <td class="colTaskName" contenteditable="true"></td>
             <td class="colTaskDesc" contenteditable="true"></td>
@@ -3454,7 +3455,7 @@ Template.supplierscard.events({
         $('#contactPhoneClient').val($('#edtSupplierPhone').val());
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
 
-        $(document).on("click", "#tblSupplierCrmListWithDate tbody .dnd-moved .colType", function(e) {
+        $(document).on("click", "#tblSupplierCrmListWithDate tbody .dnd-moved .colDate, #tblSupplierCrmListWithDate tbody .dnd-moved .colType", function(e) {
             $("#edtAccountName").val($("#tblSupplierCrmListWithDate tbody .dnd-moved .colTaskName").html());
             $("#txaAccountDescription").val($("#tblSupplierCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
             $("#taskmodalDuedate").val($("#tblSupplierCrmListWithDate tbody .dnd-moved #completeDate").val());
