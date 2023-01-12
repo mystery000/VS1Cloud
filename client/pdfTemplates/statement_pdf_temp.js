@@ -1,15 +1,10 @@
 import { ContactService } from "../contacts/contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
 import { UtilityService } from "../utility-service";
 import { Random } from 'meteor/random';
 import { SideBarService } from '../js/sidebar-service';
-import {OrganisationService} from '../js/organisation-service';
 import '../lib/global/indexdbstorage.js';
-import { jsPDF } from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
-import { autoTable } from 'jspdf-autotable';
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './statement_pdf_temp.html';
 let sideBarService = new SideBarService();

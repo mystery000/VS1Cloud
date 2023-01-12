@@ -1,13 +1,9 @@
 import { PurchaseBoardService } from "../js/purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
-import { CoreService } from "../js/core-service";
-import { EmployeeProfileService } from "../js/profile-service";
-import draggableCharts from "../js/Charts/draggableCharts";
 import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { PaymentsService } from "../payments/payments-service";
 import { SideBarService } from "../js/sidebar-service";
-import {OrganisationService} from '../js/organisation-service';
 import "../lib/global/indexdbstorage.js";
 
 import { Template } from 'meteor/templating';

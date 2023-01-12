@@ -1,12 +1,9 @@
 import {PurchaseBoardService} from '../js/purchase-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
 import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import {OrganisationService} from '../js/organisation-service';
 import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
 import LoadingOverlay from '../LoadingOverlay';
