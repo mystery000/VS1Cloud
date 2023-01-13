@@ -1,6 +1,9 @@
 import "jQuery.print/jQuery.print.js";
 import {UtilityService} from "../../utility-service";
 import {SideBarService} from "../../js/sidebar-service"; 
+
+import './employeeLeave.html';
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
