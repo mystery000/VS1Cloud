@@ -1662,7 +1662,7 @@ Template.organisationsettings.events({
       $("#chkusregiontax").prop("checked", false);
       swal(
         "Ooops...",
-        "Can't alter country as the entire VS1 Database are set to this region.",
+        "Can't Alter Country Once the Database Is Set.",
         "error"
       );
       $(event.target).val("United States");
