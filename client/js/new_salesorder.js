@@ -3,7 +3,6 @@ import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
-import {OrganisationService} from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
@@ -24,7 +23,6 @@ import CachedHttp from '../lib/global/CachedHttp';
 import erpObject from '../lib/global/erp-objects';
 import GlobalFunctions from '../GlobalFunctions';
 import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line';
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import '../salesorder/frm_salesorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -12793,13 +12791,13 @@ Template.new_salesorder.events({
               var arrSelectDays = selectDays.split(",");
               for (i=0; i<arrSelectDays.length; i++) {
                 if (parseInt(arrSelectDays[i]) == 0)
-                  $("#formCheck-sunday").prop('checked', true);
+                  $("#formCheck-sunday").prop('checked', false);
                 if (parseInt(arrSelectDays[i]) == 1)
                   $("#formCheck-monday").prop('checked', true);
                 if (parseInt(arrSelectDays[i]) == 2)
                   $("#formCheck-tuesday").prop('checked', true);
                 if (parseInt(arrSelectDays[i]) == 3)
-                  $("#formCheck-wednesday").prop('checked', true);
+                  $("#formCheck-wednesday").prop('checked', false);
                 if (parseInt(arrSelectDays[i]) == 4)
                   $("#formCheck-thursday").prop('checked', true);
                 if (parseInt(arrSelectDays[i]) == 5)

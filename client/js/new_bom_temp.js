@@ -122,7 +122,7 @@ Template.bom_template.onRendered(async function() {
 
         let objectFields = await getObjectFields();
         templateObject.initialRecord.set(objectFields)
-        if (objectFields.Value != '' && JSON.parse(objectFields.Value).length > 0) {
+        if (objectFields.Value && objectFields.Value != '' && JSON.parse(objectFields.Value).length > 0) {
             let productContents = $('.product-content')
             $(productContents[0]).find('.attachedFiles').text(JSON.stringify({totalAttachments: objectFields.attachments.length, uploadedFilesArray: objectFields.attachments}))
             let modalId = $('#myModalAttachment.modal').attr('id');
@@ -462,8 +462,8 @@ Template.bom_template.onRendered(async function() {
                         $('#edtMainProductName').val(objectFields.Caption)
                         $('#edtProcess').editableSelect();
                         $('#edtProcess').val(objectFields.Info);
-                        $('.edtProcessNote').val(objectFields.processNote);
-                        $('.edtDuration').val(objectFields.duration) || ''
+                        $('.edtProcessNote').val(objectFields.CustomInputClass);
+                        $('.edtDuration').val(objectFields.QtyVariation) || ''
                         resolve(objectFields)
                     }
                 } else {

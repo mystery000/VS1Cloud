@@ -4,10 +4,8 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import { OrganisationService } from "../js/organisation-service";
-let organisationService = new OrganisationService;
+
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './leadlist.html';
