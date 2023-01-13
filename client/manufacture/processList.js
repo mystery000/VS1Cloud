@@ -1,13 +1,4 @@
-import {SalesBoardService} from '../js/sales-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
-import {AccountService} from "../accounts/account-service";
-import {InvoiceService} from "../invoice/invoice-service";
-import {UtilityService} from "../utility-service";
-import { SideBarService } from '../js/sidebar-service';
-import {OrganisationService} from '../js/organisation-service';
-import { ManufacturingService } from './manufacturing-service';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
@@ -15,9 +6,6 @@ import { Template } from 'meteor/templating';
 import './processList.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-let manufacturingService = new ManufacturingService();
 Template.processList.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -801,7 +789,6 @@ Template.processList.events({
 
     'click .saveTable' : function(event) {
         let lineItems = [];
-        let organisationService = new OrganisationService();
         let listType = 'ltProcessList';
 
         $(".fullScreenSpin").css("display", "inline-block");

@@ -6,8 +6,8 @@
                   <div class="modal-header">
                       <h5 class="modal-title"><span class="headerprogressLabel">Hi <span class="first-name-label"></span>, just loading your company information on your device.</span></h5>
                       <script>
-                          // let loggedEmployeedName = localStorage.getItem('vs1LoggedEmployeeName').split(" ");
-                          // $(".first-name-label").html(loggedEmployeedName[0] || '');
+                          let loggedEmployeedName = localStorage.getItem('vs1LoggedEmployeeName').split(" ");
+                          $(".first-name-label").html(loggedEmployeedName[0] || '');
                       </script>
                       <i class="fas fa-spinner fa-pulse" style="font-size: 16px; margin-top: 6px;"></i>
                   </div>

@@ -1,25 +1,18 @@
 import {ReactiveVar} from "meteor/reactive-var";
 import moment from "moment";
-import {AccountService} from "../../accounts/account-service";
 import Datehandler from "../../DateHandler";
 import GlobalFunctions from "../../GlobalFunctions";
-import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
 import TableHandler from "../../js/Table/TableHandler";
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
-import {UtilityService} from "../../utility-service";
 
 import { Template } from 'meteor/templating';
 import './SelectPayCalendar.html';
 
-let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-let accountService = new AccountService();
-let taxRateService = new TaxRateService();
-let organisationService = new OrganisationService();
 
 Template.SelectPayCalendar.onCreated(function () {
   const templateObject = Template.instance();

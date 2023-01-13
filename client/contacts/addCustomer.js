@@ -80,7 +80,7 @@ Template.customerscard.onRendered(function() {
     const contactService = new ContactService();
     const countryService = new CountryService();
     const paymentService = new PaymentsService();
-    
+
     let countries = [];
 
     let preferredPayments = [];
@@ -2131,6 +2131,7 @@ Template.customerscard.onRendered(function() {
             }
 
             function editableTerms(e, $each, offset, termsDataName) {
+                console.log("modal here========");
                 $('#edtTermsID').val('');
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     $('#termsListModal').modal('toggle');
@@ -2429,7 +2430,7 @@ Template.customerscard.onRendered(function() {
                 const taxRateDataName = e.target.value || '';
                 editableTaxCode(e, $each, offset, taxRateDataName);
             });
-        }, 1200);
+        }, 5000);
     });
 
     $(document).on('click', '#editCustomerTitle', function(e, li) {
@@ -4807,7 +4808,6 @@ Template.customerscard.events({
         let completeDate = new Date();
         currentDate = moment(currentDate).format("DD/MM/YYYY");
         completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
-        console.log("completeDate=", completeDate);
 
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
@@ -4851,7 +4851,7 @@ Template.customerscard.events({
             }
         });
         $("#completeDate").datepicker("setDate", completeDate);
-        
+
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
 
@@ -4862,7 +4862,7 @@ Template.customerscard.events({
         $("#addProjectID").val("");
         $("#contactID").val("");
         $('#assignedID').val("");
-        
+
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
@@ -4870,7 +4870,7 @@ Template.customerscard.events({
         if (getemp_id[1]) {
             TCustomerID = parseInt(currentEmployee);
         }
-        
+
         $("#contactID").val(TCustomerID);
         $('#contactType').val('Customer')
         $('#crmEditSelectLeadList').val($('#edtCustomerCompany').val());
@@ -4896,7 +4896,7 @@ Template.customerscard.events({
         $(event.target).closest("tr").remove();
         $(".btnAddLineGroup button").attr("disabled", false);
         $(".btnCustomerTask").attr("disabled", false);
-        event.preventDefault();        
+        event.preventDefault();
     },
 });
 

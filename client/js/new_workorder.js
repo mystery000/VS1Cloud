@@ -3,23 +3,17 @@ import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
-import {OrganisationService} from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import {Random} from 'meteor/random';
-import {jsPDF} from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
 import 'jquery-editable-select';
 import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
-import { TaxRateService } from "../settings/settings-service";
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import '../manufacture/frm_workorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import { ManufacturingService } from '../manufacture/manufacturing-service';
 import { cloneDeep } from 'lodash';
 
 let sideBarService = new SideBarService();
@@ -27,7 +21,6 @@ let utilityService = new UtilityService();
 let accountService = new SalesBoardService();
 let productService = new ProductService();
 let contactService = new ContactService();
-let manufacturingService = new ManufacturingService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -186,13 +179,13 @@ Template.new_workorder.onRendered(async function(){
                                 if(index == -1) {
                                     productService.getOneBOMProductByName(name).then(function(data){
                                         if(data.tproctree.length>0) {
-                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)
                                         }
                                     })
                                 }else {
                                     templateObject.bomStructure.set(bomProductsTemp[index].fields)
                                 }
-                            $('#edtCustomerName').val(record.fields.Customer)
+                            $('#edtCustomerName').val(record.customer)
                             $('.fullScreenSpin').css('display', 'none');
 
                         })
@@ -227,7 +220,7 @@ Template.new_workorder.onRendered(async function(){
                                 if(index == -1) {
                                     productService.getOneBOMProductByName(name).then(function(data){
                                         if(data.tproctree.length>0) {
-                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)
                                         }
                                     })
                                 }else {
@@ -271,7 +264,7 @@ Template.new_workorder.onRendered(async function(){
                         if(index == -1) {
                             productService.getOneBOMProductByName(name).then(function(data){
                                 if(data.tproctree.length>0) {
-                                    templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                    templateObject.bomStructure.set(data.tproctree[0].fields)
                                 }
                             })
                         }else {
@@ -771,8 +764,8 @@ Template.new_workorder.events({
                                duration = d.tproctree[0].fields.QtyVariation
                            })
                         }
-                        
-                        
+
+
                         let subBOMStructure = {
                             Caption: subs.productName,
                             Info: subs.process,
@@ -812,8 +805,8 @@ Template.new_workorder.events({
                                 }
 
                                 let subDetail = {
-                                    ID: parseInt(templateObject.salesOrderId.get() + "_" + (count + k + 1).toString()),
-                                    LID: parseInt(templateObject.salesOrderId.get() + "_" + (count + k + 1).toString()),
+                                    ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                    LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                     Customer: $('#edtCustomerName').val() || '',
                                     InvoiceToDesc: $('#txabillingAddress').val() || '',
                                     PONumber: $('#ponumber').val()||'',
@@ -827,6 +820,7 @@ Template.new_workorder.events({
                                     InProgress: record.isStarted,
                                     Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
                                 }
+
 
                                 if(subs.subs&&subs.subs.length > 0) {
                                     for(let n=0; n<subs.subs.length; n++) {
@@ -929,7 +923,7 @@ Template.new_workorder.events({
                                             workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
                                         }
                                         addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
-                                            resolve();    
+                                            resolve();
                                         })
                                         // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                                         // resolve();
@@ -951,12 +945,17 @@ Template.new_workorder.events({
         async function saveMainOrders() {
 
             let record = templateObject.workorderrecord.get();
+            let totalWorkOrders = await templateObject.getAllWorkorders();
+            let savedworkorders = totalWorkOrders.filter(order => {
+                return order.fields.SaleID == templateObject.salesOrderId.get();
+            })
+            let count = savedworkorders.length;
             let temp = cloneDeep(record);
             temp = {...temp, isStarted: true}
             templateObject.workorderrecord.set(temp);
             record = templateObject.workorderrecord.get();
             let objDetail = {
-                LID: parseInt(templateObject.salesOrderId.get() + "_" + "1"),
+                LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
                 Customer: $('#edtCustomerName').val() || '',
                 OrderTo: $('#txabillingAddress').val() || '',
                 PONumber: $('#ponumber').val()||'',
@@ -972,16 +971,14 @@ Template.new_workorder.events({
                 ProductID: record.productid,
                 Quantity: record.quantity || 1,
                 InProgress: record.isStarted,
-                ID: parseInt(templateObject.salesOrderId.get() + "_" + "1")
+                ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString()
             }
 
             // manufacturingService.saveWorkOrder({
             //     type: 'TVS1Workorder',
             //     fields: objDetail
             // }).then(function(){
-            //     console.log("save workorder to erp suc")
             // }).catch(function(er) {
-            //     console.log("*************", er)
             // })
 
 
@@ -1030,7 +1027,7 @@ Template.new_workorder.events({
         let templateObject = Template.instance();
         let productName = $(event.target).closest('tr').find('input.lineProductName').val()
         let tempBOMs = templateObject.bomProducts.get();
-       
+
         $('#BOMSetupModal').modal('toggle')
     },
     'change .edtQuantity' : function(event) {
@@ -1064,7 +1061,7 @@ Template.new_workorder.helpers({
 })
 
 Template.new_workorder.events({
-   
+
 
     'click #BOMSetupModal .btn-save-bom': function(event) {
         let templateObject = Template.instance();

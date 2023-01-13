@@ -2,15 +2,14 @@
     <script>
         $(document).ready(function() {
             localStorage.removeItem("enteredURL");
-
-            if(!sessionStorage.getItem("pageLoaded")){
-                // localStorage.clear();
+            if(sessionStorage.getItem("pageLoaded") != "true"){
+                localStorage.clear();
                 window.open('/','_self');
             }
         })
         window.addEventListener("beforeunload", function (e) {
-            if(!sessionStorage.getItem("pageLoaded")){
-                localStorage.clear();
+            if(sessionStorage.getItem("pageLoaded") != "true"){
+                // localStorage.clear();
             }
             window.removeEventListener("beforeunload");
             // if (!JSON.parse(localStorage.getItem("isFormUpdated"))) {

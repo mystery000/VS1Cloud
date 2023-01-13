@@ -84,6 +84,7 @@ import './route.js';
 
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
+// import "../lib/global/indexdbstorage.js";
 // import '/imports/startup/client';
 // Transaction Header and Footer
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
@@ -292,12 +293,19 @@ import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
 import './journalEntry/journalentry_list.js';
 import './manufacture/processList.js';
+import './vs1shipping/shippingoverview.js';
+import './vs1shipping/shippingdocket.js';
 /* Tinyiko */
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import 'datatables.net-responsive-bs4';
+import './lib/global/globalShipping.js';
 /* Rasheed */
+
+/* Jeyhun */
+import './manufacture/workorderList.js';
+/* Jeyhun */
 
 /* DevTop/Dev Pioneer */
 import './vs1_templates/report/accountant_header.js';
@@ -411,6 +419,8 @@ import './contacts/leadlist.js';
 import './contacts/employeelist.js';
 import './contacts/addemployeepop.js';
 import './packages/currency/currencydropdown.js';
+
+
 import './accesslevel/accessleveldup.js';
 import './accesslevel/companyappsettingsdup.js';
 import './accesslevel/companyappsettings.js';
@@ -545,7 +555,6 @@ import './eft/exportModal/eftExportModal.js';
 import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
 /* XiaoJang*/
-
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
