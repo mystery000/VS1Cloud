@@ -1,7 +1,8 @@
 import "jQuery.print/jQuery.print.js";
 import {UtilityService} from "../../utility-service";
-import {SideBarService} from "../../js/sidebar-service"; 
-
+import {SideBarService} from "../../js/sidebar-service";
+import { Template } from "meteor/templating";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import './employeeLeave.html';
 
 let utilityService = new UtilityService();
@@ -28,7 +29,7 @@ Template.employeeLeave.onRendered(() => {
 	}
 
 	function setChart(data){
-		let clockedOnEmpList = []; 
+		let clockedOnEmpList = [];
 		let max = {};
 		let max_tmp = 0;
 
@@ -72,7 +73,7 @@ Template.employeeLeave.onRendered(() => {
 		}
 
 		empName.reverse();
-		empClockedCount.reverse(); 
+		empClockedCount.reverse();
 
 		var ctx = document.getElementById("employeeLeavechart").getContext("2d");
 		var myChart = new Chart(ctx, {
@@ -182,14 +183,14 @@ Template.employeeLeave.onRendered(() => {
 			} else {
 				setTimeout(function () {
 					let data = JSON.parse(dataObject[0].data);
-					setChart(data); 
+					setChart(data);
 				}, 0);
 				setFullScreenSpin();
 			}
 		}).catch(function (err) {
 			sideBarService.getAllTimeSheetList().then(function (data) {
 				setTimeout(function () {
-					setChart(data); 
+					setChart(data);
 				}, 0);
 				setFullScreenSpin();
 			}).catch(function (err) {

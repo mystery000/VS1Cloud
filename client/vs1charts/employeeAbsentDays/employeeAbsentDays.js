@@ -1,8 +1,9 @@
 import "jQuery.print/jQuery.print.js";
 import {UtilityService} from "../../utility-service";
-import {SideBarService} from "../../js/sidebar-service"; 
-
+import {SideBarService} from "../../js/sidebar-service";
+import { Template } from "meteor/templating";
 import './employeeAbsentDays.html';
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -28,7 +29,7 @@ Template.employeeAbsentDays.onRendered(() => {
 	}
 
 	function setChart(data){
-		let clockedOnEmpList = []; 
+		let clockedOnEmpList = [];
 		let max = {};
 		let max_tmp = 0;
 
@@ -71,7 +72,7 @@ Template.employeeAbsentDays.onRendered(() => {
 		}
 
 		empName.reverse();
-		empClockedCount.reverse(); 
+		empClockedCount.reverse();
 
 		var ctx = document.getElementById("employeeAbsentDayschart").getContext("2d");
 		var myChart = new Chart(ctx, {
@@ -181,14 +182,14 @@ Template.employeeAbsentDays.onRendered(() => {
 			} else {
 				setTimeout(function () {
 					let data = JSON.parse(dataObject[0].data);
-					setChart(data); 
+					setChart(data);
 				}, 0);
 				setFullScreenSpin();
 			}
 		}).catch(function (err) {
 			sideBarService.getAllTimeSheetList().then(function (data) {
 				setTimeout(function () {
-					setChart(data); 
+					setChart(data);
 				}, 0);
 				setFullScreenSpin();
 			}).catch(function (err) {
