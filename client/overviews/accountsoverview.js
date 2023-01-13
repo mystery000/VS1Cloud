@@ -1,6 +1,4 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { CoreService } from "../js/core-service.js";
-import { EmployeeProfileService } from "../js/profile-service.js";
 import { AccountService } from "../accounts/account-service.js";
 import { UtilityService } from "../utility-service.js";
 import { ProductService } from "../product/product-service.js";
@@ -17,7 +15,6 @@ import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
-let organisationService = new OrganisationService();
 Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();

@@ -18,6 +18,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './addCustomer.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { subtract } from "lodash";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -79,7 +80,7 @@ Template.customerscard.onRendered(function() {
     const contactService = new ContactService();
     const countryService = new CountryService();
     const paymentService = new PaymentsService();
-    
+
     let countries = [];
 
     let preferredPayments = [];
@@ -2130,6 +2131,7 @@ Template.customerscard.onRendered(function() {
             }
 
             function editableTerms(e, $each, offset, termsDataName) {
+                console.log("modal here========");
                 $('#edtTermsID').val('');
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     $('#termsListModal').modal('toggle');
@@ -2428,7 +2430,7 @@ Template.customerscard.onRendered(function() {
                 const taxRateDataName = e.target.value || '';
                 editableTaxCode(e, $each, offset, taxRateDataName);
             });
-        }, 1200);
+        }, 5000);
     });
 
     $(document).on('click', '#editCustomerTitle', function(e, li) {
@@ -4803,7 +4805,10 @@ Template.customerscard.events({
     "click #btnAddLine, click #btnAddLineTask": function(e) {
         let tokenid = "random";
         let currentDate = new Date();
+        let completeDate = new Date();
         currentDate = moment(currentDate).format("DD/MM/YYYY");
+        completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
+
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}
@@ -4845,9 +4850,12 @@ Template.customerscard.events({
                 $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
             }
         });
+        $("#completeDate").datepicker("setDate", completeDate);
 
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
+
+        $("#"+tokenid+" .colTaskName").focus();
 
         $("#frmEditTaskModal")[0].reset();
         $("#txtCrmTaskID").val("");
@@ -4856,7 +4864,7 @@ Template.customerscard.events({
         $("#addProjectID").val("");
         $("#contactID").val("");
         $('#assignedID').val("");
-        
+
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
@@ -4864,7 +4872,7 @@ Template.customerscard.events({
         if (getemp_id[1]) {
             TCustomerID = parseInt(currentEmployee);
         }
-        
+
         $("#contactID").val(TCustomerID);
         $('#contactType').val('Customer')
         $('#crmEditSelectLeadList').val($('#edtCustomerCompany').val());
@@ -4884,13 +4892,24 @@ Template.customerscard.events({
             $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html($("#txaAccountDescription").val());
             $("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
         });
+
+        $(document).on("focusout", "#"+tokenid+" .colTaskName, #"+tokenid+" .colTaskDesc, #"+tokenid+" .colCompletedBy", function(e) {
+            $("#edtAccountName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
+            $("#txaAccountDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+            $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
+            if($("#"+tokenid+" .colTaskName").html() != "" && $("#"+tokenid+" .colTaskDesc").html() != "" && $("#"+tokenid+" #completeDate").val() != ""){
+                $(".btnSaveEditTask").trigger("click");
+                $(".btnAddLineGroup button").attr("disabled", false);
+                $(".btnCustomerTask").attr("disabled", false);
+            }
+        });
     },
     "click .btnRemoveLine": function(event) {
         var targetID = $(event.target).closest("tr").attr("id");
         $(event.target).closest("tr").remove();
         $(".btnAddLineGroup button").attr("disabled", false);
         $(".btnCustomerTask").attr("disabled", false);
-        event.preventDefault();        
+        event.preventDefault();
     },
 });
 

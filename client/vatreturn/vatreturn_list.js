@@ -34,7 +34,7 @@ Template.vatreturnlist.onCreated(function() {
 });
 
 Template.vatreturnlist.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     const dataTableList = [];
     const tableHeaderList = [];
@@ -55,516 +55,529 @@ Template.vatreturnlist.onRendered(function() {
         });
     };
 
-    templateObject.getAllVatReturnData = function() {
-        getVS1Data('TVATReturn').then(function(dataObject) {
-            let userdata = JSON.parse(dataObject[0].data) || [];
-            userdata = userdata.tvatreturns || [];
-            if (userdata.length == 0) {
-                reportService.getAllVATReturn().then(function(data) {
-                    addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
-                    for (let i = 0; i < data.tvatreturns.length; i++) {
-                        let tab1startDate = "";
-                        let tab1endDate = "";
-                        let tab2startDate = "";
-                        let tab2endDate = "";
-                        let tab3startDate = "";
-                        let tab3endDate = "";
-                        let tab4startDate = "";
-                        let tab4endDate = "";
-                        if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                            tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
-                            var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
-                            tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                            tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                        }
-                        if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
-                            var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
-                            tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                            tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                        }
-                        if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                            tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
-                            var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
-                            tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                            tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                        }
+    // templateObject.getAllVatReturnData = function() {
+    //     getVS1Data('TVATReturn').then(function(dataObject) {
+    //         let userdata = JSON.parse(dataObject[0].data) || [];
+    //         userdata = userdata.tvatreturns || [];
+    //         if (userdata.length == 0) {
+    //             reportService.getAllVATReturn().then(function(data) {
+    //                 addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+    //                 for (let i = 0; i < data.tvatreturns.length; i++) {
+    //                     let tab1startDate = "";
+    //                     let tab1endDate = "";
+    //                     let tab2startDate = "";
+    //                     let tab2endDate = "";
+    //                     let tab3startDate = "";
+    //                     let tab3endDate = "";
+    //                     let tab4startDate = "";
+    //                     let tab4endDate = "";
+    //                     if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+    //                         tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+    //                         var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+    //                         tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+    //                         tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+    //                     }
+    //                     if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+    //                         tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+    //                         var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+    //                         tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+    //                         tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+    //                     }
+    //                     if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+    //                         tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+    //                         var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+    //                         tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+    //                         tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+    //                     }
 
-                        var dataList = {
-                            basnumber: data.tvatreturn[i].fields.ID || '',
-                            description: data.tvatreturn[i].fields.BasSheetDesc || '',
-                            tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
-                            tab1startDate: tab1startDate,
-                            tab1endDate: tab1endDate,
-                            tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
-                            tab2startDate: tab2startDate,
-                            tab2endDate: tab2endDate,
-                            tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
-                            tab3startDate: tab3startDate,
-                            tab3endDate: tab3endDate,
-                        };
-                        dataTableList.push(dataList);
-                    }
-                    templateObject.datatablerecords.set(dataTableList);
-                    $('.fullScreenSpin').css('display', 'none');
-                    setTimeout(function() {
-                        //$.fn.dataTable.moment('DD/MM/YY');
-                        $('#tblVATReturnList').DataTable({
-                            // dom: 'lBfrtip',
-                            columnDefs: [
-                                { type: 'basnumber', targets: 0 }
-                            ],
-                            "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [{
-                                extend: 'excelHtml5',
-                                text: '',
-                                title: 'VAT Return List',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "vatreturnlist_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'VAT Return List',
-                                filename: "vatreturnlist_" + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            // bStateSave: true,
-                            // rowId: 0,
-                            pageLength: initialDatatableLoad,
-                            "bLengthChange": false,
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [0, "desc"],
-                                // [2, "desc"]
-                            ],
-                            // "aaSorting": [[1,'desc']],
-                            action: function() {
-                                $('#tblVATReturnList').DataTable().ajax.reload();
-                            },
-                            "fnInitComplete": function() {
-                                this.fnPageChange('last');
-                                // if (data.Params.Search.replace(/\s/g, "") == "") {
-                                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                                // } else {
-                                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                                // }
-                                $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
-                                $('.myvarFilterForm').appendTo(".colDateFilter");
-                            },
-                            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                                let countTableData = data.length || 0; //get count from API data
+    //                     var dataList = {
+    //                         basnumber: data.tvatreturn[i].fields.ID || '',
+    //                         description: data.tvatreturn[i].fields.BasSheetDesc || '',
+    //                         tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+    //                         tab1startDate: tab1startDate,
+    //                         tab1endDate: tab1endDate,
+    //                         tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
+    //                         tab2startDate: tab2startDate,
+    //                         tab2endDate: tab2endDate,
+    //                         tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
+    //                         tab3startDate: tab3startDate,
+    //                         tab3endDate: tab3endDate,
+    //                     };
+    //                     dataTableList.push(dataList);
+    //                 }
+    //                 templateObject.datatablerecords.set(dataTableList);
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //                 setTimeout(function() {
+    //                     //$.fn.dataTable.moment('DD/MM/YY');
+    //                     $('#tblVATReturnList').DataTable({
+    //                         // dom: 'lBfrtip',
+    //                         columnDefs: [
+    //                             { type: 'basnumber', targets: 0 }
+    //                         ],
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         buttons: [{
+    //                             extend: 'excelHtml5',
+    //                             text: '',
+    //                             title: 'VAT Return List',
+    //                             download: 'open',
+    //                             className: "btntabletocsv hiddenColumn",
+    //                             filename: "vatreturnlist_" + moment().format(),
+    //                             orientation: 'portrait',
+    //                             exportOptions: {
+    //                                 columns: ':visible'
+    //                             }
+    //                         }, {
+    //                             extend: 'print',
+    //                             download: 'open',
+    //                             className: "btntabletopdf hiddenColumn",
+    //                             text: '',
+    //                             title: 'VAT Return List',
+    //                             filename: "vatreturnlist_" + moment().format(),
+    //                             exportOptions: {
+    //                                 columns: ':visible'
+    //                             }
+    //                         }],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //                         // bStateSave: true,
+    //                         // rowId: 0,
+    //                         pageLength: initialDatatableLoad,
+    //                         "bLengthChange": false,
+    //                         info: true,
+    //                         responsive: true,
+    //                         "order": [
+    //                             [0, "desc"],
+    //                             // [2, "desc"]
+    //                         ],
+    //                         // "aaSorting": [[1,'desc']],
+    //                         action: function() {
+    //                             $('#tblVATReturnList').DataTable().ajax.reload();
+    //                         },
+    //                         "fnInitComplete": function() {
+    //                             this.fnPageChange('last');
+    //                             // if (data.Params.Search.replace(/\s/g, "") == "") {
+    //                             //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+    //                             // } else {
+    //                             //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+    //                             // }
+    //                             $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
+    //                             $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                         },
+    //                         "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                             let countTableData = data.length || 0; //get count from API data
 
-                                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                            }
+    //                             return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+    //                         }
 
-                        }).on('page', function() {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function() {
+    //                     }).on('page', function() {
+    //                         setTimeout(function() {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                         let draftRecord = templateObject.datatablerecords.get();
+    //                         templateObject.datatablerecords.set(draftRecord);
+    //                     }).on('column-reorder', function() {
 
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 1000);
+    //                     });
+    //                     $('.fullScreenSpin').css('display', 'none');
+    //                 }, 1000);
 
-                    var columns = $('#tblVATReturnList th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if ((v.className.includes("hiddenColumn"))) {
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
+    //                 var columns = $('#tblVATReturnList th');
+    //                 let sTible = "";
+    //                 let sWidth = "";
+    //                 let sIndex = "";
+    //                 let sVisible = "";
+    //                 let columVisible = false;
+    //                 let sClass = "";
+    //                 $.each(columns, function(i, v) {
+    //                     if (v.hidden == false) {
+    //                         columVisible = true;
+    //                     }
+    //                     if ((v.className.includes("hiddenColumn"))) {
+    //                         columVisible = false;
+    //                     }
+    //                     sWidth = v.style.width.replace('px', "");
 
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.id || '',
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('#tblVATReturnList tbody').on('click', 'tr', function() {
-                        var listData = $(this).closest('tr').attr('id');
-                        var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+    //                     let datatablerecordObj = {
+    //                         sTitle: v.innerText || '',
+    //                         sWidth: sWidth || '',
+    //                         sIndex: v.id || '',
+    //                         sVisible: columVisible || false,
+    //                         sClass: v.className || ''
+    //                     };
+    //                     tableHeaderList.push(datatablerecordObj);
+    //                 });
+    //                 templateObject.tableheaderrecords.set(tableHeaderList);
+    //                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                 $('#tblVATReturnList tbody').on('click', 'tr', function() {
+    //                     var listData = $(this).closest('tr').attr('id');
+    //                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
-                        if (listData) {
-                            if (checkDeleted == "Deleted") {
-                                swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                            } else {
-                                FlowRouter.go('/vatreturn?id=' + listData);
-                            }
-                        }
-                    });
-                }).catch(function(err) {
-                    console.error(err);
-                    $('.fullScreenSpin').css('display', 'none');
-                });
+    //                     if (listData) {
+    //                         if (checkDeleted == "Deleted") {
+    //                             swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+    //                         } else {
+    //                             FlowRouter.go('/vatreturn?id=' + listData);
+    //                         }
+    //                     }
+    //                 });
+    //             }).catch(function(err) {
+    //                 console.error(err);
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             });
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             for (let i = 0; i < data.tvatreturns.length; i++) {
+    //                 let tab1startDate = "";
+    //                 let tab1endDate = "";
+    //                 let tab2startDate = "";
+    //                 let tab2endDate = "";
+    //                 let tab3startDate = "";
+    //                 let tab3endDate = "";
+    //                 if (data.tvatreturns[i].fields.Tab1_Year > 0 && data.tvatreturns[i].fields.Tab1_Month != "") {
+    //                     tab1startDate = data.tvatreturns[i].fields.Tab1_Year + "-" + months[data.tvatreturns[i].fields.Tab1_Month] + "-01";
+    //                     var endMonth = (data.tvatreturns[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1_Month]);
+    //                     tab1endDate = new Date(data.tvatreturns[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+    //                     tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+    //                 }
+    //                 if (data.tvatreturns[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+    //                     tab2startDate = data.tvatreturns[i].fields.Tab2_Year + "-" + months[data.tvatreturns[i].fields.Tab2_Month] + "-01";
+    //                     var endMonth = (data.tvatreturns[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2_Month]);
+    //                     tab2endDate = new Date(data.tvatreturns[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+    //                     tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+    //                 }
+    //                 if (data.tvatreturns[i].fields.Tab3_Year > 0 && data.tvatreturns[i].fields.Tab3_Month != "") {
+    //                     tab3startDate = data.tvatreturns[i].fields.Tab3_Year + "-" + months[data.tvatreturns[i].fields.Tab3_Month] + "-01";
+    //                     var endMonth = (data.tvatreturns[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3_Month]);
+    //                     tab3endDate = new Date(data.tvatreturns[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+    //                     tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+    //                 }
+    //                 var dataList = {
+    //                     basnumber: data.tvatreturns[i].fields.ID || '',
+    //                     description: data.tvatreturns[i].fields.BasSheetDesc || '',
+    //                     tab1datemethod: data.tvatreturns[i].fields.Tab1_Type,
+    //                     tab1startDate: tab1startDate,
+    //                     tab1endDate: tab1endDate,
+    //                     tab2datemethod: data.tvatreturns[i].fields.Tab2_Type,
+    //                     tab2startDate: tab2startDate,
+    //                     tab2endDate: tab2endDate,
+    //                     tab3datemethod: data.tvatreturns[i].fields.Tab3_Type,
+    //                     tab3startDate: tab3startDate,
+    //                     tab3endDate: tab3endDate,
+    //                 };
+    //                 dataTableList.push(dataList);
+    //             }
+    //             templateObject.datatablerecords.set(dataTableList);
+
+    //             if (templateObject.datatablerecords.get()) {
+
+    //                 setTimeout(function() {
+    //                     MakeNegative();
+    //                 }, 100);
+    //             }
+
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             setTimeout(function() {
+    //                 //$.fn.dataTable.moment('DD/MM/YY');
+    //                 $('#tblVATReturnList').DataTable({
+    //                     // dom: 'lBfrtip',
+    //                     columnDefs: [
+    //                         { type: 'vatnumber', targets: 0 }
+    //                     ],
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     buttons: [{
+    //                         extend: 'excelHtml5',
+    //                         text: '',
+    //                         title: 'VAT Return List',
+    //                         download: 'open',
+    //                         className: "btntabletocsv hiddenColumn",
+    //                         filename: "vatreturnlist_" + moment().format(),
+    //                         orientation: 'portrait',
+    //                         exportOptions: {
+    //                             columns: ':visible'
+    //                         }
+    //                     }, {
+    //                         extend: 'print',
+    //                         download: 'open',
+    //                         className: "btntabletopdf hiddenColumn",
+    //                         text: '',
+    //                         title: 'VAT Return List',
+    //                         filename: "vatreturnlist_" + moment().format(),
+    //                         exportOptions: {
+    //                             columns: ':visible'
+    //                         }
+    //                     }],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     // bStateSave: true,
+    //                     // rowId: 0,
+    //                     pageLength: initialDatatableLoad,
+    //                     "bLengthChange": false,
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [
+    //                         [0, "desc"],
+    //                         // [2, "desc"]
+    //                     ],
+    //                     // "aaSorting": [[1,'desc']],
+    //                     action: function() {
+    //                         $('#tblVATReturnList').DataTable().ajax.reload();
+    //                     },
+    //                     "fnInitComplete": function() {
+    //                         this.fnPageChange('last');
+    //                         // if (data.Params.Search.replace(/\s/g, "") == "") {
+    //                         //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+    //                         // } else {
+    //                         //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+    //                         // }
+    //                         $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
+    //                         $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                     },
+    //                     "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                         let countTableData = data.length || 0; //get count from API data
+
+    //                         return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+    //                     }
+
+    //                 }).on('page', function() {
+    //                     setTimeout(function() {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                     let draftRecord = templateObject.datatablerecords.get();
+    //                     templateObject.datatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function() {
+
+    //                 });
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             }, 1000);
+
+    //             var columns = $('#tblVATReturnList th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let sClass = "";
+    //             $.each(columns, function(i, v) {
+    //                 if (v.hidden == false) {
+    //                     columVisible = true;
+    //                 }
+    //                 if ((v.className.includes("hiddenColumn"))) {
+    //                     columVisible = false;
+    //                 }
+    //                 sWidth = v.style.width.replace('px', "");
+
+    //                 let datatablerecordObj = {
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '',
+    //                     sIndex: v.id || '',
+    //                     sVisible: columVisible || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //             $('#tblVATReturnList tbody').on('click', 'tr', function() {
+    //                 var listData = $(this).closest('tr').attr('id');
+    //                 var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+
+    //                 if (listData) {
+    //                     if (checkDeleted == "Deleted") {
+    //                         swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+    //                     } else {
+    //                         FlowRouter.go('/vatreturn?id=' + listData);
+    //                     }
+    //                 }
+    //             });
+
+    //         }
+    //     }).catch(function(err) {
+    //         reportService.getAllVATReturn().then(function(data) {
+    //             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+    //             for (let i = 0; i < data.tvatreturns.length; i++) {
+    //                 let tab1startDate = "";
+    //                 let tab1endDate = "";
+    //                 let tab2startDate = "";
+    //                 let tab2endDate = "";
+    //                 let tab3startDate = "";
+    //                 let tab3endDate = "";
+    //                 let tab4startDate = "";
+    //                 let tab4endDate = "";
+    //                 if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+    //                     tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+    //                     var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+    //                     tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+    //                     tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+    //                 }
+    //                 if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+    //                     tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+    //                     var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+    //                     tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+    //                     tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+    //                 }
+    //                 if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+    //                     tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+    //                     var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+    //                     tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+    //                     tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+    //                 }
+
+    //                 var dataList = {
+    //                     basnumber: data.tvatreturn[i].fields.ID || '',
+    //                     description: data.tvatreturn[i].fields.BasSheetDesc || '',
+    //                     tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+    //                     tab1startDate: tab1startDate,
+    //                     tab1endDate: tab1endDate,
+    //                     tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
+    //                     tab2startDate: tab2startDate,
+    //                     tab2endDate: tab2endDate,
+    //                     tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
+    //                     tab3startDate: tab3startDate,
+    //                     tab3endDate: tab3endDate,
+    //                 };
+    //                 dataTableList.push(dataList);
+    //             }
+    //             templateObject.datatablerecords.set(dataTableList);
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             setTimeout(function() {
+    //                 //$.fn.dataTable.moment('DD/MM/YY');
+    //                 $('#tblVATReturnList').DataTable({
+    //                     // dom: 'lBfrtip',
+    //                     columnDefs: [
+    //                         { type: 'basnumber', targets: 0 }
+    //                     ],
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     buttons: [{
+    //                         extend: 'excelHtml5',
+    //                         text: '',
+    //                         title: 'VAT Return List',
+    //                         download: 'open',
+    //                         className: "btntabletocsv hiddenColumn",
+    //                         filename: "vatreturnlist_" + moment().format(),
+    //                         orientation: 'portrait',
+    //                         exportOptions: {
+    //                             columns: ':visible'
+    //                         }
+    //                     }, {
+    //                         extend: 'print',
+    //                         download: 'open',
+    //                         className: "btntabletopdf hiddenColumn",
+    //                         text: '',
+    //                         title: 'VAT Return List',
+    //                         filename: "vatreturnlist_" + moment().format(),
+    //                         exportOptions: {
+    //                             columns: ':visible'
+    //                         }
+    //                     }],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     // bStateSave: true,
+    //                     // rowId: 0,
+    //                     pageLength: initialDatatableLoad,
+    //                     "bLengthChange": false,
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [
+    //                         [0, "desc"],
+    //                         // [2, "desc"]
+    //                     ],
+    //                     // "aaSorting": [[1,'desc']],
+    //                     action: function() {
+    //                         $('#tblVATReturnList').DataTable().ajax.reload();
+    //                     },
+    //                     "fnInitComplete": function() {
+    //                         this.fnPageChange('last');
+    //                         // if (data.Params.Search.replace(/\s/g, "") == "") {
+    //                         //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+    //                         // } else {
+    //                         //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+    //                         // }
+    //                         $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
+    //                         $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                     },
+    //                     "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                         let countTableData = data.length || 0; //get count from API data
+
+    //                         return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+    //                     }
+
+    //                 }).on('page', function() {
+    //                     setTimeout(function() {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                     let draftRecord = templateObject.datatablerecords.get();
+    //                     templateObject.datatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function() {
+
+    //                 });
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             }, 1000);
+
+    //             var columns = $('#tblVATReturnList th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let sClass = "";
+    //             $.each(columns, function(i, v) {
+    //                 if (v.hidden == false) {
+    //                     columVisible = true;
+    //                 }
+    //                 if ((v.className.includes("hiddenColumn"))) {
+    //                     columVisible = false;
+    //                 }
+    //                 sWidth = v.style.width.replace('px', "");
+
+    //                 let datatablerecordObj = {
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '',
+    //                     sIndex: v.id || '',
+    //                     sVisible: columVisible || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //             $('#tblVATReturnList tbody').on('click', 'tr', function() {
+    //                 var listData = $(this).closest('tr').attr('id');
+    //                 var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+
+    //                 if (listData) {
+    //                     if (checkDeleted == "Deleted") {
+    //                         swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+    //                     } else {
+    //                         FlowRouter.go('/vatreturn?id=' + listData);
+    //                     }
+    //                 }
+    //             });
+    //         }).catch(function(err) {
+    //             console.error(err);
+    //             $('.fullScreenSpin').css('display', 'none');
+    //         });
+    //     });
+    // }
+
+    // templateObject.getAllVatReturnData();
+
+    // tableResize();
+
+    $('#tblVATReturnList tbody').on('click', 'tr', function() {
+        var listData = $(this).closest('tr').attr('id');
+        var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+
+        if (listData) {
+            if (checkDeleted == "Deleted") {
+                swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
             } else {
-                let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.tvatreturns.length; i++) {
-                    let tab1startDate = "";
-                    let tab1endDate = "";
-                    let tab2startDate = "";
-                    let tab2endDate = "";
-                    let tab3startDate = "";
-                    let tab3endDate = "";
-                    if (data.tvatreturns[i].fields.Tab1_Year > 0 && data.tvatreturns[i].fields.Tab1_Month != "") {
-                        tab1startDate = data.tvatreturns[i].fields.Tab1_Year + "-" + months[data.tvatreturns[i].fields.Tab1_Month] + "-01";
-                        var endMonth = (data.tvatreturns[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1_Month]);
-                        tab1endDate = new Date(data.tvatreturns[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturns[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                        tab2startDate = data.tvatreturns[i].fields.Tab2_Year + "-" + months[data.tvatreturns[i].fields.Tab2_Month] + "-01";
-                        var endMonth = (data.tvatreturns[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2_Month]);
-                        tab2endDate = new Date(data.tvatreturns[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturns[i].fields.Tab3_Year > 0 && data.tvatreturns[i].fields.Tab3_Month != "") {
-                        tab3startDate = data.tvatreturns[i].fields.Tab3_Year + "-" + months[data.tvatreturns[i].fields.Tab3_Month] + "-01";
-                        var endMonth = (data.tvatreturns[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3_Month]);
-                        tab3endDate = new Date(data.tvatreturns[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                    }
-                    var dataList = {
-                        basnumber: data.tvatreturns[i].fields.ID || '',
-                        description: data.tvatreturns[i].fields.BasSheetDesc || '',
-                        tab1datemethod: data.tvatreturns[i].fields.Tab1_Type,
-                        tab1startDate: tab1startDate,
-                        tab1endDate: tab1endDate,
-                        tab2datemethod: data.tvatreturns[i].fields.Tab2_Type,
-                        tab2startDate: tab2startDate,
-                        tab2endDate: tab2endDate,
-                        tab3datemethod: data.tvatreturns[i].fields.Tab3_Type,
-                        tab3startDate: tab3startDate,
-                        tab3endDate: tab3endDate,
-                    };
-                    dataTableList.push(dataList);
-                }
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblVATReturnList').DataTable({
-                        // dom: 'lBfrtip',
-                        columnDefs: [
-                            { type: 'vatnumber', targets: 0 }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            title: 'VAT Return List',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "vatreturnlist_" + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'VAT Return List',
-                            filename: "vatreturnlist_" + moment().format(),
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "desc"],
-                            // [2, "desc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#tblVATReturnList').DataTable().ajax.reload();
-                        },
-                        "fnInitComplete": function() {
-                            this.fnPageChange('last');
-                            // if (data.Params.Search.replace(/\s/g, "") == "") {
-                            //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                            // } else {
-                            //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                            // }
-                            $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
-                        },
-                        "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                            let countTableData = data.length || 0; //get count from API data
-
-                            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                        }
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 1000);
-
-                var columns = $('#tblVATReturnList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.id || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblVATReturnList tbody').on('click', 'tr', function() {
-                    var listData = $(this).closest('tr').attr('id');
-                    var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-
-                    if (listData) {
-                        if (checkDeleted == "Deleted") {
-                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                        } else {
-                            FlowRouter.go('/vatreturn?id=' + listData);
-                        }
-                    }
-                });
-
+                FlowRouter.go('/vatreturn?id=' + listData);
             }
-        }).catch(function(err) {
-            reportService.getAllVATReturn().then(function(data) {
-                addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
-                for (let i = 0; i < data.tvatreturns.length; i++) {
-                    let tab1startDate = "";
-                    let tab1endDate = "";
-                    let tab2startDate = "";
-                    let tab2endDate = "";
-                    let tab3startDate = "";
-                    let tab3endDate = "";
-                    let tab4startDate = "";
-                    let tab4endDate = "";
-                    if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                        tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
-                        var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
-                        tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                        tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
-                        var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
-                        tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                        tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
-                        var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
-                        tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                    }
-
-                    var dataList = {
-                        basnumber: data.tvatreturn[i].fields.ID || '',
-                        description: data.tvatreturn[i].fields.BasSheetDesc || '',
-                        tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
-                        tab1startDate: tab1startDate,
-                        tab1endDate: tab1endDate,
-                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
-                        tab2startDate: tab2startDate,
-                        tab2endDate: tab2endDate,
-                        tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
-                        tab3startDate: tab3startDate,
-                        tab3endDate: tab3endDate,
-                    };
-                    dataTableList.push(dataList);
-                }
-                templateObject.datatablerecords.set(dataTableList);
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblVATReturnList').DataTable({
-                        // dom: 'lBfrtip',
-                        columnDefs: [
-                            { type: 'basnumber', targets: 0 }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            title: 'VAT Return List',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "vatreturnlist_" + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'VAT Return List',
-                            filename: "vatreturnlist_" + moment().format(),
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "desc"],
-                            // [2, "desc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#tblVATReturnList').DataTable().ajax.reload();
-                        },
-                        "fnInitComplete": function() {
-                            this.fnPageChange('last');
-                            // if (data.Params.Search.replace(/\s/g, "") == "") {
-                            //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                            // } else {
-                            //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 8px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
-                            // }
-                            $("<button class='btn btn-primary btnRefreshVatReturn' type='button' id='btnRefreshVatReturn' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblVATReturnList_filter");
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
-                        },
-                        "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                            let countTableData = data.length || 0; //get count from API data
-
-                            return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                        }
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 1000);
-
-                var columns = $('#tblVATReturnList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.id || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblVATReturnList tbody').on('click', 'tr', function() {
-                    var listData = $(this).closest('tr').attr('id');
-                    var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-
-                    if (listData) {
-                        if (checkDeleted == "Deleted") {
-                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                        } else {
-                            FlowRouter.go('/vatreturn?id=' + listData);
-                        }
-                    }
-                });
-            }).catch(function(err) {
-                console.error(err);
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        });
-    }
-
-    templateObject.getAllVatReturnData();
-
-    tableResize();
+        }
+    });
 });
 
 Template.vatreturnlist.events({

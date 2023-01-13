@@ -3,23 +3,17 @@ import {PurchaseBoardService} from './purchase-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {ProductService} from "../product/product-service";
-import {OrganisationService} from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import {Random} from 'meteor/random';
-import {jsPDF} from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
 import 'jquery-editable-select';
 import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import {ContactService} from "../contacts/contact-service";
-import { TaxRateService } from "../settings/settings-service";
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import '../manufacture/frm_workorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import { ManufacturingService } from '../manufacture/manufacturing-service';
 import { cloneDeep } from 'lodash';
 
 let sideBarService = new SideBarService();
@@ -27,7 +21,6 @@ let utilityService = new UtilityService();
 let accountService = new SalesBoardService();
 let productService = new ProductService();
 let contactService = new ContactService();
-let manufacturingService = new ManufacturingService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -112,9 +105,9 @@ Template.new_workorder.onRendered(async function(){
 
         if(FlowRouter.current().queryParams.id) {
             $('.fullScreenSpin').css('display', 'inline-block')
-            let orderid = FlowRouter.current().queryParams.lid
+            let orderid = FlowRouter.current().queryParams.id
             let workorderIndex = templateObject.workOrderRecords.get().findIndex(order => {
-                return order.LID == orderid
+                return order.fields.ID == orderid
             })
             let workorder = templateObject.workOrderRecords.get()[workorderIndex]
             templateObject.salesOrderId.set(workorder.fields.SaleID)
@@ -123,8 +116,8 @@ Template.new_workorder.onRendered(async function(){
                 salesorderid: workorder.fields.SaleID,
                 lid: 'Edit Work Order ' + orderid,
                 customer: workorder.fields.Customer || '',
-                invoiceToDesc: workorder.fields.InvoiceToDesc || '',
-                ponumber: workorder.fields.PONumber  || '',
+                invoiceToDesc: workorder.fields.OrderTo || '',
+                custPONumber: workorder.fields.PONumber  || '',
                 saledate: workorder.fields.SaleDate || "",
                 duedate: workorder.fields.DueDate || "",
                 // line: workorder.Line,
@@ -161,18 +154,18 @@ Template.new_workorder.onRendered(async function(){
                         accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
                             let currencySymbol = Currency;
                             let record = {
-                                id: data.fields.ID + "000"+(workordersCount + 1).toString(),
+                                id: data.fields.ID + "_"+(workordersCount + 1).toString(),
                                 salesorderid: data.fields.ID,
                                 lid: 'Edit Work Order' + ' ' + data.fields.ID + ' - ' + (workordersCount+1).toString(),
                                 customer: data.fields.CustomerName,
                                 invoiceToDesc: data.fields.InvoiceToDesc,
-                                ponumber: data.fields.CustPONumber,
+                                custPONumber: data.fields.CustPONumber,
                                 saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
                                 duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
                                 // line: data.fields.Lines[templateObject.workOrderLineId.get()],
                                 productname: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
                                 productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
-                                salesorderQty: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
+                                quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
                                 shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
                             }
                             // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
@@ -186,13 +179,13 @@ Template.new_workorder.onRendered(async function(){
                                 if(index == -1) {
                                     productService.getOneBOMProductByName(name).then(function(data){
                                         if(data.tproctree.length>0) {
-                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)
                                         }
                                     })
                                 }else {
                                     templateObject.bomStructure.set(bomProductsTemp[index].fields)
                                 }
-                            $('#edtCustomerName').val(record.fields.Customer)
+                            $('#edtCustomerName').val(record.customer)
                             $('.fullScreenSpin').css('display', 'none');
 
                         })
@@ -202,25 +195,24 @@ Template.new_workorder.onRendered(async function(){
                         for(let d = 0; d< useData.length; d++) {
                             if(parseInt(useData[d].fields.ID) == templateObject.salesOrderId.get()) {
                                 let record = {
-                                    id: useData[d].fields.ID + "000"+(workordersCount + 1).toString(),
+                                    id: useData[d].fields.ID + "_"+(workordersCount + 1).toString(),
                                     salesorderid: useData[d].fields.ID,
-                                    lid: 'Edit Work Order' + ' ' + useData[d].fields.ID + '000' + (workordersCount+1).toString(),
+                                    lid: 'Edit Work Order' + ' ' + useData[d].fields.ID + '_' + (workordersCount+1).toString(),
                                     customer: useData[d].fields.CustomerName,
                                     invoiceToDesc: useData[d].fields.InvoiceToDesc,
-                                    ponumber: useData[d].fields.CustPONumber,
+                                    custPONumber: useData[d].fields.CustPONumber,
                                     saledate: useData[d].fields.SaleDate ? moment(useData[d].fields.SaleDate).format('DD/MM/YYYY') : "",
                                     duedate: useData[d].fields.DueDate ? moment(useData[d].fields.DueDate).format('DD/MM/YYYY') : "",
                                     // line: useData[d].fields.Lines[templateObject.workOrderLineId.get()],
                                     productname: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
                                     productDescription: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
-                                    salesorderQty: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
+                                    quantity: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
                                     shipDate: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
                                 }
                                 // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
-
                                 templateObject.workorderrecord.set(record);
                                 templateObject.showBOMModal.set(true)
-                                let name = record.line.fields.ProductName;
+                                let name = record.productname;
                                 let bomProductsTemp = templateObject.bomProducts.get();
                                 let index = bomProductsTemp.findIndex(product=>{
                                     return product.fields.Caption == name;
@@ -228,7 +220,7 @@ Template.new_workorder.onRendered(async function(){
                                 if(index == -1) {
                                     productService.getOneBOMProductByName(name).then(function(data){
                                         if(data.tproctree.length>0) {
-                                            templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                            templateObject.bomStructure.set(data.tproctree[0].fields)
                                         }
                                     })
                                 }else {
@@ -246,18 +238,18 @@ Template.new_workorder.onRendered(async function(){
                     accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
                         let currencySymbol = Currency;
                         let record = {
-                            id: data.fields.ID + "000"+(workordersCount + 1).toString(),
+                            id: data.fields.ID + "_"+(workordersCount + 1).toString(),
                                 salesorderid: data.fields.ID,
-                                lid: 'Edit Work Order' + ' ' + data.fields.ID + '000' + (workordersCount+1).toString(),
+                                lid: 'Edit Work Order' + ' ' + data.fields.ID + '_' + (workordersCount+1).toString(),
                                 customer: data.fields.CustomerName,
                                 invoiceToDesc: data.fields.InvoiceToDesc,
-                                ponumber: data.fields.CustPONumber,
+                                custPONumber: data.fields.CustPONumber,
                                 saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
                                 duedate: data.fields.DueDate ? moment(data.fields.DueDate).format('DD/MM/YYYY') : "",
                                 // line: data.fields.Lines[templateObject.workOrderLineId.get()],
                                 productname: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
                                 productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
-                                salesorderQty: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
+                                quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
                                 shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
                         }
                         // record.shipDate = record.shipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
@@ -272,7 +264,7 @@ Template.new_workorder.onRendered(async function(){
                         if(index == -1) {
                             productService.getOneBOMProductByName(name).then(function(data){
                                 if(data.tproctree.length>0) {
-                                    templateObject.bomStructure.set(data.tproctree[0].fields)                                            
+                                    templateObject.bomStructure.set(data.tproctree[0].fields)
                                 }
                             })
                         }else {
@@ -381,7 +373,7 @@ Template.new_workorder.events({
                             let isExisting = false;
                             if(workorderRecords.length> 0) {
                                     for(let j = 0; j< workorderRecords.length; j ++) {
-                                        if(workorderRecords[j].Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
+                                        if(workorderRecords[j].fields.ProductName == lineItems[i].fields.ProductName && workorderRecords[j].fields.SaleID == useData[d].fields.ID) {
                                             isExisting = true
                                         }
                                     }
@@ -434,7 +426,7 @@ Template.new_workorder.events({
                for(let i = 0; i< lineItems.length; i ++ ) {
                 let isExisting = false;
                 workorderRecords.map(order => {
-                      if(order.Line.fields.ProductName == lineItems[i].fields.ProductName && order.SalesOrderID == data.fields.ID) {
+                      if(order.fields.ProductName == lineItems[i].fields.ProductName && order.fields.SaleID == data.fields.ID) {
                       isExisting = true
                   }
                 })
@@ -485,6 +477,8 @@ Template.new_workorder.events({
     },
 
     'click .btnSave': function(event) {
+        event.stopPropagation();
+        event.preventDefault()
         let templateObject = Template.instance();
         playSaveAudio();
         setTimeout(async function(){
@@ -745,11 +739,11 @@ Template.new_workorder.events({
         async function saveSubOrders () {
             let record = templateObject.workorderrecord.get();
             let bomStructure = templateObject.bomStructure.get();
-
+            let bomProducts = templateObject.bomProducts.get();
 
             let totalWorkOrders = await templateObject.getAllWorkorders();
             let savedworkorders = totalWorkOrders.filter(order => {
-                return order.field.SaleID == templateObject.salesOrderId.get();
+                return order.fields.SaleID == templateObject.salesOrderId.get();
             })
             let count = savedworkorders.length;
             if(bomStructure.Details && JSON.parse(bomStructure.Details).length > 0) {
@@ -757,11 +751,27 @@ Template.new_workorder.events({
                 for(let k = 0; k< subBOMs.length; k++) {
                     let subs = subBOMs[k];
                     if(subs.isBuild == true) {
+
+                        let subBOMIndex = bomProducts.findIndex(product=>{
+                            return product.fields.Caption == subs.productName
+                        })
+                        let duration = 0;
+                        if(subBOMIndex > -1) {
+                            duration = bomProducts[subBOMIndex].fields.QtyVariation
+                        }else {
+                           await productService.getOneBOMProductByName(subs.productName).then(function(dataObject){
+                                let d = JSON.parse(dataObject[0].data);
+                               duration = d.tproctree[0].fields.QtyVariation
+                           })
+                        }
+
+
                         let subBOMStructure = {
                             Caption: subs.productName,
                             Info: subs.process,
                             CustomInputClass: subs.processNote,
                             Details: JSON.stringify(subs.subs),
+                            QtyVariation: duration
                         }
                         async function getProductionPlanData() {
                             return new Promise(async(resolve, reject)=>{
@@ -795,8 +805,8 @@ Template.new_workorder.events({
                                 }
 
                                 let subDetail = {
-                                    ID: parseInt(templateObject.salesOrderId.get() + "000" + (count + k + 1).toString()),
-                                    LID: parseInt(templateObject.salesOrderId.get() + "000" + (count + k + 1).toString()),
+                                    ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                    LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                     Customer: $('#edtCustomerName').val() || '',
                                     InvoiceToDesc: $('#txabillingAddress').val() || '',
                                     PONumber: $('#ponumber').val()||'',
@@ -808,8 +818,9 @@ Template.new_workorder.events({
                                     StartTime: subStart,
                                     OrderDate: new Date(),
                                     InProgress: record.isStarted,
-                                    Quantity: record.salesorderQty? record.salesorderQty* parseFloat(subs.qty) : subs.qty
+                                    Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
                                 }
+
 
                                 if(subs.subs&&subs.subs.length > 0) {
                                     for(let n=0; n<subs.subs.length; n++) {
@@ -819,7 +830,7 @@ Template.new_workorder.events({
                                     }
                                 }
                                 let subEnd = new Date();
-                                subEnd.setTime(subStart.getTime() + subDetail.Quantity * subs.duration * 3600000);
+                                subEnd.setTime(subStart.getTime() + subDetail.Quantity * duration * 3600000);
                                 if(subEnd.getTime() > mainOrderStart.getTime()) {
                                     mainOrderStart = subEnd;
                                 }
@@ -833,11 +844,11 @@ Template.new_workorder.events({
                                             let productname = subProductName;
                                             let product_description = data.tproduct[0].fields.ProductDescription;
                                             let productid = data.tproduct[0].fields.ID;
-                                            let quantity = record.Quantity * parseFloat(subs.qty)
+                                            // let quantity = record.Quantity * parseFloat(subs.qty)
                                             // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
                                             subDetail.ProductName = productname;
                                             subDetail.ProductDescription = product_description;
-                                            subDetail.Quantity = quantity;
+                                            // subDetail.Quantity = quantity;
                                             subDetail.ProductID = productid;
 
                                             // let tempArray = localStorage.getItem('TWorkorders');
@@ -864,11 +875,11 @@ Template.new_workorder.events({
                                                     let productname = subProductName;
                                                     let product_description = useData[i].fields.ProductDescription;
                                                     let productid = useData[i].fields.ID;
-                                                    let quantity = record.Quantity * parseFloat(subs.qty)
+                                                    // let quantity = record.Quantity * parseFloat(subs.qty)
                                                     // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
                                                     subDetail.ProductName = productname;
                                                     subDetail.ProductDescription = product_description;
-                                                    subDetail.Quantity = quantity;
+                                                    // subDetail.Quantity = quantity;
                                                     subDetail.ProductID = productid;
                                                     let workorders = await templateObject.getAllWorkorders();
                                                     let existIndex = workorders.findIndex(order=>{
@@ -893,11 +904,11 @@ Template.new_workorder.events({
                                         let productname = subProductName;
                                         let product_description = data.tproduct[0].fields.ProductDescription;
                                         let productid = data.tproduct[0].fields.ID;
-                                        let quantity = record.Quantity * parseFloat(subs.qty)
+                                        // let quantity = record.Quantity * parseFloat(subs.qty)
                                         // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
                                         subDetail.ProductName = productname;
                                         subDetail.ProductDescription = product_description;
-                                        subDetail.Quantity = quantity;
+                                        // subDetail.Quantity = quantity;
                                         subDetail.ProductID = productid;
 
                                         // let tempArray = localStorage.getItem('TWorkorders');
@@ -912,7 +923,7 @@ Template.new_workorder.events({
                                             workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
                                         }
                                         addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
-                                            resolve();    
+                                            resolve();
                                         })
                                         // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                                         // resolve();
@@ -934,12 +945,17 @@ Template.new_workorder.events({
         async function saveMainOrders() {
 
             let record = templateObject.workorderrecord.get();
+            let totalWorkOrders = await templateObject.getAllWorkorders();
+            let savedworkorders = totalWorkOrders.filter(order => {
+                return order.fields.SaleID == templateObject.salesOrderId.get();
+            })
+            let count = savedworkorders.length;
             let temp = cloneDeep(record);
             temp = {...temp, isStarted: true}
             templateObject.workorderrecord.set(temp);
             record = templateObject.workorderrecord.get();
             let objDetail = {
-                LID: parseInt(templateObject.salesOrderId.get() + "000" + "1"),
+                LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
                 Customer: $('#edtCustomerName').val() || '',
                 OrderTo: $('#txabillingAddress').val() || '',
                 PONumber: $('#ponumber').val()||'',
@@ -953,18 +969,16 @@ Template.new_workorder.events({
                 ProductDescription: record.product_description,
                 ShipDate: record.shipDate,
                 ProductID: record.productid,
-                Quantity: record.salesorderQty || 1,
+                Quantity: record.quantity || 1,
                 InProgress: record.isStarted,
-                ID: parseInt(templateObject.salesOrderId.get() + "000" + "1")
+                ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString()
             }
 
             // manufacturingService.saveWorkOrder({
             //     type: 'TVS1Workorder',
             //     fields: objDetail
             // }).then(function(){
-            //     console.log("save workorder to erp suc")
             // }).catch(function(er) {
-            //     console.log("*************", er)
             // })
 
 
@@ -1013,7 +1027,7 @@ Template.new_workorder.events({
         let templateObject = Template.instance();
         let productName = $(event.target).closest('tr').find('input.lineProductName').val()
         let tempBOMs = templateObject.bomProducts.get();
-       
+
         $('#BOMSetupModal').modal('toggle')
     },
     'change .edtQuantity' : function(event) {
@@ -1047,7 +1061,7 @@ Template.new_workorder.helpers({
 })
 
 Template.new_workorder.events({
-   
+
 
     'click #BOMSetupModal .btn-save-bom': function(event) {
         let templateObject = Template.instance();
@@ -1071,7 +1085,7 @@ Template.new_workorder.events({
                 return order.fields.SalesID == templateObject.salesOrderId.get();
             })
             let count = savedworkorders.length;
-            let mainOrderId = currentRecord.id.split('000')[1];
+            let mainOrderId = currentRecord.id.split('_')[1];
             if(mainOrderId <= count) {
                 mainOrderSaved = true;
             }else {
@@ -1262,22 +1276,22 @@ Template.new_workorder.events({
         event.preventDefault();
         let templateObject = Template.instance();
         let record = JSON.parse(JSON.stringify(templateObject.workorderrecord.get()))
-        record.line.fields.Qty = parseFloat($(event.target).val())
+        record.quantity = parseFloat($(event.target).val())
         templateObject.workorderrecord.set(record);
     },
 
-    'click #btnCompleteProcess': function(event) {
+    'click #btnCompleteProcess': async function(event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block')
-        let workorders = localStorage.getItem('TWorkorders')?JSON.parse(localStorage.getItem('TWorkorders')): [];
+        let workorders = await templateObject.getAllWorkorders()
         let currentworkorder;
 
         let workorderindex = workorders.findIndex(order => {
-            return order.SalesOrderID == templateObject.salesOrderId.get() && order.Line.fields.ProductName == templateObject.workorderrecord.get().line.fields.ProductName;
+            return order.fields.SaleID == templateObject.salesOrderId.get() && order.fields.ProductName == templateObject.workorderrecord.get().productname;
         })
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
-            let productName = currentworkorder.Line.fields.ProductName;
+            let productName = currentworkorder.fields.ProductName;
             getVS1Data('TProductVS1').then(function(dataObject) {
                 if(dataObject.length == 0) {
                     productService.getOneProductdatavs1byname(productName).then(function(dataDetail)  {
@@ -1286,7 +1300,7 @@ Template.new_workorder.events({
                             type: 'TProduct',
                             fields: {
                                 ...data.fields,
-                                TotalQtyInStock: currentworkorder.Line.fields.Qty + data.fields.TotalQtyInStock
+                                TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
                             }
                             // ID: data.fields.ID,
                         }).then(function(){
@@ -1305,7 +1319,7 @@ Template.new_workorder.events({
                                 fields: {
                                     // ...useData[i].fields,
                                     ID: useData[i].fields.ID,
-                                    TotalQtyInStock: currentworkorder.Line.fields.Qty + useData[i].fields.TotalQtyInStock
+                                    TotalQtyInStock: currentworkorder.fields.Quantity + useData[i].fields.TotalQtyInStock
                                 }
                             }).then(function(){
                                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
@@ -1323,7 +1337,7 @@ Template.new_workorder.events({
                         type: 'TProduct',
                         fields: {
                             ...data.fields,
-                            TotalQtyInStock: currentworkorder.Line.fields.Qty + data.fields.TotalQtyInStock
+                            TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
                         }
                     }).then(function(){
                         sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
@@ -1333,7 +1347,7 @@ Template.new_workorder.events({
                 })
             })
 
-            let subs = currentworkorder.BOM.subs;
+            let subs = JSON.parse(JSON.parse(currentworkorder.fields.BOMStructure).Details);
             for(let j = 0; j< subs.length; j++) {
                 let name = subs[j].productName;
                 getVS1Data('TProductVS1').then(function(dataObject) {
@@ -1344,7 +1358,7 @@ Template.new_workorder.events({
                                 type: 'TProduct',
                                 fields: {
                                     ...data.fields,
-                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
+                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
                                 }
                             }).then(function(){
                                 $('.fullScreenSpin').css('display', 'none')
@@ -1365,7 +1379,7 @@ Template.new_workorder.events({
                                     fields: {
                                         ...useData[i].fields,
                                         // ID: useData[i].fields.ID,
-                                        TotalQtyInStock: useData[i].fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
+                                        TotalQtyInStock: useData[i].fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
                                     }
                                 }).then(function(){
                                     $('.fullScreenSpin').css('display', 'none')
@@ -1385,7 +1399,7 @@ Template.new_workorder.events({
                             type: 'TProduct',
                             fields:{
                                 ...data.fields,
-                                TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.Line.fields.Qty * subs[j].qty)
+                                TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
                             }
                             // ID: data.fields.ID,
                         }).then(function(){
@@ -1399,7 +1413,7 @@ Template.new_workorder.events({
                     })
                 })
             }
-            let tempworkorder = JSON.parse(JSON.stringify(currentworkorder));
+            let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder = {...tempworkorder, EndTime: new Date()}
             workorders.splice(workorderindex, 1, tempworkorder)
 

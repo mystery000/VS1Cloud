@@ -778,8 +778,8 @@
                                 </div>
                                 <div class="col-12 product_recent_trans" style="display:none; margin-top: 16px;">
                                     <h3>Recent Transactions</h3>
-                                    {{>recentTransactionTable productID=productID type="all"}}
-
+                                    <!-- {{>recentTransactionTable productID=productID type="all"}} -->
+                                    {{>non_transactional_list tablename="productrecentlist" productID=productID type="all"}}
                                 </div>
                             </div>
                             <div class="row mt-3">
