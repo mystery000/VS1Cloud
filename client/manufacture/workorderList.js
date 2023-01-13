@@ -47,7 +47,7 @@ Template.workorderlist.onRendered (function() {
                 })
             })
         }
-        let tempArray = await getWorkorders();;
+        let tempArray = await getWorkorders();
         templateObject.datatablerecords.set(tempArray);
         
 
