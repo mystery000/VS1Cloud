@@ -419,8 +419,6 @@ import './contacts/leadlist.js';
 import './contacts/employeelist.js';
 import './contacts/addemployeepop.js';
 import './packages/currency/currencydropdown.js';
-
-
 import './accesslevel/accessleveldup.js';
 import './accesslevel/companyappsettingsdup.js';
 import './accesslevel/companyappsettings.js';
@@ -431,6 +429,8 @@ import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
 import './vs1_templates/contact_title/contact_title.html';
+import './vs1charts/employeeAbsentDays/employeeAbsentDays.js';
+import './vs1charts/employeeLeave/employeeLeave.js';
 /*Vladyslav*/
 
 /* Roverto */

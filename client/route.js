@@ -204,7 +204,7 @@ FlowRouter.triggers.enter([
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Save',
-                cancelButtonText: 'Leave'
+                cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
                     localStorage.setItem("enteredURL", context.path);

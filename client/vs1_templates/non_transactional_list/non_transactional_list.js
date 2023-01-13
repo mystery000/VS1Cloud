@@ -7,6 +7,7 @@ import { SideBarService } from '../../js/sidebar-service';
 import { ProductService } from '../../product/product-service';
 import { ManufacturingService } from "../../manufacture/manufacturing-service";
 import { CRMService } from "../../crm/crm-service";
+import { ReportService } from "../../reports/report-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import {Session} from 'meteor/session';
@@ -18,8 +19,8 @@ let utilityService = new UtilityService();
 let contactService = new ContactService();
 let productService = new ProductService();
 let manufacturingService = new ManufacturingService();
-
 let crmService = new CRMService();
+let reportService = new ReportService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
@@ -37,6 +38,243 @@ Template.non_transactional_list.onCreated(function() {
     templateObject.non_trans_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.tablename = new ReactiveVar();
+    templateObject.currentproductID = new ReactiveVar();
+    templateObject.currenttype = new ReactiveVar();
+
+    templateObject.autorun(() => {
+        // /*added by sobura
+        const curdata = Template.currentData();
+        let currentProductID = curdata.productID || "";
+        templateObject.currentproductID.set(currentProductID);
+        let currenttype = curdata.type || "";
+        templateObject.currenttype.set(currenttype);
+        
+        templateObject.getAllProductRecentTransactions = async function(deptname) {
+        // templateObject.initCustomFieldDisplaySettings("", currenttablename);
+            getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
+                let need_API = true;
+                if(dataObject.length > 0)
+                {
+                    let data = JSON.parse(dataObject[0].data);
+                    for(let i=0;i<data.t_vs1_report_productmovement.length;i++){
+                        let data_productID = data.t_vs1_report_productmovement[i].ProductID;
+                        
+                        if(parseInt(currentProductID) == data_productID){
+                            need_API = false;
+                            break;
+                        }
+                    }
+                }
+                if(currentProductID){
+                    if(need_API){
+                        productService.getProductRecentTransactionsAll(currentProductID).then(function(data) {
+                        addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
+                        templateObject.displayAllProductRecentTransactions(data,deptname)
+                    });
+                    }
+                    else
+                    {
+                        let data = JSON.parse(dataObject[0].data);
+                        templateObject.displayAllProductRecentTransactions(data,deptname);
+                    }
+                }
+            });
+        };
+        templateObject.displayAllProductRecentTransactions = function(data,deptname) {
+                let currentProductID = templateObject.currentproductID.get();
+                let recentTransList = new Array();
+                for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+                    // let recentTranObject = {
+                    //     date: data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
+                    //     type: data.t_vs1_report_productmovement[i].TranstypeDesc,
+                    //     transactionno: data.t_vs1_report_productmovement[i].TransactionNo,
+                    //     reference: data.t_vs1_report_productmovement[i].TransactionNo,
+                    //     quantity: data.t_vs1_report_productmovement[i].Qty,
+                    //     unitPrice: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+                    //     total: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
+                    // };
+                    if(parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID && (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)){
+                        let recentTranObject = [
+                            data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
+                            data.t_vs1_report_productmovement[i].TranstypeDesc,
+                            data.t_vs1_report_productmovement[i].TransactionNo,
+                            data.t_vs1_report_productmovement[i].Qty,
+                            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+                            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
+                        ];
+                        recentTransList.push(recentTranObject);
+                    }
+                }
+                let columnData = [];
+                let displayfields = templateObject.non_trans_displayfields.get();
+                if( displayfields.length > 0 ){
+                    displayfields.forEach(function( item ){
+                        columnData.push({
+                            className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                            targets: [item.id],
+                        })
+                    });
+                }
+                templateObject.transactiondatatablerecords.set(recentTransList);
+                let currenttablename = templateObject.tablename.get();
+                setTimeout(function() {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    $('#' + currenttablename).DataTable({
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        data:recentTransList,
+                        columnDefs: columnData,
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        // bStateSave: true,
+                        // rowId: 0,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [
+                            [initialDatatableLoad, -1],
+                            [initialDatatableLoad, "All"]
+                        ],
+                        info: true,
+                        responsive: true,
+                        "order": [[0, "desc"],[3, "desc"]],
+                        action: function() {
+                            $('#productrecentlist').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function(oSettings) {
+                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                            //if(checkurlIgnoreDate == 'true'){
+
+                            //}else{
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function() {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    let dataLenght = oSettings._iDisplayLength;
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        tpaymentlist: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+                                    } else {
+                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                                if (dataObjectold.length == 0) {} else {
+                                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                    let objCombineData = {
+                                                        Params: dataOld.Params,
+                                                        tpaymentlist: thirdaryData
+                                                    }
+
+                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                        templateObject.resetData(objCombineData);
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    }).catch(function(err) {
+                                                        $('.fullScreenSpin').css('display', 'none');
+                                                    });
+
+                                                }
+                                            }).catch(function(err) {});
+
+                                        }).catch(function(err) {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                        });
+
+                                    }
+
+                                });
+
+                            //}
+                            setTimeout(function() {
+                                // MakeNegative();
+                            }, 100);
+                        },
+
+                    }).on('page', function() {}).on('column-reorder', function() {});
+                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                    $('.fullScreenSpin').css('display', 'none');
+                }, 0);
+
+                $('#productrecentlist tbody').on('click', 'tr', function() {
+                    var listData = $(this).closest('tr').attr('id');
+                    var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
+
+                    if ((listData) && (transactiontype)) {
+                        if (transactiontype === 'Quote') {
+                            window.open('/quotecard?id=' + listData, '_self');
+                        } else if (transactiontype === 'Sales Order') {
+                            window.open('/salesordercard?id=' + listData, '_self');
+                        } else if (transactiontype === 'Invoice') {
+                            window.open('/invoicecard?id=' + listData, '_self');
+                        } else if (transactiontype === 'Purchase Order') {
+                            window.open('/purchaseordercard?id=' + listData, '_self');
+                        } else if (transactiontype === 'Bill') {
+                            //window.open('/billcard?id=' + listData,'_self');
+                        } else if (transactiontype === 'Credit') {
+                            //window.open('/creditcard?id=' + listData,'_self');
+                        }
+
+                    }
+                });
+
+                // $('.product_recent_trans').css('display', 'block');
+                // $([document.documentElement, document.body]).animate({
+                //     scrollTop: $(".product_recent_trans").offset().top
+                // }, 2000);
+                $('.fullScreenSpin').css('display', 'none');
+            // }).catch(function(err) {
+
+            //     $('.fullScreenSpin').css('display', 'none');
+            //     $('.product_recent_trans').css('display', 'block');
+            //     $([document.documentElement, document.body]).animate({
+            //         scrollTop: $(".product_recent_trans").offset().top
+            //     }, 2000);
+
+            //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
+            // });
+        // });
+            // Meteor.render(Template.non_transactional_list);
+            // templateObject.getAllProductRecentTransactions(currenttype);
+
+        }
+        templateObject.getAllProductRecentTransactions(currenttype);
+        //added by sobura*/
+    });
 });
 
 Template.non_transactional_list.onRendered(function() {
@@ -72,12 +310,14 @@ Template.non_transactional_list.onRendered(function() {
     var url = FlowRouter.current().path;
     let currenttablename = templateObject.data.tablename || "";
     
-    // /*added by sobura
-    let currentproductID = templateObject.data.productID || "";
-    let currenttype = templateObject.data.type || "";
-    //added by sobura*/
-
+    
     templateObject.tablename.set(currenttablename);
+    let currentproductID = templateObject.data.productID || "";
+    templateObject.currentproductID.set(currentproductID);
+    let currenttype = templateObject.data.type || "";
+    templateObject.currenttype.set(currenttype);
+    
+
 
     // set initial table rest_data
     templateObject.init_reset_data = function() {
@@ -585,7 +825,8 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
             ]
         } else if(currenttablename === "tblInventoryOverview"){
-            let reset_data = [
+
+            reset_data = [
                 { index: 0, label: "#ID", class: "ProductID", width: "30", active: false, display: true },
                 { index: 1, label: "Product Name", class: "ProductName", width: "200", active: true, display: true },
                 { index: 2, label: "Sales Description", class: "SalesDescription", width: "", active: true, display: true },
@@ -605,7 +846,36 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
                 { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
               ];
-        } 
+              
+        } else if(currenttablename === "tblBASReturnList"){
+            reset_data = [
+                { index: 0, label: "BAS Number", class: "colBasNumber", width: "80", active: true, display: true },
+                { index: 1, label: "Description", class: "colBasName", width: "250", active: true, display: true },
+                { index: 2, label: "GST\nPeriod", class: "t1Period", width: "100", active: true, display: true },
+                { index: 3, label: "GST\nFrom", class: "t1From", width: "120", active: true, display: true },
+                { index: 4, label: "GST\nTo", class: "t1To", width: "120", active: true, display: true },
+                { index: 5, label: "Withheld\nPeriod", class: "t2Period", width: "100", active: true, display: true },
+                { index: 6, label: "Withheld\nFrom", class: "t2From", width: "120", active: true, display: true },
+                { index: 7, label: "Withheld\nTo", class: "t2To", width: "120", active: true, display: true },
+                { index: 8, label: "instalment\nPeriod", class: "t3Period", width: "100", active: true, display: true },
+                { index: 9, label: "instalment\nFrom", class: "t3From", width: "120", active: true, display: true },
+                { index: 10, label: "instalment\nTo", class: "t3To", width: "120", active: true, display: true },
+              ];
+        } else if(currenttablename === "tblVATReturnList"){
+            reset_data = [
+                { index: 0, label: "VAT Number", class: "colVatNumber", width: "80", active: true, display: true },
+                { index: 1, label: "Description", class: "colBasName", width: "250", active: true, display: true },
+                { index: 2, label: "OUTPUT TAX\nPeriod", class: "t1Period", width: "100", active: true, display: true },
+                { index: 3, label: "OUTPUT TAX\nFrom", class: "t1From", width: "120", active: true, display: true },
+                { index: 4, label: "OUTPUT TAX\nTo", class: "t1To", width: "120", active: true, display: true },
+                { index: 5, label: "INPUT TAX\nPeriod", class: "t2Period", width: "100", active: true, display: true },
+                { index: 6, label: "INPUT TAX\nFrom", class: "t2From", width: "120", active: true, display: true },
+                { index: 7, label: "INPUT TAX\nTo", class: "t2To", width: "120", active: true, display: true },
+                { index: 8, label: "REFUND\nPeriod", class: "t3Period", width: "100", active: true, display: true },
+                { index: 9, label: "REFUND\nFrom", class: "t3From", width: "120", active: true, display: true },
+                { index: 10, label: "REFUND\nTo", class: "t3To", width: "120", active: true, display: true },
+            ];
+        }
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -616,7 +886,7 @@ Template.non_transactional_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
-
+        
         // try {
         //     getVS1Data("VS1_Customize").then(function(dataObject) {
         //         if (dataObject.length == 0) {
@@ -1984,7 +2254,6 @@ Template.non_transactional_list.onRendered(function() {
                     })
                 });
             }
-            
             $("#" + currenttablename).dataTable({
                 
                 data: splashArrayProductList,
@@ -8055,9 +8324,9 @@ Template.non_transactional_list.onRendered(function() {
                     if (data.tprojecttasks.length > 0) {
                         addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
-                            let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
-                            due_date = new Date(due_date);
-                            if (due_date >= fromDate && due_date <= toDate ) {
+                            let sort_date = data.tprojecttasks[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tprojecttasks[i].fields.MsTimeStamp;
+                            sort_date = new Date(sort_date);
+                            if (sort_date >= fromDate && sort_date <= toDate ) {
                                 let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                                 let taskLabelArray = [];
                                 if (taskLabel !== null) {
@@ -8077,7 +8346,7 @@ Template.non_transactional_list.onRendered(function() {
                                         const dataList = {
                                             id: data.tprojecttasks[i].fields.ID || 0,
                                             priority: data.tprojecttasks[i].fields.priority || 0,
-                                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                            date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                             taskName: data.tprojecttasks[i].fields.TaskName || '',
                                             projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -8093,7 +8362,7 @@ Template.non_transactional_list.onRendered(function() {
                                     const dataList = {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
-                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                         taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -8117,8 +8386,8 @@ Template.non_transactional_list.onRendered(function() {
                 let all_records = data.tprojecttasks;
                 
                 for (let i = 0; i < all_records.length; i++) {
-                    let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
-                    due_date = new Date(due_date);
+                    let sort_date = all_records[i].fields.MsTimeStamp == "" ? "1770-01-01" : all_records[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
                     if (all_records[i].fields.ContactName == customerName && due_date >= fromDate && due_date <= toDate ) {
                         let taskLabel = all_records[i].fields.TaskLabel;
                         let taskLabelArray = [];
@@ -8139,7 +8408,7 @@ Template.non_transactional_list.onRendered(function() {
                                 const dataList = {
                                     id: all_records[i].fields.ID || 0,
                                     priority: all_records[i].fields.priority || 0,
-                                    date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    date: all_records[i].fields.MsTimeStamp !== '' ? moment(all_records[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                     taskName: all_records[i].fields.TaskName || '',
                                     projectID: all_records[i].fields.ProjectID || '',
                                     projectName: all_records[i].fields.ProjectName || '',
@@ -8155,7 +8424,7 @@ Template.non_transactional_list.onRendered(function() {
                             const dataList = {
                                 id: all_records[i].fields.ID || 0,
                                 priority: all_records[i].fields.priority || 0,
-                                date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                date: all_records[i].fields.MsTimeStamp !== '' ? moment(all_records[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                 taskName: all_records[i].fields.TaskName || '',
                                 projectID: all_records[i].fields.ProjectID || '',
                                 projectName: all_records[i].fields.ProjectName || '',
@@ -8176,8 +8445,8 @@ Template.non_transactional_list.onRendered(function() {
                 if (data.tprojecttasks.length > 0) {
                     addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
-                        let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
-                        due_date = new Date(due_date);
+                        let sort_date = data.tprojecttasks[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tprojecttasks[i].fields.MsTimeStamp;
+                            sort_date = new Date(sort_date);
                         if (due_date >= fromDate && due_date <= toDate ) {
                             let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                             let taskLabelArray = [];
@@ -8198,7 +8467,7 @@ Template.non_transactional_list.onRendered(function() {
                                     const dataList = {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
-                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                         taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -8214,7 +8483,7 @@ Template.non_transactional_list.onRendered(function() {
                                 const dataList = {
                                     id: data.tprojecttasks[i].fields.ID || 0,
                                     priority: data.tprojecttasks[i].fields.priority || 0,
-                                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                     taskName: data.tprojecttasks[i].fields.TaskName || '',
                                     projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                     projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -8242,7 +8511,7 @@ Template.non_transactional_list.onRendered(function() {
                         if (dataObj.tappointmentex.length > 0) {
                             addVS1Data("TAppointment", JSON.stringify(dataObj));
                             dataObj.tappointmentex.map(data => {
-                                let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                                 creationDate = new Date(creationDate);
                                 if(creationDate >= fromDate && creationDate <= toDate){
                                     if (!deleteFilter) {
@@ -8250,7 +8519,7 @@ Template.non_transactional_list.onRendered(function() {
                                             let obj = {
                                                 id: data.fields.ID,
                                                 priority: 0,
-                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                 taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
@@ -8266,7 +8535,7 @@ Template.non_transactional_list.onRendered(function() {
                                         let obj = {
                                             id: data.fields.ID,
                                             priority: 0,
-                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                             taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
@@ -8289,7 +8558,7 @@ Template.non_transactional_list.onRendered(function() {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tappointmentex;
                     for (let i = 0; i < useData.length; i++) {
-                        let creationDate = useData[i].fields.StartTime == "" ? "1770-01-01" : useData[i].fields.StartTime;
+                        let creationDate = useData[i].fields.CreationDate == "" ? "1770-01-01" : useData[i].fields.CreationDate;
                         creationDate = new Date(creationDate);
                         if (useData[i].fields.ClientName == customerName && creationDate >= fromDate && creationDate <= toDate) {
                             if (!deleteFilter) {
@@ -8297,7 +8566,7 @@ Template.non_transactional_list.onRendered(function() {
                                     let obj = {
                                         id: useData[i].fields.ID,
                                         priority: 0,
-                                        date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                        date: useData[i].fields.CreationDate !== '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : '',
                                         taskName: '',
                                         projectID: useData[i].fields.ProjectID || '',
                                         projectName: '',
@@ -8313,7 +8582,7 @@ Template.non_transactional_list.onRendered(function() {
                                 let obj = {
                                     id: useData[i].fields.ID,
                                     priority: 0,
-                                    date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                    date: useData[i].fields.CreationDate !== '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : '',
                                     taskName: '',
                                     projectID: useData[i].fields.ProjectID || '',
                                     projectName: '',
@@ -8332,7 +8601,7 @@ Template.non_transactional_list.onRendered(function() {
                             if (dataObj.tappointmentex.length > 0) {
                                 addVS1Data("TAppointment", JSON.stringify(dataObj));
                                 dataObj.tappointmentex.map(data => {
-                                    let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                    let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                                     creationDate = new Date(creationDate);
                                     if(creationDate >= fromDate && creationDate <= toDate){
                                         if (!deleteFilter) {
@@ -8340,7 +8609,7 @@ Template.non_transactional_list.onRendered(function() {
                                                 let obj = {
                                                     id: data.fields.ID,
                                                     priority: 0,
-                                                    date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                    date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                     taskName: '',
                                                     projectID: data.fields.ProjectID || '',
                                                     projectName: '',
@@ -8356,7 +8625,7 @@ Template.non_transactional_list.onRendered(function() {
                                             let obj = {
                                                 id: data.fields.ID,
                                                 priority: 0,
-                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                 taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
@@ -8384,7 +8653,7 @@ Template.non_transactional_list.onRendered(function() {
                     if (dataObj.tappointmentex.length > 0) {
                         addVS1Data("TAppointment", JSON.stringify(dataObj));
                         dataObj.tappointmentex.map(data => {
-                            let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                            let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                             creationDate = new Date(creationDate);
                             if(creationDate >= fromDate && creationDate <= toDate){
                                 if (!deleteFilter) {
@@ -8392,7 +8661,7 @@ Template.non_transactional_list.onRendered(function() {
                                         let obj = {
                                             id: data.fields.ID,
                                             priority: 0,
-                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                             taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
@@ -8408,7 +8677,7 @@ Template.non_transactional_list.onRendered(function() {
                                     let obj = {
                                         id: data.fields.ID,
                                         priority: 0,
-                                        date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                        date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                         taskName: '',
                                         projectID: data.fields.ProjectID || '',
                                         projectName: '',
@@ -8465,7 +8734,7 @@ Template.non_transactional_list.onRendered(function() {
                         }
                         try {
                             dataTableList.sort((a, b) => {
-                                new Date(a.date) - new Date(b.date)
+                                return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                             })
                         } catch (error) {}
                         templateObject.displayLeadCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -8499,7 +8768,7 @@ Template.non_transactional_list.onRendered(function() {
                         }
                         try {
                             dataTableList.sort((a, b) => {
-                                new Date(a.date) - new Date(b.date)
+                                return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                             })
                         } catch (error) {}
                         templateObject.displayLeadCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -8538,7 +8807,7 @@ Template.non_transactional_list.onRendered(function() {
                     }
                     try {
                         dataTableList.sort((a, b) => {
-                            new Date(a.date) - new Date(b.date)
+                            return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                         })
                     } catch (error) {}
                     templateObject.displayLeadCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -8660,7 +8929,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: true,
                 "order": [
-                    [1, "asc"]
+                    // [1, "asc"]
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -9077,9 +9346,9 @@ Template.non_transactional_list.onRendered(function() {
                     if (data.tprojecttasks.length > 0) {
                         addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
-                            let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
-                            due_date = new Date(due_date);
-                            if (due_date >= fromDate && due_date <= toDate ) {
+                            let sort_date = data.tprojecttasks[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tprojecttasks[i].fields.MsTimeStamp;
+                            sort_date = new Date(sort_date);
+                            if (sort_date >= fromDate && sort_date <= toDate ) {
                                 let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                                 let taskLabelArray = [];
                                 if (taskLabel !== null) {
@@ -9099,7 +9368,7 @@ Template.non_transactional_list.onRendered(function() {
                                         const dataList = {
                                             id: data.tprojecttasks[i].fields.ID || 0,
                                             priority: data.tprojecttasks[i].fields.priority || 0,
-                                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                            date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                             taskName: data.tprojecttasks[i].fields.TaskName || '',
                                             projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -9115,7 +9384,7 @@ Template.non_transactional_list.onRendered(function() {
                                     const dataList = {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
-                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                         taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -9138,9 +9407,9 @@ Template.non_transactional_list.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
                 for (let i = 0; i < all_records.length; i++) {
-                    let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
-                    due_date = new Date(due_date);
-                    if (all_records[i].fields.ContactName == customerName && due_date >= fromDate && due_date <= toDate ) {
+                    let sort_date = all_records[i].fields.MsTimeStamp == "" ? "1770-01-01" : all_records[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
+                    if (all_records[i].fields.ContactName == customerName && sort_date >= fromDate && sort_date <= toDate ) {
                         let taskLabel = all_records[i].fields.TaskLabel;
                         let taskLabelArray = [];
                         if (taskLabel !== null) {
@@ -9160,7 +9429,7 @@ Template.non_transactional_list.onRendered(function() {
                                 const dataList = {
                                     id: all_records[i].fields.ID || 0,
                                     priority: all_records[i].fields.priority || 0,
-                                    date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    date: all_records[i].fields.MsTimeStamp !== '' ? moment(all_records[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                     taskName: all_records[i].fields.TaskName || '',
                                     projectID: all_records[i].fields.ProjectID || '',
                                     projectName: all_records[i].fields.ProjectName || '',
@@ -9176,7 +9445,7 @@ Template.non_transactional_list.onRendered(function() {
                             const dataList = {
                                 id: all_records[i].fields.ID || 0,
                                 priority: all_records[i].fields.priority || 0,
-                                date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                date: all_records[i].fields.MsTimeStamp !== '' ? moment(all_records[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                 taskName: all_records[i].fields.TaskName || '',
                                 projectID: all_records[i].fields.ProjectID || '',
                                 projectName: all_records[i].fields.ProjectName || '',
@@ -9197,9 +9466,9 @@ Template.non_transactional_list.onRendered(function() {
                 if (data.tprojecttasks.length > 0) {
                     addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
-                        let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
-                        due_date = new Date(due_date);
-                        if (due_date >= fromDate && due_date <= toDate ) {
+                        let sort_date = data.tprojecttasks[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tprojecttasks[i].fields.MsTimeStamp;
+                        sort_date = new Date(sort_date);
+                        if (sort_date >= fromDate && sort_date <= toDate ) {
                             let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                             let taskLabelArray = [];
                             if (taskLabel !== null) {
@@ -9219,7 +9488,7 @@ Template.non_transactional_list.onRendered(function() {
                                     const dataList = {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
-                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                         taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -9235,7 +9504,7 @@ Template.non_transactional_list.onRendered(function() {
                                 const dataList = {
                                     id: data.tprojecttasks[i].fields.ID || 0,
                                     priority: data.tprojecttasks[i].fields.priority || 0,
-                                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                     taskName: data.tprojecttasks[i].fields.TaskName || '',
                                     projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                     projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -9263,7 +9532,7 @@ Template.non_transactional_list.onRendered(function() {
                         if (dataObj.tappointmentex.length > 0) {
                             addVS1Data("TAppointment", JSON.stringify(dataObj));
                             dataObj.tappointmentex.map(data => {
-                                let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                                 creationDate = new Date(creationDate);
                                 if(creationDate >= fromDate && creationDate <= toDate){
                                     if (!deleteFilter) {
@@ -9271,7 +9540,7 @@ Template.non_transactional_list.onRendered(function() {
                                             let obj = {
                                                 id: data.fields.ID,
                                                 priority: 0,
-                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                 taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
@@ -9287,7 +9556,7 @@ Template.non_transactional_list.onRendered(function() {
                                         let obj = {
                                             id: data.fields.ID,
                                             priority: 0,
-                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                             taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
@@ -9310,7 +9579,7 @@ Template.non_transactional_list.onRendered(function() {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tappointmentex;
                     for (let i = 0; i < useData.length; i++) {
-                        let creationDate = useData[i].fields.StartTime == "" ? "1770-01-01" : useData[i].fields.StartTime;
+                        let creationDate = useData[i].fields.CreationDate == "" ? "1770-01-01" : useData[i].fields.CreationDate;
                         creationDate = new Date(creationDate);
                         if (useData[i].fields.ClientName == customerName && creationDate >= fromDate && creationDate <= toDate) {
                             if (!deleteFilter) {
@@ -9318,7 +9587,7 @@ Template.non_transactional_list.onRendered(function() {
                                     let obj = {
                                         id: useData[i].fields.ID,
                                         priority: 0,
-                                        date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                        date: useData[i].fields.CreationDate !== '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : '',
                                         taskName: '',
                                         projectID: useData[i].fields.ProjectID || '',
                                         projectName: '',
@@ -9334,7 +9603,7 @@ Template.non_transactional_list.onRendered(function() {
                                 let obj = {
                                     id: useData[i].fields.ID,
                                     priority: 0,
-                                    date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                    date: useData[i].fields.CreationDate !== '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : '',
                                     taskName: '',
                                     projectID: useData[i].fields.ProjectID || '',
                                     projectName: '',
@@ -9353,7 +9622,7 @@ Template.non_transactional_list.onRendered(function() {
                             if (dataObj.tappointmentex.length > 0) {
                                 addVS1Data("TAppointment", JSON.stringify(dataObj));
                                 dataObj.tappointmentex.map(data => {
-                                    let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                    let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                                     creationDate = new Date(creationDate);
                                     if(creationDate >= fromDate && creationDate <= toDate){
                                         if (!deleteFilter) {
@@ -9361,7 +9630,7 @@ Template.non_transactional_list.onRendered(function() {
                                                 let obj = {
                                                     id: data.fields.ID,
                                                     priority: 0,
-                                                    date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                    date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                     taskName: '',
                                                     projectID: data.fields.ProjectID || '',
                                                     projectName: '',
@@ -9377,7 +9646,7 @@ Template.non_transactional_list.onRendered(function() {
                                             let obj = {
                                                 id: data.fields.ID,
                                                 priority: 0,
-                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                 taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
@@ -9405,7 +9674,7 @@ Template.non_transactional_list.onRendered(function() {
                     if (dataObj.tappointmentex.length > 0) {
                         addVS1Data("TAppointment", JSON.stringify(dataObj));
                         dataObj.tappointmentex.map(data => {
-                            let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                            let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                             creationDate = new Date(creationDate);
                             if(creationDate >= fromDate && creationDate <= toDate){
                                 if (!deleteFilter) {
@@ -9413,7 +9682,7 @@ Template.non_transactional_list.onRendered(function() {
                                         let obj = {
                                             id: data.fields.ID,
                                             priority: 0,
-                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                             taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
@@ -9429,7 +9698,7 @@ Template.non_transactional_list.onRendered(function() {
                                     let obj = {
                                         id: data.fields.ID,
                                         priority: 0,
-                                        date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                        date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                         taskName: '',
                                         projectID: data.fields.ProjectID || '',
                                         projectName: '',
@@ -9486,7 +9755,7 @@ Template.non_transactional_list.onRendered(function() {
                         }
                         try {
                             dataTableList.sort((a, b) => {
-                                new Date(a.date) - new Date(b.date)
+                                return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                             })
                         } catch (error) {}
                         templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -9518,13 +9787,13 @@ Template.non_transactional_list.onRendered(function() {
                                 dataTableList.push(obj)
                             }
                         }
-                        try {
-                            dataTableList.sort((a, b) => {
-                                new Date(a.date) - new Date(b.date)
-                            })
-                        } catch (error) {}
-                        templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                     }
+                    try {
+                        dataTableList.sort((a, b) => {
+                            return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
+                        })
+                    } catch (error) {}
+                    templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                 }
             }).catch(function(err) {
                 sideBarService.getCorrespondences().then(dataReturn => {
@@ -9559,7 +9828,7 @@ Template.non_transactional_list.onRendered(function() {
                     }
                     try {
                         dataTableList.sort((a, b) => {
-                            new Date(a.date) - new Date(b.date)
+                            return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                         })
                     } catch (error) {}
                     templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -9608,6 +9877,7 @@ Template.non_transactional_list.onRendered(function() {
                         targets: 1,
                         className: "colDate",
                         width: "15%",
+                        orderable: false,
                     },
                     {
                         targets: 2,
@@ -9628,6 +9898,7 @@ Template.non_transactional_list.onRendered(function() {
                         targets: 5,
                         className: "colCompletedBy",
                         width: "15%",
+                        orderable: false,
                     },
                     {
                         targets: 6,
@@ -9682,7 +9953,7 @@ Template.non_transactional_list.onRendered(function() {
                 responsive: true,
                 bLengthChange: false,
                 "order": [
-                    [1, "asc"]
+                    // [1, "asc"]
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -10106,9 +10377,9 @@ Template.non_transactional_list.onRendered(function() {
                     if (data.tprojecttasks.length > 0) {
                         addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
-                            let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
-                            due_date = new Date(due_date);
-                            if (due_date >= fromDate && due_date <= toDate ) {
+                            let sort_date = data.tprojecttasks[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tprojecttasks[i].fields.MsTimeStamp;
+                            sort_date = new Date(sort_date);
+                            if (sort_date >= fromDate && sort_date <= toDate ) {
                                 let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                                 let taskLabelArray = [];
                                 if (taskLabel !== null) {
@@ -10128,7 +10399,7 @@ Template.non_transactional_list.onRendered(function() {
                                         const dataList = {
                                             id: data.tprojecttasks[i].fields.ID || 0,
                                             priority: data.tprojecttasks[i].fields.priority || 0,
-                                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                            date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                             taskName: data.tprojecttasks[i].fields.TaskName || '',
                                             projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                             projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -10144,7 +10415,7 @@ Template.non_transactional_list.onRendered(function() {
                                     const dataList = {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
-                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                         taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -10168,9 +10439,9 @@ Template.non_transactional_list.onRendered(function() {
                 let all_records = data.tprojecttasks;
 
                 for (let i = 0; i < all_records.length; i++) {
-                    let due_date = all_records[i].fields.due_date == "" ? "1770-01-01" : all_records[i].fields.due_date;
-                    due_date = new Date(due_date);
-                    if (all_records[i].fields.ContactName == customerName && due_date >= fromDate && due_date <= toDate ) {
+                    let sort_date = all_records[i].fields.MsTimeStamp == "" ? "1770-01-01" : all_records[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
+                    if (all_records[i].fields.ContactName == customerName && sort_date >= fromDate && sort_date <= toDate ) {
                         let taskLabel = all_records[i].fields.TaskLabel;
                         let taskLabelArray = [];
                         if (taskLabel !== null) {
@@ -10190,7 +10461,7 @@ Template.non_transactional_list.onRendered(function() {
                                 const dataList = {
                                     id: all_records[i].fields.ID || 0,
                                     priority: all_records[i].fields.priority || 0,
-                                    date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    date: all_records[i].fields.MsTimeStamp !== '' ? moment(all_records[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                     taskName: all_records[i].fields.TaskName || '',
                                     projectID: all_records[i].fields.ProjectID || '',
                                     projectName: all_records[i].fields.ProjectName || '',
@@ -10206,7 +10477,7 @@ Template.non_transactional_list.onRendered(function() {
                             const dataList = {
                                 id: all_records[i].fields.ID || 0,
                                 priority: all_records[i].fields.priority || 0,
-                                date: all_records[i].fields.due_date !== '' ? moment(all_records[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                date: all_records[i].fields.MsTimeStamp !== '' ? moment(all_records[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                 taskName: all_records[i].fields.TaskName || '',
                                 projectID: all_records[i].fields.ProjectID || '',
                                 projectName: all_records[i].fields.ProjectName || '',
@@ -10227,9 +10498,9 @@ Template.non_transactional_list.onRendered(function() {
                 if (data.tprojecttasks.length > 0) {
                     addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
-                        let due_date = data.tprojecttasks[i].fields.due_date == "" ? "1770-01-01" : data.tprojecttasks[i].fields.due_date;
-                        due_date = new Date(due_date);
-                        if (due_date >= fromDate && due_date <= toDate ) {
+                        let sort_date = data.tprojecttasks[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tprojecttasks[i].fields.MsTimeStamp;
+                        sort_date = new Date(sort_date);
+                        if (sort_date >= fromDate && sort_date <= toDate ) {
                             let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                             let taskLabelArray = [];
                             if (taskLabel !== null) {
@@ -10249,7 +10520,7 @@ Template.non_transactional_list.onRendered(function() {
                                     const dataList = {
                                         id: data.tprojecttasks[i].fields.ID || 0,
                                         priority: data.tprojecttasks[i].fields.priority || 0,
-                                        date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                        date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                         taskName: data.tprojecttasks[i].fields.TaskName || '',
                                         projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                         projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -10265,7 +10536,7 @@ Template.non_transactional_list.onRendered(function() {
                                 const dataList = {
                                     id: data.tprojecttasks[i].fields.ID || 0,
                                     priority: data.tprojecttasks[i].fields.priority || 0,
-                                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                                    date: data.tprojecttasks[i].fields.MsTimeStamp !== '' ? moment(data.tprojecttasks[i].fields.MsTimeStamp).format("DD/MM/YYYY") : '',
                                     taskName: data.tprojecttasks[i].fields.TaskName || '',
                                     projectID: data.tprojecttasks[i].fields.ProjectID || '',
                                     projectName: data.tprojecttasks[i].fields.ProjectName || '',
@@ -10293,7 +10564,7 @@ Template.non_transactional_list.onRendered(function() {
                         if (dataObj.tappointmentex.length > 0) {
                             addVS1Data("TAppointment", JSON.stringify(dataObj));
                             dataObj.tappointmentex.map(data => {
-                                let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                                 creationDate = new Date(creationDate);
                                 if(creationDate >= fromDate && creationDate <= toDate){
                                     if (!deleteFilter) {
@@ -10301,7 +10572,7 @@ Template.non_transactional_list.onRendered(function() {
                                             let obj = {
                                                 id: data.fields.ID,
                                                 priority: 0,
-                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                 taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
@@ -10317,7 +10588,7 @@ Template.non_transactional_list.onRendered(function() {
                                         let obj = {
                                             id: data.fields.ID,
                                             priority: 0,
-                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                             taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
@@ -10340,7 +10611,7 @@ Template.non_transactional_list.onRendered(function() {
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tappointmentex;
                     for (let i = 0; i < useData.length; i++) {
-                        let creationDate = useData[i].fields.StartTime == "" ? "1770-01-01" : useData[i].fields.StartTime;
+                        let creationDate = useData[i].fields.CreationDate == "" ? "1770-01-01" : useData[i].fields.CreationDate;
                         creationDate = new Date(creationDate);
                         if (useData[i].fields.ClientName == customerName && creationDate >= fromDate && creationDate <= toDate) {
                             if (!deleteFilter) {
@@ -10348,7 +10619,7 @@ Template.non_transactional_list.onRendered(function() {
                                     let obj = {
                                         id: useData[i].fields.ID,
                                         priority: 0,
-                                        date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                        date: useData[i].fields.CreationDate !== '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : '',
                                         taskName: '',
                                         projectID: useData[i].fields.ProjectID || '',
                                         projectName: '',
@@ -10364,7 +10635,7 @@ Template.non_transactional_list.onRendered(function() {
                                 let obj = {
                                     id: useData[i].fields.ID,
                                     priority: 0,
-                                    date: useData[i].fields.StartTime !== '' ? moment(useData[i].fields.StartTime).format("DD/MM/YYYY") : '',
+                                    date: useData[i].fields.CreationDate !== '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : '',
                                     taskName: '',
                                     projectID: useData[i].fields.ProjectID || '',
                                     projectName: '',
@@ -10383,7 +10654,7 @@ Template.non_transactional_list.onRendered(function() {
                             if (dataObj.tappointmentex.length > 0) {
                                 addVS1Data("TAppointment", JSON.stringify(dataObj));
                                 dataObj.tappointmentex.map(data => {
-                                    let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                                    let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                                     creationDate = new Date(creationDate);
                                     if(creationDate >= fromDate && creationDate <= toDate){
                                         if (!deleteFilter) {
@@ -10391,7 +10662,7 @@ Template.non_transactional_list.onRendered(function() {
                                                 let obj = {
                                                     id: data.fields.ID,
                                                     priority: 0,
-                                                    date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                    date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                     taskName: '',
                                                     projectID: data.fields.ProjectID || '',
                                                     projectName: '',
@@ -10407,7 +10678,7 @@ Template.non_transactional_list.onRendered(function() {
                                             let obj = {
                                                 id: data.fields.ID,
                                                 priority: 0,
-                                                date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                                date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                                 taskName: '',
                                                 projectID: data.fields.ProjectID || '',
                                                 projectName: '',
@@ -10435,7 +10706,7 @@ Template.non_transactional_list.onRendered(function() {
                     if (dataObj.tappointmentex.length > 0) {
                         addVS1Data("TAppointment", JSON.stringify(dataObj));
                         dataObj.tappointmentex.map(data => {
-                            let creationDate = data.fields.StartTime == "" ? "1770-01-01" : data.fields.StartTime;
+                            let creationDate = data.fields.CreationDate == "" ? "1770-01-01" : data.fields.CreationDate;
                             creationDate = new Date(creationDate);
                             if(creationDate >= fromDate && creationDate <= toDate){
                                 if (!deleteFilter) {
@@ -10443,7 +10714,7 @@ Template.non_transactional_list.onRendered(function() {
                                         let obj = {
                                             id: data.fields.ID,
                                             priority: 0,
-                                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                            date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                             taskName: '',
                                             projectID: data.fields.ProjectID || '',
                                             projectName: '',
@@ -10459,7 +10730,7 @@ Template.non_transactional_list.onRendered(function() {
                                     let obj = {
                                         id: data.fields.ID,
                                         priority: 0,
-                                        date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
+                                        date: data.fields.CreationDate !== '' ? moment(data.fields.CreationDate).format("DD/MM/YYYY") : '',
                                         taskName: '',
                                         projectID: data.fields.ProjectID || '',
                                         projectName: '',
@@ -10516,7 +10787,7 @@ Template.non_transactional_list.onRendered(function() {
                         }
                         try {
                             dataTableList.sort((a, b) => {
-                                new Date(a.date) - new Date(b.date)
+                                return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                             })
                         } catch (error) {}
                         templateObject.displaySupplierCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -10548,13 +10819,13 @@ Template.non_transactional_list.onRendered(function() {
                                 dataTableList.push(obj)
                             }
                         }
-                        try {
-                            dataTableList.sort((a, b) => {
-                                new Date(a.date) - new Date(b.date)
-                            })
-                        } catch (error) {}
-                        templateObject.displaySupplierCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                     }
+                    try {
+                        dataTableList.sort((a, b) => {
+                            return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
+                        })
+                    } catch (error) {}
+                    templateObject.displaySupplierCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
                 }
             }).catch(function(err) {
                 sideBarService.getCorrespondences().then(dataReturn => {
@@ -10589,7 +10860,7 @@ Template.non_transactional_list.onRendered(function() {
                     }
                     try {
                         dataTableList.sort((a, b) => {
-                            new Date(a.date) - new Date(b.date)
+                            return new Date(b.date.split("/")[2]+"-"+b.date.split("/")[1]+"-"+b.date.split("/")[0]) - new Date(a.date.split("/")[2]+"-"+a.date.split("/")[1]+"-"+a.date.split("/")[0])
                         })
                     } catch (error) {}
                     templateObject.displaySupplierCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -10711,7 +10982,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: true,
                 "order": [
-                    [1, "asc"]
+                    // [1, "asc"]
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -11107,6 +11378,803 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.getBasReturnData = function() {
+        let dataTableList = [];
+        let months = [];
+        months["January"] = "01";
+        months["February"] = "02";
+        months["March"] = "03";
+        months["April"] = "04";
+        months["May"] = "05";
+        months["June"] = "06";
+        months["July"] = "07";
+        months["August"] = "08";
+        months["September"] = "09";
+        months["October"] = "10";
+        months["November"] = "11";
+        months["December"] = "12";
+        $(".fullScreenSpin").css("display", "inline-block");
+        getVS1Data('TBASReturn').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                reportService.getAllBASReturn().then(function(data) {
+                    addVS1Data("TBASReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+                    for (let i = 0; i < data.tbasreturn.length; i++) {
+                        let tab1startDate = "";
+                        let tab1endDate = "";
+                        let tab2startDate = "";
+                        let tab2endDate = "";
+                        let tab3startDate = "";
+                        let tab3endDate = "";
+                        let tab4startDate = "";
+                        let tab4endDate = "";
+                        if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
+                            tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                            tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
+                            tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                            tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
+                            tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                            tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
+                            tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
+                            tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                            tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
+                        }
+
+                        var dataList = {
+                            basnumber: data.tbasreturn[i].fields.ID || '',
+                            description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                            tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                            tab1startDate: tab1startDate,
+                            tab1endDate: tab1endDate,
+                            tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
+                            tab2startDate: tab2startDate,
+                            tab2endDate: tab2endDate,
+                            tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
+                            tab2startDate2: tab3startDate,
+                            tab2endDate2: tab3endDate,
+                            tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
+                            tab3startDate: tab4startDate,
+                            tab3endDate: tab4endDate,
+                        };
+                        dataTableList.push(dataList);
+                    }
+                    templateObject.displayBasReturnData(dataTableList);
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tbasreturn.length; i++) {
+                    let tab1startDate = "";
+                    let tab1endDate = "";
+                    let tab2startDate = "";
+                    let tab2endDate = "";
+                    let tab3startDate = "";
+                    let tab3endDate = "";
+                    let tab4startDate = "";
+                    let tab4endDate = "";
+                    if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
+                        tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                        tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
+                        tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                        tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
+                        tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                        tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
+                        tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
+                        tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                        tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
+                    }
+                    var dataList = {
+                        basnumber: data.tbasreturn[i].fields.ID || '',
+                        description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                        tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                        tab1startDate: tab1startDate,
+                        tab1endDate: tab1endDate,
+                        tab2datemethod: data.tbasreturn[i].fields.Tab2_Type,
+                        tab2startDate: tab2startDate,
+                        tab2endDate: tab2endDate,
+                        tab2datemethod2: data.tbasreturn[i].fields.Tab3_Type,
+                        tab2startDate2: tab3startDate,
+                        tab2endDate2: tab3endDate,
+                        tab3datemethod: data.tbasreturn[i].fields.Tab4_Type,
+                        tab3startDate: tab4startDate,
+                        tab3endDate: tab4endDate,
+                    };
+                    dataTableList.push(dataList);
+                }
+                templateObject.displayBasReturnData(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            }
+        }).catch(function(err) {
+            reportService.getAllBASReturn().then(function(data) {
+                addVS1Data("TBASReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+                for (let i = 0; i < data.tbasreturn.length; i++) {
+                    let tab1startDate = "";
+                    let tab1endDate = "";
+                    let tab2startDate = "";
+                    let tab2endDate = "";
+                    let tab3startDate = "";
+                    let tab3endDate = "";
+                    let tab4startDate = "";
+                    let tab4endDate = "";
+                    if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
+                        tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                        tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
+                        tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                        tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
+                        tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                        tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
+                        tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
+                        var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
+                        tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                        tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
+                    }
+
+                    var dataList = {
+                        basnumber: data.tbasreturn[i].fields.ID || '',
+                        description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                        tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                        tab1startDate: tab1startDate,
+                        tab1endDate: tab1endDate,
+                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
+                        tab2startDate: tab2startDate,
+                        tab2endDate: tab2endDate,
+                        tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
+                        tab2startDate2: tab3startDate,
+                        tab2endDate2: tab3endDate,
+                        tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
+                        tab3startDate: tab4startDate,
+                        tab3endDate: tab4endDate,
+                    };
+                    dataTableList.push(dataList);
+                }
+                templateObject.displayBasReturnData(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        });
+    }
+
+    templateObject.displayBasReturnData = async function(data){
+        var splashArrayLeadList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let deleteFilter = false;
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+
+        for (let i = 0; i < data.length; i++) {
+            let linestatus = '';
+            // if (data[i].Active == true) {
+            //     linestatus = "";
+            // } else if (data[i].Active == false) {
+            //     linestatus = "In-Active";
+            // };
+
+            var dataList = [
+                data[i].basnumber || '',
+                data[i].description || '',
+                data[i].tab1datemethod || '',
+                data[i].tab1startDate || '',
+                data[i].tab1endDate || '',
+                data[i].tab2datemethod || '',
+                data[i].tab2startDate || '',
+                data[i].tab2endDate || '',
+                data[i].tab2datemethod2 || '',
+                data[i].tab2startDate2 || '',
+                data[i].tab2endDate2 || '',
+            ];
+            splashArrayLeadList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayLeadList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "colBasNumber",
+                        width: "80px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
+                        className: "colBasName",
+                        width: "250px",
+                    },
+                    {
+                        targets: 2,
+                        className: "t1Period",
+                        width: "100px",
+                    },
+                    {
+                        targets: 3,
+                        className: "t1From",
+                        width: "120px",
+                    },
+                    {
+                        targets: 4,
+                        className: "t1To",
+                        width: "120px",
+                    },
+                    {
+                        targets: 5,
+                        className: "t2Period",
+                        width: "100px",
+                    },
+                    {
+                        targets: 6,
+                        className: "t2From",
+                        width: "120px",
+                    },
+                    {
+                        targets: 7,
+                        className: "t2To",
+                        width: "120px",
+                    },
+                    {
+                        targets: 8,
+                        className: "t3Period",
+                        width: "100px",
+                    },
+                    {
+                        targets: 9,
+                        className: "t3From",
+                        width: "120px",
+                    },
+                    {
+                        targets: 10,
+                        className: "t3To",
+                        width: "120px",
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search ST Payroll..." },
+                // "fnInitComplete": function(oSettings) {
+                //     if (data.Params.Search.replace(/\s/g, "") == "") {
+                //         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                //     } else {
+                //         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                //     }
+                //     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                // },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    templateObject.getVatReturnData = function() {
+        let dataTableList = [];
+        let months = [];
+        months["January"] = "01";
+        months["February"] = "02";
+        months["March"] = "03";
+        months["April"] = "04";
+        months["May"] = "05";
+        months["June"] = "06";
+        months["July"] = "07";
+        months["August"] = "08";
+        months["September"] = "09";
+        months["October"] = "10";
+        months["November"] = "11";
+        months["December"] = "12";
+        $(".fullScreenSpin").css("display", "inline-block");
+        getVS1Data('TVATReturn').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                reportService.getAllVATReturn().then(function(data) {
+                    addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+                    for (let i = 0; i < data.tvatreturn.length; i++) {
+                        let tab1startDate = "";
+                        let tab1endDate = "";
+                        let tab2startDate = "";
+                        let tab2endDate = "";
+                        let tab3startDate = "";
+                        let tab3endDate = "";
+                        if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                            tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                            tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                            tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                        }
+       
+                        var dataList = {
+                            basnumber: data.tvatreturn[i].fields.ID || '',
+                            description: data.tvatreturn[i].fields.VatSheetDesc || '',
+                            tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+                            tab1startDate: tab1startDate,
+                            tab1endDate: tab1endDate,
+                            tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
+                            tab2startDate: tab2startDate,
+                            tab2endDate: tab2endDate,
+                            tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
+                            tab3startDate: tab4startDate,
+                            tab3endDate: tab4endDate,
+                        };
+                        dataTableList.push(dataList);
+                    }
+                    templateObject.displayVatReturnData(dataTableList);
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tvatreturn.length; i++) {
+                    let tab1startDate = "";
+                    let tab1endDate = "";
+                    let tab2startDate = "";
+                    let tab2endDate = "";
+                    let tab3startDate = "";
+                    let tab3endDate = "";
+                    if (data.tvatreturns[i].fields.Tab1_Year > 0 && data.tvatreturns[i].fields.Tab1_Month != "") {
+                        tab1startDate = data.tvatreturns[i].fields.Tab1_Year + "-" + months[data.tvatreturns[i].fields.Tab1_Month] + "-01";
+                        var endMonth = (data.tvatreturns[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1_Month]);
+                        tab1endDate = new Date(data.tvatreturns[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tvatreturns[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                        tab2startDate = data.tvatreturns[i].fields.Tab2_Year + "-" + months[data.tvatreturns[i].fields.Tab2_Month] + "-01";
+                        var endMonth = (data.tvatreturns[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2_Month]);
+                        tab2endDate = new Date(data.tvatreturns[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tvatreturns[i].fields.Tab3_Year > 0 && data.tvatreturns[i].fields.Tab3_Month != "") {
+                        tab3startDate = data.tvatreturns[i].fields.Tab3_Year + "-" + months[data.tvatreturns[i].fields.Tab3_Month] + "-01";
+                        var endMonth = (data.tvatreturns[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3_Month]);
+                        tab3endDate = new Date(data.tvatreturns[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                    }
+                    var dataList = {
+                        basnumber: data.tvatreturns[i].fields.ID || '',
+                        description: data.tvatreturns[i].fields.BasSheetDesc || '',
+                        tab1datemethod: data.tvatreturns[i].fields.Tab1_Type,
+                        tab1startDate: tab1startDate,
+                        tab1endDate: tab1endDate,
+                        tab2datemethod: data.tvatreturns[i].fields.Tab2_Type,
+                        tab2startDate: tab2startDate,
+                        tab2endDate: tab2endDate,
+                        tab3datemethod: data.tvatreturns[i].fields.Tab3_Type,
+                        tab3startDate: tab3startDate,
+                        tab3endDate: tab3endDate,
+                    };
+                    dataTableList.push(dataList);
+                }
+                templateObject.displayVatReturnData(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            }
+        }).catch(function(err) {
+            reportService.getAllVATReturn().then(function(data) {
+                addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+                for (let i = 0; i < data.tvatreturn.length; i++) {
+                    let tab1startDate = "";
+                    let tab1endDate = "";
+                    let tab2startDate = "";
+                    let tab2endDate = "";
+                    let tab3startDate = "";
+                    let tab3endDate = "";
+                    if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                        tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                        var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                        tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                        tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                        var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                        tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                    }
+                    if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                        tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                        var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                        tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                    }
+   
+                    var dataList = {
+                        basnumber: data.tvatreturn[i].fields.ID || '',
+                        description: data.tvatreturn[i].fields.VatSheetDesc || '',
+                        tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+                        tab1startDate: tab1startDate,
+                        tab1endDate: tab1endDate,
+                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
+                        tab2startDate: tab2startDate,
+                        tab2endDate: tab2endDate,
+                        tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
+                        tab3startDate: tab4startDate,
+                        tab3endDate: tab4endDate,
+                    };
+                    dataTableList.push(dataList);
+                }
+                templateObject.displayVatReturnData(dataTableList);
+                $('.fullScreenSpin').css('display', 'none');
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        });
+    }
+
+    templateObject.displayVatReturnData = async function(data){
+        var splashArrayLeadList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let deleteFilter = false;
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+
+        for (let i = 0; i < data.length; i++) {
+            let linestatus = '';
+            // if (data[i].Active == true) {
+            //     linestatus = "";
+            // } else if (data[i].Active == false) {
+            //     linestatus = "In-Active";
+            // };
+
+            var dataList = [
+                data[i].vatnumber || '',
+                data[i].description || '',
+                data[i].tab1datemethod || '',
+                data[i].tab1startDate || '',
+                data[i].tab1endDate || '',
+                data[i].tab2datemethod || '',
+                data[i].tab2startDate || '',
+                data[i].tab2endDate || '',
+                data[i].tab3datemethod || '',
+                data[i].tab3startDate || '',
+                data[i].tab3endDate || '',
+            ];
+            splashArrayLeadList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayLeadList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "colVatNumber",
+                        width: "80px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
+                        className: "colVatName",
+                        width: "250px",
+                    },
+                    {
+                        targets: 2,
+                        className: "t1Period",
+                        width: "100px",
+                    },
+                    {
+                        targets: 3,
+                        className: "t1From",
+                        width: "120px",
+                    },
+                    {
+                        targets: 4,
+                        className: "t1To",
+                        width: "120px",
+                    },
+                    {
+                        targets: 5,
+                        className: "t2Period",
+                        width: "100px",
+                    },
+                    {
+                        targets: 6,
+                        className: "t2From",
+                        width: "120px",
+                    },
+                    {
+                        targets: 7,
+                        className: "t2To",
+                        width: "120px",
+                    },
+                    {
+                        targets: 8,
+                        className: "t3Period",
+                        width: "100px",
+                    },
+                    {
+                        targets: 9,
+                        className: "t3From",
+                        width: "120px",
+                    },
+                    {
+                        targets: 10,
+                        className: "t3To",
+                        width: "120px",
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search ST Payroll..." },
+                // "fnInitComplete": function(oSettings) {
+                //     if (data.Params.Search.replace(/\s/g, "") == "") {
+                //         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                //     } else {
+                //         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                //     }
+                //     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                // },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -11182,14 +12250,17 @@ Template.non_transactional_list.onRendered(function() {
     }else if (currenttablename === "tblRateTypeList"){
         templateObject.getRateTypeListData();
     }else if (currenttablename === "tblOverTimeSheet"){
-        templateObject.getOverTimeSheets(true);
+        templateObject.getOverTimeSheets();
     }else if( currenttablename === "productrecentlist"){
         templateObject.getAllProductRecentTransactions(currenttype);
     }else if(currenttablename === "tblInventoryOverview"){
-        templateObject.getAllProductData();
+        templateObject.getAllProductData("All");
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
-        templateObject.getOverTimeSheets();
+    } else if (currenttablename == "tblBASReturnList") {
+        templateObject.getBasReturnData();
+    } else if (currenttablename == "tblVATReturnList") {
+        templateObject.getVatReturnData();
     }
     tableResize();
 });
