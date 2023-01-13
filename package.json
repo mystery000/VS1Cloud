@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "VS1 Cloud Application.",
   "scripts": {
-    "start": "meteor run",
+    "start": "meteor run --no-lint --no-release-check",
     "dev": "meteor --port 3300",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
