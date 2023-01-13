@@ -21,6 +21,8 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 
+const _ = require('lodash');
+
 const redirectToPayRollOverview = () => {
   const id = FlowRouter.current().queryParams.tid;
   window.location.href = `/payrolloverview?tid=${id}&refresh=true`;

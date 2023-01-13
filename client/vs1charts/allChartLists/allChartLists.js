@@ -78,8 +78,9 @@ let chartsPlaceList = {
     ],
 
     "Payroll_Overview": [
-        "employeecompletedjobs",
+        "employeeDaysAbsent",
         "clockedOnEmployees",
+        "employeesOnLeave"
     ],
 
     "Purchases_Overview": [
