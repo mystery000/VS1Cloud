@@ -214,7 +214,8 @@ Template.fixedassetcard.events({
       var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
       var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
       return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " " + hh + ":" + min + ":" + ss;
-    }
+    };
+
     fixedassetSercie.saveTFixedAsset(newFixedAsset).then((data) => {
       fixedassetSercie.getTFixedAssetsList().then(function (data) {
         addVS1Data('TFixedAssets', JSON.stringify(data));

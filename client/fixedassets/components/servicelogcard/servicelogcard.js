@@ -10,8 +10,11 @@ Template.servicelogcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.fixedAssets = new ReactiveVar([]);
 
-  templateObject.asset_code = new ReactiveVar();
-  templateObject.asset_name = new ReactiveVar();
+  templateObject.asset_id = new ReactiveVar(0);
+  templateObject.asset_code = new ReactiveVar('');
+  templateObject.asset_name = new ReactiveVar('');
+  templateObject.asset_name = new ReactiveVar('');
+  templateObject.asset_status = new ReactiveVar(false);
 });
 
 Template.servicelogcard.onRendered(function () {
@@ -44,25 +47,28 @@ Template.servicelogcard.onRendered(function () {
       dataTableList.push(dataList);
     }
     templateObject.fixedAssets.set(dataTableList);
+    templateObject.fixedAssets.get().forEach((asset, index) => {
+      $('#edtAssetCode').editableSelect('add', function(){
+        $(this).val(index);
+        $(this).text(asset.assetcode);
+      });
+    });
+    $('#edtAssetCode').editableSelect();
   }
 
   $('#edtAssetCode').editableSelect();
-  // $('#edtAssetCode').editableSelect().on('click.editable-select', function (e, li) {
-  //   var $earch = $(this);
-  //   var offset = $earch.offset();
-  //   var taxRateDataName = e.target.value || '';
-  //   if (taxRateDataName.replace(/\s/g, '') != '') {
-  //     console.log(taxRateDataName);
-  //     const fixedAssetsList = templateObject.fixedAssets.get();
-  //     let lineItems = [];
-  //     for (let i = 0; i < fixedAssetsList.length; i++) {
-  //       if ((fixedAssetsList[i].assetcode) === taxRateDataName) {
-  //         lineItems.push(fixedAssetsList[i]);
-  //       }
-  //     }
-  //     $()
-  //   }
-  // });
+  $('#edtAssetCode').editableSelect()
+  .on('select.editable-select', function (e, li) {
+    if (li) {
+      const index = parseInt(li.val() || -1);
+      if (index >= 0) {
+        const assetsList = templateObject.fixedAssets.get();
+        templateObject.asset_id.set(assetsList[index].id);
+        templateObject.asset_code.set(assetsList[index].assetcode);
+        templateObject.asset_name.set(assetsList[index].assetname);
+      }
+    }
+  });
 
   $("#date-input,#dtServiceDate,#dtNextServiceDate").datepicker({
     showOn: 'button',
@@ -84,18 +90,37 @@ Template.servicelogcard.events({
     let newServiceLog = {
       "type": "TServiceLog",
       "fields": {
-        AssetID: '6',
-        AssetCode: 'TestAsset -111',
-        AssetName: 'Asset Name -tEst',
-        ServiceProvider:"Lion Park Holden",
-        ServiceDate:"2008-08-14 00:00:00",
-        NextServiceDate:"2008-11-21 00:00:00",
-        ServiceNotes:"Basic 3000 km service",
-        Done:false
+        AssetID: templateObject.asset_id.get(),
+        AssetCode: templateObject.asset_code.get(),
+        AssetName: templateObject.asset_name.get(),
+        ServiceProvider: $("#edtServiceProvider").val(),
+        ServiceDate: getDateStr($("#dtServiceDate").datepicker("getDate")),
+        NextServiceDate: getDateStr($("#dtNextServiceDate").datepicker("getDate")),
+        ServiceNotes: $("#txtServiceNotes").val(),
+        Done: templateObject.asset_status.get()
       }
     };
     console.log(newServiceLog);
-    serviceLogService.saveServiceLog(newServiceLog);
+
+    function getDateStr(dateVal) {
+      if (!dateVal)
+        return '';
+      const dateObj = new Date(dateVal);
+      var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
+      var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
+      var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
+      return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " " + hh + ":" + min + ":" + ss;
+    };
+
+
+    serviceLogService.saveServiceLog(newServiceLog).then((data) => {
+      console.log(data);
+    }).catch((err) => {
+      console.log(err);
+    });
+  },
+  "change input##chkDone": function() {
+    templateObject.asset_status.set(!templateObject.asset_status.get());
   },
   "click button.btnBack": function() {
     FlowRouter.go('/serviceloglist');
@@ -103,14 +128,5 @@ Template.servicelogcard.events({
 });
 
 Template.servicelogcard.helpers({
-  fixedAssets: () => {
-    return Template.instance().fixedAssets.get().sort(function (a, b) {
-      if (a.assetname === "NA") {
-        return 1;
-      } else if (b.assetname === "NA") {
-        return -1;
-      }
-      return a.assetname.toUpperCase() > b.assetname.toUpperCase() ? 1 : -1;
-    });
-  },
+  assetName: templateObject.asset_name.get()
 });
