@@ -1328,7 +1328,7 @@ Template.bankrecon2.onRendered(function() {
         $(".colAccountName").removeClass('boldtablealertsborder');
         var table = $(this);
 
-        let accountname = table.find(".productName").text();
+        let accountname = table.find(".colAccountName").text();
         var accountTypeId = table.find(".colAccountID").text();
         $('#accountListModal').modal('toggle');
         $('#bankAccountName').val(accountname);
