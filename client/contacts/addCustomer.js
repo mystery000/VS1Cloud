@@ -4855,6 +4855,8 @@ Template.customerscard.events({
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
 
+        $("#"+tokenid+" .colTaskName").focus();
+
         $("#frmEditTaskModal")[0].reset();
         $("#txtCrmTaskID").val("");
         $("#txtCrmProjectID").val("");
@@ -4889,6 +4891,17 @@ Template.customerscard.events({
             $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html($("#edtAccountName").val());
             $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html($("#txaAccountDescription").val());
             $("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
+        });
+
+        $(document).on("focusout", "#"+tokenid+" .colTaskName, #"+tokenid+" .colTaskDesc, #"+tokenid+" .colCompletedBy", function(e) {
+            $("#edtAccountName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
+            $("#txaAccountDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+            $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
+            if($("#"+tokenid+" .colTaskName").html() != "" && $("#"+tokenid+" .colTaskDesc").html() != "" && $("#"+tokenid+" #completeDate").val() != ""){
+                $(".btnSaveEditTask").trigger("click");
+                $(".btnAddLineGroup button").attr("disabled", false);
+                $(".btnCustomerTask").attr("disabled", false);
+            }
         });
     },
     "click .btnRemoveLine": function(event) {
