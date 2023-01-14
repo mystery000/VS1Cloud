@@ -287,6 +287,16 @@
         {{#if is_available_chart currentTemplate "dsleadlistchart"}}
             {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
         {{/if}} 
+        
+        {{#if is_available_chart currentTemplate "employeeDaysAbsent"}}
+            {{> employeeAbsentDays
+                    md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+        {{/if}}
+
+        {{#if is_available_chart currentTemplate "employeesOnLeave"}}
+            {{> employeeLeave
+                    md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+        {{/if}}
 
     </div>
     <div class="row no-gutters justify-content-center">

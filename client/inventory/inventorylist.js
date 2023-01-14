@@ -1,6 +1,7 @@
 import './inventorylist.html';
 // import './inventorypopups/RecentTransactionPopUp.html';
 // import './producttable/productTable.js';
+
 import './inventorypopups/onBackOrderPopUp.html';
 import './inventorypopups/onOrderPopUp.html';
 import './inventorypopups/onSalesOrderPopUp.html';

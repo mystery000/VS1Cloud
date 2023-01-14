@@ -20,7 +20,7 @@
                             <h3>Recent Transactions</h3>
                             <!-- {{>recentTransactionTable productID=productID type="all"}} -->
                             {{#if productID}}
-                            {{>non_transactional_list tablename="productrecentlist" type="all"}}
+                            {{>non_transactional_list tablename="productrecentlist" type="all" productID = productID}}
                             {{/if}}
                         </div>
                     </div>

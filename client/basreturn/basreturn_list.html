@@ -171,8 +171,7 @@
 
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
-
-                    <div class="table-responsive">
+                    <!--<div class="table-responsive">
                         <style>
                             th {
                                 background-color: #ededed;
@@ -208,23 +207,17 @@
                         <table id="tblBASReturnList" name="tblBASReturnList" class="dataTable table table-hover table-striped table-bordered tblBasReturnList">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colBasNumber" rowspan="2" style="width:60px; text-align:center" id="header-1">Bas Number</th>
+                                    <th class="th colBasNumber" rowspan="2" style="width:80px; text-align:center" id="header-1">Bas Number</th>
                                     <th class="th colBasName" style="width:250px !important; text-align:center" rowspan="2" id="header-2">Description</th>
-                                    <th class="th colT1Option" colspan="3" style="text-align:center" id="header-3">Supplies and Acquisitions</th>
-                                    <th class="th colT2Option" colspan="3" style="text-align:center" id="header-4">PAYG Withheld for the period</th>
-                                    <th class="th colT1Option" colspan="3" style="text-align:center" id="header-5">PAYG instalment for the period</th>
-                                    <!-- <th class="th colStatus hiddenColumn" style="width: 5% !important; text-align:center;" rowspan="3">Status</th> -->
-                                </tr>
-                                <tr class="dnd-moved">
-                                    <th style="width:80px; text-align:center" class="t1Period" id="header-6">Period</th>
-                                    <th style="width:100px; text-align:center" class="t1From" id="header-7">From</th>
-                                    <th style="width:100px; text-align:center" class="t1To" id="header-8">To</th>
-                                    <th style="width:80px; text-align:center" class="t2Period" id="header-9">Period</th>
-                                    <th style="width:100px; text-align:center" class="t2From" id="header-10">From</th>
-                                    <th style="width:100px; text-align:center" class="t2To" id="header-11">To</th>
-                                    <th style="width:80px; text-align:center" class="t3Period" id="header-12">Period</th>
-                                    <th style="width:100px; text-align:center" class="t3From" id="header-13">From</th>
-                                    <th style="width:100px; text-align:center" class="t3To" id="header-14">To</th>
+                                    <th style="width:100px; text-align:center" class="t1Period" id="header-6">GST<br>Period</th>
+                                    <th style="width:120px; text-align:center" class="t1From" id="header-7">GST<br>From</th>
+                                    <th style="width:120px; text-align:center" class="t1To" id="header-8">GST<br>To</th>
+                                    <th style="width:100px; text-align:center" class="t2Period" id="header-9">Withheld<br>Period</th>
+                                    <th style="width:120px; text-align:center" class="t2From" id="header-10">Withheld<br>From</th>
+                                    <th style="width:120px; text-align:center" class="t2To" id="header-11">Withheld<br>To</th>
+                                    <th style="width:100px; text-align:center" class="t3Period" id="header-12">instalment<br>Period</th>
+                                    <th style="width:120px; text-align:center" class="t3From" id="header-13">instalment<br>From</th>
+                                    <th style="width:120px; text-align:center" class="t3To" id="header-14">instalment<br>To</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -242,13 +235,13 @@
                                     <td contenteditable="false" class="t3Period">{{item.tab2datemethod2}}</td>
                                     <td contenteditable="false" class="t3From">{{item.tab2startDate2}}</td>
                                     <td contenteditable="false" class="t3To">{{item.tab2endDate2}}</td>
-                                    <!-- <td contenteditable="false" class="colStatus hiddenColumn">{{item.orderstatus}}</td> -->
                                 </tr>
                                 {{/each}}
                                 {{/if}}
                             </tbody>
                         </table>
-                    </div>
+                    </div> -->
+                    {{> non_transactional_list tablename = "tblBASReturnList"}}
                 </div>
             </div>
         </div>
