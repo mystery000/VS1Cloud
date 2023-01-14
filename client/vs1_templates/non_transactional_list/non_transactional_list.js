@@ -8320,7 +8320,7 @@ Template.non_transactional_list.onRendered(function() {
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
-                crmService.getAllTasksByContactName(customerName).then(async function(data) {
+                crmService.getAllTasksByContactName().then(async function(data) {
                     if (data.tprojecttasks.length > 0) {
                         addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
@@ -8441,7 +8441,7 @@ Template.non_transactional_list.onRendered(function() {
                 await getAppointments(deleteFilter);
             }
         }).catch(function(err) {
-            crmService.getAllTasksByContactName(customerName).then(async function(data) {
+            crmService.getAllTasksByContactName().then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
                     addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
@@ -9009,7 +9009,7 @@ Template.non_transactional_list.onRendered(function() {
                             onSelect: function(formated, dates) {
                                 const datefrom = $("#dateFrom").val();
                                 const dateto = $("#dateTo").val();
-                                templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
+                                templateObject.getLeadCrmListDataWithDate(deleteFilter, datefrom, dateto);
                             },
                             onChangeMonthYear: function(year, month, inst) {
                                 // Set date to picker
@@ -9022,6 +9022,12 @@ Template.non_transactional_list.onRendered(function() {
                         });
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
+
+                        $(document).on("click", "#btnRefreshList", function(e) {
+                            const datefrom = $("#dateFrom").val();
+                            const dateto = $("#dateTo").val();
+                            templateObject.getLeadCrmListDataWithDate(deleteFilter, datefrom, dateto);
+                        });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -9333,7 +9339,7 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
         let dataTableList = [];
         let customerName = $('#edtCustomerCompany').val();
-
+        
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
         
@@ -9342,7 +9348,7 @@ Template.non_transactional_list.onRendered(function() {
         
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
-                crmService.getAllTasksByContactName(customerName).then(async function(data) {
+                crmService.getAllTasksByContactName().then(async function(data) {
                     if (data.tprojecttasks.length > 0) {
                         addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
@@ -9462,7 +9468,7 @@ Template.non_transactional_list.onRendered(function() {
                 await getAppointments(deleteFilter);
             }
         }).catch(function(err) {
-            crmService.getAllTasksByContactName(customerName).then(async function(data) {
+            crmService.getAllTasksByContactName().then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
                     addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
@@ -10033,7 +10039,7 @@ Template.non_transactional_list.onRendered(function() {
                             onSelect: function(formated, dates) {
                                 const datefrom = $("#dateFrom").val();
                                 const dateto = $("#dateTo").val();
-                                templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+                                templateObject.getCustomerCrmListDataWithDate(deleteFilter, datefrom, dateto);
                             },
                             onChangeMonthYear: function(year, month, inst) {
                                 // Set date to picker
@@ -10050,7 +10056,7 @@ Template.non_transactional_list.onRendered(function() {
                         $(document).on("click", "#btnRefreshList", function(e) {
                             const datefrom = $("#dateFrom").val();
                             const dateto = $("#dateTo").val();
-                            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+                            templateObject.getCustomerCrmListDataWithDate(deleteFilter, datefrom, dateto);
                         });
                     }, 100);
                 },
@@ -10373,7 +10379,7 @@ Template.non_transactional_list.onRendered(function() {
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
-                crmService.getAllTasksByContactName(customerName).then(async function(data) {
+                crmService.getAllTasksByContactName().then(async function(data) {
                     if (data.tprojecttasks.length > 0) {
                         addVS1Data("TCRMTaskList", JSON.stringify(data));
                         for (let i = 0; i < data.tprojecttasks.length; i++) {
@@ -10494,7 +10500,7 @@ Template.non_transactional_list.onRendered(function() {
                 await getAppointments(deleteFilter);
             }
         }).catch(function(err) {
-            crmService.getAllTasksByContactName(customerName).then(async function(data) {
+            crmService.getAllTasksByContactName().then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
                     addVS1Data("TCRMTaskList", JSON.stringify(data));
                     for (let i = 0; i < data.tprojecttasks.length; i++) {
@@ -11062,7 +11068,7 @@ Template.non_transactional_list.onRendered(function() {
                             onSelect: function(formated, dates) {
                                 const datefrom = $("#dateFrom").val();
                                 const dateto = $("#dateTo").val();
-                                templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+                                templateObject.getSupplierCrmListDataWithDate(deleteFilter, datefrom, dateto);
                             },
                             onChangeMonthYear: function(year, month, inst) {
                                 // Set date to picker
@@ -11075,6 +11081,12 @@ Template.non_transactional_list.onRendered(function() {
                         });
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
+
+                        $(document).on("click", "#btnRefreshList", function(e) {
+                            const datefrom = $("#dateFrom").val();
+                            const dateto = $("#dateTo").val();
+                            templateObject.getSupplierCrmListDataWithDate(deleteFilter, datefrom, dateto);
+                        });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -12339,15 +12351,15 @@ Template.non_transactional_list.events({
         } else if (currenttablename === "tblLeadCrmListWithDate") {
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
-            templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
+            templateObject.getLeadCrmListDataWithDate(true, datefrom, dateto);
         } else if (currenttablename === "tblCustomerCrmListWithDate") {
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
-            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+            templateObject.getCustomerCrmListDataWithDate(true, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmListWithDate") {
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
-            templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+            templateObject.getSupplierCrmListDataWithDate(true, datefrom, dateto);
         } else if (currenttablename === "tblRatePopList"){
             templateObject.getRateListData(true);
         } else if (currenttablename === "tblRateTypeList"){

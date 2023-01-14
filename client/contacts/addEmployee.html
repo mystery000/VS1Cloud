@@ -532,7 +532,8 @@
                                                 <div class="col" style="padding: 4px;margin-top: 16px;">
                                                     <div>
                                                         <ul class="nav nav-tabs nav-justified">
-                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-4">Address</a></li>
+                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab active" role="tab" data-toggle="tab" data-target="#tab-crm">CRM</a></li>
+                                                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-4">Address</a></li>
                                                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-5">Notes</a></li>
                                                             <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-6">Billing</a></li> -->
                                                             <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-8">{{#if attachmentCount}}<span
@@ -546,7 +547,34 @@
                                                             {{/if}}
                                                         </ul>
                                                         <div class="tab-content">
-                                                            <div class="tab-pane active border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; overflow: auto; ">
+                                                            <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                                <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                                <style>
+                                                                    #tblCustomerCrmListWithDate{
+                                                                        width:100% !important;
+                                                                    }
+                                                                    #tblCustomerCrmListWithDate .colDate{
+                                                                        width:12% !important;
+                                                                    }
+                                                                    #tblCustomerCrmListWithDate .colType{
+                                                                        width:12% !important;
+                                                                    }
+                                                                    #tblCustomerCrmListWithDate .colTaskName{
+                                                                        width:18% !important;
+                                                                    }
+                                                                    #tblCustomerCrmListWithDate .colTaskDesc{
+                                                                        width:30% !important;
+                                                                    }
+                                                                    #tblCustomerCrmListWithDate .colCompletedBy{
+                                                                        width:15% !important;
+                                                                    }
+                                                                    #tblCustomerCrmListWithDate .colCompleteTask{
+                                                                        width:12% !important;
+                                                                    }
+                                                                </style>
+                                                                {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}
+                                                            </div>
+                                                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; overflow: auto; ">
                                                                 <div class="row" style="margin: 4px 12px;">
                                                                     <div class="col-12" style="padding: 0px;">
                                                                         <h4 style="margin: 4px;">Shipping Address</h4>
@@ -3842,7 +3870,11 @@
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="employeeTitlePopModal">
         {{> title_list_pop}}
-     </div>
+    </div>
+
+    {{> taskDetailModal}}
+    {{> frmappointmentpop}}
+    {{> newTaskModal}}
 
     {{> SelectPayCalendar }}
     <script>

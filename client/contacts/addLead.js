@@ -43,6 +43,7 @@ Template.leadscard.onCreated(function() {
     templateObject.tprojectlist = new ReactiveVar([]);
     templateObject.all_projects = new ReactiveVar([]);
     templateObject.subTasks = new ReactiveVar([]);
+    templateObject.taskrecords = new ReactiveVar([]);
 });
 
 Template.leadscard.onRendered(function() {
@@ -445,8 +446,7 @@ Template.leadscard.onRendered(function() {
         //let attachmentData =  contactService.getCustomerAttachmentList(data.fields.ID);
         templateObject.getOverviewARData(data.fields.ClientName);
         templateObject.records.set(lineItemObj);
-
-        templateObject.getAllCrm(data.fields.ClientName);
+        templateObject.getAllTask(data.fields.ClientName);
         /* START attachment */
         templateObject.attachmentCount.set(0);
         if (data.fields.Attachments) {
@@ -875,135 +875,32 @@ Template.leadscard.onRendered(function() {
         }
     }
 
-    templateObject.getAllCrm = async function(leadName) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
-        var url = FlowRouter.current().path;
-        if (url.includes("/employeescard")) {
-            url = new URL(window.location.href);
-            employeeID = url.searchParams.get("id");
-        }
-        let dataTableList = [];
-
-        // async function getTask() {
-        crmService.getAllTasksByContactName(leadName).then(async function(data) {
+    templateObject.getAllTask = function(leadName) {
+        getVS1Data("TCRMTaskList").then(async function(dataObject) {
+            if (dataObject.length == 0) {
+                crmService.getAllTasksByContactName().then(async function(data) {
+                    if (data.tprojecttasks.length > 0) {
+                        addVS1Data("TCRMTaskList", JSON.stringify(data));
+                        templateObject.taskrecords.set(data.tprojecttasks);
+                    }
+                }).catch(function(err) {
+                })
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let all_records = data.tprojecttasks;
+                templateObject.taskrecords.set(all_records);
+            }
+        }).catch(function(err) {
+            crmService.getAllTasksByContactName().then(async function(data) {
                 if (data.tprojecttasks.length > 0) {
-                    for (let i = 0; i < data.tprojecttasks.length; i++) {
-                        let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-                        let taskLabelArray = [];
-                        if (taskLabel !== null) {
-                            if (taskLabel.length === undefined || taskLabel.length === 0) {
-                                taskLabelArray.push(taskLabel.fields);
-                            } else {
-                                for (let j = 0; j < taskLabel.length; j++) {
-                                    taskLabelArray.push(taskLabel[j].fields);
-                                }
-                            }
-                        }
-                        let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
-                        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-                        const dataList = {
-                            id: data.tprojecttasks[i].fields.ID || 0,
-                            priority: data.tprojecttasks[i].fields.priority || 0,
-                            date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                            taskName: 'Task',
-                            projectID: data.tprojecttasks[i].fields.ProjectID || '',
-                            projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                            description: taskDescription,
-                            labels: taskLabelArray,
-                            category: 'task',
-                            completed: data.tprojecttasks[i].fields.Completed,
-                            completedby: data.tprojecttasks[i].fields.due_date ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : "",
-                        };
-                        // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
-                        dataTableList.push(dataList);
-                        // }
-                    }
+                    addVS1Data("TCRMTaskList", JSON.stringify(data));
+                    templateObject.taskrecords.set(data.tprojecttasks);
                 }
-                await getAppointments();
             }).catch(function(err) {
-                getAppointments();
             })
-            // }
-
-        async function getAppointments() {
-            crmService.getAllAppointments(leadName).then(async function(dataObj) {
-                if (dataObj.tappointmentex.length > 0) {
-                    dataObj.tappointmentex.map(data => {
-                        let obj = {
-                            id: data.fields.ID,
-                            priority: 0,
-                            date: data.fields.StartTime !== '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : '',
-                            taskName: 'Appointment',
-                            projectID: data.fields.ProjectID || '',
-                            projectName: '',
-                            description: '',
-                            labels: '',
-                            category: 'appointment',
-                            completed: data.fields.Actual_EndTime ? true : false,
-                            completedby: data.fields.Actual_EndTime ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
-                        }
-
-                        dataTableList.push(obj);
-                    })
-                }
-                // templateObject.crmRecords.set(dataTableList);
-                // setCrmProjectTasks()
-                // $('.fullScreenSpin').css('display', 'none');
-                await getEmails();
-            }).catch(function(error) {
-                getEmails();
-            })
-        }
-
-        async function getEmails() {
-            sideBarService.getCorrespondences().then(dataReturn => {
-                    let totalCorrespondences = dataReturn.tcorrespondence;
-                    totalCorrespondences = totalCorrespondences.filter(item => {
-                        return item.fields.MessageTo == $('#edtLeadEmail').val()
-                    })
-                    if (totalCorrespondences.length > 0 && $('#edtLeadEmail').val() != '') {
-                        totalCorrespondences.map(item => {
-                            let labels = [];
-                            labels.push(item.fields.Ref_Type)
-                            let obj = {
-                                id: item.fields.MessageId ? parseInt(item.fields.MessageId) : 999999,
-                                priority: 0,
-                                date: item.fields.Ref_Date !== '' ? moment(item.fields.Ref_Date).format('DD/MM/YYYY') : '',
-                                taskName: 'Email',
-                                projectID: '',
-                                projectName: '',
-                                description: '',
-                                labels: '',
-                                category: 'email',
-                                completed: false,
-                                completedby: "",
-                            }
-                            dataTableList.push(obj)
-                        })
-                    }
-                    try {
-                        dataTableList.sort((a, b) => {
-                            new Date(a.date) - new Date(b.date)
-                        })
-                        templateObject.crmRecords.set(dataTableList);
-                    } catch (error) {}
-                    setCrmProjectTasks()
-
-                })
-                .catch((err) => {
-                    templateObject.crmRecords.set(dataTableList);
-                    setCrmProjectTasks()
-                    $('.fullScreenSpin').css('display', 'none');
-                })
-        }
-
-        // await getTask();
-        // await getAppointments();
-        // await getEmails();
-
-
+        });
     };
+
 
     function setCrmProjectTasks() {
         let tableHeaderList = [];
@@ -1864,18 +1761,13 @@ Template.leadscard.events({
     },
     'click .tblLeadCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
-        // const taskCategory = $(event.target).parent().attr('category');
-        let crmRecords = Template.instance().crmRecords.get();
-        const currentRecordIndex = crmRecords.findIndex(item => item.id == taskID);
-        let taskCategory = "";
-        if (currentRecordIndex > -1) {
-            taskCategory = crmRecords[currentRecordIndex].category;
-        }
-        if (taskID !== undefined) {
-            if (taskCategory == 'task') {
+        let colType = $(event.target).parent().find(".colType").text();
+        
+        if (taskID !== undefined && taskID !== "random") {
+            if (colType == 'Task') {
                 // FlowRouter.go('/crmoverview?taskid=' + taskID);
                 openEditTaskModals(taskID, "");
-            } else if (taskCategory == 'appointment') {
+            } else if (colType == 'Appointment') {
                 // FlowRouter.go('/appointments?id=' + taskID);
                 document.getElementById("updateID").value = taskID || 0;
                 $("#event-modal").modal("toggle");
@@ -2638,21 +2530,21 @@ Template.leadscard.events({
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
 
         $(document).on("click", "#tblLeadCrmListWithDate tbody .dnd-moved .colDate, #tblLeadCrmListWithDate tbody .dnd-moved .colType", function(e) {
-            $("#edtAccountName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
-            $("#txaAccountDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+            $(".editTaskDetailName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
+            $(".editTaskDetailDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
             $("#taskmodalDuedate").val($("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val());
             $("#taskDetailModal").modal("toggle");
         });
 
-        $(document).on("change", "#edtAccountName, #txaAccountDescription, #taskmodalDuedate", function(e) {
+        $(document).on("change", ".editTaskDetailName, .editTaskDetailDescription, #taskmodalDuedate", function(e) {
             $("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html($("#edtAccountName").val());
             $("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html($("#txaAccountDescription").val());
             $("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
         });
 
         $(document).on("focusout", "#"+tokenid+" .colTaskName, #"+tokenid+" .colTaskDesc, #"+tokenid+" .colCompletedBy", function(e) {
-            $("#edtAccountName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
-            $("#txaAccountDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+            $(".editTaskDetailName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
+            $(".editTaskDetailDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
             $("#taskmodalDuedate").val($("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val());
             if($("#"+tokenid+" .colTaskName").html() != "" && $("#"+tokenid+" .colTaskDesc").html() != "" && $("#"+tokenid+" #completeDate").val() != ""){
                 $(".btnSaveEditTask").trigger("click");
@@ -2856,10 +2748,11 @@ function openEditTaskModals(id, type) {
 
     $(".fullScreenSpin").css("display", "inline-block");
     // get selected task detail via api
-    crmService.getTaskDetail(id).then(function(data) {
-        $(".fullScreenSpin").css("display", "none");
-        if (data.fields.ID == id) {
-            let selected_record = data.fields;
+    let taskrecords = templateObject.taskrecords.get();
+    for(var i=0; i<taskrecords.length; i++){
+        if(taskrecords[i].fields.ID == id){
+            $(".fullScreenSpin").css("display", "none");
+            let selected_record = taskrecords[i].fields;
 
             $("#txtCrmTaskID").val(selected_record.ID);
             $("#txtCrmProjectID").val(selected_record.ProjectID);
@@ -3338,14 +3231,10 @@ function openEditTaskModals(id, type) {
             let begunDate = moment(currentDate).format("DD/MM/YYYY");
             $(".crmDatepicker").val(begunDate);
 
-        } else {
-            swal("Cannot edit this task", "", "warning");
-            return;
-        }
-    }).catch(function(err) {
-        $(".fullScreenSpin").css("display", "none");
-
-        swal(err, "", "error");
-        return;
-    });
+        } 
+        // else {
+        //     swal("Cannot edit this task", "", "warning");
+        //     return;
+        // }
+    }
 }
