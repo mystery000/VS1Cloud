@@ -2610,7 +2610,9 @@ Template.leadscard.events({
         $("#completeDate").datepicker("setDate", completeDate);
 
         $(".btnAddLineGroup button").attr("disabled", true);
-        $(".btnCustomerTask").attr("disabled", true);
+        $(".btnTask").attr("disabled", true);
+
+        $("#"+tokenid+" .colTaskName").focus();
 
         $("#frmEditTaskModal")[0].reset();
         $("#txtCrmTaskID").val("");
@@ -2647,6 +2649,24 @@ Template.leadscard.events({
             $("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html($("#txaAccountDescription").val());
             $("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
         });
+
+        $(document).on("focusout", "#"+tokenid+" .colTaskName, #"+tokenid+" .colTaskDesc, #"+tokenid+" .colCompletedBy", function(e) {
+            $("#edtAccountName").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskName").html());
+            $("#txaAccountDescription").val($("#tblLeadCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+            $("#taskmodalDuedate").val($("#tblLeadCrmListWithDate tbody .dnd-moved #completeDate").val());
+            if($("#"+tokenid+" .colTaskName").html() != "" && $("#"+tokenid+" .colTaskDesc").html() != "" && $("#"+tokenid+" #completeDate").val() != ""){
+                $(".btnSaveEditTask").trigger("click");
+                $(".btnAddLineGroup button").attr("disabled", false);
+                $(".btnTask").attr("disabled", false);
+            }
+        });
+    },
+    "click .btnRemoveLine": function(event) {
+        var targetID = $(event.target).closest("tr").attr("id");
+        $(event.target).closest("tr").remove();
+        $(".btnAddLineGroup button").attr("disabled", false);
+        $(".btnTask").attr("disabled", false);
+        event.preventDefault();
     },
 });
 
