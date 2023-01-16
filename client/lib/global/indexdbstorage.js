@@ -460,6 +460,7 @@ openDb = function (dbName) {
       db.createObjectStore("TProductionPlanData", { keyPath: "EmployeeEmail" });
       db.createObjectStore("VS1_BankRule", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1Workorder", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1DashboardStatus", {keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
