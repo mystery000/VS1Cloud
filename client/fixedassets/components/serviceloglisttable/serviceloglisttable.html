@@ -106,6 +106,7 @@
                       </th>
                     {{/if}}
                   {{/each}}
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -139,7 +140,10 @@
                     </td>
                     <td contenteditable="false"
                       class="colAssetName {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
-                      {{item.status}}
+                      {{#if item.status}}Completed{{else}}Pending{{/if}}
+                    </td>
+                    <td contenteditable="false">
+                      
                     </td>
                   </tr>
                 {{/each}}

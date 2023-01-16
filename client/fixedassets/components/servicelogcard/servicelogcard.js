@@ -2,6 +2,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { FixedAssetService } from "../../fixedasset-service";
 import { ServiceLogService } from "../../servicelog-service";
+import { template } from "lodash";
 
 let fixedAssetService = new FixedAssetService();
 let serviceLogService = new ServiceLogService();
@@ -13,7 +14,6 @@ Template.servicelogcard.onCreated(function () {
   templateObject.asset_id = new ReactiveVar(0);
   templateObject.asset_code = new ReactiveVar('');
   templateObject.asset_name = new ReactiveVar('');
-  templateObject.asset_name = new ReactiveVar('');
   templateObject.asset_status = new ReactiveVar(false);
 });
 
@@ -23,12 +23,21 @@ Template.servicelogcard.onRendered(function () {
   templateObject.getFixedAssetsList = function () {
     getVS1Data("TFixedAssets").then(function (dataObject) {
       if (dataObject.length == 0) {
-
+        fixedAssetService.getTFixedAssetsList().then(function (data) {
+          setFixedAssetsList(data);
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
       } else {
         let data = JSON.parse(dataObject[0].data);
         setFixedAssetsList(data);
       }
     }).catch(function (err) {
+      fixedAssetService.getTFixedAssetsList().then(function (data) {
+        setFixedAssetsList(data);
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
     });
   };
 
@@ -94,8 +103,11 @@ Template.servicelogcard.events({
         AssetCode: templateObject.asset_code.get(),
         AssetName: templateObject.asset_name.get(),
         ServiceProvider: $("#edtServiceProvider").val(),
+        // ServiceType: $("#edtServiceProvider").val(),
         ServiceDate: getDateStr($("#dtServiceDate").datepicker("getDate")),
-        NextServiceDate: getDateStr($("#dtNextServiceDate").datepicker("getDate")),
+        NetServiceDate: getDateStr($("#dtNextServiceDate").datepicker("getDate")),
+        HoursForNextService: parseInt($('#edtHours').val()) || 0,
+        KmsForNextService: parseInt($('#edtKms').val()) || 0,
         ServiceNotes: $("#txtServiceNotes").val(),
         Done: templateObject.asset_status.get()
       }
@@ -114,12 +126,16 @@ Template.servicelogcard.events({
 
 
     serviceLogService.saveServiceLog(newServiceLog).then((data) => {
-      console.log(data);
+      serviceLogService.getServiceLogList().then(function (data) {
+        console.log("[Updated ServiceLogList]", data);
+        addVS1Data("TServiceLogList", JSON.stringify(data));
+      });
     }).catch((err) => {
       console.log(err);
     });
   },
-  "change input##chkDone": function() {
+  "click input#chkDone": function() {
+    const templateObject = Template.instance();
     templateObject.asset_status.set(!templateObject.asset_status.get());
   },
   "click button.btnBack": function() {
@@ -128,5 +144,7 @@ Template.servicelogcard.events({
 });
 
 Template.servicelogcard.helpers({
-  assetName: templateObject.asset_name.get()
+  assetName: () => {
+    return Template.instance().asset_name.get();
+  }
 });

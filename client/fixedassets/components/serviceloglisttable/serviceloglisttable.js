@@ -1,13 +1,9 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ServiceLogService } from "../../servicelog-service";
-import { FixedAssetService } from "../../fixedasset-service";
 import { SideBarService } from "../../../js/sidebar-service";
-import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-let fixedAssetService = new FixedAssetService();
 let serviceLogService = new ServiceLogService();
 
 Template.serviceloglisttable.onCreated(function () {
@@ -96,7 +92,7 @@ Template.serviceloglisttable.onRendered(function () {
     getVS1Data("TServiceLogList").then(function (dataObject) {
       if (dataObject.length == 0) {
         serviceLogService.getServiceLogList().then(function (data) {
-          setServiceLogList(data);
+          templateObject.setServiceLogList(data);
         }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
         });
@@ -106,7 +102,7 @@ Template.serviceloglisttable.onRendered(function () {
       }
     }).catch(function (err) {
       serviceLogService.getServiceLogList().then(function (data) {
-        setServiceLogList(data);
+        templateObject.setServiceLogList(data);
       }).catch(function (err) {
         $(".fullScreenSpin").css("display", "none");
       });
@@ -116,21 +112,23 @@ Template.serviceloglisttable.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   templateObject.getServiceLogList();
 
-  function setServiceLogList(data) {
+  templateObject.setServiceLogList = function (data) {
     addVS1Data('TServiceLogList', JSON.stringify(data));
-    console.log("Tserviceloglist", data);
     const dataTableList = [];
 
     for (const log of data.tserviceloglist) {
       const dataList = {
-        id: log.fields.ServiceID || "",
+        id: log.ServiceID || "",
+        assetID: log.AssetID || 0,
         assetCode: log.AssetCode || "",
         assetName: log.AssetName || "",
-        serviceType: log.serviceType || "",
+        // serviceType: log.fields.ServiceType || "",
         serviceDate: log.ServiceDate || "",
         serviceProvider: log.ServiceProvider || "",
         nextServiceDate: log.NextServiceDate || "",
-        // serviceNotes: log.ServiceNotes || "",
+        nextServiceHours: log.HoursForNextService || 0,
+        nextServiceKms: log.KmsForNextService || 0,
+        serviceNotes: log.ServiceNotes || "",
         status: log.Done || "",
       };
       dataTableList.push(dataList);
@@ -336,17 +334,12 @@ Template.serviceloglisttable.events({
     }
   },
   "click .btnRefresh": function () {
+    let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
-    fixedAssetService.getServiceLogList().then(function (data) {
-      addVS1Data("TServiceLogList", JSON.stringify(data))
-        .then(function (datareturn) {
-          Meteor._reload.reload();
-        })
-        .catch(function (err) {
-          Meteor._reload.reload();
-        });
+    serviceLogService.getServiceLogList().then(function (data) {
+      templateObject.setServiceLogList(data);
     }).catch(function (err) {
-      Meteor._reload.reload();
+      $(".fullScreenSpin").css("display", "none");
     });
   },
 
@@ -359,12 +352,12 @@ Template.serviceloglisttable.events({
 Template.serviceloglisttable.helpers({
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
-      if (a.assetname === "NA") {
+      if (a.assetCode === "NA") {
         return 1;
-      } else if (b.assetname === "NA") {
+      } else if (b.assetCode === "NA") {
         return -1;
       }
-      return a.assetname.toUpperCase() > b.assetname.toUpperCase() ? 1 : -1;
+      return a.assetCode.toUpperCase() > b.assetCode.toUpperCase() ? 1 : -1;
     });
   },
   // custom fields displaysettings

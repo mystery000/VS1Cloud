@@ -12174,95 +12174,219 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+    // Get ServiceLogList
+    templateObject.getServiceLogList = function () {
+      getVS1Data("TServiceLogList").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          reportService.getServiceLogList().then(function (data) {
+            templateObject.setServiceLogList(data);
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          templateObject.setServiceLogList(data);
+        }
+      }).catch(function (err) {
+          reportService.getServiceLogList().then(function (data) {
+            templateObject.setServiceLogList(data);
+          });
+      });
+    };
+    
+    templateObject.setServiceLogList = function (data) {
+      addVS1Data('TServiceLogList', JSON.stringify(data));
+      const dataTableList = [];
+  
+      for (const log of data.tserviceloglist) {
+        const dataList = {
+          id: log.ServiceID || "",
+          assetID: log.AssetID || 0,
+          assetCode: log.AssetCode || "",
+          assetName: log.AssetName || "",
+          // serviceType: log.fields.ServiceType || "",
+          serviceDate: log.ServiceDate || "",
+          serviceProvider: log.ServiceProvider || "",
+          nextServiceDate: log.NextServiceDate || "",
+          nextServiceHours: log.HoursForNextService || 0,
+          nextServiceKms: log.KmsForNextService || 0,
+          serviceNotes: log.ServiceNotes || "",
+          status: log.Done || "",
+        };
+        dataTableList.push(dataList);
+      }
+      templateObject.transactiondatatablerecords.set(dataTableList);
 
-    //Check URL to make right call.
-    if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
-        templateObject.getContactOverviewData();
-    } else if (currenttablename == "tblEmployeelist") {
-        templateObject.getEmployeeListData();
-    } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
-        templateObject.getAccountsOverviewData();
-    } else if (currenttablename == "tblClienttypeList") {
-        templateObject.getClientTypeListData();
-    } else if (currenttablename == "tblLeadStatusList") {
-        templateObject.getLeadStatusListData();
-    } else if (currenttablename == "tblDepartmentList") {
-        templateObject.getDepartmentData();
-    } else if (currenttablename == "tblPaymentMethodList") {
-        templateObject.getPaymentMethodData();
-    } else if (currenttablename == "tblTermsList") {
-        templateObject.getTermsData();
-    } else if (currenttablename == "tblUOMList") {
-        templateObject.getUOMListData();
-    } else if (currenttablename == "tblBOMList") {
-        templateObject.getBOMListData();
-    } else if (currenttablename == "tblSupplierlist") {
-        templateObject.getSupplierListData();
-    } else if (currenttablename == "tblLeadlist") {
-        templateObject.getLeadListData();
-    } else if (currenttablename == "tblCurrencyList") {
-        templateObject.getCurrencyListData();
-    } else if (currenttablename === "tblTitleList") {
-        templateObject.getTitleListData();
-    } else if (currenttablename == 'tblProcessList') {
-        templateObject.getProcessListData();
-    } else if (currenttablename == "tblSupplierTransactionList") {
-        templateObject.getSupplierTransactionListData();
-    } else if (currenttablename == "tblCustomerTransactionList") {
-        templateObject.getCustomerTransactionListData();
-    } else if (currenttablename === "tblCustomerJobDetailsList") {
-        templateObject.getCustomerJobDetailsListData();
-    } else if (currenttablename === "tblEmployeeTransactionList") {
-        templateObject.getEmployeeTransactionListData();
-    } else if (currenttablename === "tblLeadCrmList") {
-        templateObject.getLeadCrmListData();
-    } else if (currenttablename === "tblCustomerCrmList") {
-        // $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
-        // $("#dateTo").val(moment().format('DD/MM/YYYY'));
-        // const datefrom = $("#dateFrom").val();
-        // const dateto = $("#dateTo").val();
-        templateObject.getCustomerCrmListData();
-        // templateObject.getCustomerCrmListData(false, datefrom, dateto);
-    } else if (currenttablename === "tblSupplierCrmList") {
-        templateObject.getSupplierCrmListData();
-    } else if (currenttablename === "tblSingleTouchPayroll") {
-        templateObject.getSTPListData();
-    } else if (currenttablename === "tblLeadCrmListWithDate") {
-        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
-        $("#dateTo").val(moment().format('DD/MM/YYYY'));
-        const datefrom = $("#dateFrom").val();
-        const dateto = $("#dateTo").val();
-        templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
-    } else if (currenttablename === "tblCustomerCrmListWithDate") {
-        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
-        $("#dateTo").val(moment().format('DD/MM/YYYY'));
-        const datefrom = $("#dateFrom").val();
-        const dateto = $("#dateTo").val();
-        templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
-    } else if (currenttablename === "tblSupplierCrmListWithDate") {
-        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
-        $("#dateTo").val(moment().format('DD/MM/YYYY'));
-        const datefrom = $("#dateFrom").val();
-        const dateto = $("#dateTo").val();
-        templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
-    } else if (currenttablename === "tblRatePopList"){
-        templateObject.getRateListData();
-    }else if (currenttablename === "tblRateTypeList"){
-        templateObject.getRateTypeListData();
-    }else if (currenttablename === "tblOverTimeSheet"){
-        templateObject.getOverTimeSheets();
-    }else if( currenttablename === "productrecentlist"){
-        templateObject.getAllProductRecentTransactions(currenttype);
-    }else if(currenttablename === "tblInventoryOverview"){
-        templateObject.getAllProductData("All");
-    }else if(currenttablename === "tblTransactionSOList"){
-        templateObject.getAllSOListData();
-    } else if (currenttablename == "tblBASReturnList") {
-        templateObject.getBasReturnData();
-    } else if (currenttablename == "tblVATReturnList") {
-        templateObject.getVatReturnData();
-    }
-    tableResize();
+      if (templateObject.transactiondatatablerecords.get()) {
+        setTimeout(function() {
+            MakeNegative();
+        }, 100);
+      }
+
+      setTimeout(function () {
+        $("#" + currenttablename).DataTable({
+          columnDefs: [
+          ],
+          select: true,
+          destroy: true,
+          colReorder: true,
+          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          buttons: [{
+            extend: "csvHtml5",
+            text: "",
+            download: "open",
+            className: "btntabletocsv hiddenColumn",
+            filename: "FixedAssetsOverview__" + moment().format(),
+            orientation: "portrait",
+            exportOptions: {
+              columns: ":visible",
+            },
+          },
+          {
+            extend: "print",
+            download: "open",
+            className: "btntabletopdf hiddenColumn",
+            text: "",
+            title: "Accounts Overview",
+            filename: "Accounts Overview_" + moment().format(),
+            exportOptions: {
+              columns: ":visible",
+            },
+          },
+          {
+            extend: "excelHtml5",
+            title: "",
+            download: "open",
+            className: "btntabletoexcel hiddenColumn",
+            filename: "FixedAssetsOverview__" + moment().format(),
+            orientation: "portrait",
+            exportOptions: {
+              columns: ":visible",
+            },
+          },
+          ],
+          pageLength: initialDatatableLoad,
+          lengthMenu: [
+            [initialDatatableLoad, -1],
+            [initialDatatableLoad, "All"],
+          ],
+          info: true,
+          responsive: true,
+          order: [
+            [0, "asc"]
+          ],
+          // "aaSorting": [[1,'desc']],
+          action: function () {
+            $("#tblServiceLogList").DataTable().ajax.reload();
+          },
+          language: { search: "", searchPlaceholder: "Search List..." },
+          fnDrawCallback: function (oSettings) {
+          },
+          fnInitComplete: function () {
+            $(
+              "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+            ).insertAfter("#tblServiceLogList_filter");
+          },
+        })
+          .on("page", function () {
+            let draftRecord = templateObject.datatablerecords.get();
+            templateObject.datatablerecords.set(draftRecord);
+          })
+          .on("column-reorder", function () { })
+          .on("length.dt", function (e, settings, len) {
+          });
+      }, 10);
+    };
+
+
+  //Check URL to make right call.
+  if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
+      templateObject.getContactOverviewData();
+  } else if (currenttablename == "tblEmployeelist") {
+      templateObject.getEmployeeListData();
+  } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+      templateObject.getAccountsOverviewData();
+  } else if (currenttablename == "tblClienttypeList") {
+      templateObject.getClientTypeListData();
+  } else if (currenttablename == "tblLeadStatusList") {
+      templateObject.getLeadStatusListData();
+  } else if (currenttablename == "tblDepartmentList") {
+      templateObject.getDepartmentData();
+  } else if (currenttablename == "tblPaymentMethodList") {
+      templateObject.getPaymentMethodData();
+  } else if (currenttablename == "tblTermsList") {
+      templateObject.getTermsData();
+  } else if (currenttablename == "tblUOMList") {
+      templateObject.getUOMListData();
+  } else if (currenttablename == "tblBOMList") {
+      templateObject.getBOMListData();
+  } else if (currenttablename == "tblSupplierlist") {
+      templateObject.getSupplierListData();
+  } else if (currenttablename == "tblLeadlist") {
+      templateObject.getLeadListData();
+  } else if (currenttablename == "tblCurrencyList") {
+      templateObject.getCurrencyListData();
+  } else if (currenttablename === "tblTitleList") {
+      templateObject.getTitleListData();
+  } else if (currenttablename == 'tblProcessList') {
+      templateObject.getProcessListData();
+  } else if (currenttablename == "tblSupplierTransactionList") {
+      templateObject.getSupplierTransactionListData();
+  } else if (currenttablename == "tblCustomerTransactionList") {
+      templateObject.getCustomerTransactionListData();
+  } else if (currenttablename === "tblCustomerJobDetailsList") {
+      templateObject.getCustomerJobDetailsListData();
+  } else if (currenttablename === "tblEmployeeTransactionList") {
+      templateObject.getEmployeeTransactionListData();
+  } else if (currenttablename === "tblLeadCrmList") {
+      templateObject.getLeadCrmListData();
+  } else if (currenttablename === "tblCustomerCrmList") {
+      // $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+      // $("#dateTo").val(moment().format('DD/MM/YYYY'));
+      // const datefrom = $("#dateFrom").val();
+      // const dateto = $("#dateTo").val();
+      templateObject.getCustomerCrmListData();
+      // templateObject.getCustomerCrmListData(false, datefrom, dateto);
+  } else if (currenttablename === "tblSupplierCrmList") {
+      templateObject.getSupplierCrmListData();
+  } else if (currenttablename === "tblSingleTouchPayroll") {
+      templateObject.getSTPListData();
+  } else if (currenttablename === "tblLeadCrmListWithDate") {
+      $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+      $("#dateTo").val(moment().format('DD/MM/YYYY'));
+      const datefrom = $("#dateFrom").val();
+      const dateto = $("#dateTo").val();
+      templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
+  } else if (currenttablename === "tblCustomerCrmListWithDate") {
+      $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+      $("#dateTo").val(moment().format('DD/MM/YYYY'));
+      const datefrom = $("#dateFrom").val();
+      const dateto = $("#dateTo").val();
+      templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+  } else if (currenttablename === "tblSupplierCrmListWithDate") {
+      $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+      $("#dateTo").val(moment().format('DD/MM/YYYY'));
+      const datefrom = $("#dateFrom").val();
+      const dateto = $("#dateTo").val();
+      templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+  } else if (currenttablename === "tblRatePopList"){
+      templateObject.getRateListData();
+  }else if (currenttablename === "tblRateTypeList"){
+      templateObject.getRateTypeListData();
+  }else if (currenttablename === "tblOverTimeSheet"){
+      templateObject.getOverTimeSheets();
+  }else if( currenttablename === "productrecentlist"){
+      templateObject.getAllProductRecentTransactions(currenttype);
+  }else if(currenttablename === "tblInventoryOverview"){
+      templateObject.getAllProductData("All");
+  }else if(currenttablename === "tblTransactionSOList"){
+      templateObject.getAllSOListData();
+  } else if (currenttablename == "tblBASReturnList") {
+      templateObject.getBasReturnData();
+  } else if (currenttablename == "tblVATReturnList") {
+      templateObject.getVatReturnData();
+  } else if (currenttablename == "tblServiceLogList") {
+    templateObject.getServiceLogList();
+  }
+  tableResize();
 });
 
 Template.non_transactional_list.events({
