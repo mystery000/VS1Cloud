@@ -4362,12 +4362,11 @@ Template.customerscard.events({
             $('#deleteCustomerModal').modal('toggle');
         }, delayTimeAfterSound);
     },
-    'click .btnCustomerTask': function(event) {
+    'click .btnCustomerTask, click .btnJobTask': function(event) {
         // $('.fullScreenSpin').css('display', 'inline-block');
         let currentId = FlowRouter.current().queryParams;
-        if (!isNaN(currentId.id)) {
+        if (!isNaN(currentId.id) || !isNaN(currentId.jobid)) {
             let customerID = parseInt(currentId.id);
-            // FlowRouter.go('/crmoverview?customerid=' + customerID);
             $("#btnAddLine").trigger("click");
         } else {
             $('.fullScreenSpin').css('display', 'none');
@@ -4433,16 +4432,6 @@ Template.customerscard.events({
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
             FlowRouter.go('/refundcard?customerid=' + customerID);
-        } else {
-            $('.fullScreenSpin').css('display', 'none');
-        }
-    },
-    'click .btnJobTask': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let currentId = FlowRouter.current().queryParams;
-        if (!isNaN(currentId.jobid)) {
-            let customerID = parseInt(currentId.jobid);
-            FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
             $('.fullScreenSpin').css('display', 'none');
         }
@@ -4753,6 +4742,7 @@ Template.customerscard.events({
 
         $(".btnAddLineGroup button").attr("disabled", true);
         $(".btnCustomerTask").attr("disabled", true);
+        $(".btnJobTask").attr("disabled", true);
 
         $("#"+tokenid+" .colTaskName").focus();
 
@@ -4764,12 +4754,19 @@ Template.customerscard.events({
         $("#contactID").val("");
         $('#assignedID').val("");
 
-        const url = FlowRouter.current().path;
-        const getemp_id = url.split('?id=');
+        let url = FlowRouter.current().path;
+        let getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
         let TCustomerID = 0;
         if (getemp_id[1]) {
             TCustomerID = parseInt(currentEmployee);
+        }
+        else{
+            getemp_id = url.split('?jobid=');
+            currentEmployee = getemp_id[getemp_id.length - 1];
+            if (getemp_id[1]) {
+                TCustomerID = parseInt(currentEmployee);
+            }
         }
 
         $("#contactID").val(TCustomerID);
@@ -4800,6 +4797,7 @@ Template.customerscard.events({
                 $(".btnSaveEditTask").trigger("click");
                 $(".btnAddLineGroup button").attr("disabled", false);
                 $(".btnCustomerTask").attr("disabled", false);
+                $(".btnJobTask").attr("disabled", false);
             }
         });
     },
@@ -4808,6 +4806,7 @@ Template.customerscard.events({
         $(event.target).closest("tr").remove();
         $(".btnAddLineGroup button").attr("disabled", false);
         $(".btnCustomerTask").attr("disabled", false);
+        $(".btnJobTask").attr("disabled", false);
         event.preventDefault();
     },
 });

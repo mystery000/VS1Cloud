@@ -136,6 +136,7 @@ Template.employeescard.onCreated(function() {
     templateObject.deletedSelectedProducts = new ReactiveVar([]);
     templateObject.TRepServices = new ReactiveVar([]);
     templateObject.taskrecords = new ReactiveVar([]);
+    templateObject.all_projects = new ReactiveVar([]);
 });
 
 Template.employeescard.onRendered(function() {
@@ -401,6 +402,45 @@ Template.employeescard.onRendered(function() {
             }).catch(function(err) {
             })
         });
+    };
+
+    templateObject.getInitTProjectList = function() {
+        getVS1Data("TCRMProjectList").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                templateObject.getTProjectList();
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                    let all_projects = data.tprojectlist;
+
+                    let employeeID = '';
+                    if (employeeID) {
+                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
+                    } else {
+                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                    }
+                    templateObject.all_projects.set(all_projects);
+                }
+            }
+        }).catch(function(err) {
+            templateObject.getTProjectList();
+        });
+    };
+
+    templateObject.getTProjectList = function() {
+        var url = FlowRouter.current().path;
+        url = new URL(window.location.href);
+        let employeeID = '';
+
+        crmService.getTProjectList(employeeID).then(function(data) {
+            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                let all_projects = data.tprojectlist;
+
+                all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                templateObject.all_projects.set(all_projects);
+            }
+            addVS1Data("TCRMProjectList", JSON.stringify(data));
+        }).catch(function(err) {});
     };
 
 
@@ -2086,6 +2126,7 @@ Template.employeescard.onRendered(function() {
         /* END  attachment */
 
         templateObject.getAllTask(data.fields.EmployeeName);
+        templateObject.getInitTProjectList();
 
         //templateObject.getAllProductRecentTransactions(data.fields.EmployeeName);
         // $('.fullScreenSpin').css('display','none');
@@ -11506,7 +11547,6 @@ function openEditTaskModals(id, type) {
 
             $(".editTaskDetailName").val(selected_record.TaskName);
             $(".editTaskDetailDescription").val(selected_record.TaskDescription);
-            // tempcode check if AssignedName is set in selected_record
             let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
             let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
             $('#crmEditSelectEmployeeList').val(employeeName);
@@ -11515,9 +11555,6 @@ function openEditTaskModals(id, type) {
                 $('#contactEmailUser').val(empDetailInfo.fields.Email);
                 $('#contactPhoneUser').val(empDetailInfo.fields.Phone);
             }).catch(function(err) {});
-
-            // $('#contactEmailClient').val(selected_record.ClientEmail);
-            // $('#contactPhoneClient').val(selected_record.ClientPhone);
 
             $("#contactEmailClient").val(selected_record.ContactEmail);
             $("#contactPhoneClient").val(selected_record.ContactPhone);
@@ -11568,16 +11605,8 @@ function openEditTaskModals(id, type) {
             let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
 
             if (selected_record.Completed) {
-                // $('#lblComplete_taskEditLabel').removeClass('chk_complete');
-                // $('#lblComplete_taskEditLabel').addClass('chk_uncomplete');
-                // $('#chkComplete_taskEdit').removeClass('chk_complete');
-                // $('#chkComplete_taskEdit').addClass('chk_uncomplete');
                 $('#chkComplete_taskEdit').prop("checked", true);
             } else {
-                // $('#lblComplete_taskEditLabel').removeClass('chk_uncomplete');
-                // $('#lblComplete_taskEditLabel').addClass('chk_complete');
-                // $('#chkComplete_taskEdit').removeClass('chk_uncomplete');
-                // $('#chkComplete_taskEdit').addClass('chk_complete');
                 $('#chkComplete_taskEdit').prop("checked", false);
             }
 
@@ -11590,63 +11619,6 @@ function openEditTaskModals(id, type) {
                 }
             }
 
-            let catg = "";
-            let today = moment().format("YYYY-MM-DD");
-            // if (selected_record.due_date) {
-            //     if (selected_record.due_date.substring(0, 10) == today) {
-            //         catg =
-            //             `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-            //             "<span class='text-primary' style='" + projectColorStyle + "'>" +
-            //             projectName +
-            //             "</span>";
-            //         $(".taskDueDate").css("color", "#00a3d3");
-            //     } else if (selected_record.due_date.substring(0, 10) > today) {
-            //         catg =
-            //             `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-            //             "<span class='text-danger' style='" + projectColorStyle + "'>" +
-            //             projectName +
-            //             "</span>";
-            //         $(".taskDueDate").css("color", "#1cc88a");
-            //     } else if (selected_record.due_date.substring(0, 10) < today) {
-            //         // catg =
-            //         //   `<i class="fas fa-inbox text-warning" style="margin-right: 5px;"></i>` +
-            //         //   "<span class='text-warning'>Overdue</span>";
-            //         // $(".taskDueDate").css("color", "#e74a3b");
-            //         catg =
-            //             `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-            //             "<span class='text-success' style='" + projectColorStyle + "'>" +
-            //             projectName +
-            //             "</span>";
-            //         $(".taskDueDate").css("color", "#1cc88a");
-            //     } else {
-            //         catg =
-            //             `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-            //             "<span class='text-success' style='" + projectColorStyle + "'>" +
-            //             projectName +
-            //             "</span>";
-            //         $(".taskDueDate").css("color", "#1cc88a");
-            //     }
-            // } else {
-            //     catg =
-            //         `<i class="fas fa-inbox text-success" style="margin-right: 5px; ${projectColorStyle}"></i>` +
-            //         "<span class='text-success' style='" + projectColorStyle + "'>" +
-            //         projectName +
-            //         "</span>";
-            //     $(".taskDueDate").css("color", "#1cc88a");
-            // }
-
-            // $(".taskLocation").html(
-            //     `<a class="taganchor">
-            //     ${catg}
-            //   </a>`
-            // );
-
-            // if (projectName) {
-            //     $('.taskDetailProjectName').show();
-            // } else {
-            //     $('.taskDetailProjectName').hide();
-            // }
-
             $("#addProjectID").val(selected_record.ProjectID);
             $("#taskDetailModalCategoryLabel").val(projectName);
 
@@ -11656,61 +11628,7 @@ function openEditTaskModals(id, type) {
             let due_date = selected_record.due_date ? moment(selected_record.due_date).format("DD/MM/YYYY") : "";
 
 
-            let todayDate = moment().format("ddd");
-            let tomorrowDay = moment().add(1, "day").format("ddd");
-            let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
             let date_component = due_date;
-            // let date_component = ` <div class="dropdown btnTaskTableAction">
-            //   <div data-toggle="dropdown" title="Reschedule Task" style="cursor:pointer;">
-            //     <i class="far fa-calendar-plus" style="margin-right: 5px;"></i>
-            //     <span id="edit_task_modal_due_date">${due_date}</span>
-            //   </div>
-            //   <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
-            //     aria-labelledby="dropdownMenuButton" style="width: 275px;">
-            //     <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="${selected_record.ID}">
-            //       <i class="fas fa-calendar-day text-success no-modal"
-            //         style="margin-right: 8px;"></i>Today
-            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-            //         ${todayDate}</div>
-            //     </a>
-            //     <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
-            //       data-id="${selected_record.ID}">
-            //       <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
-            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-            //         ${tomorrowDay}</div>
-            //     </a>
-            //     <a class="dropdown-item no-modal setScheduleWeekend" href="#"
-            //       data-id="${selected_record.ID}">
-            //       <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
-            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-            //         Sat</div>
-            //     </a>
-            //     <a class="dropdown-item no-modal setScheduleNexweek" href="#"
-            //       data-id="${selected_record.ID}">
-            //       <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
-            //       <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-            //         ${nextMonday}
-            //       </div>
-            //     </a>
-            //     <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="${selected_record.ID}">
-            //       <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
-            //       No Date</a>
-            //     <div class="dropdown-divider no-modal"></div>
-            //     <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-            //       title="Date format: DD/MM/YYYY" style="display:flex; margin: 6px 20px; margin-top: 0px; z-index: 99999;">
-            //       <label style="margin-top: 6px; margin-right: 16px; width: 146px;">Select Date</label>
-            //       <div class="input-group date no-modal" style="cursor: pointer;">
-            //         <input type="text" id="${selected_record.ID}" class="form-control crmDatepicker no-modal"
-            //           autocomplete="off">
-            //         <div class="input-group-addon no-modal">
-            //           <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
-            //         </div>
-            //       </div>
-            //     </div>
-            //   </div>
-            // </div>`;
-
-            // $("#taskmodalDuedate").html(due_date);
             $("#taskmodalDuedate").val(date_component);
             $("#taskmodalDescription").html(selected_record.TaskDescription);
 
@@ -11743,12 +11661,7 @@ function openEditTaskModals(id, type) {
                     taskmodalLabels = taskmodalLabels.slice(0, -2);
                 }
             }
-            // if (taskmodalLabels != "") {
-            //   taskmodalLabels =
-            //     '<span class="taskTag"><i class="fas fa-tag"></i>' +
-            //     taskmodalLabels +
-            //     "</span>";
-            // }
+            
             $("#taskmodalLabels").html(taskmodalLabels);
             let subtasks = "";
             if (selected_record.subtasks) {
