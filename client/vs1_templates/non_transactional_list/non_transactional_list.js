@@ -9022,12 +9022,6 @@ Template.non_transactional_list.onRendered(function() {
                         });
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
-
-                        $(document).on("click", "#btnRefreshList", function(e) {
-                            const datefrom = $("#dateFrom").val();
-                            const dateto = $("#dateTo").val();
-                            templateObject.getLeadCrmListDataWithDate(deleteFilter, datefrom, dateto);
-                        });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -9338,7 +9332,10 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
         let dataTableList = [];
-        let customerName = $('#edtCustomerCompany').val();
+        let customerName = $('#edtCustomerCompany').val() || "";
+        if(customerName == ""){
+            customerName = $('#edtJobCustomerCompany').val() || "";
+        }
         
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
@@ -9623,6 +9620,7 @@ Template.non_transactional_list.onRendered(function() {
                             }
                         }
                     }
+
                     if (dataTableList.length == 0) {
                         crmService.getAllAppointments(customerName).then(async function(dataObj) {
                             if (dataObj.tappointmentex.length > 0) {
@@ -10053,11 +10051,11 @@ Template.non_transactional_list.onRendered(function() {
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
 
-                        $(document).on("click", "#btnRefreshList", function(e) {
-                            const datefrom = $("#dateFrom").val();
-                            const dateto = $("#dateTo").val();
-                            templateObject.getCustomerCrmListDataWithDate(deleteFilter, datefrom, dateto);
-                        });
+                        // $(document).on("click", "#btnRefreshList", function(e) {
+                        //     const datefrom = $("#dateFrom").val();
+                        //     const dateto = $("#dateTo").val();
+                        //     templateObject.getCustomerCrmListDataWithDate(deleteFilter, datefrom, dateto);
+                        // });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -11082,11 +11080,11 @@ Template.non_transactional_list.onRendered(function() {
                         $("#dateFrom").val(fromDate);
                         $("#dateTo").val(toDate);
 
-                        $(document).on("click", "#btnRefreshList", function(e) {
-                            const datefrom = $("#dateFrom").val();
-                            const dateto = $("#dateTo").val();
-                            templateObject.getSupplierCrmListDataWithDate(deleteFilter, datefrom, dateto);
-                        });
+                        // $(document).on("click", "#btnRefreshList", function(e) {
+                        //     const datefrom = $("#dateFrom").val();
+                        //     const dateto = $("#dateTo").val();
+                        //     templateObject.getSupplierCrmListDataWithDate(deleteFilter, datefrom, dateto);
+                        // });
                     }, 100);
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {}
@@ -12275,6 +12273,19 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getVatReturnData();
     }
     tableResize();
+
+    $(document).on("click", "#btnRefreshList", function(e) {
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+
+        if (currenttablename === "tblLeadCrmListWithDate") {
+            templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblCustomerCrmListWithDate") {
+            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblSupplierCrmListWithDate") {
+            templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+        }
+    });
 });
 
 Template.non_transactional_list.events({

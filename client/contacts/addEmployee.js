@@ -4930,10 +4930,8 @@ Template.employeescard.onRendered(function() {
                     await this.earnings.add(fields);
                 }
             }
-
         },
     };
-
 
 
     /**
@@ -4943,14 +4941,36 @@ Template.employeescard.onRendered(function() {
     this.initPage = async() => {
         LoadingOverlay.show();
 
-
-
-
-
         LoadingOverlay.hide();
     }
 
     // this.initPage();
+
+    $(document).on("click", "#tblCustomerCrmListWithDate tbody .dnd-moved .colDate, #tblCustomerCrmListWithDate tbody .dnd-moved .colType", function(e) {
+        $(".editTaskDetailName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
+        $(".editTaskDetailDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+        $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
+        $("#taskDetailModal").modal("toggle");
+    });
+
+    $(document).on("change", ".editTaskDetailName, .editTaskDetailDescription, #taskmodalDuedate", function(e) {
+        $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html($(".editTaskDetailName").val());
+        $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html($(".editTaskDetailDescription").val());
+        $("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
+    });
+
+    let tokenid = "random";
+    $(document).on("focusout", "#"+tokenid+" .colTaskName, #"+tokenid+" .colTaskDesc, #"+tokenid+" .colCompletedBy", function(e) {
+        $(".editTaskDetailName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
+        $(".editTaskDetailDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
+        $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
+        if($("#"+tokenid+" .colTaskName").html() != "" && $("#"+tokenid+" .colTaskDesc").html() != "" && $("#"+tokenid+" #completeDate").val() != ""){
+            $("input.form-control-sm").focus();
+            $(".btnSaveEditTask").trigger("click");
+            $(".btnAddLineGroup button").attr("disabled", false);
+            // $(".btnCustomerTask").attr("disabled", false);
+        }
+    });
 
 });
 
@@ -11250,30 +11270,6 @@ Template.employeescard.events({
         $('#contactEmailClient').val($('#edtCustomerEmail').val());
         $('#contactPhoneClient').val($('#edtCustomerPhone').val());
         $('#taskmodalDuedate').val(moment().format("DD/MM/YYYY"));
-
-        $(document).on("click", "#tblCustomerCrmListWithDate tbody .dnd-moved .colDate, #tblCustomerCrmListWithDate tbody .dnd-moved .colType", function(e) {
-            $(".editTaskDetailName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
-            $(".editTaskDetailDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
-            $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
-            $("#taskDetailModal").modal("toggle");
-        });
-
-        $(document).on("change", ".editTaskDetailName, .editTaskDetailDescription, #taskmodalDuedate", function(e) {
-            $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html($(".editTaskDetailName").val());
-            $("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html($("#txaAccountDescription").val());
-            $("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val($("#taskmodalDuedate").val());
-        });
-
-        $(document).on("focusout", "#"+tokenid+" .colTaskName, #"+tokenid+" .colTaskDesc, #"+tokenid+" .colCompletedBy", function(e) {
-            $(".editTaskDetailName").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskName").html());
-            $(".editTaskDetailDescription").val($("#tblCustomerCrmListWithDate tbody .dnd-moved .colTaskDesc").html());
-            $("#taskmodalDuedate").val($("#tblCustomerCrmListWithDate tbody .dnd-moved #completeDate").val());
-            if($("#"+tokenid+" .colTaskName").html() != "" && $("#"+tokenid+" .colTaskDesc").html() != "" && $("#"+tokenid+" #completeDate").val() != ""){
-                $(".btnSaveEditTask").trigger("click");
-                $(".btnAddLineGroup button").attr("disabled", false);
-                // $(".btnCustomerTask").attr("disabled", false);
-            }
-        });
     },
     "click .btnRemoveLine": function(event) {
         var targetID = $(event.target).closest("tr").attr("id");
@@ -11531,365 +11527,394 @@ function openEditTaskModals(id, type) {
     // let catg = e.target.dataset.catg;
     let templateObject = Template.instance();
     // $("#editProjectID").val("");
+    
     $("#txtCrmSubTaskID").val(id);
 
     $(".fullScreenSpin").css("display", "inline-block");
     // get selected task detail via api
-    let taskrecords = templateObject.taskrecords.get();
-    for(var i=0; i<taskrecords.length; i++){
-        if(taskrecords[i].fields.ID == id){
-            $(".fullScreenSpin").css("display", "none");
-            let selected_record = taskrecords[i].fields;
+    getVS1Data("TCRMTaskList").then(async function(dataObject) {
+        if (dataObject.length == 0) {
+            // crmService.getAllTasksByContactName().then(async function(data) {
+            //     if (data.tprojecttasks.length > 0) {
+            //         addVS1Data("TCRMTaskList", JSON.stringify(data));
+            //         templateObject.taskrecords.set(data.tprojecttasks);
+            //     }
+            // }).catch(function(err) {
+            // })
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            let taskrecords = data.tprojecttasks;
+            for(var i=0; i<taskrecords.length; i++){
+                if(taskrecords[i].fields.ID == id){
+                    $(".fullScreenSpin").css("display", "none");
+                    let selected_record = taskrecords[i].fields;
 
-            $("#txtCrmTaskID").val(selected_record.ID);
-            $("#txtCrmProjectID").val(selected_record.ProjectID);
-            $("#txtCommentsDescription").val("");
+                    $("#txtCrmTaskID").val(selected_record.ID);
+                    $("#txtCrmProjectID").val(selected_record.ProjectID);
+                    $("#txtCommentsDescription").val("");
 
-            $(".editTaskDetailName").val(selected_record.TaskName);
-            $(".editTaskDetailDescription").val(selected_record.TaskDescription);
-            let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
-            let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
-            $('#crmEditSelectEmployeeList').val(employeeName);
-            $('#assignedID').val(assignId)
-            contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {
-                $('#contactEmailUser').val(empDetailInfo.fields.Email);
-                $('#contactPhoneUser').val(empDetailInfo.fields.Phone);
-            }).catch(function(err) {});
+                    $(".editTaskDetailName").val(selected_record.TaskName);
+                    $(".editTaskDetailDescription").val(selected_record.TaskDescription);
+                    // tempcode check if AssignedName is set in selected_record
+                    let employeeName = selected_record.AssignName ? selected_record.AssignName : localStorage.getItem("mySessionEmployee");
+                    let assignId = selected_record.AssignID ? selected_record.AssignID : localStorage.getItem("mySessionEmployeeLoggedID");
+                    $('#crmEditSelectEmployeeList').val(employeeName);
+                    $('#assignedID').val(assignId)
+                    contactService.getOneEmployeeDataEx(assignId).then(function(empDetailInfo) {
+                        $('#contactEmailUser').val(empDetailInfo.fields.Email);
+                        $('#contactPhoneUser').val(empDetailInfo.fields.Phone);
+                    }).catch(function(err) {});
 
-            $("#contactEmailClient").val(selected_record.ContactEmail);
-            $("#contactPhoneClient").val(selected_record.ContactPhone);
-            $("#contactEmailUser").val(selected_record.AssignEmail);
-            $("#contactPhoneUser").val(selected_record.AssignPhone);
+                    // $('#contactEmailClient').val(selected_record.ClientEmail);
+                    // $('#contactPhoneClient').val(selected_record.ClientPhone);
 
-            let colClientName = selected_record.ContactName;
-            $('#crmEditSelectLeadList').val(colClientName);
-            if (selected_record.CustomerID) {
-                $('#contactID').val(selected_record.CustomerID)
-                $('#contactType').val('Customer')
+                    $("#contactEmailClient").val(selected_record.ContactEmail);
+                    $("#contactPhoneClient").val(selected_record.ContactPhone);
+                    $("#contactEmailUser").val(selected_record.AssignEmail);
+                    $("#contactPhoneUser").val(selected_record.AssignPhone);
 
-                if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
-                    contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
-                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
-                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
-                    }).catch(function(err) {
+                    let colClientName = selected_record.ContactName;
+                    $('#crmEditSelectLeadList').val(colClientName);
+                    if (selected_record.CustomerID) {
+                        $('#contactID').val(selected_record.CustomerID)
+                        $('#contactType').val('Customer')
 
-                    });
-                }
-            } else if (selected_record.LeadID) {
-                $('#contactID').val(selected_record.LeadID)
-                $('#contactType').val('Lead')
+                        if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                            contactService.getOneEmployeeDataEx(selected_record.CustomerID).then(function(empDetailInfo) {
+                                $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                                $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                            }).catch(function(err) {
 
-                if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
-                    contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {
-                        $('#contactEmailClient').val(empDetailInfo.fields.Email);
-                        $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
-                    }).catch(function(err) {
-
-                    });
-                }
-            } else {
-                $('#contactID').val(selected_record.SupplierID)
-                $('#contactType').val('Supplier')
-                if (selected_record.SupplierID) {
-                    if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
-                        contactService.getOneSupplierDataEx(selected_record.SupplierID).then(function(empDetailInfo) {
-                            $('#contactEmailClient').val(empDetailInfo.fields.Email);
-                            $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
-                        }).catch(function(err) {
-
-                        });
-                    }
-                }
-            }
-
-            let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
-
-            if (selected_record.Completed) {
-                $('#chkComplete_taskEdit').prop("checked", true);
-            } else {
-                $('#chkComplete_taskEdit').prop("checked", false);
-            }
-
-            let all_projects = templateObject.all_projects.get();
-            let projectColorStyle = '';
-            if (selected_record.ProjectID != 0) {
-                let projects = all_projects.filter(project => project.fields.ID == selected_record.ProjectID);
-                if (projects.length && projects[0].fields.ProjectColour) {
-                    projectColorStyle = 'color: ' + projects[0].fields.ProjectColour + ' !important';
-                }
-            }
-
-            $("#addProjectID").val(selected_record.ProjectID);
-            $("#taskDetailModalCategoryLabel").val(projectName);
-
-            $("#taskmodalNameLabel").html(selected_record.TaskName);
-            $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
-            // let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
-            let due_date = selected_record.due_date ? moment(selected_record.due_date).format("DD/MM/YYYY") : "";
-
-
-            let date_component = due_date;
-            $("#taskmodalDuedate").val(date_component);
-            $("#taskmodalDescription").html(selected_record.TaskDescription);
-
-            $("#chkComplete_taskEditLabel").removeClass("task_priority_0");
-            $("#chkComplete_taskEditLabel").removeClass("task_priority_1");
-            $("#chkComplete_taskEditLabel").removeClass("task_priority_2");
-            $("#chkComplete_taskEditLabel").removeClass("task_priority_3");
-            $("#chkComplete_taskEditLabel").addClass("task_priority_" + selected_record.priority);
-
-            let taskmodalLabels = "";
-            $(".chkDetailLabel").prop("checked", false);
-            if (selected_record.TaskLabel) {
-                if (selected_record.TaskLabel.fields != undefined) {
-                    taskmodalLabels =
-                        `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-                        selected_record.TaskLabel.fields.TaskLabelName +
-                        "</a></span>";
-                    $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-                        "checked",
-                        true
-                    );
-                } else {
-                    selected_record.TaskLabel.forEach((lbl) => {
-                        taskmodalLabels +=
-                            `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                            lbl.fields.TaskLabelName +
-                            "</a></span> ";
-                        $("#detail_label_" + lbl.fields.ID).prop("checked", true);
-                    });
-                    taskmodalLabels = taskmodalLabels.slice(0, -2);
-                }
-            }
-            
-            $("#taskmodalLabels").html(taskmodalLabels);
-            let subtasks = "";
-            if (selected_record.subtasks) {
-                if (Array.isArray(selected_record.subtasks)) {
-                    templateObject.subTasks.set(selected_record.subtasks)
-                    templateObject.initSubtaskDatatable();
-                }
-
-                if (typeof selected_record.subtasks == 'object') {
-                    let arr = [];
-                    arr.push(selected_record.subtasks)
-                    templateObject.subTasks.set(arr)
-                    templateObject.initSubtaskDatatable();
-                }
-            } else {
-                let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
-                sutTaskTable.clear().draw();
-            }
-
-            let comments = "";
-            if (selected_record.comments) {
-                if (selected_record.comments.fields != undefined) {
-                    let comment = selected_record.comments.fields;
-                    let comment_date = comment.CommentsDate ? moment(comment.CommentsDate).format("MMM D h:mm A") : "";
-                    let commentUserArry = comment.EnteredBy.toUpperCase().split(" ");
-                    let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
-                    comments = `
-                <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
-                  <div class="row commentRow">
-                    <div class="col-1">
-                      <div class="commentUser">${commentUser}</div>
-                    </div>
-                    <div class="col-11" style="padding-top:4px; padding-left: 24px;">
-                      <div class="row">
-                        <div>
-                          <span class="commenterName">${comment.EnteredBy}</span>
-                          <span class="commentDateTime">${comment_date}</span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <span class="commentText">${comment.CommentsDescription}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                `;
-                } else {
-                    selected_record.comments.forEach((item) => {
-                        let comment = item.fields;
-                        let comment_date = comment.CommentsDate ? moment(comment.CommentsDate).format("MMM D h:mm A") : "";
-                        let commentUserArry = comment.EnteredBy.toUpperCase().split(" ");
-                        let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
-                        comments += `
-                  <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
-                    <div class="row commentRow">
-                      <div class="col-1">
-                        <div class="commentUser">${commentUser}</div>
-                      </div>
-                      <div class="col-11" style="padding-top:4px; padding-left: 24px;">
-                        <div class="row">
-                          <div>
-                            <span class="commenterName">${comment.EnteredBy}</span>
-                            <span class="commentDateTime">${comment_date}</span>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <span class="commentText">${comment.CommentsDescription}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  `;
-                    });
-                }
-            }
-            $(".task-comment-row").html(comments);
-
-            let activities = "";
-            if (selected_record.activity) {
-                if (selected_record.activity.fields != undefined) {
-                    let activity = selected_record.activity.fields;
-                    let day = "";
-                    if (moment().format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
-                        day = " ‧ Today";
-                    } else if (moment().add(-1, "day").format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
-                        day = " . Yesterday";
-                    }
-                    let activityDate = moment(activity.ActivityDateStartd).format("MMM D") + day + " . " + moment(activity.ActivityDateStartd).format("ddd");
-
-                    let commentUserArry = activity.EnteredBy.toUpperCase().split(" ");
-                    let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
-
-                    activities = `
-                <div class="row" style="padding: 16px;">
-                  <div class="col-12">
-                    <span class="activityDate">${activityDate}</span>
-                  </div>
-                  <hr style="width: 100%; margin: 8px 16px;" />
-                  <div class="col-1">
-                    <div class="commentUser">${commentUser}</div>
-                  </div>
-                  <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
-                    <div class="row">
-                      <span class="activityName">${activity.EnteredBy
-            } </span> <span class="activityAction">${activity.ActivityName
-            } </span>
-                    </div>
-                    <div class="row">
-                      <span class="activityComment">${activity.ActivityDescription
-            }</span>
-                    </div>
-                    <div class="row">
-                      <span class="activityTime">${moment(
-              activity.ActivityDateStartd
-            ).format("h:mm A")}</span>
-                    </div>
-                  </div>
-                  <hr style="width: 100%; margin: 16px;" />
-                </div>
-                `;
-                } else {
-                    selected_record.activity.forEach((item) => {
-                        let activity = item.fields;
-                        let day = "";
-                        if (moment().format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
-                            day = " ‧ Today";
-                        } else if (moment().add(-1, "day").format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
-                            day = " . Yesterday";
+                            });
                         }
-                        let activityDate = moment(activity.ActivityDateStartd).format("MMM D") + day + " . " + moment(activity.ActivityDateStartd).format("ddd");
+                    } else if (selected_record.LeadID) {
+                        $('#contactID').val(selected_record.LeadID)
+                        $('#contactType').val('Lead')
 
-                        let commentUserArry = activity.EnteredBy.toUpperCase().split(" ");
-                        let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+                        if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                            contactService.getOneLeadDataEx(selected_record.LeadID).then(function(empDetailInfo) {
+                                $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                                $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                            }).catch(function(err) {
 
-                        activities = `
-                  <div class="row" style="padding: 16px;">
-                    <div class="col-12">
-                      <span class="activityDate">${activityDate}</span>
-                    </div>
-                    <hr style="width: 100%; margin: 8px 16px;" />
-                    <div class="col-1">
-                      <div class="commentUser">${commentUser}</div>
-                    </div>
-                    <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
-                      <div class="row">
-                        <span class="activityName">${activity.EnteredBy
-              } </span> <span class="activityAction">${activity.ActivityName
-              } </span>
-                      </div>
-                      <div class="row">
-                        <span class="activityComment">${activity.ActivityDescription
-              }</span>
-                      </div>
-                      <div class="row">
-                        <span class="activityTime">${moment(
-                activity.ActivityDateStartd
-              ).format("h:mm A")}</span>
-                      </div>
-                    </div>
-                    <hr style="width: 100%; margin: 16px;" />
-                  </div>
-                  `;
+                            });
+                        }
+                    } else {
+                        $('#contactID').val(selected_record.SupplierID)
+                        $('#contactType').val('Supplier')
+                        if (selected_record.SupplierID) {
+                            if (selected_record.ContactEmail == "" && selected_record.ContactPhone == "") {
+                                contactService.getOneSupplierDataEx(selected_record.SupplierID).then(function(empDetailInfo) {
+                                    $('#contactEmailClient').val(empDetailInfo.fields.Email);
+                                    $('#contactPhoneClient').val(empDetailInfo.fields.Phone);
+                                }).catch(function(err) {
+
+                                });
+                            }
+                        }
+                    }
+
+                    let projectName = selected_record.ProjectName == "Default" ? "All Tasks" : selected_record.ProjectName;
+
+                    if (selected_record.Completed) {
+                        $('#chkComplete_taskEdit').prop("checked", true);
+                    } else {
+                        $('#chkComplete_taskEdit').prop("checked", false);
+                    }
+
+                    let all_projects = templateObject.all_projects.get();
+                    let projectColorStyle = '';
+                    if (selected_record.ProjectID != 0) {
+                        let projects = all_projects.filter(project => project.fields.ID == selected_record.ProjectID);
+                        if (projects.length && projects[0].fields.ProjectColour) {
+                            projectColorStyle = 'color: ' + projects[0].fields.ProjectColour + ' !important';
+                        }
+                    }
+
+                    $("#addProjectID").val(selected_record.ProjectID);
+                    $("#taskDetailModalCategoryLabel").val(projectName);
+
+                    $("#taskmodalNameLabel").html(selected_record.TaskName);
+                    $(".activityAdded").html("Added on " + moment(selected_record.MsTimeStamp).format("MMM D h:mm A"));
+                    // let due_date = selected_record.due_date ? moment(selected_record.due_date).format("D MMM") : "No Date";
+                    let due_date = selected_record.due_date ? moment(selected_record.due_date).format("DD/MM/YYYY") : "";
+
+
+                    let todayDate = moment().format("ddd");
+                    let tomorrowDay = moment().add(1, "day").format("ddd");
+                    let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+                    let date_component = due_date;
+                    
+                    $("#taskmodalDuedate").val(date_component);
+                    $("#taskmodalDescription").html(selected_record.TaskDescription);
+
+                    $("#chkComplete_taskEditLabel").removeClass("task_priority_0");
+                    $("#chkComplete_taskEditLabel").removeClass("task_priority_1");
+                    $("#chkComplete_taskEditLabel").removeClass("task_priority_2");
+                    $("#chkComplete_taskEditLabel").removeClass("task_priority_3");
+                    $("#chkComplete_taskEditLabel").addClass("task_priority_" + selected_record.priority);
+
+                    let taskmodalLabels = "";
+                    $(".chkDetailLabel").prop("checked", false);
+                    if (selected_record.TaskLabel) {
+                        if (selected_record.TaskLabel.fields != undefined) {
+                            taskmodalLabels =
+                                `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+                                selected_record.TaskLabel.fields.TaskLabelName +
+                                "</a></span>";
+                            $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                                "checked",
+                                true
+                            );
+                        } else {
+                            selected_record.TaskLabel.forEach((lbl) => {
+                                taskmodalLabels +=
+                                    `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                                    lbl.fields.TaskLabelName +
+                                    "</a></span> ";
+                                $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                            });
+                            taskmodalLabels = taskmodalLabels.slice(0, -2);
+                        }
+                    }
+                    $("#taskmodalLabels").html(taskmodalLabels);
+                    let subtasks = "";
+                    if (selected_record.subtasks) {
+                        if (Array.isArray(selected_record.subtasks)) {
+                            templateObject.subTasks.set(selected_record.subtasks)
+                            templateObject.initSubtaskDatatable();
+                        }
+
+                        if (typeof selected_record.subtasks == 'object') {
+                            let arr = [];
+                            arr.push(selected_record.subtasks)
+                            templateObject.subTasks.set(arr)
+                            templateObject.initSubtaskDatatable();
+                        }
+                    } else {
+                        let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
+                        sutTaskTable.clear().draw();
+                    }
+
+                    let comments = "";
+                    if (selected_record.comments) {
+                        if (selected_record.comments.fields != undefined) {
+                            let comment = selected_record.comments.fields;
+                            let comment_date = comment.CommentsDate ? moment(comment.CommentsDate).format("MMM D h:mm A") : "";
+                            let commentUserArry = comment.EnteredBy.toUpperCase().split(" ");
+                            let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+                            comments = `
+                        <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
+                        <div class="row commentRow">
+                            <div class="col-1">
+                            <div class="commentUser">${commentUser}</div>
+                            </div>
+                            <div class="col-11" style="padding-top:4px; padding-left: 24px;">
+                            <div class="row">
+                                <div>
+                                <span class="commenterName">${comment.EnteredBy}</span>
+                                <span class="commentDateTime">${comment_date}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <span class="commentText">${comment.CommentsDescription}</span>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        `;
+                        } else {
+                            selected_record.comments.forEach((item) => {
+                                let comment = item.fields;
+                                let comment_date = comment.CommentsDate ? moment(comment.CommentsDate).format("MMM D h:mm A") : "";
+                                let commentUserArry = comment.EnteredBy.toUpperCase().split(" ");
+                                let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+                                comments += `
+                        <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
+                            <div class="row commentRow">
+                            <div class="col-1">
+                                <div class="commentUser">${commentUser}</div>
+                            </div>
+                            <div class="col-11" style="padding-top:4px; padding-left: 24px;">
+                                <div class="row">
+                                <div>
+                                    <span class="commenterName">${comment.EnteredBy}</span>
+                                    <span class="commentDateTime">${comment_date}</span>
+                                </div>
+                                </div>
+                                <div class="row">
+                                <span class="commentText">${comment.CommentsDescription}</span>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        `;
+                            });
+                        }
+                    }
+                    $(".task-comment-row").html(comments);
+
+                    let activities = "";
+                    if (selected_record.activity) {
+                        if (selected_record.activity.fields != undefined) {
+                            let activity = selected_record.activity.fields;
+                            let day = "";
+                            if (moment().format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                                day = " ‧ Today";
+                            } else if (moment().add(-1, "day").format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                                day = " . Yesterday";
+                            }
+                            let activityDate = moment(activity.ActivityDateStartd).format("MMM D") + day + " . " + moment(activity.ActivityDateStartd).format("ddd");
+
+                            let commentUserArry = activity.EnteredBy.toUpperCase().split(" ");
+                            let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+
+                            activities = `
+                        <div class="row" style="padding: 16px;">
+                        <div class="col-12">
+                            <span class="activityDate">${activityDate}</span>
+                        </div>
+                        <hr style="width: 100%; margin: 8px 16px;" />
+                        <div class="col-1">
+                            <div class="commentUser">${commentUser}</div>
+                        </div>
+                        <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                            <div class="row">
+                            <span class="activityName">${activity.EnteredBy
+                    } </span> <span class="activityAction">${activity.ActivityName
+                    } </span>
+                            </div>
+                            <div class="row">
+                            <span class="activityComment">${activity.ActivityDescription
+                    }</span>
+                            </div>
+                            <div class="row">
+                            <span class="activityTime">${moment(
+                    activity.ActivityDateStartd
+                    ).format("h:mm A")}</span>
+                            </div>
+                        </div>
+                        <hr style="width: 100%; margin: 16px;" />
+                        </div>
+                        `;
+                        } else {
+                            selected_record.activity.forEach((item) => {
+                                let activity = item.fields;
+                                let day = "";
+                                if (moment().format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                                    day = " ‧ Today";
+                                } else if (moment().add(-1, "day").format("YYYY-MM-DD") == moment(activity.ActivityDateStartd).format("YYYY-MM-DD")) {
+                                    day = " . Yesterday";
+                                }
+                                let activityDate = moment(activity.ActivityDateStartd).format("MMM D") + day + " . " + moment(activity.ActivityDateStartd).format("ddd");
+
+                                let commentUserArry = activity.EnteredBy.toUpperCase().split(" ");
+                                let commentUser = commentUserArry.length > 1 ? commentUserArry[0].charAt(0) + commentUserArry[1].charAt(0) : commentUserArry[0].charAt(0);
+
+                                activities = `
+                        <div class="row" style="padding: 16px;">
+                            <div class="col-12">
+                            <span class="activityDate">${activityDate}</span>
+                            </div>
+                            <hr style="width: 100%; margin: 8px 16px;" />
+                            <div class="col-1">
+                            <div class="commentUser">${commentUser}</div>
+                            </div>
+                            <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                            <div class="row">
+                                <span class="activityName">${activity.EnteredBy
+                    } </span> <span class="activityAction">${activity.ActivityName
+                    } </span>
+                            </div>
+                            <div class="row">
+                                <span class="activityComment">${activity.ActivityDescription
+                    }</span>
+                            </div>
+                            <div class="row">
+                                <span class="activityTime">${moment(
+                        activity.ActivityDateStartd
+                    ).format("h:mm A")}</span>
+                            </div>
+                            </div>
+                            <hr style="width: 100%; margin: 16px;" />
+                        </div>
+                        `;
+                            });
+                        }
+                    }
+                    $(".task-activity-row").html(activities);
+
+                    if (type == "comment") {
+                        $("#nav-comments-tab").click();
+                    } else {
+                        $("#nav-subtasks-tab").click();
+                    }
+
+                    $("#chkPriority0").prop("checked", false);
+                    $("#chkPriority1").prop("checked", false);
+                    $("#chkPriority2").prop("checked", false);
+                    $("#chkPriority3").prop("checked", false);
+                    $("#chkPriority" + selected_record.priority).prop("checked", true);
+
+                    $(".taskModalActionFlagDropdown").removeClass(
+                        "task_modal_priority_3"
+                    );
+                    $(".taskModalActionFlagDropdown").removeClass(
+                        "task_modal_priority_2"
+                    );
+                    $(".taskModalActionFlagDropdown").removeClass(
+                        "task_modal_priority_1"
+                    );
+                    $(".taskModalActionFlagDropdown").removeClass(
+                        "task_modal_priority_0"
+                    );
+                    $(".taskModalActionFlagDropdown").addClass(
+                        "task_modal_priority_" + selected_record.priority
+                    );
+
+                    $("#taskDetailModal").modal("toggle");
+
+                    $(".crmDatepicker").datepicker({
+                        showOn: "button",
+                        buttonText: "Show Date",
+                        buttonImageOnly: true,
+                        buttonImage: "/img/imgCal2.png",
+                        constrainInput: false,
+                        dateFormat: "dd/mm/yy",
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "-90:+10",
+                        onSelect: function(dateText, inst) {
+                            let task_id = inst.id;
+                            $(".crmDatepicker").val(dateText);
+
+                            templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
+                        },
+                        onChangeMonthYear: function(year, month, inst) {
+                            // Set date to picker
+                            $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                        }
                     });
+                    let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
+                    let begunDate = moment(currentDate).format("DD/MM/YYYY");
+                    $(".crmDatepicker").val(begunDate);
+
                 }
+                // else {
+                //     swal("Cannot edit this task", "", "warning");
+                //     return;
+                // }
             }
-            $(".task-activity-row").html(activities);
-
-            if (type == "comment") {
-                $("#nav-comments-tab").click();
-            } else {
-                $("#nav-subtasks-tab").click();
-            }
-
-            $("#chkPriority0").prop("checked", false);
-            $("#chkPriority1").prop("checked", false);
-            $("#chkPriority2").prop("checked", false);
-            $("#chkPriority3").prop("checked", false);
-            $("#chkPriority" + selected_record.priority).prop("checked", true);
-
-            $(".taskModalActionFlagDropdown").removeClass(
-                "task_modal_priority_3"
-            );
-            $(".taskModalActionFlagDropdown").removeClass(
-                "task_modal_priority_2"
-            );
-            $(".taskModalActionFlagDropdown").removeClass(
-                "task_modal_priority_1"
-            );
-            $(".taskModalActionFlagDropdown").removeClass(
-                "task_modal_priority_0"
-            );
-            $(".taskModalActionFlagDropdown").addClass(
-                "task_modal_priority_" + selected_record.priority
-            );
-
-            $("#taskDetailModal").modal("toggle");
-
-            $(".crmDatepicker").datepicker({
-                showOn: "button",
-                buttonText: "Show Date",
-                buttonImageOnly: true,
-                buttonImage: "/img/imgCal2.png",
-                constrainInput: false,
-                dateFormat: "dd/mm/yy",
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "-90:+10",
-                onSelect: function(dateText, inst) {
-                    let task_id = inst.id;
-                    $(".crmDatepicker").val(dateText);
-
-                    templateObject.updateTaskSchedule(task_id, new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
-                },
-                onChangeMonthYear: function(year, month, inst) {
-                    // Set date to picker
-                    $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-                }
-            });
-            let currentDate = selected_record.due_date ? new Date(selected_record.due_date) : new Date();
-            let begunDate = moment(currentDate).format("DD/MM/YYYY");
-            $(".crmDatepicker").val(begunDate);
-
         }
-        // else {
-        //     swal("Cannot edit this task", "", "warning");
-        //     return;
-        // }
-    }
+    }).catch(function(err) {
+        // crmService.getAllTasksByContactName().then(async function(data) {
+        //     if (data.tprojecttasks.length > 0) {
+        //         addVS1Data("TCRMTaskList", JSON.stringify(data));
+        //         templateObject.taskrecords.set(data.tprojecttasks);
+        //     }
+        // }).catch(function(err) {
+        // })
+    });
 }
