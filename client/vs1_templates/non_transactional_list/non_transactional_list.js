@@ -951,6 +951,17 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Project', class: 'colTaskProjects no-modal', active: false, display: true, width: "100" },
                 { index: 6, label: 'Actions', class: 'colTaskActions no-modal', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename === "tblSubtaskDatatable") {
+            reset_data = [
+                { index: 0, label: '', class: 'colCompleteTask', active: false, display: true, width: "2%" },
+                { index: 1, label: 'Priority', class: 'colPriority no-modal', active: false, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colSubDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Task', class: 'colSubTaskName', active: true, display: true, width: "100" },
+                { index: 3, label: 'Description', class: 'colTaskDesc no-modal', active: false, display: true, width: "150" },
+                { index: 4, label: 'Labels', class: 'colTaskLabels no-modal', active: false, display: true, width: "250" },
+                { index: 5, label: 'Project', class: 'colTaskProjects no-modal', active: false, display: true, width: "100" },
+                { index: 6, label: 'Actions', class: 'colTaskActions no-modal', active: true, display: true, width: "100" },
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -13663,15 +13674,17 @@ Template.non_transactional_list.onRendered(function() {
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
     } else if (currenttablename == "tblBASReturnList") {
-        templateObject.getBasReturnData();
+        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getBasReturnData(false, datefrom, dateto);
     } else if (currenttablename == "tblVATReturnList") {
-        templateObject.getVatReturnData();
-    } else if (currenttablename == "tblServiceLogList") {
-      templateObject.getServiceLogData();
-    } else if (currenttablename == "tblAssetRegisterList") {
-      templateObject.getAssetRegisterData();
-    } else if (currenttablename == "tblFixedAssetList") {
-      templateObject.getFixedAssetData();
+        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getVatReturnData(false, datefrom, dateto);
     }
     tableResize();
 
@@ -13697,7 +13710,6 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getSubtaskData(false);
         }, 10);
     });
->>>>>>> 13e5e9b5fa4dc6b1796b7426fb0c3f159e3cfddc
 });
 
 Template.non_transactional_list.events({
