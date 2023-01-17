@@ -300,6 +300,7 @@ import './deposits/deposit_list.js';
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
 /* Rasheed */
