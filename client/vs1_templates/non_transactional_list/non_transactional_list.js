@@ -11388,7 +11388,7 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getBasReturnData = function() {
+    templateObject.getBasReturnData = function(deleteFilter = false, datefrom="", dateto="") {
         let dataTableList = [];
         let months = [];
         months["January"] = "01";
@@ -11403,12 +11403,110 @@ Template.non_transactional_list.onRendered(function() {
         months["October"] = "10";
         months["November"] = "11";
         months["December"] = "12";
+
+        let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
+        let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
+        
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+
         $(".fullScreenSpin").css("display", "inline-block");
         getVS1Data('TBASReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 reportService.getAllBASReturn().then(function(data) {
                     addVS1Data("TBASReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
                     for (let i = 0; i < data.tbasreturn.length; i++) {
+                        let sort_date = data.tbasreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tbasreturn[i].fields.MsTimeStamp;
+                        sort_date = new Date(sort_date);
+                        if (sort_date >= fromDate && sort_date <= toDate ) {
+                            let tab1startDate = "";
+                            let tab1endDate = "";
+                            let tab2startDate = "";
+                            let tab2endDate = "";
+                            let tab3startDate = "";
+                            let tab3endDate = "";
+                            let tab4startDate = "";
+                            let tab4endDate = "";
+                            if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
+                                tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
+                                var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                                tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                                tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                            }
+                            if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
+                                tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
+                                var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                                tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                                tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                            }
+                            if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
+                                tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
+                                var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                                tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                                tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                            }
+                            if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
+                                tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
+                                var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
+                                tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                                tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
+                            }
+
+                            if (deleteFilter == false) {
+                                if (data.tbasreturn[i].fields.Active) {
+                                    var dataList = {
+                                        basnumber: data.tbasreturn[i].fields.ID || '',
+                                        description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                                        tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                                        tab1startDate: tab1startDate,
+                                        tab1endDate: tab1endDate,
+                                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
+                                        tab2startDate: tab2startDate,
+                                        tab2endDate: tab2endDate,
+                                        tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
+                                        tab2startDate2: tab3startDate,
+                                        tab2endDate2: tab3endDate,
+                                        tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
+                                        tab3startDate: tab4startDate,
+                                        tab3endDate: tab4endDate,
+                                        Active: data.tbasreturn[i].fields.Active
+                                    };
+                                    dataTableList.push(dataList);
+                                }
+                            }
+                            else{
+                                var dataList = {
+                                    basnumber: data.tbasreturn[i].fields.ID || '',
+                                    description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                                    tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                                    tab1startDate: tab1startDate,
+                                    tab1endDate: tab1endDate,
+                                    tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
+                                    tab2startDate: tab2startDate,
+                                    tab2endDate: tab2endDate,
+                                    tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
+                                    tab2startDate2: tab3startDate,
+                                    tab2endDate2: tab3endDate,
+                                    tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
+                                    tab3startDate: tab4startDate,
+                                    tab3endDate: tab4endDate,
+                                    Active: data.tbasreturn[i].fields.Active
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        }
+                    }
+                    templateObject.displayBasReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tbasreturn.length; i++) {
+                    let sort_date = data.tbasreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tbasreturn[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
+                    if (sort_date >= fromDate && sort_date <= toDate ) {
                         let tab1startDate = "";
                         let tab1endDate = "";
                         let tab2startDate = "";
@@ -11442,141 +11540,138 @@ Template.non_transactional_list.onRendered(function() {
                             tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
                         }
 
-                        var dataList = {
-                            basnumber: data.tbasreturn[i].fields.ID || '',
-                            description: data.tbasreturn[i].fields.BasSheetDesc || '',
-                            tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
-                            tab1startDate: tab1startDate,
-                            tab1endDate: tab1endDate,
-                            tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
-                            tab2startDate: tab2startDate,
-                            tab2endDate: tab2endDate,
-                            tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
-                            tab2startDate2: tab3startDate,
-                            tab2endDate2: tab3endDate,
-                            tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
-                            tab3startDate: tab4startDate,
-                            tab3endDate: tab4endDate,
-                        };
-                        dataTableList.push(dataList);
+                        if (deleteFilter == false) {
+                            if (data.tbasreturn[i].fields.Active) {
+                                var dataList = {
+                                    basnumber: data.tbasreturn[i].fields.ID || '',
+                                    description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                                    tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                                    tab1startDate: tab1startDate,
+                                    tab1endDate: tab1endDate,
+                                    tab2datemethod: data.tbasreturn[i].fields.Tab2_Type,
+                                    tab2startDate: tab2startDate,
+                                    tab2endDate: tab2endDate,
+                                    tab2datemethod2: data.tbasreturn[i].fields.Tab3_Type,
+                                    tab2startDate2: tab3startDate,
+                                    tab2endDate2: tab3endDate,
+                                    tab3datemethod: data.tbasreturn[i].fields.Tab4_Type,
+                                    tab3startDate: tab4startDate,
+                                    tab3endDate: tab4endDate,
+                                    Active: data.tbasreturn[i].fields.Active
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        }
+                        else{
+                            var dataList = {
+                                basnumber: data.tbasreturn[i].fields.ID || '',
+                                description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                                tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                                tab1startDate: tab1startDate,
+                                tab1endDate: tab1endDate,
+                                tab2datemethod: data.tbasreturn[i].fields.Tab2_Type,
+                                tab2startDate: tab2startDate,
+                                tab2endDate: tab2endDate,
+                                tab2datemethod2: data.tbasreturn[i].fields.Tab3_Type,
+                                tab2startDate2: tab3startDate,
+                                tab2endDate2: tab3endDate,
+                                tab3datemethod: data.tbasreturn[i].fields.Tab4_Type,
+                                tab3startDate: tab4startDate,
+                                tab3endDate: tab4endDate,
+                                Active: data.tbasreturn[i].fields.Active
+                            };
+                            dataTableList.push(dataList);
+                        }
                     }
-                    templateObject.displayBasReturnData(dataTableList);
-                    $('.fullScreenSpin').css('display', 'none');
-                }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.tbasreturn.length; i++) {
-                    let tab1startDate = "";
-                    let tab1endDate = "";
-                    let tab2startDate = "";
-                    let tab2endDate = "";
-                    let tab3startDate = "";
-                    let tab3endDate = "";
-                    let tab4startDate = "";
-                    let tab4endDate = "";
-                    if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
-                        tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
-                        tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
-                        tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
-                        tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
-                        tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
-                        tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
-                        tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
-                        tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
-                        tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
-                    }
-                    var dataList = {
-                        basnumber: data.tbasreturn[i].fields.ID || '',
-                        description: data.tbasreturn[i].fields.BasSheetDesc || '',
-                        tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
-                        tab1startDate: tab1startDate,
-                        tab1endDate: tab1endDate,
-                        tab2datemethod: data.tbasreturn[i].fields.Tab2_Type,
-                        tab2startDate: tab2startDate,
-                        tab2endDate: tab2endDate,
-                        tab2datemethod2: data.tbasreturn[i].fields.Tab3_Type,
-                        tab2startDate2: tab3startDate,
-                        tab2endDate2: tab3endDate,
-                        tab3datemethod: data.tbasreturn[i].fields.Tab4_Type,
-                        tab3startDate: tab4startDate,
-                        tab3endDate: tab4endDate,
-                    };
-                    dataTableList.push(dataList);
                 }
-                templateObject.displayBasReturnData(dataTableList);
+                templateObject.displayBasReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
                 $('.fullScreenSpin').css('display', 'none');
             }
         }).catch(function(err) {
             reportService.getAllBASReturn().then(function(data) {
                 addVS1Data("TBASReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
                 for (let i = 0; i < data.tbasreturn.length; i++) {
-                    let tab1startDate = "";
-                    let tab1endDate = "";
-                    let tab2startDate = "";
-                    let tab2endDate = "";
-                    let tab3startDate = "";
-                    let tab3endDate = "";
-                    let tab4startDate = "";
-                    let tab4endDate = "";
-                    if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
-                        tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
-                        tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
-                        tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
-                        tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
-                        tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
-                        tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
-                        tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
-                        var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
-                        tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
-                        tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
-                    }
+                    let sort_date = data.tbasreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tbasreturn[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
+                    if (sort_date >= fromDate && sort_date <= toDate ) {
+                        let tab1startDate = "";
+                        let tab1endDate = "";
+                        let tab2startDate = "";
+                        let tab2endDate = "";
+                        let tab3startDate = "";
+                        let tab3endDate = "";
+                        let tab4startDate = "";
+                        let tab4endDate = "";
+                        if (data.tbasreturn[i].fields.Tab1_Year > 0 && data.tbasreturn[i].fields.Tab1_Month != "") {
+                            tab1startDate = data.tbasreturn[i].fields.Tab1_Year + "-" + months[data.tbasreturn[i].fields.Tab1_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab1_Month]);
+                            tab1endDate = new Date(data.tbasreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tbasreturn[i].fields.Tab2_Year > 0 && data.tbasreturn[i].fields.Tab2_Month != "") {
+                            tab2startDate = data.tbasreturn[i].fields.Tab2_Year + "-" + months[data.tbasreturn[i].fields.Tab2_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab2_Month]);
+                            tab2endDate = new Date(data.tbasreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tbasreturn[i].fields.Tab3_Year > 0 && data.tbasreturn[i].fields.Tab3_Month != "") {
+                            tab3startDate = data.tbasreturn[i].fields.Tab3_Year + "-" + months[data.tbasreturn[i].fields.Tab3_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab3_Month]);
+                            tab3endDate = new Date(data.tbasreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tbasreturn[i].fields.Tab4_Year > 0 && data.tbasreturn[i].fields.Tab4_Month != "") {
+                            tab4startDate = data.tbasreturn[i].fields.Tab4_Year + "-" + months[data.tbasreturn[i].fields.Tab4_Month] + "-01";
+                            var endMonth = (data.tbasreturn[i].fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tbasreturn[i].fields.Tab4_Month]) / 3) * 3) : (months[data.tbasreturn[i].fields.Tab4_Month]);
+                            tab4endDate = new Date(data.tbasreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
+                            tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
+                        }
 
-                    var dataList = {
-                        basnumber: data.tbasreturn[i].fields.ID || '',
-                        description: data.tbasreturn[i].fields.BasSheetDesc || '',
-                        tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
-                        tab1startDate: tab1startDate,
-                        tab1endDate: tab1endDate,
-                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
-                        tab2startDate: tab2startDate,
-                        tab2endDate: tab2endDate,
-                        tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
-                        tab2startDate2: tab3startDate,
-                        tab2endDate2: tab3endDate,
-                        tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
-                        tab3startDate: tab4startDate,
-                        tab3endDate: tab4endDate,
-                    };
-                    dataTableList.push(dataList);
+                        if (deleteFilter == false) {
+                            if (data.tbasreturn[i].fields.Active) {
+                                var dataList = {
+                                    basnumber: data.tbasreturn[i].fields.ID || '',
+                                    description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                                    tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                                    tab1startDate: tab1startDate,
+                                    tab1endDate: tab1endDate,
+                                    tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
+                                    tab2startDate: tab2startDate,
+                                    tab2endDate: tab2endDate,
+                                    tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
+                                    tab2startDate2: tab3startDate,
+                                    tab2endDate2: tab3endDate,
+                                    tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
+                                    tab3startDate: tab4startDate,
+                                    tab3endDate: tab4endDate,
+                                    Active: data.tbasreturn[i].fields.Active
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        }
+                        else{
+                            var dataList = {
+                                basnumber: data.tbasreturn[i].fields.ID || '',
+                                description: data.tbasreturn[i].fields.BasSheetDesc || '',
+                                tab1datemethod: data.tbasreturn[i].fields.Tab1_Type,
+                                tab1startDate: tab1startDate,
+                                tab1endDate: tab1endDate,
+                                tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tbasreturn[i].fields.Tab2_Type : "",
+                                tab2startDate: tab2startDate,
+                                tab2endDate: tab2endDate,
+                                tab2datemethod2: (tab3startDate != "" && tab3endDate != "") ? data.tbasreturn[i].fields.Tab3_Type : "",
+                                tab2startDate2: tab3startDate,
+                                tab2endDate2: tab3endDate,
+                                tab3datemethod: (tab4startDate != "" && tab4endDate != "") ? data.tbasreturn[i].fields.Tab4_Type : "",
+                                tab3startDate: tab4startDate,
+                                tab3endDate: tab4endDate,
+                                Active: data.tbasreturn[i].fields.Active
+                            };
+                            dataTableList.push(dataList);
+                        }
+                    }
                 }
-                templateObject.displayBasReturnData(dataTableList);
+                templateObject.displayBasReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -11584,25 +11679,12 @@ Template.non_transactional_list.onRendered(function() {
         });
     }
 
-    templateObject.displayBasReturnData = async function(data){
+    templateObject.displayBasReturnData = async function(data, deleteFilter = false, fromDate="", toDate=""){
         var splashArrayLeadList = new Array();
         let lineItems = [];
         let lineItemObj = {};
-        let deleteFilter = false;
-        // if (data.Params.Search.replace(/\s/g, "") == "") {
-        //     deleteFilter = true;
-        // } else {
-        //     deleteFilter = false;
-        // };
-
+        
         for (let i = 0; i < data.length; i++) {
-            let linestatus = '';
-            // if (data[i].Active == true) {
-            //     linestatus = "";
-            // } else if (data[i].Active == false) {
-            //     linestatus = "In-Active";
-            // };
-
             var dataList = [
                 data[i].basnumber || '',
                 data[i].description || '',
@@ -11735,7 +11817,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: true,
                 "order": [
-                    [1, "asc"]
+                    [0, "desc"]
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -11761,14 +11843,65 @@ Template.non_transactional_list.onRendered(function() {
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search ST Payroll..." },
-                // "fnInitComplete": function(oSettings) {
-                //     if (data.Params.Search.replace(/\s/g, "") == "") {
-                //         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                //     } else {
-                //         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                //     }
-                //     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-                // },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+
+                    var html = `<div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <div class="form-group" style="margin: 12px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 12px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin: 12px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 12px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    setTimeout(function() {
+                        $(".colDateFilter").html(html);
+                        $("#dateFrom, #dateTo").datepicker({
+                            showOn: "button",
+                            buttonText: "Show Date",
+                            buttonImageOnly: true,
+                            buttonImage: "/img/imgCal2.png",
+                            dateFormat: "dd/mm/yy",
+                            showOtherMonths: true,
+                            selectOtherMonths: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "-90:+10",
+                            onSelect: function(formated, dates) {
+                                const datefrom = $("#dateFrom").val();
+                                const dateto = $("#dateTo").val();
+                                templateObject.getBasReturnData(deleteFilter, datefrom, dateto);
+                            },
+                            onChangeMonthYear: function(year, month, inst) {
+                                // Set date to picker
+                                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                                // Hide (close) the picker
+                                // $(this).datepicker('hide');
+                                // // Change ttrigger the on change function
+                                // $(this).trigger('change');
+                            }
+                        });
+                        $("#dateFrom").val(fromDate);
+                        $("#dateTo").val(toDate);
+                    }, 100);
+                },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.length || 0; //get count from API data
 
@@ -11803,7 +11936,7 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getVatReturnData = function() {
+    templateObject.getVatReturnData = function(deleteFilter = false, datefrom="", dateto="") {
         let dataTableList = [];
         let months = [];
         months["January"] = "01";
@@ -11818,12 +11951,126 @@ Template.non_transactional_list.onRendered(function() {
         months["October"] = "10";
         months["November"] = "11";
         months["December"] = "12";
+
+        let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
+        let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
+        
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+
         $(".fullScreenSpin").css("display", "inline-block");
         getVS1Data('TVATReturn').then(function(dataObject) {
             if (dataObject.length == 0) {
                 reportService.getAllVATReturn().then(function(data) {
                     addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
                     for (let i = 0; i < data.tvatreturn.length; i++) {
+                        let sort_date = data.tvatreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturn[i].fields.MsTimeStamp;
+                        sort_date = new Date(sort_date);
+                        if (sort_date >= fromDate && sort_date <= toDate ) {
+                            let tab1startDate = "";
+                            let tab1endDate = "";
+                            let tab2startDate = "";
+                            let tab2endDate = "";
+                            let tab3startDate = "";
+                            let tab3endDate = "";
+                            if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
+                                tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                                tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                            }
+                            if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
+                                tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                                tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                            }
+                            if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                                var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
+                                tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                                tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                            }
+        
+                            var dataList = {
+                                basnumber: data.tvatreturn[i].fields.ID || '',
+                                description: data.tvatreturn[i].fields.VatSheetDesc || '',
+                                tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
+                                tab1startDate: tab1startDate,
+                                tab1endDate: tab1endDate,
+                                tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
+                                tab2startDate: tab2startDate,
+                                tab2endDate: tab2endDate,
+                                tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
+                                tab3startDate: tab4startDate,
+                                tab3endDate: tab4endDate,
+                                Active: data.tvatreturn[i].fields.Active
+                            };
+                            dataTableList.push(dataList);
+                        }
+                    }
+                    templateObject.displayVatReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
+                    $('.fullScreenSpin').css('display', 'none');
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tvatreturn.length; i++) {
+                    let sort_date = data.tvatreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturn[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
+                    if (sort_date >= fromDate && sort_date <= toDate ) {
+                        let tab1startDate = "";
+                        let tab1endDate = "";
+                        let tab2startDate = "";
+                        let tab2endDate = "";
+                        let tab3startDate = "";
+                        let tab3endDate = "";
+                        if (data.tvatreturns[i].fields.Tab1_Year > 0 && data.tvatreturns[i].fields.Tab1_Month != "") {
+                            tab1startDate = data.tvatreturns[i].fields.Tab1_Year + "-" + months[data.tvatreturns[i].fields.Tab1_Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1_Month]);
+                            tab1endDate = new Date(data.tvatreturns[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tvatreturns[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            tab2startDate = data.tvatreturns[i].fields.Tab2_Year + "-" + months[data.tvatreturns[i].fields.Tab2_Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2_Month]);
+                            tab2endDate = new Date(data.tvatreturns[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                        }
+                        if (data.tvatreturns[i].fields.Tab3_Year > 0 && data.tvatreturns[i].fields.Tab3_Month != "") {
+                            tab3startDate = data.tvatreturns[i].fields.Tab3_Year + "-" + months[data.tvatreturns[i].fields.Tab3_Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3_Month]);
+                            tab3endDate = new Date(data.tvatreturns[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                        }
+                        var dataList = {
+                            basnumber: data.tvatreturns[i].fields.ID || '',
+                            description: data.tvatreturns[i].fields.BasSheetDesc || '',
+                            tab1datemethod: data.tvatreturns[i].fields.Tab1_Type,
+                            tab1startDate: tab1startDate,
+                            tab1endDate: tab1endDate,
+                            tab2datemethod: data.tvatreturns[i].fields.Tab2_Type,
+                            tab2startDate: tab2startDate,
+                            tab2endDate: tab2endDate,
+                            tab3datemethod: data.tvatreturns[i].fields.Tab3_Type,
+                            tab3startDate: tab3startDate,
+                            tab3endDate: tab3endDate,
+                            Active: data.tvatreturn[i].fields.Active
+                        };
+                        dataTableList.push(dataList);
+                    }
+                }
+                templateObject.displayVatReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
+                $('.fullScreenSpin').css('display', 'none');
+            }
+        }).catch(function(err) {
+            reportService.getAllVATReturn().then(function(data) {
+                addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+                for (let i = 0; i < data.tvatreturn.length; i++) {
+                    let sort_date = data.tvatreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturn[i].fields.MsTimeStamp;
+                    sort_date = new Date(sort_date);
+                    if (sort_date >= fromDate && sort_date <= toDate ) {
                         let tab1startDate = "";
                         let tab1endDate = "";
                         let tab2startDate = "";
@@ -11848,7 +12095,7 @@ Template.non_transactional_list.onRendered(function() {
                             tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
                             tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                         }
-       
+    
                         var dataList = {
                             basnumber: data.tvatreturn[i].fields.ID || '',
                             description: data.tvatreturn[i].fields.VatSheetDesc || '',
@@ -11861,104 +12108,12 @@ Template.non_transactional_list.onRendered(function() {
                             tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
                             tab3startDate: tab4startDate,
                             tab3endDate: tab4endDate,
+                            Active: data.tvatreturn[i].fields.Active
                         };
                         dataTableList.push(dataList);
                     }
-                    templateObject.displayVatReturnData(dataTableList);
-                    $('.fullScreenSpin').css('display', 'none');
-                }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.tvatreturn.length; i++) {
-                    let tab1startDate = "";
-                    let tab1endDate = "";
-                    let tab2startDate = "";
-                    let tab2endDate = "";
-                    let tab3startDate = "";
-                    let tab3endDate = "";
-                    if (data.tvatreturns[i].fields.Tab1_Year > 0 && data.tvatreturns[i].fields.Tab1_Month != "") {
-                        tab1startDate = data.tvatreturns[i].fields.Tab1_Year + "-" + months[data.tvatreturns[i].fields.Tab1_Month] + "-01";
-                        var endMonth = (data.tvatreturns[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1_Month]);
-                        tab1endDate = new Date(data.tvatreturns[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturns[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                        tab2startDate = data.tvatreturns[i].fields.Tab2_Year + "-" + months[data.tvatreturns[i].fields.Tab2_Month] + "-01";
-                        var endMonth = (data.tvatreturns[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2_Month]);
-                        tab2endDate = new Date(data.tvatreturns[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturns[i].fields.Tab3_Year > 0 && data.tvatreturns[i].fields.Tab3_Month != "") {
-                        tab3startDate = data.tvatreturns[i].fields.Tab3_Year + "-" + months[data.tvatreturns[i].fields.Tab3_Month] + "-01";
-                        var endMonth = (data.tvatreturns[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3_Month]);
-                        tab3endDate = new Date(data.tvatreturns[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                    }
-                    var dataList = {
-                        basnumber: data.tvatreturns[i].fields.ID || '',
-                        description: data.tvatreturns[i].fields.BasSheetDesc || '',
-                        tab1datemethod: data.tvatreturns[i].fields.Tab1_Type,
-                        tab1startDate: tab1startDate,
-                        tab1endDate: tab1endDate,
-                        tab2datemethod: data.tvatreturns[i].fields.Tab2_Type,
-                        tab2startDate: tab2startDate,
-                        tab2endDate: tab2endDate,
-                        tab3datemethod: data.tvatreturns[i].fields.Tab3_Type,
-                        tab3startDate: tab3startDate,
-                        tab3endDate: tab3endDate,
-                    };
-                    dataTableList.push(dataList);
                 }
-                templateObject.displayVatReturnData(dataTableList);
-                $('.fullScreenSpin').css('display', 'none');
-            }
-        }).catch(function(err) {
-            reportService.getAllVATReturn().then(function(data) {
-                addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
-                for (let i = 0; i < data.tvatreturn.length; i++) {
-                    let tab1startDate = "";
-                    let tab1endDate = "";
-                    let tab2startDate = "";
-                    let tab2endDate = "";
-                    let tab3startDate = "";
-                    let tab3endDate = "";
-                    if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                        tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
-                        var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
-                        tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                        tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
-                        var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
-                        tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
-                    }
-                    if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                        tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
-                        var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
-                        tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
-                    }
-   
-                    var dataList = {
-                        basnumber: data.tvatreturn[i].fields.ID || '',
-                        description: data.tvatreturn[i].fields.VatSheetDesc || '',
-                        tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
-                        tab1startDate: tab1startDate,
-                        tab1endDate: tab1endDate,
-                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
-                        tab2startDate: tab2startDate,
-                        tab2endDate: tab2endDate,
-                        tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
-                        tab3startDate: tab4startDate,
-                        tab3endDate: tab4endDate,
-                    };
-                    dataTableList.push(dataList);
-                }
-                templateObject.displayVatReturnData(dataTableList);
+                templateObject.displayVatReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -11966,25 +12121,13 @@ Template.non_transactional_list.onRendered(function() {
         });
     }
 
-    templateObject.displayVatReturnData = async function(data){
+    templateObject.displayVatReturnData = async function(data, deleteFilter = false, fromDate="", toDate=""){
         var splashArrayLeadList = new Array();
         let lineItems = [];
         let lineItemObj = {};
-        let deleteFilter = false;
-        // if (data.Params.Search.replace(/\s/g, "") == "") {
-        //     deleteFilter = true;
-        // } else {
-        //     deleteFilter = false;
-        // };
-
+        
         for (let i = 0; i < data.length; i++) {
-            let linestatus = '';
-            // if (data[i].Active == true) {
-            //     linestatus = "";
-            // } else if (data[i].Active == false) {
-            //     linestatus = "In-Active";
-            // };
-
+            let linestatus = '';        
             var dataList = [
                 data[i].vatnumber || '',
                 data[i].description || '',
@@ -12117,7 +12260,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: true,
                 "order": [
-                    [1, "asc"]
+                    [0, "desc"]
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -12143,14 +12286,65 @@ Template.non_transactional_list.onRendered(function() {
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search ST Payroll..." },
-                // "fnInitComplete": function(oSettings) {
-                //     if (data.Params.Search.replace(/\s/g, "") == "") {
-                //         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                //     } else {
-                //         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                //     }
-                //     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-                // },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+
+                    var html = `<div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                        <div class="form-group" style="margin: 12px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 12px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin: 12px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 12px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    setTimeout(function() {
+                        $(".colDateFilter").html(html);
+                        $("#dateFrom, #dateTo").datepicker({
+                            showOn: "button",
+                            buttonText: "Show Date",
+                            buttonImageOnly: true,
+                            buttonImage: "/img/imgCal2.png",
+                            dateFormat: "dd/mm/yy",
+                            showOtherMonths: true,
+                            selectOtherMonths: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "-90:+10",
+                            onSelect: function(formated, dates) {
+                                const datefrom = $("#dateFrom").val();
+                                const dateto = $("#dateTo").val();
+                                templateObject.getVatReturnData(deleteFilter, datefrom, dateto);
+                            },
+                            onChangeMonthYear: function(year, month, inst) {
+                                // Set date to picker
+                                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                                // Hide (close) the picker
+                                // $(this).datepicker('hide');
+                                // // Change ttrigger the on change function
+                                // $(this).trigger('change');
+                            }
+                        });
+                        $("#dateFrom").val(fromDate);
+                        $("#dateTo").val(toDate);
+                    }, 100);
+                },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.length || 0; //get count from API data
 
@@ -12268,9 +12462,17 @@ Template.non_transactional_list.onRendered(function() {
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
     } else if (currenttablename == "tblBASReturnList") {
-        templateObject.getBasReturnData();
+        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getBasReturnData(false, datefrom, dateto);
     } else if (currenttablename == "tblVATReturnList") {
-        templateObject.getVatReturnData();
+        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getVatReturnData(false, datefrom, dateto);
     }
     tableResize();
 
@@ -12284,6 +12486,10 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
         } else if (currenttablename === "tblSupplierCrmListWithDate") {
             templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblBASReturnList") {
+            templateObject.getBasReturnData(false, datefrom, dateto);
+        } else if (currenttablename === "tblVATReturnList") {
+            templateObject.getVatReturnData(false, datefrom, dateto);
         }
     });
 });
@@ -12383,8 +12589,15 @@ Template.non_transactional_list.events({
         }else if(currenttablename === 'tblTransactionSOList'){
             await clearData('TSalesOrderList');
             templateObject.getAllSOListData();
+        } else if (currenttablename === "tblBASReturnList") {
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getBasReturnData(true, datefrom, dateto);
+        } else if (currenttablename === "tblVATReturnList") {
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getVatReturnData(true, datefrom, dateto);
         }
-
     },
     "click .btnHideDeleted": async function(e) {
         $(".fullScreenSpin").css("display", "inline-block");
@@ -12474,6 +12687,14 @@ Template.non_transactional_list.events({
             templateObject.getRateTypeListData(false);
         } else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(false);
+        } else if (currenttablename === "tblBASReturnList") {
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getBasReturnData(false, datefrom, dateto);
+        } else if (currenttablename === "tblVATReturnList") {
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getVatReturnData(false, datefrom, dateto);
         }
 
     },
