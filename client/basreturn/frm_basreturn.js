@@ -1116,7 +1116,7 @@ Template.basreturn.onRendered(function() {
     }
     setTimeout(function() {
         templateObject.getAllBasReturnData();
-    }, 1000);
+    }, 500);
 
 
     templateObject.getReceiptCategoryList = function() {
@@ -1646,12 +1646,12 @@ Template.basreturn.onRendered(function() {
                 if (getid[1]) {
                     templateObject.getId.set(getid[1]);
                     templateObject.pageTitle.set("Edit VAT Return");
-
+                    
                     getVS1Data('TBASReturn').then(function(dataObject) {
                         let taxRateList = templateObject.taxRateList.get();
                         let accountsList = templateObject.accountsList.get();
                         let deptrecords = templateObject.deptrecords.get();
-
+                        
                         if (dataObject.length == 0) {
                             reportService.getOneBASReturn(getid[1]).then(function(data) {
                                 $("#description").val(data.tbasreturn[0].fields.BasSheetDesc);
@@ -2691,7 +2691,7 @@ Template.basreturn.onRendered(function() {
                 }
             });
         });
-    }, 500);
+    }, 50);
 
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDepartment').val($(this).find(".colDeptName").text());
