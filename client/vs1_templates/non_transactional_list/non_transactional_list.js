@@ -12937,7 +12937,8 @@ Template.non_transactional_list.onRendered(function() {
 });
 
 Template.non_transactional_list.events({
-    "click #tblCustomerCrmListWithDate tbody tr, click .tblLeadCrmListWithDate tbody tr, click .tblSupplierCrmListWithDate tbody tr": async function(e) {
+    "click .openEditTaskModal": async function(e) {
+    // "click #tblCustomerCrmListWithDate tbody tr, click .tblLeadCrmListWithDate tbody tr, click .tblSupplierCrmListWithDate tbody tr": async function(e) {
         const templateObject = Template.instance();
         setTimeout(function() {
             templateObject.getSubtaskData(false);
