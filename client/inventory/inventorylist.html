@@ -698,17 +698,13 @@
                         color: #17a673;
                     }
                 </style>
-                <!-- {{>productTable productList=dataProductList columns=columnData fields=displayfields}} -->
                 {{>non_transactional_list tablename="tblInventoryOverview"}}
             
         </div>
     </div>
 </div>
 {{#if productID}}
-    {{> onBackOrderPopUp productID=productID}}
-    {{> onSalesOrderPopUp productID=productID}}
-    {{> onOrderPopUp productID=productID}}
-    {{> recentTransactionPopUp productID=productID}}
+    {{> recentTransactionPopUp productID=productID type=transtype}}
 {{/if}}
 
     <!-- Start Help Video Modal -->
