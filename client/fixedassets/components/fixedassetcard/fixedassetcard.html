@@ -157,7 +157,7 @@
                   <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Cost</label>
-                      <input type="text" class="form-control" id="edtNumber" name="edtNumber">
+                      <input type="text" class="form-control" id="edtPurchCost" name="edtPurchCost">
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
@@ -179,13 +179,13 @@
                   <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Insurance Info</label>
-                      <input type="text" class="form-control" id="edtCapacityWeight" name="edtCapacityWeight">
+                      <input type="text" class="form-control" id="edtInsuranceInfo" name="edtInsuranceInfo">
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Renewal Date</label>
+                    <div class="form-group" style="margin: 4px;"><label>Depreciation Start Date</label>
                       <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtDateRenewal" name="edtDateRenewal">
+                        <input type="text" class="form-control" id="edtDepreciationStartDate" name="edtDepreciationStartDate">
                         <div class="input-group-addon">
                           <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                         </div>
@@ -302,9 +302,9 @@
                       <div class="form-group" style="margin: 4px;">
                         <label>Depreciation Type</label>
                         <select type="search" class="form-control" id="edtDepreciationType" name="edtDepreciationType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                          <option>No Depreciation</option>
-                          <option>Straight Line Depreciation</option>
-                          <option>Decling Balance</option>
+                          <option value="0">No Depreciation</option>
+                          <option value="1">Straight Line Depreciation</option>
+                          <option value="2">Decling Balance</option>
                         </select>
                       </div>
                     </div>
@@ -317,14 +317,6 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Cost Asset Account</label>
                         <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                          {{#if edtCostAssetAccount}}
-                            <option></option>
-                            {{#each account in edtCostAssetAccount}}
-                              <option class="" value="{{account.id}}">
-                                {{account.accountName}}
-                              </option>
-                            {{/each}}
-                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -332,14 +324,6 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Bank Account</label>
                         <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                          {{#if editBankAccount}}
-                            <option></option>
-                            {{#each account in editBankAccount}}
-                              <option class="" value="{{account.id}}">
-                                {{account.accountName}}
-                              </option>
-                            {{/each}}
-                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -347,14 +331,6 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Depreciation Asset Account</label>
                         <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                          {{#if edtDepreciationAssetAccount}}
-                          <option></option>
-                            {{#each account in edtDepreciationAssetAccount}}
-                              <option class="" value="{{account.id}}">
-                                {{account.accountName}}
-                              </option>
-                            {{/each}}
-                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -362,14 +338,6 @@
                       <div class="form-group" style="margin: 4px;">
                         <label> Depreciation Expense Account</label>
                         <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                          {{#if edtDepreciationExpenseAccount}}
-                            <option></option>
-                            {{#each account in edtDepreciationExpenseAccount}}
-                              <option class="" value="{{account.id}}">
-                                {{account.accountName}}
-                              </option>
-                            {{/each}}
-                          {{/if}}
                         </select>
                       </div>
                     </div>
@@ -379,15 +347,15 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
-                        <input type="text" class="form-control" id="edtSalvageValue" name="edtSalvageValue">
+                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;"> 
                         <label>&nbsp;</label>
                         <select type="search" class="form-control" id="edtSalvageValueType" name="edtSalvageValueType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;">
-                          <option>Amount</option>
-                          <option>Percent</option>
+                          <option value="1">Amount</option>
+                          <option value="2">Percent</option>
                         </select>
                       </div>
                     </div>

@@ -39,4 +39,16 @@ export class FixedAssetService extends BaseService {
   getFixedAssetType(id) {
     return this.getOneById(this.ERPObjects.TFixedAssetType, id);
   }
+
+  getServiceLogList() {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    };
+    return this.GET(this.ERPObjects.TServiceLogList);
+  }
+  
+  saveServiceLog(data) {
+    return this.POST(this.ERPObjects.TServiceLog, data);
+  }
 }

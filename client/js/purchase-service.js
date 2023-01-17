@@ -253,6 +253,14 @@ export class PurchaseBoardService extends BaseService {
         return this.getOneById(this.ERPObjects.TPurchaseOrderEx, id);
     }
 
+    getPurchaseOrderByWorkorderid(id) {
+        let options = {
+            ListType: 'Detail',
+            select: "[deleted]=fasle and [CustField]='" +id +"'"
+        }
+        return this.getList(this.ERPObjects.TPurchaseOrderEx, options)
+    }
+
     getOneBilldataEx(id) {
         return this.getOneById(this.ERPObjects.TBillEx, id);
     }
