@@ -295,6 +295,7 @@ import './journalEntry/journalentry_list.js';
 import './manufacture/processList.js';
 import './vs1shipping/shippingoverview.js';
 import './vs1shipping/shippingdocket.js';
+import './deposits/deposit_list.js';
 /* Tinyiko */
 
 /* Rasheed */

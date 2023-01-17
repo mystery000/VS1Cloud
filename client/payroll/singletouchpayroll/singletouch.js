@@ -19,7 +19,7 @@ import {
 import 'jquery-editable-select';
 import CachedHttp from '../../lib/global/CachedHttp';
 import erpObject from '../../lib/global/erp-objects';
-import index from "magento-api-rest";
+// import index from "magento-api-rest";
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 import './singletouch.html';
@@ -53,6 +53,7 @@ Template.singletouch.onRendered(function() {
         }
     });
     checkSetupFinished();
+    $('.fullScreenSpin').css('display', 'none');
     // function init_reset_data() {
     //     let reset_data = [
     //         { index: 0, label: "SortDate", class: "SortDate", active: false, display: false, width: "0" },
