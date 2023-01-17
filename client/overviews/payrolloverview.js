@@ -6832,6 +6832,7 @@ Template.payrolloverview.events({
     if(employeId) {
       $('.selector-target').attr('employee-id', employeId);
       $('.selector-target').trigger('change');
+      $('.add-new-timesheet').attr('disabled', false);
     }
     $('.selector-target').removeClass('selector-target');
   },

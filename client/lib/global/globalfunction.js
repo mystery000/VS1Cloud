@@ -3,6 +3,7 @@ import '../../lib/global/indexdbstorage.js';
 import '../../lib/global/colResizable.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { Session } from 'meteor/session';
+import { HTTP } from "meteor/http";
 let sideBarService = new SideBarService();
 modalDraggable = function () {
     $('.modal-dialog').draggable({
@@ -709,7 +710,7 @@ checkSetupFinished = function () {
         username: ERPUsername,
         password: ERPPassword
     };
-    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+  HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
         if (error) {
           // handle error here
         } else {
@@ -751,7 +752,7 @@ checkSetupFinished2 = function () {
         username: ERPUsername,
         password: ERPPassword
     };
-    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+    HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
         if (error) {
           // handle error here
         } else {

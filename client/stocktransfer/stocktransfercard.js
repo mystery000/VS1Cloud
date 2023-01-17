@@ -36,6 +36,7 @@ import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "./stocktransfercard.html"
+import "../lib/global/globalStockTransfer.js";
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -3117,7 +3118,7 @@ Template.stocktransfercard.events({
         let templateObject = Template.instance();
         setTimeout(function(){
         let invoiceID = parseInt($("#SalesId").val());
-        
+
         let isInvoice = templateObject.includeInvoiceAttachment.get();
         let isShippingDocket = templateObject.includeDocketAttachment.get();
 
@@ -3145,7 +3146,7 @@ Template.stocktransfercard.events({
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
@@ -3154,7 +3155,7 @@ Template.stocktransfercard.events({
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
@@ -3938,7 +3939,7 @@ Template.stocktransfercard.events({
         if ($('.chkEmailCopy').is(':checked')) {
         $('#html-2-pdfwrapper').css('display', 'block');
         }
-        
+
         //let customername = $('#edtCustomerName').val() || '';
         //let shippingaddress = $('#txaShipingInfo').val() || '';
         let transferFrom = $('#sltDepartment').val() || '';
@@ -4030,7 +4031,7 @@ Template.stocktransfercard.events({
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentStock = getso_id[getso_id.length - 1];
-        
+
         var objDetails = '';
         if (getso_id[1]) {
             currentStock = parseInt(currentStock);
@@ -4280,7 +4281,7 @@ Template.stocktransfercard.events({
         $('.fullScreenSpin').css('display', 'none');
       }
     }, delayTimeAfterSound);
-    
+
     },
     'click .btnDeleteFollowingStocks': async function(event) {
         playDeleteAudio();
@@ -4473,7 +4474,7 @@ Template.stocktransfercard.events({
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        if(targetID != undefined) {       
+        if(targetID != undefined) {
             times++;
             if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
@@ -4490,7 +4491,7 @@ Template.stocktransfercard.events({
 
                 }
         }else {
-            $('#footerDeleteModal1').modal('toggle'); 
+            $('#footerDeleteModal1').modal('toggle');
         }
     },
     'click #tdBarcodeScannerMobile': function(event) {

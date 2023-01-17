@@ -1,3 +1,4 @@
+import {VS1ChartService} from "../vs1charts-service";
 import "jQuery.print/jQuery.print.js";
 import {UtilityService} from "../../utility-service";
 import {SideBarService} from "../../js/sidebar-service";
@@ -5,6 +6,7 @@ import { Template } from "meteor/templating";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import './employeeLeave.html';
 
+let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 
@@ -67,7 +69,7 @@ Template.employeeLeave.onRendered(() => {
 			return b.clockedOn > a.clockedOn ? 1 : -1;
 		});
 
-		for (let j = 0; j < 5; j++) {
+		for (let j = 0; j < sortArray.length; j++) {
 			empName.push(sortArray[j].name);
 			empClockedCount.push(sortArray[j].clockedOn);
 		}
