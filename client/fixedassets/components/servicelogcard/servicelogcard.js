@@ -45,7 +45,6 @@ Template.servicelogcard.onRendered(function () {
   templateObject.getFixedAssetsList();
 
   function setFixedAssetsList(data) {
-    console.log('TFxiedAssets', data);
     const dataTableList = [];
     for (const asset of data.tfixedassets) {
       const dataList = {
@@ -112,7 +111,6 @@ Template.servicelogcard.events({
         Done: templateObject.asset_status.get()
       }
     };
-    console.log(newServiceLog);
 
     function getDateStr(dateVal) {
       if (!dateVal)
@@ -127,11 +125,9 @@ Template.servicelogcard.events({
 
     serviceLogService.saveServiceLog(newServiceLog).then((data) => {
       serviceLogService.getServiceLogList().then(function (data) {
-        console.log("[Updated ServiceLogList]", data);
         addVS1Data("TServiceLogList", JSON.stringify(data));
       });
     }).catch((err) => {
-      console.log(err);
     });
   },
   "click input#chkDone": function() {
