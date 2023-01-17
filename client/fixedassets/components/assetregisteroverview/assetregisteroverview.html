@@ -68,7 +68,7 @@
             </div>
   
             <div class="col">
-              <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#displaySettingsModal2"
+              <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#tblAssetRegisterList_Modal"
                 style="margin: 12px 0 12px 12px ;"><i class="icon ion-android-more-horizontal"></i></a>
               <button class="btn btnNav btn-primary float-right printConfirm" type="button" style="margin: 12px;"><i
                   class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
@@ -90,104 +90,7 @@
           </div>
   
           <div class="card-body">
-            <div class="d-xl-flex justify-content-xl-end">
-              <div>
-                <div class="modal fade" role="dialog" tabindex="-1" id="displaySettingsModal2">
-                  <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
-                          aria-label="Close"><span aria-hidden="true">×</span></button>
-                      </div>
-                      <div class="modal-body">
-                        <div>
-                          <form class="d-xl-flex align-items-xl-center">
-                            <div class="flex-grow-1">
-                              {{#each displayfield in displayfields}}
-                              {{#if displayfield.display}}
-                              <div class="columnSettings customDisplaySettings" custid="{{displayfield.id}}">
-                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                  <input class="custom-control-input {{displayfield.class}}" type="checkbox"
-                                    id="{{displayfield.class}}" checked="{{displayfield.active}}"
-                                    name="{{displayfield.class}}">
-                                  <label class="custom-control-label" for="{{displayfield.class}}"></label>
-                                  <div contenteditable="true" class="groove divcolumn" type="text"
-                                    value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">
-                                    {{displayfield.custfieldlabel}}</div>
-                                </div>
-                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                  <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                  <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number"
-                                    style="margin: 8px;" value="{{displayfield.width}}"
-                                    valueclass="{{displayfield.class}}" min="0" max="1000">
-                                </div>
-                              </div>
-                              {{/if}}
-                              {{/each}}
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
-                            style="margin-right: 5px;"></i>Save</button>
-                        <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat"
-                            style="margin-right: 5px;"></i>Reset</button>
-                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
-                            style="margin-right: 5px;"></i>Close</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-  
-            <div class="table-responsive">
-              <table id="tblAssetRegisterTable" name="tblAssetRegisterTable"
-                class="dataTable table table-hover table-striped table-bordered tblAssetRegisterTable">
-                <thead>
-                  <tr class="dasnd-moved">
-                    <th class="th colFixedID hiddenColumn">ID</th>
-                    {{#each displayfield in displayfields}}
-                    {{#if displayfield.display}}
-                    <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}"
-                      data-col-active="{{ displayfield.active}}"
-                      class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
-                      style="width:{{displayfield.width}}px">
-                      {{displayfield.custfieldlabel}}
-                    </th>
-                    {{/if}}
-                    {{/each}}
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#if datatablerecords}}
-                    {{#each item in datatablerecords}}
-                      <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                        <td contenteditable="false" class="colCostTypeId hiddenColumn">{{item.id}}</td>
-                        <td contenteditable="false">{{item.assetCode}}</td>
-                        <td contenteditable="false">{{item.assetName}}</td>
-                        <td contenteditable="false">{{item.assetDescription}}</td>
-                        <td contenteditable="false">{{item.assetType}}</td>
-                        <td contenteditable="false">{{item.brand}}</td>
-                        <td contenteditable="false">{{item.model}}</td>
-                        <td contenteditable="false">{{item.number}}</td>
-                        <td contenteditable="false">{{item.regNo}}</td>
-                        <td contenteditable="false">{{item.type}}</td>
-                        <td contenteditable="false">{{item.capacityWeight}}</td>
-                        <td contenteditable="false">{{item.capacityVolume}}</td>
-                        <td contenteditable="false">{{item.purchasedDate}}</td>
-                        <td contenteditable="false">{{item.purchCost}}</td>
-                        <td contenteditable="false">{{item.supplier}}</td>
-                        <td contenteditable="false">{{item.registrationRenewalDate}}</td>
-                        <td contenteditable="false">{{item.insuranceInfo}}</td>
-                        <td contenteditable="false">{{item.depreciationStartDate}}</td>
-                      </tr>
-                    {{/each}}
-                  {{/if}}
-                </tbody>
-              </table>
-            </div>
+            {{> non_transactional_list tablename = "tblAssetRegisterList"}}
           </div>
         </div>
       </div>

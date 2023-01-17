@@ -888,6 +888,27 @@ Template.non_transactional_list.onRendered(function() {
             { index: 6, label: 'Next Service Due Date', class: 'ServiceDueDate', active: true, display: true, width: "" },
             { index: 7, label: 'Status', class: 'ServiceStatus', active: true, display: true, width: "" },
           ];
+        } else if(currenttablename === "tblAssetRegisterList"){
+          reset_data = [
+            { index: 0, label: 'ID', class: 'AssetRegisterId', active: true, display: true, width: "0"},
+            { index: 1, label: 'Asset Code', class: 'RegisterAssetCode', active: true, display: true, width: ""},
+            { index: 2, label: 'Asset Name', class: 'RegisterAssetName', active: true, display: true, width: "" },
+            { index: 3, label: 'Asset Description', class: 'RegisterAssetDescription', active: true, display: true, width: ""},
+            { index: 4, label: 'Asset Type', class: 'RegisterAssetType', active: true, display: true, width: "" },
+            { index: 5, label: 'Brand', class: 'RegisterAssetBrand', active: true, display: true, width: "" },
+            { index: 6, label: 'Model', class: 'RegisterAssetModel', active: true, display: true, width: "" },
+            { index: 7, label: 'Number', class: 'RegisterAssetNumber', active: true, display: true, width: "" },
+            { index: 8, label: 'Registration No', class: 'RegisterAssetRegistrationNo', active: true, display: true, width: "" },
+            { index: 9, label: 'Type', class: 'RegisterAssetType', active: true, display: true, width: "" },
+            { index: 10, label: 'Capacity Weight', class: 'RegisterAssetCapacityWeight', active: true, display: true, width: "" },
+            { index: 11, label: 'Capacity Volume', class: 'RegisterAssetCapacityVolume', active: true, display: true, width: "" },
+            { index: 12, label: 'Purchased Date', class: 'RegisterAssetPurchasedDate', active: true, display: true, width: "" },
+            { index: 13, label: 'Cost', class: 'RegisterAssetCost', active: true, display: true, width: "" },
+            { index: 14, label: 'Supplier', class: 'RegisterAssetSupplier', active: true, display: true, width: "" },
+            { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "" },
+            { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "" },
+            { index: 17, label: 'Depreciation Start Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "" },
+          ];
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -12461,7 +12482,269 @@ Template.non_transactional_list.onRendered(function() {
     $('div.dataTables_filter input').addClass('form-control form-control-sm');
     };
 
+    // Get AssetRegisterList
+    templateObject.getAssetRegisterData = function () {
+      getVS1Data("TFixedAssets").then(function (dataObject) {
+        if (dataObject.length == 0) {
+          fixedAssetService.getTFixedAssetsList().then(function (data) {
+            templateObject.setAssetRegisterList(data);
+          }).catch(function (err) {
+            $(".fullScreenSpin").css("display", "none");
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          templateObject.setAssetRegisterList(data);
+        }
+      }).catch(function (err) {
+        fixedAssetService.getTFixedAssetsList().then(function (data) {
+          templateObject.setAssetRegisterList(data);
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+      });
+    };
+    
+    templateObject.setAssetRegisterList = function (data) {
+      addVS1Data('TFixedAssets', JSON.stringify(data));
+      const dataTableList = new Array();
+      for (const asset of data.tfixedassets) {
+        const dataList = [
+          asset.fields.ID || "",
+          asset.fields.AssetCode || "",
+          asset.fields.AssetName || "",
+          asset.fields.Description || "",
+          asset.fields.AssetType || "",
+          asset.fields.BrandName || "",
+          asset.fields.Model || "",
+          asset.fields.CUSTFLD1 || "",
+          asset.fields.CUSTFLD2 || "",
+          asset.fields.CUSTFLD3 || "",
+          asset.fields.CUSTFLD4 || "",
+          asset.fields.CUSTFLD5 || "",
+          asset.fields.PurchDate ? moment(asset.fields.PurchDate).format("DD/MM/YYYY") : "",
+          asset.fields.PurchCost || "",
+          "",
+          asset.fields.CUSTDATE1 ? moment(asset.fields.CUSTDATE1).format("DD/MM/YYYY") : "",
+          '',
+          asset.fields.DepreciationStartDate ? moment(asset.fields.DepreciationStartDate).format("DD/MM/YYYY") : ""
+        ];
+        dataTableList.push(dataList);
+      }
+      $(".fullScreenSpin").css("display", "none");
+      templateObject.transactiondatatablerecords.set(dataTableList);
 
+      if (templateObject.transactiondatatablerecords.get()) {
+        setTimeout(function() {
+            MakeNegative();
+        }, 100);
+      }
+      let columnData = [];
+      let displayfields = templateObject.non_trans_displayfields.get();
+      if( displayfields.length > 0 ){
+          displayfields.forEach(function( item ){
+            if (item.id == 0) {
+              columnData.push({
+                className: ( item.display )? item.class : `col${item.class} hiddenColumn`,
+                targets: item.id,
+                width: "10px",
+                createdCell: function(td, cellData, rowData, row, col) {
+                  $(td).closest("tr").attr("id", rowData[0]);
+                }
+              })
+            }
+            else {
+              columnData.push({
+                  className: ( item.display )? item.class : `col${item.class} hiddenColumn`,
+                  targets: item.id,
+              })
+            }
+          });
+      }
+      setTimeout(function() {
+        $('#' + currenttablename).DataTable({
+            data: dataTableList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: columnData,
+            buttons: [
+              // {
+              //   extend: 'csvHtml5',
+              //   text: '',
+              //   download: 'open',
+              //   className: "btntabletocsv hiddenColumn",
+              //   filename: "Customer Type Settings",
+              //   orientation: 'portrait',
+              //   exportOptions: {
+              //       columns: ':visible'
+              //   }
+              // }, {
+              //     extend: 'print',
+              //     download: 'open',
+              //     className: "btntabletopdf hiddenColumn",
+              //     text: '',
+              //     title: 'Customer Type Settings',
+              //     filename: "Customer Type Settings",
+              //     exportOptions: {
+              //         columns: ':visible',
+              //         stripHtml: false
+              //     }
+              // },
+              // {
+              //     extend: 'excelHtml5',
+              //     title: '',
+              //     download: 'open',
+              //     className: "btntabletoexcel hiddenColumn",
+              //     filename: "Customer Type Settings",
+              //     orientation: 'portrait',
+              //     exportOptions: {
+              //         columns: ':visible'
+              //     }
+
+              // }
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "asc"]
+            ],
+            action: function() {
+                $('#' + currenttablename).DataTable().ajax.reload();
+            },
+            "fnDrawCallback": function(oSettings) {
+              $('.paginate_button.page-item').removeClass('disabled');
+              $('#' + currenttablename + '_ellipsis').addClass('disabled');
+              if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+
+                  }
+              } else {
+
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $('.paginate_button.page-item.next').addClass('disabled');
+              }
+
+              $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                  $('.fullScreenSpin').css('display', 'inline-block');
+                  //var splashArrayCustomerListDupp = new Array();
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                  // sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+
+                  //     for (let j = 0; j < dataObjectnew.taccountvs1list.length; j++) {
+                  //         if (!isNaN(dataObjectnew.taccountvs1list[j].Balance)) {
+                  //             accBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.taccountvs1list[j].Balance) || 0.0;
+                  //         } else {
+                  //             accBalance = Currency + "0.00";
+                  //         }
+                  //         if (dataObjectnew.taccountvs1list[j].ReceiptCategory && dataObjectnew.taccountvs1list[j].ReceiptCategory != '') {
+                  //             usedCategories.push(dataObjectnew.taccountvs1list[j].fields);
+                  //         }
+                  //         let linestatus = '';
+                  //         if (dataObjectnew.taccountvs1list[j].Active == true) {
+                  //             linestatus = "";
+                  //         } else if (dataObjectnew.taccountvs1list[j].Active == false) {
+                  //             linestatus = "In-Active";
+                  //         };
+
+
+                  //         var dataListDupp = [
+                  //             dataObjectnew.taccountvs1list[j].AccountID || "",
+                  //             dataObjectnew.taccountvs1list[j].AccountName || "",
+                  //             dataObjectnew.taccountvs1list[j].Description || "",
+                  //             dataObjectnew.taccountvs1list[j].AccountNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].AccountType || "",
+                  //             accBalance || '',
+                  //             dataObjectnew.taccountvs1list[j].TaxCode || '',
+                  //             dataObjectnew.taccountvs1list[j].BankName || '',
+                  //             dataObjectnew.taccountvs1list[j].BankAccountName || '',
+                  //             dataObjectnew.taccountvs1list[j].BSB || '',
+                  //             dataObjectnew.taccountvs1list[j].BankAccountNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].CarNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].ExpiryDate || "",
+                  //             dataObjectnew.taccountvs1list[j].CVC || "",
+                  //             dataObjectnew.taccountvs1list[j].Extra || "",
+                  //             dataObjectnew.taccountvs1list[j].BankNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].IsHeader || false,
+                  //             dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
+                  //             dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
+                  //             linestatus,
+                  //         ];
+
+                  //         splashArrayAccountsOverview.push(dataListDupp);
+                  //         //}
+                  //     }
+                  //     let uniqueChars = [...new Set(splashArrayAccountsOverview)];
+                  //     templateObject.transactiondatatablerecords.set(uniqueChars);
+                  //     var datatable = $('#' + currenttablename).DataTable();
+                  //     datatable.clear();
+                  //     datatable.rows.add(uniqueChars);
+                  //     datatable.draw(false);
+                  //     setTimeout(function() {
+                  //         $('#' + currenttablename).dataTable().fnPageChange('last');
+                  //     }, 400);
+
+                  //     $('.fullScreenSpin').css('display', 'none');
+
+                  // }).catch(function(err) {
+                  //     $('.fullScreenSpin').css('display', 'none');
+                  // });
+
+              });
+              setTimeout(function() {
+                  MakeNegative();
+              }, 100);
+            },
+            language: { search: "", searchPlaceholder: "Search List..." },
+            "fnInitComplete": function(oSettings) {
+                // if (deleteFilter) {
+                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                // } else {
+                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                // }
+                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+            },
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                // let countTableData = data.Params.Count || 0; //get count from API data
+                //
+                // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
+
+        }).on('page', function() {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }).on('column-reorder', function() {
+
+        }).on('length.dt', function(e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                    $(".fullScreenSpin").css("display", "none");
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+            } else {
+                $(".fullScreenSpin").css("display", "none");
+            }
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        });
+        $(".fullScreenSpin").css("display", "none");
+      } , 0);
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    };
   //Check URL to make right call.
   if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
       templateObject.getContactOverviewData();
@@ -12550,6 +12833,8 @@ Template.non_transactional_list.onRendered(function() {
       templateObject.getVatReturnData();
   } else if (currenttablename == "tblServiceLogList") {
     templateObject.getServiceLogData();
+  } else if (currenttablename == "tblAssetRegisterList") {
+    templateObject.getAssetRegisterData();
   }
   tableResize();
 });
