@@ -25,6 +25,10 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
+const clientsService = new SalesBoardService();
+const salesService = new SalesBoardService();
+const accountService = new SalesBoardService();
+const contactService = new ContactService();
 let times = 0;
 let clickedInput = "";
 
@@ -89,56 +93,6 @@ Template.new_invoice.onCreated(function() {
     this.customer = new ReactiveVar();
 
     templateObject.customerRecord = new ReactiveVar();
-
-});
-
-Template.new_invoice.onRendered(function() {
-    let templateObject = Template.instance();
-    /**
-     * It should be updated with indexeddb
-     */
-    templateObject.hasFollowings = async function() {
-        let salesService = new SalesBoardService();
-        var url = FlowRouter.current().path;
-        var getso_id = url.split("?id=");
-        var currentInvoice = getso_id[getso_id.length - 1];
-        if (getso_id[1]) {
-            currentInvoice = parseInt(currentInvoice);
-            getVS1Data('TInvoiceEx').then(res => {
-                const invoices = JSON.parse(res[0].data).tinvoiceex;
-                const currentInvoiceData = invoices.find(inv => inv.fields.ID === currentInvoice);
-                if(currentInvoiceData){
-                    var isRepeated = currentInvoiceData.fields.RepeatedFrom;
-                    templateObject.hasFollow.set(isRepeated);
-                }
-            })
-            .catch(e => {
-                salesService.getOneInvoicedataEx(currentInvoice)
-                .then(invData => {
-                    var isRepeated = invData.fields.RepeatedFrom;
-                    templateObject.hasFollow.set(isRepeated);
-                }); 
-                
-            })
-           
-        }
-    }
-
-    templateObject.hasFollowings();
-    $('#edtFrequencyDetail').css('display', 'none');
-    $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        constrainInput: false,
-        dateFormat: 'd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-    });
 
     templateObject.getDayNumber = function(day) {
         day = day.toLowerCase();
@@ -221,26 +175,34 @@ Template.new_invoice.onRendered(function() {
         }
     }
 
-    $("#serialNumberModal .btnSelect").removeClass("d-none");
-    $("#serialNumberModal .btnAutoFill").addClass("d-none");
-    $("#choosetemplate").attr("checked", true);
-    var invoice_type = FlowRouter.current().queryParams.type;
-
-    if (invoice_type == "bo") {
-        localStorage.setItem("invoice_type", "bo");
-    } else {
-        localStorage.setItem("invoice_type", "invoice");
-    }
-
-    if (localStorage.getItem("invoice_type") == "bo") {
-        $(".Invoices").css("display", "none");
-        $(".Docket").css("display", "none");
-        $(".add_dy .coltr").removeClass("col-md-6");
-    } else {
-        $(".Invoices").css("display", "block");
-        $(".Docket").css("display", "block");
-        $(".Invoice").css("display", "none");
-        $(".add_dy .coltr").addClass("col-md-6");
+    /**
+    * It should be updated with indexeddb
+    */
+    templateObject.hasFollowings = async function() {
+        let salesService = new SalesBoardService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?id=");
+        var currentInvoice = getso_id[getso_id.length - 1];
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            getVS1Data('TInvoiceEx').then(res => {
+                const invoices = JSON.parse(res[0].data).tinvoiceex;
+                const currentInvoiceData = invoices.find(inv => inv.fields.ID === currentInvoice);
+                if(currentInvoiceData){
+                    var isRepeated = currentInvoiceData.fields.RepeatedFrom;
+                    templateObject.hasFollow.set(isRepeated);
+                }
+            })
+            .catch(e => {
+                salesService.getOneInvoicedataEx(currentInvoice)
+                .then(invData => {
+                    var isRepeated = invData.fields.RepeatedFrom;
+                    templateObject.hasFollow.set(isRepeated);
+                }); 
+                
+            })
+            
+        }
     }
 
     /**
@@ -268,81 +230,7 @@ Template.new_invoice.onRendered(function() {
             });
     };
 
-    $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-        title = $(this).parent().attr("data-id");
-        number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-        templateObject.generateInvoiceData(title, number);
-    });
-
-    let currentInvoice;
-    let getso_id;
-
-    $(window).on("load", function() {
-        const win = $(this); //this = window
-        if (win.width() <= 1024 && win.width() >= 450) {
-            $("#colBalanceDue").addClass("order-12");
-        }
-        if (win.width() <= 926) {
-            $("#totalSection").addClass("offset-md-6");
-        }
-    });
-
-    let imageData = localStorage.getItem("Image");
-
-    if (imageData) {
-        $(".uploadedImage").attr("src", imageData);
-    }
-
-    const salesService = new SalesBoardService();
-    const clientsService = new SalesBoardService();
-    const accountService = new SalesBoardService();
-    const contactService = new ContactService();
-
-    const clientList = [];
-    const deptrecords = [];
-    const termrecords = [];
-    const statusList = [];
-    const dataTableList = [];
-    let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
-    if (isBOnShippedQty) {
-        templateObject.includeBOnShippedQty.set(false);
-    }
-
-    $("#date-input,#dtSODate,#dtDueDate,#customdateone").datepicker({
-        showOn: "button",
-        buttonText: "Show Date",
-        buttonImageOnly: true,
-        buttonImage: "/img/imgCal2.png",
-        constrainInput: false,
-        dateFormat: "d/mm/yy",
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-    });
-
-    $(".fullScreenSpin").css("display", "inline-block");
-
-    templateObject.getAllClients = function() {
-        getVS1Data("TCustomerVS1")
-            .then(function(dataObject) {
-                if (dataObject.length === 0) {
-                    sideBarService.getAllCustomersDataVS1("All").then(function(data) {
-                        setClientVS1(data);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    setClientVS1(data);
-                }
-            })
-            .catch(function(err) {
-                sideBarService.getAllCustomersDataVS1("All").then(function(data) {
-                    setClientVS1(data);
-                });
-            });
-    };
-
+    
     function setClientVS1(data) {
         for (let i in data.tcustomervs1) {
             if (data.tcustomervs1.hasOwnProperty(i)) {
@@ -380,9 +268,27 @@ Template.new_invoice.onRendered(function() {
             }, 200);
         }
     }
-    templateObject.getAllClients();
 
-    /**
+    templateObject.getAllClients = function() {
+        getVS1Data("TCustomerVS1")
+            .then(function(dataObject) {
+                if (dataObject.length === 0) {
+                    sideBarService.getAllCustomersDataVS1("All").then(function(data) {
+                        setClientVS1(data);
+                    });
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    setClientVS1(data);
+                }
+            })
+            .catch(function(err) {
+                sideBarService.getAllCustomersDataVS1("All").then(function(data) {
+                    setClientVS1(data);
+                });
+            });
+    };
+
+      /**
      *  Should be updated with indexeddb
      */
     templateObject.getOrganisationDetails = function() {
@@ -391,10 +297,8 @@ Template.new_invoice.onRendered(function() {
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
-    // 
-    templateObject.getOrganisationDetails();
-
     templateObject.getAllLeadStatuss = function() {
+        const statusList = [];
         getVS1Data("TLeadStatusType")
             .then(function(dataObject) {
                 if (dataObject.length == 0) {
@@ -434,9 +338,8 @@ Template.new_invoice.onRendered(function() {
                 });
             });
     };
-    templateObject.getAllLeadStatuss();
-
     templateObject.getDepartments = function() {
+        const deptrecords = [];
         getVS1Data("TDeptClass")
             .then(function(dataObject) {
                 if (dataObject.length == 0) {
@@ -476,9 +379,9 @@ Template.new_invoice.onRendered(function() {
                 });
             });
     };
-    templateObject.getDepartments();
-
+    
     templateObject.getTerms = function() {
+        const termrecords = [];
         getVS1Data("TTermsVS1")
             .then(function(dataObject) {
                 if (dataObject.length == 0) {
@@ -538,17 +441,16 @@ Template.new_invoice.onRendered(function() {
                 });
             });
     };
-    templateObject.getTerms();
 
-    /**
+      /**
      * Should be updated with indexeddb
      */
-    templateObject.getAllSelectPaymentData = function() {
+      templateObject.getAllSelectPaymentData = function() {
         let customerName = $("#edtCustomerName").val() || "";
         salesService
             .getCheckPaymentDetailsByName(customerName)
             .then(function(data) {
-
+                const dataTableList = [];
                 for (let i = 0; i < data.tcustomerpayment.length; i++) {
                     let amount =
                         utilityService.modifynegativeCurrencyFormat(
@@ -589,10 +491,103 @@ Template.new_invoice.onRendered(function() {
             })
             .catch(function(err) {});
     };
-    /**
-     * It is strange code. 
-     * Should be updated after getAllSelectPaymentData is updated.
-     */
+
+});
+
+Template.new_invoice.onRendered(function() {
+    let templateObject = Template.instance();
+
+    templateObject.hasFollowings();
+    $('#edtFrequencyDetail').css('display', 'none');
+    $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
+        showOn: 'button',
+        buttonText: 'Show Date',
+        buttonImageOnly: true,
+        buttonImage: '/img/imgCal2.png',
+        constrainInput: false,
+        dateFormat: 'd/mm/yy',
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+    });
+
+    $("#serialNumberModal .btnSelect").removeClass("d-none");
+    $("#serialNumberModal .btnAutoFill").addClass("d-none");
+    $("#choosetemplate").attr("checked", true);
+    var invoice_type = FlowRouter.current().queryParams.type;
+
+    if (invoice_type == "bo") {
+        localStorage.setItem("invoice_type", "bo");
+    } else {
+        localStorage.setItem("invoice_type", "invoice");
+    }
+
+    if (localStorage.getItem("invoice_type") == "bo") {
+        $(".Invoices").css("display", "none");
+        $(".Docket").css("display", "none");
+        $(".add_dy .coltr").removeClass("col-md-6");
+    } else {
+        $(".Invoices").css("display", "block");
+        $(".Docket").css("display", "block");
+        $(".Invoice").css("display", "none");
+        $(".add_dy .coltr").addClass("col-md-6");
+    }
+
+    $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+        title = $(this).parent().attr("data-id");
+        number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
+        templateObject.generateInvoiceData(title, number);
+    });
+
+    let currentInvoice;
+    let getso_id;
+
+    $(window).on("load", function() {
+        const win = $(this); //this = window
+        if (win.width() <= 1024 && win.width() >= 450) {
+            $("#colBalanceDue").addClass("order-12");
+        }
+        if (win.width() <= 926) {
+            $("#totalSection").addClass("offset-md-6");
+        }
+    });
+
+    let imageData = localStorage.getItem("Image");
+
+    if (imageData) {
+        $(".uploadedImage").attr("src", imageData);
+    }
+
+    const clientList = [];
+    let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
+    if (isBOnShippedQty) {
+        templateObject.includeBOnShippedQty.set(false);
+    }
+
+    $("#date-input,#dtSODate,#dtDueDate,#customdateone").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        constrainInput: false,
+        dateFormat: "d/mm/yy",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+    });
+
+    $(".fullScreenSpin").css("display", "inline-block");
+
+
+    templateObject.getAllClients();
+    templateObject.getOrganisationDetails();
+    templateObject.getAllLeadStatuss();
+    templateObject.getDepartments();
+    templateObject.getTerms();
     if (
         FlowRouter.current().queryParams.id ||
         FlowRouter.current().queryParams.customerid ||
@@ -600,16 +595,14 @@ Template.new_invoice.onRendered(function() {
         FlowRouter.current().queryParams.copyinvid ||
         FlowRouter.current().queryParams.copysoid
     ) {
-        setTimeout(function() {
+        // setTimeout(function() {
             templateObject.getAllSelectPaymentData();
-        }, 2000);
+        // }, 2000);
     } else {
-        setTimeout(function() {
+        // setTimeout(function() {
             $("#sltTerms").val(templateObject.defaultsaleterm.get() || "");
-        }, 300);
+        // }, 300);
     }
-
-
 
     function getCustomerData(customerID) {
         getVS1Data("TCustomerVS1")
@@ -2608,15 +2601,8 @@ Template.new_invoice.onRendered(function() {
                                 let lineItems = [];
                                 let lineItemObj = {};
                                 let lineItemsTable = [];
-                                let lineItemTableObj = {};
-                                let exchangeCode = data.fields.ForeignExchangeCode;
                                 let currencySymbol = Currency;
-                                let total =
-                                    currencySymbol +
-                                    "" +
-                                    data.fields.TotalAmount.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                    });
+                               
                                 let totalInc =
                                     currencySymbol +
                                     "" +
@@ -2723,7 +2709,6 @@ Template.new_invoice.onRendered(function() {
                                                         data.fields.Lines[i].fields.LineTaxRate * 100
                                                     ).toFixed(2) || 0,
                                                 taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
-                                                //TotalAmt: AmountGbp || 0,
                                                 curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
@@ -3649,19 +3634,6 @@ Template.new_invoice.onRendered(function() {
                                         );
                                     });
 
-                                    // getVS1Data("TAppointment").then(function (dataObject) {
-                                    //   let appointments = JSON.parse(dataObject[0].data);
-                                    //   let allAppointments = appointments.tappointmentex;
-                                    //   let apptId = FlowRouter.current().queryParams.apptId;
-                                    //   let appointmentAttachments = (appointmentAttachments =
-                                    //     allAppointments.find((x) => x.fields.ID === parseInt(apptId)).fields.Attachments);
-                                    //   if (appointmentAttachments.length > 0) {
-                                    //     templateObject.attachmentCount.set(
-                                    //       appointmentAttachments.length
-                                    //     );
-                                    //     templateObject.uploadedFiles.set(appointmentAttachments);
-                                    //   }
-                                    // });
                                     templateObject.singleInvoiceData.set(useData[d]);
                                     let lineItems = [];
                                     let lineItemObj = {};
