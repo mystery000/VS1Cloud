@@ -125,8 +125,6 @@ Template.dashboardoptionspopup.onRendered(function() {
         // $(this).closest('tr').find(".colOptionsName ").click();
         let dashboardStatus = $(this).closest('tr').find(".colOptionsName").text();
         showDashboard = showDashboard.includes(dashboardStatus) ? showDashboard.filter(el => el !== dashboardStatus) : [...showDashboard, dashboardStatus];
-        // console.log("show", dashboardStatus, showDashboard);
-        // console.log(JSON.stringify(showDashboard));
         addVS1Data('TVS1DashboardStatus', JSON.stringify(showDashboard));
     });
     $('#tblDashboardOptions tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function() {
