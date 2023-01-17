@@ -32,7 +32,7 @@
                                             <td contenteditable="false" class="colOptionsName">{{item.name}}</td>
                                             <td contenteditable="false" class="colShowDef text-center">
                                                 <div class="custom-control custom-switch">
-                                                    {{#if equals item.name "All"}}
+                                                    {{#if equals item.isshowdefault true}}
                                                         <input type="checkbox" class="custom-control-input optradioDL"
                                                                name="optcheckboxDL" id="formShowP-{{item.id}}"
                                                                value="{{item.name}}" checked><label

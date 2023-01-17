@@ -2430,7 +2430,7 @@ Template.customerscard.onRendered(function() {
                 const taxRateDataName = e.target.value || '';
                 editableTaxCode(e, $each, offset, taxRateDataName);
             });
-        }, 5000);
+        }, 1200);
     });
 
     $(document).on('click', '#editCustomerTitle', function(e, li) {

@@ -554,6 +554,8 @@ import './overviews/payrolloverview_tmp.html';
 import './eft/exportModal/eftExportModal.js';
 import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
+
+import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
