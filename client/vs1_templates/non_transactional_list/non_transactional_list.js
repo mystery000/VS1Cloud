@@ -8,6 +8,7 @@ import { ProductService } from '../../product/product-service';
 import { ManufacturingService } from "../../manufacture/manufacturing-service";
 import { CRMService } from "../../crm/crm-service";
 import { ReportService } from "../../reports/report-service";
+import { FixedAssetService } from "../../fixedassets/fixedasset-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import {Session} from 'meteor/session';
@@ -21,6 +22,7 @@ let productService = new ProductService();
 let manufacturingService = new ManufacturingService();
 let crmService = new CRMService();
 let reportService = new ReportService();
+let fixedAssetService = new FixedAssetService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
@@ -875,6 +877,17 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 9, label: "REFUND\nFrom", class: "t3From", width: "120", active: true, display: true },
                 { index: 10, label: "REFUND\nTo", class: "t3To", width: "120", active: true, display: true },
             ];
+        } else if(currenttablename === "tblServiceLogList"){
+          reset_data = [
+            { index: 0, label: 'ID', class: 'LogId', active: true, display: true, width: "0" },
+            { index: 1, label: 'Asset Code', class: 'AssetCode', active: true, display: true, width: "" },
+            { index: 2, label: 'Asset Name', class: 'AssetName', active: true, display: true, width: "" },
+            { index: 3, label: 'Service Type', class: 'ServiceType', active: true, display: true, width: "" },
+            { index: 4, label: 'Service Date', class: 'ServiceDate', active: true, display: true, width: "" },
+            { index: 5, label: 'Service Provider', class: 'ServiceProvider', active: true, display: true, width: "" },
+            { index: 6, label: 'Next Service Due Date', class: 'ServiceDueDate', active: true, display: true, width: "" },
+            { index: 7, label: 'Status', class: 'ServiceStatus', active: true, display: true, width: "" },
+          ];
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -12175,10 +12188,10 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
     // Get ServiceLogList
-    templateObject.getServiceLogList = function () {
+    templateObject.getServiceLogData = function () {
       getVS1Data("TServiceLogList").then(function (dataObject) {
         if (dataObject.length == 0) {
-          reportService.getServiceLogList().then(function (data) {
+          fixedAssetService.getServiceLogList().then(function (data) {
             templateObject.setServiceLogList(data);
           });
         } else {
@@ -12186,7 +12199,7 @@ Template.non_transactional_list.onRendered(function() {
           templateObject.setServiceLogList(data);
         }
       }).catch(function (err) {
-          reportService.getServiceLogList().then(function (data) {
+        fixedAssetService.getServiceLogList().then(function (data) {
             templateObject.setServiceLogList(data);
           });
       });
@@ -12194,23 +12207,19 @@ Template.non_transactional_list.onRendered(function() {
     
     templateObject.setServiceLogList = function (data) {
       addVS1Data('TServiceLogList', JSON.stringify(data));
-      const dataTableList = [];
+      const dataTableList = new Array();;
   
       for (const log of data.tserviceloglist) {
-        const dataList = {
-          id: log.ServiceID || "",
-          assetID: log.AssetID || 0,
-          assetCode: log.AssetCode || "",
-          assetName: log.AssetName || "",
-          // serviceType: log.fields.ServiceType || "",
-          serviceDate: log.ServiceDate || "",
-          serviceProvider: log.ServiceProvider || "",
-          nextServiceDate: log.NextServiceDate || "",
-          nextServiceHours: log.HoursForNextService || 0,
-          nextServiceKms: log.KmsForNextService || 0,
-          serviceNotes: log.ServiceNotes || "",
-          status: log.Done || "",
-        };
+        const dataList = [
+          log.ServiceID || "",
+          log.AssetCode || "",
+          log.AssetName || "",
+          log.ServiceType || "",
+          log.ServiceDate || "",
+          log.ServiceProvider || "",
+          log.NextServiceDate || "",
+          log.Done ? 'Completed' : 'Pending',
+        ];
         dataTableList.push(dataList);
       }
       templateObject.transactiondatatablerecords.set(dataTableList);
@@ -12221,79 +12230,235 @@ Template.non_transactional_list.onRendered(function() {
         }, 100);
       }
 
-      setTimeout(function () {
-        $("#" + currenttablename).DataTable({
-          columnDefs: [
-          ],
-          select: true,
-          destroy: true,
-          colReorder: true,
-          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          buttons: [{
-            extend: "csvHtml5",
-            text: "",
-            download: "open",
-            className: "btntabletocsv hiddenColumn",
-            filename: "FixedAssetsOverview__" + moment().format(),
-            orientation: "portrait",
-            exportOptions: {
-              columns: ":visible",
+      setTimeout(function() {
+        $('#' + currenttablename).DataTable({
+            data: dataTableList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: [
+              {
+                  targets: 0,
+                  className: "colServiceLogID",
+                  width: "10px",
+                  createdCell: function(td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }
+              },
+              {
+                  targets: 1,
+                  className: "assetCode",
+                  width: "200px",
+              },
+              {
+                  targets: 2,
+                  className: "assetName",
+                  width: "200px",
+              },
+              {
+                  targets: 3,
+                  className: "serviceType",
+                  width: "150px",
+              },
+              {
+                  targets: 4,
+                  className: "serviceDate",
+                  width: "150px",
+              },
+              {
+                  targets: 5,
+                  className: "serviceProvider",
+                  width: "150px",
+              },
+              {
+                  targets: 6,
+                  className: "nextServiceDate",
+                  width: "150px",
+              },
+              {
+                  targets: 7,
+                  className: "status",
+                  width: "150px",
+              }
+            ],
+            buttons: [
+              {
+                extend: 'csvHtml5',
+                text: '',
+                download: 'open',
+                className: "btntabletocsv hiddenColumn",
+                filename: "Customer Type Settings",
+                orientation: 'portrait',
+                exportOptions: {
+                    columns: ':visible'
+                }
+              }, {
+                  extend: 'print',
+                  download: 'open',
+                  className: "btntabletopdf hiddenColumn",
+                  text: '',
+                  title: 'Customer Type Settings',
+                  filename: "Customer Type Settings",
+                  exportOptions: {
+                      columns: ':visible',
+                      stripHtml: false
+                  }
+              },
+              {
+                  extend: 'excelHtml5',
+                  title: '',
+                  download: 'open',
+                  className: "btntabletoexcel hiddenColumn",
+                  filename: "Customer Type Settings",
+                  orientation: 'portrait',
+                  exportOptions: {
+                      columns: ':visible'
+                  }
+
+              }
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "asc"]
+            ],
+            action: function() {
+                $('#' + currenttablename).DataTable().ajax.reload();
             },
-          },
-          {
-            extend: "print",
-            download: "open",
-            className: "btntabletopdf hiddenColumn",
-            text: "",
-            title: "Accounts Overview",
-            filename: "Accounts Overview_" + moment().format(),
-            exportOptions: {
-              columns: ":visible",
+            "fnDrawCallback": function(oSettings) {
+              $('.paginate_button.page-item').removeClass('disabled');
+              $('#' + currenttablename + '_ellipsis').addClass('disabled');
+              if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+
+                  }
+              } else {
+
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $('.paginate_button.page-item.next').addClass('disabled');
+              }
+
+              $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                  $('.fullScreenSpin').css('display', 'inline-block');
+                  //var splashArrayCustomerListDupp = new Array();
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                  // sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+
+                  //     for (let j = 0; j < dataObjectnew.taccountvs1list.length; j++) {
+                  //         if (!isNaN(dataObjectnew.taccountvs1list[j].Balance)) {
+                  //             accBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.taccountvs1list[j].Balance) || 0.0;
+                  //         } else {
+                  //             accBalance = Currency + "0.00";
+                  //         }
+                  //         if (dataObjectnew.taccountvs1list[j].ReceiptCategory && dataObjectnew.taccountvs1list[j].ReceiptCategory != '') {
+                  //             usedCategories.push(dataObjectnew.taccountvs1list[j].fields);
+                  //         }
+                  //         let linestatus = '';
+                  //         if (dataObjectnew.taccountvs1list[j].Active == true) {
+                  //             linestatus = "";
+                  //         } else if (dataObjectnew.taccountvs1list[j].Active == false) {
+                  //             linestatus = "In-Active";
+                  //         };
+
+
+                  //         var dataListDupp = [
+                  //             dataObjectnew.taccountvs1list[j].AccountID || "",
+                  //             dataObjectnew.taccountvs1list[j].AccountName || "",
+                  //             dataObjectnew.taccountvs1list[j].Description || "",
+                  //             dataObjectnew.taccountvs1list[j].AccountNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].AccountType || "",
+                  //             accBalance || '',
+                  //             dataObjectnew.taccountvs1list[j].TaxCode || '',
+                  //             dataObjectnew.taccountvs1list[j].BankName || '',
+                  //             dataObjectnew.taccountvs1list[j].BankAccountName || '',
+                  //             dataObjectnew.taccountvs1list[j].BSB || '',
+                  //             dataObjectnew.taccountvs1list[j].BankAccountNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].CarNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].ExpiryDate || "",
+                  //             dataObjectnew.taccountvs1list[j].CVC || "",
+                  //             dataObjectnew.taccountvs1list[j].Extra || "",
+                  //             dataObjectnew.taccountvs1list[j].BankNumber || "",
+                  //             dataObjectnew.taccountvs1list[j].IsHeader || false,
+                  //             dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
+                  //             dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
+                  //             linestatus,
+                  //         ];
+
+                  //         splashArrayAccountsOverview.push(dataListDupp);
+                  //         //}
+                  //     }
+                  //     let uniqueChars = [...new Set(splashArrayAccountsOverview)];
+                  //     templateObject.transactiondatatablerecords.set(uniqueChars);
+                  //     var datatable = $('#' + currenttablename).DataTable();
+                  //     datatable.clear();
+                  //     datatable.rows.add(uniqueChars);
+                  //     datatable.draw(false);
+                  //     setTimeout(function() {
+                  //         $('#' + currenttablename).dataTable().fnPageChange('last');
+                  //     }, 400);
+
+                  //     $('.fullScreenSpin').css('display', 'none');
+
+                  // }).catch(function(err) {
+                  //     $('.fullScreenSpin').css('display', 'none');
+                  // });
+
+              });
+              setTimeout(function() {
+                  MakeNegative();
+              }, 100);
             },
-          },
-          {
-            extend: "excelHtml5",
-            title: "",
-            download: "open",
-            className: "btntabletoexcel hiddenColumn",
-            filename: "FixedAssetsOverview__" + moment().format(),
-            orientation: "portrait",
-            exportOptions: {
-              columns: ":visible",
+            language: { search: "", searchPlaceholder: "Search List..." },
+            "fnInitComplete": function(oSettings) {
+                // if (deleteFilter) {
+                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                // } else {
+                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                // }
+                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
-          },
-          ],
-          pageLength: initialDatatableLoad,
-          lengthMenu: [
-            [initialDatatableLoad, -1],
-            [initialDatatableLoad, "All"],
-          ],
-          info: true,
-          responsive: true,
-          order: [
-            [0, "asc"]
-          ],
-          // "aaSorting": [[1,'desc']],
-          action: function () {
-            $("#tblServiceLogList").DataTable().ajax.reload();
-          },
-          language: { search: "", searchPlaceholder: "Search List..." },
-          fnDrawCallback: function (oSettings) {
-          },
-          fnInitComplete: function () {
-            $(
-              "<button class='btn btn-primary btnSearchFixedAccount' type='button' id='btnSearchFixedAccount' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-            ).insertAfter("#tblServiceLogList_filter");
-          },
-        })
-          .on("page", function () {
-            let draftRecord = templateObject.datatablerecords.get();
-            templateObject.datatablerecords.set(draftRecord);
-          })
-          .on("column-reorder", function () { })
-          .on("length.dt", function (e, settings, len) {
-          });
-      }, 10);
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                // let countTableData = data.Params.Count || 0; //get count from API data
+                //
+                // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
+
+        }).on('page', function() {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }).on('column-reorder', function() {
+
+        }).on('length.dt', function(e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                    $(".fullScreenSpin").css("display", "none");
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+            } else {
+                $(".fullScreenSpin").css("display", "none");
+            }
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        });
+        $(".fullScreenSpin").css("display", "none");
+    }, 0);
+
+    $('div.dataTables_filter input').addClass('form-control form-control-sm');
     };
 
 
@@ -12384,7 +12549,7 @@ Template.non_transactional_list.onRendered(function() {
   } else if (currenttablename == "tblVATReturnList") {
       templateObject.getVatReturnData();
   } else if (currenttablename == "tblServiceLogList") {
-    templateObject.getServiceLogList();
+    templateObject.getServiceLogData();
   }
   tableResize();
 });
