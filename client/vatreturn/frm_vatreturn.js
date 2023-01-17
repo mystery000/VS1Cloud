@@ -887,7 +887,7 @@ Template.vatreturn.onRendered(function() {
     }
     setTimeout(function() {
         templateObject.getAllVatReturnData();
-    }, 1000);
+    }, 500);
 
     function MakeNegative() {
         var TDs = document.getElementsByTagName("td");
@@ -2035,7 +2035,7 @@ Template.vatreturn.onRendered(function() {
                 }
             });
         });
-    }, 500);
+    }, 50);
 
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDepartment').val($(this).find(".colDeptName").text());
