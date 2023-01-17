@@ -295,6 +295,7 @@ import './journalEntry/journalentry_list.js';
 import './manufacture/processList.js';
 import './vs1shipping/shippingoverview.js';
 import './vs1shipping/shippingdocket.js';
+import './deposits/deposit_list.js';
 /* Tinyiko */
 
 /* Rasheed */
@@ -490,6 +491,26 @@ import './vs1_templates/vs1_select/default_select.html'
 /* Stefan */
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
+
+// import 'datatables.net';
+// import 'datatables.net-bs';
+// import 'datatables.net-bs4';
+// import 'datatables.net-buttons';
+// import 'datatables.net-buttons-dt';
+// import 'datatables.net-buttons/js/buttons.colVis';
+// import 'datatables.net-buttons/js/buttons.flash';
+// import 'datatables.net-buttons/js/buttons.html5';
+// import 'datatables.net-buttons/js/buttons.print';
+// import "datatables.net-colreorder";
+// import "datatables.net-fixedheader";
+// import "datatables.net-fixedcolumns";
+// import "datatables.net-select";
+
+import '../public/js/cdnjs/pdfmake.min.js';
+import '../public/js/cdnjs/split.min.js';
+import '../public/js/cdnjs/jszip.min.js';
+import '../public/js/cdnjs/vfs_fonts.js';
+
 /* Stefan */
 
 /* Arthlo */

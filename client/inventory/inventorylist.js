@@ -1,10 +1,5 @@
 import './inventorylist.html';
-// import './inventorypopups/RecentTransactionPopUp.html';
-// import './producttable/productTable.js';
 
-import './inventorypopups/onBackOrderPopUp.html';
-import './inventorypopups/onOrderPopUp.html';
-import './inventorypopups/onSalesOrderPopUp.html';
 import './inventorypopups/RecentTransactionPopUp.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
@@ -73,6 +68,7 @@ Template.inventorylist.onCreated(function() {
     templateObject.productDataList = new ReactiveVar();
     templateObject.columnData = new ReactiveVar();
     templateObject.productID = new ReactiveVar();
+    templateObject.transtype = new ReactiveVar();
 });
 
 Template.inventorylist.onRendered(function() {
@@ -1280,6 +1276,9 @@ Template.inventorylist.helpers({
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];
+    },
+    transtype: () => {
+        return Template.instance().transtype.get();
     }
 });
 
@@ -2575,23 +2574,34 @@ Template.inventorylist.events({
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".ProductName").text();
     if (listData) {
-        $('#onBackOrderPopUp').modal("show");
-        let templateObject = Template.instance();
-        templateObject.productID.set(listData);
-        $(".productNameOnBo").text(listProductName);
+        $('#transTitle').text(listProductName + ' - On Back Order');
+          
+          let templateObject = Template.instance();
+          templateObject.productID.set(listData);
+          templateObject.transtype.set("Purchase Order");
+          $('#recentTransactionPopUp').modal("show");
     }
   },
   "click .InStock": function(event) {
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".ProductName").text();
     if (listData) {
-        // FlowRouter.go("/stockmovementreport?id=" + listData);
+        $('#transTitle').text(listProductName + ' - In Stock');
         let templateObject = Template.instance();
-        $('#recentTransactionPopUp').modal("show");
         templateObject.productID.set(listData);
-        $('.productIDOnRT').text(listData);
-        $('.productNameOnRT').text(listProductName);
-        // Filter the stock movement report based on product ID
+        templateObject.transtype.set("all");
+        $('#recentTransactionPopUp').modal("show");
+    }
+  },
+  "click td.Available": function(event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+    if (listData) {
+        $('#transTitle').text(listProductName + ' - Available');
+        let templateObject = Template.instance();
+        templateObject.productID.set(listData);
+        templateObject.transtype.set("all");
+        $('#recentTransactionPopUp').modal("show");
     }
   },
 
@@ -2599,10 +2609,11 @@ Template.inventorylist.events({
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       var listProductName = $(event.target).closest("tr").find(".ProductName").text();
       if (listData) {
-          $('#onSalesOrderPopUp').modal("show");
+          $('#transTitle').text(listProductName + ' - On Sales Order');
           let templateObject = Template.instance();
           templateObject.productID.set(listData);
-          $(".productNameOnSO").text(listProductName);
+          templateObject.transtype.set("Sales Order");
+          $('#recentTransactionPopUp').modal("show");
 
       }
   },
@@ -2611,14 +2622,17 @@ Template.inventorylist.events({
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       var listProductName = $(event.target).closest("tr").find(".ProductName").text();
       if (listData) {
-          $('#onOrderPopUp').modal("show");
+          $('#transTitle').text(listProductName + ' - On Order');
+          
           let templateObject = Template.instance();
           templateObject.productID.set(listData);
-          $(".productNameOnOrder").text(listProductName);
+          templateObject.transtype.set("Invoice");
+          $('#recentTransactionPopUp').modal("show");
+          // $(".productNameOnOrder").text(listProductName);
       }
   },
 
-  "click .ProductName, .SalesDescription, ": function(event) {
+  "click .ProductName, click td.SalesDescription, ": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       if (listData) {
           FlowRouter.go("/productview?id=" + listData);
