@@ -2848,6 +2848,7 @@ Template.purchaseordercard.onRendered(() => {
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
+        
         lineItemObj = {
             lineID: Random.id(),
             item: '',
@@ -2867,6 +2868,31 @@ Template.purchaseordercard.onRendered(() => {
             TaxRate: 0,
 
         };
+        if(url.indexOf('?workorderid=')>0 || url.indexOf('?salesorderid=')>0) {
+            let object = localStorage.getItem('newPOParamItem')? JSON.parse(localStorage.getItem('newPOParamItem')): []
+            if(object.length > 0) {
+                let detail = object[0].fields
+                lineItemObj = {
+                    lineID: Random.id(),
+                    item: detail.ProductName,
+                    description: detail.ProductDescription,
+                    quantity: detail.UOMQtySold,
+                    qtyordered: detail.UOMQtySold,
+                    qtyshipped: detail.UOMQtyShipped,
+                    qtybo: '',
+                    unitPrice: detail.LineCost,
+                    unitPriceInc:0,
+                    TotalAmt: 0,
+                    TotalAmtInc: 0,
+                    taxRate: detail.LineTaxRate || 0,
+                    taxCode: detail.LineTaxCode,
+                    curTotalAmt: 0,
+                    TaxTotal: 0,
+                    TaxRate: 0,
+        
+                };
+            }
+        }
         lineItemsTable.push(dataListTable);
         lineItems.push(lineItemObj);
         const currentDate = new Date();
