@@ -34,22 +34,22 @@ Template.stockvaluereport.onRendered(() => {
     Datehandler.initOneMonth();
 
     let reset_data = [
-      { index: 1, label: 'Department Name', class: 'colDepartmentName', active: true, display: true, width: "" },
-      { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "" },
-      { index: 3, label: 'Trans Type', class: 'colTransType', active: true, display: true, width: "" },
-      { index: 4, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
-      { index: 5, label: 'Running Qty', class: 'colRunningQty', active: true, display: true, width: "" },
-      { index: 6, label: 'Unit Cost~When Posted', class: 'colUnitCostWhenPosted', active: true, display: true, width: "" },
-      { index: 7, label: 'Todays Unit~Avg Cost', class: 'colTodaysUnitAvgCost', active: true, display: true, width: "" },
-      { index: 8, label: 'Total Cost~When Posted', class: 'colTotalCostWhenPosted', active: true, display: true, width: "" },
-      { index: 9, label: 'Todays Total~Avg Cost', class: 'colTodaysTotalAvgCost', active: true, display: true, width: "" },
-      { index: 10, label: 'Trans Date', class: 'colTransDate', active: true, display: true, width: "" },
-      { index: 11, label: 'Transaction No', class: 'colTransactionNo', active: false, display: true, width: "" },
-      { index: 12, label: 'Opening', class: 'colOpenning', active: false, display: true, width: "" },
-      { index: 13, label: 'Actual Date', class: 'colActualDate', active: false, display: true, width: "" },
-      { index: 14, label: 'Sub Group', class: 'colSubGroup', active: false, display: true, width: "" },
-      { index: 15, label: 'Type', class: 'colType', active: false, display: true, width: "" },
-      { index: 16, label: 'Dept', class: 'colDept', active: false, display: true, width: "" },
+      { index: 1, label: 'Department Name', class: 'colDepartmentName', active: true, display: true, width: "200" },
+      { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "130" },
+      { index: 3, label: 'Trans Type', class: 'colTransType', active: true, display: true, width: "130" },
+      { index: 4, label: 'Qty', class: 'colQty', active: true, display: true, width: "70" },
+      { index: 5, label: 'Running Qty', class: 'colRunningQty', active: true, display: true, width: "130" },
+      { index: 6, label: 'Unit Cost~When Posted', class: 'colUnitCostWhenPosted', active: true, display: true, width: "200" },
+      { index: 7, label: 'Todays Unit~Avg Cost', class: 'colTodaysUnitAvgCost', active: true, display: true, width: "200" },
+      { index: 8, label: 'Total Cost~When Posted', class: 'colTotalCostWhenPosted', active: true, display: true, width: "200" },
+      { index: 9, label: 'Todays Total~Avg Cost', class: 'colTodaysTotalAvgCost', active: true, display: true, width: "200" },
+      { index: 10, label: 'Trans Date', class: 'colTransDate', active: true, display: true, width: "100" },
+      { index: 11, label: 'Transaction No', class: 'colTransactionNo', active: false, display: true, width: "120" },
+      { index: 12, label: 'Opening', class: 'colOpenning', active: false, display: true, width: "80" },
+      { index: 13, label: 'Actual Date', class: 'colActualDate', active: false, display: true, width: "100" },
+      { index: 14, label: 'Sub Group', class: 'colSubGroup', active: false, display: true, width: "100" },
+      { index: 15, label: 'Type', class: 'colType', active: false, display: true, width: "60" },
+      { index: 16, label: 'Dept', class: 'colDept', active: false, display: true, width: "60" },
     ];
     templateObject.stockvaluereportth.set(reset_data);
 
