@@ -2542,7 +2542,7 @@ Template.alltaskdatatable.events({
                                     let newSubTaskID = 0;
                                     if (Array.isArray(selected_record.subtasks)) {
                                         templateObject.subTasks.set(selected_record.subtasks)
-                                        templateObject.initSubtaskDatatable();
+                                        // templateObject.initSubtaskDatatable();
                                         newSubTaskID = selected_record.subtasks[selected_record.subtasks.length - 1].fields.ID
                                     }
 
@@ -2550,7 +2550,7 @@ Template.alltaskdatatable.events({
                                         let arr = [];
                                         arr.push(selected_record.subtasks)
                                         templateObject.subTasks.set(arr)
-                                        templateObject.initSubtaskDatatable();
+                                        // templateObject.initSubtaskDatatable();
                                         newSubTaskID = selected_record.subtasks.fields.ID
 
                                     }
@@ -4252,14 +4252,14 @@ function openEditTaskModal(id, type) {
             if (selected_record.subtasks) {
                 if (Array.isArray(selected_record.subtasks)) {
                     templateObject.subTasks.set(selected_record.subtasks)
-                    templateObject.initSubtaskDatatable();
+                    // templateObject.initSubtaskDatatable();
                 }
 
                 if (typeof selected_record.subtasks == 'object') {
                     let arr = [];
                     arr.push(selected_record.subtasks)
                     templateObject.subTasks.set(arr)
-                    templateObject.initSubtaskDatatable();
+                    // templateObject.initSubtaskDatatable();
                 }
             } else {
                 let sutTaskTable = $('#tblSubtaskDatatable').DataTable();

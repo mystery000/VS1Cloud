@@ -537,20 +537,6 @@ Template.customerscard.onRendered(function() {
             $("#tblSubtaskDatatable").DataTable({
                 data: splashArrayTaskList,
                 columnDefs: [
-                    // {
-                    //   orderable: false,
-                    //   targets: 0,
-                    //   className: "colCompleteTask colSubComplete",
-                    //   createdCell: function (td, cellData, rowData, row, col) {
-                    //     $(td).closest("tr").attr("data-id", rowData[8]);
-                    //     $(td).attr("data-id", rowData[8]);
-                    //     $(td).addClass("task_priority_" + rowData[10]);
-                    //     if (rowData[12]) {
-                    //       $(td).addClass("taskCompleted");
-                    //     }
-                    //   },
-                    //   width: "18px",
-                    // },
                     {
                         orderable: false,
                         targets: 0,
@@ -614,15 +600,6 @@ Template.customerscard.onRendered(function() {
                             $(td).attr("data-id", rowData[8]);
                         },
                     },
-                    // {
-                    //   orderable: false,
-                    //   targets: 8,
-                    //   className: "colTaskActions",
-                    //   createdCell: function (td, cellData, rowData, row, col) {
-                    //     $(td).attr("data-id", rowData[8]);
-                    //   },
-                    //   width: "150px",
-                    // },
                 ],
                 colReorder: {
                     fixedColumnsLeft: 0,
@@ -2036,7 +2013,6 @@ Template.customerscard.onRendered(function() {
             }
 
             function editableTerms(e, $each, offset, termsDataName) {
-                console.log("modal here========");
                 $('#edtTermsID').val('');
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     $('#termsListModal').modal('toggle');
@@ -4639,7 +4615,7 @@ Template.customerscard.events({
                                     let newSubTaskID = 0;
                                     if (Array.isArray(selected_record.subtasks)) {
                                         templateObject.subTasks.set(selected_record.subtasks)
-                                        templateObject.initSubtaskDatatable();
+                                        // templateObject.initSubtaskDatatable();
                                         newSubTaskID = selected_record.subtasks[selected_record.subtasks.length - 1].fields.ID
                                     }
 
@@ -4647,7 +4623,7 @@ Template.customerscard.events({
                                         let arr = [];
                                         arr.push(selected_record.subtasks)
                                         templateObject.subTasks.set(arr)
-                                        templateObject.initSubtaskDatatable();
+                                        // templateObject.initSubtaskDatatable();
                                         newSubTaskID = selected_record.subtasks.fields.ID
 
                                     }
@@ -5206,14 +5182,14 @@ function openEditTaskModals(id, type) {
                     if (selected_record.subtasks) {
                         if (Array.isArray(selected_record.subtasks)) {
                             templateObject.subTasks.set(selected_record.subtasks)
-                            templateObject.initSubtaskDatatable();
+                            // templateObject.initSubtaskDatatable();
                         }
 
                         if (typeof selected_record.subtasks == 'object') {
                             let arr = [];
                             arr.push(selected_record.subtasks)
                             templateObject.subTasks.set(arr)
-                            templateObject.initSubtaskDatatable();
+                            // templateObject.initSubtaskDatatable();
                         }
                     } else {
                         let sutTaskTable = $('#tblSubtaskDatatable').DataTable();
