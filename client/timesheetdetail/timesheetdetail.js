@@ -3,7 +3,7 @@ import {ReactiveVar} from "meteor/reactive-var";
 import {UtilityService} from "../utility-service";
 import {SideBarService} from "../js/sidebar-service";
 import "jquery-editable-select";
-
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import LoadingOverlay from "../LoadingOverlay";
 
 import CachedHttp from "../lib/global/CachedHttp";
@@ -15,10 +15,13 @@ import Datehandler from "../DateHandler";
 import {getEarnings, getOvertimes, getRateTypes} from "../settings/payroll-settings/payrollrules";
 import TableHandler from "../js/Table/TableHandler";
 import PayrollSettingsOvertimes, {PayrollSettingOvertime} from "../js/Api/Model/PayrollSettingsOvertimes";
-
+import { Template } from 'meteor/templating';
+import './timesheetdetail.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
+
+const _ = require('lodash');
 
 const redirectToPayRollOverview = () => {
   const id = FlowRouter.current().queryParams.tid;
@@ -180,7 +183,7 @@ Template.timesheetdetail.onRendered(function () {
 
     data = _.groupBy(data, "EarningRate");
 
-   
+
     this.earnings.set(data);
     return data;
   };
@@ -789,7 +792,7 @@ Template.timesheetdetail.onRendered(function () {
     // Lets load the timesheet data
     let timesheetDetails = await this.loadTimeSheetDetails();
 
-   
+
 
     if (timesheetDetails == undefined) {
       setTimeout(() => {

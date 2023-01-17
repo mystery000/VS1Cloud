@@ -626,15 +626,12 @@
                     border-radius: .35rem;
                     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
                     } */
-                    #tblInventoryOverview_filter .form-control,
-                    #tblInventoryOverview_filter label {
-                        /* display:none!important; */
-                    }
+                    
                 </style>
                 <!-- <div class="form-group" style="margin: 16px;margin-left: 8px;">
-<label>Search:</label>
-<input type="search" class="searchInput" autocomplete="off" id="myInputSearch" name="myInputSearch">
-</div> -->
+        <label>Search:</label>
+        <input type="search" class="searchInput" autocomplete="off" id="myInputSearch" name="myInputSearch">
+        </div> -->
                 <!-- <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="dataTables_filter">
@@ -701,108 +698,14 @@
                         color: #17a673;
                     }
                 </style>
-
-
-                <table id="tblInventoryOverview" style="width:100%" class="dataTable table table-striped table-bordered tblInventoryOverview">
-                    <thead>
-                        <tr class="dnd-moved">
-                            {{#each displayfield in displayfields}}
-                                <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}}" style="width:{{displayfield.width}}px">
-                                    {{displayfield.custfieldlabel}}
-                                    {{#if equals displayfield.class 'CostPrice'}} <i class="fas fa-random"></i>
-                                    {{else}}
-                                        {{#if equals displayfield.class 'CostPriceInc'}} <i class="fas fa-random fa-trans"></i>
-                                        {{else}}
-                                            {{#if equals displayfield.class 'SalePrice'}} <i class="fas fa-random"></i>
-                                            {{else}}
-                                                {{#if equals displayfield.class 'SalePriceInc'}} <i class="fas fa-random fa-trans"></i>
-                                                {{/if}}
-                                            {{/if}}
-                                        {{/if}}
-                                    {{/if}}
-                                </th>
-                            {{/each}}
-
-                            <!-- <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
-                            <th class="th colProductName" style="width:200px;">Product Name</th>
-                            <th class="th colSalesDescription">Sales Description</th>
-                            <th class="th colAvailable" style="width:70px;">Available</th>
-                            <th class="th colOnSO" style="width:60px;">On SO</th>
-                            <th class="th colOnBO" style="width:60px;">On BO</th>
-                            <th class="th colInStock" style="width:65px;">In Stock</th>
-                            <th class="th colOnOrder" style="width:72px;">On Order</th>
-                            <th class="th colCostPrice lblCostEx hiddenColumn" style="width:130px;">Cost Price (Ex)
-                                <i class="fas fa-random"></i>
-                            </th>
-                            <th class="th colCostPriceInc lblCostInc " style="width:135px;">Cost Price (Inc) <i class="fas fa-random fa-trans"></i></th>
-                            <th class="th colSalePrice lblPriceEx hiddenColumn" style="width:130px;">Sale Price (Ex)
-                                <i class="fas fa-random"></i>
-                            </th>
-                            <th class="th colSalePriceInc lblPriceInc " style="width:135px;">Sale Price (Inc) <i class="fas fa-random fa-trans"></i></th>
-
-                            {{#if equals isSNTrackchecked true}}
-                                <th class="th colSerialNo hiddenColumn" style="width: 124px;">Serial/Lot No</th>
-                            {{/if}}
-                            <th class="th colBarcode hiddenColumn">Barcode</th>
-                            <th class="th colDepartment hiddenColumn" style="width:100px;">Department</th>
-
-                            <th class="th colPurchaseDescription hiddenColumn">Purchase Description</th>
-                            <th class="th colProdCustField1 hiddenColumn">Custom Field 1</th>
-                            <th class="th colProdCustField2 hiddenColumn">Custom Field 2</th> -->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--
-                      {{#if datatablerecords}}
-                            {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.[0]}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colProductID {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">{{item.[0]}}</td>
-                                    <td contenteditable="false" class="colProductName {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span style="display:none;">{{item.[1]}}</span>{{item.[1]}}</td>
-                                    <td contenteditable="false" class="colSalesDescription {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.[2]}}</td>
-                                    <td contenteditable="false" class="colAvailable {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.[3]}}</td>
-                                    <td contenteditable="false" class="colOnSO {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.[4]}}</td>
-                                    <td contenteditable="false" class="colOnBO {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.[5]}}
-                                    </td>
-                                    <td contenteditable="false" class="colInStock {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.[6]}}
-                                    </td>
-                                    <td contenteditable="false" class="colOnOrder {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.[7]}}
-                                    </td>
-
-                                    <td contenteditable="false" class="colCostPrice {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.[8]}}</td>
-                                    <td contenteditable="false" class="colCostPriceInc {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.[9]}}</td>
-                                    <td contenteditable="false" class="colSalePrice {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.[10]}}
-                                    </td>
-                                    <td contenteditable="false" class="colSalePriceInc {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.[11]}}
-                                    </td>
-
-                                    {{#if equals isSNTrackchecked true}}
-                                    <td contenteditable="false" class="colSerialNo {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.[12]}}</td>
-                                    {{/if}}
-                                    <td contenteditable="false" class="colBarcode {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.[13]}}</td>
-                                    <td contenteditable="false" class="colDepartmentth {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.[14]}}</td>
-                                    <td contenteditable="false" class="colPurchaseDescription {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.[15]}}</td>
-                                    <td contenteditable="false" class="colProdCustField1 {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}">{{item.[16]}}</td>
-                                    <td contenteditable="false" class="colProdCustField2 {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}">{{item.[17]}}</td>
-                                </tr>
-                            {{/each}}
-                        {{/if}}
-
-                        -->
-                    </tbody>
-                </table>
-            </div>
+                {{>non_transactional_list tablename="tblInventoryOverview"}}
+            
         </div>
     </div>
-
-    {{> onBackOrderPopUp}}
-    {{> onSalesOrderPopUp}}
-    {{> onOrderPopUp}}
-    <!-- {{> recentTransactionPopUp}} -->
+</div>
+{{#if productID}}
+    {{> recentTransactionPopUp productID=productID type=transtype}}
+{{/if}}
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

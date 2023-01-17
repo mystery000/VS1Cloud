@@ -113,6 +113,10 @@ Template.dashboardoptionspopup.onRendered(function() {
     templateObject.getDashboardOptions();
 
 
+    $('#tblDashboardOptions tbody').on('change', 'tr input', function() {
+        $(this).closest('tr').find(".colOptionsName ").click();
+    });
+
     $('#tblDashboardOptions tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function() {
         var listData = $(this).closest('tr').attr('id');
         var is7days = false;
@@ -127,7 +131,7 @@ Template.dashboardoptionspopup.onRendered(function() {
             if (listData !== '') {
                 listData = Number(listData);
                 //taxRateService.getOneTerms(listData).then(function (data) {
-
+                let isDays;
                 var termsID = listData || '';
                 var termsName = $(event.target).closest("tr").find(".colName").text() || '';
                 var description = $(event.target).closest("tr").find(".colDescription").text() || '';

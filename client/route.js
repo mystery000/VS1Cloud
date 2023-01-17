@@ -204,7 +204,7 @@ FlowRouter.triggers.enter([
                 type: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Save',
-                cancelButtonText: 'Leave'
+                cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
                     localStorage.setItem("enteredURL", context.path);
@@ -212,7 +212,7 @@ FlowRouter.triggers.enter([
                     // FlowRouter.go(previous_url);
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
-                    Meteor._reload.reload();
+                    // Meteor._reload.reload();
                     //TODO need to url async
                     previous_url = "";
                     localStorage.setItem("isFormUpdated", false);

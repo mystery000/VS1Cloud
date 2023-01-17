@@ -1,9 +1,20 @@
 <template name="settings">
+    <style>
+        .button {
+            height: 60px;
+            width: 100%;
+            margin: 16px 0px;
+        }
+    </style>
     <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
         <div align="center">
+            <div class="row">
+                <div class="col-12 col-md-4"></div>
+                <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+            </div>
             <div class="row d-xl-flex justify-content-center justify-content-xl-center mb-3">
 
                 <style>
@@ -23,10 +34,24 @@
                             {{#if isGreenTrack}}
                                 <div class="row">
                                     <div class="col-6 col-lg-6 colGreenTrackModules" id="colGreenTrackModules">
-                                        <button title="VS1 modules includes all module options" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnCompanyAppSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>VS1 Modules</button>
+                                        {{> vs1_button
+                                            tooltip="VS1 modules includes all module options"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnCompanyAppSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="VS1 Modules"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colGreenTrackDetails" id="colGreenTrackDetails">
-                                        <button title="Organization details includes organization profile. E.g. Company Name" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnOrganisationSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Organization Details</button>
+                                        {{> vs1_button
+                                            tooltip="Organization details includes organization profile. E.g. Company Name"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnOrganisationSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Organization Details"
+                                        }}
                                     </div>
                                 </div>
                             {{else}}
@@ -38,10 +63,24 @@
 
                                 <div class="row">
                                     <div class="col-6 col-lg-6 colVs1Modules" id="colVs1Modules">
-                                        <button title="Organization details includes organization profile. E.g. Company Name" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnOrganisationSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Organization Details</button>
+                                        {{> vs1_button
+                                            tooltip="Organization details includes organization profile. E.g. Company Name"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnOrganisationSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Organization Details"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colVs1Modules" id="colVs1Modules">
-                                        <button title="VS1 modules includes all module options" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnCompanyAppSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>VS1 Modules</button>
+                                        {{> vs1_button
+                                            tooltip="VS1 modules includes all module options"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnCompanyAppSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="VS1 Modules"
+                                        }}
                                     </div>
                                     <div class="col-12">
                                         <hr>
@@ -49,59 +88,163 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6 col-lg-6 colBackupRestore" id="colBackupRestore">
-                                        <button title="Backup and restore your application information and settings" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnBackupRestore" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Backup and Restore</button>
+                                        {{> vs1_button
+                                            tooltip="Backup and restore your application information and settings"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnBackupRestore"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Backup and Restore"
+                                        }}
                                     </div>
                                     {{#if checkFXCurrency}}
                                         <div class="col-6 col-lg-6 colCurrencies" id="colCurrencies">
-                                            <button title="Currencies includes currencies the company works with" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btncurrenciesSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Currencies</button>
+                                            {{> vs1_button
+                                                tooltip="Currencies includes currencies the company works with"
+                                                color="primary"
+                                                classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btncurrenciesSettings"
+                                                iconName="cog"
+                                                htmlType="button"
+                                                title="Currencies"
+                                            }}
                                         </div>
                                     {{/if}}
                                     <div class="col-6 col-lg-6 colCustomerType" id="colCustomerType">
-                                        <button title="Terms included setting up invoice and quote due date" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnCustomerType" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Customer Type</button>
+                                        {{> vs1_button
+                                            tooltip="Terms included setting up invoice and quote due date"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnCustomerType"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Customer Type"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colLeadStatus" id="colLeadStatus">
-                                        <button title="Lead status includes setting up leads" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnLeadStatus" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Lead Status</button>
+                                        {{> vs1_button
+                                            tooltip="Lead status includes setting up leads"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnLeadStatus"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Lead Status"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colDepartments" id="colDepartments">
-                                        <button title="Departments includes all departments in the organization" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnDepartmentSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Departments</button>
+                                        {{> vs1_button
+                                            tooltip="Departments includes all departments in the organization"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnDepartmentSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Departments"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colEDIIntegrations" id="colEDIIntegrations">
-                                        <button title="" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnEDIIntegrations" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>EDI and Integration's</button>
+                                        {{> vs1_button
+                                            tooltip=""
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnEDIIntegrations"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="EDI and Integration's"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colEmailSettings" id="colEmailSettings">
-                                        <button title="Manage how and to whom emails are sent and when" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnEmailSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Email Settings</button>
+                                        {{> vs1_button
+                                            tooltip="Manage how and to whom emails are sent and when"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnEmailSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Email Settings"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colPaymentMethods" id="colPaymentMethods">
-                                        <button title="Payment method includes setting up payment method and payment link fee" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnpaymentMethodSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Payment Method</button>
+                                        {{> vs1_button
+                                            tooltip="Payment method includes setting up payment method and payment link fee"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnpaymentMethodSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Payment Method"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colPayrollSettings" id="colPayrollSettings">
-                                        <button title="Manage and create payroll/timesheet rules" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnPayrollSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Payroll Settings</button>
+                                        {{> vs1_button
+                                            tooltip="Manage and create payroll/timesheet rules"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnPayrollSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Payroll Settings"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colTemplates" id="colTemplates">
-                                        <button title="" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnTemplates" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Print Options</button>
+                                        {{> vs1_button
+                                            tooltip=""
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnTemplates"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Print Options"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colSmsSettings" id="colSetupWizard">
-                                        <button title="" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnSetupWizard" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Setup Wizard</button>
+                                        {{> vs1_button
+                                            tooltip=""
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnSetupWizard"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Setup Wizard"
+                                        }}
                                     </div>
                                     <!-- <div class="col-6 col-lg-6 colSmsSettings" id="colVs1Modules">
                                         <button title="Setup all of your company's SMS settings" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnSmsSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>SMS Settings</button>
                                     </div> -->
                                     <div class="col-6 col-lg-6 colSubscription" id="colSubscription">
-                                        <button title="Subscription allows you to control your VS1 Cloud subscription and users" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnSubcription" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Subscription</button>
+                                        {{> vs1_button
+                                            tooltip="Subscription allows you to control your VS1 Cloud subscription and users"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnSubcription"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Subscription"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colTaxRates" id="colTaxRates">
-                                        <button title="Tax rate settings allows you to set up different tax rate for products or services" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btntaxRatesSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Tax Rates</button>
+                                        {{> vs1_button
+                                            tooltip="Tax rate settings allows you to set up different tax rate for products or services"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btntaxRatesSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Tax Rates"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colTerms" id="colTerms">
-                                        <button title="Terms included setting up invoice and quote due date" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnTermsSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Terms</button>
+                                        {{> vs1_button
+                                            tooltip="Terms included setting up invoice and quote due date"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnTermsSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="Terms"
+                                        }}
                                     </div>
                                     <div class="col-6 col-lg-6 colUOM" id="colUOM">
-                                        <button title="Setup and manage all units of measure used inside VS1" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnUomSettings" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>UOM Settings</button>
+                                        {{> vs1_button
+                                            tooltip="Setup and manage all units of measure used inside VS1"
+                                            color="primary"
+                                            classes="button d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnUomSettings"
+                                            iconName="cog"
+                                            htmlType="button"
+                                            title="UOM Settings"
+                                        }}
                                     </div>
                                     <!-- <div class="col-6 col-lg-6 colMailchimp" id="colMailchimp">
                                         <button title="Setup and manage all units of measure used inside VS1" class="btn btn-primary d-xl-flex flex-row justify-content-xl-center align-items-xl-center btnMailchimp" type="button" style="height: 60px;width: 100%;margin: 16px 0px;"><i class="fa fa-cog" style="margin-right: 8px;"></i>Mail Chimp</button>
                                     </div> -->
-
                                 </div>
                             {{/if}}
                         </div>

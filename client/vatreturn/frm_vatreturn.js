@@ -1179,14 +1179,6 @@ Template.vatreturn.onRendered(function() {
     setTimeout(function() {
         $(document).ready(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
-            organisationService.getOrganisationDetail().then(function(data) {
-                let mainData = data.tcompanyinfo[0];
-                $("#prt_companyName").html(mainData.CompanyName);
-                $("#prt_companyAddress").html(mainData.Address);
-                $("#prt_companyCity").html(mainData.City);
-                $("#prt_companyZipState").html(mainData.PoState + " " + mainData.Postcode);
-                $("#prt_companyPhoneNumber").html(mainData.PhoneNumber);
-            });
             var url = FlowRouter.current().path;
             if (url.indexOf('?id=') > 0) {
                 var getid = url.split('?id=');
@@ -2960,8 +2952,6 @@ Template.vatreturn.events({
                     if (templateObject.getId.get()) {
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
-
-                    console.log("jsonObj=", jsonObj);
                     reportService.saveVATReturn(jsonObj).then(function(res) {
                         reportService.getAllVATReturn().then(function(data) {
                             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {

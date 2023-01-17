@@ -3,6 +3,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import { UtilityService } from "../../utility-service";
 import "../../lib/global/indexdbstorage.js";
+import { Template } from 'meteor/templating';
 import "./term.html";
 import XLSX from "xlsx";
 let sideBarService = new SideBarService();

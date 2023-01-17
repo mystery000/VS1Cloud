@@ -28,6 +28,7 @@ import '../mytaskswdiget/mytaskswidgetchart.html'
 
 import '../top10Customers/dsm_top10Customers.html'
 import '../../Dashboard/appointments-widget/dsm-appointments-widget.html'
+import '../../Dashboard/appointments-widget/ds-appointments-widget.html'
 
 
 let _ = require("lodash");
@@ -77,8 +78,9 @@ let chartsPlaceList = {
     ],
 
     "Payroll_Overview": [
-        "employeecompletedjobs",
+        "employeeDaysAbsent",
         "clockedOnEmployees",
+        "employeesOnLeave"
     ],
 
     "Purchases_Overview": [

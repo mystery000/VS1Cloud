@@ -6,7 +6,6 @@ import { SideBarService } from '../js/sidebar-service';
 import {AccountService} from "../accounts/account-service";
 import {PurchaseBoardService} from '../js/purchase-service';
 import {EmployeeProfileService} from "../js/profile-service";
-import {OrganisationService} from '../js/organisation-service';
 
 import { Template } from 'meteor/templating';
 import './credit_list.html';

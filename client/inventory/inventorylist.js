@@ -1,8 +1,6 @@
 import './inventorylist.html';
-import './inventorypopups/onBackOrderPopUp.html';
-import './inventorypopups/onOrderPopUp.html';
-import './inventorypopups/onSalesOrderPopUp.html';
-// import './inventorypopups/RecentTransactionPopUp.html';
+
+import './inventorypopups/RecentTransactionPopUp.html';
 import { ProductService } from "../product/product-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { CoreService } from "../js/core-service";
@@ -16,7 +14,6 @@ import "../lib/global/indexdbstorage.js";
 import { OrganisationService } from "../js/organisation-service";
 
 import { Template } from 'meteor/templating';
-import './inventorylist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
@@ -67,6 +64,11 @@ Template.inventorylist.onCreated(function() {
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar();
+
+    templateObject.productDataList = new ReactiveVar();
+    templateObject.columnData = new ReactiveVar();
+    templateObject.productID = new ReactiveVar();
+    templateObject.transtype = new ReactiveVar();
 });
 
 Template.inventorylist.onRendered(function() {
@@ -377,129 +379,134 @@ Template.inventorylist.onRendered(function() {
                                         })
                                     });
                                 }
-                                $("#tblInventoryOverview").dataTable({
-                                    data: splashArrayProductList,
-                                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                    columnDefs: columnData,
-                                      select: true,
-                                      destroy: true,
-                                      colReorder: true,
-                                      buttons: [{
-                                              extend: "excelHtml5",
-                                              text: "",
-                                              download: "open",
-                                              className: "btntabletocsv hiddenColumn",
-                                              filename: "inventory_" + moment().format(),
-                                              orientation: "portrait",
-                                              exportOptions: {
-                                                  columns: ":visible",
-                                              },
-                                          },
-                                          {
-                                              extend: "print",
-                                              download: "open",
-                                              className: "btntabletopdf hiddenColumn",
-                                              text: "",
-                                              title: "Inventory List",
-                                              filename: "inventory_" + moment().format(),
-                                              exportOptions: {
-                                                  columns: ":visible",
-                                              },
-                                          },
-                                      ],
-                                      // bStateSave: true,
-                                      // rowId: 0,
-                                      // paging: false,
-                                      // "scrollY": "800px",
-                                      // "scrollCollapse": true,
-                                      pageLength: initialBaseDataLoad,
-                                      lengthMenu: [
-                                          [initialBaseDataLoad, -1],
-                                          [initialBaseDataLoad, "All"],
-                                      ],
-                                      info: true,
-                                      responsive: true,
-                                      order: [
-                                          [1, "asc"] // modified by matthias
-                                      ],
-                                      action: function() {
-                                          $("#tblInventoryOverview").DataTable().ajax.reload();
-                                      },
-                                      fnDrawCallback: function(oSettings) {
-                                          $(".paginate_button.page-item").removeClass("disabled");
-                                          $("#tblInventoryOverview_ellipsis").addClass("disabled");
-                                          if (oSettings._iDisplayLength == -1) {
-                                              if (oSettings.fnRecordsDisplay() > 150) {}
-                                              $(".fullScreenSpin").css("display", "inline-block");
-                                              setTimeout(function() {
-                                                  $(".fullScreenSpin").css("display", "none");
-                                              }, 100);
-                                          } else {}
-                                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                              $(".paginate_button.page-item.next").addClass("disabled");
-                                          }
+                                templateObject.productDataList.set(JSON.stringify(splashArrayProductList));
+                                
+                                templateObject.columnData.set(JSON.stringify(columnData));
+                                
+                                // $("#tblInventoryOverview").dataTable({
+                                    
+                                //     data: splashArrayProductList,
+                                //     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                                //     columnDefs: columnData,
+                                //       select: true,
+                                //       destroy: true,
+                                //       colReorder: true,
+                                //       buttons: [{
+                                //               extend: "excelHtml5",
+                                //               text: "",
+                                //               download: "open",
+                                //               className: "btntabletocsv hiddenColumn",
+                                //               filename: "inventory_" + moment().format(),
+                                //               orientation: "portrait",
+                                //               exportOptions: {
+                                //                   columns: ":visible",
+                                //               },
+                                //           },
+                                //           {
+                                //               extend: "print",
+                                //               download: "open",
+                                //               className: "btntabletopdf hiddenColumn",
+                                //               text: "",
+                                //               title: "Inventory List",
+                                //               filename: "inventory_" + moment().format(),
+                                //               exportOptions: {
+                                //                   columns: ":visible",
+                                //               },
+                                //           },
+                                //       ],
+                                //       // bStateSave: true,
+                                //       // rowId: 0,
+                                //       // paging: false,
+                                //       // "scrollY": "800px",
+                                //       // "scrollCollapse": true,
+                                //       pageLength: initialBaseDataLoad,
+                                //       lengthMenu: [
+                                //           [initialBaseDataLoad, -1],
+                                //           [initialBaseDataLoad, "All"],
+                                //       ],
+                                //       info: true,
+                                //       responsive: true,
+                                //       order: [
+                                //           [1, "asc"] // modified by matthias
+                                //       ],
+                                //       action: function() {
+                                //           $("#tblInventoryOverview").DataTable().ajax.reload();
+                                //       },
+                                //       fnDrawCallback: function(oSettings) {
+                                //           $(".paginate_button.page-item").removeClass("disabled");
+                                //           $("#tblInventoryOverview_ellipsis").addClass("disabled");
+                                //           if (oSettings._iDisplayLength == -1) {
+                                //               if (oSettings.fnRecordsDisplay() > 150) {}
+                                //               $(".fullScreenSpin").css("display", "inline-block");
+                                //               setTimeout(function() {
+                                //                   $(".fullScreenSpin").css("display", "none");
+                                //               }, 100);
+                                //           } else {}
+                                //           if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                //               $(".paginate_button.page-item.next").addClass("disabled");
+                                //           }
 
-                                          $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
-                                              $(".fullScreenSpin").css("display", "inline-block");
-                                              let dataLenght = oSettings._iDisplayLength;
-                                              let customerSearch = $("#tblInventoryOverview_filter input").val();
-                                              sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                                getVS1Data("TProductList").then(function (dataObjectold) {
-                                                    if (dataObjectold.length == 0) {
-                                                    } else {
-                                                      let dataOld = JSON.parse(dataObjectold[0].data);
+                                //           $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
+                                //               $(".fullScreenSpin").css("display", "inline-block");
+                                //               let dataLenght = oSettings._iDisplayLength;
+                                //               let customerSearch = $("#tblInventoryOverview_filter input").val();
+                                //               sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                //                 getVS1Data("TProductList").then(function (dataObjectold) {
+                                //                     if (dataObjectold.length == 0) {
+                                //                     } else {
+                                //                       let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                                      var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
-                                                      let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tproductlist: thirdaryData,
-                                                      };
+                                //                       var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                //                       let objCombineData = {
+                                //                         Params: dataOld.Params,
+                                //                         tproductlist: thirdaryData,
+                                //                       };
 
-                                                      addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
-                                                          templateObject.resetData(objCombineData);
-                                                          $(".fullScreenSpin").css("display", "none");
-                                                        }).catch(function (err) {
-                                                          $(".fullScreenSpin").css("display", "none");
-                                                        });
-                                                    }
-                                                }).catch(function (err) {});
+                                //                       addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                //                           templateObject.resetData(objCombineData);
+                                //                           $(".fullScreenSpin").css("display", "none");
+                                //                         }).catch(function (err) {
+                                //                           $(".fullScreenSpin").css("display", "none");
+                                //                         });
+                                //                     }
+                                //                 }).catch(function (err) {});
 
-                                              }).catch(function(err) {
-                                                  $(".fullScreenSpin").css("display", "none");
-                                              });
-                                             });
-                                          setTimeout(function() {
-                                              MakeNegative();
-                                          }, 100);
-                                      },
-                                      language: { search: "",searchPlaceholder: "Search List..." },
-                                      fnInitComplete: function() {
-                                        let urlParametersPage = FlowRouter.current().queryParams.page;
-                                        if (urlParametersPage) {
-                                          this.fnPageChange("last");
-                                        };
-                                          $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                                          ).insertAfter("#tblInventoryOverview_filter");
-                                      },
-                                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                                        let countTableData = data.Params.Count || 0; //get count from API data
+                                //               }).catch(function(err) {
+                                //                   $(".fullScreenSpin").css("display", "none");
+                                //               });
+                                //              });
+                                //           setTimeout(function() {
+                                //               MakeNegative();
+                                //           }, 100);
+                                //       },
+                                //       language: { search: "",searchPlaceholder: "Search List..." },
+                                //       fnInitComplete: function() {
+                                //         let urlParametersPage = FlowRouter.current().queryParams.page;
+                                //         if (urlParametersPage) {
+                                //           this.fnPageChange("last");
+                                //         };
+                                //           $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                //           ).insertAfter("#tblInventoryOverview_filter");
+                                //       },
+                                //       "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                                //         let countTableData = data.Params.Count || 0; //get count from API data
 
-                                          return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                                      },
-                                  }).on("length.dt", function(e, settings, len) {
-                                      $(".fullScreenSpin").css("display", "inline-block");
-                                      let dataLenght = settings._iDisplayLength;
-                                      // splashArrayProductList = [];
-                                      if (dataLenght == -1) {
-                                          $(".fullScreenSpin").css("display", "none");
-                                      } else {
-                                          if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                              $(".fullScreenSpin").css("display", "none");
-                                          } else {
-                                              $(".fullScreenSpin").css("display", "none");
-                                          }
-                                      }
-                                  });
+                                //           return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                                //       },
+                                //   }).on("length.dt", function(e, settings, len) {
+                                //       $(".fullScreenSpin").css("display", "inline-block");
+                                //       let dataLenght = settings._iDisplayLength;
+                                //       // splashArrayProductList = [];
+                                //       if (dataLenght == -1) {
+                                //           $(".fullScreenSpin").css("display", "none");
+                                //       } else {
+                                //           if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                                //               $(".fullScreenSpin").css("display", "none");
+                                //           } else {
+                                //               $(".fullScreenSpin").css("display", "none");
+                                //           }
+                                //       }
+                                //   });
 
                                 $(".fullScreenSpin").css("display", "none");
                                 $("div.dataTables_filter input").addClass(
@@ -589,129 +596,131 @@ Template.inventorylist.onRendered(function() {
                                 })
                             });
                         }
-                        $("#tblInventoryOverview").dataTable({
-                                data: splashArrayProductList,
-                                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                columnDefs: columnData,
-                                select: true,
-                                destroy: true,
-                                colReorder: true,
-                                buttons: [{
-                                        extend: "excelHtml5",
-                                        text: "",
-                                        download: "open",
-                                        className: "btntabletocsv hiddenColumn",
-                                        filename: "inventory_" + moment().format(),
-                                        orientation: "portrait",
-                                        exportOptions: {
-                                            columns: ":visible",
-                                        },
-                                    },
-                                    {
-                                        extend: "print",
-                                        download: "open",
-                                        className: "btntabletopdf hiddenColumn",
-                                        text: "",
-                                        title: "Inventory List",
-                                        filename: "inventory_" + moment().format(),
-                                        exportOptions: {
-                                            columns: ":visible",
-                                        },
-                                    },
-                                ],
-                                // bStateSave: true,
-                                // rowId: 0,
-                                // paging: false,
-                                // "scrollY": "800px",
-                                // "scrollCollapse": true,
-                                pageLength: initialBaseDataLoad,
-                                lengthMenu: [
-                                    [initialBaseDataLoad, -1],
-                                    [initialBaseDataLoad, "All"],
-                                ],
-                                info: true,
-                                responsive: true,
-                                order: [
-                                    [1, "asc"] // modified by matthias
-                                ],
-                                action: function() {
-                                    $("#tblInventoryOverview").DataTable().ajax.reload();
-                                },
-                                fnDrawCallback: function(oSettings) {
-                                    $(".paginate_button.page-item").removeClass("disabled");
-                                    $("#tblInventoryOverview_ellipsis").addClass("disabled");
-                                    if (oSettings._iDisplayLength == -1) {
-                                        if (oSettings.fnRecordsDisplay() > 150) {}
-                                        $(".fullScreenSpin").css("display", "inline-block");
-                                        setTimeout(function() {
-                                            $(".fullScreenSpin").css("display", "none");
-                                        }, 100);
-                                    } else {}
-                                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                        $(".paginate_button.page-item.next").addClass("disabled");
-                                    }
+                        templateObject.productDataList.set(JSON.stringify(splashArrayProductList));
+                        templateObject.columnData.set(JSON.stringify(columnData));
+                        // $("#tblInventoryOverview").dataTable({
+                        //         data: splashArrayProductList,
+                        //         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        //         columnDefs: columnData,
+                        //         select: true,
+                        //         destroy: true,
+                        //         colReorder: true,
+                        //         buttons: [{
+                        //                 extend: "excelHtml5",
+                        //                 text: "",
+                        //                 download: "open",
+                        //                 className: "btntabletocsv hiddenColumn",
+                        //                 filename: "inventory_" + moment().format(),
+                        //                 orientation: "portrait",
+                        //                 exportOptions: {
+                        //                     columns: ":visible",
+                        //                 },
+                        //             },
+                        //             {
+                        //                 extend: "print",
+                        //                 download: "open",
+                        //                 className: "btntabletopdf hiddenColumn",
+                        //                 text: "",
+                        //                 title: "Inventory List",
+                        //                 filename: "inventory_" + moment().format(),
+                        //                 exportOptions: {
+                        //                     columns: ":visible",
+                        //                 },
+                        //             },
+                        //         ],
+                        //         // bStateSave: true,
+                        //         // rowId: 0,
+                        //         // paging: false,
+                        //         // "scrollY": "800px",
+                        //         // "scrollCollapse": true,
+                        //         pageLength: initialBaseDataLoad,
+                        //         lengthMenu: [
+                        //             [initialBaseDataLoad, -1],
+                        //             [initialBaseDataLoad, "All"],
+                        //         ],
+                        //         info: true,
+                        //         responsive: true,
+                        //         order: [
+                        //             [1, "asc"] // modified by matthias
+                        //         ],
+                        //         action: function() {
+                        //             $("#tblInventoryOverview").DataTable().ajax.reload();
+                        //         },
+                        //         fnDrawCallback: function(oSettings) {
+                        //             $(".paginate_button.page-item").removeClass("disabled");
+                        //             $("#tblInventoryOverview_ellipsis").addClass("disabled");
+                        //             if (oSettings._iDisplayLength == -1) {
+                        //                 if (oSettings.fnRecordsDisplay() > 150) {}
+                        //                 $(".fullScreenSpin").css("display", "inline-block");
+                        //                 setTimeout(function() {
+                        //                     $(".fullScreenSpin").css("display", "none");
+                        //                 }, 100);
+                        //             } else {}
+                        //             if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        //                 $(".paginate_button.page-item.next").addClass("disabled");
+                        //             }
 
-                                    $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
-                                        $(".fullScreenSpin").css("display", "inline-block");
-                                        let dataLenght = oSettings._iDisplayLength;
-                                        let customerSearch = $("#tblInventoryOverview_filter input").val();
-                                        sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                          getVS1Data("TProductList").then(function (dataObjectold) {
-                                              if (dataObjectold.length == 0) {
-                                              } else {
-                                                let dataOld = JSON.parse(dataObjectold[0].data);
+                        //             $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
+                        //                 $(".fullScreenSpin").css("display", "inline-block");
+                        //                 let dataLenght = oSettings._iDisplayLength;
+                        //                 let customerSearch = $("#tblInventoryOverview_filter input").val();
+                        //                 sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                        //                   getVS1Data("TProductList").then(function (dataObjectold) {
+                        //                       if (dataObjectold.length == 0) {
+                        //                       } else {
+                        //                         let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                                var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
-                                                let objCombineData = {
-                                                  Params: dataOld.Params,
-                                                  tproductlist: thirdaryData,
-                                                };
+                        //                         var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                        //                         let objCombineData = {
+                        //                           Params: dataOld.Params,
+                        //                           tproductlist: thirdaryData,
+                        //                         };
 
-                                                addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
-                                                    templateObject.resetData(objCombineData);
-                                                    $(".fullScreenSpin").css("display", "none");
-                                                  }).catch(function (err) {
-                                                    $(".fullScreenSpin").css("display", "none");
-                                                  });
-                                              }
-                                          }).catch(function (err) {});
+                        //                         addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                        //                             templateObject.resetData(objCombineData);
+                        //                             $(".fullScreenSpin").css("display", "none");
+                        //                           }).catch(function (err) {
+                        //                             $(".fullScreenSpin").css("display", "none");
+                        //                           });
+                        //                       }
+                        //                   }).catch(function (err) {});
 
-                                        }).catch(function(err) {
-                                            $(".fullScreenSpin").css("display", "none");
-                                        });
-                                    });
-                                    setTimeout(function() {
-                                        MakeNegative();
-                                    }, 100);
-                                },
-                                language: { search: "",searchPlaceholder: "Search List..." },
-                                fnInitComplete: function() {
-                                  let urlParametersPage = FlowRouter.current().queryParams.page;
-                                  if (urlParametersPage) {
-                                    this.fnPageChange("last");
-                                  };
-                                    $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                                    ).insertAfter("#tblInventoryOverview_filter");
-                                },
-                                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                                  let countTableData = data.Params.Count || 0; //get count from API data
+                        //                 }).catch(function(err) {
+                        //                     $(".fullScreenSpin").css("display", "none");
+                        //                 });
+                        //             });
+                        //             setTimeout(function() {
+                        //                 MakeNegative();
+                        //             }, 100);
+                        //         },
+                        //         language: { search: "",searchPlaceholder: "Search List..." },
+                        //         fnInitComplete: function() {
+                        //           let urlParametersPage = FlowRouter.current().queryParams.page;
+                        //           if (urlParametersPage) {
+                        //             this.fnPageChange("last");
+                        //           };
+                        //             $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                        //             ).insertAfter("#tblInventoryOverview_filter");
+                        //         },
+                        //         "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        //           let countTableData = data.Params.Count || 0; //get count from API data
 
-                                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                                },
-                            }).on("length.dt", function(e, settings, len) {
-                                $(".fullScreenSpin").css("display", "inline-block");
-                                let dataLenght = settings._iDisplayLength;
-                                // splashArrayProductList = [];
-                                if (dataLenght == -1) {
-                                    $(".fullScreenSpin").css("display", "none");
-                                } else {
-                                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                        $(".fullScreenSpin").css("display", "none");
-                                    } else {
-                                        $(".fullScreenSpin").css("display", "none");
-                                    }
-                                }
-                            });
+                        //             return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                        //         },
+                        //     }).on("length.dt", function(e, settings, len) {
+                        //         $(".fullScreenSpin").css("display", "inline-block");
+                        //         let dataLenght = settings._iDisplayLength;
+                        //         // splashArrayProductList = [];
+                        //         if (dataLenght == -1) {
+                        //             $(".fullScreenSpin").css("display", "none");
+                        //         } else {
+                        //             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                        //                 $(".fullScreenSpin").css("display", "none");
+                        //             } else {
+                        //                 $(".fullScreenSpin").css("display", "none");
+                        //             }
+                        //         }
+                        //     });
 
                         $(".fullScreenSpin").css("display", "none");
                         $("div.dataTables_filter input").addClass(
@@ -797,128 +806,130 @@ Template.inventorylist.onRendered(function() {
                                     })
                                 });
                             }
-                            $("#tblInventoryOverview").dataTable({
-                                  data: splashArrayProductList,
-                                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                  columnDefs: columnData,
-                                  select: true,
-                                  destroy: true,
-                                  colReorder: true,
-                                  buttons: [{
-                                          extend: "excelHtml5",
-                                          text: "",
-                                          download: "open",
-                                          className: "btntabletocsv hiddenColumn",
-                                          filename: "inventory_" + moment().format(),
-                                          orientation: "portrait",
-                                          exportOptions: {
-                                              columns: ":visible",
-                                          },
-                                      },
-                                      {
-                                          extend: "print",
-                                          download: "open",
-                                          className: "btntabletopdf hiddenColumn",
-                                          text: "",
-                                          title: "Inventory List",
-                                          filename: "inventory_" + moment().format(),
-                                          exportOptions: {
-                                              columns: ":visible",
-                                          },
-                                      },
-                                  ],
-                                  // bStateSave: true,
-                                  // rowId: 0,
-                                  // paging: false,
-                                  // "scrollY": "800px",
-                                  // "scrollCollapse": true,
-                                  pageLength: initialBaseDataLoad,
-                                  lengthMenu: [
-                                      [initialBaseDataLoad, -1],
-                                      [initialBaseDataLoad, "All"],
-                                  ],
-                                  info: true,
-                                  responsive: true,
-                                  order: [
-                                      [1, "asc"] // modified by matthias
-                                  ],
-                                  action: function() {
-                                      $("#tblInventoryOverview").DataTable().ajax.reload();
-                                  },
-                                  fnDrawCallback: function(oSettings) {
-                                      $(".paginate_button.page-item").removeClass("disabled");
-                                      $("#tblInventoryOverview_ellipsis").addClass("disabled");
-                                      if (oSettings._iDisplayLength == -1) {
-                                          if (oSettings.fnRecordsDisplay() > 150) {}
-                                          $(".fullScreenSpin").css("display", "inline-block");
-                                          setTimeout(function() {
-                                              $(".fullScreenSpin").css("display", "none");
-                                          }, 100);
-                                      } else {}
-                                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                          $(".paginate_button.page-item.next").addClass("disabled");
-                                      }
+                            templateObject.productDataList.set(JSON.stringify(splashArrayProductList));
+                            templateObject.columnData.set(JSON.stringify(columnData));
+                            // $("#tblInventoryOverview").dataTable({
+                            //       data: splashArrayProductList,
+                            //       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            //       columnDefs: columnData,
+                            //       select: true,
+                            //       destroy: true,
+                            //       colReorder: true,
+                            //       buttons: [{
+                            //               extend: "excelHtml5",
+                            //               text: "",
+                            //               download: "open",
+                            //               className: "btntabletocsv hiddenColumn",
+                            //               filename: "inventory_" + moment().format(),
+                            //               orientation: "portrait",
+                            //               exportOptions: {
+                            //                   columns: ":visible",
+                            //               },
+                            //           },
+                            //           {
+                            //               extend: "print",
+                            //               download: "open",
+                            //               className: "btntabletopdf hiddenColumn",
+                            //               text: "",
+                            //               title: "Inventory List",
+                            //               filename: "inventory_" + moment().format(),
+                            //               exportOptions: {
+                            //                   columns: ":visible",
+                            //               },
+                            //           },
+                            //       ],
+                            //       // bStateSave: true,
+                            //       // rowId: 0,
+                            //       // paging: false,
+                            //       // "scrollY": "800px",
+                            //       // "scrollCollapse": true,
+                            //       pageLength: initialBaseDataLoad,
+                            //       lengthMenu: [
+                            //           [initialBaseDataLoad, -1],
+                            //           [initialBaseDataLoad, "All"],
+                            //       ],
+                            //       info: true,
+                            //       responsive: true,
+                            //       order: [
+                            //           [1, "asc"] // modified by matthias
+                            //       ],
+                            //       action: function() {
+                            //           $("#tblInventoryOverview").DataTable().ajax.reload();
+                            //       },
+                            //       fnDrawCallback: function(oSettings) {
+                            //           $(".paginate_button.page-item").removeClass("disabled");
+                            //           $("#tblInventoryOverview_ellipsis").addClass("disabled");
+                            //           if (oSettings._iDisplayLength == -1) {
+                            //               if (oSettings.fnRecordsDisplay() > 150) {}
+                            //               $(".fullScreenSpin").css("display", "inline-block");
+                            //               setTimeout(function() {
+                            //                   $(".fullScreenSpin").css("display", "none");
+                            //               }, 100);
+                            //           } else {}
+                            //           if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            //               $(".paginate_button.page-item.next").addClass("disabled");
+                            //           }
 
-                                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
-                                          $(".fullScreenSpin").css("display", "inline-block");
-                                          let dataLenght = oSettings._iDisplayLength;
-                                          let customerSearch = $("#tblInventoryOverview_filter input").val();
-                                          sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                            getVS1Data("TProductList").then(function (dataObjectold) {
-                                                if (dataObjectold.length == 0) {
-                                                } else {
-                                                  let dataOld = JSON.parse(dataObjectold[0].data);
+                            //           $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
+                            //               $(".fullScreenSpin").css("display", "inline-block");
+                            //               let dataLenght = oSettings._iDisplayLength;
+                            //               let customerSearch = $("#tblInventoryOverview_filter input").val();
+                            //               sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                            //                 getVS1Data("TProductList").then(function (dataObjectold) {
+                            //                     if (dataObjectold.length == 0) {
+                            //                     } else {
+                            //                       let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
-                                                  let objCombineData = {
-                                                    Params: dataOld.Params,
-                                                    tproductlist: thirdaryData,
-                                                  };
+                            //                       var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                            //                       let objCombineData = {
+                            //                         Params: dataOld.Params,
+                            //                         tproductlist: thirdaryData,
+                            //                       };
 
-                                                  addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
-                                                      templateObject.resetData(objCombineData);
-                                                      $(".fullScreenSpin").css("display", "none");
-                                                    }).catch(function (err) {
-                                                      $(".fullScreenSpin").css("display", "none");
-                                                    });
-                                                }
-                                            }).catch(function (err) {});
+                            //                       addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                            //                           templateObject.resetData(objCombineData);
+                            //                           $(".fullScreenSpin").css("display", "none");
+                            //                         }).catch(function (err) {
+                            //                           $(".fullScreenSpin").css("display", "none");
+                            //                         });
+                            //                     }
+                            //                 }).catch(function (err) {});
 
-                                          }).catch(function(err) {
-                                              $(".fullScreenSpin").css("display", "none");
-                                          });
-                                      });
-                                      setTimeout(function() {
-                                          MakeNegative();
-                                      }, 100);
-                                  },
-                                  language: { search: "",searchPlaceholder: "Search List..." },
-                                  fnInitComplete: function() {
-                                    let urlParametersPage = FlowRouter.current().queryParams.page;
-                                    if (urlParametersPage) {
-                                      this.fnPageChange("last");
-                                    };
-                                      $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryOverview_filter");
-                                  },
-                                  "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                                    let countTableData = data.Params.Count || 0; //get count from API data
+                            //               }).catch(function(err) {
+                            //                   $(".fullScreenSpin").css("display", "none");
+                            //               });
+                            //           });
+                            //           setTimeout(function() {
+                            //               MakeNegative();
+                            //           }, 100);
+                            //       },
+                            //       language: { search: "",searchPlaceholder: "Search List..." },
+                            //       fnInitComplete: function() {
+                            //         let urlParametersPage = FlowRouter.current().queryParams.page;
+                            //         if (urlParametersPage) {
+                            //           this.fnPageChange("last");
+                            //         };
+                            //           $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryOverview_filter");
+                            //       },
+                            //       "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                            //         let countTableData = data.Params.Count || 0; //get count from API data
 
-                                      return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                                  },
-                              }).on("length.dt", function(e, settings, len) {
-                                  $(".fullScreenSpin").css("display", "inline-block");
-                                  let dataLenght = settings._iDisplayLength;
-                                  // splashArrayProductList = [];
-                                  if (dataLenght == -1) {
-                                      $(".fullScreenSpin").css("display", "none");
-                                  } else {
-                                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                          $(".fullScreenSpin").css("display", "none");
-                                      } else {
-                                          $(".fullScreenSpin").css("display", "none");
-                                      }
-                                  }
-                              });
+                            //           return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                            //       },
+                            //   }).on("length.dt", function(e, settings, len) {
+                            //       $(".fullScreenSpin").css("display", "inline-block");
+                            //       let dataLenght = settings._iDisplayLength;
+                            //       // splashArrayProductList = [];
+                            //       if (dataLenght == -1) {
+                            //           $(".fullScreenSpin").css("display", "none");
+                            //       } else {
+                            //           if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                            //               $(".fullScreenSpin").css("display", "none");
+                            //           } else {
+                            //               $(".fullScreenSpin").css("display", "none");
+                            //           }
+                            //       }
+                            //   });
 
                             $(".fullScreenSpin").css("display", "none");
                             $("div.dataTables_filter input").addClass(
@@ -933,90 +944,90 @@ Template.inventorylist.onRendered(function() {
             });
     };
 
-    $("#tblInventoryOverview tbody").on("click", "td:not(.colAvailable, .colOnSO, .colOnBO, .colInStock, .colOnOrder, .colQuantity, .colSerialNo)", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        if (listData) {
-            //FlowRouter.go('/productview?id=' + listData);
-            FlowRouter.go("/productview?id=" + listData);
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td:not(.colAvailable, .colOnSO, .colOnBO, .colInStock, .colOnOrder, .colQuantity, .colSerialNo)", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     if (listData) {
+    //         //FlowRouter.go('/productview?id=' + listData);
+    //         FlowRouter.go("/productview?id=" + listData);
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colAvailable", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        var listProductName = $(this).closest("tr").find(".colProductName").text();
-        if (listData) {
-            // FlowRouter.go("/stockmovementreport?id=" + listData);
-            // Filter the stock movement report based on product ID
-            //modified by Matthias
-            // $('#recentTransactionPopUp').modal("show");
-            $(".productNameOnRT").text(listProductName);
+    // $("#tblInventoryOverview tbody").on("click", "td.colAvailable", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     var listProductName = $(this).closest("tr").find(".colProductName").text();
+    //     if (listData) {
+    //         // FlowRouter.go("/stockmovementreport?id=" + listData);
+    //         // Filter the stock movement report based on product ID
+    //         //modified by Matthias
+    //         // $('#recentTransactionPopUp').modal("show");
+    //         $(".productNameOnRT").text(listProductName);
 
-        }
-    });
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colInStock", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        if (listData) {
-            FlowRouter.go("/stockmovementreport?id=" + listData);
-            // Filter the stock movement report based on product ID
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colInStock", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     if (listData) {
+    //         FlowRouter.go("/stockmovementreport?id=" + listData);
+    //         // Filter the stock movement report based on product ID
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colOnBO", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        var listProductName = $(this).closest("tr").find(".colProductName").text();
-        if (listData) {
-            $('#onBackOrderPopUp').modal("show");
-            $(".productNameOnBo").text(listProductName);
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colOnBO", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     var listProductName = $(this).closest("tr").find(".colProductName").text();
+    //     if (listData) {
+    //         $('#onBackOrderPopUp').modal("show");
+    //         $(".productNameOnBo").text(listProductName);
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colOnSO", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        var listProductName = $(this).closest("tr").find(".colProductName").text();
-        if (listData) {
-            $('#onSalesOrderPopUp').modal("show");
-            $(".productNameOnSO").text(listProductName);
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colOnSO", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     var listProductName = $(this).closest("tr").find(".colProductName").text();
+    //     if (listData) {
+    //         $('#onSalesOrderPopUp').modal("show");
+    //         $(".productNameOnSO").text(listProductName);
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colOnOrder", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        var listProductName = $(this).closest("tr").find(".colProductName").text();
-        if (listData) {
-            $('#onOrderPopUp').modal("show");
-            $(".productNameOnOrder").text(listProductName);
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colOnOrder", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     var listProductName = $(this).closest("tr").find(".colProductName").text();
+    //     if (listData) {
+    //         $('#onOrderPopUp').modal("show");
+    //         $(".productNameOnOrder").text(listProductName);
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colQuantity", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        if (listData) {
-            FlowRouter.go("/productview?id=" + listData + "&instock=true");
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colQuantity", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     if (listData) {
+    //         FlowRouter.go("/productview?id=" + listData + "&instock=true");
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnNoBatchorSerial", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        var selectedProductName = $(this).closest("tr").find(".colProductName").text();
-        if (listData) {
-           swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnNoBatchorSerial", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     var selectedProductName = $(this).closest("tr").find(".colProductName").text();
+    //     if (listData) {
+    //        swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnBatch", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        if (listData) {
-            FlowRouter.go("/lotnumberlist?id=" + listData);
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnBatch", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     if (listData) {
+    //         FlowRouter.go("/lotnumberlist?id=" + listData);
+    //     }
+    // });
 
-    $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnSNTracking", function() {
-        var listData = $(this).closest("tr").find(".colProductID").text();
-        if (listData) {
-            FlowRouter.go("/serialnumberlist?id=" + listData);
-        }
-    });
+    // $("#tblInventoryOverview tbody").on("click", "td.colSerialNo .btnSNTracking", function() {
+    //     var listData = $(this).closest("tr").find(".colProductID").text();
+    //     if (listData) {
+    //         FlowRouter.go("/serialnumberlist?id=" + listData);
+    //     }
+    // });
 
     templateObject.getDepartments = function() {
         getVS1Data("TDeptClass")
@@ -1247,12 +1258,27 @@ Template.inventorylist.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
+
+    dataProductList: () => {
+        return Template.instance().productDataList.get();
+    },
+
+    columnData: () => {
+        return Template.instance().columnData.get();
+    },
+
     isSetupFinished: () => {
         return Template.instance().setupFinished.get();
+    },
+    productID: () => {
+        return Template.instance().productID.get();
     },
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];
+    },
+    transtype: () => {
+        return Template.instance().transtype.get();
     }
 });
 
@@ -1662,47 +1688,47 @@ Template.inventorylist.events({
       $('.colSalePriceInc').css('width', range);
     },
 
-    'click .th.colCostPrice': function(event) {
-      $('.colCostPrice').addClass('hiddenColumn');
-      $('.colCostPrice').removeClass('showColumn');
+//     'click .th.colCostPrice': function(event) {
+//       $('.colCostPrice').addClass('hiddenColumn');
+//       $('.colCostPrice').removeClass('showColumn');
 
-      $('.colCostPriceInc').addClass('showColumn');
-      $('.colCostPriceInc').removeClass('hiddenColumn');
+//       $('.colCostPriceInc').addClass('showColumn');
+//       $('.colCostPriceInc').removeClass('hiddenColumn');
 
-      $('.chkCostPrice').prop("checked", false);
-      $('.chkCostPriceInc').prop("checked", true);
-  },
-  'click .th.colCostPriceInc': function(event) {
-      $('.colCostPriceInc').addClass('hiddenColumn');
-      $('.colCostPriceInc').removeClass('showColumn');
+//       $('.chkCostPrice').prop("checked", false);
+//       $('.chkCostPriceInc').prop("checked", true);
+//   },
+//   'click .th.colCostPriceInc': function(event) {
+//       $('.colCostPriceInc').addClass('hiddenColumn');
+//       $('.colCostPriceInc').removeClass('showColumn');
 
-      $('.colCostPrice').addClass('showColumn');
-      $('.colCostPrice').removeClass('hiddenColumn');
+//       $('.colCostPrice').addClass('showColumn');
+//       $('.colCostPrice').removeClass('hiddenColumn');
 
-      $('.chkCostPrice').prop("checked", true);
-      $('.chkCostPriceInc').prop("checked", false);
-  },
-  'click .th.colSalePrice': function(event) {
-      $('.colSalePrice').addClass('hiddenColumn');
-      $('.colSalePrice').removeClass('showColumn');
+//       $('.chkCostPrice').prop("checked", true);
+//       $('.chkCostPriceInc').prop("checked", false);
+//   },
+//   'click .th.colSalePrice': function(event) {
+//       $('.colSalePrice').addClass('hiddenColumn');
+//       $('.colSalePrice').removeClass('showColumn');
 
-      $('.colSalePriceInc').addClass('showColumn');
-      $('.colSalePriceInc').removeClass('hiddenColumn');
+//       $('.colSalePriceInc').addClass('showColumn');
+//       $('.colSalePriceInc').removeClass('hiddenColumn');
 
-      $('.chkSalePrice').prop("checked", false);
-      $('.chkSalePriceInc').prop("checked", true);
-  },
-  'click .th.colSalePriceInc': function(event) {
-      $('.colSalePriceInc').addClass('hiddenColumn');
-      $('.colSalePriceInc').removeClass('showColumn');
+//       $('.chkSalePrice').prop("checked", false);
+//       $('.chkSalePriceInc').prop("checked", true);
+//   },
+//   'click .th.colSalePriceInc': function(event) {
+//       $('.colSalePriceInc').addClass('hiddenColumn');
+//       $('.colSalePriceInc').removeClass('showColumn');
 
-      $('.colSalePrice').addClass('showColumn');
-      $('.colSalePrice').removeClass('hiddenColumn');
+//       $('.colSalePrice').addClass('showColumn');
+//       $('.colSalePrice').removeClass('hiddenColumn');
 
-      $('.chkSalePrice').prop("checked", true);
-      $('.chkSalePriceInc').prop("checked", false);
+//       $('.chkSalePrice').prop("checked", true);
+//       $('.chkSalePriceInc').prop("checked", false);
 
-  },
+//   },
 
 
     "change .rngRange": function(event) {
@@ -1761,23 +1787,23 @@ Template.inventorylist.events({
         });
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
-    "keyup #tblInventoryOverview_filter input": function(event) {
-        if ($(event.target).val() != "") {
-            $(".btnRefreshProduct").addClass("btnSearchAlert");
-        } else {
-            $(".btnRefreshProduct").removeClass("btnSearchAlert");
-        }
-        if (event.keyCode == 13) {
-            $(".btnRefreshProduct").trigger("click");
-        }
-    },
-    "blur #tblInventoryOverview_filter input": function(event) {
-        if ($(event.target).val() != "") {
-            $(".btnRefreshProduct").addClass("btnSearchAlert");
-        } else {
-            $(".btnRefreshProduct").removeClass("btnSearchAlert");
-        }
-    },
+    // "keyup #tblInventoryOverview_filter input": function(event) {
+    //     if ($(event.target).val() != "") {
+    //         $(".btnRefreshProduct").addClass("btnSearchAlert");
+    //     } else {
+    //         $(".btnRefreshProduct").removeClass("btnSearchAlert");
+    //     }
+    //     if (event.keyCode == 13) {
+    //         $(".btnRefreshProduct").trigger("click");
+    //     }
+    // },
+    // "blur #tblInventoryOverview_filter input": function(event) {
+    //     if ($(event.target).val() != "") {
+    //         $(".btnRefreshProduct").addClass("btnSearchAlert");
+    //     } else {
+    //         $(".btnRefreshProduct").removeClass("btnSearchAlert");
+    //     }
+    // },
     "click .btnRefreshProduct": function(event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
@@ -2544,7 +2570,135 @@ Template.inventorylist.events({
             //$('.lblPriceEx').css('width','10%');
         }
     },
+    'click .OnBO' : function(event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+    if (listData) {
+        $('#transTitle').text(listProductName + ' - On Back Order');
+          
+          let templateObject = Template.instance();
+          templateObject.productID.set(listData);
+          templateObject.transtype.set("Purchase Order");
+          $('#recentTransactionPopUp').modal("show");
+    }
+  },
+  "click .InStock": function(event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+    if (listData) {
+        $('#transTitle').text(listProductName + ' - In Stock');
+        let templateObject = Template.instance();
+        templateObject.productID.set(listData);
+        templateObject.transtype.set("all");
+        $('#recentTransactionPopUp').modal("show");
+    }
+  },
+  "click td.Available": function(event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+    if (listData) {
+        $('#transTitle').text(listProductName + ' - Available');
+        let templateObject = Template.instance();
+        templateObject.productID.set(listData);
+        templateObject.transtype.set("all");
+        $('#recentTransactionPopUp').modal("show");
+    }
+  },
 
+  "click .OnSO": function(event) {
+      var listData = $(event.target).closest("tr").find(".colProductID").text();
+      var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+      if (listData) {
+          $('#transTitle').text(listProductName + ' - On Sales Order');
+          let templateObject = Template.instance();
+          templateObject.productID.set(listData);
+          templateObject.transtype.set("Sales Order");
+          $('#recentTransactionPopUp').modal("show");
+
+      }
+  },
+
+  "click .OnOrder": function(event) {
+      var listData = $(event.target).closest("tr").find(".colProductID").text();
+      var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+      if (listData) {
+          $('#transTitle').text(listProductName + ' - On Order');
+          
+          let templateObject = Template.instance();
+          templateObject.productID.set(listData);
+          templateObject.transtype.set("Invoice");
+          $('#recentTransactionPopUp').modal("show");
+          // $(".productNameOnOrder").text(listProductName);
+      }
+  },
+
+  "click .ProductName, click td.SalesDescription, ": function(event) {
+      var listData = $(event.target).closest("tr").find(".colProductID").text();
+      if (listData) {
+          FlowRouter.go("/productview?id=" + listData);
+      }
+  },
+  'click .th.colCostPrice': function(event) {
+    $('.colCostPrice').addClass('hiddenColumn');
+    $('.colCostPrice').removeClass('showColumn');
+
+    $('.colCostPriceInc').addClass('showColumn');
+    $('.colCostPriceInc').removeClass('hiddenColumn');
+
+    $('.chkCostPrice').prop("checked", false);
+    $('.chkCostPriceInc').prop("checked", true);
+},
+'click .th.colCostPriceInc': function(event) {
+    $('.colCostPriceInc').addClass('hiddenColumn');
+    $('.colCostPriceInc').removeClass('showColumn');
+
+    $('.colCostPrice').addClass('showColumn');
+    $('.colCostPrice').removeClass('hiddenColumn');
+
+    $('.CostPrice').addClass('showColumn');
+    $('.CostPrice').removeClass('hiddenColumn');
+
+    $('.chkCostPrice').prop("checked", true);
+    $('.chkCostPriceInc').prop("checked", false);
+},
+'click .th.colSalePrice': function(event) {
+    $('.colSalePrice').addClass('hiddenColumn');
+    $('.colSalePrice').removeClass('showColumn');
+
+    $('.colSalePriceInc').addClass('showColumn');
+    $('.colSalePriceInc').removeClass('hiddenColumn');
+
+    $('.chkSalePrice').prop("checked", false);
+    $('.chkSalePriceInc').prop("checked", true);
+},
+'click .th.colSalePriceInc': function(event) {
+    $('.colSalePriceInc').addClass('hiddenColumn');
+    $('.colSalePriceInc').removeClass('showColumn');
+
+    $('.colSalePrice').addClass('showColumn');
+    $('.colSalePrice').removeClass('hiddenColumn');
+
+    $('.chkSalePrice').prop("checked", true);
+    $('.chkSalePriceInc').prop("checked", false);
+
+},
+"keyup #tblInventoryOverview_filter input": function(event) {
+  if ($(event.target).val() != "") {
+      $(".btnRefreshProduct").addClass("btnSearchAlert");
+  } else {
+      $(".btnRefreshProduct").removeClass("btnSearchAlert");
+  }
+  if (event.keyCode == 13) {
+      $(".btnRefreshProduct").trigger("click");
+  }
+},
+"blur #tblInventoryOverview_filter input": function(event) {
+  if ($(event.target).val() != "") {
+      $(".btnRefreshProduct").addClass("btnSearchAlert");
+  } else {
+      $(".btnRefreshProduct").removeClass("btnSearchAlert");
+  }
+},
 
 });
 

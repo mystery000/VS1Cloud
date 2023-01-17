@@ -13,7 +13,7 @@ import { autoTable } from "jspdf-autotable";
 import 'jquery-editable-select';
 import { SideBarService } from "../../js/sidebar-service";
 import '../../lib/global/indexdbstorage.js';
-
+import { Template } from 'meteor/templating';
 import './grouptypelist.html';
 import './grouptype.html';
 
@@ -35,9 +35,9 @@ Template.grouptypelistpop.onRendered(function() {
     let utilityService = new UtilityService();
     let rateTypeService = new RateTypeService();
     let description = '';
-    var splashArrayGroupTypeList = new Array(); 
+    var splashArrayGroupTypeList = new Array();
     var currentLoc = FlowRouter.current().route.path;
-   
+
     tempObj.getAllGroupType = function() {
         getVS1Data('TPayrollHolidayGroup').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -51,20 +51,20 @@ Template.grouptypelistpop.onRendered(function() {
                       } else {
                         description = "";
                       }
-                      var dataList = [                   
-                      	data.tpayrollholidaygroup[i].fields.Groupdesc || '',    
-                        data.tpayrollholidaygroup[i].fields.ID || ''                
-                      ];                 
+                      var dataList = [
+                      	data.tpayrollholidaygroup[i].fields.Groupdesc || '',
+                        data.tpayrollholidaygroup[i].fields.ID || ''
+                      ];
                       splashArrayGroupTypeList.push(dataList);
                     }
-            
+
                     if(splashArrayGroupTypeList) {
                         $('#tblgrouptypelist').dataTable({
                             data: splashArrayGroupTypeList,
                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             columnDefs: [
-                                { className: "thgroupDescription", "targets": [0] },                                     
-                                { className: "thgroupID hiddenColumn", "targets": [1]}                            
+                                { className: "thgroupDescription", "targets": [0] },
+                                { className: "thgroupID hiddenColumn", "targets": [1]}
                             ],
                             select: true,
                             destroy: true,
@@ -83,10 +83,10 @@ Template.grouptypelistpop.onRendered(function() {
 
                     }
                 });
-              } 
+              }
               else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tpayrollholidaygroup;           
+                let useData = data.tpayrollholidaygroup;
                 let records = [];
                 let inventoryData = [];
                 for (let i = 0; i < useData.length; i++) {
@@ -98,9 +98,9 @@ Template.grouptypelistpop.onRendered(function() {
                     var dataList = [
                         useData[i].fields.Groupdesc || '-',
                         useData[i].fields.ID || ''
-                    ];                  
+                    ];
                     splashArrayGroupTypeList.push(dataList);
-                   
+
 
                 }
                 if (splashArrayGroupTypeList) {
@@ -109,8 +109,8 @@ Template.grouptypelistpop.onRendered(function() {
                         data: splashArrayGroupTypeList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
-                            { className: "thgroupDescription", "targets": [0] },                                     
-                            { className: "thgroupID hiddenColumn", "targets": [1]}                            
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1]}
                         ],
                         select: true,
                         destroy: true,
@@ -141,10 +141,10 @@ Template.grouptypelistpop.onRendered(function() {
                    } else {
                      description = "";
                    }
-                   var dataList = [                   
-                       data.tpayrollholidaygroup[i].fields.Groupdesc || '',    
-                     data.tpayrollholidaygroup[i].fields.ID || ''                
-                   ];                 
+                   var dataList = [
+                       data.tpayrollholidaygroup[i].fields.Groupdesc || '',
+                     data.tpayrollholidaygroup[i].fields.ID || ''
+                   ];
                    splashArrayGroupTypeList.push(dataList);
                  }
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
@@ -155,8 +155,8 @@ Template.grouptypelistpop.onRendered(function() {
                         data: splashArrayGroupTypeList,
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         columnDefs: [
-                            { className: "thgroupDescription", "targets": [0] },                                     
-                            { className: "thgroupID hiddenColumn", "targets": [1]}                            
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1]}
                         ],
                         select: true,
                         destroy: true,
@@ -184,7 +184,7 @@ Template.grouptypelistpop.onRendered(function() {
 
 
 Template.grouptypelistpop.helpers({
-   
+
     deptrecords: () => {
         return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
@@ -195,8 +195,8 @@ Template.grouptypelistpop.helpers({
             return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
         });
     },
-  
-   
+
+
     isMobileDevices: () => {
         var isMobile = false;
 
@@ -207,14 +207,14 @@ Template.grouptypelistpop.helpers({
 
         return isMobile;
     },
-   
+
 });
 
 Template.grouptypelistpop.events({
     'click .btnAddGroupType': function(event) {
       $('#add-grouptype-title').text('Add New Group');
       $('#edtgroupID').val('');
-   
+
     },
 
     'click .btnRefreshGroupType': function (event) {
@@ -224,7 +224,7 @@ Template.grouptypelistpop.events({
         const clientList = [];
         let salesOrderTable;
         var splashArray = new Array();
-        var splashArrayGroupTypeList = new Array(); 
+        var splashArrayGroupTypeList = new Array();
         let utilityService = new UtilityService();
         const dataTableList = [];
         const tableHeaderList = [];
@@ -238,13 +238,13 @@ Template.grouptypelistpop.events({
                 let lineItemObj = {};
                 if (data.tpayrollholidaygroup.length > 0) {
                   for (let i = 0; i < data.tpayrollholidaygroup.length; i++) {
-                    var dataList = [                  
+                    var dataList = [
                     	data.tpayrollholidaygroup[i].fields.Groupdesc || '',
                         data.tpayrollholidaygroup[i].fields.ID || ''
                     ];
-                
+
                     splashArrayGroupTypeList.push(dataList);
-                    
+
 
                     }
                     var datatable = $('#tblgrouptypelist').DataTable();
@@ -284,16 +284,16 @@ Template.grouptypelistpop.events({
                   let records = [];
                   let inventoryData = [];
                   for (let i = 0; i < data.tpayrollholidaygroup.length; i++) {
-                    var dataList = [                  
+                    var dataList = [
                     	data.tpayrollholidaygroup[i].fields.Groupdesc || '',
                         data.tpayrollholidaygroup[i].fields.ID || ''
                     ];
-                
+
                     splashArrayGroupTypeList.push(dataList);
-                    
+
 
                     }
-                  
+
                   var datatable = $('#tblgrouptypelist').DataTable();
                     datatable.clear();
                     datatable.rows.add(splashArrayGroupTypeList);
@@ -315,7 +315,7 @@ Template.grouptypelistpop.events({
             $('#statusModal').modal();
         }
     },
- 
+
     'click .lineDescription': function(event) {
         $('#tblgrouptypelist tbody tr .lineDescription').attr("data-toggle", "modal");
         $('#tblgrouptypelist tbody tr .lineDescription').attr("data-target", "#groupTypeListModel");
@@ -333,7 +333,7 @@ Template.grouptypelistpop.events({
         templateObject.getAllGroupType();
 
     },
- 
+
 
     // 'click .btnRemove': function(event) {
     //     let templateObject = Template.instance();
@@ -443,7 +443,7 @@ Template.grouptypelistpop.events({
     //         }
     //     }
     // },
-   
+
 });
 
 Template.registerHelper('equals', function(a, b) {

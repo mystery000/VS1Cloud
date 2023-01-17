@@ -300,9 +300,14 @@
                   <div class="col">
                     <div class="card shadow">
                       <div class="card-header py-3">
-                        <h5 class="text-primary-- m-0 font-weight-bold d-inline-block">Organization Settings </h5>
-                        <a class="btn btn-success" style="margin-left: 12px;" role="button" data-toggle="modal"
-                          href="#organizationSettringHelp">Help <i class="fa fa-question-circle-o"></i></a>
+                          <div class="row">
+                              <div class="col-12 col-md-4">
+                                  <h5 class="text-primary-- m-0 font-weight-bold d-inline-block">Organization Settings </h5>
+                                  <a class="btn btn-success" style="margin-left: 12px;" role="button" data-toggle="modal"
+                                     href="#organizationSettringHelp">Help <i class="fa fa-question-circle-o"></i></a>
+                              </div>
+                              <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                          </div>
                         <div class="modal fade" role="dialog" tabindex="-1" id="organizationSettringHelp"
                           style="display: none;" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable"

@@ -219,6 +219,7 @@ Template.bankrecon.onRendered(function() {
                             data.ttobereconcileddeposit[r].Notes || ' ',
                             data.ttobereconcileddeposit[r].PaymentID || 0,
                             depositamount || 0.00,
+                            data.ttobereconcileddeposit[r].Amount || 0
                         ];
 
                         if (data.ttobereconcileddeposit[r].Seqno != 0) {
@@ -262,7 +263,8 @@ Template.bankrecon.onRendered(function() {
                                 { className: "depositClick", "targets": [3] },
                                 { className: "depositClick", "targets": [4] },
                                 { className: "depositClick", "targets": [5] },
-                                { className: "depositClick", "targets": [6] }
+                                { className: "depositClick", "targets": [6] },
+                                { className: "depositClick hiddenColumn", "targets": [7] }
                             ],
                             // colReorder: true,
                             colReorder: {
@@ -316,7 +318,8 @@ Template.bankrecon.onRendered(function() {
                             { className: "depositClick", "targets": [3] },
                             { className: "depositClick", "targets": [4] },
                             { className: "depositClick", "targets": [5] },
-                            { className: "depositClick", "targets": [6] }
+                            { className: "depositClick", "targets": [6] },
+                            { className: "depositClick hiddenColumn", "targets": [7] }
                         ],
                         // colReorder: true,
                         colReorder: {
@@ -400,7 +403,8 @@ Template.bankrecon.onRendered(function() {
                             data.ttobereconciledwithdrawal[j].CompanyName || ' ',
                             data.ttobereconciledwithdrawal[j].Notes || ' ',
                             data.ttobereconciledwithdrawal[j].PaymentID || 0,
-                            withdrawalamount || 0.00
+                            withdrawalamount || 0.00,
+                            data.ttobereconciledwithdrawal[j].Amount || 0
                         ];
 
                         if (data.ttobereconciledwithdrawal[j].Seqno != 0) {
@@ -445,7 +449,8 @@ Template.bankrecon.onRendered(function() {
                                 { className: "withClick", "targets": [3] },
                                 { className: "withClick", "targets": [4] },
                                 { className: "withClick", "targets": [5] },
-                                { className: "withClick", "targets": [6] }
+                                { className: "withClick", "targets": [6] },
+                                { className: "withClick hiddenColumn", "targets": [7] }
                             ],
                             // colReorder: true,
                             colReorder: {
@@ -500,7 +505,8 @@ Template.bankrecon.onRendered(function() {
                             { className: "withClick", "targets": [3] },
                             { className: "withClick", "targets": [4] },
                             { className: "withClick", "targets": [5] },
-                            { className: "withClick", "targets": [6] }
+                            { className: "withClick", "targets": [6] },
+                            { className: "withClick hiddenColumn", "targets": [7] }
                         ],
                         // colReorder: true,
                         colReorder: {
@@ -772,6 +778,7 @@ Template.bankrecon.onRendered(function() {
                         data.fields.DepositLines[i].fields.Notes || ' ',
                         data.fields.DepositLines[i].fields.DepositLineID || 0,
                         depositamount || 0.00,
+                        data.fields.DepositLines[i].fields.Amount || 0,
                     ];
 
                     //if(data.ttobereconcileddeposit[i].Seqno != 0){
@@ -789,6 +796,7 @@ Template.bankrecon.onRendered(function() {
                         reconname: data.fields.DepositLines[i].fields.ClientName,
                         recondesc: data.fields.DepositLines[i].fields.Notes,
                         reconamount: utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount),
+                        reconvalue: data.fields.DepositLines[i].fields.Amount,
                         reconref: data.fields.DepositLines[i].fields.Reference,
                         reconpayid: data.fields.DepositLines[i].fields.DepositLineID,
                         depositLineID: data.fields.DepositLines[i].fields.DepositLineID || 0
@@ -883,7 +891,8 @@ Template.bankrecon.onRendered(function() {
                                     { className: "depositClick", "targets": [3] },
                                     { className: "depositClick", "targets": [4] },
                                     { className: "depositClick", "targets": [5] },
-                                    { className: "depositClick", "targets": [6] }
+                                    { className: "depositClick", "targets": [6] },
+                                    { className: "depositClick hiddenColumn", "targets": [7] },
                                 ],
                                 // colReorder: true,
                                 colReorder: {
@@ -968,7 +977,8 @@ Template.bankrecon.onRendered(function() {
                             { className: "depositClick", "targets": [3] },
                             { className: "depositClick", "targets": [4] },
                             { className: "depositClick", "targets": [5] },
-                            { className: "depositClick", "targets": [6] }
+                            { className: "depositClick", "targets": [6] },
+                            { className: "depositClick hiddenColumn", "targets": [7] },
                         ],
                         // colReorder: true,
                         colReorder: {
@@ -1029,7 +1039,8 @@ Template.bankrecon.onRendered(function() {
                     { className: "depositClick", "targets": [3] },
                     { className: "depositClick", "targets": [4] },
                     { className: "depositClick", "targets": [5] },
-                    { className: "depositClick", "targets": [6] }
+                    { className: "depositClick", "targets": [6] },
+                    { className: "depositClick hiddenColumn", "targets": [7] }
                 ],
                 // colReorder: true,
                 colReorder: {
@@ -1097,7 +1108,8 @@ Template.bankrecon.onRendered(function() {
                         data.fields.WithdrawalLines[j].fields.ClientName || ' ',
                         data.fields.WithdrawalLines[j].fields.Notes || ' ',
                         data.fields.WithdrawalLines[j].fields.DepositLineID || 0,
-                        withdrawalamount || 0.00
+                        withdrawalamount || 0.00,
+                        data.fields.WithdrawalLines[j].fields.Amount || 0
                     ];
 
                     reconwith.push(reconcilewithdrawalObj);
@@ -1113,6 +1125,7 @@ Template.bankrecon.onRendered(function() {
                         reconname: data.fields.WithdrawalLines[j].fields.ClientName,
                         recondesc: data.fields.WithdrawalLines[j].fields.Notes,
                         reconamount: utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount),
+                        reconvalue: data.fields.WithdrawalLines[j].fields.Amount,
                         reconref: data.fields.WithdrawalLines[j].fields.Reference,
                         reconpayid: data.fields.WithdrawalLines[j].fields.DepositLineID,
                         depositLineID: data.fields.WithdrawalLines[j].fields.DepositLineID || 0
@@ -1205,7 +1218,8 @@ Template.bankrecon.onRendered(function() {
                                     { className: "withClick", "targets": [3] },
                                     { className: "withClick", "targets": [4] },
                                     { className: "withClick", "targets": [5] },
-                                    { className: "withClick", "targets": [6] }
+                                    { className: "withClick", "targets": [6] },
+                                    { className: "withClick hiddenColumn", "targets": [7] },
                                 ],
                                 // colReorder: true,
                                 colReorder: {
@@ -1286,7 +1300,8 @@ Template.bankrecon.onRendered(function() {
                             { className: "withClick", "targets": [3] },
                             { className: "withClick", "targets": [4] },
                             { className: "withClick", "targets": [5] },
-                            { className: "withClick", "targets": [6] }
+                            { className: "withClick", "targets": [6] },
+                            { className: "withClick hiddenColumn", "targets": [7] },
                         ],
                         // colReorder: true,
                         colReorder: {
@@ -1347,7 +1362,8 @@ Template.bankrecon.onRendered(function() {
                     { className: "withClick", "targets": [3] },
                     { className: "withClick", "targets": [4] },
                     { className: "withClick", "targets": [5] },
-                    { className: "withClick", "targets": [6] }
+                    { className: "withClick", "targets": [6] },
+                    { className: "withClick hiddenColumn", "targets": [7] },
                 ],
                 // colReorder: true,
                 colReorder: {
@@ -1556,9 +1572,9 @@ Template.bankrecon.onRendered(function() {
 
     $(document).on("click", ".bankrecon #tblAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
-        const table = $(this);
-        let accountname = table.find(".productName").text();
-        const accountTypeId = table.find(".colAccountID").text();
+        let table = $(this);
+        let accountname = table.find(".colAccountName").text();
+        let accountTypeId = table.find(".colID").text();
         $('#accountListModal').modal('toggle');
         $('#bankAccountName').val(accountname);
         $('#bankAccountID').val(accountTypeId);
@@ -1706,13 +1722,15 @@ Template.bankrecon.events({
                     reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
                     recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
                     reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                    reconvalue: $(this).closest('tr').find('td:nth-child(8)').text(),
                     reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
                     reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                     depositLineID: depositLineIDDep || 0
                 };
                 selectedtransactionsdep.push(transactionObj);
             }
-            var reconamounttrimdep = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+            // var reconamounttrimdep = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+            var reconamounttrimdep = parseFloat($(this).closest('tr').find('td:nth-child(8)').text()) || 0;
             //(($('#vs1reconamount_' + checkboxIDdepLine).text()).substring(1)).replace(',', '');
             selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
         });
@@ -1792,6 +1810,7 @@ Template.bankrecon.events({
                     reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
                     recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
                     reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                    reconvalue: $(this).closest('tr').find('td:nth-child(8)').text(),
                     reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
                     reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                     depositLineID: depositLineIDWith || 0
@@ -1799,7 +1818,8 @@ Template.bankrecon.events({
                 selectedtransactionswith.push(transactionObj);
             }
 
-            var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+            // var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+            var reconamounttrim = parseFloat($(this).closest('tr').find('td:nth-child(8)').text()) || 0;
             //(($('#vs1reconamountwith_' + checkboxIDwithLine).text()).substring(1)).replace(',', '');
             selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
         });
@@ -1880,11 +1900,13 @@ Template.bankrecon.events({
                         reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
                         recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
                         reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconvalue: $(this).closest('tr').find('td:nth-child(8)').text(),
                         reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDDepAll || 0
                     };
-                    var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    // var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrim = parseFloat($(this).closest('tr').find('td:nth-child(8)').text()) || 0;
                     selectedTransAmountdep = selectedTransAmountdep + reconamounttrim;
                     selectedtransactionsdep.push(transactionObj);
                 }
@@ -1933,11 +1955,13 @@ Template.bankrecon.events({
                         reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
                         recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
                         reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconvalue: $(this).closest('tr').find('td:nth-child(8)').text(),
                         reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDDepAll || 0
                     };
-                    var reconamounttrimdep = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    // var reconamounttrimdep = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrimdep = parseFloat($(this).closest('tr').find('td:nth-child(8)').text()) || 0;
                     selectedTransAmountdep = selectedTransAmountdep + reconamounttrimdep;
                     selectedtransactionsdep.push(transactionObj);
                 }
@@ -1990,11 +2014,13 @@ Template.bankrecon.events({
                         reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
                         recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
                         reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconvalue: $(this).closest('tr').find('td:nth-child(8)').text(),
                         reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDAll || 0
                     };
-                    var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    // var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrim = parseFloat($(this).closest('tr').find('td:nth-child(8)').text()) || 0;
                     selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
                     selectedtransactionswith.push(transactionObj);
                 }
@@ -2043,11 +2069,13 @@ Template.bankrecon.events({
                         reconname: $(this).closest('tr').find('td:nth-child(4)').text(),
                         recondesc: $(this).closest('tr').find('td:nth-child(5)').text(),
                         reconamount: $(this).closest('tr').find('td:nth-child(7)').text(),
+                        reconvalue: $(this).closest('tr').find('td:nth-child(8)').text(),
                         reconref: $(this).closest('tr').find('td:nth-child(3)').text(),
                         reconpayid: $(this).closest('tr').find('td:nth-child(6)').text(),
                         depositLineID: depositLineIDwith || 0
                     };
-                    var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    // var reconamounttrim = utilityService.convertSubstringParseFloatR($(this).closest('tr').find('td:nth-child(7)').text()) || 0;
+                    var reconamounttrim = parseFloat($(this).closest('tr').find('td:nth-child(8)').text()) || 0;
                     selectedTransAmountwith = selectedTransAmountwith + reconamounttrim;
                     selectedtransactionswith.push(transactionObj);
                 }
@@ -2123,7 +2151,8 @@ Template.bankrecon.events({
                 let depclientname = $("#" + depID + "_name").text() || '';
                 let depdepositdate = $("#" + depID + "_date").text() || '';
                 let depnotes = $("#" + depID + "_desc").text() || '';
-                let depamount = $("#" + depID + "_amount").text() || 0;
+                // let depamount = $("#" + depID + "_amount").text() || 0;
+                let depamount = $("#" + depID + "_value").text() || 0;
                 let depref = $("#" + depID + "_ref").text() || '';
                 let deppaymentid = $("#" + depID + "_payid").text() || '';
                 let depaccountname = $('#bankAccountName').val() || '';
@@ -2158,7 +2187,8 @@ Template.bankrecon.events({
                     type: "TReconciliationDepositLines",
                     fields: {
                         AccountName: depaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
+                        // Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
+                        Amount: parseFloat(depamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: depclientname || '',
                         DepositDate: formateDepDate + " 00:00:00" || '',
@@ -2185,7 +2215,8 @@ Template.bankrecon.events({
                 let withclientname = $("#" + withID + "_name").text() || '';
                 let withdepositdate = $("#" + withID + "_date").text() || '';
                 let withnotes = $("#" + withID + "_desc").text() || '';
-                let withamount = $("#" + withID + "_amount").text() || 0;
+                // let withamount = $("#" + withID + "_amount").text() || 0;
+                let withamount = $("#" + withID + "_value").text() || 0;
                 let withref = $("#" + withID + "_ref").text() || '';
                 let withpaymentid = $("#" + withID + "_payid").text() || '';
                 // withpaymentid = withID;
@@ -2202,7 +2233,8 @@ Template.bankrecon.events({
                     type: "TReconciliationWithdrawalLines",
                     fields: {
                         AccountName: withaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
+                        // Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
+                        Amount: parseFloat(withamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: withclientname || '',
                         DepositDate: formatWithDate + " 00:00:00" || '',
@@ -2311,7 +2343,8 @@ Template.bankrecon.events({
                 let depclientname = $("#" + depID + "_name").text() || '';
                 let depdepositdate = $("#" + depID + "_date").text() || '';
                 let depnotes = $("#" + depID + "_desc").text() || '';
-                let depamount = $("#" + depID + "_amount").text() || 0;
+                // let depamount = $("#" + depID + "_amount").text() || 0;
+                let depamount = $("#" + depID + "_value").text() || 0;
                 let depref = $("#" + depID + "_ref").text() || '';
                 let deppaymentid = $("#" + depID + "_payid").text() || '';
                 let depaccountname = $('#bankAccountName').val() || '';
@@ -2345,7 +2378,8 @@ Template.bankrecon.events({
                     type: "TReconciliationDepositLines",
                     fields: {
                         AccountName: depaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
+                        // Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
+                        Amount: parseFloat(depamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: depclientname || '',
                         DepositDate: formateDepDate + " 00:00:00" || '',
@@ -2372,7 +2406,8 @@ Template.bankrecon.events({
                 let withclientname = $("#" + withID + "_name").text() || '';
                 let withdepositdate = $("#" + withID + "_date").text() || '';
                 let withnotes = $("#" + withID + "_desc").text() || '';
-                let withamount = $("#" + withID + "_amount").text() || 0;
+                // let withamount = $("#" + withID + "_amount").text() || 0;
+                let withamount = $("#" + withID + "_value").text() || 0;
                 let withref = $("#" + withID + "_ref").text() || '';
                 let withpaymentid = $("#" + withID + "_payid").text() || '';
                 // withpaymentid = withID;
@@ -2389,7 +2424,8 @@ Template.bankrecon.events({
                     type: "TReconciliationWithdrawalLines",
                     fields: {
                         AccountName: withaccountname || '',
-                        Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
+                        // Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
+                        Amount: parseFloat(withamount) || 0,
                         BankStatementLineID: 0, //Hardcoded for now
                         ClientName: withclientname || '',
                         DepositDate: formatWithDate + " 00:00:00" || '',

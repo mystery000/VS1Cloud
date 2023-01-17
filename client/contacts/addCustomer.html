@@ -1250,14 +1250,7 @@
                                                     <div class="col d-xl-flex align-items-xl-start" style="padding: 0;">
                                                         <div class="col-6 col-md-1" style="padding: 0px 8px;">
                                                             <div class="form-group" style="margin: 4px;padding-right:4px;">
-                                                                <!-- <label class="text-nowrap">Title</label> -->
-                                                                <label for="editCustomerTitle">Title</label>
-                                                                <select type="search" class="form-control" id="editCustomerTitle" name="editCustomerTitle" style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.title}}">
-                                                                </select>
-                                                                <!-- <input type="text"
-                                                                    class="form-control"
-                                                                    style="width: 50px;min-width: 75px;max-width: 75px;"
-                                                                    id="edtTitle" name="edtTitle" value="{{record.title}}"> -->
+                                                                {{> contact_title target="editCustomerTitle" value=record.title}}
                                                             </div>
                                                         </div>
                                                         <div class="form-group flex-grow-1" style="margin: 4px;"><label
@@ -1465,19 +1458,22 @@
                                                                     width:100% !important;
                                                                 }
                                                                 #tblCustomerCrmListWithDate .colDate{
-                                                                    width:15% !important;
+                                                                    width:12% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colType{
+                                                                    width:12% !important;
                                                                 }
                                                                 #tblCustomerCrmListWithDate .colTaskName{
-                                                                    width:20% !important;
+                                                                    width:18% !important;
                                                                 }
                                                                 #tblCustomerCrmListWithDate .colTaskDesc{
-                                                                    width:35% !important;
+                                                                    width:30% !important;
                                                                 }
                                                                 #tblCustomerCrmListWithDate .colCompletedBy{
                                                                     width:15% !important;
                                                                 }
                                                                 #tblCustomerCrmListWithDate .colCompleteTask{
-                                                                    width:15% !important;
+                                                                    width:12% !important;
                                                                 }
                                                             </style>
                                                             {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}

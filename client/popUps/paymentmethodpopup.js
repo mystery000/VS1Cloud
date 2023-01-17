@@ -11,8 +11,6 @@ import {
     SideBarService
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './paymentmethodpopup.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';

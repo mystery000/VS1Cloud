@@ -5,12 +5,12 @@
     </div>
     <div style="margin-top: -24px;">
       <header style="padding: 16px; padding-bottom: 1px; background-color: #ededed;">
-          <div class="row">
-              <div class="col-12 col-md-4">
-                  <h2 style="margin: 16px 16px 0;">Invoice List {{> helpbutton}}</h2>
-              </div>
-              <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+        <div class="row">
+          <div class="col-12 col-md-4">
+            <h2 style="margin: 16px 16px 0;">Invoice List {{> helpbutton}}</h2>
           </div>
+          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+        </div>
         <style>
           @media screen and (max-width: 376px) {
             .btnOpenSettings {
@@ -390,7 +390,7 @@
               class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
               <thead>
                 <tr class="dnd-moved">
-                  <!-- <th class="th colSortDate hiddenColumn">id</th> -->
+                  <!-- <th class="th colSortDate hiddenColumn"></th> -->
                   {{#each displayfield in displayfields}}
                   {{#if displayfield.display}}
                   <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}"
@@ -401,13 +401,24 @@
                   </th>
                   {{/if}}
                   {{/each}}
+                  {{#if custfields}}
                   {{#each custfield in custfields}}
                   {{#if custfield.display}}
-                  <th data-class="{{custfield.class}}" data-col-index="{{custfield.id}}" data-col-active="{{ custfield.active}}" class="th col{{custfield.class}} {{#if custfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{custfield.width}}px">
-                  	{{custfield.custfieldlabel}}
+                  <th data-class="{{custfield.class}}" data-col-index="{{custfield.id}}"
+                    data-col-active="{{ custfield.active}}"
+                    class="th col{{custfield.class}} {{#if custfield.active}}{{else}}hiddenColumn{{/if}}"
+                    style="width:{{custfield.width}}px">
+                    {{custfield.custfieldlabel}}
                   </th>
+                  {{else}}
+                  <th class="th col{{custfield.class}} hiddenColumn"></th>
                   {{/if}}
                   {{/each}}
+                  {{else}}
+                  <th class="th colSaleCustField1 hiddenColumn"></th>
+                  <th class="th colSaleCustField2 hiddenColumn"></th>
+                  <th class="th colSaleCustField3 hiddenColumn"></th>
+                  {{/if}}
                 </tr>
               </thead>
               <tbody>
@@ -455,12 +466,15 @@
                     class="colComments {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.comments}}
                   </td>
 
-                  <td contenteditable="false" 
-				  	class="colSaleCustField1 customFieldColumn {{#if custfields.[0].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}</td>
-                  <td contenteditable="false" 
-				  	class="colSaleCustField2 customFieldColumn {{#if custfields.[1].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}</td>
-                  <td contenteditable="false" 
-				  	class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}</td>
+                  <td contenteditable="false"
+                    class="colSaleCustField1 customFieldColumn {{#if custfields.[0].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.custfield1}}</td>
+                  <td contenteditable="false"
+                    class="colSaleCustField2 customFieldColumn {{#if custfields.[1].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.custfield2}}</td>
+                  <td contenteditable="false"
+                    class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.custfield3}}</td>
                 </tr>
                 {{/each}}
                 {{/if}}

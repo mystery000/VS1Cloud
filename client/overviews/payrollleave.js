@@ -26,6 +26,8 @@ import Datehandler from "../DateHandler";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import LeaveRequest from "../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
+import { Template } from "meteor/templating";
+import './payrollleave.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 const contactService = new ContactService();
@@ -356,7 +358,7 @@ Template.payrollleave.onRendered(function () {
         //LoadingOverlay.show();
 
         let dataLenght = settings._iDisplayLength;
-        splashArrayAssignLeaveList = [];
+        let splashArrayAssignLeaveList = [];
         if (dataLenght == -1) {
           $(".fullScreenSpin").css("display", "none");
         } else {

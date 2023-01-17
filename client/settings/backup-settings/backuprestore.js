@@ -1,11 +1,15 @@
 import {ReactiveVar} from 'meteor/reactive-var';
 import {TaxRateService} from "../settings-service";
-import "./backuprestore.html"
+import { Template } from 'meteor/templating';
+import "./backuprestore.html";
 import 'colresizable/colResizable-1.6.min';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-ui-dist/jquery-ui.css';
+import '../../lib/global/indexdbstorage.js';
 let _ = require('lodash');
+
+
 Template.backuprestore.onCreated(() => {
   let templateObject = Template.instance();
   templateObject.restorerecords = new ReactiveVar();

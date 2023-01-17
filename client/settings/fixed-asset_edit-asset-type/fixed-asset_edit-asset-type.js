@@ -1,6 +1,9 @@
 import {ReactiveVar} from 'meteor/reactive-var';
 import {TaxRateService} from "../settings-service";
 import {AccountService} from "../../accounts/account-service";
+import { Template } from 'meteor/templating';
+import './fixed-asset_edit-asset-type.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let accountService = new AccountService();
 Template.fixedAssetEditAssetType.onCreated(()=>{
     const tempObj = Template.instance();
