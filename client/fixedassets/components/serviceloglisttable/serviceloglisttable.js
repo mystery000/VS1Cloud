@@ -7,10 +7,6 @@ let sideBarService = new SideBarService();
 let serviceLogService = new ServiceLogService();
 
 Template.serviceloglisttable.onCreated(function () {
-  const templateObject = Template.instance();
-});
-
-Template.serviceloglisttable.onRendered(function () {
 });
 
 Template.serviceloglisttable.events({
@@ -18,7 +14,4 @@ Template.serviceloglisttable.events({
   "click #btnNewServiceLog": function() {
     FlowRouter.go('/servicelogcard');
   }
-});
-
-Template.serviceloglisttable.helpers({
 });
