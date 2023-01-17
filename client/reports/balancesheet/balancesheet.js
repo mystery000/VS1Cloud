@@ -9,6 +9,7 @@ import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
 import { Template } from 'meteor/templating';
 import "./balancesheet.html"
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
@@ -53,7 +54,7 @@ Template.balancesheetreport.onRendered(() => {
             { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
             { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "150" },
         ]
-        templateObject.currencyList.set(reset_data);
+        templateObject.currencyRecord.set(reset_data);
     }
     templateObject.init_reset_data();
 
