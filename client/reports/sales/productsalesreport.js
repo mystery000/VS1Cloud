@@ -39,14 +39,14 @@ Template.productsalesreport.onRendered(() => {
 
 
   let reset_data = [
-    { index: 1, label: 'Doc Number', class: 'colDocNumber', active: true, display: true, width: "100" },
+    { index: 1, label: 'Doc Number', class: 'colDocNumber', active: true, display: true, width: "130" },
     { index: 2, label: 'Transaction~Type', class: 'colTransactionType', active: true, display: true, width: "100" },
-    { index: 3, label: 'Ship~Date', class: 'colShipDate', active: true, display: true, width: "100" },
+    { index: 3, label: 'Ship~Date', class: 'colShipDate', active: true, display: true, width: "85" },
     { index: 4, label: 'Customer ID', class: 'colCustomerID', active: true, display: true, width: "100" },
     { index: 5, label: 'Contact Name', class: 'colContractName', active: true, display: true, width: "100" },
-    { index: 6, label: 'Address1', class: 'colAddress1', active: true, display: true, width: "100" },
-    { index: 7, label: 'Address2', class: 'colAddress2', active: true, display: true, width: "100" },
-    { index: 8, label: 'Address3', class: 'colAddress3', active: true, display: true, width: "100" },
+    { index: 6, label: 'Address1', class: 'colAddress1', active: true, display: true, width: "85" },
+    { index: 7, label: 'Address2', class: 'colAddress2', active: true, display: true, width: "85" },
+    { index: 8, label: 'Address3', class: 'colAddress3', active: true, display: true, width: "85" },
     { index: 9, label: 'Ship To City', class: 'colShipToCity', active: true, display: true, width: "100" },
     { index: 10, label: 'State', class: 'colState', active: false, display: true, width: "100" },
     { index: 11, label: 'Zip Code', class: 'colZipCode', active: true, display: true, width: "100" },

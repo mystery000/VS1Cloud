@@ -372,7 +372,7 @@ Template.taskDetailModal.events({
                         if($("#btnRefreshList") != undefined){
                             $("#btnRefreshList").trigger("click");
                         }
-                        Meteor._reload.reload();
+                        // Meteor._reload.reload();
                     }
                 }).catch(function(err) {
                     $(".fullScreenSpin").css("display", "none");
@@ -420,7 +420,7 @@ Template.taskDetailModal.events({
                                 if($("#btnRefreshList") != undefined){
                                     $("#btnRefreshList").trigger("click");
                                 }
-                                Meteor._reload.reload();
+                                // Meteor._reload.reload();
                             }
                         }).catch(function(err) {
                             $(".fullScreenSpin").css("display", "none");

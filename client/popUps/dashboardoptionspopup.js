@@ -42,25 +42,29 @@ Template.dashboardoptionspopup.onRendered(function() {
     const deptrecords = [];
     let deptprodlineItems = [];
 
-    templateObject.getDashboardOptions = function() {
+    templateObject.getDashboardOptions = async function() {
       let data = require('./dashboardoptions.json');
       //let countries = require('./dashboardoptions.json');
       //let useData = data.ttermsvs1;
       let lineItems = [];
       let lineItemObj = {};
       let setISCOD = false;
+      let dataObject = await getVS1Data('TVS1DashboardStatus');
+      let dataShow;
+      if (dataObject.length > 0) {
+          dataShow = JSON.parse(dataObject[0].data);
+      }
       for (let i = 0; i < data.length; i++) {
           // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
           var dataList = {
               id: data[i].Id || '',
               name: data[i].name || '',
               isdefault: data[i].isdefaultlogin || false,
+              isshowdefault: data[i].isshowdefault || false,
           };
-
           dataTableList.push(dataList);
           //}
       }
-
 
       templateObject.dashboardoptionrecords.set(dataTableList);
 
@@ -113,10 +117,18 @@ Template.dashboardoptionspopup.onRendered(function() {
     templateObject.getDashboardOptions();
 
 
-    $('#tblDashboardOptions tbody').on('change', 'tr input', function() {
-        $(this).closest('tr').find(".colOptionsName ").click();
+    $('#tblDashboardOptions tbody').on('change', 'tr input[type=radio]', function() {
+        $(this).closest('tr').find(".colOptionsName").click();
     });
-
+    let showDashboard = ["All"];
+    $('#tblDashboardOptions tbody').on('change', 'tr input[type=checkbox]', function() {
+        // $(this).closest('tr').find(".colOptionsName ").click();
+        let dashboardStatus = $(this).closest('tr').find(".colOptionsName").text();
+        showDashboard = showDashboard.includes(dashboardStatus) ? showDashboard.filter(el => el !== dashboardStatus) : [...showDashboard, dashboardStatus];
+        // console.log("show", dashboardStatus, showDashboard);
+        // console.log(JSON.stringify(showDashboard));
+        addVS1Data('TVS1DashboardStatus', JSON.stringify(showDashboard));
+    });
     $('#tblDashboardOptions tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function() {
         var listData = $(this).closest('tr').attr('id');
         var is7days = false;

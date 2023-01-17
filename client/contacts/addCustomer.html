@@ -588,7 +588,8 @@
                                             <div class="col" style="padding: 4px;margin-top: 16px;">
                                                 <div>
                                                     <ul class="nav nav-tabs nav-justified">
-                                                        
+                                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab active" role="tab"
+                                                            data-toggle="tab" data-target="#tab-crm-job">CRM</a></li>
                                                         <li class="nav-item"><a class="nav-link" role="tab"
                                                                 data-toggle="tab" data-target="#tab-Job4">Address</a>
                                                         </li>
@@ -609,7 +610,34 @@
                                                     </ul>
 
                                                     <div class="tab-content">
-                                                        
+                                                        <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm-job"
+                                                            style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+                                                            <!-- {{> crmtable crmRecords=crmRecords crmTableheaderRecords=crmTableheaderRecords}} -->
+                                                            <style>
+                                                                #tblCustomerCrmListWithDate{
+                                                                    width:100% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colDate{
+                                                                    width:12% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colType{
+                                                                    width:12% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colTaskName{
+                                                                    width:18% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colTaskDesc{
+                                                                    width:30% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colCompletedBy{
+                                                                    width:15% !important;
+                                                                }
+                                                                #tblCustomerCrmListWithDate .colCompleteTask{
+                                                                    width:12% !important;
+                                                                }
+                                                            </style>
+                                                            {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}
+                                                        </div>
                                                         <div class="tab-pane border rounded-0 tab-Job4"
                                                             role="tabpanel" id="tab-Job4"
                                                             style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
