@@ -1,5 +1,6 @@
 import { Meteor, fetch } from "meteor/meteor";
 import { ReactiveVar } from "meteor/reactive-var";
+import { Template } from 'meteor/templating';
 import { OrganisationService } from "../js/organisation-service";
 import { CountryService } from "../js/country-service";
 import { TaxRateService } from "../settings/settings-service";
@@ -18,10 +19,11 @@ import XLSX from 'xlsx';
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import '../lib/global/utBarcodeConst.js';
 import '../lib/global/indexdbstorage.js';
-import { Template } from 'meteor/templating';
+
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './AddTermModal.html'
 import './setup.html';
+import { HTTP } from "meteor/http";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
@@ -68,7 +70,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
         username: ERPUsername,
         password: ERPPassword
     };
-    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+    HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
         if (error) {
           // handle error here
         } else {
