@@ -16,6 +16,12 @@ let reportService = new ReportService();
 let utilityService = new UtilityService();
 let defaultCurrencyCode = CountryAbbr;
 
+function MakeNegative() {
+  $('td').each(function(){
+    if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+  });
+}
+
 Template.jobprofitabilityreport.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.dateAsAt = new ReactiveVar();

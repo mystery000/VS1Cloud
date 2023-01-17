@@ -25,17 +25,17 @@ Template.fxhistorylist.onRendered(() => {
     }
 
     let reset_data = [
-        { index: 1, label: 'Company', class:'colCompany', active: true, display: true, width: "" },
-        { index: 2, label: 'Currency', class:'colCurrency', active: true, display: true, width: "" },
-        { index: 3, label: 'Code', class:'colCode', active: true, display: true, width: "" },
-        { index: 4, label: 'Buy Rate', class:'colBuyRate', active: true, display: true, width: "" },
-        { index: 5, label: 'Sell Rate', class:'colSellRate', active: true, display: true, width: "" },
-        { index: 6, label: 'Rate Last Modified', class:'colRateLastModified', active: true, display: true, width: "" },
-        { index: 7, label: 'Active', class:'colActive', active: true, display: true, width: "" },
-        { index: 8, label: 'Global Ref', class:'colGlobalRef', active: false, display: true, width: "" },
-        { index: 9, label: 'Currency Symbol', class:'colCurrencySymbol', active: false, display: true, width: "" },
-        { index: 10, label: 'Currency ID', class:'colCurrencyID', active: false, display: true, width: "" },
-        { index: 11, label: 'Edited Flag', class:'colEditedFlag', active: false, display: true, width: "" },
+        { index: 1, label: 'Company', class:'colCompany', active: true, display: true, width: "80" },
+        { index: 2, label: 'Currency', class:'colCurrency', active: true, display: true, width: "100" },
+        { index: 3, label: 'Code', class:'colCode', active: true, display: true, width: "70" },
+        { index: 4, label: 'Buy Rate', class:'colBuyRate', active: true, display: true, width: "80" },
+        { index: 5, label: 'Sell Rate', class:'colSellRate', active: true, display: true, width: "90" },
+        { index: 6, label: 'Rate Last Modified', class:'colRateLastModified', active: true, display: true, width: "140" },
+        { index: 7, label: 'Active', class:'colActive', active: true, display: true, width: "80" },
+        { index: 8, label: 'Global Ref', class:'colGlobalRef', active: false, display: true, width: "100" },
+        { index: 9, label: 'Currency Symbol', class:'colCurrencySymbol', active: false, display: true, width: "130" },
+        { index: 10, label: 'Currency ID', class:'colCurrencyID', active: false, display: true, width: "100" },
+        { index: 11, label: 'Edited Flag', class:'colEditedFlag', active: false, display: true, width: "100" },
       ];
 
       templateObject.fxhistorylistth.set(reset_data);

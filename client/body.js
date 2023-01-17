@@ -300,6 +300,7 @@ import './deposits/deposit_list.js';
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
 /* Rasheed */
@@ -575,6 +576,8 @@ import './overviews/payrolloverview_tmp.html';
 import './eft/exportModal/eftExportModal.js';
 import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
+
+import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

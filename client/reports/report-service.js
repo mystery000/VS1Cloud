@@ -891,7 +891,6 @@ export class ReportService extends BaseService {
 
     getAllBASReturn(data) {
         let options = {
-            select: "[Active]=true",
             OrderBy: "ID desc",
             ListType: "Detail",
         };
@@ -900,7 +899,7 @@ export class ReportService extends BaseService {
 
     getOneBASReturn(id) {
         let options = {
-            select: "[Active]=true and [ID]=" + id,
+            select: "[ID]=" + id,
             ListType: "Detail",
         };
         return this.getList(this.ERPObjects.TBASReturn, options);
@@ -912,7 +911,6 @@ export class ReportService extends BaseService {
 
     getAllVATReturn(data) {
         let options = {
-            select: "[Active]=true",
             OrderBy: "ID desc",
             ListType: "Detail",
         };
@@ -921,7 +919,7 @@ export class ReportService extends BaseService {
 
     getOneVATReturn(id) {
         let options = {
-            select: "[Active]=true and [ID]=" + id,
+            select: "[ID]=" + id,
             ListType: "Detail",
         };
         return this.getList(this.ERPObjects.TVATReturn, options);

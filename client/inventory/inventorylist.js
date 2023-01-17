@@ -2570,7 +2570,7 @@ Template.inventorylist.events({
             //$('.lblPriceEx').css('width','10%');
         }
     },
-    'click .OnBO' : function(event) {
+    'click td.OnBO' : function(event) {
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".ProductName").text();
     if (listData) {
@@ -2582,7 +2582,7 @@ Template.inventorylist.events({
           $('#recentTransactionPopUp').modal("show");
     }
   },
-  "click .InStock": function(event) {
+  "click td.InStock": function(event) {
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".ProductName").text();
     if (listData) {
@@ -2605,7 +2605,7 @@ Template.inventorylist.events({
     }
   },
 
-  "click .OnSO": function(event) {
+  "click td.OnSO": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       var listProductName = $(event.target).closest("tr").find(".ProductName").text();
       if (listData) {
@@ -2618,7 +2618,7 @@ Template.inventorylist.events({
       }
   },
 
-  "click .OnOrder": function(event) {
+  "click td.OnOrder": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       var listProductName = $(event.target).closest("tr").find(".ProductName").text();
       if (listData) {
@@ -2632,7 +2632,7 @@ Template.inventorylist.events({
       }
   },
 
-  "click .ProductName, click td.SalesDescription, ": function(event) {
+  "click td.ProductName, click td.SalesDescription, ": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       if (listData) {
           FlowRouter.go("/productview?id=" + listData);

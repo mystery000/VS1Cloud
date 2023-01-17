@@ -819,14 +819,14 @@ Template.myTasksWidget.events({
                                     let newSubTaskID = 0;
                                     if (Array.isArray(selected_record.subtasks)) {
                                         templateObject.subTasks.set(selected_record.subtasks);
-                                        templateObject.initSubtaskDatatable();
+                                        // templateObject.initSubtaskDatatable();
                                         newSubTaskID = selected_record.subtasks[selected_record.subtasks.length - 1].fields.ID;
                                     }
                                     if (typeof selected_record.subtasks == 'object') {
                                         let arr = [];
                                         arr.push(selected_record.subtasks);
                                         templateObject.subTasks.set(arr);
-                                        templateObject.initSubtaskDatatable();
+                                        // templateObject.initSubtaskDatatable();
                                         newSubTaskID = selected_record.subtasks.fields.ID;
                                     }
                                     try {
