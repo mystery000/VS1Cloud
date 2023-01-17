@@ -21,6 +21,7 @@ let utilityService = new UtilityService();
 let accountService = new SalesBoardService();
 let productService = new ProductService();
 let contactService = new ContactService();
+let purchaseService = new PurchaseBoardService();
 let times = 0;
 let clickedInput = "";
 let isDropDown = false;
@@ -46,6 +47,7 @@ Template.new_workorder.onCreated(function() {
     templateObject.quantityBuild = new ReactiveVar(true);
     templateObject.showBOMModal = new ReactiveVar(false);
     templateObject.bomProducts = new ReactiveVar([]);
+    templateObject.isSaved = new ReactiveVar(false);
 })
 
 Template.new_workorder.onRendered(async function(){
@@ -53,7 +55,9 @@ Template.new_workorder.onRendered(async function(){
     let salesorderid = FlowRouter.current().queryParams.salesorderid;
     let lineId = FlowRouter.current().queryParams.lineId;
 
-
+    if(FlowRouter.current().queryParams.id) {
+        templateObject.isSaved.set(true)
+    }
 
     if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
     /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))){
@@ -480,214 +484,200 @@ Template.new_workorder.events({
         event.stopPropagation();
         event.preventDefault()
         let templateObject = Template.instance();
+        
         playSaveAudio();
-        setTimeout(async function(){
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let mainOrderStart = new Date();
+        if(!FlowRouter.current().queryParams.id) {
+            swal({
+                title: 'Question',
+                text: 'Do you want to forward this order to vendor service?',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(async (result)=>{
+                if(result.value) {
+                    let record = templateObject.workorderrecord.get();
+                    let productData = await getProductData(record.productname)                    
+                    let splashLineArray = [];
+                    let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
+                   
+                    async function getTaxRate ()  {
+                        return new Promise(async(resolve, reject)=> {
+                            
+                            getVS1Data('TTaxcodeVS1').then(function(dataObject){
+                                if(dataObject.length == 0) {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.ttaxcodevs1;
+                                    let index = useData.findIndex(taxCode=>{
+                                        return taxCode.CodeName == productData.TaxCodePurchase
+                                    })
+                                    if(index == -1) {
+                                        sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
+                                            resolve(data.ttaxcodevs1[0].Rate)
+                                        })
+                                    }else {
+                                        resolve(useData[index].Rate)
+                                    }
+                                    
+                                }else {
+                                    sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
+                                        resolve(data.ttaxcodevs1[0].Rate)
+                                    })
+                                }
+                            }).catch(function(err){
+                                sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
+                                    resolve(data.ttaxcodevs1[0].Rate)
+                                })
+                            })
+                        })
+                    }
+                    let taxRate = await getTaxRate()
+                    let lineItemObjForm = {
+                        type: "TPurchaseOrderLine",
+                        fields: {
+                            ProductName: record.productname || '',
+                            ProductDescription: productData.ProductDescription || '',
+                            UOMQtySold: record.quantity,
+                            UOMQtyShipped: 0,
+                            LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                            CustomerJob: record.customer || '',
+                            LineTaxCode: productData.TaxCodePurchase || '',
+                            LineTaxRate: taxRate || 0,
+                            LineClassName: defaultDept
+                        }
+                    };
 
-        async function getStockCount(productName) {
-            return new Promise(async(resolve, reject)=>{
-                getVS1Data('TProductVS1').then(function(dataObject) {
+                    splashLineArray.push(lineItemObjForm);
+                    localStorage.setItem("newPOParamItem", JSON.stringify(splashLineArray))
+                    FlowRouter.go('/purchaseordercard?salesorderid=' + templateObject.salesOrderId.get())
+                }else if(result.dismiss == 'cancel') {
+                    swal({
+                        title: 'Warning',
+                        text: 'For the required raws and materials, if there is not enough for building in stock, will create purchase order automatically',
+                        type: 'warning',
+                        showCancelButton: false,
+                        confirmButtonText: 'Continue',
+                    }).then ((result)=>{
+                        saveOrders();
+                    });
+                }
+            })
+        } else {
+                saveOrders();
+        }
+
+
+        async function getProductData(productName) {
+            return new Promise(async(resolve, reject)=> {
+                let record = templateObject.workorderrecord.get();
+                getVS1Data('TProductVS1').then(async function(dataObject){
                     if(dataObject.length == 0) {
-                        productService.getOneProductdatavs1byname(productName).then(function(data) {
-                            resolve(data.tproduct[0].fields.TotalQtyInStock)
+                        productService.getOneProductdatavs1byname(productName).then(function(data){
+                            resolve(data.tproduct[0].fields)
                         })
                     }else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tproductvs1;
-                        for(let o=0; o<useData.length; o++) {
-                            if(useData[o].fields.ProductName == productName) {
-                                resolve(useData[o].fields.TotalQtyInStock)
-                            }
-                        }
+                         let added = false;
+                         let data = JSON.parse(dataObject[0].data);
+                         let useData = data.tproduct;
+                         let index = useData.findIndex(item=>{
+                            return item.fields.ProductName == productName
+                         })
+                         if(index == -1) {
+                            productService.getOneProductdatavs1byname(productName).then(function(data){
+                                resolve(data.tproduct[0].fields)
+                            })  
+                         }else {
+                            resolve(useData[index].fields)
+                         }
                     }
-                }).catch(function(e) {
-                    productService.getOneProductdatavs1byname(productName).then(function(data) {
-                        resolve(data.tproduct[0].fields.TotalQtyInStock)
+                }).catch(function(err){
+                    productService.getOneProductdatavs1byname(productName).then(function(data){
+                        resolve(data.tproduct[0].fields)
                     })
                 })
             })
         }
 
-        async function getSupplierDetail ()  {
-            return new Promise(async(resolve, reject)=>{
-                let supplierName = 'Misc Supplier';
-
-                contactService.getOneSupplierDataExByName(supplierName).then(function(dataObject) {
-                    let data = dataObject.tsupplier;
-                    if(data.length > 0) {
-                        let clientName = data[0].fields.ClientName;
-                        let street = data[0].fields.Street || '';
-                        let city = data[0].fields.Street2 || '';
-                        let state = data[0].fields.State || '';
-                        let zipCode = data[0].fields.Postcode || '';
-                        let country = data[0].fields.Country || '';
-
-                        let postalAddress = data[0].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
-                        resolve(postalAddress)
-                    }else {
-                        resolve('')
-                    }
-                }).catch(function(e) {
-                    resolve('')
-                })
-            })
-
-
-        }
-
-        async function createPurchaseOrder(productName, neededQty) {
-            return new Promise(async(resolve, reject)=>{
-                let foreignCurrencyFields = {
-                    ForeignExchangeCode: CountryAbbr,
-                    ForeignExchangeRate: 0.00,
-                }
-                let purchaseService = new PurchaseBoardService();
-                getVS1Data('TProductVS1').then(async function(dataObject){
-                    if(dataObject.length == 0) {
-                        productService.getOneProductdatavs1byname(productName).then(async function(data) {
-                            let stockQty = data.tproduct[0].fields.TotalQtyInStock;
-                            if(stockQty < neededQty) {
-                                let splashLineArray = [];
-
-                                let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
-                                let lineItemObjForm = {
-                                    type: "TPurchaseOrderLine",
-                                    fields: {
-                                        ProductName: productName || '',
-                                        ProductDescription: data.tproduct[0].fields.ProductDescription || '',
-                                        UOMQtySold: parseFloat(neededQty - stockQty),
-                                        UOMQtyShipped: 0,
-                                        LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                        CustomerJob: '',
-                                        LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
-                                        LineClassName: defaultDept
-                                    }
-                                };
-
-                                splashLineArray.push(lineItemObjForm);
-                                let billingAddress = await getSupplierDetail();
-                                let saledateTime = new Date();
-                                let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-
-                                let objDetails = {
-                                    type: "TPurchaseOrderEx",
-                                    fields: {
-                                        SupplierName: 'Misc Supplier',
-                                        ...foreignCurrencyFields,
-                                        SupplierInvoiceNumber: ' ',
-                                        Lines: splashLineArray,
-                                        OrderTo: billingAddress,
-                                        OrderDate: date,
-
-                                        SupplierInvoiceDate: date,
-
-                                        SaleLineRef: '',
-                                        TermsName: 'COD',
-                                        Shipping: '',
-                                        ShipTo: billingAddress,
-                                        Comments: '',
-                                        SalesComments: '',
-                                        Attachments: [],
-                                        OrderStatus: ''
-                                    }
-                                };
-                                purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
-                                    sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
-                                        addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
-                                            resolve()
-                                        })
-                                    })
-                                }).catch(function(err) {
-                                    resolve()
+        function saveOrders () {
+            setTimeout(async function(){
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let mainOrderStart = new Date();
+        
+                async function getStockCount(productName) {
+                    return new Promise(async(resolve, reject)=>{
+                        getVS1Data('TProductVS1').then(function(dataObject) {
+                            if(dataObject.length == 0) {
+                                productService.getOneProductdatavs1byname(productName).then(function(data) {
+                                    resolve(data.tproduct[0].fields.TotalQtyInStock)
                                 })
                             }else {
-                                resolve()
-                            }
-                        })
-                    }else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tproductvs1;
-                        for(let i = 0; i< useData.length; i++) {
-                            if(useData[i].fields.ProductName == productName) {
-                                let stockQty = useData[i].fields.TotalQtyInStock;
-                                if(stockQty < neededQty) {
-                                    let splashLineArray = [];
-
-                                    let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(useData[i].fields.BuyQty1Cost * 100) / 100);
-                                    let lineItemObjForm = {
-                                        type: "TPurchaseOrderLine",
-                                        fields: {
-                                            ProductName: productName || '',
-                                            ProductDescription: useData[i].fields.ProductDescription || '',
-                                            UOMQtySold: parseFloat(neededQty - stockQty),
-                                            UOMQtyShipped: 0,
-                                            LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                            CustomerJob: '',
-                                            LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
-                                            LineClassName: defaultDept
-                                        }
-                                    };
-
-                                    splashLineArray.push(lineItemObjForm);
-                                    let billingAddress = await getSupplierDetail();
-                                    let saledateTime = new Date();
-                                    let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-
-                                    let objDetails = {
-                                        type: "TPurchaseOrderEx",
-                                        fields: {
-                                            SupplierName: 'Misc Supplier',
-                                            ...foreignCurrencyFields,
-                                            SupplierInvoiceNumber: ' ',
-                                            Lines: splashLineArray,
-                                            OrderTo: billingAddress,
-                                            OrderDate: date,
-
-                                            SupplierInvoiceDate: date,
-
-                                            SaleLineRef: '',
-                                            TermsName: 'COD',
-                                            Shipping: '',
-                                            ShipTo: billingAddress,
-                                            Comments: '',
-                                            SalesComments: '',
-                                            Attachments: [],
-                                            OrderStatus: ''
-                                        }
-                                    };
-                                    purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
-                                        sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
-                                            addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
-                                                resolve()
-                                            })
-                                        })
-                                    }).catch(function(err) {
-                                        resolve()
-                                    })
-                                }else {
-                                    resolve()
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.tproductvs1;
+                                for(let o=0; o<useData.length; o++) {
+                                    if(useData[o].fields.ProductName == productName) {
+                                        resolve(useData[o].fields.TotalQtyInStock)
+                                    }
                                 }
                             }
+                        }).catch(function(e) {
+                            productService.getOneProductdatavs1byname(productName).then(function(data) {
+                                resolve(data.tproduct[0].fields.TotalQtyInStock)
+                            })
+                        })
+                    })
+                }
+        
+                async function getSupplierDetail ()  {
+                    return new Promise(async(resolve, reject)=>{
+                        let supplierName = 'Misc Supplier';
+        
+                        contactService.getOneSupplierDataExByName(supplierName).then(function(dataObject) {
+                            let data = dataObject.tsupplier;
+                            if(data.length > 0) {
+                                let clientName = data[0].fields.ClientName;
+                                let street = data[0].fields.Street || '';
+                                let city = data[0].fields.Street2 || '';
+                                let state = data[0].fields.State || '';
+                                let zipCode = data[0].fields.Postcode || '';
+                                let country = data[0].fields.Country || '';
+        
+                                let postalAddress = data[0].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
+                                resolve(postalAddress)
+                            }else {
+                                resolve('')
+                            }
+                        }).catch(function(e) {
+                            resolve('')
+                        })
+                    })
+        
+        
+                }
+        
+                async function createPurchaseOrder(productName, neededQty) {
+                    return new Promise(async(resolve, reject)=>{
+                        let foreignCurrencyFields = {
+                            ForeignExchangeCode: CountryAbbr,
+                            ForeignExchangeRate: 0.00,
                         }
-                    }
-                }).catch(async function(error) {
-                    productService.getOneProductdatavs1byname(productName).then(async function(data) {
-                        let stockQty = data.tproduct[0].fields.TotalQtyInStock;
+                        let purchaseService = new PurchaseBoardService();
+
+
+                        let productData = await getProductData(productName);
+                        let stockQty = productData.TotalQtyInStock;
                         if(stockQty < neededQty) {
                             let splashLineArray = [];
-
-                            let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
+                            let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
                             let lineItemObjForm = {
                                 type: "TPurchaseOrderLine",
                                 fields: {
                                     ProductName: productName || '',
-                                    ProductDescription: data.tproduct[0].fields.ProductDescription || '',
+                                    ProductDescription: productData.ProductDescription || '',
                                     UOMQtySold: parseFloat(neededQty - stockQty),
                                     UOMQtyShipped: 0,
                                     LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                     CustomerJob: '',
-                                    LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                                    LineTaxCode: productData.TaxCodePurchase || '',
                                     LineClassName: defaultDept
                                 }
                             };
@@ -731,156 +721,323 @@ Template.new_workorder.events({
                         }else {
                             resolve()
                         }
+                        // getVS1Data('TProductVS1').then(async function(dataObject){
+                        //     if(dataObject.length == 0) {
+                        //         productService.getOneProductdatavs1byname(productName).then(async function(data) {
+                        //             let stockQty = data.tproduct[0].fields.TotalQtyInStock;
+                        //             if(stockQty < neededQty) {
+                                        
+                        //                 let splashLineArray = [];
+        
+                        //                 let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
+                        //                 let lineItemObjForm = {
+                        //                     type: "TPurchaseOrderLine",
+                        //                     fields: {
+                        //                         ProductName: productName || '',
+                        //                         ProductDescription: data.tproduct[0].fields.ProductDescription || '',
+                        //                         UOMQtySold: parseFloat(neededQty - stockQty),
+                        //                         UOMQtyShipped: 0,
+                        //                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                        //                         CustomerJob: '',
+                        //                         LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                        //                         LineClassName: defaultDept
+                        //                     }
+                        //                 };
+        
+                        //                 splashLineArray.push(lineItemObjForm);
+                        //                 let billingAddress = await getSupplierDetail();
+                        //                 let saledateTime = new Date();
+                        //                 let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
+        
+                        //                 let objDetails = {
+                        //                     type: "TPurchaseOrderEx",
+                        //                     fields: {
+                        //                         SupplierName: 'Misc Supplier',
+                        //                         ...foreignCurrencyFields,
+                        //                         SupplierInvoiceNumber: ' ',
+                        //                         Lines: splashLineArray,
+                        //                         OrderTo: billingAddress,
+                        //                         OrderDate: date,
+        
+                        //                         SupplierInvoiceDate: date,
+        
+                        //                         SaleLineRef: '',
+                        //                         TermsName: 'COD',
+                        //                         Shipping: '',
+                        //                         ShipTo: billingAddress,
+                        //                         Comments: '',
+                        //                         SalesComments: '',
+                        //                         Attachments: [],
+                        //                         OrderStatus: ''
+                        //                     }
+                        //                 };
+                        //                 purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
+                        //                     sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
+                        //                         addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
+                        //                             resolve()
+                        //                         })
+                        //                     })
+                        //                 }).catch(function(err) {
+                        //                     resolve()
+                        //                 })
+                        //             }else {
+                        //                 resolve()
+                        //             }
+                        //         })
+                        //     }else {
+                        //         let data = JSON.parse(dataObject[0].data);
+                        //         let useData = data.tproductvs1;
+                        //         let added = true;
+                        //         for(let i = 0; i< useData.length; i++) {
+                        //             if(useData[i].fields.ProductName == productName) {
+                                        
+                        //             }
+                        //         }
+                        //         if(added==true) {
+                        //             productService.getOneProductdatavs1byname(productName).then(async function(data) {
+                        //                 let stockQty = data.tproduct[0].fields.TotalQtyInStock;
+                        //                 if(stockQty < neededQty) {
+                        //                     let splashLineArray = [];
+            
+                        //                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
+                        //                     let lineItemObjForm = {
+                        //                         type: "TPurchaseOrderLine",
+                        //                         fields: {
+                        //                             ProductName: productName || '',
+                        //                             ProductDescription: data.tproduct[0].fields.ProductDescription || '',
+                        //                             UOMQtySold: parseFloat(neededQty - stockQty),
+                        //                             UOMQtyShipped: 0,
+                        //                             LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                        //                             CustomerJob: '',
+                        //                             LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                        //                             LineClassName: defaultDept
+                        //                         }
+                        //                     };
+            
+                        //                     splashLineArray.push(lineItemObjForm);
+                        //                     let billingAddress = await getSupplierDetail();
+                        //                     let saledateTime = new Date();
+                        //                     let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
+            
+                        //                     let objDetails = {
+                        //                         type: "TPurchaseOrderEx",
+                        //                         fields: {
+                        //                             SupplierName: 'Misc Supplier',
+                        //                             ...foreignCurrencyFields,
+                        //                             SupplierInvoiceNumber: ' ',
+                        //                             Lines: splashLineArray,
+                        //                             OrderTo: billingAddress,
+                        //                             OrderDate: date,
+            
+                        //                             SupplierInvoiceDate: date,
+            
+                        //                             SaleLineRef: '',
+                        //                             TermsName: 'COD',
+                        //                             Shipping: '',
+                        //                             ShipTo: billingAddress,
+                        //                             Comments: '',
+                        //                             SalesComments: '',
+                        //                             Attachments: [],
+                        //                             OrderStatus: ''
+                        //                         }
+                        //                     };
+                        //                     purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
+                        //                         sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
+                        //                             addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
+                        //                                 resolve()
+                        //                             })
+                        //                         })
+                        //                     }).catch(function(err) {
+                        //                         resolve()
+                        //                     })
+                        //                 }else {
+                        //                     resolve()
+                        //                 }
+                        //             })
+                        //         }
+                        //     }
+                        // }).catch(async function(error) {
+                        //     productService.getOneProductdatavs1byname(productName).then(async function(data) {
+                        //         let stockQty = data.tproduct[0].fields.TotalQtyInStock;
+                        //         if(stockQty < neededQty) {
+                        //             let splashLineArray = [];
+        
+                        //             let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
+                        //             let lineItemObjForm = {
+                        //                 type: "TPurchaseOrderLine",
+                        //                 fields: {
+                        //                     ProductName: productName || '',
+                        //                     ProductDescription: data.tproduct[0].fields.ProductDescription || '',
+                        //                     UOMQtySold: parseFloat(neededQty - stockQty),
+                        //                     UOMQtyShipped: 0,
+                        //                     LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                        //                     CustomerJob: '',
+                        //                     LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
+                        //                     LineClassName: defaultDept
+                        //                 }
+                        //             };
+        
+                        //             splashLineArray.push(lineItemObjForm);
+                        //             let billingAddress = await getSupplierDetail();
+                        //             let saledateTime = new Date();
+                        //             let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
+        
+                        //             let objDetails = {
+                        //                 type: "TPurchaseOrderEx",
+                        //                 fields: {
+                        //                     SupplierName: 'Misc Supplier',
+                        //                     ...foreignCurrencyFields,
+                        //                     SupplierInvoiceNumber: ' ',
+                        //                     Lines: splashLineArray,
+                        //                     OrderTo: billingAddress,
+                        //                     OrderDate: date,
+        
+                        //                     SupplierInvoiceDate: date,
+        
+                        //                     SaleLineRef: '',
+                        //                     TermsName: 'COD',
+                        //                     Shipping: '',
+                        //                     ShipTo: billingAddress,
+                        //                     Comments: '',
+                        //                     SalesComments: '',
+                        //                     Attachments: [],
+                        //                     OrderStatus: ''
+                        //                 }
+                        //             };
+                        //             purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
+                        //                 sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
+                        //                     addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
+                        //                         resolve()
+                        //                     })
+                        //                 })
+                        //             }).catch(function(err) {
+                        //                 resolve()
+                        //             })
+                        //         }else {
+                        //             resolve()
+                        //         }
+                        //     })
+                        // })
                     })
-                })
-            })
-        }
-
-        async function saveSubOrders () {
-            let record = templateObject.workorderrecord.get();
-            let bomStructure = templateObject.bomStructure.get();
-            let bomProducts = templateObject.bomProducts.get();
-
-            let totalWorkOrders = await templateObject.getAllWorkorders();
-            let savedworkorders = totalWorkOrders.filter(order => {
-                return order.fields.SaleID == templateObject.salesOrderId.get();
-            })
-            let count = savedworkorders.length;
-            if(bomStructure.Details && JSON.parse(bomStructure.Details).length > 0) {
-                let subBOMs = JSON.parse(bomStructure.Details);
-                for(let k = 0; k< subBOMs.length; k++) {
-                    let subs = subBOMs[k];
-                    if(subs.isBuild == true) {
-
-                        let subBOMIndex = bomProducts.findIndex(product=>{
-                            return product.fields.Caption == subs.productName
-                        })
-                        let duration = 0;
-                        if(subBOMIndex > -1) {
-                            duration = bomProducts[subBOMIndex].fields.QtyVariation
-                        }else {
-                           await productService.getOneBOMProductByName(subs.productName).then(function(dataObject){
-                                let d = JSON.parse(dataObject[0].data);
-                               duration = d.tproctree[0].fields.QtyVariation
-                           })
-                        }
-
-
-                        let subBOMStructure = {
-                            Caption: subs.productName,
-                            Info: subs.process,
-                            CustomInputClass: subs.processNote,
-                            Details: JSON.stringify(subs.subs),
-                            QtyVariation: duration
-                        }
-                        async function getProductionPlanData() {
-                            return new Promise(async(resolve, reject)=>{
-                                let returnVal = [];
-                                getVS1Data('TProductionPlanData').then(function(dataObject) {
-                                    if(dataObject.length == 0) {
-                                        resolve(returnVal)
-                                    }else {
-                                        returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events);
-                                        if(returnVal == undefined) {
-                                            returnVal = [];
-                                        }
-                                        resolve(returnVal)
-                                    }
-                                }).catch(function(e) {
-                                    resolve(returnVal)
+                }
+        
+                async function saveSubOrders () {
+                    let record = templateObject.workorderrecord.get();
+                    let bomStructure = templateObject.bomStructure.get();
+                    let bomProducts = templateObject.bomProducts.get();
+        
+                    let totalWorkOrders = await templateObject.getAllWorkorders();
+                    let savedworkorders = totalWorkOrders.filter(order => {
+                        return order.fields.SaleID == templateObject.salesOrderId.get();
+                    })
+                    let count = savedworkorders.length;
+                    if(bomStructure.Details && JSON.parse(bomStructure.Details).length > 0) {
+                        let subBOMs = JSON.parse(bomStructure.Details);
+                        for(let k = 0; k< subBOMs.length; k++) {
+                            let subs = subBOMs[k];
+                            if(subs.isBuild == true) {
+        
+                                let subBOMIndex = bomProducts.findIndex(product=>{
+                                    return product.fields.Caption == subs.productName
                                 })
-                            })
-                        }
-                        async function saveOneSubOrder() {
-                            return new Promise(async(resolve, reject)=>{
-                                let subProductName = subs.productName;
-                                let plans = await getProductionPlanData();
-                                let tempPlans = cloneDeep(plans);
-                                tempPlans = tempPlans.filter(plan=>plan.resourceName == subs.process);
-                                let subStart = new Date();
-                                if (tempPlans.length > 0) {
-                                    subStart = new Date(Math.max.apply(null, tempPlans.map(function(e) {
-                                        return new Date(e.end);
-                                    })));
+                                let duration = 0;
+                                if(subBOMIndex > -1) {
+                                    duration = bomProducts[subBOMIndex].fields.QtyVariation
+                                }else {
+                                await productService.getOneBOMProductByName(subs.productName).then(function(dataObject){
+                                        let d = JSON.parse(dataObject[0].data);
+                                    duration = d.tproctree[0].fields.QtyVariation
+                                })
                                 }
-
-                                let subDetail = {
-                                    ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
-                                    LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
-                                    Customer: $('#edtCustomerName').val() || '',
-                                    InvoiceToDesc: $('#txabillingAddress').val() || '',
-                                    PONumber: $('#ponumber').val()||'',
-                                    // SaleDate: new Date($('#dtSODate').val()) || '',
-                                    SaleDate: record.saledate,
-                                    DueDate: record.duedate,
-                                    BOMStructure: JSON.stringify(subBOMStructure),
-                                    SaleID: templateObject.salesOrderId.get(),
-                                    StartTime: subStart,
-                                    OrderDate: new Date(),
-                                    InProgress: record.isStarted,
-                                    Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
+        
+        
+                                let subBOMStructure = {
+                                    Caption: subs.productName,
+                                    Info: subs.process,
+                                    CustomInputClass: subs.processNote,
+                                    Details: JSON.stringify(subs.subs),
+                                    QtyVariation: duration
                                 }
-
-
-                                if(subs.subs&&subs.subs.length > 0) {
-                                    for(let n=0; n<subs.subs.length; n++) {
-                                        let rawName = subs.subs[n].productName;
-                                        let neededQty = subs.subs[n].qty * subDetail.Quantity;
-                                        await createPurchaseOrder(rawName, neededQty)
-                                    }
-                                }
-                                let subEnd = new Date();
-                                subEnd.setTime(subStart.getTime() + subDetail.Quantity * duration * 3600000);
-                                if(subEnd.getTime() > mainOrderStart.getTime()) {
-                                    mainOrderStart = subEnd;
-                                }
-
-
-                                getVS1Data('TProductVS1').then(async function(dataObject) {
-                                    if(dataObject.length == 0) {
-                                        productService.getOneProductdatavs1byname(subProductName).then(async function(data){
-
-                                            // let line = JSON.parse(JSON.stringify(record.line));
-                                            let productname = subProductName;
-                                            let product_description = data.tproduct[0].fields.ProductDescription;
-                                            let productid = data.tproduct[0].fields.ID;
-                                            // let quantity = record.Quantity * parseFloat(subs.qty)
-                                            // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
-                                            subDetail.ProductName = productname;
-                                            subDetail.ProductDescription = product_description;
-                                            // subDetail.Quantity = quantity;
-                                            subDetail.ProductID = productid;
-
-                                            // let tempArray = localStorage.getItem('TWorkorders');
-                                            // let workorders = tempArray?JSON.parse(tempArray): [];
-                                            let workorders = await templateObject.getAllWorkorders();
-                                            let existIndex = workorders.findIndex(order=>{
-                                                return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
-                                            })
-                                            if(existIndex > -1) {
-                                                workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
+                                async function getProductionPlanData() {
+                                    return new Promise(async(resolve, reject)=>{
+                                        let returnVal = [];
+                                        getVS1Data('TProductionPlanData').then(function(dataObject) {
+                                            if(dataObject.length == 0) {
+                                                resolve(returnVal)
                                             }else {
-                                                workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
+                                                returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events);
+                                                if(returnVal == undefined) {
+                                                    returnVal = [];
+                                                }
+                                                resolve(returnVal)
                                             }
-                                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
-                                                resolve();
-                                            })
-                                            // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                                        }).catch(function(e) {
+                                            resolve(returnVal)
                                         })
-                                    }else {
-                                        let data = JSON.parse(dataObject[0].data);
-                                        let useData = data.tproductvs1;
-                                        for(let i=0 ; i< useData.length; i++) {
-                                            if(useData[i].fields.ProductName == subProductName) {
+                                    })
+                                }
+                                async function saveOneSubOrder() {
+                                    return new Promise(async(resolve, reject)=>{
+                                        let subProductName = subs.productName;
+                                        let plans = await getProductionPlanData();
+                                        let tempPlans = cloneDeep(plans);
+                                        tempPlans = tempPlans.filter(plan=>plan.resourceName == subs.process);
+                                        let subStart = new Date();
+                                        if (tempPlans.length > 0) {
+                                            subStart = new Date(Math.max.apply(null, tempPlans.map(function(e) {
+                                                return new Date(e.end);
+                                            })));
+                                        }
+        
+                                        let subDetail = {
+                                            ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                            LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
+                                            Customer: $('#edtCustomerName').val() || '',
+                                            InvoiceToDesc: $('#txabillingAddress').val() || '',
+                                            PONumber: $('#ponumber').val()||'',
+                                            // SaleDate: new Date($('#dtSODate').val()) || '',
+                                            SaleDate: record.saledate,
+                                            DueDate: record.duedate,
+                                            BOMStructure: JSON.stringify(subBOMStructure),
+                                            SaleID: templateObject.salesOrderId.get(),
+                                            StartTime: subStart,
+                                            OrderDate: new Date(),
+                                            InProgress: record.isStarted,
+                                            Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
+                                        }
+        
+        
+                                        if(subs.subs&&subs.subs.length > 0) {
+                                            for(let n=0; n<subs.subs.length; n++) {
+                                                let rawName = subs.subs[n].productName;
+                                                let neededQty = subs.subs[n].qty * subDetail.Quantity;
+                                                await createPurchaseOrder(rawName, neededQty)
+                                            }
+                                        }
+                                        let subEnd = new Date();
+                                        subEnd.setTime(subStart.getTime() + subDetail.Quantity * duration * 3600000);
+                                        if(subEnd.getTime() > mainOrderStart.getTime()) {
+                                            mainOrderStart = subEnd;
+                                        }
+        
+        
+                                        getVS1Data('TProductVS1').then(async function(dataObject) {
+                                            if(dataObject.length == 0) {
+                                                productService.getOneProductdatavs1byname(subProductName).then(async function(data){
+        
+                                                    // let line = JSON.parse(JSON.stringify(record.line));
                                                     let productname = subProductName;
-                                                    let product_description = useData[i].fields.ProductDescription;
-                                                    let productid = useData[i].fields.ID;
+                                                    let product_description = data.tproduct[0].fields.ProductDescription;
+                                                    let productid = data.tproduct[0].fields.ID;
                                                     // let quantity = record.Quantity * parseFloat(subs.qty)
                                                     // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
                                                     subDetail.ProductName = productname;
                                                     subDetail.ProductDescription = product_description;
                                                     // subDetail.Quantity = quantity;
                                                     subDetail.ProductID = productid;
+        
+                                                    // let tempArray = localStorage.getItem('TWorkorders');
+                                                    // let workorders = tempArray?JSON.parse(tempArray): [];
                                                     let workorders = await templateObject.getAllWorkorders();
                                                     let existIndex = workorders.findIndex(order=>{
                                                         return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
@@ -890,135 +1047,164 @@ Template.new_workorder.events({
                                                     }else {
                                                         workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
                                                     }
-                                                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+                                                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
                                                         resolve();
                                                     })
                                                     // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                                            } else if (i == useData.length -1) {
-                                                resolve();
+                                                })
+                                            }else {
+                                                let data = JSON.parse(dataObject[0].data);
+                                                let useData = data.tproductvs1;
+                                                for(let i=0 ; i< useData.length; i++) {
+                                                    if(useData[i].fields.ProductName == subProductName) {
+                                                            let productname = subProductName;
+                                                            let product_description = useData[i].fields.ProductDescription;
+                                                            let productid = useData[i].fields.ID;
+                                                            // let quantity = record.Quantity * parseFloat(subs.qty)
+                                                            // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
+                                                            subDetail.ProductName = productname;
+                                                            subDetail.ProductDescription = product_description;
+                                                            // subDetail.Quantity = quantity;
+                                                            subDetail.ProductID = productid;
+                                                            let workorders = await templateObject.getAllWorkorders();
+                                                            let existIndex = workorders.findIndex(order=>{
+                                                                return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
+                                                            })
+                                                            if(existIndex > -1) {
+                                                                workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
+                                                            }else {
+                                                                workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
+                                                            }
+                                                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+                                                                resolve();
+                                                            })
+                                                            // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                                                    } else if (i == useData.length -1) {
+                                                        resolve();
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }
-                                }).catch(function(err){
-                                    productService.getOneProductdatavs1byname(subProductName).then(async function(data){
-                                        let productname = subProductName;
-                                        let product_description = data.tproduct[0].fields.ProductDescription;
-                                        let productid = data.tproduct[0].fields.ID;
-                                        // let quantity = record.Quantity * parseFloat(subs.qty)
-                                        // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
-                                        subDetail.ProductName = productname;
-                                        subDetail.ProductDescription = product_description;
-                                        // subDetail.Quantity = quantity;
-                                        subDetail.ProductID = productid;
-
-                                        // let tempArray = localStorage.getItem('TWorkorders');
-                                        // let workorders = tempArray?JSON.parse(tempArray): [];
-                                        let workorders = await templateObject.getAllWorkorders();
-                                        let existIndex = workorders.findIndex(order=>{
-                                            return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
+                                        }).catch(function(err){
+                                            productService.getOneProductdatavs1byname(subProductName).then(async function(data){
+                                                let productname = subProductName;
+                                                let product_description = data.tproduct[0].fields.ProductDescription;
+                                                let productid = data.tproduct[0].fields.ID;
+                                                // let quantity = record.Quantity * parseFloat(subs.qty)
+                                                // subDetail = {...subDetail, ProductName: productname, ProductDescription: product_description, };
+                                                subDetail.ProductName = productname;
+                                                subDetail.ProductDescription = product_description;
+                                                // subDetail.Quantity = quantity;
+                                                subDetail.ProductID = productid;
+        
+                                                // let tempArray = localStorage.getItem('TWorkorders');
+                                                // let workorders = tempArray?JSON.parse(tempArray): [];
+                                                let workorders = await templateObject.getAllWorkorders();
+                                                let existIndex = workorders.findIndex(order=>{
+                                                    return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
+                                                })
+                                                if(existIndex > -1) {
+                                                    workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
+                                                }else {
+                                                    workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
+                                                }
+                                                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
+                                                    resolve();
+                                                })
+                                                // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                                                // resolve();
+                                            }).catch(function(error){
+                                                resolve();
+                                            })
                                         })
-                                        if(existIndex > -1) {
-                                            workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
-                                        }else {
-                                            workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
-                                        }
-                                        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function() {
-                                            resolve();
-                                        })
-                                        // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-                                        // resolve();
-                                    }).catch(function(error){
-                                        resolve();
                                     })
-                                })
-                            })
+                                }
+                                await saveOneSubOrder();
+                            }
+        
                         }
-                        await saveOneSubOrder();
                     }
-
                 }
-            }
+        
+                await saveSubOrders();
+        
+                async function saveMainOrders() {
+        
+                    let record = templateObject.workorderrecord.get();
+                    let totalWorkOrders = await templateObject.getAllWorkorders();
+                    let savedworkorders = totalWorkOrders.filter(order => {
+                        return order.fields.SaleID == templateObject.salesOrderId.get();
+                    })
+                    let count = savedworkorders.length;
+                    let temp = cloneDeep(record);
+                    temp = {...temp, isStarted: true}
+                    templateObject.workorderrecord.set(temp);
+                    record = templateObject.workorderrecord.get();
+                    let objDetail = {
+                        LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        Customer: $('#edtCustomerName').val() || '',
+                        OrderTo: $('#txabillingAddress').val() || '',
+                        PONumber: $('#ponumber').val()||'',
+                        SaleDate: record.saledate,
+                        DueDate: record.duedate,
+                        BOMStructure: JSON.stringify(templateObject.bomStructure.get()),
+                        SaleID: templateObject.salesOrderId.get(),
+                        OrderDate: new Date(),
+                        StartTime: mainOrderStart,
+                        ProductName: record.productname,
+                        ProductDescription: record.product_description,
+                        ShipDate: record.shipDate,
+                        ProductID: record.productid,
+                        Quantity: record.quantity || 1,
+                        InProgress: record.isStarted,
+                        ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString()
+                    }
+        
+                    // manufacturingService.saveWorkOrder({
+                    //     type: 'TVS1Workorder',
+                    //     fields: objDetail
+                    // }).then(function(){
+                    // }).catch(function(er) {
+                    // })
+        
+        
+                    let workorders = await templateObject.getAllWorkorders();
+                    let existIndex = workorders.findIndex(order=>{
+                        return order.fields.SaleID == objDetail.SaleID && order.fields.ProductName == objDetail.ProductName
+                    })
+                    if(existIndex > -1) {
+                        workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:objDetail})
+                    }else {
+                        workorders = [...workorders, {type:'TVS1Workorder', fields:objDetail}];
+                    }
+                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
+                    // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
+                }
+        
+                await saveMainOrders();
+        
+        
+        
+                $('.fullScreenSpin').css('display', 'none');
+                swal({
+                    title: 'Success',
+                    text: 'Work Order has been saved successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Continue',
+                }).then ((result)=>{
+        
+                    if (localStorage.getItem("enteredURL") != null) {
+                        FlowRouter.go(localStorage.getItem("enteredURL"));
+                        localStorage.removeItem("enteredURL");
+                        return;
+                    }
+        
+                    FlowRouter.go('/workorderlist')
+                });
+        
+        
+            }, delayTimeAfterSound);
         }
-
-        await saveSubOrders();
-
-        async function saveMainOrders() {
-
-            let record = templateObject.workorderrecord.get();
-            let totalWorkOrders = await templateObject.getAllWorkorders();
-            let savedworkorders = totalWorkOrders.filter(order => {
-                return order.fields.SaleID == templateObject.salesOrderId.get();
-            })
-            let count = savedworkorders.length;
-            let temp = cloneDeep(record);
-            temp = {...temp, isStarted: true}
-            templateObject.workorderrecord.set(temp);
-            record = templateObject.workorderrecord.get();
-            let objDetail = {
-                LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
-                Customer: $('#edtCustomerName').val() || '',
-                OrderTo: $('#txabillingAddress').val() || '',
-                PONumber: $('#ponumber').val()||'',
-                SaleDate: record.saledate,
-                DueDate: record.duedate,
-                BOMStructure: JSON.stringify(templateObject.bomStructure.get()),
-                SaleID: templateObject.salesOrderId.get(),
-                OrderDate: new Date(),
-                StartTime: mainOrderStart,
-                ProductName: record.productname,
-                ProductDescription: record.product_description,
-                ShipDate: record.shipDate,
-                ProductID: record.productid,
-                Quantity: record.quantity || 1,
-                InProgress: record.isStarted,
-                ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString()
-            }
-
-            // manufacturingService.saveWorkOrder({
-            //     type: 'TVS1Workorder',
-            //     fields: objDetail
-            // }).then(function(){
-            // }).catch(function(er) {
-            // })
-
-
-            let workorders = await templateObject.getAllWorkorders();
-            let existIndex = workorders.findIndex(order=>{
-                return order.fields.SaleID == objDetail.SaleID && order.fields.ProductName == objDetail.ProductName
-            })
-            if(existIndex > -1) {
-                workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:objDetail})
-            }else {
-                workorders = [...workorders, {type:'TVS1Workorder', fields:objDetail}];
-            }
-            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
-            // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
-        }
-
-        await saveMainOrders();
-
-
-
-        $('.fullScreenSpin').css('display', 'none');
-        swal({
-            title: 'Success',
-            text: 'Work Order has been saved successfully',
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'Continue',
-        }).then ((result)=>{
-
-            if (localStorage.getItem("enteredURL") != null) {
-                FlowRouter.go(localStorage.getItem("enteredURL"));
-                localStorage.removeItem("enteredURL");
-                return;
-            }
-
-            FlowRouter.go('/workorderlist')
-        });
-
-
-    }, delayTimeAfterSound);
     },
 
     'click #tblWorkOrderLine tbody tr': function(event) {
@@ -1035,6 +1221,78 @@ Template.new_workorder.events({
         value = parseFloat(value).toFixed(5);
         $(event.target).val(value);
     },
+
+    'click #btnVendorService': async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        async function checkExistPurchaseOrder (workorderid) {
+            return new Promise(async(resolve, reject)=> {
+                getVS1Data('TPurchaseOrderEx').then(function(dataObject) {
+                    if(dataObject.length == 0) {
+                        purchaseService.getPurchaseOrderByWorkorderid(workorderid).then(function(data){
+                            if(data.tpurchaseorderex.length > 0) {
+                                resolve(data.tpurhcaseorderex[0].fields.ID)
+                            } else {
+                                resolve('')
+                            }
+                        }).catch(function(e){
+                            resolve('')
+                        })
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tpurchaseorderex;
+                        let index = useData.findIndex(purchaseOrder => {
+                            return purchaseOrder.fields.CustField2 == workorderid
+                        })
+                        if(index == -1 ) {
+                            purchaseService.getPurchaseOrderByWorkorderid(workorderid).then(function(data){
+                                if(data.tpurchaseorderex.length > 0) {
+                                    resolve(data.tpurhcaseorderex[0].fields.ID)
+                                } else {
+                                    resolve('')
+                                }
+                            }).catch(function(error){
+                                resolve('')
+                            })
+                        } else {
+                            resolve(useData[index].fields.ID)
+                        }
+                    }
+                }).catch(function(e) {
+                    purchaseService.getPurchaseOrderByWorkorderid(workorderid).then(function(data){
+                        if(data.tpurchaseorderex.length > 0) {
+                            resolve(data.tpurhcaseorderex[0].fields.ID)
+                        } else {
+                            resolve('')
+                        }
+                    }).catch(function(err) {
+                        resolve('')
+                    })
+                })
+            })
+        }
+
+        let purchaseOrderId = await checkExistPurchaseOrder();
+        if(purchaseOrderId == '') {
+            swal({
+                title: 'Question',
+                text: 'Do you want to forward this order to vendor service?',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result)=>{
+                if(result.value) {
+                    FlowRouter.go('/purchaseordercard?workorderid='+ FlowRouter.current().queryParams.id)
+                }else if(result.dismiss == 'cancel') {
+                    return;
+                }
+            })
+        } else {
+            FlowRouter.go('/purchaseordercard?id=' + purchaseOrderId)
+        }
+    }
 
 })
 
@@ -1056,6 +1314,10 @@ Template.new_workorder.helpers({
 
     isMobileDevices: ()=> {
         return Template.instance().isMobileDevices.get()
+    },
+
+    isSaved: () => {
+        return Template.instance().isSaved.get();
     }
 
 })
