@@ -204,7 +204,6 @@ Template.fixedassetcard.events({
         Active: true
       }
     };
-    console.log(newFixedAsset);
 
     function getDateStr(dateVal) {
       if (!dateVal)
@@ -224,7 +223,7 @@ Template.fixedassetcard.events({
       });
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
   },
   "click button.btnBack": function() {
