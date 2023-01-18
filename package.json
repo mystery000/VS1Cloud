@@ -4,13 +4,11 @@
   "version": "1.0.0",
   "description": "VS1 Cloud Application.",
   "scripts": {
-    "start": "meteor run --no-lint --no-release-check",
-    "dev": "meteor --port 3300",
+    "start": "meteor run",
+    "dev": "NODE_OPTIONS=' --max-old-space-size=8192' meteor --settings settings-development.json --port 3300",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer",
-    "check-memory": "node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'",
-    "set-memory-limit": "export NODE_OPTIONS='--max-old-space-size=8196'"
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
