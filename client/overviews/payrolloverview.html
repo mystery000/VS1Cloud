@@ -891,8 +891,9 @@
                             <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
                                 <button type="button" class="btn btn-primary btnAddTimeSheet" data-toggle="modal" data-target="#addTimeSheetModal" ><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Timesheet</button>
                             </div>
-                        </div> 
-                        <table id="tblTimeSheet" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
+                        </div>
+                        {{> non_transactional_list tablename = "tblTimeSheet"}}
+                        <!-- <table id="tblTimeSheet" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
                             <thead>
                                 <tr>
                                     <th>First Name</th>
@@ -915,7 +916,7 @@
                                             <td>{{ formatHours item.Hours }}</td>
                                         </tr>
                                     {{/each}}
-                                {{/if}}
+                                {{/if}} -->
                               
                                 <!-- <tr>
                                     <td>Odette</td>
@@ -925,8 +926,8 @@
                                     <td>31 Jan 2023 06:09</td>
                                     <td>48.00</td>
                                 </tr> -->
-                            </tbody>
-                        </table>
+                            <!-- </tbody>
+                        </table> -->
                     </div>
 
                         <div class="table-responsive">

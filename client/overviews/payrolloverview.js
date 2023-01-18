@@ -300,157 +300,157 @@ Template.payrolloverview.onRendered(function () {
 
     // TODO: Datable jquery to be added
 
-    setTimeout(() => {
+    // setTimeout(() => {
 
-      $("#tblTimeSheet").DataTable({
-        columnDefs: [
-          {
-            orderable: false,
-            targets: -1
-          }
-        ],
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        buttons: [
-          {
-            extend: "excelHtml5",
-            text: "",
-            download: "open",
-            className: "btntabletocsv hiddenColumn",
-            filename: "timesheets_" + moment().format(),
-            orientation: "portrait",
-            exportOptions: {
-              columns: ":visible"
-            }
-          }, {
-            extend: "print",
-            download: "open",
-            className: "btntabletopdf hiddenColumn",
-            text: "",
-            title: "Timesheets",
-            filename: "timesheets_" + moment().format(),
-            exportOptions: {
-              columns: ":visible"
-            }
-          }
-        ],
-        select: true,
-        destroy: true,
-        colReorder: true,
-        lengthMenu: [
-          [
-            25, -1
-          ],
-          [
-            25, "All"
-          ]
-        ],
-        // bStateSave: true,
-        // rowId: 0,
-        paging: true,
-        info: true,
-        responsive: true,
-        order: [
-          [0, "asc"]
-        ],
-        action: function () {
-          $("#tblTimeSheet").DataTable().ajax.reload();
-        },fnDrawCallback: function (oSettings) {
-          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //   $("#tblTimeSheet").DataTable({
+    //     columnDefs: [
+    //       {
+    //         orderable: false,
+    //         targets: -1
+    //       }
+    //     ],
+    //     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //     buttons: [
+    //       {
+    //         extend: "excelHtml5",
+    //         text: "",
+    //         download: "open",
+    //         className: "btntabletocsv hiddenColumn",
+    //         filename: "timesheets_" + moment().format(),
+    //         orientation: "portrait",
+    //         exportOptions: {
+    //           columns: ":visible"
+    //         }
+    //       }, {
+    //         extend: "print",
+    //         download: "open",
+    //         className: "btntabletopdf hiddenColumn",
+    //         text: "",
+    //         title: "Timesheets",
+    //         filename: "timesheets_" + moment().format(),
+    //         exportOptions: {
+    //           columns: ":visible"
+    //         }
+    //       }
+    //     ],
+    //     select: true,
+    //     destroy: true,
+    //     colReorder: true,
+    //     lengthMenu: [
+    //       [
+    //         25, -1
+    //       ],
+    //       [
+    //         25, "All"
+    //       ]
+    //     ],
+    //     // bStateSave: true,
+    //     // rowId: 0,
+    //     paging: true,
+    //     info: true,
+    //     responsive: true,
+    //     order: [
+    //       [0, "asc"]
+    //     ],
+    //     action: function () {
+    //       $("#tblTimeSheet").DataTable().ajax.reload();
+    //     },fnDrawCallback: function (oSettings) {
+    //       let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
-          $(".paginate_button.page-item").removeClass("disabled");
-          $("#tblJournalList_ellipsis").addClass("disabled");
+    //       $(".paginate_button.page-item").removeClass("disabled");
+    //       $("#tblJournalList_ellipsis").addClass("disabled");
 
-          if (oSettings._iDisplayLength == -1) {
-            if (oSettings.fnRecordsDisplay() > 150) {
-              $(".paginate_button.page-item.previous").addClass("disabled");
-              $(".paginate_button.page-item.next").addClass("disabled");
-            }
-          } else {}
-          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            $(".paginate_button.page-item.next").addClass("disabled");
-          }
+    //       if (oSettings._iDisplayLength == -1) {
+    //         if (oSettings.fnRecordsDisplay() > 150) {
+    //           $(".paginate_button.page-item.previous").addClass("disabled");
+    //           $(".paginate_button.page-item.next").addClass("disabled");
+    //         }
+    //       } else {}
+    //       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //         $(".paginate_button.page-item.next").addClass("disabled");
+    //       }
 
-          $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
-            $(".fullScreenSpin").css("display", "inline-block");
-            let dataLenght = oSettings._iDisplayLength;
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    //       $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+    //         $(".fullScreenSpin").css("display", "inline-block");
+    //         let dataLenght = oSettings._iDisplayLength;
+    //         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (
-            dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (
-            dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-            if (data.Params.IgnoreDates == true) {
-              sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                getVS1Data("TJournalEntryList").then(function (dataObjectold) {
-                  if (dataObjectold.length == 0) {} else {
-                    let dataOld = JSON.parse(dataObjectold[0].data);
+    //         let formatDateFrom = dateFrom.getFullYear() + "-" + (
+    //         dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //         let formatDateTo = dateTo.getFullYear() + "-" + (
+    //         dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //         if (data.Params.IgnoreDates == true) {
+    //           sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //             getVS1Data("TJournalEntryList").then(function (dataObjectold) {
+    //               if (dataObjectold.length == 0) {} else {
+    //                 let dataOld = JSON.parse(dataObjectold[0].data);
 
-                    var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-                    let objCombineData = {
-                      Params: dataOld.Params,
-                      tjournalentrylist: thirdaryData
-                    };
+    //                 var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
+    //                 let objCombineData = {
+    //                   Params: dataOld.Params,
+    //                   tjournalentrylist: thirdaryData
+    //                 };
 
-                    addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
-                      templateObject.resetData(objCombineData);
-                      LoadingOverlay.hide();
-                    }).catch(function (err) {
-                      LoadingOverlay.hide();
-                    });
-                  }
-                }).catch(function (err) {});
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-            } else {
-              sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                getVS1Data("TJournalEntryList").then(function (dataObjectold) {
-                  if (dataObjectold.length == 0) {} else {
-                    let dataOld = JSON.parse(dataObjectold[0].data);
+    //                 addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                   templateObject.resetData(objCombineData);
+    //                   LoadingOverlay.hide();
+    //                 }).catch(function (err) {
+    //                   LoadingOverlay.hide();
+    //                 });
+    //               }
+    //             }).catch(function (err) {});
+    //           }).catch(function (err) {
+    //             LoadingOverlay.hide();
+    //           });
+    //         } else {
+    //           sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //             getVS1Data("TJournalEntryList").then(function (dataObjectold) {
+    //               if (dataObjectold.length == 0) {} else {
+    //                 let dataOld = JSON.parse(dataObjectold[0].data);
 
-                    var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-                    let objCombineData = {
-                      Params: dataOld.Params,
-                      tjournalentrylist: thirdaryData
-                    };
+    //                 var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
+    //                 let objCombineData = {
+    //                   Params: dataOld.Params,
+    //                   tjournalentrylist: thirdaryData
+    //                 };
 
-                    addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
-                      templateObject.resetData(objCombineData);
-                      LoadingOverlay.hide();
-                    }).catch(function (err) {
-                      LoadingOverlay.hide();
-                    });
-                  }
-                }).catch(function (err) {});
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-            }
-          });
+    //                 addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                   templateObject.resetData(objCombineData);
+    //                   LoadingOverlay.hide();
+    //                 }).catch(function (err) {
+    //                   LoadingOverlay.hide();
+    //                 });
+    //               }
+    //             }).catch(function (err) {});
+    //           }).catch(function (err) {
+    //             LoadingOverlay.hide();
+    //           });
+    //         }
+    //       });
 
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        },
-        fnInitComplete: function () {
-            setTimeout(function() {
-            $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
-          }, 3500);
-        },
-        language: {
-          search: "",
-          searchPlaceholder: "Search List..."
-        },
-        fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-          let countTableData = data.Params.Count || 0; //get count from API data
+    //       setTimeout(function () {
+    //         MakeNegative();
+    //       }, 100);
+    //     },
+    //     fnInitComplete: function () {
+    //         setTimeout(function() {
+    //         $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+    //       }, 3500);
+    //     },
+    //     language: {
+    //       search: "",
+    //       searchPlaceholder: "Search List..."
+    //     },
+    //     fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //       let countTableData = data.Params.Count || 0; //get count from API data
 
-          return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
-        }
+    //       return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
+    //     }
 
-      })
+    //   })
 
-    }, 500);
+    // }, 500);
 
   },
 
