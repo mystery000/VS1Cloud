@@ -12934,11 +12934,17 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getVatReturnData(false, datefrom, dateto);
         }
     });
+
+    $(document).on("click", "#tblAllTaskDatatable tbody tr", function(e) {
+        setTimeout(function() {
+            templateObject.getSubtaskData(false);
+        }, 10);
+    });
 });
 
 Template.non_transactional_list.events({
-    "click .openEditTaskModal": async function(e) {
-    // "click #tblCustomerCrmListWithDate tbody tr, click .tblLeadCrmListWithDate tbody tr, click .tblSupplierCrmListWithDate tbody tr": async function(e) {
+    // "click .openEditTaskModal": async function(e) {
+    "click #tblCustomerCrmListWithDate tbody tr, click .tblLeadCrmListWithDate tbody tr, click .tblSupplierCrmListWithDate tbody tr, click .tblAllTaskDatatable tbody tr": async function(e) {
         const templateObject = Template.instance();
         setTimeout(function() {
             templateObject.getSubtaskData(false);
