@@ -303,6 +303,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
+import './lib/global/soundalert.js';
 /* Rasheed */
 
 /* Jeyhun */
@@ -468,6 +469,7 @@ import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
+// import './reports/balancesheet/balancetransactionlist.js';
 /* Roverto */
 
 /* Kelvin More */
