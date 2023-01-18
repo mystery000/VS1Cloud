@@ -22,6 +22,8 @@ Template.fixedassetcard.onCreated(function () {
   templateObject.edtDepreciationAssetAccount = new ReactiveVar(0);
   templateObject.edtDepreciationExpenseAccount = new ReactiveVar(0);
 
+  templateObject.edtSupplierId = new ReactiveVar(0);
+
   templateObject.chkEnterAmount = new ReactiveVar();
   templateObject.chkEnterAmount.set(true);
 
@@ -149,21 +151,15 @@ Template.fixedassetcard.onRendered(function () {
     yearRange: "-90:+10",
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function(e) {
-    // $(".colAccountName").removeClass('boldtablealertsborder');
-    let selectLineID = $('#selectLineID').val();
-    let accountId = $(this).find('td.colAccountID').html();
-    let accountName = $(this).find('td.productName').html();
-    // let taxcodeList = templateObject.taxraterecords.get();
-    templateObject[templateObject.current_account_type.get()].set(accountName);
-    var table = $(this);
-    $("input#"+templateObject.current_account_type.get()).val(accountName);
-
-    $('#accountListModal').modal('toggle');
-  });
-  $(document).on("click", "#tblFixedassettypelist tbody tr", function(e) {
+  $(document).on("click", "#tblFixedAssetType tbody tr", function(e) {
     $('input#edtAssetType').val($(this).find('td.AssetName').html());
     $('#fixedAssetTypeListModal').modal('hide');
+  });
+
+  $(document).on("click", "#tblSupplierlist tbody tr", function(e) {
+    $('input#edtSupplierName').val($(this).find('td.colCompany').html());
+    templateObject.edtSupplierId.set(parseInt($(this).attr('id')));
+    $('#supplierListModal').modal('hide');
   });
 });
 Template.fixedassetcard.events({
@@ -187,7 +183,8 @@ Template.fixedassetcard.events({
         DepreciationStartDate: getDateStr($("#edtDepreciationStartDate").datepicker("getDate")), // DateRenewal Date
         PurchDate: getDateStr($("#edtDateofPurchase").datepicker("getDate")), //
         PurchCost: parseInt($('input#edtPurchCost').val()) || 0, //
-        // SupplierID: $('input#edtModel').val(), //
+        SupplierID: templateObject.edtSupplierId.get(), //
+        SupplierName: $('input#edtSupplierName').val(), //
         // InsuranceInfo: $('input#edtInsuranceInfo').val(), //
 
         // -----------------Depreciation Information
@@ -221,6 +218,7 @@ Template.fixedassetcard.events({
       }).catch(function (err) {
         $(".fullScreenSpin").css("display", "none");
       });
+      FlowRouter.go('/fixedassetsoverview');
     })
     .catch((err) => {
       // console.log(err);
@@ -229,6 +227,9 @@ Template.fixedassetcard.events({
   },
   "click button.btnBack": function() {
     FlowRouter.go('/fixedassetsoverview');
+  },
+  "click input#edtSupplierName": function() {
+    $('#supplierListModal').modal('show');
   },
   'change select#edtCostAssetAccount': function(event) {
     Template.instance().edtCostAssetAccount.set(event.target.value);

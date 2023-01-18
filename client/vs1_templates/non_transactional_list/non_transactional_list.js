@@ -962,6 +962,13 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Project', class: 'colTaskProjects no-modal', active: false, display: true, width: "100" },
                 { index: 6, label: 'Actions', class: 'colTaskActions no-modal', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename === "tblFixedAssetType") {
+            reset_data = [
+                { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
+                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "" },
+                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "" },
+                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "" },
+            ];
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -13190,7 +13197,7 @@ Template.non_transactional_list.onRendered(function() {
           asset.fields.CUSTFLD5 || "",
           asset.fields.PurchDate ? moment(asset.fields.PurchDate).format("DD/MM/YYYY") : "",
           asset.fields.PurchCost || "",
-          "",
+          asset.fields.SupplierName,
           asset.fields.CUSTDATE1 ? moment(asset.fields.CUSTDATE1).format("DD/MM/YYYY") : "",
           '',
           asset.fields.DepreciationStartDate ? moment(asset.fields.DepreciationStartDate).format("DD/MM/YYYY") : ""
@@ -13413,7 +13420,7 @@ Template.non_transactional_list.onRendered(function() {
       $('div.dataTables_filter input').addClass('form-control form-control-sm');
     };
 
-    // Get AssetRegisterList
+    // Get FixedAssetList
     templateObject.getFixedAssetData = function () {
       getVS1Data("TFixedAssets").then(function (dataObject) {
         if (dataObject.length == 0) {
@@ -13470,6 +13477,163 @@ Template.non_transactional_list.onRendered(function() {
           asset.fields.Active || false
         ];
         dataTableList.push(dataList);
+      }
+      $(".fullScreenSpin").css("display", "none");
+      templateObject.transactiondatatablerecords.set(dataTableList);
+
+      if (templateObject.transactiondatatablerecords.get()) {
+        setTimeout(function() {
+            MakeNegative();
+        }, 100);
+      }
+      let columnData = [];
+      let displayfields = templateObject.non_trans_displayfields.get();
+      if( displayfields.length > 0 ){
+          displayfields.forEach(function( item ){
+            if (item.id == 0) {
+              columnData.push({
+                className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                targets: item.id,
+                width: "10px",
+                createdCell: function(td, cellData, rowData, row, col) {
+                  $(td).closest("tr").attr("id", rowData[0]);
+                }
+              })
+            }
+            else {
+              columnData.push({
+                  className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                  targets: item.id,
+              })
+            }
+          });
+      }
+      setTimeout(function() {
+        $('#' + currenttablename).DataTable({
+            data: dataTableList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: columnData,
+            buttons: [
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "asc"]
+            ],
+            action: function() {
+                $('#' + currenttablename).DataTable().ajax.reload();
+            },
+            "fnDrawCallback": function(oSettings) {
+              $('.paginate_button.page-item').removeClass('disabled');
+              $('#' + currenttablename + '_ellipsis').addClass('disabled');
+              if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+
+                  }
+              } else {
+
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $('.paginate_button.page-item.next').addClass('disabled');
+              }
+
+              $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                  $('.fullScreenSpin').css('display', 'inline-block');
+                  //var splashArrayCustomerListDupp = new Array();
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $('#' + currenttablename + '_filter input').val();                 
+
+              });
+              setTimeout(function() {
+                  MakeNegative();
+              }, 100);
+            },
+            language: { search: "", searchPlaceholder: "Search List..." },
+            "fnInitComplete": function(oSettings) {
+                // if (deleteFilter) {
+                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                // } else {
+                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                // }
+                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+            },
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                // let countTableData = data.Params.Count || 0; //get count from API data
+                //
+                // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
+
+        }).on('page', function() {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }).on('column-reorder', function() {
+
+        }).on('length.dt', function(e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                    $(".fullScreenSpin").css("display", "none");
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+            } else {
+                $(".fullScreenSpin").css("display", "none");
+            }
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        });
+        $(".fullScreenSpin").css("display", "none");
+      } , 0);
+      $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    };
+
+    // Get FixedAssetList
+    templateObject.getFixedAssetTypeData = function () {
+        getVS1Data("TFixedAssetType").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            fixedAssetService.getFixedAssetTypes().then(function (data) {
+              templateObject.setFixedAssetTypeList(data);
+            }).catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            templateObject.setFixedAssetTypeList(data);
+          }
+        }).catch(function (err) {
+          fixedAssetService.getFixedAssetTypes().then(function (data) {
+            templateObject.setFixedAssetTypeList(data);
+          }).catch(function (err) {
+            $(".fullScreenSpin").css("display", "none");
+          });
+        });
+      };
+      
+    templateObject.setFixedAssetTypeList = function (data) {
+      addVS1Data('TFixedAssetType', JSON.stringify(data));
+      const dataTableList = new Array();
+      for (const asset of data.tfixedassettype) {
+          const dataList = [
+              asset.fields.ID || "",
+              asset.fields.AssetTypeCode || "",
+              asset.fields.AssetTypeName || "",
+              asset.fields.Notes || "",
+              asset.fields.Active || false,
+          ];
+          if (asset.fields.Active)
+              dataTableList.push(dataList);
       }
       $(".fullScreenSpin").css("display", "none");
       templateObject.transactiondatatablerecords.set(dataTableList);
@@ -13693,7 +13857,9 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getAssetRegisterData();
     } else if (currenttablename == "tblFixedAssetList") {
         templateObject.getFixedAssetData();
-    }
+    } else if (currenttablename == "tblFixedAssetType") {
+        templateObject.getFixedAssetTypeData();
+    } 
     
     tableResize();
 

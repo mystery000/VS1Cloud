@@ -1,11 +1,9 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { FixedAssetService } from "../../fixedasset-service";
-import { ServiceLogService } from "../../servicelog-service";
 import { template } from "lodash";
 
 let fixedAssetService = new FixedAssetService();
-let serviceLogService = new ServiceLogService();
 
 Template.servicelogcard.onCreated(function () {
   const templateObject = Template.instance();
@@ -123,8 +121,8 @@ Template.servicelogcard.events({
     };
 
 
-    serviceLogService.saveServiceLog(newServiceLog).then((data) => {
-      serviceLogService.getServiceLogList().then(function (data) {
+    fixedAssetService.saveServiceLog(newServiceLog).then((data) => {
+      fixedAssetService.getServiceLogList().then(function (data) {
         addVS1Data("TServiceLogList", JSON.stringify(data));
       });
     }).catch((err) => {

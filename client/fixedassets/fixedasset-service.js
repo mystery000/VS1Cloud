@@ -30,8 +30,8 @@ export class FixedAssetService extends BaseService {
 
   getFixedAssetTypes() {
     let options = {
-      PropertyList: "AssetTypeCode, AssetTypeName, Notes, Active",
-      select: "[Active]=true",
+      ListType: "Detail",
+      select: "[Active]=true"
     };
     return this.getList(this.ERPObjects.TFixedAssetType, options);
   }
@@ -50,5 +50,14 @@ export class FixedAssetService extends BaseService {
   
   saveServiceLog(data) {
     return this.POST(this.ERPObjects.TServiceLog, data);
+  }
+
+  getCostTypeList() {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    };
+    console.log(this.ERPObjects);
+    return this.GET(this.ERPObjects.TCostTypes);
   }
 }
