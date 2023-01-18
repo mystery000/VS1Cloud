@@ -1849,7 +1849,7 @@ Template.new_salesorder.onCreated(function () {
           taxCodesList.push(taxcoderecordObj);
           splashArrayTaxRateList.push(dataList);
         }
-        temaplteObject.taxraterecords.set(taxCodesList);
+        templateObject.taxraterecords.set(taxCodesList);
         if (splashArrayTaxRateList) {
           $('#tblTaxRate').DataTable({
             data: splashArrayTaxRateList,
