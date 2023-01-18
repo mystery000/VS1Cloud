@@ -1213,7 +1213,7 @@ Template.stocktransfercard.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }
         setTimeout(function() {
-            $('#edtCustomerEmail').val(localStorage.getItem('mySession'));
+            $('#edtSupplierEmail').val(localStorage.getItem('mySession'));
         }, 200);
     } else {
         $('.fullScreenSpin').css('display', 'none');
@@ -1254,7 +1254,7 @@ Template.stocktransfercard.onRendered(function() {
         setTimeout(function() {
             $('#sltDepartment').val(defaultDept);
             $('#sltBankAccountName').val('Stock Adjustment');
-            $('#edtCustomerEmail').val(localStorage.getItem('mySession'));
+            $('#edtSupplierEmail').val(localStorage.getItem('mySession'));
             setTimeout(function() {
                 getVS1Data('TDeptClass').then(function(dataObject) {
                     if (dataObject.length == 0) {
@@ -1449,15 +1449,15 @@ Template.stocktransfercard.onRendered(function() {
         $('#sltDepartment').editableSelect();
         $('#edtCustomerName').editableSelect();
         $('#sltBankAccountName').editableSelect();
-        $('#edtCustomerEmail').editableSelect();
+        // $('#edtSupplierEmail').editableSelect();
         $('#shipvia').editableSelect();
 
         $('#tblEmployeelist tbody').on('click', 'tr', function(event) {
-            $('#edtCustomerEmail').val($(event.target).closest("tr").find('.colEmail').text());
+            $('#edtSupplierEmail').val($(event.target).closest("tr").find('.colEmail').text());
             $('#employeeList').modal('hide');
-            $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));
+            $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));
             if ($('.chkEmailCopy').is(':checked')) {
-                let checkEmailData = $('#edtCustomerEmail').val();
+                let checkEmailData = $('#edtSupplierEmail').val();
                 if (checkEmailData.replace(/\s/g, '') === '') {
                     $('.chkEmailCopy').prop('checked', false);
                     swal('Employee Email cannot be blank!', '', 'warning');
@@ -1478,7 +1478,7 @@ Template.stocktransfercard.onRendered(function() {
             } else {}
         })
 
-        $("#edtCustomerEmail").on('dblclick', function(e) {
+        $("#edtSupplierEmail").on('dblclick', function(e) {
             $('#employeeList').modal('show');
         });
         $('#addRow').on('click', function() {
@@ -3438,7 +3438,7 @@ Template.stocktransfercard.events({
                 let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 //let customerEmailName = $('#edtCustomerName').val();
-                let checkEmailData = $('#edtCustomerEmail').val();
+                let checkEmailData = $('#edtSupplierEmail').val();
                 // let grandtotal = $('#grandTotal').html();
                 // let amountDueEmail = $('#totalBalanceDue').html();
                 // let emailDueDate = $("#dtDueDate").val();
@@ -3785,7 +3785,7 @@ Template.stocktransfercard.events({
               let mailFromName = localStorage.getItem('vs1companyName');
               let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
               //let customerEmailName = $('#edtCustomerName').val();
-              let checkEmailData = $('#edtCustomerEmail').val();
+              let checkEmailData = $('#edtSupplierEmail').val();
               // let grandtotal = $('#grandTotal').html();
               // let amountDueEmail = $('#totalBalanceDue').html();
               // let emailDueDate = $("#dtDueDate").val();
@@ -4136,7 +4136,7 @@ Template.stocktransfercard.events({
                 let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 //let customerEmailName = $('#edtCustomerName').val();
-                let checkEmailData = $('#edtCustomerEmail').val();
+                let checkEmailData = $('#edtSupplierEmail').val();
                 // let grandtotal = $('#grandTotal').html();
                 // let amountDueEmail = $('#totalBalanceDue').html();
                 // let emailDueDate = $("#dtDueDate").val();

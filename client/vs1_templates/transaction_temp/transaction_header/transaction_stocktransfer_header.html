@@ -14,20 +14,98 @@
       </div>
   </header>
   {{> help_modal}}
-  
+
   <div class="row" style="background-color: #ededed; padding: 32px; padding-bottom: 0px;">
     <div class="col-12 col-md-6 col-lg-2 colProcessed" id="colProcessed" style="display: none;">
       <h3 style="margin-left: 0px; margin-top: 35px; color: #e02d1b; font-weight: 600;">Processed</h3>
     </div>
   </div>
-  <div class="row" style="background-color: #ededed; padding: 8px 32px 0px 32px;">
+
+<div class="row" style="background-color: #ededed; padding: 8px 32px 8px 32px;">
+  <div class="col-12 col-md-6 col-lg-5 col-xl-5">
+    <div class="row row-middle">
+      <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+        {{> default_select
+              label="Transfer From"
+              type="search"
+              id="sltDepartment"
+              name="sltDepartment"
+            }}
+      </div>
+      <div class="col-12 col-md-6 col-lg-5 col-xl-3">
+        {{> single_date_picker
+            label="Transfer Date"
+            id="dtShipDate"
+            name="dtShipDate"
+            defaultValue=data.transdate
+          }}
+      </div>
+      <div class="col-12 col-md-6 col-lg-5 col-xl-5">
+        {{> default_select
+            label="To Account"
+            id="sltBankAccountName"
+            name="sltBankAccountName"
+            type="search"
+          }}
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+        {{> default_input
+            label="No"
+            type="text"
+            id="txtTransfer"
+            name="txtTransfer"
+            defaultValue=data.id
+          }}
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+        {{> default_select
+            label="Ship Via"
+            type="search"
+            id="shipvia"
+            name="shipvia"
+          }}
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-7">
+        {{> customer_email_input
+          label="Employee"
+          hideEmailUser=true }}
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-5 col-xl-7">
+      <div class="row row-middle">
+        <div class="col-12 col-lg-6">
+          {{# vs1_textarea
+            label="Reason"
+            row="5"
+            id="txtNotes"
+            name="txtNotes"
+            }}{{data.descriptions}}{{/vs1_textarea}}
+        </div>
+        <div class="col-12 col-lg-6">
+          {{# vs1_textarea
+            label="Description"
+            row="5"
+            id="shipcomments"
+            name="shipcomments"
+            }}{{data.notes}}{{/vs1_textarea}}
+        </div>
+      </div>
+  </div>
+</div>
+
+  <!-- <div class="row" style="background-color: #ededed; padding: 8px 32px 0px 32px;">
     <div class="col-12 col-lg-3">
       <div class="row">
         <div class="col-12">
-          {{> customer_email_input
-            label="Employee"
-            hideEmailUser=true
+
+          {{> default_select
+            label="Transfer From"
+            type="search"
+            id="sltDepartment"
+            name="sltDepartment"
           }}
+
           {{> default_input
             label="Transfer No"
             type="text"
@@ -56,18 +134,16 @@
         </div>
         <div class="col-6 col-lg-6">
           {{> default_select
-            label="Transfer From"
-            type="search"
-            id="sltDepartment"
-            name="sltDepartment"
-          }}
-
-          {{> default_select
             label="To Account"
             id="sltBankAccountName"
             name="sltBankAccountName"
             type="search"
           }}
+
+          {{> customer_email_input
+          label="Employee"
+          hideEmailUser=true
+        }}
         </div>
       </div>
     </div>
@@ -87,5 +163,5 @@
         name="shipcomments"
         }}{{data.notes}}{{/vs1_textarea}}
     </div>
-  </div>
+  </div> -->
 </template>

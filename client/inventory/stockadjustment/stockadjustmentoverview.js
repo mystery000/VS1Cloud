@@ -3,7 +3,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import { Template } from 'meteor/templating';
 import "./stockAdjusmentOverview.html";
-
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import {UtilityService} from "../../utility-service";
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
