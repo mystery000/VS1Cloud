@@ -1,25 +1,83 @@
+import { ReactiveVar } from "meteor/reactive-var";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { FixedAssetService } from "../../fixedasset-service";
+import { ServiceLogService } from "../../servicelog-service";
+import { template } from "lodash";
+
+let fixedAssetService = new FixedAssetService();
+let serviceLogService = new ServiceLogService();
+
 Template.servicelogcard.onCreated(function () {
   const templateObject = Template.instance();
-  templateObject.datatablerecords = new ReactiveVar([]);
-  templateObject.displayfields = new ReactiveVar([]);
-  templateObject.reset_data = new ReactiveVar([]);
+  templateObject.fixedAssets = new ReactiveVar([]);
 
-  templateObject.asset_code = new ReactiveVar();
-  templateObject.asset_name = new ReactiveVar();
-  templateObject.service_tyoe = new ReactiveVar();
-  templateObject.service_date = new ReactiveVar();
-  templateObject.service_provider = new ReactiveVar();
-  templateObject.next_service_cate = new ReactiveVar();
+  templateObject.asset_id = new ReactiveVar(0);
+  templateObject.asset_code = new ReactiveVar('');
+  templateObject.asset_name = new ReactiveVar('');
+  templateObject.asset_status = new ReactiveVar(false);
 });
 
 Template.servicelogcard.onRendered(function () {
-  $('#edtAssetCode').editableSelect();
-  let objDetails = {
-    type: "TServiceLog",
-    fields: {
-      
+  let templateObject = Template.instance();
+
+  templateObject.getFixedAssetsList = function () {
+    getVS1Data("TFixedAssets").then(function (dataObject) {
+      if (dataObject.length == 0) {
+        fixedAssetService.getTFixedAssetsList().then(function (data) {
+          setFixedAssetsList(data);
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        setFixedAssetsList(data);
+      }
+    }).catch(function (err) {
+      fixedAssetService.getTFixedAssetsList().then(function (data) {
+        setFixedAssetsList(data);
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
+    });
+  };
+
+  // $(".fullScreenSpin").css("display", "inline-block");
+  templateObject.getFixedAssetsList();
+
+  function setFixedAssetsList(data) {
+    console.log('TFxiedAssets', data);
+    const dataTableList = [];
+    for (const asset of data.tfixedassets) {
+      const dataList = {
+        id: asset.fields.ID || "",
+        assetname: asset.fields.AssetName || "",
+        assetcode: asset.fields.AssetCode || "",
+      };
+      dataTableList.push(dataList);
     }
-};
+    templateObject.fixedAssets.set(dataTableList);
+    templateObject.fixedAssets.get().forEach((asset, index) => {
+      $('#edtAssetCode').editableSelect('add', function(){
+        $(this).val(index);
+        $(this).text(asset.assetcode);
+      });
+    });
+    $('#edtAssetCode').editableSelect();
+  }
+
+  $('#edtAssetCode').editableSelect();
+  $('#edtAssetCode').editableSelect()
+  .on('select.editable-select', function (e, li) {
+    if (li) {
+      const index = parseInt(li.val() || -1);
+      if (index >= 0) {
+        const assetsList = templateObject.fixedAssets.get();
+        templateObject.asset_id.set(assetsList[index].id);
+        templateObject.asset_code.set(assetsList[index].assetcode);
+        templateObject.asset_name.set(assetsList[index].assetname);
+      }
+    }
+  });
 
   $("#date-input,#dtServiceDate,#dtNextServiceDate").datepicker({
     showOn: 'button',
@@ -34,11 +92,59 @@ Template.servicelogcard.onRendered(function () {
     yearRange: "-90:+10",
   });
 });
+
 Template.servicelogcard.events({
   "click button.btnSave": function() {
-    
+    const templateObject = Template.instance();
+    let newServiceLog = {
+      "type": "TServiceLog",
+      "fields": {
+        AssetID: templateObject.asset_id.get(),
+        AssetCode: templateObject.asset_code.get(),
+        AssetName: templateObject.asset_name.get(),
+        ServiceProvider: $("#edtServiceProvider").val(),
+        // ServiceType: $("#edtServiceProvider").val(),
+        ServiceDate: getDateStr($("#dtServiceDate").datepicker("getDate")),
+        NetServiceDate: getDateStr($("#dtNextServiceDate").datepicker("getDate")),
+        HoursForNextService: parseInt($('#edtHours').val()) || 0,
+        KmsForNextService: parseInt($('#edtKms').val()) || 0,
+        ServiceNotes: $("#txtServiceNotes").val(),
+        Done: templateObject.asset_status.get()
+      }
+    };
+    console.log(newServiceLog);
+
+    function getDateStr(dateVal) {
+      if (!dateVal)
+        return '';
+      const dateObj = new Date(dateVal);
+      var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
+      var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
+      var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
+      return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " " + hh + ":" + min + ":" + ss;
+    };
+
+
+    serviceLogService.saveServiceLog(newServiceLog).then((data) => {
+      serviceLogService.getServiceLogList().then(function (data) {
+        console.log("[Updated ServiceLogList]", data);
+        addVS1Data("TServiceLogList", JSON.stringify(data));
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
+  },
+  "click input#chkDone": function() {
+    const templateObject = Template.instance();
+    templateObject.asset_status.set(!templateObject.asset_status.get());
   },
   "click button.btnBack": function() {
     FlowRouter.go('/serviceloglist');
+  }
+});
+
+Template.servicelogcard.helpers({
+  assetName: () => {
+    return Template.instance().asset_name.get();
   }
 });
