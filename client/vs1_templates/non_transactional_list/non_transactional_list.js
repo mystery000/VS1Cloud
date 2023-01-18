@@ -648,7 +648,7 @@ Template.non_transactional_list.onRendered(function() {
             reset_data = [
                 { index: 0, label: '#ID', class: '', active: false, display: true, width: "10" },
                 { index: 1, label: 'Title', class: 'colTitleName', active: true, display: true, width: "150" },
-                { index: 2, label: 'Active', class: 'chkBox', active: true, display: true, width: "50" },
+                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
         } else if (currenttablename == 'tblProcessList') {
             reset_data = [
@@ -6084,11 +6084,17 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayTitleListData = async function(data) {
         var splashArrayTitleList = [
-            [1, "Mr", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>', ],
-            [2, "Mrs", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
-            [3, "MIss", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
-            [4, "Ms", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+            [1,"Mr",""],
+            [2,"Mrs",""],
+            [3,"Miss",""],
+            [4,"Ms",""],
         ];
+        // var splashArrayTitleList = [
+        //     [1, "Mr", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>', ],
+        //     [2, "Mrs", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+        //     [3, "MIss", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+        //     [4, "Ms", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+        // ];
         let deleteFilter = false;
         templateObject.transactiondatatablerecords.set(splashArrayTitleList)
             if(templateObject.transactiondatatablerecords.get()) {
@@ -6116,9 +6122,9 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 2,
-                        className: "chkBox pointer",
-                        width: "20px",
-                    },
+                        className: "colStatus",
+                        width: "100px",
+                    }
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
