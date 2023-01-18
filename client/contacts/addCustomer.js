@@ -48,34 +48,33 @@ Template.customerscard.onCreated(function () {
   templateObject.all_projects = new ReactiveVar([]);
   templateObject.subTasks = new ReactiveVar([]);
 
-    /* Attachments */
-    templateObject.uploadedFile = new ReactiveVar();
-    templateObject.uploadedFiles = new ReactiveVar([]);
-    templateObject.attachmentCount = new ReactiveVar();
-    templateObject.currentAttachLineID = new ReactiveVar();
-    templateObject.uploadedFileJob = new ReactiveVar();
-    templateObject.uploadedFilesJob = new ReactiveVar([]);
-    templateObject.attachmentCountJob = new ReactiveVar();
-    templateObject.uploadedFileJobNoPOP = new ReactiveVar();
-    templateObject.uploadedFilesJobNoPOP = new ReactiveVar([]);
-    templateObject.attachmentCountJobNoPOP = new ReactiveVar();
-    templateObject.currentAttachLineIDJob = new ReactiveVar();
-    templateObject.correspondences = new ReactiveVar([]);
-    templateObject.active_projects = new ReactiveVar([]);
-    templateObject.deleted_projects = new ReactiveVar([]);
-    templateObject.favorite_projects = new ReactiveVar([]);
-    templateObject.tprojectlist = new ReactiveVar([]);
-    templateObject.taskrecords = new ReactiveVar([]);
+  /* Attachments */
+  templateObject.uploadedFile = new ReactiveVar();
+  templateObject.uploadedFiles = new ReactiveVar([]);
+  templateObject.attachmentCount = new ReactiveVar();
+  templateObject.currentAttachLineID = new ReactiveVar();
+  templateObject.uploadedFileJob = new ReactiveVar();
+  templateObject.uploadedFilesJob = new ReactiveVar([]);
+  templateObject.attachmentCountJob = new ReactiveVar();
+  templateObject.uploadedFileJobNoPOP = new ReactiveVar();
+  templateObject.uploadedFilesJobNoPOP = new ReactiveVar([]);
+  templateObject.attachmentCountJobNoPOP = new ReactiveVar();
+  templateObject.currentAttachLineIDJob = new ReactiveVar();
+  templateObject.correspondences = new ReactiveVar([]);
+  templateObject.active_projects = new ReactiveVar([]);
+  templateObject.deleted_projects = new ReactiveVar([]);
+  templateObject.favorite_projects = new ReactiveVar([]);
+  templateObject.tprojectlist = new ReactiveVar([]);
+  templateObject.taskrecords = new ReactiveVar([]);
 
-    templateObject.checkedAppointments = new ReactiveVar();
-    templateObject.checkedAppointments.set(true);
-    templateObject.checkedQuotes = new ReactiveVar();
-    templateObject.checkedQuotes.set(true);
-    templateObject.checkedSalesOrders = new ReactiveVar();
-    templateObject.checkedSalesOrders.set(true);
-    templateObject.checkedInvoices = new ReactiveVar();
-    templateObject.checkedInvoices.set(true);
-});
+  templateObject.checkedAppointments = new ReactiveVar();
+  templateObject.checkedAppointments.set(true);
+  templateObject.checkedQuotes = new ReactiveVar();
+  templateObject.checkedQuotes.set(true);
+  templateObject.checkedSalesOrders = new ReactiveVar();
+  templateObject.checkedSalesOrders.set(true);
+  templateObject.checkedInvoices = new ReactiveVar();
+  templateObject.checkedInvoices.set(true);
 
   // Methods
   this.updateTaskSchedule = function (id, date) {
@@ -583,6 +582,10 @@ Template.customerscard.onCreated(function () {
       $('#addNewJobModal #edtJobNumber').val('1');
     });
   };
+
+
+
+});
 
 Template.customerscard.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
