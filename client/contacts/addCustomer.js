@@ -138,8 +138,7 @@ Template.customerscard.onCreated(function () {
   };
 
   this.getTProjectList = function () {
-    var url = FlowRouter.current().path;
-    url = new URL(window.location.href);
+    let url = new URL(window.location.href);
     let employeeID = '';
 
     crmService.getTProjectList(employeeID).then(function (data) {
