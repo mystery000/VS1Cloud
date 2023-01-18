@@ -1224,56 +1224,58 @@ Template.newprofitandloss.events({
       "-" +
       dateTo.getDate();
 
-    // const filename = loggedCompany + "-Profit and Loss" + ".csv";
+    const filename = "SpreadSheet" + ".xlsx";
 
-    var table = $("#tableExport").filter("table");
-    var rows = table.find('tr').not(options.ignoreRows);
+    utilityService.exportReportToXLSX("tableExport", filename, "xlsx");
 
-    var numCols = rows.first().find("td,th").not(options.ignoreColumns).length;
-    var tables = [];
-    var wsnames = [];
+    // var table = $("#tableExport").filter("table");
+    // var rows = table.find('tr').not(options.ignoreRows);
 
-    var maintab = {
-      rows: []
-    };
+    // var numCols = rows.first().find("td,th").not(options.ignoreColumns).length;
+    // var tables = [];
+    // var wsnames = [];
 
-    rows.each(function() {
-      var cells = [];
-      $(this).find("td,th").not(options.ignoreColumns)
-          .each(function(i, col) {
-              var column = $(col);
+    // var maintab = {
+    //   rows: []
+    // };
 
-              // Strip whitespaces
-              var content = options.trimContent ? $.trim(column.text()) : column.text();
-              cells.push({
-                "data-type": "String",
-                "data-style": "",
-                "data-value": content,
-                "innerHTML": "",
-                "data-formula": null,
-                getAttribute: function (attr_val) {
-                  if (attr_val) {
-                    return this[attr_val];
-                  }
-                }
-              });
-          });
-      maintab.rows.push({cells: cells});
-    });
+    // rows.each(function() {
+    //   var cells = [];
+    //   $(this).find("td,th").not(options.ignoreColumns)
+    //     .each(function(i, col) {
+    //       var column = $(col);
 
-    tables.push(maintab);
+    //       // Strip whitespaces
+    //       var content = options.trimContent ? $.trim(column.text()) : column.text();
+    //       cells.push({
+    //         "data-type": "String",
+    //         "data-style": "",
+    //         "data-value": content,
+    //         "innerHTML": "",
+    //         "data-formula": null,
+    //         getAttribute: function (attr_val) {
+    //           if (attr_val) {
+    //             return this[attr_val];
+    //           }
+    //         }
+    //       });
+    //     });
+    //   maintab.rows.push({cells: cells});
+    // });
+
+    // tables.push(maintab);
 
     //raw data tab content
 
-    tables.push([]);
+    // tables.push([]);
     
     //----------------
     
-    wsnames.push(loggedCompany + "-Profit and Loss");
-    wsnames.push("Raw data");
+    // wsnames.push(loggedCompany + "-Profit and Loss");
+    // wsnames.push("Raw data");
 
 
-    utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Profit and Loss", "");
+    // utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Profit and Loss", "");
     // reportService.getProfitandLoss(formatDateFrom,formatDateTo,false).then(function (data) {
     //     if(data.profitandlossreport){
     //         rows[0] = ['Account Type','Account Name', 'Account Number', 'Total Amount(EX)'];

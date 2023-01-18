@@ -13685,7 +13685,16 @@ Template.non_transactional_list.onRendered(function() {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
         templateObject.getVatReturnData(false, datefrom, dateto);
+    } else if (currenttablename === "tblSubtaskDatatable"){
+        templateObject.getSubtaskData(true);
+    } else if (currenttablename == "tblServiceLogList") {
+        templateObject.getServiceLogData();
+    } else if (currenttablename == "tblAssetRegisterList") {
+        templateObject.getAssetRegisterData();
+    } else if (currenttablename == "tblFixedAssetList") {
+        templateObject.getFixedAssetData();
     }
+    
     tableResize();
 
     $(document).on("click", "#btnRefreshList", function(e) {

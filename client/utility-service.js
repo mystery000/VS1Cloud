@@ -2,6 +2,8 @@ import 'jquery/dist/jquery.min';
 import 'jQuery.print/jQuery.print.js';
 import { jsPDF } from "jspdf";
 import { autoTable } from 'jspdf-autotable';
+const XLSX = require("xlsx");
+
 (function($) {
     $.fn.extend({
         tableHTMLExport: function(options) {
@@ -154,6 +156,93 @@ import { autoTable } from 'jspdf-autotable';
     });
 })(jQuery);
 
+
+(function ($) {
+    $.fn.extend({
+        tableToXlsx: async function (options) {
+
+            var defaults = {
+                separator: ',',
+                newline: '\r\n',
+                ignoreColumns: '',
+                ignoreRows: '',
+                type: 'xlsx',
+                htmlContent: false,
+                consoleLog: false,
+                trimContent: true,
+                quoteFields: true,
+                filename: 'SpreadSheet.xlsx'
+            };
+            var options = $.extend(defaults, options);
+
+            if (options.type == 'xlsx' || options.type == 'xls') {
+
+                var table = this.filter('table'); // TODO use $.each
+
+                if (table.length <= 0) {
+                    throw new Error('tableHTMLExport must be called on a <table> element')
+                }
+
+                if (table.length > 1) {
+                    throw new Error('converting multiple table elements at once is not supported yet')
+                }
+
+                const ignorekeys = ["!cols", "!fullref", "!merges", "!ref", "!rows"];
+
+                var ws1 = XLSX.utils.table_to_sheet(table[0]);
+                var ws2 = XLSX.utils.table_to_sheet(table[0]);
+
+                var wb = XLSX.utils.book_new();
+
+                var new_ws1 = Object.keys(ws1).reduce((ret, key) => {
+                    return ignorekeys.includes(key) || ws1[key].t === 'z'
+                        ? { ...ret, [key]: ws1[key] }
+                        : { ...ret, [key]: { ...ws1[key], f: `'Raw Data'!${key}` } }
+                }, {});
+
+                XLSX.utils.book_append_sheet(wb, new_ws1, 'Sales Export');
+                XLSX.utils.book_append_sheet(wb, ws2, 'Raw Data');
+
+                const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
+                    try {
+                        return window.self === window.top;
+                    } catch {
+                        return false;
+                    }
+                })();
+
+                if (supportsFileSystemAccess) {
+                    try {
+                        const handle = await showSaveFilePicker({
+                            suggestedName: options.filename,
+                            type: [{
+                                description: 'XLSX file',
+                                accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
+                            }]
+                        });
+
+                        const u8 = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
+                        const data = new Blob([u8], { type: "application/vnd.ms-excel" });
+                        console.log({ data })
+                        const writable = await handle.createWritable();
+                        await writable.write(data);
+                        await writable.close();
+                        return;
+                    } catch (err) {
+                        if (err.name == 'AbortError') {
+                            console.log("User Aborted save request");
+                            return;
+                        }
+                    }
+                }
+
+                XLSX.writeFileXLSX(wb, options.filename);
+            }
+            return this;
+        }
+    });
+})(jQuery);
+
 export class UtilityService {
     exportReportToCsvTable = function(tableName, filename, type) {
         $("#" + tableName).tableHTMLExport({
@@ -162,6 +251,15 @@ export class UtilityService {
         });
         $('.fullScreenSpin').css('display', 'none');
     }
+    
+    exportReportToXLSX = function (tableName, filename, type) {
+        $("#" + tableName).tableToXlsx({
+            type: 'xlsx',
+            filename: filename,
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    }
+    
     exportReportToCsv = function(rows, filename, type) {
         let processRow = function(row) {
             let finalVal = '';
