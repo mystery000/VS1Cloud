@@ -1,3 +1,4 @@
+import '../../js/ion.sound.js'
 OkaySound = function () {
 
   $(document).ready(function(){
@@ -67,6 +68,6 @@ DangerSound = function () {
       });
       setTimeout(function () {
         swal.close();
-      }, 2500);
+      }, 4500);
 
 };
