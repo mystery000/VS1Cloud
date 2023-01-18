@@ -3,7 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
 import { UtilityService } from "../utility-service";
 import { CountryService } from '../js/country-service';
-import { PaymentsService } from '../payments/payments-service';
 import { ProductService } from '../product/product-service';
 import { SideBarService } from '../js/sidebar-service';
 import { CRMService } from "../crm/crm-service";
@@ -12,8 +11,6 @@ import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import { Random } from 'meteor/random';
 import { AppointmentService } from '../appointments/appointment-service';
 import EmployeePaySettings from "../js/Api/Model/EmployeePaySettings";
-import EmployeePaySettingFields from "../js/Api/Model/EmployeePaySettingFields";
-import { Employee, EmployeeFields } from '../js/Api/Model/Employee';
 import AssignLeaveType from "../js/Api/Model/AssignLeaveType";
 import AssignLeaveTypeFields from "../js/Api/Model/AssignLeaveTypeFields";
 import PayTemplateEarningLine from "../js/Api/Model/PayTemplateEarningLine";
@@ -35,45 +32,28 @@ import PaySlips from "../js/Api/Model/PaySlips";
 import PaySlipsFields from "../js/Api/Model/PaySlipsFields";
 import 'jquery-editable-select';
 import '../lib/global/indexdbstorage.js';
-import { functionsIn, template } from "lodash";
 import moment from "moment";
 import LoadingOverlay from '../LoadingOverlay';
 import { jsPDF } from "jspdf";
 import erpObject from "../lib/global/erp-objects";
 import CachedHttp from "../lib/global/CachedHttp";
 import GlobalFunctions from "../GlobalFunctions";
-
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './addEmployee.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
-let crmService = new CRMService();
+const sideBarService = new SideBarService();
+const utilityService = new UtilityService();
+const crmService = new CRMService();
+const contactService = new ContactService();
+const countryService = new CountryService();
+const productService = new ProductService();
+const appointmentService = new AppointmentService();
 const employeePayrollServices = new EmployeePayrollService();
 let edtProductSelect = "";
 
 Template.employeescard.onCreated(function() {
     const templateObject = Template.instance();
-    setTimeout(function() {
-        // $('#period').editableSelect('add','Hourly');
-        // $('#period').editableSelect('add','Daily');
-        // $('#period').editableSelect('add','Weekly');
-        // $('#period').editableSelect('add','Monthly');
-        $("#paymentDate").datepicker({
-            showOn: 'button',
-            buttonText: 'Show Date',
-            buttonImageOnly: true,
-            buttonImage: '/img/imgCal2.png',
-            dateFormat: 'dd/mm/yy',
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-90:+10",
-        });
-    }, 1000);
     templateObject.AppTableModalData = new ReactiveVar([]);
     templateObject.ResidencyStatusList = new ReactiveVar();
     templateObject.EmploymentBasisList = new ReactiveVar();
@@ -127,7 +107,6 @@ Template.employeescard.onCreated(function() {
     templateObject.allrepservicedata = new ReactiveVar([]);
 
     templateObject.earningLines = new ReactiveVar([]);
-    
 
     /* PayRun related vars */
     templateObject.payPeriods = new ReactiveVar([]);
@@ -140,19 +119,11 @@ Template.employeescard.onCreated(function() {
 });
 
 Template.employeescard.onRendered(function() {
+    let templateObject = Template.instance();
     let begunDate;
     let currentDate;
-    const erpGet = erpDb();
     LoadingOverlay.show();
     localStorage.setItem('cloudCurrentLogonName', '');
-    //var splashArrayRepServiceList = new Array();
-    let templateObject = Template.instance();
-    let contactService = new ContactService();
-    const countryService = new CountryService();
-    let paymentService = new PaymentsService();
-    let productService = new ProductService();
-    let appointmentService = new AppointmentService();
-    const records = [];
     let countries = [];
     let preferedPayments = [];
     let terms = [];
@@ -161,222 +132,22 @@ Template.employeescard.onRendered(function() {
     let employeePriority = [];
     let currentId = FlowRouter.current().queryParams;
     let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
-    const activeParentTab = ((currentId.activeparenttab)) ? currentId.activeparenttab : 'employeeTab';
-    const activeChildTab = ((currentId.activechildtab)) ? currentId.activechildtab : 'contact-tab';
 
     const dataTableList = [];
     const tableHeaderList = [];
     let salestaxcode = '';
-    let totAmount = 0;
-    let totAmountOverDue = 0;
-
-    // setTimeout(function() {
-    //     $('#tblLeaveRequests').DataTable({
-    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-    //         buttons: [{
-    //             extend: 'excelHtml5',
-    //             text: '',
-    //             download: 'open',
-    //             className: "btntabletocsv hiddenColumn",
-    //             filename: "taxratelist_" + moment().format(),
-    //             orientation: 'portrait',
-    //             exportOptions: {
-    //                 columns: ':visible'
-    //             }
-    //         }, {
-    //             extend: 'print',
-    //             download: 'open',
-    //             className: "btntabletopdf hiddenColumn",
-    //             text: '',
-    //             title: 'Tax Rate List',
-    //             filename: "taxratelist_" + moment().format(),
-    //             exportOptions: {
-    //                 columns: ':visible'
-    //             }
-    //         }],
-    //         select: true,
-    //         destroy: true,
-    //         colReorder: {
-    //             fixedColumnsRight: 1
-    //         },
-    //         lengthMenu: [
-    //             [25, -1],
-    //             [25, "All"]
-    //         ],
-    //         // bStateSave: true,
-    //         // rowId: 0,
-    //         paging: true,
-    //         info: true,
-    //         responsive: true,
-    //         "order": [
-    //             [0, "asc"]
-    //         ],
-    //         action: function() {
-    //             $('#tblLeaveRequests').DataTable().ajax.reload();
-    //         },
-    //         "fnDrawCallback": function(oSettings) {
-    //             setTimeout(function() {
-    //                 MakeNegative();
-    //             }, 100);
-    //         },
-
-    //     }).on('page', function() {
-    //         setTimeout(function() {
-    //             MakeNegative();
-    //         }, 100);
-    //         let draftRecord = templateObject.datatablerecords.get();
-    //         templateObject.datatablerecords.set(draftRecord);
-    //     }).on('column-reorder', function() {
-
-    //     }).on('length.dt', function(e, settings, len) {
-    //         setTimeout(function() {
-    //             MakeNegative();
-    //         }, 100);
-    //     });
-
-    //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
-    //     $('.fullScreenSpin').css('display', 'none');
-    // }, 100);
-
-    // setTimeout(function() {
-    //     $('#tblPayslipHistory').DataTable({
-    //         columnDefs: [{
-    //             "orderable": false,
-    //             "targets": -1
-    //         }],
-    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-    //         buttons: [{
-    //             extend: 'excelHtml5',
-    //             text: '',
-    //             download: 'open',
-    //             className: "btntabletocsv hiddenColumn",
-    //             filename: "taxratelist_" + moment().format(),
-    //             orientation: 'portrait',
-    //             exportOptions: {
-    //                 columns: ':visible'
-    //             }
-    //         }, {
-    //             extend: 'print',
-    //             download: 'open',
-    //             className: "btntabletopdf hiddenColumn",
-    //             text: '',
-    //             title: 'Tax Rate List',
-    //             filename: "taxratelist_" + moment().format(),
-    //             exportOptions: {
-    //                 columns: ':visible'
-    //             }
-    //         }],
-    //         select: true,
-    //         destroy: true,
-    //         colReorder: {
-    //             fixedColumnsRight: 1
-    //         },
-    //         lengthMenu: [
-    //             [25, -1],
-    //             [25, "All"]
-    //         ],
-    //         // bStateSave: true,
-    //         // rowId: 0,
-    //         paging: true,
-    //         info: true,
-    //         responsive: true,
-    //         "order": [
-    //             [0, "asc"]
-    //         ],
-    //         action: function() {
-    //             $('#tblPayslipHistory').DataTable().ajax.reload();
-    //         },
-    //         "fnDrawCallback": function(oSettings) {
-    //             setTimeout(function() {
-    //                 MakeNegative();
-    //             }, 100);
-    //         },
-
-    //     }).on('page', function() {
-    //         setTimeout(function() {
-    //             MakeNegative();
-    //         }, 100);
-    //         let draftRecord = templateObject.datatablerecords.get();
-    //         templateObject.datatablerecords.set(draftRecord);
-    //     }).on('column-reorder', function() {
-
-    //     }).on('length.dt', function(e, settings, len) {
-    //         setTimeout(function() {
-    //             MakeNegative();
-    //         }, 100);
-    //     });
-
-    //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
-    //     $('.fullScreenSpin').css('display', 'none');
-    // }, 100);
-
-    // setTimeout(function() {
-    //     $('#tblPayrollNotes').DataTable({
-    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-    //         buttons: [{
-    //             extend: 'excelHtml5',
-    //             text: '',
-    //             download: 'open',
-    //             className: "btntabletocsv hiddenColumn",
-    //             filename: "taxratelist_" + moment().format(),
-    //             orientation: 'portrait',
-    //             exportOptions: {
-    //                 columns: ':visible'
-    //             }
-    //         }, {
-    //             extend: 'print',
-    //             download: 'open',
-    //             className: "btntabletopdf hiddenColumn",
-    //             text: '',
-    //             title: 'Tax Rate List',
-    //             filename: "taxratelist_" + moment().format(),
-    //             exportOptions: {
-    //                 columns: ':visible'
-    //             }
-    //         }],
-    //         select: true,
-    //         destroy: true,
-    //         colReorder: {
-    //             fixedColumnsRight: 1
-    //         },
-    //         lengthMenu: [
-    //             [25, -1],
-    //             [25, "All"]
-    //         ],
-    //         // bStateSave: true,
-    //         // rowId: 0,
-    //         paging: true,
-    //         info: true,
-    //         responsive: true,
-    //         "order": [
-    //             [0, "asc"]
-    //         ],
-    //         action: function() {
-    //             $('#tblPayrollNotes').DataTable().ajax.reload();
-    //         },
-    //         "fnDrawCallback": function(oSettings) {
-    //             setTimeout(function() {
-    //                 MakeNegative();
-    //             }, 100);
-    //         },
-
-    //     }).on('page', function() {
-    //         setTimeout(function() {
-    //             MakeNegative();
-    //         }, 100);
-    //         let draftRecord = templateObject.datatablerecords.get();
-    //         templateObject.datatablerecords.set(draftRecord);
-    //     }).on('column-reorder', function() {
-
-    //     }).on('length.dt', function(e, settings, len) {
-    //         setTimeout(function() {
-    //             MakeNegative();
-    //         }, 100);
-    //     });
-
-    //     // $('#currencyLists').DataTable().column( 0 ).visible( true );
-    //     $('.fullScreenSpin').css('display', 'none');
-    // }, 200);
+    $("#paymentDate").datepicker({
+        showOn: 'button',
+        buttonText: 'Show Date',
+        buttonImageOnly: true,
+        buttonImage: '/img/imgCal2.png',
+        dateFormat: 'dd/mm/yy',
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+    });
 
     templateObject.getAllTask = function(customerName) {
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
