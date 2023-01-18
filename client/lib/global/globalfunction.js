@@ -6,7 +6,7 @@ import { Session } from 'meteor/session';
 import { HTTP } from "meteor/http";
 let sideBarService = new SideBarService();
 modalDraggable = function () {
-  $.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
+  //$.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
     $('.modal-dialog').draggable({
         containment: "body",
         "handle":".modal-header, .modal-footer"
