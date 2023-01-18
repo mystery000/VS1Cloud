@@ -12,7 +12,7 @@ let fixedassetSercie = new FixedAssetService();
 
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
-  templateObject.current_account_type = new ReactiveVar('');
+  templateObject.currentAssetID = new ReactiveVar(0);
 
   templateObject.allAcounts = new ReactiveVar([]);
   templateObject.edtDepreciationType = new ReactiveVar(0);
@@ -151,6 +151,62 @@ Template.fixedassetcard.onRendered(function () {
     yearRange: "-90:+10",
   });
 
+  let currentAssetID = parseInt(FlowRouter.current().queryParams.assetId || '0');
+  templateObject.currentAssetID.set(currentAssetID);
+
+  if (currentAssetID > 0) {
+    fixedassetSercie.getTFixedAssetByNameOrID(currentAssetID).then((data) => {
+      const assetData = data.tfixedassets;
+      if (assetData.length > 0) {
+        const assetInfo = assetData[0].fields;
+        $('input#edtAssetCode').val(assetInfo.AssetCode);
+        $('input#edtAssetName').val(assetInfo.AssetName);
+        $('input#edtAssetDescription').val(assetInfo.Description);
+        $('input#edtAssetType').val(assetInfo.AssetType);
+        $('input#edtBrand').val(assetInfo.BrandName);
+        $('input#edtModel').val(assetInfo.Model);
+        $('input#edtNumber').val(assetInfo.CUSTFLD1);
+        $('input#edtRegistrationNo').val(assetInfo.CUSTFLD2); // RegistrationNo
+        $('input#edtType').val(assetInfo.CUSTFLD3);
+        $('input#edtCapacityWeight').val(assetInfo.CUSTFLD4); // CapacityWeight
+        $('input#edtCapacityVolume').val(assetInfo.CUSTFLD5); // CapacityVolumn
+        $("#edtDateRegisterRenewal").val(getDatePickerForm(assetInfo.CUSTDATE1)); // RegisterRenewal Date
+        $("#edtDepreciationStartDate").val(getDatePickerForm(assetInfo.DepreciationStartDate)); // DateRenewal Date
+        $("#edtDateofPurchase").val(getDatePickerForm(assetInfo.PurchDate));//
+        $('input#edtPurchCost').val(assetInfo.PurchCost); //
+        templateObject.edtSupplierId.set(assetInfo.SupplierID);
+        $('input#edtSupplierName').val(assetInfo.SupplierName);
+        // InsuranceInfo: $('input#edtInsuranceInfo').val(), //
+
+        // -----------------Depreciation Information
+        templateObject.edtDepreciationType.set(assetInfo.DepreciationOption); //Depreciation Type
+        let accountName = $("#edtDepreciationType").parent().find("li[value="+assetInfo.DepreciationOption+"]").html();
+        $("#edtDepreciationType").val(accountName);
+
+        templateObject.edtCostAssetAccount.set(assetInfo.FixedAssetCostAccountID);
+        accountName = $("#edtCostAssetAccount").parent().find("li[value="+assetInfo.FixedAssetCostAccountID+"]").html();
+        $("#edtCostAssetAccount").val(accountName);
+        
+        templateObject.editBankAccount.set(assetInfo.CUSTFLD6); // FixedAssetBankAccountID
+        accountName = $("#editBankAccount").parent().find("li[value="+assetInfo.CUSTFLD6+"]").html();
+        $("#editBankAccount").val(accountName);
+
+        templateObject.edtDepreciationAssetAccount.set(assetInfo.FixedAssetDepreciationAccountID); //FixedAssetDepreciationExpenseAccountID
+        accountName = $("#edtDepreciationAssetAccount").parent().find("li[value="+assetInfo.FixedAssetDepreciationAccountID+"]").html();
+        $("#edtDepreciationAssetAccount").val(accountName);
+
+        templateObject.edtDepreciationExpenseAccount.set(assetInfo.FixedAssetDepreciationAssetAccountID);
+        accountName = $("#edtDepreciationExpenseAccount").parent().find("li[value="+assetInfo.FixedAssetDepreciationAssetAccountID+"]").html();
+        $("#edtDepreciationExpenseAccount").val(accountName);
+
+        $('input#edtSalvageValue').val(assetInfo.Salvage);
+        $('select#edtSalvageValueType').val(assetInfo.SalvageType);
+        $('input#edtAssetLife').val(assetInfo.life);
+        $('input#edtBusinessUse').val(assetInfo.BusinessUsePercent);
+      }
+    });
+  }
+
   $(document).on("click", "#tblFixedAssetType tbody tr", function(e) {
     $('input#edtAssetType').val($(this).find('td.AssetName').html());
     $('#fixedAssetTypeListModal').modal('hide');
@@ -161,6 +217,17 @@ Template.fixedassetcard.onRendered(function () {
     templateObject.edtSupplierId.set(parseInt($(this).attr('id')));
     $('#supplierListModal').modal('hide');
   });
+
+  function getDatePickerForm(dateStr) {
+    const date = new Date(dateStr);
+    let year = date.getFullYear();
+    let month = date.getMonth() < 9 ? '0'+(date.getMonth()+1) : (date.getMonth()+1);
+    let day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate();
+    if (year && month && day)
+      return day+"/"+month+"/"+year;
+    else
+      return '';
+  }
 });
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
@@ -209,21 +276,37 @@ Template.fixedassetcard.events({
       var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
       var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
       var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
-      return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " " + hh + ":" + min + ":" + ss;
+      var month = dateObj.getMonth() < 9? "0" + (dateObj.getMonth()+1) : (dateObj.getMonth()+1);
+      var date = dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate();
+      return dateObj.getFullYear() + "-" + month + "-" + date + " " + hh + ":" + min + ":" + ss;
     };
 
-    fixedassetSercie.saveTFixedAsset(newFixedAsset).then((data) => {
-      fixedassetSercie.getTFixedAssetsList().then(function (data) {
-        addVS1Data('TFixedAssets', JSON.stringify(data));
-      }).catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
+    if (templateObject.currentAssetID.get() == 0) {
+      fixedassetSercie.saveTFixedAsset(newFixedAsset).then((data) => {
+        fixedassetSercie.getTFixedAssetsList().then(function (data) {
+          addVS1Data('TFixedAssets', JSON.stringify(data));
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+        FlowRouter.go('/fixedassetsoverview');
+      })
+      .catch((err) => {
+        // console.log(err);
       });
-      FlowRouter.go('/fixedassetsoverview');
-    })
-    .catch((err) => {
-      // console.log(err);
-
-    });
+    } else {
+      newFixedAsset.fields['ID'] = templateObject.currentAssetID.get();
+      fixedassetSercie.updateTFixedAsset(newFixedAsset).then((data) => {
+        fixedassetSercie.getTFixedAssetsList().then(function (data) {
+          addVS1Data('TFixedAssets', JSON.stringify(data));
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+        FlowRouter.go('/fixedassetsoverview');
+      })
+      .catch((err) => {
+        // console.log(err);
+      });
+    }
   },
   "click button.btnBack": function() {
     FlowRouter.go('/fixedassetsoverview');

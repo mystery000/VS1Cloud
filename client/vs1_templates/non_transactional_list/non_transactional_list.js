@@ -13240,40 +13240,6 @@ Template.non_transactional_list.onRendered(function() {
             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             columnDefs: columnData,
             buttons: [
-              // {
-              //   extend: 'csvHtml5',
-              //   text: '',
-              //   download: 'open',
-              //   className: "btntabletocsv hiddenColumn",
-              //   filename: "Customer Type Settings",
-              //   orientation: 'portrait',
-              //   exportOptions: {
-              //       columns: ':visible'
-              //   }
-              // }, {
-              //     extend: 'print',
-              //     download: 'open',
-              //     className: "btntabletopdf hiddenColumn",
-              //     text: '',
-              //     title: 'Customer Type Settings',
-              //     filename: "Customer Type Settings",
-              //     exportOptions: {
-              //         columns: ':visible',
-              //         stripHtml: false
-              //     }
-              // },
-              // {
-              //     extend: 'excelHtml5',
-              //     title: '',
-              //     download: 'open',
-              //     className: "btntabletoexcel hiddenColumn",
-              //     filename: "Customer Type Settings",
-              //     orientation: 'portrait',
-              //     exportOptions: {
-              //         columns: ':visible'
-              //     }
-
-              // }
             ],
             select: true,
             destroy: true,
