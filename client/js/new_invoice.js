@@ -4531,7 +4531,7 @@ Template.new_invoice.onRendered(function () {
                   templateObject.customerRecord.set(customerRecord);
                   setTimeout(function() {
                     $('#addCustomerModal').modal('show');
-                }, 200);
+                  }, 200);
                 })
                 .catch(function (err) {
                   $(".fullScreenSpin").css("display", "none");
@@ -4778,7 +4778,39 @@ Template.new_invoice.onRendered(function () {
                       $("#chkSameAsSupplier").removeAttr("checked");
                     }
 
-                    $("#addCustomerModal").modal("show");
+                    let customerRecord = {
+                      id: popCustomerID,
+                      phone: popCustomerPhone,
+                      firstname: popCustomerFirstName,
+                      middlename: popCustomerMiddleName,
+                      lastname: popCustomerLastName,
+                      company: data.tcustomer[0].fields.Companyname || '',
+                      email: popCustomerEmail,
+                      title: popCustomerTitle,
+                      tfn: popCustomertfn,
+                      mobile: popCustomerMobile,
+                      fax: popCustomerFaxnumber,
+                      shippingaddress: popCustomerStreet,
+                      scity: popCustomerStreet2,
+                      sstate: popCustomerCountry,
+                      terms: '',
+                      spostalcode: popCustomerPostcode,
+                      scountry: popCustomerState,
+                      billingaddress: popCustomerbillingaddress,
+                      bcity: popCustomerbcity,
+                      bstate: popCustomerbstate,
+                      bpostalcode: popCustomerbpostalcode,
+                      bcountry: popCustomerCountry,
+                      custFld1: popCustomercustfield1,
+                      custFld2: popCustomercustfield2,
+                      jobbcountry: '',
+                      jobscountry: '',
+                      discount: 0
+                    }
+                    templateObject.customerRecord.set(customerRecord);
+                    setTimeout(function() {
+                      $('#addCustomerModal').modal('show');
+                    }, 200);
                   })
                   .catch(function (err) {
                     $(".fullScreenSpin").css("display", "none");
