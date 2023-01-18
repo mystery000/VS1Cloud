@@ -712,10 +712,10 @@
       }
     }
 
-    #tblSubtaskDatatable_filter,
+    /* #tblSubtaskDatatable_filter,
     #tblSubtaskDatatable_length {
       display: none !important;
-    }
+    } */
 
     .ui-datepicker {
       z-index: 9999 !important;
@@ -738,7 +738,14 @@
   <div class="modal fade" id="taskDetailModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel"
     aria-hidden="true">
     <form id="frmEditTaskModal">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+      <style>
+        #modalviewTask {
+            left: calc(50vw - 500px);
+            top: calc(50vh - 360px);
+            margin:0px !important;
+        }
+      </style>
+      <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 1000px;" id = "modalviewTask">
         <div class="modal-content" style="min-height: 90vh; padding: 20px; background-color: #EDEDED !important;">
           <div class="modal-header" style="border-bottom: none; padding-bottom: 0; background-color: #EDEDED;">
             <div style="display: grid; width: 100%;">
@@ -969,7 +976,7 @@
                     aria-labelledby="nav-subtasks-tab">
                     <div class="row no-gutters">
                       <div class="subtask-row col-12">
-                        <div class="table-responsive">
+                        <!-- <div class="table-responsive">
                           <table id="tblSubtaskDatatable" name="tblSubtaskDatatable" style="width:100%"
                             class="dataTable table table-hover table-striped table-bordered tblSubtaskDatatable">
                             <thead>
@@ -988,7 +995,25 @@
                             <tbody>
                             </tbody>
                           </table>
-                        </div>
+                        </div> -->
+                        <style>
+                            #tblSubtaskDatatable{
+                                width:100% !important;
+                            }
+                            #tblSubtaskDatatable .colCompleteTask{
+                                width:2% !important;
+                            }
+                            #tblSubtaskDatatable .colSubDate{
+                                width:15% !important;
+                            }
+                            #tblSubtaskDatatable .colSubTaskName{
+                                width:50% !important;
+                            }
+                            #tblSubtaskDatatable .colTaskActions{
+                                width:15% !important;
+                            }
+                        </style>
+                        {{> non_transactional_list tablename="tblSubtaskDatatable"}}
                       </div>
   
                       <div class="col-12">
@@ -1514,7 +1539,7 @@
           </div>
         </div>
       </div>
-    </form>
+    </form>      
   </div>
   <style>
     #taskmodalLabels .fa-tag {

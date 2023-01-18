@@ -1566,6 +1566,41 @@ Template.newsidenav.onRendered(function() {
         });
     }
 
+    templateObject.getAllRecentTransactions = function(){
+        productService.getProductRecentTransactionsAll("all").then(function(data) {
+            countObjectTimes++;
+            progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+            $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+            $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+            $(".progressName").text("Product List ");
+            if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                }
+
+            } else if (Math.round(progressPercentage) >= 100) {
+                $('.checkmarkwrapper').removeClass("hide");
+                setTimeout(function() {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    } else {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    }
+
+                }, 1000);
+            }
+            addVS1Data('T_VS1_Report_Productmovement', JSON.stringify(data));
+            $("<span class='process'>Product Movement List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+    }
+
     templateObject.getAllProductServiceData = function() {
         sideBarService.getProductServiceListVS1(initialBaseDataLoad, 0).then(function(data) {
             countObjectTimes++;
@@ -6448,6 +6483,24 @@ Template.newsidenav.onRendered(function() {
                         });
                     });
                     templateObject.getAllProductData();
+
+                    getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            templateObject.getAllRecentTransactions();
+                        } else {
+                            let getTimeStamp = dataObject[0].timestamp.split(' ');
+                            if (getTimeStamp) {
+                                if (loggedUserEventFired) {
+                                    if (getTimeStamp[0] != currenctTodayDate) {
+                                        templateObject.getAllRecentTransactions();
+                                    }
+                                }
+                            }
+
+                        }
+                    }).catch(function(err) {
+                        templateObject.getAllRecentTransactions();
+                    });
                     getVS1Data('TProductStocknSalePeriodReport').then(function(dataObject) {
                         if (dataObject.length == 0) {
                             templateObject.getAllTProductStocknSalePeriodReportData();
@@ -6680,6 +6733,25 @@ Template.newsidenav.onRendered(function() {
                     });
                 });
                 templateObject.getAllProductData();
+
+                getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        templateObject.getAllRecentTransactions();
+                    } else {
+                        let getTimeStamp = dataObject[0].timestamp.split(' ');
+                        if (getTimeStamp) {
+                            if (loggedUserEventFired) {
+                                if (getTimeStamp[0] != currenctTodayDate) {
+                                    templateObject.getAllRecentTransactions();
+                                }
+                            }
+                        }
+
+                    }
+                }).catch(function(err) {
+                    templateObject.getAllRecentTransactions();
+                });
+
                 getVS1Data('TProductStocknSalePeriodReport').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         templateObject.getAllTProductStocknSalePeriodReportData();
