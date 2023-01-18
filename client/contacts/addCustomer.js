@@ -584,10 +584,6 @@ Template.customerscard.onCreated(function () {
     });
   };
 
-
-
-});
-
 Template.customerscard.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
