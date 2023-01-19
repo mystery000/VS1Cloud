@@ -156,7 +156,7 @@
                           <td colspan="4"><i class="fa fa-warning"></i> No result</td>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody> {{customerrecords.length}}
                         {{#if customerrecords}}
                         {{#each item in customerrecords}}
                         <tr id="{{item.id}}" class="{{item.isslectJob}}" style="cursor: pointer;">
