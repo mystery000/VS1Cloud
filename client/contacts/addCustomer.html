@@ -143,7 +143,7 @@
                     </button>
                   </div>
                   <div class="col-12">
-                    <span class="counter pull-right"></span>
+                    <span class="pull-right">{{customerrecords.length}} items</span>
                   </div>
                   <div class="col-12">
                     <table id="tblCustomerSideList" name="tblCustomerSideList"
@@ -156,7 +156,7 @@
                           <td colspan="4"><i class="fa fa-warning"></i> No result</td>
                         </tr>
                       </thead>
-                      <tbody> {{customerrecords.length}}
+                      <tbody>
                         {{#if customerrecords}}
                         {{#each item in customerrecords}}
                         <tr id="{{item.id}}" class="{{item.isslectJob}}" style="cursor: pointer;">

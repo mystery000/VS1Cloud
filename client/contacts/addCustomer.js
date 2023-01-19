@@ -1527,6 +1527,7 @@ Template.customerscard.onCreated(function () {
         contactService.getAllCustomerSideDataVS1().then(function (data) {
           templateObject.setAllCustomerSideDataVS1(data);
         }).catch(function (err) {
+          console.log("Err:", err)
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
@@ -1536,12 +1537,14 @@ Template.customerscard.onCreated(function () {
       contactService.getAllCustomerSideDataVS1().then(function (data) {
         templateObject.setAllCustomerSideDataVS1(data);
       }).catch(function (err) {
+        console.log("Err:", err)
       });
     });
   };
 
   this.setAllCustomerSideDataVS1 = function (data) {
     const _lineItems = [];
+    let currentId = FlowRouter.current().queryParams;
     for (let i = 0; i < data.tcustomervs1.length; i++) {
       let classname = '';
       if (!isNaN(currentId.id)) {
@@ -1560,18 +1563,14 @@ Template.customerscard.onCreated(function () {
         isslectJob: data.tcustomervs1[i].fields.IsJob || false,
         classname: classname
       };
-
-      console.log(dataList)
-
       _lineItems.push(dataList);
     }
-    console.log("lineITems:",_lineItems);
     templateObject.customerrecords.set(_lineItems);
-    if (templateObject.customerrecords.get()) {
-      setTimeout(function() {
-        $('.counter').text(_lineItems.length + ' items');
-      }, 100);
-    }
+    // if (templateObject.customerrecords.get()) {
+    //   setTimeout(function() {
+    //     $('.counter').text(_lineItems.length + ' items');
+    //   }, 100);
+    // }
   }
 
 });
@@ -1619,6 +1618,8 @@ Template.customerscard.onRendered(function () {
   // templateObject.getClientTypeData();
   templateObject.getTaxCodesList();
 
+  templateObject.getCustomersList();
+
   if (JSON.stringify(currentId) != '{}') {
     if (currentId.id == "undefined") {
       templateObject.setInitialForEmptyCurrentID();
@@ -1640,7 +1641,6 @@ Template.customerscard.onRendered(function () {
   } else {
     templateObject.setInitialForEmptyCurrentID();
   }
-  templateObject.getCustomersList();
 
   $(document).ready(function () {
     function setTermsVS1(data, termsDataName) {
