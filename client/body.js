@@ -281,8 +281,8 @@ import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 import './fixedassets/fixedassets.js';
-import './settings/chart-accounts-setting/chart-accounts.js';
-import './settings/chart-accounts-setting/chart-account-settings-table.js';
+// import './settings/chart-accounts-setting/chart-accounts.js';
+// import './settings/chart-accounts-setting/chart-account-settings-table.js';
 import './settings/edi-integrations/edi-integrations.js';
 import './settings/fixed-asset_edit-asset-type/fixed-asset_edit-asset-type.js';
 import './settings/fxupdate/fxUpdateSettings.js';
@@ -472,7 +472,7 @@ import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
-// import './reports/balancesheet/balancetransactionlist.js';
+import './reports/balancesheet/balancetransactionlist.js';
 /* Roverto */
 
 /* Kelvin More */
