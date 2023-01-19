@@ -36,6 +36,7 @@ import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "./stocktransfercard.html"
+import "../lib/global/globalStockTransfer.js";
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1212,7 +1213,7 @@ Template.stocktransfercard.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         }
         setTimeout(function() {
-            $('#edtCustomerEmail').val(localStorage.getItem('mySession'));
+            $('#edtSupplierEmail').val(localStorage.getItem('mySession'));
         }, 200);
     } else {
         $('.fullScreenSpin').css('display', 'none');
@@ -1253,7 +1254,7 @@ Template.stocktransfercard.onRendered(function() {
         setTimeout(function() {
             $('#sltDepartment').val(defaultDept);
             $('#sltBankAccountName').val('Stock Adjustment');
-            $('#edtCustomerEmail').val(localStorage.getItem('mySession'));
+            $('#edtSupplierEmail').val(localStorage.getItem('mySession'));
             setTimeout(function() {
                 getVS1Data('TDeptClass').then(function(dataObject) {
                     if (dataObject.length == 0) {
@@ -1448,15 +1449,15 @@ Template.stocktransfercard.onRendered(function() {
         $('#sltDepartment').editableSelect();
         $('#edtCustomerName').editableSelect();
         $('#sltBankAccountName').editableSelect();
-        $('#edtCustomerEmail').editableSelect();
+        // $('#edtSupplierEmail').editableSelect();
         $('#shipvia').editableSelect();
 
         $('#tblEmployeelist tbody').on('click', 'tr', function(event) {
-            $('#edtCustomerEmail').val($(event.target).closest("tr").find('.colEmail').text());
+            $('#edtSupplierEmail').val($(event.target).closest("tr").find('.colEmail').text());
             $('#employeeList').modal('hide');
-            $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));
+            $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));
             if ($('.chkEmailCopy').is(':checked')) {
-                let checkEmailData = $('#edtCustomerEmail').val();
+                let checkEmailData = $('#edtSupplierEmail').val();
                 if (checkEmailData.replace(/\s/g, '') === '') {
                     $('.chkEmailCopy').prop('checked', false);
                     swal('Employee Email cannot be blank!', '', 'warning');
@@ -1477,7 +1478,7 @@ Template.stocktransfercard.onRendered(function() {
             } else {}
         })
 
-        $("#edtCustomerEmail").on('dblclick', function(e) {
+        $("#edtSupplierEmail").on('dblclick', function(e) {
             $('#employeeList').modal('show');
         });
         $('#addRow').on('click', function() {
@@ -3117,7 +3118,7 @@ Template.stocktransfercard.events({
         let templateObject = Template.instance();
         setTimeout(function(){
         let invoiceID = parseInt($("#SalesId").val());
-        
+
         let isInvoice = templateObject.includeInvoiceAttachment.get();
         let isShippingDocket = templateObject.includeDocketAttachment.get();
 
@@ -3145,7 +3146,7 @@ Template.stocktransfercard.events({
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         let printType = "InvoiceOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
@@ -3154,7 +3155,7 @@ Template.stocktransfercard.events({
         playPrintAudio();
         let templateObject = Template.instance();
         setTimeout(function(){
-        
+
         let printType = "DeliveryDocketsOnly";
         templateObject.SendShippingDetails(printType);
     }, delayTimeAfterSound);
@@ -3437,7 +3438,7 @@ Template.stocktransfercard.events({
                 let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 //let customerEmailName = $('#edtCustomerName').val();
-                let checkEmailData = $('#edtCustomerEmail').val();
+                let checkEmailData = $('#edtSupplierEmail').val();
                 // let grandtotal = $('#grandTotal').html();
                 // let amountDueEmail = $('#totalBalanceDue').html();
                 // let emailDueDate = $("#dtDueDate").val();
@@ -3784,7 +3785,7 @@ Template.stocktransfercard.events({
               let mailFromName = localStorage.getItem('vs1companyName');
               let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
               //let customerEmailName = $('#edtCustomerName').val();
-              let checkEmailData = $('#edtCustomerEmail').val();
+              let checkEmailData = $('#edtSupplierEmail').val();
               // let grandtotal = $('#grandTotal').html();
               // let amountDueEmail = $('#totalBalanceDue').html();
               // let emailDueDate = $("#dtDueDate").val();
@@ -3938,7 +3939,7 @@ Template.stocktransfercard.events({
         if ($('.chkEmailCopy').is(':checked')) {
         $('#html-2-pdfwrapper').css('display', 'block');
         }
-        
+
         //let customername = $('#edtCustomerName').val() || '';
         //let shippingaddress = $('#txaShipingInfo').val() || '';
         let transferFrom = $('#sltDepartment').val() || '';
@@ -4030,7 +4031,7 @@ Template.stocktransfercard.events({
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
         var currentStock = getso_id[getso_id.length - 1];
-        
+
         var objDetails = '';
         if (getso_id[1]) {
             currentStock = parseInt(currentStock);
@@ -4135,7 +4136,7 @@ Template.stocktransfercard.events({
                 let mailFromName = localStorage.getItem('vs1companyName');
                 let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
                 //let customerEmailName = $('#edtCustomerName').val();
-                let checkEmailData = $('#edtCustomerEmail').val();
+                let checkEmailData = $('#edtSupplierEmail').val();
                 // let grandtotal = $('#grandTotal').html();
                 // let amountDueEmail = $('#totalBalanceDue').html();
                 // let emailDueDate = $("#dtDueDate").val();
@@ -4280,7 +4281,7 @@ Template.stocktransfercard.events({
         $('.fullScreenSpin').css('display', 'none');
       }
     }, delayTimeAfterSound);
-    
+
     },
     'click .btnDeleteFollowingStocks': async function(event) {
         playDeleteAudio();
@@ -4473,7 +4474,7 @@ Template.stocktransfercard.events({
         var clicktimes = 0;
         var targetID = $(event.target).closest('tr').attr('id');
         $('#selectDeleteLineID').val(targetID);
-        if(targetID != undefined) {       
+        if(targetID != undefined) {
             times++;
             if (times == 1) {
                 $('#deleteLineModal').modal('toggle');
@@ -4490,7 +4491,7 @@ Template.stocktransfercard.events({
 
                 }
         }else {
-            $('#footerDeleteModal1').modal('toggle'); 
+            $('#footerDeleteModal1').modal('toggle');
         }
     },
     'click #tdBarcodeScannerMobile': function(event) {

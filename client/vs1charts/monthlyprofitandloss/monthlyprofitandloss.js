@@ -3,6 +3,7 @@ import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import './monthlyprofitandloss.html';
+import { Chart } from '../../../public/assets/js/chart.min';
 
 let _ = require("lodash");
 let vs1chartService = new VS1ChartService();
@@ -657,7 +658,7 @@ Template.monthlyprofitandloss.onRendered(() => {
       var ctx = document
         .getElementById("monthlyprofitandlosschart")
         .getContext("2d");
-      var myChart = new Chart(ctx, {
+      var myChart = new Chart.Chart(ctx, {
         type: "bar",
         data: {
           labels: [

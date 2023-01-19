@@ -13,11 +13,15 @@
                             .colLogginDef {
                               width: 30%!important;
                             }
+                            .colShowDef {
+                                width: 25%!important;
+                            }
                         </style>
                         <table id="tblDashboardOptions" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblDashboardOptions">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colOptionsName" style="">Show Dashboards</th>
+                                    <th class="th colOptionsName" style="">Options Name</th>
+                                    <th class="th colShowDef" style="">Show Dashboards</th>
                                     <th class="th colLogginDef" style="">Dashboard load at login</th>
                                 </tr>
                             </thead>
@@ -26,6 +30,23 @@
                                     {{#each item in dashboardoptionrecords}}
                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: default;">
                                             <td contenteditable="false" class="colOptionsName">{{item.name}}</td>
+                                            <td contenteditable="false" class="colShowDef text-center">
+                                                <div class="custom-control custom-switch">
+                                                    {{#if equals item.isshowdefault true}}
+                                                        <input type="checkbox" class="custom-control-input optradioDL"
+                                                               name="optcheckboxDL" id="formShowP-{{item.id}}"
+                                                               value="{{item.name}}" checked><label
+                                                            class="custom-control-label"
+                                                            for="formShowP-{{item.id}}"></label>
+                                                    {{else}}
+                                                        <input type="checkbox" class="custom-control-input optradioDL"
+                                                               name="optcheckboxDL" id="formShowP-{{item.id}}"
+                                                               value="{{item.name}}"><label
+                                                            class="custom-control-label"
+                                                            for="formShowP-{{item.id}}"></label>
+                                                    {{/if}}
+                                                </div>
+                                            </td>
                                             <td contenteditable="false" class="colLogginDef text-center">
                                               <div class="custom-control custom-switch">
                                                   {{#if equals item.isdefault true}}

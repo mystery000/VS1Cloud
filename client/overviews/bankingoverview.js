@@ -57,7 +57,7 @@ Template.bankingoverview.onRendered(function() {
 
 
     // set initial table rest_data
-    function init_reset_data() {
+    templateObject.init_reset_data = function() {
       let reset_data = [
         { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
         { index: 1, label: "Date", class: "PaymentDate", width: "80", active: true, display: true },
@@ -74,7 +74,7 @@ Template.bankingoverview.onRendered(function() {
       let templateObject = Template.instance();
       templateObject.reset_data.set(reset_data);
     }
-  init_reset_data();
+  templateObject.init_reset_data();
   // set initial table rest_data
 
 
@@ -82,14 +82,14 @@ Template.bankingoverview.onRendered(function() {
    templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
-    showCustomFieldDisplaySettings(reset_data);
+    templateObject.showCustomFieldDisplaySettings(reset_data);
 
     try {
       getVS1Data("VS1_Customize").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
+              templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
         } else {
@@ -98,7 +98,7 @@ Template.bankingoverview.onRendered(function() {
            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               showCustomFieldDisplaySettings(reset_data);
+               templateObject.showCustomFieldDisplaySettings(reset_data);
              }
            }
          };
@@ -110,7 +110,7 @@ Template.bankingoverview.onRendered(function() {
     return;
   }
 
-  function showCustomFieldDisplaySettings(reset_data) {
+  templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
 
     let custFields = [];
     let customData = {};
@@ -125,6 +125,12 @@ Template.bankingoverview.onRendered(function() {
         display: reset_data[r].display,
         width: reset_data[r].width ? reset_data[r].width : ''
       };
+      if (reset_data[r].active == true) {
+              $('#tblBankingOverview' + ' .' + reset_data[r].class).removeClass('hiddenColumn');
+      } else if (reset_data[r].active == false) {
+              $('#tblBankingOverview' + ' .' + reset_data[r].class).addClass('hiddenColumn');
+      };
+
       custFields.push(customData);
     }
     templateObject.displayfields.set(custFields);

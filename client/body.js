@@ -300,8 +300,10 @@ import './deposits/deposit_list.js';
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
+import './lib/global/soundalert.js';
 /* Rasheed */
 
 /* Jeyhun */
@@ -360,6 +362,9 @@ import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
 import './eft/eft.js';
+import './vs1charts/bankaccountschart/bankaccountschart.js';
+import './vs1charts/accountslist/accountslistchart.js';
+import './vs1charts/crmleadchart/crmleadchart.js';
 /* Sasa */
 
 /* Martin */
@@ -467,6 +472,7 @@ import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
+// import './reports/balancesheet/balancetransactionlist.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -575,6 +581,8 @@ import './overviews/payrolloverview_tmp.html';
 import './eft/exportModal/eftExportModal.js';
 import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
+
+import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
