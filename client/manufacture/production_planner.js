@@ -18,6 +18,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './production_planner.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { cloneDeep } from 'lodash';
 
 Template.production_planner.onCreated(function() {
     const templateObject = Template.instance();
@@ -80,7 +81,7 @@ Template.production_planner.onRendered(async function() {
     let resources = await getResources();
     await templateObject.resources.set(resources);
 
-    async function getWorkorders() {
+    templateObject.getWorkorders = function() {
         return new Promise(async(resolve, reject)=>{
             getVS1Data('TVS1Workorder').then(function(dataObject){
                 if(dataObject.length == 0) {
@@ -93,7 +94,7 @@ Template.production_planner.onRendered(async function() {
         })
     }
     
-    let workorders = await getWorkorders();
+    let workorders = await templateObject.getWorkorders();
         // templateObject.workorders.set(workorders);
     async function getPlanData() {
         return new Promise(async(resolve, reject)=> {
@@ -102,11 +103,11 @@ Template.production_planner.onRendered(async function() {
                 if(dataObject.length == 0) {
                     resolve(returnVal)
                 } else {
-                    returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events)
+                    returnVal = JSON.parse(dataObject[0].data)
                     if(returnVal == undefined) {
-                        returnVal = [];
+                        resolve([])
                     }
-                    resolve(returnVal)
+                    resolve(returnVal.tproductionplandata)
                 }
             }).catch(function(e) {
                 returnVal = [];
@@ -128,7 +129,7 @@ Template.production_planner.onRendered(async function() {
             let planData = await getPlanData();
             
             let eventsData = planData;
-            if (eventsData.length == 0) {
+            // if (eventsData.length == 0) {
 
                 let tempEvents = [];
                 if(workorders && workorders.length > 0) {
@@ -184,11 +185,12 @@ Template.production_planner.onRendered(async function() {
                 }
                 templateObject.events.set(tempEvents)
                 resolve(tempEvents);
-            } else {
-                // events = eventsData;
-                templateObject.events.set(eventsData)
-                resolve(eventsData)
-            }
+            // }
+            //  else {
+            //     // events = eventsData;
+            //     templateObject.events.set(eventsData)
+            //     resolve(eventsData)
+            // }
         })
     }
 
@@ -315,9 +317,7 @@ Template.production_planner.onRendered(async function() {
                     let progressed = current.getTime() - sTime.getTime();
                     let percent = Math.round((progressed / totalDuration) * 100);
                     customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage' style='width:"+percent+"%'>" + percent + "%</div></div>"
-                } else if (current.getTime() >= eTime.getTime()) {
-                    customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage w-100'>Completed</div></div>"
-                }
+                } 
             }
             
             // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
@@ -338,7 +338,7 @@ Template.production_planner.onRendered(async function() {
                 let unableProcesses = arg.el.getElementsByClassName('unable-process');
                 if(unableProcesses.length == 0) {
                     arg.el.classList.remove('fc-event-resizable');
-                    arg.el.classList.remove('fc-event-draggable');
+                    // arg.el.classList.remove('fc-event-draggable');
                 }
             }
             
@@ -499,28 +499,50 @@ Template.production_planner.onRendered(async function() {
 })
 
 Template.production_planner.events({
-    'click .btnApply': function(event) {
+    'click .btnApply': async function(event) {
         $('.fullScreenSpin').css('display', 'inline-block')
         let templateObject = Template.instance();
         let events = templateObject.events.get();
         let objectDetail = {
-            type: 'TProductionPlanData',
-            fields: {
-                events: events
-            }
+            tproductionplandata: events
         }
-        addVS1Data('TProductionPlanData', JSON.stringify(objectDetail)).then(function() {
+        let workorders = await templateObject.getWorkorders();
+        let tempOrders = cloneDeep(workorders);
+        for(let i = 0; i< events.length; i++) {
+            let workorderid = events[i].extendedProps.orderId;
+            let index = workorders.findIndex(order=> {
+                return order.fields.ID == workorderid
+            })
+            let temp = tempOrders[index];
+            temp.fields.StartTime = events[i].start
+            tempOrders.splice(index, 1, temp);
+        }
+
+        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder:tempOrders})).then(function(){
             $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: 'Success',
-                text: 'Production planner has been saved successfully',
-                type: 'success',
-                showCancelButton: false,
-                confirmButtonText: 'Continue',
-            }).then((result) => {
-                window.location.reload();
-            });
+                swal({
+                    title: 'Success',
+                    text: 'Production planner has been saved successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Continue',
+                }).then((result) => {
+                    window.location.reload();
+                });
+            // addVS1Data('TProductionPlanData', JSON.stringify(objectDetail)).then(function() {
+            //     $('.fullScreenSpin').css('display', 'none');
+            //     swal({
+            //         title: 'Success',
+            //         text: 'Production planner has been saved successfully',
+            //         type: 'success',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Continue',
+            //     }).then((result) => {
+            //         window.location.reload();
+            //     });
+            // })
         })
+        
     },
 
     'click .btn-print-event': function(event) {
