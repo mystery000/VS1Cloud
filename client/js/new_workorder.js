@@ -14,7 +14,7 @@ import {ContactService} from "../contacts/contact-service";
 import { Template } from 'meteor/templating';
 import '../manufacture/frm_workorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, template } from 'lodash';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -48,6 +48,8 @@ Template.new_workorder.onCreated(function() {
     templateObject.showBOMModal = new ReactiveVar(false);
     templateObject.bomProducts = new ReactiveVar([]);
     templateObject.isSaved = new ReactiveVar(false);
+    templateObject.updateFromPO = new ReactiveVar(false);
+    templateObject.isCompleted = new ReactiveVar(false);
 })
 
 Template.new_workorder.onRendered(async function(){
@@ -114,6 +116,9 @@ Template.new_workorder.onRendered(async function(){
                 return order.fields.ID == orderid
             })
             let workorder = templateObject.workOrderRecords.get()[workorderIndex]
+            if(workorder.fields.EndTime && new Date(workorder.fields.EndTime).getTime() < new Date().getTime()) {
+                templateObject.isCompleted = true;
+            }
             templateObject.salesOrderId.set(workorder.fields.SaleID)
             let record = {
                 id: orderid,
@@ -130,8 +135,9 @@ Template.new_workorder.onRendered(async function(){
                 quantity: workorder.fields.Quantity || 1,
                 shipDate: workorder.fields.ShipDate || "",
                 isStarted: workorder.fields.InProgress,
-
+                poStatus: workorder.fields.POStatus,
             }
+            templateObject.updateFromPO.set(workorder.fields.UpdateFromPO)
             templateObject.workorderrecord.set(record);
             templateObject.bomStructure.set(JSON.parse(workorder.fields.BOMStructure));
             templateObject.showBOMModal.set(true)
@@ -170,7 +176,8 @@ Template.new_workorder.onRendered(async function(){
                                 productname: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
                                 productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
                                 quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
-                                shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
+                                shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
+                                poStatus: ''
                             }
                             // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
@@ -211,7 +218,8 @@ Template.new_workorder.onRendered(async function(){
                                     productname: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
                                     productDescription: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
                                     quantity: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
-                                    shipDate: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
+                                    shipDate: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
+                                    poStatus: ''
                                 }
                                 // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                                 templateObject.workorderrecord.set(record);
@@ -254,7 +262,8 @@ Template.new_workorder.onRendered(async function(){
                                 productname: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ProductName || "",
                                 productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
                                 quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
-                                shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || ""
+                                shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
+                                poStatus: ''
                         }
                         // record.shipDate = record.shipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
@@ -548,8 +557,25 @@ Template.new_workorder.events({
                     };
 
                     splashLineArray.push(lineItemObjForm);
+                    $('.fullScreenSpin').css('display', 'none')
                     localStorage.setItem("newPOParamItem", JSON.stringify(splashLineArray))
-                    FlowRouter.go('/purchaseordercard?salesorderid=' + templateObject.salesOrderId.get())
+                    swal({
+                        title: 'Question',
+                        text: 'Do you want to update work orders based on purchase order status changes?',
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then(async (res)=>{
+                        if(res.value) {
+                            templateObject.updateFromPO.set(true);
+                            await saveOrders(true)
+                        } else if(res.dismiss == 'cancel') {
+                            templateObject.updateFromPO.set(false)
+                            await saveOrders(true)
+                        }
+                    })
+                    
                 }else if(result.dismiss == 'cancel') {
                     swal({
                         title: 'Warning',
@@ -558,12 +584,12 @@ Template.new_workorder.events({
                         showCancelButton: false,
                         confirmButtonText: 'Continue',
                     }).then ((result)=>{
-                        saveOrders();
+                        saveOrders(false);
                     });
                 }
             })
         } else {
-                saveOrders();
+                saveOrders(false);
         }
 
 
@@ -598,34 +624,10 @@ Template.new_workorder.events({
             })
         }
 
-        function saveOrders () {
+        async function saveOrders (vendorService) {
             setTimeout(async function(){
                 $('.fullScreenSpin').css('display', 'inline-block');
                 let mainOrderStart = new Date();
-        
-                async function getStockCount(productName) {
-                    return new Promise(async(resolve, reject)=>{
-                        getVS1Data('TProductVS1').then(function(dataObject) {
-                            if(dataObject.length == 0) {
-                                productService.getOneProductdatavs1byname(productName).then(function(data) {
-                                    resolve(data.tproduct[0].fields.TotalQtyInStock)
-                                })
-                            }else {
-                                let data = JSON.parse(dataObject[0].data);
-                                let useData = data.tproductvs1;
-                                for(let o=0; o<useData.length; o++) {
-                                    if(useData[o].fields.ProductName == productName) {
-                                        resolve(useData[o].fields.TotalQtyInStock)
-                                    }
-                                }
-                            }
-                        }).catch(function(e) {
-                            productService.getOneProductdatavs1byname(productName).then(function(data) {
-                                resolve(data.tproduct[0].fields.TotalQtyInStock)
-                            })
-                        })
-                    })
-                }
         
                 async function getSupplierDetail ()  {
                     return new Promise(async(resolve, reject)=>{
@@ -721,203 +723,7 @@ Template.new_workorder.events({
                         }else {
                             resolve()
                         }
-                        // getVS1Data('TProductVS1').then(async function(dataObject){
-                        //     if(dataObject.length == 0) {
-                        //         productService.getOneProductdatavs1byname(productName).then(async function(data) {
-                        //             let stockQty = data.tproduct[0].fields.TotalQtyInStock;
-                        //             if(stockQty < neededQty) {
-                                        
-                        //                 let splashLineArray = [];
-        
-                        //                 let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
-                        //                 let lineItemObjForm = {
-                        //                     type: "TPurchaseOrderLine",
-                        //                     fields: {
-                        //                         ProductName: productName || '',
-                        //                         ProductDescription: data.tproduct[0].fields.ProductDescription || '',
-                        //                         UOMQtySold: parseFloat(neededQty - stockQty),
-                        //                         UOMQtyShipped: 0,
-                        //                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                        //                         CustomerJob: '',
-                        //                         LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
-                        //                         LineClassName: defaultDept
-                        //                     }
-                        //                 };
-        
-                        //                 splashLineArray.push(lineItemObjForm);
-                        //                 let billingAddress = await getSupplierDetail();
-                        //                 let saledateTime = new Date();
-                        //                 let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-        
-                        //                 let objDetails = {
-                        //                     type: "TPurchaseOrderEx",
-                        //                     fields: {
-                        //                         SupplierName: 'Misc Supplier',
-                        //                         ...foreignCurrencyFields,
-                        //                         SupplierInvoiceNumber: ' ',
-                        //                         Lines: splashLineArray,
-                        //                         OrderTo: billingAddress,
-                        //                         OrderDate: date,
-        
-                        //                         SupplierInvoiceDate: date,
-        
-                        //                         SaleLineRef: '',
-                        //                         TermsName: 'COD',
-                        //                         Shipping: '',
-                        //                         ShipTo: billingAddress,
-                        //                         Comments: '',
-                        //                         SalesComments: '',
-                        //                         Attachments: [],
-                        //                         OrderStatus: ''
-                        //                     }
-                        //                 };
-                        //                 purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
-                        //                     sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
-                        //                         addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
-                        //                             resolve()
-                        //                         })
-                        //                     })
-                        //                 }).catch(function(err) {
-                        //                     resolve()
-                        //                 })
-                        //             }else {
-                        //                 resolve()
-                        //             }
-                        //         })
-                        //     }else {
-                        //         let data = JSON.parse(dataObject[0].data);
-                        //         let useData = data.tproductvs1;
-                        //         let added = true;
-                        //         for(let i = 0; i< useData.length; i++) {
-                        //             if(useData[i].fields.ProductName == productName) {
-                                        
-                        //             }
-                        //         }
-                        //         if(added==true) {
-                        //             productService.getOneProductdatavs1byname(productName).then(async function(data) {
-                        //                 let stockQty = data.tproduct[0].fields.TotalQtyInStock;
-                        //                 if(stockQty < neededQty) {
-                        //                     let splashLineArray = [];
-            
-                        //                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
-                        //                     let lineItemObjForm = {
-                        //                         type: "TPurchaseOrderLine",
-                        //                         fields: {
-                        //                             ProductName: productName || '',
-                        //                             ProductDescription: data.tproduct[0].fields.ProductDescription || '',
-                        //                             UOMQtySold: parseFloat(neededQty - stockQty),
-                        //                             UOMQtyShipped: 0,
-                        //                             LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                        //                             CustomerJob: '',
-                        //                             LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
-                        //                             LineClassName: defaultDept
-                        //                         }
-                        //                     };
-            
-                        //                     splashLineArray.push(lineItemObjForm);
-                        //                     let billingAddress = await getSupplierDetail();
-                        //                     let saledateTime = new Date();
-                        //                     let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-            
-                        //                     let objDetails = {
-                        //                         type: "TPurchaseOrderEx",
-                        //                         fields: {
-                        //                             SupplierName: 'Misc Supplier',
-                        //                             ...foreignCurrencyFields,
-                        //                             SupplierInvoiceNumber: ' ',
-                        //                             Lines: splashLineArray,
-                        //                             OrderTo: billingAddress,
-                        //                             OrderDate: date,
-            
-                        //                             SupplierInvoiceDate: date,
-            
-                        //                             SaleLineRef: '',
-                        //                             TermsName: 'COD',
-                        //                             Shipping: '',
-                        //                             ShipTo: billingAddress,
-                        //                             Comments: '',
-                        //                             SalesComments: '',
-                        //                             Attachments: [],
-                        //                             OrderStatus: ''
-                        //                         }
-                        //                     };
-                        //                     purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
-                        //                         sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
-                        //                             addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
-                        //                                 resolve()
-                        //                             })
-                        //                         })
-                        //                     }).catch(function(err) {
-                        //                         resolve()
-                        //                     })
-                        //                 }else {
-                        //                     resolve()
-                        //                 }
-                        //             })
-                        //         }
-                        //     }
-                        // }).catch(async function(error) {
-                        //     productService.getOneProductdatavs1byname(productName).then(async function(data) {
-                        //         let stockQty = data.tproduct[0].fields.TotalQtyInStock;
-                        //         if(stockQty < neededQty) {
-                        //             let splashLineArray = [];
-        
-                        //             let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproduct[0].fields.BuyQty1Cost * 100) / 100);
-                        //             let lineItemObjForm = {
-                        //                 type: "TPurchaseOrderLine",
-                        //                 fields: {
-                        //                     ProductName: productName || '',
-                        //                     ProductDescription: data.tproduct[0].fields.ProductDescription || '',
-                        //                     UOMQtySold: parseFloat(neededQty - stockQty),
-                        //                     UOMQtyShipped: 0,
-                        //                     LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                        //                     CustomerJob: '',
-                        //                     LineTaxCode: data.tproduct[0].fields.TaxCodeSales || '',
-                        //                     LineClassName: defaultDept
-                        //                 }
-                        //             };
-        
-                        //             splashLineArray.push(lineItemObjForm);
-                        //             let billingAddress = await getSupplierDetail();
-                        //             let saledateTime = new Date();
-                        //             let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-        
-                        //             let objDetails = {
-                        //                 type: "TPurchaseOrderEx",
-                        //                 fields: {
-                        //                     SupplierName: 'Misc Supplier',
-                        //                     ...foreignCurrencyFields,
-                        //                     SupplierInvoiceNumber: ' ',
-                        //                     Lines: splashLineArray,
-                        //                     OrderTo: billingAddress,
-                        //                     OrderDate: date,
-        
-                        //                     SupplierInvoiceDate: date,
-        
-                        //                     SaleLineRef: '',
-                        //                     TermsName: 'COD',
-                        //                     Shipping: '',
-                        //                     ShipTo: billingAddress,
-                        //                     Comments: '',
-                        //                     SalesComments: '',
-                        //                     Attachments: [],
-                        //                     OrderStatus: ''
-                        //                 }
-                        //             };
-                        //             purchaseService.savePurchaseOrderEx(objDetails).then(function(dataReturn) {
-                        //                 sideBarService.getAllTPurchasesBackOrderReportData('', '', true, initialReportLoad, 0).then(function(data)  {
-                        //                     addVS1Data('TPurchasesBackOrderReport', JSON.stringify(data)).then(function (dataUpdate) {
-                        //                         resolve()
-                        //                     })
-                        //                 })
-                        //             }).catch(function(err) {
-                        //                 resolve()
-                        //             })
-                        //         }else {
-                        //             resolve()
-                        //         }
-                        //     })
-                        // })
+                        
                     })
                 }
         
@@ -1156,9 +962,11 @@ Template.new_workorder.events({
                         ProductID: record.productid,
                         Quantity: record.quantity || 1,
                         InProgress: record.isStarted,
-                        ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString()
+                        ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        UpdateFromPO: templateObject.updateFromPO.get(),
+                        POStatus: ''
                     }
-        
+         
                     // manufacturingService.saveWorkOrder({
                     //     type: 'TVS1Workorder',
                     //     fields: objDetail
@@ -1185,22 +993,31 @@ Template.new_workorder.events({
         
         
                 $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Success',
-                    text: 'Work Order has been saved successfully',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Continue',
-                }).then ((result)=>{
-        
-                    if (localStorage.getItem("enteredURL") != null) {
-                        FlowRouter.go(localStorage.getItem("enteredURL"));
-                        localStorage.removeItem("enteredURL");
-                        return;
-                    }
-        
-                    FlowRouter.go('/workorderlist')
-                });
+
+                if(vendorService == false) {
+                    swal({
+                        title: 'Success',
+                        text: 'Work Order has been saved successfully',
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Continue',
+                    }).then ((result)=>{
+            
+                        if (localStorage.getItem("enteredURL") != null) {
+                            FlowRouter.go(localStorage.getItem("enteredURL"));
+                            localStorage.removeItem("enteredURL");
+                            return;
+                        }
+            
+                        FlowRouter.go('/workorderlist')
+                    });
+                } else {
+                    let totalWorkOrders = await templateObject.getAllWorkorders();
+                    let savedworkorders = totalWorkOrders.filter(order => {
+                        return order.fields.SaleID == templateObject.salesOrderId.get();
+                    })
+                    FlowRouter.go('/purchaseordercard?workorderid=' + templateObject.salesOrderId.get() + "_" + (savedworkorders.length).toString())
+                }
         
         
             }, delayTimeAfterSound);
@@ -1225,7 +1042,7 @@ Template.new_workorder.events({
     'click #btnVendorService': async function(event) {
         event.preventDefault();
         event.stopPropagation();
-
+        let templateObject = Template.instance();
         async function checkExistPurchaseOrder (workorderid) {
             return new Promise(async(resolve, reject)=> {
                 getVS1Data('TPurchaseOrderEx').then(function(dataObject) {
@@ -1243,12 +1060,12 @@ Template.new_workorder.events({
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.tpurchaseorderex;
                         let index = useData.findIndex(purchaseOrder => {
-                            return purchaseOrder.fields.CustField2 == workorderid
+                            return purchaseOrder.fields.CustField3 == workorderid
                         })
                         if(index == -1 ) {
                             purchaseService.getPurchaseOrderByWorkorderid(workorderid).then(function(data){
                                 if(data.tpurchaseorderex.length > 0) {
-                                    resolve(data.tpurhcaseorderex[0].fields.ID)
+                                    resolve((data.tpurchaseorderex)[0].fields.ID)
                                 } else {
                                     resolve('')
                                 }
@@ -1273,7 +1090,38 @@ Template.new_workorder.events({
             })
         }
 
-        let purchaseOrderId = await checkExistPurchaseOrder();
+        async function getProductData(productName) {
+            return new Promise(async(resolve, reject)=> {
+                let record = templateObject.workorderrecord.get();
+                getVS1Data('TProductVS1').then(async function(dataObject){
+                    if(dataObject.length == 0) {
+                        productService.getOneProductdatavs1byname(productName).then(function(data){
+                            resolve(data.tproduct[0].fields)
+                        })
+                    }else {
+                         let added = false;
+                         let data = JSON.parse(dataObject[0].data);
+                         let useData = data.tproduct;
+                         let index = useData.findIndex(item=>{
+                            return item.fields.ProductName == productName
+                         })
+                         if(index == -1) {
+                            productService.getOneProductdatavs1byname(productName).then(function(data){
+                                resolve(data.tproduct[0].fields)
+                            })  
+                         }else {
+                            resolve(useData[index].fields)
+                         }
+                    }
+                }).catch(function(err){
+                    productService.getOneProductdatavs1byname(productName).then(function(data){
+                        resolve(data.tproduct[0].fields)
+                    })
+                })
+            })
+        }
+
+        let purchaseOrderId = await checkExistPurchaseOrder(FlowRouter.current().queryParams.id);
         if(purchaseOrderId == '') {
             swal({
                 title: 'Question',
@@ -1282,8 +1130,63 @@ Template.new_workorder.events({
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No'
-            }).then((result)=>{
+            }).then(async (result)=>{
                 if(result.value) {
+                    let record = templateObject.workorderrecord.get();
+                    let productData = await getProductData(record.productname)                    
+                    let splashLineArray = [];
+                    let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
+                    $('.fullScreenSpin').css('display', 'inline-block')
+                    async function getTaxRate ()  {
+                        return new Promise(async(resolve, reject)=> {
+                            
+                            getVS1Data('TTaxcodeVS1').then(function(dataObject){
+                                if(dataObject.length == 0) {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.ttaxcodevs1;
+                                    let index = useData.findIndex(taxCode=>{
+                                        return taxCode.CodeName == productData.TaxCodePurchase
+                                    })
+                                    if(index == -1) {
+                                        sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
+                                            resolve(data.ttaxcodevs1[0].Rate)
+                                        })
+                                    }else {
+                                        resolve(useData[index].Rate)
+                                    }
+                                    
+                                }else {
+                                    sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
+                                        resolve(data.ttaxcodevs1[0].Rate)
+                                    })
+                                }
+                            }).catch(function(err){
+                                sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
+                                    resolve(data.ttaxcodevs1[0].Rate)
+                                })
+                            })
+                        })
+                    }
+                    let taxRate = await getTaxRate()
+                    let lineItemObjForm = {
+                        type: "TPurchaseOrderLine",
+                        fields: {
+                            ProductName: record.productname || '',
+                            ProductDescription: productData.ProductDescription || '',
+                            UOMQtySold: record.quantity,
+                            UOMQtyShipped: 0,
+                            LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                            CustomerJob: record.customer || '',
+                            LineTaxCode: productData.TaxCodePurchase || '',
+                            LineTaxRate: taxRate || 0,
+                            LineClassName: defaultDept
+                        }
+                    };
+
+                    splashLineArray.push(lineItemObjForm);
+                    $('.fullScreenSpin').css('display', 'none')
+                    localStorage.setItem("newPOParamItem", JSON.stringify(splashLineArray))
+
                     FlowRouter.go('/purchaseordercard?workorderid='+ FlowRouter.current().queryParams.id)
                 }else if(result.dismiss == 'cancel') {
                     return;
@@ -1554,134 +1457,159 @@ Template.new_workorder.events({
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
             let productName = currentworkorder.fields.ProductName;
-            getVS1Data('TProductVS1').then(function(dataObject) {
-                if(dataObject.length == 0) {
-                    productService.getOneProductdatavs1byname(productName).then(function(dataDetail)  {
-                        let data = dataDetail.tproduct[0];
-                        productService.saveProduct({
-                            type: 'TProduct',
-                            fields: {
-                                ...data.fields,
-                                TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
-                            }
-                            // ID: data.fields.ID,
-                        }).then(function(){
-                            sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                addVS1Data('TProductVS1',JSON.stringify(data));
-                            })
-                        })
-                    })
-                } else {
-                    let data = JSON.parse(dataObject[0].data)
-                    let useData = data.tproductvs1;
-                    for(let i = 0; i< useData.length; i++) {
-                        if(useData[i].fields.ProductName == productName ) {
-                            productService.saveProductVS1({
-                                type: 'TProductVS1',
-                                fields: {
-                                    // ...useData[i].fields,
-                                    ID: useData[i].fields.ID,
-                                    TotalQtyInStock: currentworkorder.fields.Quantity + useData[i].fields.TotalQtyInStock
-                                }
-                            }).then(function(){
-                                sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                    addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
-                                    });
-                                })
-                            })
-                        }
-                    }
-                }
-            }).catch(function(err){
-                productService.getOneProductdatavs1byname(productName).then(function(dataDetail)  {
-                    let data = dataDetail.tproduct[0];
-                    productService.saveProduct({
-                        type: 'TProduct',
-                        fields: {
-                            ...data.fields,
-                            TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
-                        }
-                    }).then(function(){
-                        sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                            addVS1Data('TProductVS1',JSON.stringify(data));
-                        })
-                    })
-                })
-            })
+            // getVS1Data('TProductVS1').then(function(dataObject) {
+            //     if(dataObject.length == 0) {
+            //         productService.getOneProductdatavs1byname(productName).then(function(dataDetail)  {
+            //             let data = dataDetail.tproduct[0];
+            //             productService.saveProduct({
+            //                 type: 'TProduct',
+            //                 fields: {
+            //                     ...data.fields,
+            //                     TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
+            //                 }
+            //                 // ID: data.fields.ID,
+            //             }).then(function(){
+            //                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+            //                     addVS1Data('TProductVS1',JSON.stringify(data));
+            //                 })
+            //             })
+            //         })
+            //     } else {
+            //         let data = JSON.parse(dataObject[0].data)
+            //         let useData = data.tproductvs1;
+            //         for(let i = 0; i< useData.length; i++) {
+            //             if(useData[i].fields.ProductName == productName ) {
+            //                 productService.saveProductVS1({
+            //                     type: 'TProductVS1',
+            //                     fields: {
+            //                         // ...useData[i].fields,
+            //                         ID: useData[i].fields.ID,
+            //                         TotalQtyInStock: currentworkorder.fields.Quantity + useData[i].fields.TotalQtyInStock
+            //                     }
+            //                 }).then(function(){
+            //                     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+            //                         addVS1Data('TProductVS1',JSON.stringify(data)).then(()=>{
+            //                         });
+            //                     })
+            //                 })
+            //             }
+            //         }
+            //     }
+            // }).catch(function(err){
+            //     productService.getOneProductdatavs1byname(productName).then(function(dataDetail)  {
+            //         let data = dataDetail.tproduct[0];
+            //         productService.saveProduct({
+            //             type: 'TProduct',
+            //             fields: {
+            //                 ...data.fields,
+            //                 TotalQtyInStock: currentworkorder.fields.Quantity + data.fields.TotalQtyInStock
+            //             }
+            //         }).then(function(){
+            //             sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+            //                 addVS1Data('TProductVS1',JSON.stringify(data));
+            //             })
+            //         })
+            //     })
+            // })
 
             let subs = JSON.parse(JSON.parse(currentworkorder.fields.BOMStructure).Details);
-            for(let j = 0; j< subs.length; j++) {
-                let name = subs[j].productName;
-                getVS1Data('TProductVS1').then(function(dataObject) {
-                    if(dataObject.length == 0) {
-                        productService.getOneProductdatavs1byname(name).then(function(dataDetail)  {
-                            let data = dataDetail.tproduct[0];
-                            productService,saveProduct({
-                                type: 'TProduct',
-                                fields: {
-                                    ...data.fields,
-                                    TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
-                                }
-                            }).then(function(){
-                                $('.fullScreenSpin').css('display', 'none')
-                                sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                    addVS1Data('TProductVS1',JSON.stringify(data)).then(function() {
-                                        swal('Process Completed', '', 'success');
-                                    });
-                                })
-                            })
-                        })
-                    } else {
-                        let data = JSON.parse(dataObject[0].data)
-                        let useData = data.tproductvs1;
-                        for(let i = 0; i< useData.length; i++) {
-                            if(useData[i].fields.ProductName == name ) {
-                                productService.saveProductVS1({
-                                    type: 'TProductVS1',
-                                    fields: {
-                                        ...useData[i].fields,
-                                        // ID: useData[i].fields.ID,
-                                        TotalQtyInStock: useData[i].fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
-                                    }
-                                }).then(function(){
-                                    $('.fullScreenSpin').css('display', 'none')
-                                    sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                        addVS1Data('TProductVS1',JSON.stringify(data)).then(function(){
-                                            swal('Process Completed', '', 'success');
-                                        });
-                                    })
-                                })
-                            }
-                        }
-                    }
-                }).catch(function(err){
-                    productService.getOneProductdatavs1byname(name).then(function(dataDetail)  {
-                        let data = dataDetail.tproduct[0];
-                        productService,saveProduct({
-                            type: 'TProduct',
-                            fields:{
-                                ...data.fields,
-                                TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
-                            }
-                            // ID: data.fields.ID,
-                        }).then(function(){
-                            $('.fullScreenSpin').css('display', 'none')
-                            sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                                addVS1Data('TProductVS1',JSON.stringify(data)).then(function() {
-                                    swal('Process Completed', '', 'success');
-                                });
-                            })
-                        })
-                    })
-                })
-            }
+            // for(let j = 0; j< subs.length; j++) {
+            //     let name = subs[j].productName;
+            //     // getVS1Data('TProductVS1').then(function(dataObject) {
+            //     //     if(dataObject.length == 0) {
+            //     //         productService.getOneProductdatavs1byname(name).then(function(dataDetail)  {
+            //     //             let data = dataDetail.tproduct[0];
+            //     //             productService,saveProduct({
+            //     //                 type: 'TProduct',
+            //     //                 fields: {
+            //     //                     ...data.fields,
+            //     //                     TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
+            //     //                 }
+            //     //             }).then(function(){
+            //     //                 $('.fullScreenSpin').css('display', 'none')
+            //     //                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+            //     //                     addVS1Data('TProductVS1',JSON.stringify(data)).then(function() {
+            //     //                         swal('Process Completed', '', 'success');
+            //     //                     });
+            //     //                 })
+            //     //             })
+            //     //         })
+            //     //     } else {
+            //     //         let data = JSON.parse(dataObject[0].data)
+            //     //         let useData = data.tproductvs1;
+            //     //         for(let i = 0; i< useData.length; i++) {
+            //     //             if(useData[i].fields.ProductName == name ) {
+            //     //                 productService.saveProductVS1({
+            //     //                     type: 'TProductVS1',
+            //     //                     fields: {
+            //     //                         ...useData[i].fields,
+            //     //                         // ID: useData[i].fields.ID,
+            //     //                         TotalQtyInStock: useData[i].fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
+            //     //                     }
+            //     //                 }).then(function(){
+            //     //                     $('.fullScreenSpin').css('display', 'none')
+            //     //                     sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+            //     //                         addVS1Data('TProductVS1',JSON.stringify(data)).then(function(){
+            //     //                             swal('Process Completed', '', 'success');
+            //     //                         });
+            //     //                     })
+            //     //                 })
+            //     //             }
+            //     //         }
+            //     //     }
+            //     // }).catch(function(err){
+            //     //     productService.getOneProductdatavs1byname(name).then(function(dataDetail)  {
+            //     //         let data = dataDetail.tproduct[0];
+            //     //         productService,saveProduct({
+            //     //             type: 'TProduct',
+            //     //             fields:{
+            //     //                 ...data.fields,
+            //     //                 TotalQtyInStock: data.fields.TotalQtyInStock - parseFloat(currentworkorder.fields.Quantity * subs[j].qty)
+            //     //             }
+            //     //             // ID: data.fields.ID,
+            //     //         }).then(function(){
+            //     //             $('.fullScreenSpin').css('display', 'none')
+            //     //             sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+            //     //                 addVS1Data('TProductVS1',JSON.stringify(data)).then(function() {
+            //     //                     swal('Process Completed', '', 'success');
+            //     //                 });
+            //     //             })
+            //     //         })
+            //     //     })
+            //     // })
+            // }
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder = {...tempworkorder, EndTime: new Date()}
+            tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), }
             workorders.splice(workorderindex, 1, tempworkorder)
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+                async function getSalesOrders() {
+                    return new Promise(async(resolve, reject)=> {
+                        // getVS1Data('TSalesOrderEx').then(function(dataObject) {
+                        //     if (dataObject.length === 0) {
+                        //         accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data) {
 
-            productService.getOneProductdatavs1byname(productName).then(function(data){
+                        //         })
+                        //     }else {
+                        //         let data = JSON.parse(dataObject[0].data);
+                        //         let useData = data.tsalesorderex;
+                        //         let index = useData.findIndex(order=> {
+                        //             return order.fields.ID == templateObject.salesOrderId.get()
+                        //         })
+                        //         if(index > -1) {
 
+                        //         }
+                        //     }
+                        // })
+
+                    })
+                }
+
+                $('.fullScreenSpin').css('display', 'none')
+                swal('Process Completed', '', 'success');
             })
+            // productService.getOneProductdatavs1byname(productName).then(function(data){
+
+            // })
 
 
 

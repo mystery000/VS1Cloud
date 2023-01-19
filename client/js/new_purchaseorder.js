@@ -13,7 +13,7 @@ import '../lib/global/erp-objects';
 import {Random} from 'meteor/random';
 import 'jQuery.print/jQuery.print.js';
 import {Session} from 'meteor/session';
-import { rest, template } from 'lodash';
+import { cloneDeep, rest, template } from 'lodash';
 import {autoTable} from 'jspdf-autotable';
 import 'jquery-ui-dist/external/jquery/jquery';
 import {SideBarService} from '../js/sidebar-service';
@@ -1791,6 +1791,7 @@ Template.purchaseordercard.onRendered(() => {
                             let totalTax = utilityService.modifynegativeCurrencyFormat(data.fields.TotalTax);
                             let totalBalance = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance);
                             let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalPaid);
+                            let workorderid = data.fields.CustField3 || '';
                             if(data.fields.Lines != null){
                                 if (data.fields.Lines.length) {
                                     for (let i = 0; i < data.fields.Lines.length; i++) {
@@ -1900,7 +1901,8 @@ Template.purchaseordercard.onRendered(() => {
                                 totalPaid: totalPaidAmount,
                                 ispaid: data.fields.IsPaid,
                                 isPartialPaid: isPartialPaid,
-                                department: data.fields.Lines[0].fields.LineClassName || defaultDept
+                                department: data.fields.Lines[0].fields.LineClassName || defaultDept,
+                                workorderid: workorderid
                             };
 
                             let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2030,6 +2032,7 @@ Template.purchaseordercard.onRendered(() => {
                                 let totalTax = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalTax);
                                 let totalBalance = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalBalance);
                                 let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalPaid);
+                                let workorderid = useData[d].fields.CustField3 || ''
                                 if(useData[d].fields.Lines != null){
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
@@ -2141,7 +2144,8 @@ Template.purchaseordercard.onRendered(() => {
                                     totalPaid: totalPaidAmount,
                                     ispaid: useData[d].fields.IsPaid,
                                     isPartialPaid: isPartialPaid,
-                                    department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept
+                                    department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
+                                    workorderid: workorderid
                                 };
 
                                 let getDepartmentVal = useData[d].fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2152,6 +2156,7 @@ Template.purchaseordercard.onRendered(() => {
                                 $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
+
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 $('#shipvia').val(useData[d].fields.Shipping);
                                 FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
@@ -2254,6 +2259,7 @@ Template.purchaseordercard.onRendered(() => {
                                 let totalTax = utilityService.modifynegativeCurrencyFormat(data.fields.TotalTax);
                                 let totalBalance = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance);
                                 let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalPaid);
+                                let workorderid = data.fields.CustField3 || '';
                                 if(data.fields.Lines != null){
                                     if (data.fields.Lines.length) {
                                         for (let i = 0; i < data.fields.Lines.length; i++) {
@@ -2363,7 +2369,8 @@ Template.purchaseordercard.onRendered(() => {
                                     totalPaid: totalPaidAmount,
                                     ispaid: data.fields.IsPaid,
                                     isPartialPaid: isPartialPaid,
-                                    department: data.fields.Lines[0].fields.LineClassName || defaultDept
+                                    department: data.fields.Lines[0].fields.LineClassName || defaultDept,
+                                    workorderid: workorderid
                                 };
 
                                 let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2472,6 +2479,7 @@ Template.purchaseordercard.onRendered(() => {
                         let totalTax = utilityService.modifynegativeCurrencyFormat(data.fields.TotalTax);
                         let totalBalance = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance);
                         let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalPaid);
+                        let workorderid = data.fields.CustField3 || '';
                         if(data.fields.Lines != null){
                             if (data.fields.Lines.length) {
                                 for (let i = 0; i < data.fields.Lines.length; i++) {
@@ -2502,7 +2510,7 @@ Template.purchaseordercard.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
-
+                                       
                                     };
 
                                     lineItemsTable.push(dataListTable);
@@ -2581,7 +2589,8 @@ Template.purchaseordercard.onRendered(() => {
                             totalPaid: totalPaidAmount,
                             ispaid: data.fields.IsPaid,
                             isPartialPaid: isPartialPaid,
-                            department: data.fields.Lines[0].fields.LineClassName || defaultDept
+                            department: data.fields.Lines[0].fields.LineClassName || defaultDept,
+                            workorderid: workorderid
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2685,6 +2694,7 @@ Template.purchaseordercard.onRendered(() => {
                 let totalTax = utilityService.modifynegativeCurrencyFormat(data.fields.TotalTax);
                 let totalBalance = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance);
                 let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalPaid);
+                let workorderid = data.fields.CustField3 || '';
                 if(data.fields.Lines != null){
                     if (data.fields.Lines.length) {
                         for (let i = 0; i < data.fields.Lines.length; i++) {
@@ -2788,7 +2798,8 @@ Template.purchaseordercard.onRendered(() => {
                     totalPaid: totalPaidAmount,
                     ispaid: data.fields.IsPaid,
                     isPartialPaid: isPartialPaid,
-                    department: data.fields.Lines[0].fields.LineClassName || defaultDept
+                    department: data.fields.Lines[0].fields.LineClassName || defaultDept,
+                    workorderid: workorderid
                 };
 
                 let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2868,7 +2879,7 @@ Template.purchaseordercard.onRendered(() => {
             TaxRate: 0,
 
         };
-        if(url.indexOf('?workorderid=')>0 || url.indexOf('?salesorderid=')>0) {
+        if(url.indexOf('?workorderid=')>0) {
             let object = localStorage.getItem('newPOParamItem')? JSON.parse(localStorage.getItem('newPOParamItem')): []
             if(object.length > 0) {
                 let detail = object[0].fields
@@ -2895,6 +2906,7 @@ Template.purchaseordercard.onRendered(() => {
         }
         lineItemsTable.push(dataListTable);
         lineItems.push(lineItemObj);
+        localStorage.removeItem('newPOParamItem');
         const currentDate = new Date();
         const begunDate = moment(currentDate).format("DD/MM/YYYY");
         let purchaseorderrecord = {
@@ -2932,9 +2944,10 @@ Template.purchaseordercard.onRendered(() => {
             saleCustField2: '',
             totalPaid: Currency + '' + 0.00,
             ispaid: false,
-            isPartialPaid: false
-
+            isPartialPaid: false,
+            workorderid: FlowRouter.current().queryParams.workorderid || '',
         };
+        
         if (FlowRouter.current().queryParams.supplierid) {
             getSupplierData(FlowRouter.current().queryParams.supplierid);
         } else {
@@ -8058,6 +8071,10 @@ Template.purchaseordercard.events({
                             OrderStatus: $('#sltStatus').val()
                         }
                     };
+
+                    if(FlowRouter.current().queryParams.workorderid) {
+                        objDetails.fields.CustField3 = FlowRouter.current().queryParams.workorderid
+                    }
                 }
 
                 if(splashLineArray.length > 0){
@@ -8069,8 +8086,7 @@ Template.purchaseordercard.events({
                     return false;
                 };
 
-                purchaseService.savePurchaseOrderEx(objDetails).then(function(objDetails) {
-
+                await purchaseService.savePurchaseOrderEx(objDetails).then(async function(objDetails) {
                     if (localStorage.getItem("enteredURL") != null) {
                         FlowRouter.go(localStorage.getItem("enteredURL"));
                         localStorage.removeItem("enteredURL");
@@ -8081,9 +8097,45 @@ Template.purchaseordercard.events({
 
                     $('#html-2-pdfwrapper').css('display', 'block');
                     $('.pdfCustomerName').html($('#edtSupplierEmail').val());
-                    $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                    $('.pdfCustomerAddress').html($('#txabillingAddress').val() != ''?$('#txabillingAddress').val() != ''.replace(/[\r\n]/g, "<br />"): '');
                     var ponumber = $('#ponumber').val() || '.';
                     $('.po').text(ponumber);
+
+                    async function getAllWorkorders () {
+                        return new Promise(async(resolve, reject)=>{
+                            getVS1Data('TVS1Workorder').then(function(dataObject){
+                                if(dataObject.length == 0) {
+                                    resolve([]);
+                                }else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    resolve(data.tvs1workorder)
+                                }
+                            }).catch(function(e) {resolve([])})
+                        })
+                    }
+                    async function updateWO() {
+                        if(tempObject.purchaseorderrecord.get().workorderid != '') {
+                            let workorderid = tempObject.purchaseorderrecord.get().workorderid;
+                            let workorders = await getAllWorkorders();
+                            let index = workorders.findIndex((order, index)=>{
+                                return order.fields.ID == workorderid
+                            })
+                            let workorderrecord = cloneDeep(workorders[index].fields);
+                            workorderrecord.POStatus = $('#sltStatus').val();
+                            let object = {
+                                type:"TVS1Workorder",
+                                fields: workorderrecord
+                            }
+                            let tempWorkorders = cloneDeep(workorders);
+                            tempWorkorders.splice(index, 1, object);
+                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
+                                function() {getVS1Data('TVS1Workorder').then(function(dataObject){
+                                    let data = JSON.parse(dataObject[0].data);
+                                })}
+                            )
+                        }
+                    }
+                    await updateWO()
                     async function addAttachment() {
                         let attachment = [];
 
@@ -8462,7 +8514,7 @@ Template.purchaseordercard.events({
                             };
                         };
                     }
-                    addAttachment();
+                    await addAttachment();
 
                     function generatePdfForMail(invoiceId) {
                         return new Promise((resolve, reject) => {
@@ -8571,6 +8623,8 @@ Template.purchaseordercard.events({
                             FlowRouter.go('/purchaseorderlist?success=true');
                         };
                     }
+
+                   
 
                 }).catch(function(err) {
                     swal({
