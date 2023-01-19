@@ -1,5 +1,4 @@
 <template name="crmoverview">
-
   <style scoped>
     th {
       background-color: #ededed;
@@ -23,84 +22,106 @@
 
     .showColumn {
       display: table-cell;
-      padding: .75rem;
+      padding: 0.75rem;
       vertical-align: top;
     }
 
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
       opacity: 1;
     }
-
-    
   </style>
 
-  <div class="fullScreenSpin" style="display:none;">
+  <div class="fullScreenSpin" style="display: none">
     <div class="spinner"></div>
   </div>
 
-  <div style="margin-top: -24px;">
-
-    <header class="row">
-        <div class="col-12 col-md-4">
-            <header class="pt-2 pb-3 d-flex">
-                <h3 class="mr-1">CRM Overview {{> crm_help_modal }}</h3>
-            </header>
-        </div>
-        <div class="col-12 col-md-4 divLogged">
-            {{> loggedcompanyoverview}}
-        </div>
-        <div class="col-12 col-md-4">
-            <div>
-                <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#settingsModal"
-                   style="margin: 14px 14px 0 0;"><i class="icon ion-android-more-horizontal"></i></a>
-            </div>
-        </div>
-<!--      <h2 style="margin: 14px;margin-bottom: 0px;"><span id="crm_header_title">CRM Overview</span>-->
-<!--        {{> crm_help_modal }}-->
-<!--      </h2>-->
-    </header>
-
-    {{> leadbarchart}}
+  <div style="margin-top: -24px">
+    <!-- {{> leadbarchart}} -->
 
     <!-- All Cards List -->
     <div class="container-fluid">
-      <div style="padding: 0 8px;">
-        {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
+      <header class="row">
+        <div class="col-12 col-md-4">
+          <header class="pt-2 pb-3 d-flex">
+            <h3 class="mr-1">CRM Overview {{> crm_help_modal }}</h3>
+          </header>
+        </div>
+        <div class="col-12 col-md-4 divLogged">{{> loggedcompanyoverview}}</div>
+        <div class="col-12 col-md-4">
+          <div>
+            <a
+              class="btn btnOpenSettings float-right ml-auto"
+              role="button"
+              data-toggle="modal"
+              href="#settingsModal"
+              style="margin: 14px 14px 0 0"
+              ><i class="icon ion-android-more-horizontal"></i
+            ></a>
+          </div>
+        </div>
+      </header>
+      <div style="padding: 0 8px">
+        <!-- {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}} -->
+        {{> allChartLists tabGroupID="3" chartGroup="CRM" currentTemplate="CRM_Overview"}}
       </div>
     </div>
     <!-- All Cards List -->
+    {{> dashboardCardCharts tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
 
-    {{> crm_top_menu}}
-
-    {{> alltaskdatatable}}
-
-    {{> crm_mailchimp_modal}}
-    {{> crm_mailchimp_add_campaign_modal}}
+    {{> crm_top_menu}} {{> alltaskdatatable}} {{> crm_mailchimp_modal}} {{>
+    crm_mailchimp_add_campaign_modal}}
 
     <input type="hidden" id="assignedID" />
     <input type="hidden" id="contactID" />
     <input type="hidden" id="contactType" />
 
-    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
-        style="max-width: 90vw;">
+    <div
+      class="modal fade customerListModal"
+      role="dialog"
+      tabindex="-1"
+      id="customerListModal"
+    >
+      <div
+        class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner"
+        role="document"
+        style="max-width: 90vw"
+      >
         <div class="modal-content customerListContent">
           <div class="modal-header">
-            <h4>Contact List</h4><button type="button" class="close checkclose" data-dismiss="modal"
-              aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4>Contact List</h4>
+            <button
+              type="button"
+              class="close checkclose"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
           </div>
-          <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
-            <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID"
-              name="customerSelectLineID" readonly>
+          <div
+            class="modal-body mainCustomerModalBody"
+            style="padding: 0px; overflow-x: hidden"
+          >
+            <input
+              type="hidden"
+              style="width: 100%; display: none"
+              id="customerSelectLineID"
+              name="customerSelectLineID"
+              readonly
+            />
             <div class="row">
-              <div class="col-12 contactlistcol">
-                {{> contactlistpop}}
-              </div>
+              <div class="col-12 contactlistcol">{{> contactlistpop}}</div>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+            <button
+              class="btn btn-light checkclose"
+              data-dismiss="modal"
+              type="button"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
@@ -108,18 +129,33 @@
   </div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="employeeListModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
-      style="max-width: 90vw;">
+    <div
+      class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner"
+      role="document"
+      style="max-width: 90vw"
+    >
       <div class="modal-content customerListContent">
         <div class="modal-header">
-          <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
+          <h4>Employee List</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
-        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+        <div
+          class="modal-body mainCustomerModalBody appointmentCustomer"
+          style="padding: 0px; overflow-x: hidden"
+        >
           {{> employeelistpop}}
         </div>
         <div class="modal-footer">
-          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+          <button class="btn btn-light" data-dismiss="modal" type="button">
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -128,5 +164,4 @@
   {{> projectListPop}}
 
   <!-- {{> settingsModal}} -->
-
 </template>
