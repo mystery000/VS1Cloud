@@ -71,11 +71,11 @@ Template.customerscard.onCreated(function () {
   templateObject.taskrecords = new ReactiveVar([]);
 
   templateObject.checkedAppointments = new ReactiveVar();
-  templateObject.checkedAppointments.set(true);
+  templateObject.checkedAppointments.set(false);
   templateObject.checkedQuotes = new ReactiveVar();
-  templateObject.checkedQuotes.set(true);
+  templateObject.checkedQuotes.set(false);
   templateObject.checkedSalesOrders = new ReactiveVar();
-  templateObject.checkedSalesOrders.set(true);
+  templateObject.checkedSalesOrders.set(false);
   templateObject.checkedInvoices = new ReactiveVar();
   templateObject.checkedInvoices.set(true);
 
