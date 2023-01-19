@@ -1,58 +1,36 @@
-<template name="leadbarchart">
-  <!-- <style type="text/css">
-    .hideelement {
-      display: none !important;
-    }
+<template name="crmleadchart"> 
 
-    .showelement {
-      display: block;
-    }
+  {{# draggablePanel
+      xs=xs sm=sm md=md lg=lg xl=xl
+      defaultPosition=defaultPosition
+      key=key
+      hLenght=100
+      id="chart_leadpiecharts"
+      headerClass=""
+      headerColor="primary"
+      headerTitle="CRM Overview"
+      hrefDetails="/crmoverview"
+      editModalID="editDashboardModal"
+  }}
+      <canvas id="chart_leadpiechart" name="chart_leadpiechart"></canvas>
+  {{/draggablePanel}}
 
-    .sortableMonthlyExpense {
-      width: 75%;
+  {{# draggablePanel
+      xs=xs sm=sm md=md lg=lg xl=xl
+      defaultPosition=defaultPosition
+      key=key
+      hLenght=100
+      id="chart_leadbarcharts"
+      headerClass=""
+      headerColor="primary"
+      headerTitle="CRM Overview"
+      hrefDetails="/crmoverview"
+      editModalID="editDashboardModal"
+  }}
+      <canvas id="chart_leadbarchart" name="chart_leadbarchart"></canvas>
+  {{/draggablePanel}}
 
-    }
-
-    .sortableMonthlyExpense .monthly-expense-widget {
-      min-width: 275px !important;
-      max-width: 100% !important;
-    }
-
-    @media screen and (max-width: 1306px) {
-      .sortableMonthlyExpense {
-        width: 100%;
-
-      }
-    }
-
-    .sortableExpenseBreakdown {
-      width: 100%;
-      min-width: 275px;
-      max-width: calc(25% - 0.5rem);
-    }
-
-    .sortableExpenseBreakdown .expense-widget {
-      width: -webkit-fill-available;
-
-    }
-
-
-    @media screen and (max-width: 1306px) {
-      .sortableExpenseBreakdown {
-        width: 100%;
-        max-width: 512px;
-      }
-    }
-
-    @media screen and (max-width: 768px) {
-      .sortableExpenseBreakdown {
-        width: 100%;
-        max-width: 100%;
-      }
-    }
-  </style>
-
-  <div class="charts row connectedChartSortable connectedSortable" style="margin: 0px 16px;">
+  <!-- <div class="charts row connectedChartSortable connectedSortable" style="margin: 0px 16px;">
     <div class="col-auto col-md-6 sortable-chart-widget-js" position="0" data-default-class="col-md-8">
       <div class="minHeight100">
         <div class="card shadow mb-4 portlet expense-widget">
@@ -79,8 +57,6 @@
         </div>
       </div>
     </div>
-  </div> -->
-
-
-
+  </div>
+   -->
 </template>
