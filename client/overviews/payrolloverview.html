@@ -101,7 +101,7 @@
                     <!-- End Help View Modal -->
 
 
-                <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                     <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -175,11 +175,9 @@
                                                     style="margin: 8px;">
                                                     <label class="text-nowrap"
                                                         style="padding-left: 0px;margin-top: 8px;">Width:
-                                                        <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
                                                     </label>
                                                     <input class="custom-range rngRange" type="number"
                                                         style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                    <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
                                                 </div>
                                             </div>
 
@@ -210,7 +208,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </header>
             <!-- All charts list --> 
 
@@ -519,8 +517,9 @@
                     <button id="btnSingleTouchPayroll" name="btnSingleTouchPayroll" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-dollar-sign" style="padding-right: 5px;"></i>ST Payroll</button>
                     <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a>
                 </div>
-                <div class="col-6 col-md-5 col-lg-4">
-                    <a class="btn btnNav float-right" role="button" data-toggle="modal" href="#myModal2"
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename="tblTimeSheet"}}
+                    <!-- <a class="btn btnNav float-right" role="button" data-toggle="modal" href="#myModal2"
                         style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
 
                     <button class="btn btnNav btn-primary printConfirm float-right" type="button"
@@ -636,7 +635,7 @@
 
                     <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal"
                         href="#myModal2" style="margin: 16px; display: none;"><i
-                            class="icon ion-android-more-horizontal"></i></a>
+                            class="icon ion-android-more-horizontal"></i></a> -->
                 </div>
             </div>
 
