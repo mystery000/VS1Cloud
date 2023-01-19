@@ -928,50 +928,49 @@
                             <!-- </tbody>
                         </table> -->
                     </div>
-
-                        <div class="table-responsive">
-                            <div class="row no-gutters d-xl-flex align-items-xl-end">
-                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                                    <h4 style="font-weight: 600;">Draft Pay Run</h4>
-                                </div>
-                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-
-                                </div>
-                                <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                                    <button type="button" class="btn btn-link btnSetupSingleTouch" ><i class="fas fa-wrench" style="margin-right: 5px;"></i>Setup Single Touch Payroll</button>
-                                </div> -->
+                    <div class="table-responsive">
+                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                                <h4 style="font-weight: 600;">Draft Pay Run</h4>
                             </div>
-                            <table id="tblPayRunHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunHistory">
-                                <thead>
-                                    <tr class="dnd-moved">
-                                        <th class="th colPayRunCalendar" >Calendar</th>
-                                        <th class="th colPayRunPeriod" >Period</th>
-                                        <th class="th colPayRunPaymentDate" >Payment Date</th>
-                                        <th class="th colPayRunWages" >Wages</th>
-                                        <th class="th colPayRunTax" >Tax</th>
-                                        <th class="th colPayRunSuper" >Super</th>
-                                        <th class="th colPayRunNetPay" >Net Pay</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#if draftPayRunRecords}}
-                                        {{#each item in draftPayRunRecords}}
-                                            <tr class="dnd-moved redirect-to-payrun-details" payrun-id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
-                                                <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
-                                                <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
-                                                <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
-                                                <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
-                                                <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
-                                                <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
-                                                <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
-                                            </tr>
-                                        {{/each}}
-                                    {{/if}}
+                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
-                                </tbody>
-                            </table>
+                            </div>
+                            <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                                <button type="button" class="btn btn-link btnSetupSingleTouch" ><i class="fas fa-wrench" style="margin-right: 5px;"></i>Setup Single Touch Payroll</button>
+                            </div> -->
                         </div>
-                        <hr class="mt-2" />
+                        <table id="tblPayRunHistory" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRunHistory">
+                            <thead>
+                                <tr class="dnd-moved">
+                                    <th class="th colPayRunCalendar" >Calendar</th>
+                                    <th class="th colPayRunPeriod" >Period</th>
+                                    <th class="th colPayRunPaymentDate" >Payment Date</th>
+                                    <th class="th colPayRunWages" >Wages</th>
+                                    <th class="th colPayRunTax" >Tax</th>
+                                    <th class="th colPayRunSuper" >Super</th>
+                                    <th class="th colPayRunNetPay" >Net Pay</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#if draftPayRunRecords}}
+                                    {{#each item in draftPayRunRecords}}
+                                        <tr class="dnd-moved redirect-to-payrun-details" payrun-id="{{item.id}}" calendar-id="{{item.calendar.ID}}">
+                                            <td class="colPayRunCalendar" contenteditable="false">{{ item.calendar.PayrollCalendarName }}</td>
+                                            <td class="colPayRunPeriod" contenteditable="false">{{ item.calendar.PayrollCalendarPayPeriod }}</td>
+                                            <td class="colPayRunPaymentDate" contenteditable="false">{{ PaymentDateFormat item.calendar.PayrollCalendarFirstPaymentDate }}</td>
+                                            <td class="colPayRunWages" contenteditable="false">{{ item.wages }}</td>
+                                            <td class="colPayRunTax" contenteditable="false">{{ item.taxes }}</td>
+                                            <td class="colPayRunSuper" contenteditable="false">{{ item.superAnnuation }}</td>
+                                            <td class="colPayRunNetPay" contenteditable="false">{{ item.netPay }}</td>
+                                        </tr>
+                                    {{/each}}
+                                {{/if}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr class="mt-2" />
                     </div>
                 </div>
             </div>

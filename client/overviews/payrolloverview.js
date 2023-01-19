@@ -6124,10 +6124,6 @@ Template.payrolloverview.events({
       }
     }
   },
-  "click .saveTable": function (event) {
-    let lineItems = [];
-    $("#myModal2").modal("toggle");
-  },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).text();
 
