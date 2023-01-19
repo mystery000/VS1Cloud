@@ -4409,21 +4409,21 @@ Template.newsidenav.onRendered(function () {
     });
   }
 
-  templateObject.getAllTExpenseClaimExData = function () {
-    sideBarService.getAllExpenseCliamExDataVS1().then(function (data) {
-      countObjectTimes++;
-      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
-      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
-      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
-      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
-      $(".progressName").text("Receipt Claim ");
-      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
-        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
-          $('.headerprogressbar').removeClass('headerprogressbarHidden');
-        } else {
-          $('.headerprogressbar').addClass('headerprogressbarShow');
-          $('.headerprogressbar').removeClass('headerprogressbarHidden');
-        }
+    templateObject.getAllTExpenseClaimExData = function() {
+        sideBarService.getAllExpenseCliamExDataVS1().then(function(data) {
+            countObjectTimes++;
+            progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+            $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+            //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+            $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+            $(".progressName").text("Receipt Claim ");
+            if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                }
 
       } else if (Math.round(progressPercentage) >= 100) {
         $('.checkmarkwrapper').removeClass("hide");
