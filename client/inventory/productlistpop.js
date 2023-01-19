@@ -368,13 +368,13 @@ Template.productlistpop.onRendered(function () {
                                       }
 
                                                 let uniqueChars = [...new Set(splashArrayProductList)];
-                                                var datatable = $('#tblInventory').DataTable();
-                                                datatable.clear();
-                                                datatable.rows.add(uniqueChars);
-                                                datatable.draw(false);
-                                                setTimeout(function () {
-                                                  $("#tblInventory").dataTable().fnPageChange('last');
-                                                }, 400);
+                                                // var datatable = $('#tblInventory').DataTable();
+                                                // datatable.clear();
+                                                // datatable.rows.add(uniqueChars);
+                                                // datatable.draw(false);
+                                                // setTimeout(function () {
+                                                //   $("#tblInventory").dataTable().fnPageChange('last');
+                                                // }, 400);
 
                                                 $('.fullScreenSpin').css('display', 'none');
 
@@ -647,10 +647,10 @@ Template.productlistpop.events({
         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
         $('.fullScreenSpin').css('display', 'none');
         if (splashArrayProductList) {
-          var datatable = $('#tblInventory').DataTable();
-          datatable.clear();
-          datatable.rows.add(splashArrayProductList);
-          datatable.draw(false);
+          // var datatable = $('#tblInventory').DataTable();
+          // datatable.clear();
+          // datatable.rows.add(splashArrayProductList);
+          // datatable.draw(false);
 
         }
         }else{
@@ -734,10 +734,10 @@ Template.productlistpop.events({
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
-            var datatable = $('#tblInventory').DataTable();
-            datatable.clear();
-            datatable.rows.add(splashArrayProductList);
-            datatable.draw(false);
+            // var datatable = $('#tblInventory').DataTable();
+            // datatable.clear();
+            // datatable.rows.add(splashArrayProductList);
+            // datatable.draw(false);
 
 
           }
