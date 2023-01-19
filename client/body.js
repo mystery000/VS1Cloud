@@ -362,6 +362,9 @@ import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
 import './eft/eft.js';
+import './vs1charts/bankaccountschart/bankaccountschart.js';
+import './vs1charts/accountslist/accountslistchart.js';
+import './vs1charts/crmleadchart/crmleadchart.js';
 /* Sasa */
 
 /* Martin */
