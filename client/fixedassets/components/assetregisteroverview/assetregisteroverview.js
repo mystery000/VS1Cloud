@@ -7,11 +7,10 @@ Template.assetregisteroverview.onCreated(function () {
 });
 
 Template.assetregisteroverview.onRendered(function () {
-  FlowRouter.current().queryParams.accountName
   $("#tblAssetRegisterList tbody").on("click", "tr", function() {
     var assetID = $(this).attr("id");
     FlowRouter.go("/fixedassetcard?assetId=" + assetID );
-});
+  });
 });
 
 Template.assetregisteroverview.events({

@@ -7,6 +7,7 @@ let fixedAssetService = new FixedAssetService();
 
 Template.servicelogcard.onCreated(function () {
   const templateObject = Template.instance();
+  templateObject.currentServiceLogID = new ReactiveVar(0);
   templateObject.fixedAssets = new ReactiveVar([]);
 
   templateObject.asset_id = new ReactiveVar(0);
@@ -76,6 +77,36 @@ Template.servicelogcard.onRendered(function () {
     }
   });
 
+  let cServiceID = parseInt(FlowRouter.current().queryParams.id || '0');
+  templateObject.currentServiceLogID.set(cServiceID);
+
+  if (cServiceID > 0) {
+    fixedAssetService.getServiceLogDetail(cServiceID).then((data) => {
+      const serviceData = data.tserviceloglist;
+      // console.log(data);
+      if (serviceData.length > 0) {
+        const recordInfo = serviceData[0];
+        templateObject.asset_id.set(recordInfo.AssetID);
+        templateObject.asset_code.set(recordInfo.AssetCode);
+        $("#edtAssetCode").val(recordInfo.AssetCode);
+        templateObject.asset_name.set(recordInfo.AssetName);
+        $("#edtAssetName").val(recordInfo.AssetName);
+
+        $("#edtServiceProvider").val(recordInfo.ServiceProvider);
+        // ServiceType: $("#edtServiceProvider").val(),
+        $("#dtServiceDate").val(getDatePickerForm(recordInfo.ServiceDate));
+        $("#dtNextServiceDate").val(getDatePickerForm(recordInfo.NetServiceDate));
+        $('#edtHours').val(recordInfo.HoursForNextService);
+        $('#edtKms').val(recordInfo.KmsForNextService);
+        $("#txtServiceNotes").val(recordInfo.ServiceNotes);
+        if(recordInfo.Done) {
+          $("#chkDone").trigger("click");
+        }
+
+      }
+    });
+  }
+
   $("#date-input,#dtServiceDate,#dtNextServiceDate").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
@@ -88,6 +119,17 @@ Template.servicelogcard.onRendered(function () {
     changeYear: true,
     yearRange: "-90:+10",
   });
+
+  function getDatePickerForm(dateStr) {
+    const date = new Date(dateStr);
+    let year = date.getFullYear();
+    let month = date.getMonth() < 9 ? '0'+(date.getMonth()+1) : (date.getMonth()+1);
+    let day = date.getDate() < 10 ? '0'+date.getDate() : date.getDate();
+    if (year && month && day)
+      return day+"/"+month+"/"+year;
+    else
+      return '';
+  }
 });
 
 Template.servicelogcard.events({
@@ -120,14 +162,26 @@ Template.servicelogcard.events({
       return dateObj.getFullYear() + "-" + (dateObj.getMonth() + 1) + "-" + dateObj.getDate() + " " + hh + ":" + min + ":" + ss;
     };
 
-
-    fixedAssetService.saveServiceLog(newServiceLog).then((data) => {
-      fixedAssetService.getServiceLogList().then(function (data) {
-        addVS1Data("TServiceLogList", JSON.stringify(data));
+    if (templateObject.currentServiceLogID.get() == 0) {
+      fixedAssetService.saveServiceLog(newServiceLog).then((data) => {
+        fixedAssetService.getServiceLogList().then(function (data) {
+          addVS1Data("TServiceLogList", JSON.stringify(data));
+        });
+      }).catch((err) => {
+        // console.log(err);
       });
-    }).catch((err) => {
-      // console.log(err);
-    });
+      FlowRouter.go('/serviceloglist');
+    } else {
+      newServiceLog.fields['ServiceID'] = templateObject.currentServiceLogID.get();
+      fixedAssetService.saveServiceLog(newServiceLog).then((data) => {
+        fixedAssetService.getServiceLogList().then(function (data) {
+          addVS1Data("TServiceLogList", JSON.stringify(data));
+        });
+      }).catch((err) => {
+        // console.log(err);
+      });
+      FlowRouter.go('/serviceloglist');
+    }
   },
   "click input#chkDone": function() {
     const templateObject = Template.instance();

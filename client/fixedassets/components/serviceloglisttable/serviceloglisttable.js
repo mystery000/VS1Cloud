@@ -6,7 +6,12 @@ let sideBarService = new SideBarService();
 
 Template.serviceloglisttable.onCreated(function () {
 });
-
+Template.serviceloglisttable.onRendered(function () {
+  $("#tblServiceLogList tbody").on("click", "tr", function() {
+    var ID = $(this).attr("id");
+    FlowRouter.go("/servicelogcard?id=" + ID );
+  });
+});
 Template.serviceloglisttable.events({
 
   "click #btnNewServiceLog": function() {

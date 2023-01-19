@@ -12923,7 +12923,7 @@ Template.non_transactional_list.onRendered(function() {
     
     templateObject.setServiceLogList = function (data) {
       addVS1Data('TServiceLogList', JSON.stringify(data));
-      const dataTableList = new Array();;
+      const dataTableList = new Array();
   
       for (const log of data.tserviceloglist) {
         const dataList = [
