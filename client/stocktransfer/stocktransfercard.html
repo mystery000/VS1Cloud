@@ -83,6 +83,9 @@
                             padding: .75rem;
                             vertical-align: top;
                         }
+                        #txtNotes, #shipcomments{
+                          height: 125px!important;
+                        }
                     </style>
                     <!-- {{> deletepop itemName1="Transfer" itemName2="stock transfer" itemName3="Stock Transfer" button1="btnDeleteStock" button2="btnDeleteFollowingStocks"}} -->
                     <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
@@ -348,7 +351,7 @@
                     <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
                 </button>
             </div> -->
-            {{> transaction_footer 
+            {{> transaction_footer
                 TransactionType='stocktransfer'
                 showProcessButton=true
                 showHoldButton=true
