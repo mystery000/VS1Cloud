@@ -30,8 +30,8 @@ export class FixedAssetService extends BaseService {
 
   getFixedAssetTypes() {
     let options = {
-      PropertyList: "AssetTypeCode, AssetTypeName, Notes, Active",
-      select: "[Active]=true",
+      ListType: "Detail",
+      select: "[Active]=true"
     };
     return this.getList(this.ERPObjects.TFixedAssetType, options);
   }
@@ -40,6 +40,7 @@ export class FixedAssetService extends BaseService {
     return this.getOneById(this.ERPObjects.TFixedAssetType, id);
   }
 
+
   getServiceLogList() {
     let options = {
       ListType: "Detail",
@@ -47,8 +48,26 @@ export class FixedAssetService extends BaseService {
     };
     return this.GET(this.ERPObjects.TServiceLogList);
   }
-  
+
+
+  getServiceLogDetail(ID) {
+    let options = {
+      ListType: "Detail",
+      select: '[ServiceID] f7like "' + ID + '"',
+    };
+    return this.getList(this.ERPObjects.TServiceLogList, options);
+  }
+
   saveServiceLog(data) {
     return this.POST(this.ERPObjects.TServiceLog, data);
+  }
+
+  getCostTypeList() {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    };
+    console.log(this.ERPObjects);
+    return this.GET(this.ERPObjects.TCostTypes);
   }
 }

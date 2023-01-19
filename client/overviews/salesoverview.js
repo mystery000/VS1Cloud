@@ -42,7 +42,7 @@ Template.salesoverview.onRendered(function () {
       { index: 8, label: 'Paid', class:'Paid', active: true, display: true, width: "" },
       { index: 9, label: 'Balance Outstanding', class:'BalanceOutstanding', active: true, display: true, width: "" },
       { index: 10, label: 'Status', class:'Status', active: true, display: true, width: "" },
-      { index: 11, label: 'Employee', class:'Employee', active: false, display: true, width: "" },
+      { index: 11, label: 'Employee', class:'Employee', active: true, display: true, width: "" },
       { index: 12, label: 'Comments', class: 'Comments', active: true, display: true, width: "" },
     ];
 
@@ -65,6 +65,7 @@ Template.salesoverview.onRendered(function () {
           sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
               // reset_data = data.ProcessLog.CustomLayout.Columns;
               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+              reset_data = templateObject.reset_data.get();
               templateObject.showCustomFieldDisplaySettings(reset_data);
           }).catch(function (err) {
           });
@@ -74,6 +75,7 @@ Template.salesoverview.onRendered(function () {
            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+               reset_data = templateObject.reset_data.get();
                templateObject.showCustomFieldDisplaySettings(reset_data);
              }
            }
