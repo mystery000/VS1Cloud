@@ -256,7 +256,7 @@ export class PurchaseBoardService extends BaseService {
     getPurchaseOrderByWorkorderid(id) {
         let options = {
             ListType: 'Detail',
-            select: "[deleted]=fasle and [CustField]='" +id +"'"
+            select: "[deleted]=fasle and [CustField3]='" +id +"'"
         }
         return this.getList(this.ERPObjects.TPurchaseOrderEx, options)
     }
