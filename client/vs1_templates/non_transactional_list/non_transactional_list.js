@@ -648,7 +648,7 @@ Template.non_transactional_list.onRendered(function() {
             reset_data = [
                 { index: 0, label: '#ID', class: '', active: false, display: true, width: "10" },
                 { index: 1, label: 'Title', class: 'colTitleName', active: true, display: true, width: "150" },
-                { index: 2, label: 'Active', class: 'chkBox', active: true, display: true, width: "50" },
+                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
         } else if (currenttablename == 'tblProcessList') {
             reset_data = [
@@ -979,6 +979,16 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 4, label: 'Labels', class: 'colTaskLabels no-modal', active: false, display: true, width: "250" },
                 { index: 5, label: 'Project', class: 'colTaskProjects no-modal', active: false, display: true, width: "100" },
                 { index: 6, label: 'Actions', class: 'colTaskActions no-modal', active: true, display: true, width: "100" },
+            ]
+        } else if (currenttablename === "tblTimeSheet"){
+            reset_data = [
+                { index: 0, label: '#ID', class: 'colTimeSheetId', active: false, display: true, width: "" },
+                { index: 1, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100" },
+                { index: 2, label: 'Surname', class: 'colSurname', active: true, display: true, width: "100" },
+                { index: 3, label: 'Period', class: 'colPeriod', active: true, display: true, width: "150" },
+                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "150" },
+                { index: 5, label: 'Last edited', class: 'colLastEdited', active: true, display: true, width: "250" },
+                { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
             ]
         }
         templateObject.reset_data.set(reset_data);
@@ -6084,11 +6094,17 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayTitleListData = async function(data) {
         var splashArrayTitleList = [
-            [1, "Mr", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>', ],
-            [2, "Mrs", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
-            [3, "MIss", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
-            [4, "Ms", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+            [1,"Mr",""],
+            [2,"Mrs",""],
+            [3,"Miss",""],
+            [4,"Ms",""],
         ];
+        // var splashArrayTitleList = [
+        //     [1, "Mr", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>', ],
+        //     [2, "Mrs", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+        //     [3, "MIss", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+        //     [4, "Ms", '<div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="s-active-1"><label class="custom-control-label chkBox" for="s-active-1"></label></div>'],
+        // ];
         let deleteFilter = false;
         templateObject.transactiondatatablerecords.set(splashArrayTitleList)
             if(templateObject.transactiondatatablerecords.get()) {
@@ -6116,9 +6132,9 @@ Template.non_transactional_list.onRendered(function() {
                     },
                     {
                         targets: 2,
-                        className: "chkBox pointer",
-                        width: "20px",
-                    },
+                        className: "colStatus",
+                        width: "100px",
+                    }
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -13908,6 +13924,213 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+
+    templateObject.getTimeSheetList = function(){
+        getVS1Data('TTimeSheet').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getAllTimeSheetList(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TTimeSheet', JSON.stringify(data));
+                    templateObject.displayTimeSheetList(data);
+                }).catch(function (err) {
+    
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayTimeSheetList(data);
+            }
+        }).catch(function (err) {
+          sideBarService.getAllTimeSheetList(initialBaseDataLoad, 0).then(async function (data) {
+              await addVS1Data('TTimeSheet', JSON.stringify(data));
+              templateObject.displayTimeSheetList(data);
+          }).catch(function (err) {
+    
+          });
+        });
+    }
+
+    templateObject.displayTimeSheetList = function(data){
+        let splashArrayTimeSheetList = new Array();
+        for (let i = 0; i < data.ttimesheet.length; i++) {
+            let ID = data.ttimesheet[i].fields.ID || '';
+            let firstName = data.ttimesheet[i].fields.EmployeeName.split(' ')[0] || '';
+            let lastName = data.ttimesheet[i].fields.EmployeeName.split(' ')[1] || '';
+            let timeSheetDate = moment(data.ttimesheet[i].fields.TimeSheetDate).format("D MMM YYYY") || '';
+            let msTimeStamp = moment(data.ttimesheet[i].fields.MsTimeStamp).format('D MMM YYYY HH:mm');
+            let status = data.ttimesheet[i].fields.Status || '';
+            var dataTimeSheetList = [
+                ID,
+                firstName,
+                lastName,
+                timeSheetDate,
+                status === ""?"Draft":status,
+                msTimeStamp,
+                parseFloat(data.ttimesheet[i].fields.Hours) || '',
+              ];
+            splashArrayTimeSheetList.push(dataTimeSheetList);
+            templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        }
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colTimeSheetId hiddenColumn", 
+                        targets:0,
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        className: "colFirstName", 
+                        targets: 1,
+                        width:'100px'
+                    },
+                    {
+                        className: "colSurname",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPeriod",
+                        targets: 3,
+                        width:'150px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 4,
+                        width:'150px'
+                    },
+                    {
+                        className: "colLastEdited",
+                        targets: 5,
+                        width:'250px'
+                    },
+                    {
+                        className: "colHours",
+                        targets: 6,
+                        width:'100px'
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -14013,6 +14236,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getAssetRegisterData();
     } else if (currenttablename == "tblFixedAssetList") {
         templateObject.getFixedAssetData();
+    } else if (currenttablename === "tblTimeSheet"){
+        templateObject.getTimeSheetList();
     }
     
     tableResize();
