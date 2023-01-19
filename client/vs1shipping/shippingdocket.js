@@ -1442,38 +1442,37 @@ Template.shippingdocket.onRendered(function() {
                                 } else {
                                     $('#chkSameAsSupplier').removeAttr("checked");
                                 }
-
+                                let customerRecord = {
+                                    id:popCustomerID,
+                                    phone:popCustomerPhone,
+                                    firstname:popCustomerFirstName,
+                                    middlename: popCustomerMiddleName,
+                                    lastname:popCustomerLastName,
+                                    company:data.tcustomer[0].fields.Companyname || '',
+                                    email: popCustomerEmail,
+                                    title: popCustomerTitle,
+                                    tfn: popCustomertfn,
+                                    mobile: popCustomerMobile,
+                                    fax: popCustomerFaxnumber,
+                                    shippingaddress: popCustomerStreet,
+                                    scity: popCustomerStreet2,
+                                    sstate: popCustomerCountry,
+                                    terms: '',
+                                    spostalcode: popCustomerPostcode,
+                                    scountry: popCustomerState,
+                                    billingaddress: popCustomerbillingaddress,
+                                    bcity: popCustomerbcity,
+                                    bstate: popCustomerbstate,
+                                    bpostalcode: popCustomerbpostalcode,
+                                    bcountry: popCustomerCountry,
+                                    custFld1: popCustomercustfield1,
+                                    custFld2: popCustomercustfield2,
+                                    jobbcountry: '',
+                                    jobscountry: '',
+                                    discount:0
+                                }
+                                templateObject.customerRecord.set(customerRecord);
                                 setTimeout(function() {
-                                    let customerRecord = {
-                                        id:popCustomerID,
-                                        phone:popCustomerPhone,
-                                        firstname:popCustomerFirstName,
-                                        middlename: popCustomerMiddleName,
-                                        lastname:popCustomerLastName,
-                                        company:data.tcustomer[0].fields.Companyname || '',
-                                        email: popCustomerEmail,
-                                        title: popCustomerTitle,
-                                        tfn: popCustomertfn,
-                                        mobile: popCustomerMobile,
-                                        fax: popCustomerFaxnumber,
-                                        shippingaddress: popCustomerStreet,
-                                        scity: popCustomerStreet2,
-                                        sstate: popCustomerCountry,
-                                        terms: '',
-                                        spostalcode: popCustomerPostcode,
-                                        scountry: popCustomerState,
-                                        billingaddress: popCustomerbillingaddress,
-                                        bcity: popCustomerbcity,
-                                        bstate: popCustomerbstate,
-                                        bpostalcode: popCustomerbpostalcode,
-                                        bcountry: popCustomerCountry,
-                                        custFld1: popCustomercustfield1,
-                                        custFld2: popCustomercustfield2,
-                                        jobbcountry: '',
-                                        jobscountry: '',
-                                        discount:0
-                                    }
-                                    templateObject.customerRecord.set(customerRecord);
                                     $('#addCustomerModal').modal('show');
                                 }, 200);
                             }).catch(function(err) {
@@ -1570,41 +1569,39 @@ Template.shippingdocket.onRendered(function() {
                                     } else {
                                         $('#chkSameAsSupplier').removeAttr("checked");
                                     }
-
+                                    let customerRecord = {
+                                        id:popCustomerID,
+                                        phone:popCustomerPhone,
+                                        firstname:popCustomerFirstName,
+                                        middlename: popCustomerMiddleName,
+                                        lastname:popCustomerLastName,
+                                        company:popCompany,
+                                        email: popCustomerEmail,
+                                        title: popCustomerTitle,
+                                        tfn: popCustomertfn,
+                                        mobile: popCustomerMobile,
+                                        fax: popCustomerFaxnumber,
+                                        shippingaddress: popCustomerStreet,
+                                        scity: popCustomerStreet2,
+                                        sstate: popCustomerCountry,
+                                        terms: '',
+                                        spostalcode: popCustomerPostcode,
+                                        scountry: popCustomerState,
+                                        billingaddress: popCustomerbillingaddress,
+                                        bcity: popCustomerbcity,
+                                        bstate: popCustomerbstate,
+                                        bpostalcode: popCustomerbpostalcode,
+                                        bcountry: popCustomerCountry,
+                                        custFld1: popCustomercustfield1,
+                                        custFld2: popCustomercustfield2,
+                                        jobbcountry: '',
+                                        jobscountry: '',
+                                        discount:0
+                                    }
+                                    templateObject.customerRecord.set(customerRecord);
                                     setTimeout(function() {
-                                        let customerRecord = {
-                                            id:popCustomerID,
-                                            phone:popCustomerPhone,
-                                            firstname:popCustomerFirstName,
-                                            middlename: popCustomerMiddleName,
-                                            lastname:popCustomerLastName,
-                                            company:popCompany,
-                                            email: popCustomerEmail,
-                                            title: popCustomerTitle,
-                                            tfn: popCustomertfn,
-                                            mobile: popCustomerMobile,
-                                            fax: popCustomerFaxnumber,
-                                            shippingaddress: popCustomerStreet,
-                                            scity: popCustomerStreet2,
-                                            sstate: popCustomerCountry,
-                                            terms: '',
-                                            spostalcode: popCustomerPostcode,
-                                            scountry: popCustomerState,
-                                            billingaddress: popCustomerbillingaddress,
-                                            bcity: popCustomerbcity,
-                                            bstate: popCustomerbstate,
-                                            bpostalcode: popCustomerbpostalcode,
-                                            bcountry: popCustomerCountry,
-                                            custFld1: popCustomercustfield1,
-                                            custFld2: popCustomercustfield2,
-                                            jobbcountry: '',
-                                            jobscountry: '',
-                                            discount:0
-                                        }
-                                        templateObject.customerRecord.set(customerRecord);
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
-
                                 }
                             }
                             if (!added) {
@@ -1693,37 +1690,37 @@ Template.shippingdocket.onRendered(function() {
                                     } else {
                                         $('#chkSameAsSupplier').removeAttr("checked");
                                     }
+                                    let customerRecord = {
+                                        id:popCustomerID,
+                                        phone:popCustomerPhone,
+                                        firstname:popCustomerFirstName,
+                                        middlename: popCustomerMiddleName,
+                                        lastname:popCustomerLastName,
+                                        company:popCompany,
+                                        email: popCustomerEmail,
+                                        title: popCustomerTitle,
+                                        tfn: popCustomertfn,
+                                        mobile: popCustomerMobile,
+                                        fax: popCustomerFaxnumber,
+                                        shippingaddress: popCustomerStreet,
+                                        scity: popCustomerStreet2,
+                                        sstate: popCustomerCountry,
+                                        terms: '',
+                                        spostalcode: popCustomerPostcode,
+                                        scountry: popCustomerState,
+                                        billingaddress: popCustomerbillingaddress,
+                                        bcity: popCustomerbcity,
+                                        bstate: popCustomerbstate,
+                                        bpostalcode: popCustomerbpostalcode,
+                                        bcountry: popCustomerCountry,
+                                        custFld1: popCustomercustfield1,
+                                        custFld2: popCustomercustfield2,
+                                        jobbcountry: '',
+                                        jobscountry: '',
+                                        discount:0
+                                    }
+                                    templateObject.customerRecord.set(customerRecord);
                                     setTimeout(function() {
-                                        let customerRecord = {
-                                            id:popCustomerID,
-                                            phone:popCustomerPhone,
-                                            firstname:popCustomerFirstName,
-                                            middlename: popCustomerMiddleName,
-                                            lastname:popCustomerLastName,
-                                            company:popCompany,
-                                            email: popCustomerEmail,
-                                            title: popCustomerTitle,
-                                            tfn: popCustomertfn,
-                                            mobile: popCustomerMobile,
-                                            fax: popCustomerFaxnumber,
-                                            shippingaddress: popCustomerStreet,
-                                            scity: popCustomerStreet2,
-                                            sstate: popCustomerCountry,
-                                            terms: '',
-                                            spostalcode: popCustomerPostcode,
-                                            scountry: popCustomerState,
-                                            billingaddress: popCustomerbillingaddress,
-                                            bcity: popCustomerbcity,
-                                            bstate: popCustomerbstate,
-                                            bpostalcode: popCustomerbpostalcode,
-                                            bcountry: popCustomerCountry,
-                                            custFld1: popCustomercustfield1,
-                                            custFld2: popCustomercustfield2,
-                                            jobbcountry: '',
-                                            jobscountry: '',
-                                            discount:0
-                                        }
-                                        templateObject.customerRecord.set(customerRecord);
                                         $('#addCustomerModal').modal('show');
                                     }, 200);
                                 }).catch(function(err) {
@@ -1774,6 +1771,7 @@ Template.shippingdocket.onRendered(function() {
                             let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
                             let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
                             let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
+                            let popCompany = data.tcustomer[0].fields.Companyname || ''
                             $('#edtCustomerCompany').val(popCustomerName);
                             $('#edtCustomerPOPID').val(popCustomerID);
                             $('#edtCustomerPOPEmail').val(popCustomerEmail);
@@ -1815,7 +1813,36 @@ Template.shippingdocket.onRendered(function() {
                             } else {
                                 $('#chkSameAsSupplier').removeAttr("checked");
                             }
-
+                            let customerRecord = {
+                                id:popCustomerID,
+                                phone:popCustomerPhone,
+                                firstname:popCustomerFirstName,
+                                middlename: popCustomerMiddleName,
+                                lastname:popCustomerLastName,
+                                company:popCompany,
+                                email: popCustomerEmail,
+                                title: popCustomerTitle,
+                                tfn: popCustomertfn,
+                                mobile: popCustomerMobile,
+                                fax: popCustomerFaxnumber,
+                                shippingaddress: popCustomerStreet,
+                                scity: popCustomerStreet2,
+                                sstate: popCustomerCountry,
+                                terms: '',
+                                spostalcode: popCustomerPostcode,
+                                scountry: popCustomerState,
+                                billingaddress: popCustomerbillingaddress,
+                                bcity: popCustomerbcity,
+                                bstate: popCustomerbstate,
+                                bpostalcode: popCustomerbpostalcode,
+                                bcountry: popCustomerCountry,
+                                custFld1: popCustomercustfield1,
+                                custFld2: popCustomercustfield2,
+                                jobbcountry: '',
+                                jobscountry: '',
+                                discount:0
+                            }
+                            templateObject.customerRecord.set(customerRecord);
                             setTimeout(function() {
                                 $('#addCustomerModal').modal('show');
                             }, 200);
@@ -2950,5 +2977,8 @@ Template.shippingdocket.helpers({
             availaLegnt = true;
         }
         return availaLegnt;
-    }
+    },
+    customerRecord: () => {
+        return Template.instance().customerRecord.get();
+    },
 });

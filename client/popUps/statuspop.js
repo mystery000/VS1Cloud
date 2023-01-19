@@ -110,94 +110,94 @@ Template.statuspop.onRendered(function() {
             }, 100);
         }
         $('.fullScreenSpin').css('display', 'none');
-        setTimeout(function() {
-            $('#tblStatusPopList').DataTable({
-                columnDefs: [{
-                    "orderable": false,
-                    "targets": -1
-                }],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [{
-                    extend: 'csvHtml5',
-                    text: '',
-                    download: 'open',
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "tblStatusPopList_" + moment().format(),
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                }, {
-                    extend: 'print',
-                    download: 'open',
-                    className: "btntabletopdf hiddenColumn",
-                    text: '',
-                    title: 'Term List',
-                    filename: "tblStatusPopList_" + moment().format(),
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "tblStatusPopList_" + moment().format(),
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                        // ,
-                        // customize: function ( win ) {
-                        //   $(win.document.body).children("h1:first").remove();
-                        // }
+        // setTimeout(function() {
+        //     $('#tblStatusPopList').DataTable({
+        //         columnDefs: [{
+        //             "orderable": false,
+        //             "targets": -1
+        //         }],
+        //         select: true,
+        //         destroy: true,
+        //         colReorder: true,
+        //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //         buttons: [{
+        //             extend: 'csvHtml5',
+        //             text: '',
+        //             download: 'open',
+        //             className: "btntabletocsv hiddenColumn",
+        //             filename: "tblStatusPopList_" + moment().format(),
+        //             orientation: 'portrait',
+        //             exportOptions: {
+        //                 columns: ':visible'
+        //             }
+        //         }, {
+        //             extend: 'print',
+        //             download: 'open',
+        //             className: "btntabletopdf hiddenColumn",
+        //             text: '',
+        //             title: 'Term List',
+        //             filename: "tblStatusPopList_" + moment().format(),
+        //             exportOptions: {
+        //                 columns: ':visible'
+        //             }
+        //         },
+        //             {
+        //                 extend: 'excelHtml5',
+        //                 title: '',
+        //                 download: 'open',
+        //                 className: "btntabletoexcel hiddenColumn",
+        //                 filename: "tblStatusPopList_" + moment().format(),
+        //                 orientation: 'portrait',
+        //                 exportOptions: {
+        //                     columns: ':visible'
+        //                 }
+        //                 // ,
+        //                 // customize: function ( win ) {
+        //                 //   $(win.document.body).children("h1:first").remove();
+        //                 // }
 
-                    }
-                ],
-                // bStateSave: true,
-                // rowId: 0,
-                paging: false,
-                // "scrollY": "400px",
-                // "scrollCollapse": true,
-                info: true,
-                responsive: true,
-                "order": [
-                    [0, "asc"]
-                ],
-                // "aaSorting": [[1,'desc']],
-                action: function() {
-                    $('#tblStatusPopList').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function(oSettings) {
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                },
-                language: { search: "",searchPlaceholder: "Search List..." },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddNewStatus' data-dismiss='modal' data-toggle='modal' data-target='#newStatusPopModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblStatusPopList_filter");
-                    $("<button class='btn btn-primary btnRefreshStatus' type='button' id='btnRefreshStatus' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStatusPopList_filter");
-                },
+        //             }
+        //         ],
+        //         // bStateSave: true,
+        //         // rowId: 0,
+        //         paging: false,
+        //         // "scrollY": "400px",
+        //         // "scrollCollapse": true,
+        //         info: true,
+        //         responsive: true,
+        //         "order": [
+        //             [0, "asc"]
+        //         ],
+        //         // "aaSorting": [[1,'desc']],
+        //         action: function() {
+        //             $('#tblStatusPopList').DataTable().ajax.reload();
+        //         },
+        //         "fnDrawCallback": function(oSettings) {
+        //             setTimeout(function() {
+        //                 MakeNegative();
+        //             }, 100);
+        //         },
+        //         language: { search: "",searchPlaceholder: "Search List..." },
+        //         "fnInitComplete": function () {
+        //             $("<button class='btn btn-primary btnAddNewStatus' data-dismiss='modal' data-toggle='modal' data-target='#newStatusPopModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblStatusPopList_filter");
+        //             $("<button class='btn btn-primary btnRefreshStatus' type='button' id='btnRefreshStatus' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblStatusPopList_filter");
+        //         },
 
-            }).on('page', function() {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function() {
+        //     }).on('page', function() {
+        //         setTimeout(function() {
+        //             MakeNegative();
+        //         }, 100);
+        //         let draftRecord = templateObject.datatablerecords.get();
+        //         templateObject.datatablerecords.set(draftRecord);
+        //     }).on('column-reorder', function() {
 
-            }).on('length.dt', function(e, settings, len) {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        }, 10);
+        //     }).on('length.dt', function(e, settings, len) {
+        //         setTimeout(function() {
+        //             MakeNegative();
+        //         }, 100);
+        //     });
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }, 10);
         const columns = $('#tblStatusPopList th');
         let sTible = "";
         let sWidth = "";
@@ -234,7 +234,7 @@ Template.statuspop.events({
 
 Template.statuspop.helpers({
     datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b) {
+        let aaa =  Template.instance().datatablerecords.get().sort(function(a, b) {
             if (a.typename == 'NA') {
                 return 1;
             } else if (b.typename == 'NA') {
@@ -242,6 +242,7 @@ Template.statuspop.helpers({
             }
             return (a.typename.toUpperCase() > b.typename.toUpperCase()) ? 1 : -1;
         });
+        return aaa
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();

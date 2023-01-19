@@ -37,7 +37,6 @@ Template.paymentmethodSettings.onRendered(function () {
       if (error) {
       } else {
         if (result) {
-          console.log(result);
           for (let i = 0; i < result.customFields.length; i++) {
             let customcolumn = result.customFields;
             let columData = customcolumn[i].label;
@@ -54,7 +53,6 @@ Template.paymentmethodSettings.onRendered(function () {
   );
   templateObject.getOrganisationDetails = function () {
     organisationService.getOrganisationDetail().then((dataListRet) => {
-      console.log("dataListRet:", dataListRet)
       let account_id = dataListRet.tcompanyinfo[0].Apcano || "";
       let feeMethod = dataListRet.tcompanyinfo[0].DvaABN || "";
       if (feeMethod == "apply") {
