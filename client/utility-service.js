@@ -223,14 +223,12 @@ const XLSX = require("xlsx");
 
                         const u8 = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
                         const data = new Blob([u8], { type: "application/vnd.ms-excel" });
-                        console.log({ data })
                         const writable = await handle.createWritable();
                         await writable.write(data);
                         await writable.close();
                         return;
                     } catch (err) {
                         if (err.name == 'AbortError') {
-                            console.log("User Aborted save request");
                             return;
                         }
                     }
@@ -251,7 +249,7 @@ export class UtilityService {
         });
         $('.fullScreenSpin').css('display', 'none');
     }
-    
+
     exportReportToXLSX = function (tableName, filename, type) {
         $("#" + tableName).tableToXlsx({
             type: 'xlsx',
@@ -259,7 +257,7 @@ export class UtilityService {
         });
         $('.fullScreenSpin').css('display', 'none');
     }
-    
+
     exportReportToCsv = function(rows, filename, type) {
         let processRow = function(row) {
             let finalVal = '';

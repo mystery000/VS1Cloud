@@ -92,7 +92,7 @@ Template.fixedassetcard.onRendered(function () {
     // editableAssetType(e, $each, offset, assetTypeName);
     $('#fixedAssetTypeListModal').modal('toggle');
   });
-  
+
   // $('#edtBoughtFrom').editableSelect();
   // $('#edtDepartment').editableSelect();
   $('#edtDepreciationType').editableSelect();
@@ -128,7 +128,7 @@ Template.fixedassetcard.onRendered(function () {
         templateObject.edtDepreciationAssetAccount.set(parseInt(li.val() || 0));
       }
     });
-    
+
   $('#edtDepreciationExpenseAccount').editableSelect()
     .on('select.editable-select', function (e, li) {
       if (li) {
@@ -193,7 +193,7 @@ Template.fixedassetcard.events({
         // -----------------Depreciation Information
         DepreciationOption: templateObject.edtDepreciationType.get(), //Depreciation Type
         FixedAssetCostAccountID: templateObject.edtCostAssetAccount.get(),
-  
+
         CUSTFLD6: templateObject.editBankAccount.get().toString(), // FixedAssetBankAccountID: , //ClearingAccountID
         FixedAssetDepreciationAccountID: templateObject.edtDepreciationAssetAccount.get(), //FixedAssetDepreciationExpenseAccountID
         FixedAssetDepreciationAssetAccountID: templateObject.edtDepreciationExpenseAccount.get(),
@@ -204,7 +204,6 @@ Template.fixedassetcard.events({
         Active: true
       }
     };
-    console.log(newFixedAsset);
 
     function getDateStr(dateVal) {
       if (!dateVal)
@@ -224,7 +223,7 @@ Template.fixedassetcard.events({
       });
     })
     .catch((err) => {
-      console.log(err);
+
     });
   },
   "click button.btnBack": function() {

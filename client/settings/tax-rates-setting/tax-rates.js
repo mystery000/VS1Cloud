@@ -48,7 +48,7 @@ Template.taxRatesSettings.onCreated(function() {
 });
 
 Template.taxRatesSettings.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
 // Inactive Tax Button Change

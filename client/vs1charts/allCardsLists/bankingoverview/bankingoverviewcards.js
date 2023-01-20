@@ -10,7 +10,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './bankingoverviewcards.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import { _ } from 'meteor/underscore';
 const _tabGroup = 12;
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -230,6 +230,7 @@ Template.bankingoverviewcards.onRendered(function() {
 
           templateObject.bankaccountdatarecord.set(getTop4Data);
       }).catch(function(err) {
+
       });
     });
 });

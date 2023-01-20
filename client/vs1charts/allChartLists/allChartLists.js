@@ -93,6 +93,11 @@ let chartsPlaceList = {
         "top10Customers",
         "resalescomparision",
     ],
+
+    "CRM_Overview": [
+        "crmleadchart", 
+        "resalescomparision"
+    ],
 };
 
 let sideBarService = new SideBarService();
@@ -804,7 +809,7 @@ Template.allChartLists.helpers({
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;
-        if (currentLoc == "/accountsoverview") {
+        if (currentLoc == "/accountsoverview" || currentLoc == "/dashboard") {
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;
