@@ -281,8 +281,8 @@ import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 import './fixedassets/fixedassets.js';
-import './settings/chart-accounts-setting/chart-accounts.js';
-import './settings/chart-accounts-setting/chart-account-settings-table.js';
+// import './settings/chart-accounts-setting/chart-accounts.js';
+// import './settings/chart-accounts-setting/chart-account-settings-table.js';
 import './settings/edi-integrations/edi-integrations.js';
 import './settings/fixed-asset_edit-asset-type/fixed-asset_edit-asset-type.js';
 import './settings/fxupdate/fxUpdateSettings.js';
@@ -303,6 +303,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
+import './lib/global/soundalert.js';
 /* Rasheed */
 
 /* Jeyhun */
@@ -361,6 +362,9 @@ import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
 import './eft/eft.js';
+import './vs1charts/bankaccountschart/bankaccountschart.js';
+import './vs1charts/accountslist/accountslistchart.js';
+import './vs1charts/crmleadchart/crmleadchart.js';
 /* Sasa */
 
 /* Martin */
@@ -468,6 +472,8 @@ import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
+import './reports/balancesheet/balancetransactionlist.js';
+import './inventory/serialnumberview.js';
 /* Roverto */
 
 /* Kelvin More */

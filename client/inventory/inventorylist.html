@@ -131,10 +131,32 @@
                               </div>
                 {{/if}}
                 {{#if includeStockAdjustment}}
-                    <button class="btn btnNav btn-primary btnStockAdjustment vs1ButtonMargin" id="btnStockAdjustment" type="button" ><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button>
+                    <!-- <button class="btn btnNav btn-primary btnStockAdjustment vs1ButtonMargin" id="btnStockAdjustment" type="button" ><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button> -->
+                    <div class="btn-group btnNav vs1ButtonMargin" >
+                        <a class="btn btn-primary btnStockAdjustment" role="button" href="/stockadjustmentoverview" id="btnStockAdjustment"
+                            name="btnStockAdjustment">Stock Adjustments</a>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                            aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item btnStockAdjustment" role="presentation" href="/stockadjustmentoverview">Stock Adjustment List</a>
+                            <a class="dropdown-item" role="presentation" href="/stockadjustmentcard" id="newStockadjust"
+                                name="newStockadjust">+ New Stock Adjustment</a>
+                        </div>
+                    </div>
                 {{/if}}
                 {{#if includeStockTransfer}}
-                    <button class="btn btnNav btn-primary btnStockTrans vs1ButtonMargin" id="btnStockTrans" type="button" ><i class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button>
+                    <!-- <button class="btn btnNav btn-primary btnStockTrans vs1ButtonMargin" id="btnStockTrans" type="button" ><i class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button> -->
+                    <div class="btn-group btnNav vs1ButtonMargin" >
+                        <a class="btn btn-primary btnStockTrans" role="button" href="/stocktransferlist" id="btnStockTrans"
+                            name="btnStockTrans">Stock Transfers</a>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                            aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item btnStockTrans" role="presentation" href="/stocktransferlist">Stock Transfer List</a>
+                            <a class="dropdown-item" role="presentation" href="/stocktransfercard" id="newStocktransfer"
+                                name="newStocktransfer">+ New Stock Transfer</a>
+                        </div>
+                    </div>
                 {{/if}}
                 {{#if equals isSNTrackchecked true}}
 
@@ -626,7 +648,7 @@
                     border-radius: .35rem;
                     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
                     } */
-                    
+
                 </style>
                 <!-- <div class="form-group" style="margin: 16px;margin-left: 8px;">
         <label>Search:</label>
@@ -699,7 +721,7 @@
                     }
                 </style>
                 {{>non_transactional_list tablename="tblInventoryOverview"}}
-            
+
         </div>
     </div>
 </div>

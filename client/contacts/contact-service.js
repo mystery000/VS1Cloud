@@ -189,7 +189,7 @@ export class ContactService extends BaseService {
         let options = '';
         options = {
             ListType: "Detail",
-            // select: '[ClientName]="'+dataSearchName+'" and [Active]=true'
+            // select: '[ClientName]="' + dataSearchName + '" and [Active]=true'
             select: '[ClientName]="' + dataSearchName + '"'
         };
         return this.getList(this.ERPObjects.TSupplier, options);

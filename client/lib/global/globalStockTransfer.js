@@ -98,7 +98,7 @@ function updateAvailRowOrder(){
 
               if(valListRet.ValidateSN.Result == false){
                  scannedSerial = "";
-                Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+                swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
                 DangerSound();
 
               }else{
@@ -129,7 +129,7 @@ function updateAvailRowOrder(){
             //var rowCount = $tblrowAlloc.length;
              var rowCount = $('#serailscanlist  > tbody  > tr').length;
               if(rowCount == newQuantity){
-                Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                 DangerSound();
               }else{
             $tblrowAlloc.each(function (index2) {
@@ -141,7 +141,7 @@ function updateAvailRowOrder(){
                   }
             });
   if(flag){
-   Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+   swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
   DangerSound();
    return;
     }else{
@@ -153,7 +153,7 @@ function updateAvailRowOrder(){
        $("#serailscanlist").append(htmlAppend);
        updateRowOrder();
        $("#btnsaveallocline").trigger("click");
-       Bert.alert('<strong>OK</strong>', 'now-success');
+       swal({title: "", text:'', type:"success", customClass:"now-success"});
        OkaySound();
     }
 
@@ -189,7 +189,7 @@ function updateAvailRowOrder(){
 
           if(valListRet.ValidateSN.Result == false){
              scannedSerial = "";
-            Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+            swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
             DangerSound();
           }else{
              scannedSerial = scannedCode;
@@ -205,11 +205,11 @@ function updateAvailRowOrder(){
                           $("#serailscanlist").append(htmlAppend);
                           updateRowOrder();
                           $("#btnsaveallocline").trigger("click");
-                          Bert.alert('<strong>OK</strong>', 'now-success');
+                          swal({title: "", text:'', type:"success", customClass:"now-success"});
                           OkaySound();
                       }else if(rowCount == lineQuantity){
                         //lineQuantity
-                        Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                        swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                         DangerSound();
                       }else {
                         var $tblrowAlloc = $("#serailscanlist > tbody  > tr");
@@ -224,7 +224,7 @@ function updateAvailRowOrder(){
                            });
 
                            if(flag){
-                           Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                           swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                           DangerSound();
                            return;
                        }else{
@@ -236,7 +236,7 @@ function updateAvailRowOrder(){
                            $("#serailscanlist").append(htmlAppend);
                            updateRowOrder();
                            $("#btnsaveallocline").trigger("click");
-                           Bert.alert('<strong>OK</strong>', 'now-success');
+                           swal({title: "", text:'', type:"success", customClass:"now-success"});
                            OkaySound();
                        }
 
@@ -290,7 +290,7 @@ function updateAvailRowOrder(){
                   if(valListRet.ValidateSN.Result == false){
                      scannedSerial = "";
 
-                    Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+                    swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
                     DangerSound();
                     //var audio = new Audio('/sounds/system-fault.mp3');
                     //audio.play();
@@ -309,7 +309,7 @@ function updateAvailRowOrder(){
                     var $tblrow2 = $("#tblStocktransfer > tbody  > tr");
                     var rowCount = $('#serailscanlist  > tbody  > tr').length;
                      if(rowCount == lineQuantity){
-                       Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                       swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                        DangerSound();
                      }else{
                   $tblrow2.each(function (index) {
@@ -322,7 +322,7 @@ function updateAvailRowOrder(){
                           var newQuantity = $('input[name="orderQty"]').val();
                           var rowCount = $('#serailscanlist  > tbody  > tr').length;
                           if(rowCount == newQuantity){
-                       Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                       swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                        DangerSound();
                          }else{
                           $tblrowAlloc.each(function (index2) {
@@ -337,7 +337,7 @@ function updateAvailRowOrder(){
 
                           });
                           if(flag){
-                 Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                 swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                 DangerSound();
                  return;
              }else{
@@ -349,7 +349,7 @@ function updateAvailRowOrder(){
                  $("#serailscanlist").append(htmlAppend);
                  updateRowOrder();
                  $("#btnsaveallocline").trigger("click");
-                 Bert.alert('<strong>OK</strong>', 'now-success');
+                 swal({title: "", text:'', type:"success", customClass:"now-success"});
                  OkaySound();
                  let scannedDataFormatClass = scannedCode.toLowerCase().replace(/\s/g, '');
                  $('.'+scannedDataFormatClass).remove();
@@ -386,7 +386,7 @@ function updateAvailRowOrder(){
 
               if(valListRet.ValidateSN.Result == false){
                  scannedSerial = "";
-              Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+              swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
               DangerSound();
               }else{
                  scannedSerial = scannedCode;
@@ -400,11 +400,11 @@ function updateAvailRowOrder(){
                      $("#serailscanlist").append(htmlAppend);
                      updateRowOrder();
                      $("#btnsaveallocline").trigger("click");
-                     Bert.alert('<strong>OK</strong>', 'now-success');
+                     swal({title: "", text:'', type:"success", customClass:"now-success"});
                      OkaySound();
                  }else if(rowCount == lineQuantity){
                    //lineQuantity
-                   Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                   swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                    DangerSound();
                  }else {
                    var $tblrowAlloc = $("#serailscanlist > tbody  > tr");
@@ -419,7 +419,7 @@ function updateAvailRowOrder(){
                       });
 
                       if(flag){
-                      Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                      swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                       DangerSound();
                       return;
                   }else{
@@ -431,7 +431,7 @@ function updateAvailRowOrder(){
                       $("#serailscanlist").append(htmlAppend);
                       updateRowOrder();
                       $("#btnsaveallocline").trigger("click");
-                      Bert.alert('<strong>OK</strong>', 'now-success');
+                      swal({title: "", text:'', type:"success", customClass:"now-success"});
                       OkaySound();
                   }
 
@@ -487,7 +487,7 @@ function updateAvailRowOrder(){
                   if(valListRet.ValidateSN.Result == false){
                      scannedSerial = "";
 
-                    Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+                    swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
                     $('.fullScreenSpin').css('display','none');
                     DangerSound();
                     //var audio = new Audio('/sounds/system-fault.mp3');
@@ -507,7 +507,7 @@ function updateAvailRowOrder(){
                     var $tblrow2 = $("#tblStocktransfer > tbody  > tr");
                     var rowCount = $('#serailscanlist  > tbody  > tr').length;
                      if(rowCount == lineQuantity){
-                       Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                       swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                        $('.fullScreenSpin').css('display','none');
                        DangerSound();
                      }else{
@@ -521,7 +521,7 @@ function updateAvailRowOrder(){
                           var newQuantity = $('input[name="orderQty"]').val();
                           var rowCount = $('#serailscanlist  > tbody  > tr').length;
                           if(rowCount == newQuantity){
-                       Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                       swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                        $('.fullScreenSpin').css('display','none');
                        DangerSound();
                          }else{
@@ -537,7 +537,7 @@ function updateAvailRowOrder(){
 
                           });
                           if(flag){
-                 Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                 swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                  $('.fullScreenSpin').css('display','none');
                 DangerSound();
                  return;
@@ -550,7 +550,7 @@ function updateAvailRowOrder(){
                  $("#serailscanlist").append(htmlAppend);
                  updateRowOrder();
                  $("#btnsaveallocline").trigger("click");
-                 Bert.alert('<strong>OK</strong>', 'now-success');
+                 swal({title: "", text:'', type:"success", customClass:"now-success"});
                  $('.fullScreenSpin').css('display','none');
                  OkaySound();
                  let scannedDataFormatClass = serialNumberMove.toLowerCase().replace(/\s/g, '');
@@ -589,7 +589,7 @@ function updateAvailRowOrder(){
 
               if(valListRet.ValidateSN.Result == false){
                  scannedSerial = "";
-              Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+              swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
               $('.fullScreenSpin').css('display','none');
               DangerSound();
               }else{
@@ -603,12 +603,12 @@ function updateAvailRowOrder(){
                      $("#serailscanlist").append(htmlAppend);
                      updateRowOrder();
                      $("#btnsaveallocline").trigger("click");
-                     Bert.alert('<strong>OK</strong>', 'now-success');
+                     swal({title: "", text:'', type:"success", customClass:"now-success"});
                      $('.fullScreenSpin').css('display','none');
                      OkaySound();
                  }else if(rowCount == lineQuantity){
                    //lineQuantity
-                   Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                   swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                    $('.fullScreenSpin').css('display','none');
                    DangerSound();
                  }else {
@@ -624,7 +624,7 @@ function updateAvailRowOrder(){
                       });
 
                       if(flag){
-                      Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                      swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                       $('.fullScreenSpin').css('display','none');
                       DangerSound();
                       return;
@@ -638,7 +638,7 @@ function updateAvailRowOrder(){
                       $("#serailscanlist").append(htmlAppend);
                       updateRowOrder();
                       $("#btnsaveallocline").trigger("click");
-                      Bert.alert('<strong>OK</strong>', 'now-success');
+                      swal({title: "", text:'', type:"success", customClass:"now-success"});
                       $('.fullScreenSpin').css('display','none');
                       OkaySound();
                   }
@@ -758,7 +758,7 @@ function updateAvailRowOrder(){
                   if(valListRet.ValidateSN.Result == false){
                      scannedSerial = "";
 
-                    Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+                    swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
                     DangerSound();
                     //var audio = new Audio('/sounds/system-fault.mp3');
                     //audio.play();
@@ -777,7 +777,7 @@ function updateAvailRowOrder(){
                     var $tblrow2 = $("#tblStocktransfer > tbody  > tr");
                     var rowCount = $('#serailscanlist  > tbody  > tr').length;
                      if(rowCount == lineQuantity){
-                       Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                       swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                        DangerSound();
                      }else{
                   $tblrow2.each(function (index) {
@@ -790,7 +790,7 @@ function updateAvailRowOrder(){
                           var newQuantity = $('input[name="orderQty"]').val();
                           var rowCount = $('#serailscanlist  > tbody  > tr').length;
                           if(rowCount == newQuantity){
-                       Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                       swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                        DangerSound();
                          }else{
                           $tblrowAlloc.each(function (index2) {
@@ -805,7 +805,7 @@ function updateAvailRowOrder(){
 
                           });
                           if(flag){
-                 Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                 swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                 DangerSound();
                  return;
              }else{
@@ -817,7 +817,7 @@ function updateAvailRowOrder(){
                  $("#serailscanlist").append(htmlAppend);
                  updateRowOrder();
                  $("#btnsaveallocline").trigger("click");
-                 Bert.alert('<strong>OK</strong>', 'now-success');
+                 swal({title: "", text:'', type:"success", customClass:"now-success"});
                  OkaySound();
              }
            }
@@ -851,7 +851,7 @@ function updateAvailRowOrder(){
 
               if(valListRet.ValidateSN.Result == false){
                  scannedSerial = "";
-              Bert.alert('<strong>WARNING:</strong> '+valListRet.ValidateSN.Message+' or product is not on this order!', 'now-danger');
+              swal({title: "WARNING:", text:valListRet.ValidateSN.Message+' or product is not on this order!',type: "warning",  customClass:"now-danger"});
               DangerSound();
               }else{
                  scannedSerial = scannedCode;
@@ -865,11 +865,11 @@ function updateAvailRowOrder(){
                      $("#serailscanlist").append(htmlAppend);
                      updateRowOrder();
                      $("#btnsaveallocline").trigger("click");
-                     Bert.alert('<strong>OK</strong>', 'now-success');
+                     swal({title: "", text:'', type:"success", customClass:"now-success"});
                      OkaySound();
                  }else if(rowCount == lineQuantity){
                    //lineQuantity
-                   Bert.alert('<strong>WARNING:</strong> You cannot ship more serial numbers than Ordered quantity!', 'now-danger');
+                   swal({title: "WARNING:", text:'You cannot ship more serial numbers than Ordered quantity!', type:"warning", customClass:"now-danger"});
                    DangerSound();
                  }else {
                    var $tblrowAlloc = $("#serailscanlist > tbody  > tr");
@@ -884,7 +884,7 @@ function updateAvailRowOrder(){
                       });
 
                       if(flag){
-                      Bert.alert('<strong>WARNING:</strong> Serial number is already in use!', 'now-danger');
+                      swal({title: "WARNING:", text:'Serial number is already in use!', type:"warning", customClass:"now-danger"});
                       DangerSound();
                       return;
                   }else{
@@ -896,7 +896,7 @@ function updateAvailRowOrder(){
                       $("#serailscanlist").append(htmlAppend);
                       updateRowOrder();
                       $("#btnsaveallocline").trigger("click");
-                      Bert.alert('<strong>OK</strong>', 'now-success');
+                      swal({title: "", text:'', type:"success", customClass:"now-success"});
                       OkaySound();
                   }
 
@@ -925,7 +925,7 @@ function updateAvailRowOrder(){
    }
     else
     {
-      Bert.alert('<strong>Please Note:</strong> This function is only available on mobile devices!', 'now-dangerorange');
+      swal({title: "Please Note:", text:'This function is only available on mobile devices!', type:"warning", customClass:"now-dangerorange"});
     }
 
   });

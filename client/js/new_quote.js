@@ -1,20 +1,21 @@
-import {SalesBoardService} from './sales-service';
-import {PurchaseBoardService} from './purchase-service';
-import {ReactiveVar} from 'meteor/reactive-var';
-import {UtilityService} from "../utility-service";
-import {ProductService} from "../product/product-service";
-import '../lib/global/erp-objects.js';
-import 'jquery-ui-dist/external/jquery/jquery';
+import {jsPDF} from 'jspdf';
+import 'jquery-editable-select';
 import 'jquery-ui-dist/jquery-ui';
 import {Random} from 'meteor/random';
-import {jsPDF} from 'jspdf';
+import '../lib/global/erp-objects.js';
 import 'jQuery.print/jQuery.print.js';
-import 'jquery-editable-select';
-import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import LoadingOverlay from '../LoadingOverlay';
+import 'jquery-ui-dist/external/jquery/jquery';
+import {ReactiveVar} from 'meteor/reactive-var';
+import {UtilityService} from "../utility-service";
+import {SalesBoardService} from './sales-service';
+import {SideBarService} from '../js/sidebar-service';
+import {PurchaseBoardService} from './purchase-service';
+import {ProductService} from "../product/product-service";
 import {ContactService} from "../contacts/contact-service";
 import { TaxRateService } from "../settings/settings-service";
-import LoadingOverlay from '../LoadingOverlay';
+import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget.js';
 import { foreignCols } from '../vs1_templates/transaction_temp/transaction_line.js';
 
@@ -4426,37 +4427,37 @@ Template.new_quote.onRendered(() => {
         } else {
             $('#chkSameAsSupplier').removeAttr("checked");
         }
+        let customerRecord = {
+            id:popCustomerID,
+            phone:popCustomerPhone,
+            firstname:popCustomerFirstName,
+            middlename: popCustomerMiddleName,
+            lastname:popCustomerLastName,
+            company:data.tcustomer[0].fields.Companyname || '',
+            email: popCustomerEmail,
+            title: popCustomerTitle,
+            tfn: popCustomertfn,
+            mobile: popCustomerMobile,
+            fax: popCustomerFaxnumber,
+            shippingaddress: popCustomerStreet,
+            scity: popCustomerStreet2,
+            sstate: popCustomerCountry,
+            terms: '',
+            spostalcode: popCustomerPostcode,
+            scountry: popCustomerState,
+            billingaddress: popCustomerbillingaddress,
+            bcity: popCustomerbcity,
+            bstate: popCustomerbstate,
+            bpostalcode: popCustomerbpostalcode,
+            bcountry: popCustomerCountry,
+            custFld1: popCustomercustfield1,
+            custFld2: popCustomercustfield2,
+            jobbcountry: '',
+            jobscountry: '',
+            discount:0
+        }
+        templateObject.customerRecord.set(customerRecord);
         setTimeout(function() {
-            let customerRecord = {
-                id:popCustomerID,
-                phone:popCustomerPhone,
-                firstname:popCustomerFirstName,
-                middlename: popCustomerMiddleName,
-                lastname:popCustomerLastName,
-                company:data.tcustomer[0].fields.Companyname || '',
-                email: popCustomerEmail,
-                title: popCustomerTitle,
-                tfn: popCustomertfn,
-                mobile: popCustomerMobile,
-                fax: popCustomerFaxnumber,
-                shippingaddress: popCustomerStreet,
-                scity: popCustomerStreet2,
-                sstate: popCustomerCountry,
-                terms: '',
-                spostalcode: popCustomerPostcode,
-                scountry: popCustomerState,
-                billingaddress: popCustomerbillingaddress,
-                bcity: popCustomerbcity,
-                bstate: popCustomerbstate,
-                bpostalcode: popCustomerbpostalcode,
-                bcountry: popCustomerCountry,
-                custFld1: popCustomercustfield1,
-                custFld2: popCustomercustfield2,
-                jobbcountry: '',
-                jobscountry: '',
-                discount:0
-            }
-            templateObject.customerRecord.set(customerRecord);
             $('#addCustomerModal').modal('show');
         }, 200);
     }
@@ -10815,7 +10816,7 @@ Template.new_quote.events({
             productService.getProductStatus(selectedProductName).then(function(data) {
                 LoadingOverlay.hide();
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                    swal('', 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
