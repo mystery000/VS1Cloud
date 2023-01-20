@@ -5,34 +5,34 @@ import "jquery-editable-select";
 import { bankNameList } from "../lib/global/bank-names";
 import { AccountService } from "../accounts/account-service";
 import LoadingOverlay from "../LoadingOverlay";
-import { Template } from 'meteor/templating';
-import './newbankrule.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Template } from "meteor/templating";
+import "./newbankrule.html";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 
 let accountService = new AccountService();
 
 const successSaveCb = () => {
-    // LoadingOverlay.hide();
-    playSaveAudio();
-    swal({
-        title: "Bank Rule Successfully Saved",
-        text: "",
-        type: "success",
-        showCancelButton: false,
-        confirmButtonText: "OK",
-    });
+  // LoadingOverlay.hide();
+  playSaveAudio();
+  swal({
+    title: "Bank Rule Successfully Saved",
+    text: "",
+    type: "success",
+    showCancelButton: false,
+    confirmButtonText: "OK",
+  });
 
   if (localStorage.getItem("enteredURL") != null) {
     FlowRouter.go(localStorage.getItem("enteredURL"));
     localStorage.removeItem("enteredURL");
     return;
   }
-}
+};
 
 const errorSaveCb = (err) => {
-    // LoadingOverlay.hide();
-    swal("Something went wrong", "", "error");
-}
+  // LoadingOverlay.hide();
+  swal("Something went wrong", "", "error");
+};
 
 function openBankAccountListModal() {
   $("#bankAccountListModal").modal();
@@ -132,7 +132,7 @@ Template.newbankrule.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.bankRuleData = new ReactiveVar([]);
   templateObject.bankNames = new ReactiveVar([]);
-  templateObject.importData = new ReactiveVar([])
+  templateObject.importData = new ReactiveVar([]);
 });
 
 Template.newbankrule.onRendered(function () {
@@ -181,33 +181,39 @@ Template.newbankrule.onRendered(function () {
       }
     });
 
-    if (FlowRouter.current().queryParams.bankaccountid) {
-      let accountname = FlowRouter.current().queryParams.bankaccountname;
-      let accountId = FlowRouter.current().queryParams.bankaccountid;
-      $("#bankAccountName").val(accountname);
-      $("#bankAccountID").val(accountId);
-      getVS1Data("VS1_BankRule")
-        .then(function (dataObject) {
-          if (dataObject.length) {
-            let data = JSON.parse(dataObject[0].data);
-            if (data[accountId])
-              return templateObject.bankRuleData.set(data[accountId]);
-          }
-        })
-        .catch(function (err) {
-            errorSaveCb(err)
-        });
-    }
+  if (FlowRouter.current().queryParams.bankaccountname) {
+    let accountname = FlowRouter.current().queryParams.bankaccountname;
+    let accountId = FlowRouter.current().queryParams.bankaccountid;
+    $("#bankAccountName").val(accountname);
+    $("#bankAccountID").val(accountId);
+    getVS1Data("VS1_BankRule")
+      .then(function (dataObject) {
+        if (dataObject.length) {
+          let data = JSON.parse(dataObject[0].data);
+          if (data[accountname])
+            return templateObject.bankRuleData.set(data[accountname]);
+        }
+      })
+      .catch(function (err) {
+        errorSaveCb(err);
+      });
+  }
 
-    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#bankAccountID").val()) {
-      let tmp = localStorage.getItem('BankStatement')
-      if (tmp) {
-        let tmpData = JSON.parse(tmp)
-        templateObject.importData.set(tmpData)
-        if (tmpData[0] && tmpData[0].length)
-          templateObject.bankRuleData.set(tmpData[0].map((item,index) => ({column: item, order: index + 1})))
-      }
+  if (
+    FlowRouter.current().queryParams.preview &&
+    FlowRouter.current().queryParams.bankaccountname ===
+      $("#bankAccountName").val()
+  ) {
+    let tmp = localStorage.getItem("BankStatement");
+    if (tmp) {
+      let tmpData = JSON.parse(tmp);
+      templateObject.importData.set(tmpData);
+      if (tmpData[0] && tmpData[0].length)
+        templateObject.bankRuleData.set(
+          tmpData[0].map((item, index) => ({ column: item, order: index + 1 }))
+        );
     }
+  }
 
   $(document).on("click", ".newbankrule #tblAccount tbody tr", function (e) {
     $(".colAccountName").removeClass("boldtablealertsborder");
@@ -219,25 +225,29 @@ Template.newbankrule.onRendered(function () {
     $("#bankAccountName").val(accountname);
     $("#bankAccountID").val(accountId);
     $("#tblAccount_filter .form-control-sm").val("");
-    if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === $("#bankAccountID").val()) {
-      let tmp = localStorage.getItem('BankStatement')
-      if (tmp)
-        templateObject.importData.set(JSON.parse(tmp))
-      else
-        templateObject.importData.set([])
+    if (
+      FlowRouter.current().queryParams.preview &&
+      FlowRouter.current().queryParams.bankaccountname ===
+        $("#bankAccountName").val()
+    ) {
+      let tmp = localStorage.getItem("BankStatement");
+      if (tmp) templateObject.importData.set(JSON.parse(tmp));
+      else templateObject.importData.set([]);
     } else {
-      templateObject.importData.set([])
+      templateObject.importData.set([]);
     }
     getVS1Data("VS1_BankRule")
-        .then(function (dataObject) {
-          if (dataObject.length) {
-            let data = JSON.parse(dataObject[0].data);
-            templateObject.bankRuleData.set(data[accountId] ? data[accountId] : []);
-          }
-        })
-        .catch(function (err) {
-            errorSaveCb(err)
-        });
+      .then(function (dataObject) {
+        if (dataObject.length) {
+          let data = JSON.parse(dataObject[0].data);
+          templateObject.bankRuleData.set(
+            data[accountname] ? data[accountname] : []
+          );
+        }
+      })
+      .catch(function (err) {
+        errorSaveCb(err);
+      });
   });
 });
 
@@ -284,7 +294,7 @@ Template.newbankrule.events({
       if (tmp.findIndex((item) => item.order == index + 1) === -1) {
         tmp.push({ order: index + 1, column: "" });
         Template.instance().bankRuleData.set(tmp);
-        break
+        break;
       }
     }
   },
@@ -298,31 +308,44 @@ Template.newbankrule.events({
     } else {
       // LoadingOverlay.show();
       let accountId = $("#bankAccountID").val();
+      let accountname = $("#bankAccountName").val();
       let saveData = {
-        [accountId]: Template.instance().bankRuleData.get(),
+        [accountname]: Template.instance().bankRuleData.get(),
       };
       getVS1Data("VS1_BankRule")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
-            addVS1Data("VS1_BankRule", JSON.stringify(saveData)).then(function (datareturn) {
-                successSaveCb()
-            }).catch(function (err) {
-                errorSaveCb(err)
-            });
+            addVS1Data("VS1_BankRule", JSON.stringify(saveData))
+              .then(function (datareturn) {
+                successSaveCb();
+              })
+              .catch(function (err) {
+                errorSaveCb(err);
+              });
           } else {
             let data = JSON.parse(dataObject[0].data);
-            data[accountId] = saveData[accountId];
-            addVS1Data("VS1_BankRule", JSON.stringify(data)).then(function (datareturn) {
-                successSaveCb()
-            }).catch(function (err) {
-                errorSaveCb(err)
-            });
+            data[accountname] = saveData[accountname];
+            addVS1Data("VS1_BankRule", JSON.stringify(data))
+              .then(function (datareturn) {
+                successSaveCb();
+              })
+              .catch(function (err) {
+                errorSaveCb(err);
+              });
           }
         })
         .catch(function (err) {
-            errorSaveCb(err)
+          errorSaveCb(err);
         });
     }
+  },
+
+  "click .btnBack": function (event) {
+    playCancelAudio();
+    event.preventDefault();
+    setTimeout(function () {
+      history.back(1);
+    }, delayTimeAfterSound);
   },
 });
 
@@ -337,21 +360,22 @@ Template.newbankrule.helpers({
         return a.name > b.name ? 1 : -1;
       });
   },
-  previewColumn: () => [...Template.instance()
-    .bankRuleData.get()]
-    .sort((a,b) => a.order > b.order ? 1 : -1),
+  previewColumn: () =>
+    [...Template.instance().bankRuleData.get()].sort((a, b) =>
+      a.order > b.order ? 1 : -1
+    ),
   previewData: () => {
-    let tmpCol = Template.instance().bankRuleData.get()
-    let tmpData = []
-    let tmpImport = Template.instance().importData.get()
+    let tmpCol = Template.instance().bankRuleData.get();
+    let tmpData = [];
+    let tmpImport = Template.instance().importData.get();
     for (let rowIndex = 1; rowIndex < tmpImport.length; rowIndex++) {
-      let tmpRow = []
+      let tmpRow = [];
       for (let colIndex = 0; colIndex < tmpCol.length; colIndex++) {
-        let matchIndex = tmpCol.findIndex((item) => item.order == colIndex + 1)
-        tmpRow.push(matchIndex === -1 ? null : tmpImport[rowIndex][matchIndex])
+        let matchIndex = tmpCol.findIndex((item) => item.order == colIndex + 1);
+        tmpRow.push(matchIndex === -1 ? null : tmpImport[rowIndex][matchIndex]);
       }
-      tmpData.push(tmpRow)
+      tmpData.push(tmpRow);
     }
-    return tmpData
+    return tmpData;
   },
 });

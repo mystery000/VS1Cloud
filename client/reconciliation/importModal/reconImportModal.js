@@ -16,7 +16,7 @@ Template.reconImportModal.onRendered(function () {
         .then(function (dataObject) {
           if (dataObject.length) {
             let data = JSON.parse(dataObject[0].data);
-            if (data[accountId] && data[accountId].length) {
+            if (data[accountName] && data[accountName].length) {
               importRuleExist = true
               $("#attachment-upload").val("");
               $("#attachment-upload").trigger("click");
