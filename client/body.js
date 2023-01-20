@@ -473,6 +473,7 @@ import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
 import './reports/balancesheet/balancetransactionlist.js';
+import './inventory/serialnumberview.js';
 /* Roverto */
 
 /* Kelvin More */

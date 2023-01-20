@@ -186,7 +186,7 @@ Template.fixedassetcard.onRendered(function () {
         templateObject.edtCostAssetAccount.set(assetInfo.FixedAssetCostAccountID);
         accountName = $("#edtCostAssetAccount").parent().find("li[value="+assetInfo.FixedAssetCostAccountID+"]").html();
         $("#edtCostAssetAccount").val(accountName);
-        
+
         templateObject.editBankAccount.set(assetInfo.CUSTFLD6); // FixedAssetBankAccountID
         accountName = $("#editBankAccount").parent().find("li[value="+assetInfo.CUSTFLD6+"]").html();
         $("#editBankAccount").val(accountName);
@@ -291,7 +291,6 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetsoverview');
       })
       .catch((err) => {
-        // console.log(err);
       });
     } else {
       newFixedAsset.fields['ID'] = templateObject.currentAssetID.get();
@@ -304,7 +303,6 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetsoverview');
       })
       .catch((err) => {
-        // console.log(err);
       });
     }
   },

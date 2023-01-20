@@ -21,7 +21,6 @@ Template.assetcostreport.onRendered(function () {
   // set initial table rest_data
   templateObject.init_reset_data = function () {
     fixedAssetService.getCostTypeList().then(function (data) {
-      console.log(data);
       addVS1Data('TCostTypes', JSON.stringify(data.tcosttypes));
       for (let i = 0; i < data.tcosttypes.length; i ++) {
         const costType = data.tcosttypes[i];

@@ -8,29 +8,27 @@ import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import LoadingOverlay from "../LoadingOverlay";
-import Employee, { EmployeeFields } from "../js/Api/Model/Employee";
-import User from "../js/Api/Model/User";
+import Employee from "../js/Api/Model/Employee";
 import { AccountService } from "../accounts/account-service";
 import "jquery-editable-select";
 import { ContactService } from "../contacts/contact-service";
-import { BaseService } from "../js/base-service";
 import ApiService from "../js/Api/Module/ApiService";
 import XLSX from 'xlsx';
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import '../lib/global/utBarcodeConst.js';
 import '../lib/global/indexdbstorage.js';
-
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './AddTermModal.html'
 import './setup.html';
 import { HTTP } from "meteor/http";
 
-const employeeId = User.getCurrentLoggedUserId();
+import './organization-settings.js'
+import './taxrate-settings.js'
+
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
 const contactService = new ContactService();
 const utilityService = new UtilityService();
-// let purchaseService = new PurchaseBoardService();
 
 const refreshTableTimout = 300;
 
@@ -39,25 +37,6 @@ let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", 
  * This will get the TCompanyInfo
  * @returns {Object}
  */
-export const getCompanyInfo = async () => {
-
-  const headers = ApiService.getHeaders();
-  //const url = ApiService.getBaseUrl({ endpoint: "TCompanyInfo?PropertyList=ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard", isUrl: false});
-
-  const url = "https://sandboxdb.vs1cloud.com:4443/erpapi/TCompanyInfo?PropertyList=ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,IsUSRegionTax,IsSetUpWizard";
-  const response = await fetch(url, {
-    headers: headers,
-    method: "GET"
-  });
-
-  if(response.status >= 200 && response.status < 301) {
-    const data = await response.json();
-    const companyInfo = data.tcompanyinfo[0];
-    return companyInfo;
-  }
-
-}
-
 export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
@@ -92,13 +71,6 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
 
         }
     });
-     // isSetupFinished().then(boolean => {
-    //   if(boolean == true) {
-    //    window.open(onSetupFinished, '_self');
-    //   } else {
-    //    window.open(onSetupUnFinished, '_self');
-    //   }
-    // });
 };
 
 
@@ -107,12 +79,6 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
  * @returns {boolean} true / false
  */
 export const isSetupFinished  = async () => {
-
-  // This is to get from remote server the IsSetupWizard status
-  // But it is not working, because we need to hit the right URL
-  // const companyInfo = await getCompanyInfo();
-  // return companyInfo.IsSetUpWizard == true ? false : true;
-
 
   const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if (isFinished == true || isFinished == "true") {
@@ -499,101 +465,7 @@ Template.setup.onRendered(function () {
   // Step 1 Render functionalities
   let countries = [];
   var countryService = new CountryService();
-  templateObject.getOrganisationDetails = async () => {
-    LoadingOverlay.show();
 
-    const dataListRet = await organisationService.getOrganisationDetail();
-    let mainData = dataListRet.tcompanyinfo[0];
-
-    templateObject.showSkype.set(mainData.ContactEmail);
-    templateObject.showMob.set(mainData.MobileNumber);
-    templateObject.showFax.set(mainData.FaxNumber);
-    templateObject.showLinkedIn.set(mainData.DvaABN);
-    templateObject.phCity.set(mainData.PoCity);
-    templateObject.phState.set(mainData.PoState);
-    templateObject.phCountry.set(mainData.PoCountry);
-    templateObject.phCode.set(mainData.PoPostcode);
-    templateObject.phAttention.set(mainData.Contact);
-    let companyName = mainData.CompanyName;
-    let postalAddress =
-      mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
-    // let physicalAddress =
-    //   mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
-    let physicalAddress =
-      mainData.Address + "\n" + mainData.Address2;
-    templateObject.samePhysicalAddress1.set(mainData.Address);
-    templateObject.samePhysicalAddress2.set(mainData.Address2);
-    // templateObject.samePhysicalAddress3.set(mainData.Address3);
-    templateObject.samePhysicalAddress3.set("");
-
-    $("#displayname").val(mainData.CompanyName);
-    $("#tradingname").val(mainData.TradingName);
-
-    $("#ownerfirstname").val(mainData.Firstname);
-    $("#ownerlastname").val(mainData.LastName);
-    //$('#businessnumber').val(mainData.Abn);
-    //$('#branch').val(mainData.Apcano);
-    //$('#comment').val(mainData.GlobalRef);
-    // $('#org_type').val(mainData.CompanyCategory);
-    $("#edtCompanyNumber").val(mainData.CompanyNumber);
-    $("#edtABNNumber").val(mainData.abn);
-    $("#edtAddress").val(mainData.Address);
-    $("#edtCity").val(mainData.City);
-    $("#edtState").val(mainData.State);
-    $("#edtPostCode").val(mainData.Postcode);
-    $("#edtCountry").val(mainData.Country);
-    $("#edtCountry").append(
-      '<option selected="selected" value="' +
-        mainData.Country +
-        '">' +
-        mainData.Country +
-        "</option>"
-    );
-    $("#edtpostaladdress").val(mainData.PoBox);
-    $("#edtPostalCity").val(mainData.PoCity);
-    $("#edtPostalState").val(mainData.PoState);
-    $("#edtPostalPostCode").val(mainData.PoPostcode);
-    $("#edtPostalCountry").val(mainData.PoCountry);
-    $("#edtPostalCountry").append(
-      '<option selected="selected" value="' +
-        mainData.PoCountry +
-        '">' +
-        mainData.PoCountry +
-        "</option>"
-    );
-
-    if (
-      mainData.Address == mainData.PoBox &&
-      mainData.City == mainData.PoCity &&
-      mainData.State == mainData.PoState &&
-      mainData.Postcode == mainData.PoPostcode &&
-      mainData.Country == mainData.PoCountry
-    ) {
-      templateObject.isSameAddress.set(true);
-      $("#chksameaddress").attr("checked", "checked");
-      $("#show_address_data").css("display", "none");
-    } else {
-      $("#chksameaddress").removeAttr("checked");
-      $("#show_address_data").css("display", "block");
-    }
-    if (mainData.TrackEmails) {
-      templateObject.iscompanyemail.set(true);
-      $("#chkIsDefailtEmail").attr("checked", "checked");
-    } else {
-      //templateObject.iscompanyemail.set(false);
-      $("#chkIsDefailtEmail").removeAttr("checked");
-    }
-
-    $("#pocontact").val(mainData.Contact);
-    $("#contact").val(mainData.ContactName);
-    $("#edtphonenumber").val(mainData.PhoneNumber);
-    $("#edtemailaddress").val(mainData.Email);
-    $("#edtWebsite").val(mainData.Url);
-    //$('#mobile').val(mainData.MobileNumber);
-    $("#edtfaxnumber").val(mainData.FaxNumber);
-
-    LoadingOverlay.hide();
-  };
 
   let imageData = localStorage.getItem("Image");
   if (imageData) {
@@ -633,9 +505,6 @@ Template.setup.onRendered(function () {
         });
       });
   };
-
-  // templateObject.getOrganisationDetails();
-  // templateObject.getCountryData();
 
   // Step 2 Render functionalities
   let taxRateService = new TaxRateService();
@@ -921,97 +790,98 @@ Template.setup.onRendered(function () {
 
               LoadingOverlay.hide();
 
-              setTimeout(function () {
-                $("#paymentmethodList")
-                  .DataTable({
+              // commented by me
+              // setTimeout(function () {
+              //   $("#paymentmethodList")
+              //     .DataTable({
 
-                    // columnDefs: [
-                    //   {
-                    //     orderable: false,
-                    //     targets: -1,
-                    //   },
-                    // ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    // buttons: [
-                    //   {
-                    //     extend: "csvHtml5",
-                    //     text: "",
-                    //     download: "open",
-                    //     className: "btntabletocsv hiddenColumn",
-                    //     filename: "paymentmethodList_" + moment().format(),
-                    //     orientation: "portrait",
-                    //     exportOptions: {
-                    //       columns: ":visible",
-                    //     },
-                    //   },
-                    //   {
-                    //     extend: "print",
-                    //     download: "open",
-                    //     className: "btntabletopdf hiddenColumn",
-                    //     text: "",
-                    //     title: "Payment Method List",
-                    //     filename: "paymentmethodList_" + moment().format(),
-                    //     exportOptions: {
-                    //       columns: ":visible",
-                    //     },
-                    //   },
-                    //   {
-                    //     extend: "excelHtml5",
-                    //     title: "",
-                    //     download: "open",
-                    //     className: "btntabletoexcel hiddenColumn",
-                    //     filename: "paymentmethodList_" + moment().format(),
-                    //     orientation: "portrait",
-                    //     exportOptions: {
-                    //       columns: ":visible",
-                    //     },
-                    //     // ,
-                    //     // customize: function ( win ) {
-                    //     //   $(win.document.body).children("h1:first").remove();
-                    //     // }
-                    //   },
-                    // ],
-                    // bStateSave: true,
-                    // rowId: 0,
+              //       // columnDefs: [
+              //       //   {
+              //       //     orderable: false,
+              //       //     targets: -1,
+              //       //   },
+              //       // ],
+              //       select: true,
+              //       destroy: true,
+              //       colReorder: true,
+              //       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              //       // buttons: [
+              //       //   {
+              //       //     extend: "csvHtml5",
+              //       //     text: "",
+              //       //     download: "open",
+              //       //     className: "btntabletocsv hiddenColumn",
+              //       //     filename: "paymentmethodList_" + moment().format(),
+              //       //     orientation: "portrait",
+              //       //     exportOptions: {
+              //       //       columns: ":visible",
+              //       //     },
+              //       //   },
+              //       //   {
+              //       //     extend: "print",
+              //       //     download: "open",
+              //       //     className: "btntabletopdf hiddenColumn",
+              //       //     text: "",
+              //       //     title: "Payment Method List",
+              //       //     filename: "paymentmethodList_" + moment().format(),
+              //       //     exportOptions: {
+              //       //       columns: ":visible",
+              //       //     },
+              //       //   },
+              //       //   {
+              //       //     extend: "excelHtml5",
+              //       //     title: "",
+              //       //     download: "open",
+              //       //     className: "btntabletoexcel hiddenColumn",
+              //       //     filename: "paymentmethodList_" + moment().format(),
+              //       //     orientation: "portrait",
+              //       //     exportOptions: {
+              //       //       columns: ":visible",
+              //       //     },
+              //       //     // ,
+              //       //     // customize: function ( win ) {
+              //       //     //   $(win.document.body).children("h1:first").remove();
+              //       //     // }
+              //       //   },
+              //       // ],
+              //       // bStateSave: true,
+              //       // rowId: 0,
 
-                    pageLength: 25,
-                    paging: true,
-                    //                      "scrollY": "400px",
-                    //                      "scrollCollapse": true,
-                    info: true,
-                    responsive: true,
-                    "order": [0, 'asc' ],
-                    // "aaSorting": [[1,'desc']],
-                    action: function () {
-                      $("#paymentmethodList").DataTable().ajax.reload();
-                    },
-                    fnDrawCallback: function (oSettings) {
-                      setTimeout(function () {
-                        MakeNegative();
-                      }, 100);
-                    },
-                  })
-                  .on("page", function () {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                    let draftRecord =
-                      templateObject.paymentmethoddatatablerecords.get();
-                    templateObject.paymentmethoddatatablerecords.set(
-                      draftRecord
-                    );
-                  })
-                  .on("column-reorder", function () {})
-                  .on("length.dt", function (e, settings, len) {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                  });
-                LoadingOverlay.hide();
-              }, 10);
+              //       pageLength: 25,
+              //       paging: true,
+              //       //                      "scrollY": "400px",
+              //       //                      "scrollCollapse": true,
+              //       info: true,
+              //       responsive: true,
+              //       "order": [0, 'asc' ],
+              //       // "aaSorting": [[1,'desc']],
+              //       action: function () {
+              //         $("#paymentmethodList").DataTable().ajax.reload();
+              //       },
+              //       fnDrawCallback: function (oSettings) {
+              //         setTimeout(function () {
+              //           MakeNegative();
+              //         }, 100);
+              //       },
+              //     })
+              //     .on("page", function () {
+              //       setTimeout(function () {
+              //         MakeNegative();
+              //       }, 100);
+              //       let draftRecord =
+              //         templateObject.paymentmethoddatatablerecords.get();
+              //       templateObject.paymentmethoddatatablerecords.set(
+              //         draftRecord
+              //       );
+              //     })
+              //     .on("column-reorder", function () {})
+              //     .on("length.dt", function (e, settings, len) {
+              //       setTimeout(function () {
+              //         MakeNegative();
+              //       }, 100);
+              //     });
+              //   LoadingOverlay.hide();
+              // }, 10);
 
               var columns = $("#paymentmethodList th");
               let sTible = "";
@@ -1117,93 +987,94 @@ Template.setup.onRendered(function () {
           }
 
           LoadingOverlay.hide();
-          setTimeout(function () {
-            $("#paymentmethodList")
-              .DataTable({
-                columnDefs: [
-                  {
-                    orderable: false,
-                    targets: -1,
-                  },
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                  {
-                    extend: "csvHtml5",
-                    text: "",
-                    download: "open",
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "paymentmethodList_" + moment().format(),
-                    orientation: "portrait",
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                  {
-                    extend: "print",
-                    download: "open",
-                    className: "btntabletopdf hiddenColumn",
-                    text: "",
-                    title: "Payment Method List",
-                    filename: "paymentmethodList_" + moment().format(),
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                  {
-                    extend: "excelHtml5",
-                    title: "",
-                    download: "open",
-                    className: "btntabletoexcel hiddenColumn",
-                    filename: "paymentmethodList_" + moment().format(),
-                    orientation: "portrait",
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                    // ,
-                    // customize: function ( win ) {
-                    //   $(win.document.body).children("h1:first").remove();
-                    // }
-                  },
-                ],
-                // bStateSave: true,
-                // rowId: 0,
-                pageLength: 25,
-                paging: true,
-                //            "scrollY": "400px",
-                //            "scrollCollapse": true,
-                info: true,
-                responsive: true,
-                "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
-                // "aaSorting": [[1,'desc']],
-                action: function () {
-                  $("#paymentmethodList").DataTable().ajax.reload();
-                },
-                fnDrawCallback: function (oSettings) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                },
-              })
-              .on("page", function () {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-                let draftRecord =
-                  templateObject.paymentmethoddatatablerecords.get();
-                templateObject.paymentmethoddatatablerecords.set(draftRecord);
-              })
-              .on("column-reorder", function () {})
-              .on("length.dt", function (e, settings, len) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              });
-            LoadingOverlay.hide();
-          }, 10);
+          // commented by me
+          // setTimeout(function () {
+          //   $("#paymentmethodList")
+          //     .DataTable({
+          //       columnDefs: [
+          //         {
+          //           orderable: false,
+          //           targets: -1,
+          //         },
+          //       ],
+          //       select: true,
+          //       destroy: true,
+          //       colReorder: true,
+          //       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          //       buttons: [
+          //         {
+          //           extend: "csvHtml5",
+          //           text: "",
+          //           download: "open",
+          //           className: "btntabletocsv hiddenColumn",
+          //           filename: "paymentmethodList_" + moment().format(),
+          //           orientation: "portrait",
+          //           exportOptions: {
+          //             columns: ":visible",
+          //           },
+          //         },
+          //         {
+          //           extend: "print",
+          //           download: "open",
+          //           className: "btntabletopdf hiddenColumn",
+          //           text: "",
+          //           title: "Payment Method List",
+          //           filename: "paymentmethodList_" + moment().format(),
+          //           exportOptions: {
+          //             columns: ":visible",
+          //           },
+          //         },
+          //         {
+          //           extend: "excelHtml5",
+          //           title: "",
+          //           download: "open",
+          //           className: "btntabletoexcel hiddenColumn",
+          //           filename: "paymentmethodList_" + moment().format(),
+          //           orientation: "portrait",
+          //           exportOptions: {
+          //             columns: ":visible",
+          //           },
+          //           // ,
+          //           // customize: function ( win ) {
+          //           //   $(win.document.body).children("h1:first").remove();
+          //           // }
+          //         },
+          //       ],
+          //       // bStateSave: true,
+          //       // rowId: 0,
+          //       pageLength: 25,
+          //       paging: true,
+          //       //            "scrollY": "400px",
+          //       //            "scrollCollapse": true,
+          //       info: true,
+          //       responsive: true,
+          //       "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
+          //       // "aaSorting": [[1,'desc']],
+          //       action: function () {
+          //         $("#paymentmethodList").DataTable().ajax.reload();
+          //       },
+          //       fnDrawCallback: function (oSettings) {
+          //         setTimeout(function () {
+          //           MakeNegative();
+          //         }, 100);
+          //       },
+          //     })
+          //     .on("page", function () {
+          //       setTimeout(function () {
+          //         MakeNegative();
+          //       }, 100);
+          //       let draftRecord =
+          //         templateObject.paymentmethoddatatablerecords.get();
+          //       templateObject.paymentmethoddatatablerecords.set(draftRecord);
+          //     })
+          //     .on("column-reorder", function () {})
+          //     .on("length.dt", function (e, settings, len) {
+          //       setTimeout(function () {
+          //         MakeNegative();
+          //       }, 100);
+          //     });
+          //   LoadingOverlay.hide();
+          // }, 10);
 
           var columns = $("#paymentmethodList th");
           let sTible = "";
@@ -1301,92 +1172,93 @@ Template.setup.onRendered(function () {
             }
 
             LoadingOverlay.hide();
-            setTimeout(function () {
-              $("#paymentmethodList")
-                .DataTable({
-                  columnDefs: [
-                    {
-                      orderable: false,
-                      targets: -1,
-                    },
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  buttons: [
-                    {
-                      extend: "csvHtml5",
-                      text: "",
-                      download: "open",
-                      className: "btntabletocsv hiddenColumn",
-                      filename: "paymentmethodList_" + moment().format(),
-                      orientation: "portrait",
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                    {
-                      extend: "print",
-                      download: "open",
-                      className: "btntabletopdf hiddenColumn",
-                      text: "",
-                      title: "Payment Method List",
-                      filename: "paymentmethodList_" + moment().format(),
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                    {
-                      extend: "excelHtml5",
-                      title: "",
-                      download: "open",
-                      className: "btntabletoexcel hiddenColumn",
-                      filename: "paymentmethodList_" + moment().format(),
-                      orientation: "portrait",
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                      // ,
-                      // customize: function ( win ) {
-                      //   $(win.document.body).children("h1:first").remove();
-                      // }
-                    },
-                  ],
-                  // bStateSave: true,
-                  // rowId: 0,
-                  paging: false,
-                  //                    "scrollY": "400px",
-                  //                    "scrollCollapse": true,
-                  info: true,
-                  responsive: true,
-                  "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
-                  // "aaSorting": [[1,'desc']],
-                  action: function () {
-                    $("#paymentmethodList").DataTable().ajax.reload();
-                  },
-                  fnDrawCallback: function (oSettings) {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                  },
-                })
-                .on("page", function () {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                  let draftRecord =
-                    templateObject.paymentmethoddatatablerecords.get();
-                  templateObject.paymentmethoddatatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function () {})
-                .on("length.dt", function (e, settings, len) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                });
-              LoadingOverlay.hide();
-            }, 10);
+            // commented by me
+            // setTimeout(function () {
+            //   $("#paymentmethodList")
+            //     .DataTable({
+            //       columnDefs: [
+            //         {
+            //           orderable: false,
+            //           targets: -1,
+            //         },
+            //       ],
+            //       select: true,
+            //       destroy: true,
+            //       colReorder: true,
+            //       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            //       buttons: [
+            //         {
+            //           extend: "csvHtml5",
+            //           text: "",
+            //           download: "open",
+            //           className: "btntabletocsv hiddenColumn",
+            //           filename: "paymentmethodList_" + moment().format(),
+            //           orientation: "portrait",
+            //           exportOptions: {
+            //             columns: ":visible",
+            //           },
+            //         },
+            //         {
+            //           extend: "print",
+            //           download: "open",
+            //           className: "btntabletopdf hiddenColumn",
+            //           text: "",
+            //           title: "Payment Method List",
+            //           filename: "paymentmethodList_" + moment().format(),
+            //           exportOptions: {
+            //             columns: ":visible",
+            //           },
+            //         },
+            //         {
+            //           extend: "excelHtml5",
+            //           title: "",
+            //           download: "open",
+            //           className: "btntabletoexcel hiddenColumn",
+            //           filename: "paymentmethodList_" + moment().format(),
+            //           orientation: "portrait",
+            //           exportOptions: {
+            //             columns: ":visible",
+            //           },
+            //           // ,
+            //           // customize: function ( win ) {
+            //           //   $(win.document.body).children("h1:first").remove();
+            //           // }
+            //         },
+            //       ],
+            //       // bStateSave: true,
+            //       // rowId: 0,
+            //       paging: false,
+            //       //                    "scrollY": "400px",
+            //       //                    "scrollCollapse": true,
+            //       info: true,
+            //       responsive: true,
+            //       "order": [[ 3, 'asc' ], [ 0, 'asc' ]],
+            //       // "aaSorting": [[1,'desc']],
+            //       action: function () {
+            //         $("#paymentmethodList").DataTable().ajax.reload();
+            //       },
+            //       fnDrawCallback: function (oSettings) {
+            //         setTimeout(function () {
+            //           MakeNegative();
+            //         }, 100);
+            //       },
+            //     })
+            //     .on("page", function () {
+            //       setTimeout(function () {
+            //         MakeNegative();
+            //       }, 100);
+            //       let draftRecord =
+            //         templateObject.paymentmethoddatatablerecords.get();
+            //       templateObject.paymentmethoddatatablerecords.set(draftRecord);
+            //     })
+            //     .on("column-reorder", function () {})
+            //     .on("length.dt", function (e, settings, len) {
+            //       setTimeout(function () {
+            //         MakeNegative();
+            //       }, 100);
+            //     });
+            //   LoadingOverlay.hide();
+            // }, 10);
 
             var columns = $("#paymentmethodList th");
             let sTible = "";
@@ -4308,8 +4180,6 @@ Template.setup.onRendered(function () {
       //LoadingOverlay.show();
       switch (stepId) {
         case 1:
-          templateObject.getOrganisationDetails();
-          templateObject.getCountryData();
           break;
         case 2:
           templateObject.loadStep2Prefs();
@@ -4504,137 +4374,6 @@ Template.setup.events({
   },
   "click #edtCountry": async function (event) {
     await clearData('TTaxcodeVS1');
-  },
-  "click #saveStep1": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let companyID = 1;
-    let companyName = $("#displayname").val();
-    let tradingName = $("#tradingname").val();
-
-    let ownerFistName = $("#ownerfirstname").val() || "";
-    let ownerlastName = $("#ownerlastname").val() || "";
-    // let companyCategory = $('#org_type').val();
-    let companyABNNumber = $("#edtABNNumber").val();
-    let companyNumber = $("#edtCompanyNumber").val();
-    let pocontact = $("#pocontact").val();
-    let contact = $("#contact").val();
-    let phone = $("#edtphonenumber").val();
-    let emailAddress =
-      $("#edtemailaddress").val() || localStorage.getItem("VS1AdminUserName");
-    let websiteURL = $("#edtWebsite").val();
-    let fax = $("#edtfaxnumber").val();
-
-    let shipAddress = $("#edtAddress").val();
-    let shipCity = $("#edtCity").val();
-    let shipState = $("#edtState").val();
-    let shipPostCode = $("#edtPostCode").val();
-    let shipCountry = $("#edtCountry").val();
-
-    let poAddress = "";
-    let poCity = "";
-    let poState = "";
-    let poPostCode = "";
-    let poCountry = "";
-    let isDefaultEmail = false;
-
-    if ($("#chksameaddress").is(":checked")) {
-      poAddress = shipAddress;
-      poCity = shipCity;
-      poState = shipState;
-      poPostCode = shipPostCode;
-      poCountry = shipCountry;
-    } else {
-      poAddress = $("#edtpostaladdress").val();
-      poCity = $("#edtPostalCity").val();
-      poState = $("#edtPostalState").val();
-      poPostCode = $("#edtPostalPostCode").val();
-      poCountry = $("#edtPostalCountry").val();
-    }
-
-    if ($("#chkIsDefailtEmail").is(":checked")) {
-      isDefaultEmail = true;
-    }
-
-    var objDetails = {
-      type: "TCompanyInfo",
-      fields: {
-        Id: companyID,
-        CompanyName: companyName,
-        TradingName: tradingName,
-        Firstname: ownerFistName,
-        LastName: ownerlastName,
-        abn: companyABNNumber,
-        CompanyNumber: companyNumber,
-        ContactName: contact,
-        Contact: pocontact,
-        PhoneNumber: phone,
-        Email: emailAddress,
-        Url: websiteURL,
-        FaxNumber: fax,
-        Address: shipAddress,
-        City: shipCity,
-        State: shipState,
-        Postcode: shipPostCode,
-        Country: shipCountry,
-        PoBox: poAddress,
-        PoCity: poCity,
-        PoState: poState,
-        PoPostcode: poPostCode,
-        PoCountry: poCountry,
-        TrackEmails: isDefaultEmail,
-      },
-    };
-    organisationService
-      .saveOrganisationSetting(objDetails)
-      .then(function (data) {
-        // Bert.alert('<strong>'+ 'Organisation details successfully updated!'+'</strong>!', 'success');
-        // swal('Organisation details successfully updated!', '', 'success');
-        if (isDefaultEmail) {
-          localStorage.setItem("VS1OrgEmail", emailAddress);
-        } else {
-          localStorage.setItem(
-            "VS1OrgEmail",
-            localStorage.getItem("mySession")
-          );
-        }
-
-        LoadingOverlay.hide();
-        swal({
-          title: "Organisation details successfully saved!",
-          text: "",
-          type: "success",
-          showCancelButton: false,
-          confirmButtonText: "OK",
-        }).then((result) => {
-          // $(".setup-step").css("display", "none");
-          // $(`.setup-stepper li:nth-child(2)`).addClass("current");
-          // $(`.setup-stepper li:nth-child(1)`).removeClass("current");
-          // $(`.setup-stepper li:nth-child(1)`).addClass("completed");
-          // $(".setup-step-2").css("display", "block");
-          // let confirmedSteps =
-          //   localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-          // localStorage.setItem(
-          //   "VS1Cloud_SETUP_CONFIRMED_STEPS",
-          //   confirmedSteps + "1,"
-          // );
-          // localStorage.setItem("VS1Cloud_SETUP_STEP", 2);
-        });
-      })
-      .catch(function (err) {
-        LoadingOverlay.hide();
-        swal({
-          title: "Oooops...",
-          text: "All fields are required.",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "Try Again",
-        }).then((result) => {
-          if (result.value) {
-            // Meteor._reload.reload();
-          } else if (result.dismiss === "cancel") {
-          }
-        });
-      });
   },
   "keyup #postaladdress": function (event) {
     let templateObject = Template.instance();
