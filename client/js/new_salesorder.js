@@ -9151,19 +9151,20 @@ Template.new_salesorder.events({
       };
     }, delayTimeAfterSound);
   },
-  'click #btnCopyToInvoice': async function () {
+  'click #btnCopyInvoice': async function () {
     playCopyAudio();
     let salesService = new SalesBoardService();
     let i = 0;
     setTimeout(async function () {
       $("#basedOnFrequency").prop('checked', true);
+      $("#formCheck-monday").prop('checked', true);
       $('#edtFrequencyDetail').css('display', 'flex');
       $(".ofMonthList input[type=checkbox]").each(function () {
         $(this).prop('checked', false);
       });
-      $(".selectDays input[type=checkbox]").each(function () {
-        $(this).prop('checked', false);
-      });
+      // $(".selectDays input[type=checkbox]").each(function () {
+      //   $(this).prop('checked', false);
+      // });
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentInvoice = getso_id[getso_id.length - 1];

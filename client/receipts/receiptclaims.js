@@ -114,12 +114,16 @@ Template.receiptsoverview.onRendered(function () {
 
     $('.checkclose').on('click', function () {
         $('#supplierListModal').modal('hide');
+        $('#tblSupplierlist_filter input').val("");
+    });
 
-        if ( receiptData != null ) {
+    $('.addAutoSupplier').on('click', function () {
+        $('#supplierListModal').modal('hide');
+        $('#tblSupplierlist_filter input').val("");
+        if (receiptData != null) {
+            let supplier_name = receiptData.fields.ClientName;
             $('.fullScreenSpin').css('display', 'inline-block');
-            contactService.saveSupplier(receiptData).then(function (supplier) {
-                $('.fullScreenSpin').css('display', 'none');
-
+            contactService.saveSupplier(receiptData).then(function(supplier) {
                 let from = $('#employeeListModal').attr('data-from');
                 let parentElement;
                 if (from == 'ViewReceipt') {
@@ -129,25 +133,26 @@ Template.receiptsoverview.onRendered(function () {
                 } else if (from == 'NavTime') {
                     parentElement = "#nav-time";
                 }
-                
                 let supplierSaveID = supplier.fields.ID;
                 if (supplierSaveID) {
-                    $(parentElement + ' .merchants').val(receiptData.fields.ClientName);
+                    $(parentElement + ' .merchants').val(supplier_name);
                     $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
                     const suppliers = templateObject.suppliers.get();
                     suppliers.push({
                         supplierid: supplier.fields.ID,
-                        suppliername: receiptData.fields.ClientName,
+                        suppliername: supplier_name,
                     });
                     templateObject.suppliers.set(suppliers);
-                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                    sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(dataReload) {
                         addVS1Data('TSupplierVS1', JSON.stringify(dataReload));
-                    }).catch(function (err) {
-
-                    });
+                        $('.fullScreenSpin').css('display', 'none');
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });   
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
                 }
-                receiptData = null;
-            }).catch(function (err) {
+            }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
                     text: err,
@@ -156,16 +161,15 @@ Template.receiptsoverview.onRendered(function () {
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {
-    
+
                     } else if (result.dismiss == 'cancel') {
-    
+
                     }
                 });
                 $('.fullScreenSpin').css('display', 'none');
-                receiptData = null;
             });
+            receiptData = null;
         }
-
     });
 
     templateObject.getAllReceiptCategory = function () {
@@ -709,7 +713,8 @@ Template.receiptsoverview.onRendered(function () {
         }
         if (!added) {
             sideBarService.getOneSupplierDataExByName(supplierDataName).then(function (data) {
-                showEditSupplierView(data.tsuppliervs1[0].fields);
+                if (data.tsuppliervs1.length > 0)
+                    showEditSupplierView(data.tsuppliervs1[0].fields);
             }).catch(function (err) {
 
             });
@@ -1599,6 +1604,7 @@ Template.receiptsoverview.onRendered(function () {
 
     templateObject.getOCRResultFromImage = function (imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
+        $('#tblSupplierlist_filter input').val("");
         ocrService.POST(imageData, fileName).then(function (data) {
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
@@ -1665,13 +1671,26 @@ Template.receiptsoverview.onRendered(function () {
                     }
                 });
                 let pf5 =(supplier_name != "" || supplier_name != undefined || supplier_name != null) ? supplier_name.slice(0, 5) : "";
-                $('#tblSupplierlist_filter input').val(pf5);
-                $('.btnRefreshSupplier').trigger('click');
+                
+                
                 if (!isExistSupplier) {
                     contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
                         if (data.tsupplier.length == 0) {
                             // create supplier with vendor data
                             $('.fullScreenSpin').css('display', 'none');
+                            if (pf5.replace(/\s/g, '') != '') {
+                                sideBarService.getAllSuppliersDataVS1ByName(pf5).then(function (data2) {
+                                    if (data2.tsuppliervs1.length > 0) {
+                                        $('#tblSupplierlist_filter input').val(pf5);
+                                    } else {
+                                        $('#tblSupplierlist_filter input').val("");
+                                    }
+                                    $('.btnRefreshSupplier').trigger('click');
+                                    $('#supplierListModal').modal('toggle');
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+                            }
                             receiptData = {
                                 type: "TSupplier",
                                 fields: {
@@ -1699,6 +1718,8 @@ Template.receiptsoverview.onRendered(function () {
                             };
                         } else {
                             $('.fullScreenSpin').css('display', 'none');
+                            $('#tblSupplierlist_filter input').val(supplier_name);
+                            $('.btnRefreshSupplier').trigger('click');
                             $('#supplierListModal').modal('toggle');
                             $(parentElement + ' .merchants').val(supplier_name);
                             $(parentElement + ' .merchants').attr('data-id', data.tsupplier[0].fields.ID);
@@ -1715,6 +1736,8 @@ Template.receiptsoverview.onRendered(function () {
                     });
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
+                    $('#tblSupplierlist_filter input').val(pf5);
+                    $('.btnRefreshSupplier').trigger('click');
                     $('#supplierListModal').modal('toggle');
                 }
             } else {
