@@ -11051,13 +11051,14 @@ Template.new_invoice.events({
     playCopyAudio();
     setTimeout(async function () {
       $("#basedOnFrequency").prop('checked', true);
+      $("#formCheck-monday").prop('checked', true);
       $('#edtFrequencyDetail').css('display', 'flex');
       $(".ofMonthList input[type=checkbox]").each(function () {
         $(this).prop('checked', false);
       });
-      $(".selectDays input[type=checkbox]").each(function () {
-        $(this).prop('checked', true);
-      });
+      // $(".selectDays input[type=checkbox]").each(function () {
+      //   $(this).prop('checked', true);
+      // });
       $("#copyFrequencyModal").modal("toggle");
     }, delayTimeAfterSound);
   },
