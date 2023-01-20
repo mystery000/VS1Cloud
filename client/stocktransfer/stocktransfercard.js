@@ -4525,7 +4525,7 @@ Template.stocktransfercard.events({
             productService.getProductStatus(selectedProductName).then(function(data) {
                 $('.fullScreenSpin').css('display', 'none');
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                    swal('', 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
