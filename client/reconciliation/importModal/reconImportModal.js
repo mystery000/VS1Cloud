@@ -1,5 +1,8 @@
 import { Template } from 'meteor/templating';
 import './reconImportModal.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+let importRuleExist = false
 
 Template.reconImportModal.onCreated(function () {});
 
@@ -14,6 +17,7 @@ Template.reconImportModal.onRendered(function () {
           if (dataObject.length) {
             let data = JSON.parse(dataObject[0].data);
             if (data[accountId] && data[accountId].length) {
+              importRuleExist = true
               $("#attachment-upload").val("");
               $("#attachment-upload").trigger("click");
               return;
@@ -58,6 +62,14 @@ Template.reconImportModal.events({
           // $(".fullScreenSpin").css("display", "none");
           if (results.data.length > 0) {
             localStorage.setItem("BankStatement", JSON.stringify(results.data));
+            if (importRuleExist && FlowRouter.current().route.path === "/newbankrecon") {
+              return window.open(
+                `/newbankrecon?preview=1&bankaccountid=${$(
+                  "#bankAccountID"
+                ).val()}&bankaccountname=${$("#bankAccountName").val()}`,
+                "_self"
+              );
+            }
             window.open(
               `/newbankrule?preview=1&bankaccountid=${$(
                 "#bankAccountID"
