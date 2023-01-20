@@ -67,7 +67,6 @@ export class FixedAssetService extends BaseService {
       ListType: "Detail",
       select: "[Active]=true"
     };
-    console.log(this.ERPObjects);
     return this.GET(this.ERPObjects.TCostTypes);
   }
 }

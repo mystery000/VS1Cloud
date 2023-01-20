@@ -100,7 +100,7 @@ Template.wizard_organisation.onCreated(() => {
        return;
     }
     templateObject.companyData.set(dataListRet);
-    
+
     let mainData = dataListRet.tcompanyinfo[0];
     templateObject.companyName.set(mainData.CompanyName)
     templateObject.tradingName.set(mainData.TradingName)
@@ -332,7 +332,6 @@ Template.wizard_organisation.events({
         })
       })
       .catch(function (err) {
-        console.log("Error:", err)
         LoadingOverlay.hide();
         swal({
           title: "Oooops...",
@@ -348,4 +347,3 @@ Template.wizard_organisation.events({
 Template.registerHelper("equals", function (a, b) {
   return a === b;
 });
-
