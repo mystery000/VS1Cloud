@@ -1527,7 +1527,6 @@ Template.customerscard.onCreated(function () {
         contactService.getAllCustomerSideDataVS1().then(function (data) {
           templateObject.setAllCustomerSideDataVS1(data);
         }).catch(function (err) {
-          console.log("Err:", err)
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
@@ -1537,7 +1536,6 @@ Template.customerscard.onCreated(function () {
       contactService.getAllCustomerSideDataVS1().then(function (data) {
         templateObject.setAllCustomerSideDataVS1(data);
       }).catch(function (err) {
-        console.log("Err:", err)
       });
     });
   };
