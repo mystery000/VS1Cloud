@@ -1,19 +1,26 @@
 import './organization-settings.html';
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import _, { template } from "lodash";
 import LoadingOverlay from "../LoadingOverlay";
 import { OrganisationService } from "../js/organisation-service";
 import { CountryService } from "../js/country-service";
-import { SideBarService } from "../js/sidebar-service";
-import { UtilityService } from "../utility-service";
 import "../lib/global/indexdbstorage.js";
+import _ from "lodash";
 
-const sideBarService = new SideBarService();
-const utilityService = new UtilityService();
 const organisationService = new OrganisationService();
 const countryService = new CountryService();
+
+let organizations = [
+  "Club or Society",
+  "Company",
+  "Individual",
+  "Not for Profit",
+  "Partnership",
+  "Self Managed Superannuation Fund",
+  "Sole Trader",
+  "Superannuation Fund",
+  "Trust",
+];
 
 Template.wizard_organisation.onCreated(() => {
   const templateObject = Template.instance();
@@ -46,6 +53,9 @@ Template.wizard_organisation.onCreated(() => {
   templateObject.countryList = new ReactiveVar([]);
 
   templateObject.companyData = new ReactiveVar();
+
+  templateObject.imageFileData = new ReactiveVar();
+  templateObject.fieldLength = new ReactiveVar();
 
   //Methods
   templateObject.getCountryData = function () {
@@ -119,7 +129,7 @@ Template.wizard_organisation.onCreated(() => {
     templateObject.postal.set(mainData.Postcode);
     templateObject.country.set(mainData.Country)
     templateObject.attention.set(mainData.Contact);
-    const isSamePostAddressAndPhysicAddress =  mainData.Address == mainData.PoBox &&
+    const isSamePostAddressAndPhysicAddress = mainData.Address == mainData.PoBox &&
     mainData.City == mainData.PoCity &&
     mainData.State == mainData.PoState &&
     mainData.Postcode == mainData.PoPostcode &&
@@ -140,18 +150,13 @@ Template.wizard_organisation.onCreated(() => {
 
 Template.wizard_organisation.onRendered(() => {
   const templateObject = Template.instance();
-  let showPoAddress = false;
-  let organizations = [
-    "Club or Society",
-    "Company",
-    "Individual",
-    "Not for Profit",
-    "Partnership",
-    "Self Managed Superannuation Fund",
-    "Sole Trader",
-    "Superannuation Fund",
-    "Trust",
-  ];
+
+  let imageData = localStorage.getItem("Image");
+  if (imageData) {
+    $(".setup-step-1 .uploadedImageLogo").attr("src", imageData);
+    $(".setup-step-1 .uploadedImageLogo").attr("width", "160");
+    $(".setup-step-1 .uploadedImageLogo").attr("height", "50%");
+  }
 
   templateObject.getCountryData();
   templateObject.getOrganisationDetails()
@@ -210,7 +215,7 @@ Template.wizard_organisation.helpers({
     return Template.instance().attention.get();
   },
   isPostalAddressSamePhysicAddress: () => {
-    return Template.instance().isPostalAddressSamePhysicAddress.get() && 'checked';
+    return Template.instance().isPostalAddressSamePhysicAddress.get() ? 'd-none' : 'd-block';
   },
   postalAddress:() => {
     return Template.instance().postalAddress.get();
@@ -342,7 +347,51 @@ Template.wizard_organisation.events({
           confirmButtonText: "Try Again",
         })
       });
-  }
+  },
+  'click #chkIsDefailtEmail' (event) {
+    const isChecked = event.target.checked
+    const templateObject = Template.instance();
+    templateObject.useEmailAsLogin.set(isChecked)
+  },
+  'click #chksameaddress' (event) {
+    const isChecked = event.target.checked;
+    const templateObject = Template.instance();
+    templateObject.isPostalAddressSamePhysicAddress.set(isChecked)
+  },
+  'click #step1-uploadImg' (event) {
+    let templateObject = Template.instance();
+    let imageData = templateObject.imageFileData.get();
+    if (imageData != null && imageData != "") {
+      localStorage.setItem("Image", imageData);
+      $("#uploadedImage").attr("src", imageData);
+      $("#uploadedImage").attr("width", "50%");
+      $("#removeLogo").show();
+      $("#changeLogo").show();
+    }
+  },
+  'change #step1-fileInput' (event) {
+    let templateObject = Template.instance();
+    let selectedFile = event.target.files[0];
+    let reader = new FileReader();
+    $(".step1_choose_file").text("");
+    reader.onload = function (event) {
+      $("#step1-uploadImg").prop("disabled", false);
+      $("#step1-uploadImg").addClass("on-upload-logo");
+      $(".step1_choose_file").text(selectedFile.name);
+      templateObject.imageFileData.set(event.target.result);
+    };
+    reader.readAsDataURL(selectedFile);
+  },
+  'click #removeLogo' () {
+    let templateObject = Template.instance();
+    templateObject.imageFileData.set(null);
+    localStorage.removeItem("Image");
+    $("#uploadedImage").attr("src", 'assets/img/VS1.png');
+    $("#uploadedImage").attr("width", "160");
+  },
+  'click #uploadFileSelector' () {
+    $("#step1-fileInput").trigger("click");
+  },
 })
 
 Template.registerHelper("equals", function (a, b) {

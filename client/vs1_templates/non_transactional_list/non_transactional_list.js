@@ -2,6 +2,7 @@ import { ContactService } from "../../contacts/contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
 import { UtilityService } from "../../utility-service";
+import { TaxRateService } from "../../settings/settings-service.js";
 import XLSX from 'xlsx';
 import { SideBarService } from '../../js/sidebar-service';
 import { ProductService } from '../../product/product-service';
@@ -23,6 +24,7 @@ let manufacturingService = new ManufacturingService();
 let crmService = new CRMService();
 let reportService = new ReportService();
 let fixedAssetService = new FixedAssetService();
+const taxRateService = new TaxRateService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
@@ -999,6 +1001,15 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Last edited', class: 'colLastEdited', active: true, display: true, width: "250" },
                 { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename === 'taxRatesList') {
+            reset_data = [
+                { index: 0, label: 'Name', class: 'colFirstName', active: true, display: true, width: "100px" },
+                { index: 1, label: 'Description', class: 'colSurname', active: true, display: true, },
+                { index: 2, label: 'Rate', class: 'colPeriod', active: true, display: true, width: "80px" },
+                { index: 3, label: 'Purchase Default', class: 'colStatus', active: true, display: true, width: "40px" },
+                { index: 4, label: 'Sales Default', class: 'colLastEdited', active: true, display: true, width: "40px" },
+                { index: 5, label: '', class: 'colDelete', active: true, display: true, width: '40px'}
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -1056,7 +1067,7 @@ Template.non_transactional_list.onRendered(function() {
                     $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
                 }
             } else if (reset_data[r].active == false) {
-                if(currentTable){
+                if(currentTable && reset_data[r].class){
                     $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
                 }
             };
@@ -2546,199 +2557,199 @@ Template.non_transactional_list.onRendered(function() {
                 }
             });
         };
-        templateObject.displayAllProductRecentTransactions = function(data,deptname) {
-                let currentProductID = templateObject.currentproductID.get();
-                let recentTransList = new Array();
-                for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
-                    // let recentTranObject = {
-                    //     date: data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                    //     type: data.t_vs1_report_productmovement[i].TranstypeDesc,
-                    //     transactionno: data.t_vs1_report_productmovement[i].TransactionNo,
-                    //     reference: data.t_vs1_report_productmovement[i].TransactionNo,
-                    //     quantity: data.t_vs1_report_productmovement[i].Qty,
-                    //     unitPrice: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                    //     total: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-                    // };
-                    if(parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID && (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)){
-                        let recentTranObject = [
-                            data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                            data.t_vs1_report_productmovement[i].TranstypeDesc,
-                            data.t_vs1_report_productmovement[i].TransactionNo,
-                            data.t_vs1_report_productmovement[i].Qty,
-                            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-                        ];
-                        recentTransList.push(recentTranObject);
-                    }
+    templateObject.displayAllProductRecentTransactions = function(data,deptname) {
+            let currentProductID = templateObject.currentproductID.get();
+            let recentTransList = new Array();
+            for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+                // let recentTranObject = {
+                //     date: data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
+                //     type: data.t_vs1_report_productmovement[i].TranstypeDesc,
+                //     transactionno: data.t_vs1_report_productmovement[i].TransactionNo,
+                //     reference: data.t_vs1_report_productmovement[i].TransactionNo,
+                //     quantity: data.t_vs1_report_productmovement[i].Qty,
+                //     unitPrice: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+                //     total: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
+                // };
+                if(parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID && (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)){
+                    let recentTranObject = [
+                        data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
+                        data.t_vs1_report_productmovement[i].TranstypeDesc,
+                        data.t_vs1_report_productmovement[i].TransactionNo,
+                        data.t_vs1_report_productmovement[i].Qty,
+                        utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+                        utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
+                    ];
+                    recentTransList.push(recentTranObject);
                 }
-                let columnData = [];
-                let displayfields = templateObject.non_trans_displayfields.get();
-                if( displayfields.length > 0 ){
-                    displayfields.forEach(function( item ){
-                        columnData.push({
-                            className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
-                            targets: [item.id],
-                        })
-                    });
-                }
-                templateObject.transactiondatatablerecords.set(recentTransList);
-                let currenttablename = templateObject.tablename.get();
-                setTimeout(function() {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    $('#' + currenttablename).DataTable({
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        data:recentTransList,
-                        columnDefs: columnData,
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [[0, "desc"],[3, "desc"]],
-                        action: function() {
-                            $('#productrecentlist').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                            //if(checkurlIgnoreDate == 'true'){
+            }
+            let columnData = [];
+            let displayfields = templateObject.non_trans_displayfields.get();
+            if( displayfields.length > 0 ){
+                displayfields.forEach(function( item ){
+                    columnData.push({
+                        className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                        targets: [item.id],
+                    })
+                });
+            }
+            templateObject.transactiondatatablerecords.set(recentTransList);
+            let currenttablename = templateObject.tablename.get();
+            setTimeout(function() {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                $('#' + currenttablename).DataTable({
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    data:recentTransList,
+                    columnDefs: columnData,
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    // bStateSave: true,
+                    // rowId: 0,
+                    pageLength: initialDatatableLoad,
+                    lengthMenu: [
+                        [initialDatatableLoad, -1],
+                        [initialDatatableLoad, "All"]
+                    ],
+                    info: true,
+                    responsive: true,
+                    "order": [[0, "desc"],[3, "desc"]],
+                    action: function() {
+                        $('#productrecentlist').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function(oSettings) {
+                        let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                        //if(checkurlIgnoreDate == 'true'){
 
-                            //}else{
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
+                        //}else{
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblPaymentOverview_ellipsis').addClass('disabled');
 
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-                                    $('.paginate_button.page-item.previous').addClass('disabled');
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                            } else {}
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+                                $('.paginate_button.page-item.previous').addClass('disabled');
                                 $('.paginate_button.page-item.next').addClass('disabled');
                             }
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function() {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    let dataLenght = oSettings._iDisplayLength;
-
-                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                    if(data.Params.IgnoreDates == true){
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                if (dataObjectold.length == 0) {} else {
-                                                    let dataOld = JSON.parse(dataObjectold[0].data);
-                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                    let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tpaymentlist: thirdaryData
-                                                    }
-
-                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                        templateObject.resetData(objCombineData);
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    });
-
-                                                }
-                                            }).catch(function(err) {});
-
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-                                    } else {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                if (dataObjectold.length == 0) {} else {
-                                                    let dataOld = JSON.parse(dataObjectold[0].data);
-                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                    let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tpaymentlist: thirdaryData
-                                                    }
-
-                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                        templateObject.resetData(objCombineData);
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    });
-
-                                                }
-                                            }).catch(function(err) {});
-
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-
-                                    }
-
-                                });
-
-                            //}
-                            setTimeout(function() {
-                                // MakeNegative();
-                            }, 100);
-                        },
-
-                    }).on('page', function() {}).on('column-reorder', function() {});
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-
-                $('#productrecentlist tbody').on('click', 'tr', function() {
-                    var listData = $(this).closest('tr').attr('id');
-                    var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-                    if ((listData) && (transactiontype)) {
-                        if (transactiontype === 'Quote') {
-                            window.open('/quotecard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Sales Order') {
-                            window.open('/salesordercard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Invoice') {
-                            window.open('/invoicecard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Purchase Order') {
-                            window.open('/purchaseordercard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Bill') {
-                            //window.open('/billcard?id=' + listData,'_self');
-                        } else if (transactiontype === 'Credit') {
-                            //window.open('/creditcard?id=' + listData,'_self');
+                        } else {}
+                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                            $('.paginate_button.page-item.next').addClass('disabled');
                         }
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function() {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                let dataLenght = oSettings._iDisplayLength;
 
-                    }
-                });
+                                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                // $('.product_recent_trans').css('display', 'block');
-                // $([document.documentElement, document.body]).animate({
-                //     scrollTop: $(".product_recent_trans").offset().top
-                // }, 2000);
+                                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                if(data.Params.IgnoreDates == true){
+                                    sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                        getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                            if (dataObjectold.length == 0) {} else {
+                                                let dataOld = JSON.parse(dataObjectold[0].data);
+                                                var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                let objCombineData = {
+                                                    Params: dataOld.Params,
+                                                    tpaymentlist: thirdaryData
+                                                }
+
+                                                addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                    templateObject.resetData(objCombineData);
+                                                    $('.fullScreenSpin').css('display', 'none');
+                                                }).catch(function(err) {
+                                                    $('.fullScreenSpin').css('display', 'none');
+                                                });
+
+                                            }
+                                        }).catch(function(err) {});
+
+                                    }).catch(function(err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+                                } else {
+                                    sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
+                                        getVS1Data('TPaymentList').then(function(dataObjectold) {
+                                            if (dataObjectold.length == 0) {} else {
+                                                let dataOld = JSON.parse(dataObjectold[0].data);
+                                                var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                                                let objCombineData = {
+                                                    Params: dataOld.Params,
+                                                    tpaymentlist: thirdaryData
+                                                }
+
+                                                addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
+                                                    templateObject.resetData(objCombineData);
+                                                    $('.fullScreenSpin').css('display', 'none');
+                                                }).catch(function(err) {
+                                                    $('.fullScreenSpin').css('display', 'none');
+                                                });
+
+                                            }
+                                        }).catch(function(err) {});
+
+                                    }).catch(function(err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+
+                                }
+
+                            });
+
+                        //}
+                        setTimeout(function() {
+                            // MakeNegative();
+                        }, 100);
+                    },
+
+                }).on('page', function() {}).on('column-reorder', function() {});
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 $('.fullScreenSpin').css('display', 'none');
-            // }).catch(function(err) {
+            }, 0);
 
-            //     $('.fullScreenSpin').css('display', 'none');
-            //     $('.product_recent_trans').css('display', 'block');
-            //     $([document.documentElement, document.body]).animate({
-            //         scrollTop: $(".product_recent_trans").offset().top
-            //     }, 2000);
+            $('#productrecentlist tbody').on('click', 'tr', function() {
+                var listData = $(this).closest('tr').attr('id');
+                var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
 
-            //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
-            // });
+                if ((listData) && (transactiontype)) {
+                    if (transactiontype === 'Quote') {
+                        window.open('/quotecard?id=' + listData, '_self');
+                    } else if (transactiontype === 'Sales Order') {
+                        window.open('/salesordercard?id=' + listData, '_self');
+                    } else if (transactiontype === 'Invoice') {
+                        window.open('/invoicecard?id=' + listData, '_self');
+                    } else if (transactiontype === 'Purchase Order') {
+                        window.open('/purchaseordercard?id=' + listData, '_self');
+                    } else if (transactiontype === 'Bill') {
+                        //window.open('/billcard?id=' + listData,'_self');
+                    } else if (transactiontype === 'Credit') {
+                        //window.open('/creditcard?id=' + listData,'_self');
+                    }
+
+                }
+            });
+
+            // $('.product_recent_trans').css('display', 'block');
+            // $([document.documentElement, document.body]).animate({
+            //     scrollTop: $(".product_recent_trans").offset().top
+            // }, 2000);
+            $('.fullScreenSpin').css('display', 'none');
+        // }).catch(function(err) {
+
+        //     $('.fullScreenSpin').css('display', 'none');
+        //     $('.product_recent_trans').css('display', 'block');
+        //     $([document.documentElement, document.body]).animate({
+        //         scrollTop: $(".product_recent_trans").offset().top
+        //     }, 2000);
+
+        //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
         // });
-            // Meteor.render(Template.non_transactional_list);
-            // templateObject.getAllProductRecentTransactions(currenttype);
+    // });
+        // Meteor.render(Template.non_transactional_list);
+        // templateObject.getAllProductRecentTransactions(currenttype);
 
-        }
-    
+    }
+
     //Recent Sales Order Data
     templateObject.getAllSOListData = async function() {
         templateObject.initCustomFieldDisplaySettings("",currenttablename);
@@ -5816,9 +5827,6 @@ Template.non_transactional_list.onRendered(function() {
             });
         });
     }
-
-
-
     templateObject.displayCurrencyListData = async function(data) {
         var splashArrayCurrencyList = new Array();
         let lineItems = [];
@@ -14272,6 +14280,192 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+
+    // TaxRate tables
+    templateObject.getTaxRates = function(){
+        getVS1Data('TTaxcodeVS1').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                taxRateService.getTaxRateVS1().then(function(data) {
+                    console.log(data)
+                    addVS1Data('TTaxcodeVS1', JSON.stringify(data))
+                    templateObject.displayTaxRateList(data);
+                }).catch(function(err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayTaxRateList(data)
+            }
+        }).catch(function(err) {
+            taxRateService.getTaxRateVS1().then(function(data) {
+                addVS1Data('TTaxcodeVS1', JSON.stringify(data))
+                templateObject.displayTaxRateList(data)
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        });
+    }
+    templateObject.displayTaxRateList = function(data){
+        const dataTableList = [];
+        const tableHeaderList = [];
+        console.log("Non Transactional List Data:", data);
+        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
+            var dataList = {
+                id: data.ttaxcodevs1[i].Id || '',
+                codename: data.ttaxcodevs1[i].CodeName || '-',
+                description: data.ttaxcodevs1[i].Description || '-',
+                region: data.ttaxcodevs1[i].RegionName || '-',
+                rate: taxRate || '-',
+                isUSTax: data.ttaxcodevs1[i].Lines ? true : false,
+                lines: data.ttaxcodevs1[i].Lines || [],
+            };
+            dataTableList.push(dataList);
+        }
+        templateObject.transactiondatatablerecords.set(dataTableList);
+        // if (templateObject.transactiondatatablerecords.get()) {
+        //     Meteor.call(
+        //         "readPrefMethod",
+        //         localStorage.getItem("mycloudLogonID"),
+        //         "taxRatesList",
+        //         function(error, result) {
+        //             if (error) {} else {
+        //                 if (result) {
+        //                     for (let i = 0; i < result.customFields.length; i++) {
+        //                         let customcolumn = result.customFields;
+        //                         let columData = customcolumn[i].label;
+        //                         let columHeaderUpdate = customcolumn[i].thclass.replace(
+        //                             / /g,
+        //                             "."
+        //                         );
+        //                         let hiddenColumn = customcolumn[i].hidden;
+        //                         let columnClass = columHeaderUpdate.split(".")[1];
+        //                         let columnWidth = customcolumn[i].width;
+        //                         let columnindex = customcolumn[i].index + 1;
+
+        //                         if (hiddenColumn == true) {
+        //                             $("." + columnClass + "").addClass("hiddenColumn");
+        //                             $("." + columnClass + "").removeClass("showColumn");
+        //                         } else if (hiddenColumn == false) {
+        //                             $("." + columnClass + "").removeClass("hiddenColumn");
+        //                             $("." + columnClass + "").addClass("showColumn");
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     );
+        //     setTimeout(function() {
+        //         MakeNegative();
+        //     }, 100);
+        // }
+        $(".fullScreenSpin").css("display", "none");
+        $("#taxRatesList").DataTable({
+            columnDefs: [
+                { type: "date", targets: 0 },
+                { orderable: false, targets: -1 },
+            ],
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [{
+                    extend: 'excelHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "taxratelist_" + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ":visible",
+                    },
+                },
+                {
+                    extend: "print",
+                    download: "open",
+                    className: "btntabletopdf hiddenColumn",
+                    text: "",
+                    title: "Tax Rate List",
+                    filename: "taxratelist_" + moment().format(),
+                    exportOptions: {
+                        columns: ":visible",
+                    },
+                    // bStateSave: true,
+                    // rowId: 0,
+                    // pageLength: 25,
+                    paging: false,
+                    //                      "scrollY": "400px",
+                    //                      "scrollCollapse": true,
+                    info: true,
+                    responsive: true,
+                    "order": [
+                        [0, "asc"]
+                    ],
+                    action: function() {
+                        $('#taxRatesList').DataTable().ajax.reload();
+                    },
+                },
+                {
+                    extend: "print",
+                    download: "open",
+                    className: "btntabletopdf hiddenColumn",
+                    text: "",
+                    title: "Tax Rate List",
+                    filename: "taxratelist_" + moment().format(),
+                    exportOptions: {
+                        columns: ":visible",
+                    },
+                },
+            ],
+            select: true,
+            destroy: true,
+            colReorder: {
+                fixedColumnsRight: 1,
+            },
+            paging: false,
+            info: true,
+            responsive: true,
+            order: [
+                [0, "asc"]
+            ],
+            action: function() {
+                $("#taxRatesList").DataTable().ajax.reload();
+            },
+            fnDrawCallback: function(oSettings) {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            },
+        })
+        .on("column-reorder", function() {})
+        .on("length.dt", function(e, settings, len) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        });
+        $(".fullScreenSpin").css("display", "none");
+        var columns = $("#taxRatesList th");
+        let sWidth = "";
+        let columVisible = false;
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if (v.className.includes("hiddenColumn")) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace("px", "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || "",
+                sWidth: sWidth || "",
+                sIndex: v.cellIndex || "",
+                sVisible: columVisible || false,
+                sClass: v.className || "",
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -14381,6 +14575,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getFixedAssetTypeData();
     } else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetList();
+    } else if (currenttablename === 'taxRatesList'){
+        templateObject.getTaxRates();
     }
     
     tableResize();

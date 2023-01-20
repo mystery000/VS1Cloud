@@ -1,9 +1,9 @@
-import { Meteor, fetch } from "meteor/meteor";
+import { Meteor } from "meteor/meteor";
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
 import { OrganisationService } from "../js/organisation-service";
 import { CountryService } from "../js/country-service";
-import { TaxRateService } from "../settings/settings-service";
+import { TaxRateService } from "../settings/settings-service.js";
 import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
 import { PurchaseBoardService } from "../js/purchase-service";
@@ -12,7 +12,6 @@ import Employee from "../js/Api/Model/Employee";
 import { AccountService } from "../accounts/account-service";
 import "jquery-editable-select";
 import { ContactService } from "../contacts/contact-service";
-import ApiService from "../js/Api/Module/ApiService";
 import XLSX from 'xlsx';
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import '../lib/global/utBarcodeConst.js';
@@ -33,10 +32,7 @@ const utilityService = new UtilityService();
 const refreshTableTimout = 300;
 
 let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
-/**
- * This will get the TCompanyInfo
- * @returns {Object}
- */
+
 export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
@@ -73,13 +69,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
     });
 };
 
-
-/**
- *
- * @returns {boolean} true / false
- */
 export const isSetupFinished  = async () => {
-
   const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if (isFinished == true || isFinished == "true") {
     return true;
@@ -116,13 +106,6 @@ function getCurrentStep(onNaN = 1) {
   return parseInt(step);
 }
 
-function setCurrentStep(stepId = 1) {
-  if (isNaN(stepId)) return false;
-  let templateObject = Template.instance();
-  templateObject.currentStep.set(stepId);
-  return localStorage.setItem("VS1Cloud_SETUP_STEP", parseInt(stepId));
-}
-
 function getConfirmedSteps() {
   return (
     localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || JSON.stringify([])
@@ -143,11 +126,6 @@ function addConfirmedStep(step) {
   }
 }
 
-/**
- *
- * @param {integer} stepId
- * @returns {boolean}
- */
 function isConfirmedStep(stepId) {
   if (isNaN(stepId)) return false;
   let steps = getConfirmedSteps();
@@ -174,21 +152,11 @@ function setSkippedSteps(steps = []) {
   return localStorage.setItem("VS1Cloud_SETUP_SKIPPED_STEP", JSON.stringify(steps));
 }
 
-/**
- *
- * @param {integer} stepId
- * @returns {boolean}
- */
 function isStepSkipped(stepId) {
   let steps = getSkippedSteps();
   return steps.includes(stepId);
 }
 
-/**
- * This function will check if the link is clickable or not
- * @param {*} stepId
- * @returns
- */
 function isClickableStep(stepId) {
   const confirmedSteps = getConfirmedSteps();
   const skippedSteps = getSkippedSteps();
@@ -198,56 +166,15 @@ function isClickableStep(stepId) {
   return false;
 }
 
-function setSetupFinished() {
-  return localStorage.setItem("IS_SETUP_FINISHED", true);
-}
-
-
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.currentStep = new ReactiveVar(1);
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
   templateObject.skippedSteps = new ReactiveVar([]);
-
-  // Step 1 Variables
-  templateObject.iscompanyemail = new ReactiveVar();
-  templateObject.iscompanyemail.set(false);
-  templateObject.paAddress1 = new ReactiveVar();
-  templateObject.paAddress2 = new ReactiveVar();
-  templateObject.paAddress3 = new ReactiveVar();
-  templateObject.phAddress1 = new ReactiveVar();
-  templateObject.phAddress2 = new ReactiveVar();
-  templateObject.phAddress3 = new ReactiveVar();
-  templateObject.fieldLength = new ReactiveVar();
-  templateObject.imageFileData = new ReactiveVar();
-  templateObject.countryList = new ReactiveVar([]);
-  templateObject.countryData = new ReactiveVar();
-
-  templateObject.showSkype = new ReactiveVar();
-  templateObject.showMob = new ReactiveVar();
-  templateObject.showFax = new ReactiveVar();
-  templateObject.showLinkedIn = new ReactiveVar();
-  templateObject.phCity = new ReactiveVar();
-  templateObject.phState = new ReactiveVar();
-  templateObject.phCountry = new ReactiveVar();
-  templateObject.phCode = new ReactiveVar();
-  templateObject.phAttention = new ReactiveVar();
-
-  templateObject.samePhysicalAddress1 = new ReactiveVar();
-  templateObject.samePhysicalAddress2 = new ReactiveVar();
-  templateObject.samePhysicalAddress3 = new ReactiveVar();
-
-  templateObject.isSameAddress = new ReactiveVar();
-  templateObject.isSameAddress.set(false);
-
-  templateObject.iscompanyemail = new ReactiveVar();
-  templateObject.iscompanyemail.set(false);
-
   // Step 2 variables
   templateObject.taxRates = new ReactiveVar([]);
   // templateObject.taxRatesHeaders = new ReactiveVar([]);
-
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.defaultpurchasetaxcode = new ReactiveVar();
@@ -319,33 +246,32 @@ Template.setup.onCreated(() => {
 
   // Step 7 variables
   templateObject.customerList = new ReactiveVar([]);
-  // templateObject.customerListHeaders = new ReactiveVar([]);
 
   // Step 8 variables
   templateObject.supplierList = new ReactiveVar([]);
-  // templateObject.supplierListHeaders = new ReactiveVar([]);
 
   // Step 9 variables
   templateObject.inventoryList = new ReactiveVar([]);
+
+  templateObject.setCurrentStep = (stepId = 1) => {
+    if (isNaN(stepId)) return false;
+    let templateObject = Template.instance();
+    templateObject.currentStep.set(stepId);
+    return localStorage.setItem("VS1Cloud_SETUP_STEP", parseInt(stepId));
+  }
 });
 
 Template.setup.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
 
-
-  /**
-   * This function will autoredirect to dashboard if setup is finished
-   */
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
-
     if (isFinished == true || isFinished == "true") {
       FlowRouter.go("dashboard");
     }
   };
 
-  //templateObject.isSetupFinished();
   // Get step local storage variable and set step
   const currentStep = getCurrentStep();
   templateObject.loadSteps = () => {
@@ -395,8 +321,6 @@ Template.setup.onRendered(function () {
   if (currentStep !== null) {
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
-    // $(".setup-step").css("display", "none");
-
     let confirmedSteps =
       localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
     for (let i = 0; i < currentStep; i++) {
@@ -406,15 +330,10 @@ Template.setup.onRendered(function () {
         $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass(
           "clickDisabled"
         );
-      } else {
-        // we need to ADD clickDisabled
       }
     }
     if (currentStep !== numberOfSteps) {
-      // $(".setup-step-" + currentStep).css("display", "block");
       $(`.setup-stepper li:nth-child(${currentStep})`).addClass("current");
-    } else {
-      // $(".setup-complete").css("display", "block");
     }
   }
 
@@ -457,54 +376,12 @@ Template.setup.onRendered(function () {
     // window.location.href = "/";
     FlowRouter.go("dashboard");
   };
-
-  //templateObject.setSetupFinished();
   $( function() {
     $( ".resizablePopup" ).resizable();
   } );
   // Step 1 Render functionalities
   let countries = [];
   var countryService = new CountryService();
-
-
-  let imageData = localStorage.getItem("Image");
-  if (imageData) {
-    $(".setup-step-1 .uploadedImageLogo").attr("src", imageData);
-    $(".setup-step-1 .uploadedImageLogo").attr("width", "160");
-    $(".setup-step-1 .uploadedImageLogo").attr("height", "50%");
-  }
-
-  templateObject.getCountryData = () => {
-    getVS1Data("TCountries")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          countryService.getCountry().then((data) => {
-            for (let i = 0; i < data.tcountries.length; i++) {
-              countries.push(data.tcountries[i].Country);
-            }
-            countries.sort((a, b) => a.localeCompare(b));
-            templateObject.countryData.set(countries);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tcountries;
-          for (let i = 0; i < useData.length; i++) {
-            countries.push(useData[i].Country);
-          }
-          countries.sort((a, b) => a.localeCompare(b));
-          templateObject.countryData.set(countries);
-        }
-      })
-      .catch(function (err) {
-        countryService.getCountry().then((data) => {
-          for (let i = 0; i < data.tcountries.length; i++) {
-            countries.push(data.tcountries[i].Country);
-          }
-          countries.sort((a, b) => a.localeCompare(b));
-          templateObject.countryData.set(countries);
-        });
-      });
-  };
 
   // Step 2 Render functionalities
   let taxRateService = new TaxRateService();
@@ -546,8 +423,6 @@ Template.setup.onRendered(function () {
   templateObject.loadTaxRates = async () => {
     LoadingOverlay.show();
 
-    let tableHeaderList = [];
-    let _taxRatesHeaders = [];
     let dataObject = await getVS1Data("TTaxcodeVS1");
     let regionName = "Australia";
     const dataListRet = await organisationService.getOrganisationDetail();
@@ -597,8 +472,6 @@ Template.setup.onRendered(function () {
                   );
                   let hiddenColumn = customcolumn[i].hidden;
                   let columnClass = columHeaderUpdate.split(".")[1];
-                  let columnWidth = customcolumn[i].width;
-                  let columnindex = customcolumn[i].index + 1;
 
                   if (hiddenColumn == true) {
                     $("." + columnClass + "").addClass("hiddenColumn");
@@ -639,16 +512,11 @@ Template.setup.onRendered(function () {
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             select: true,
             destroy: true,
-            // colReorder: true,
             colReorder: {
               fixedColumnsRight: 1,
             },
-            // bStateSave: true,
-            // rowId: 0,
             pageLength: 25,
             paging: true,
-            //                      "scrollY": "400px",
-            //                      "scrollCollapse": true,
             info: true,
             responsive: true,
             "order": [0, 'asc' ],
@@ -681,8 +549,6 @@ Template.setup.onRendered(function () {
 
     LoadingOverlay.hide();
   };
-
-  //templateObject.loadTaxRates();
 
   // STEP 3
   let dataTableListPaymentMethod = [];
@@ -721,11 +587,8 @@ Template.setup.onRendered(function () {
           taxRateService
             .getPaymentMethodVS1()
             .then(function (data) {
-              let lineItems = [];
-              let lineItemObj = {};
               let dataTableListPaymentMethod = []
               for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
                 var dataList = {
                   id: data.tpaymentmethodvs1[i].fields.ID || "",
                   paymentmethodname:
@@ -733,9 +596,7 @@ Template.setup.onRendered(function () {
                   iscreditcard:
                     data.tpaymentmethodvs1[i].fields.IsCreditCard || "false",
                 };
-
                 dataTableListPaymentMethod.push(dataList);
-                //}
               }
 
               templateObject.paymentmethoddatatablerecords.set(
@@ -753,14 +614,11 @@ Template.setup.onRendered(function () {
                       if (result) {
                         for (let i = 0; i < result.customFields.length; i++) {
                           let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
                           let columHeaderUpdate = customcolumn[
                             i
                           ].thclass.replace(/ /g, ".");
                           let hiddenColumn = customcolumn[i].hidden;
                           let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
 
                           if (hiddenColumn == true) {
                             $("." + columnClass + "").addClass("hiddenColumn");
@@ -884,12 +742,8 @@ Template.setup.onRendered(function () {
               // }, 10);
 
               var columns = $("#paymentmethodList th");
-              let sTible = "";
               let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
               let columVisible = false;
-              let sClass = "";
               let tableHeaderListPaymentMethod = []
               $.each(columns, function (i, v) {
                 if (v.hidden == false) {
@@ -917,26 +771,19 @@ Template.setup.onRendered(function () {
               );
             })
             .catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
               LoadingOverlay.hide();
-              // Meteor._reload.reload();
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.tpaymentmethodvs1;
-          let lineItems = [];
-          let lineItemObj = {};
           let dataTableListPaymentMethod = []
           for (let i = 0; i < useData.length; i++) {
-            // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
             var dataList = {
               id: useData[i].fields.ID || "",
               paymentmethodname: useData[i].fields.PaymentMethodName || "",
               iscreditcard: useData[i].fields.IsCreditCard || "false",
             };
-
             dataTableListPaymentMethod.push(dataList);
-            //}
           }
 
           templateObject.paymentmethoddatatablerecords.set(
@@ -954,15 +801,12 @@ Template.setup.onRendered(function () {
                   if (result) {
                     for (let i = 0; i < result.customFields.length; i++) {
                       let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
                       let columHeaderUpdate = customcolumn[i].thclass.replace(
                         / /g,
                         "."
                       );
                       let hiddenColumn = customcolumn[i].hidden;
                       let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
 
                       if (hiddenColumn == true) {
                         $("." + columnClass + "").addClass("hiddenColumn");
@@ -1117,7 +961,6 @@ Template.setup.onRendered(function () {
             let lineItems = [];
             let lineItemObj = {};
             for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-              // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
               var dataList = {
                 id: data.tpaymentmethodvs1[i].fields.ID || "",
                 paymentmethodname: data.tpaymentmethodvs1[i].fields.PaymentMethodName || "",
@@ -4245,7 +4088,7 @@ function goToNextStep(
 ) {
   isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
   stepId = stepId + 1;
-  setCurrentStep(stepId);
+  templateObject.setCurrentStep(stepId);
   $(".setup-step").removeClass("show");
   $(`.setup-step-${stepId}`).addClass("show");
 
@@ -4258,7 +4101,7 @@ Template.setup.events({
     $(`[data-step-id=1]`).parents("li").addClass("current");
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
-    setCurrentStep(1);
+    templateObject.setCurrentStep(1);
     templateObject.loadSteps();
   },
   "click .confirmBtn": (event, templateObject) => {
@@ -4294,37 +4137,18 @@ Template.setup.events({
   "click .btnBack": (event, templateObject) => {
     playCancelAudio();
     setTimeout(function(){
-    LoadingOverlay.show();
-    let skippedSteps = templateObject.skippedSteps.get();
-    let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-
-    goToNextStep(stepId, false, (step) => {
-      templateObject.lazyLoader(step);
-    });
-    //addSkippedStep(stepId);
-
-    // stepId = stepId + 1;
-    // $(".setup-step").css("display", "none");
-    // $(`.setup-step-${stepId}`).css("display", "block");
-
-    // $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
-    // $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
-    // $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
-    // if (stepId !== numberOfSteps) {
-    //   $(".setup-step-" + stepId).css("display", "block");
-    // } else {
-    //   $(".setup-complete").css("display", "flex");
-    // }
-    // let _steps = templateObject.steps.get();
-    // _steps.skippedSteps.push(stepId);
-
-    if (!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
-    templateObject.skippedSteps.set(skippedSteps);
-
-    //setCurrentStep(stepId);
-    templateObject.loadSteps();
-    window.scrollTo(0, 0);
-    LoadingOverlay.hide();
+      console.log("click back!")
+      LoadingOverlay.show();
+      let skippedSteps = templateObject.skippedSteps.get();
+      let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
+      goToNextStep(stepId, false, (step) => {
+        templateObject.lazyLoader(step);
+      });
+      if (!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
+      templateObject.skippedSteps.set(skippedSteps);
+      templateObject.loadSteps();
+      window.scrollTo(0, 0);
+      LoadingOverlay.hide();
     }, delayTimeAfterSound);
   },
   "click .gotToStepID": (event, templateObj) => {
@@ -4343,7 +4167,7 @@ Template.setup.events({
     // } else {
     //   $(".setup-complete").css("display", "flex");
     // }
-    setCurrentStep(stepId);
+    templateObj.setCurrentStep(stepId);
     templateObj.loadSteps();
     templateObj.lazyLoader(stepId);
   },
@@ -4354,110 +4178,11 @@ Template.setup.events({
 
   // TODO: Step 1
   // Organization setting Events
-  "click #chkIsDefailtEmail": function (event) {
-    let templateObj = Template.instance();
-    if ($(event.target).is(":checked")) {
-      templateObj.iscompanyemail.set(true);
-    } else {
-      templateObj.iscompanyemail.set(false);
-    }
-  },
-  "click #chksameaddress": function (event) {
-    const templateObject = Template.instance();
-    //templateObject.showPoAddress.set(!templateObject.showPoAddress.get());
-    //let hideAddressData = templateObject.showPoAddress.get();
-    if ($(event.target).is(":checked")) {
-      document.getElementById("show_address_data").style.display = "none";
-    } else {
-      document.getElementById("show_address_data").style.display = "block";
-    }
-  },
   "click #edtCountry": async function (event) {
     await clearData('TTaxcodeVS1');
   },
-  "keyup #postaladdress": function (event) {
-    let templateObject = Template.instance();
-    var text = document.getElementById("postaladdress").value;
-    var lines = text.split("\n");
-    var arrArr = text.split("\n");
-    let add = "";
-    for (let i = 0; i < arrArr.length; i++) {
-      if (!arrArr[i]) {
-        lines.splice(i, 1);
-      }
-    }
-    templateObject.paAddress1.set(lines[0] ? lines[0] : "");
-    templateObject.paAddress2.set(lines[1] ? lines[1] : "");
-    if (lines.length > 3) {
-      for (let i = 2; i < arrArr.length; i++) {
-        add += lines[i] + " ";
-      }
-      templateObject.paAddress3.set(add ? add : "");
-    } else {
-      templateObject.paAddress3.set(lines[2] ? lines[2] : "");
-    }
-  },
-  "keyup #physicaladdress": function (event) {
-    let templateObject = Template.instance();
-    let text = document.getElementById("physicaladdress").value;
-    let address = text.split("\n");
-    let arrArr = text.split("\n");
-    let add = "";
-    for (let i = 0; i < arrArr.length; i++) {
-      if (!arrArr[i]) {
-        address.splice(i, 1);
-      }
-    }
-    templateObject.phAddress1.set(address[0] ? address[0] : "");
-    templateObject.phAddress2.set(address[1] ? address[1] : "");
-    if (address.length > 3) {
-      for (let i = 2; i < arrArr.length; i++) {
-        add += address[i] + " ";
-      }
-      templateObject.phAddress3.set(add ? add : "");
-    } else {
-      templateObject.phAddress3.set(address[2] ? address[2] : "");
-    }
-  },
-  "click .setup-step-1 #uploadImg": function (event) {
-    //let imageData= (localStorage.getItem("Image"));
-    let templateObject = Template.instance();
-    let imageData = templateObject.imageFileData.get();
-    if (imageData != null && imageData != "") {
-      localStorage.setItem("Image", imageData);
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-      $("#removeLogo").show();
-      $("#changeLogo").show();
-    }
-  },
-  "change .setup-step-1 #fileInput": function (event) {
-    let templateObject = Template.instance();
-    let selectedFile = event.target.files[0];
-    let reader = new FileReader();
-    $(".setup-step-1 .Choose_file").text("");
-    reader.onload = function (event) {
-      $(".setup-step-1 #uploadImg").prop("disabled", false);
-      $(".setup-step-1 #uploadImg").addClass("on-upload-logo");
-      $(".setup-step-1 .Choose_file").text(selectedFile.name);
-      // $("#uploadImg").css("background-color","yellow");
-      templateObject.imageFileData.set(event.target.result);
-      // localStorage.setItem("organisation-logo-tmp",event.target.result);
-    };
-    reader.readAsDataURL(selectedFile);
-  },
-  "click .setup-step-1 #removeLogo": function (event) {
-    let templateObject = Template.instance();
-    templateObject.imageFileData.set(null);
-    localStorage.removeItem("Image");
-    // location.reload();
-    Meteor._reload.reload();
-    //window.open('/organisationsettings','_self');
-    //Router.current().render(Template.organisationSettings);
-  },
-  "click .setup-step-1 .btnUploadLogoImgFile": (event) => {
-    $(".setup-step-1 #fileInput").trigger("click");
-  },
+
+
 
   // TODO: Step 2
   // Active Tax Rates
@@ -9903,10 +9628,6 @@ Template.setup.helpers({
   },
   steps: () => {
     return Template.instance().steps.get();
-  },
-  // Step 1 helpers
-  countryList: () => {
-    return Template.instance().countryData.get();
   },
 
   // Step 2 helpers
