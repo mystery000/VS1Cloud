@@ -589,7 +589,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             } else if ((currentLoc == "/inventorylist") || (currentLoc == '/productview') ||
                 (currentLoc == "/stockadjustmentcard") ||
                 (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
@@ -4487,7 +4487,22 @@ Template.newsidenav.onRendered(function() {
     }
 
     templateObject.getAllTExpenseClaimExData = function() {
-        sideBarService.getAllExpenseCliamExDataVS1().then(function(data) {
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if ((currentBeginDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+        } else {
+            fromDateMonth = (currentBeginDate.getMonth() + 1);
+        }
+
+        if (currentBeginDate.getDate() < 10) {
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(3, 'months')).format("YYYY-MM-DD");
+        sideBarService.getExpenseClaimList(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
             countObjectTimes++;
             progressPercentage = (countObjectTimes * 100) / allDataToLoad;
             $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);

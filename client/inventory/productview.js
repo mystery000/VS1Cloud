@@ -6,12 +6,10 @@ import { CoreService } from '../js/core-service';
 import { AccountService } from "../accounts/account-service";
 import { PurchaseBoardService } from '../js/purchase-service';
 import { UtilityService } from "../utility-service";
-import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 // import '../vs1_templates/recentTransactionTable/recentTransactionTable.js';
-import '../vs1_templates/non_transactional_list/non_transactional_list.js';
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { cloneDeep } from 'lodash';
@@ -68,6 +66,8 @@ Template.productview.onCreated(() => {
 
 Template.productview.onRendered(function() {
     $('.fullScreenSpin').css('display', 'inline-block');
+    document.getElementById('newProcessModal').removeChild(document.getElementById('newProcessModal').children[1])
+    // $('.newProcessModal')[0].removeChild($('.newProcessModal')[0].children[1]);
     let templateObject = Template.instance();
 
     let purchaseService = new PurchaseBoardService();
@@ -568,7 +568,8 @@ Template.productview.onRendered(function() {
                                                $('.fullScreenSpin').css('display', 'none');
                                                // Meteor._reload.reload();
                                            });
-                                       } else {
+                                       } 
+                                       else {
                                            let data = JSON.parse(dataObject[0].data);
                                            let useData = data.taccountvs1;
                                            let lineItems = [];
@@ -1312,10 +1313,11 @@ Template.productview.onRendered(function() {
                     if (splashArrayAccountList) {
 
                         if (splashArrayAccountList) {
-                            var datatable = $('#tblAccount').DataTable();
-                            datatable.clear();
-                            datatable.rows.add(splashArrayAccountList);
-                            datatable.draw(false);
+                            //here have one
+                            // var datatable = $('#tblAccount').DataTable();
+                            // datatable.clear();
+                            // datatable.rows.add(splashArrayAccountList);
+                            // datatable.draw(false);
                             $('#accountListModal').modal('toggle');
                         }
 
@@ -1353,11 +1355,14 @@ Template.productview.onRendered(function() {
                 }
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
                 if (splashArrayAccountList) {
-                    var datatable = $('#tblAccount').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(splashArrayAccountList);
-                    datatable.draw(false);
+                    //account datatable redraw
+                    // console.log('datatable redraw')
+                    // var datatable = $('#tblAccount').DataTable();
+                    // datatable.clear();
+                    // datatable.rows.add(splashArrayAccountList);
+                    // datatable.draw(false);
                     $('#accountListModal').modal('toggle');
+                    // console.log('modal shown');
                 }
             }
         }).catch(function(err) {
@@ -1393,10 +1398,10 @@ Template.productview.onRendered(function() {
 
                 if (splashArrayAccountList) {
                     if (splashArrayAccountList) {
-                        var datatable = $('#tblAccount').DataTable();
-                        datatable.clear();
-                        datatable.rows.add(splashArrayAccountList);
-                        datatable.draw(false);
+                        // var datatable = $('#tblAccount').DataTable();
+                        // datatable.clear();
+                        // datatable.rows.add(splashArrayAccountList);
+                        // datatable.draw(false);
                         $('#accountListModal').modal('toggle');
                     }
 
@@ -1408,6 +1413,7 @@ Template.productview.onRendered(function() {
 
     templateObject.getAccountNames = function() {
         getVS1Data('TAccountVS1').then(function(dataObject) {
+            // console.log(dataObject);
             if (dataObject.length == 0) {
                 productService.getAccountName().then(function(data) {
 
@@ -1839,8 +1845,8 @@ Template.productview.onRendered(function() {
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
         templateObject.getDepartments();
-        templateObject.getClientTypeData();
-    }, 500);
+        //templateObject.getClientTypeData();
+    }, 1000);
 
     let isInventory = localStorage.getItem('CloudInventoryModule');
     if (isInventory) {
@@ -4053,9 +4059,9 @@ Template.productview.onRendered(function() {
         let productrecord = '';
         setTimeout(async function() {
           await templateObject.setEditableSelect();
-            $("#sltsalesacount").val("Sales");
-            $("#sltcogsaccount").val("Cost of Goods Sold");
-            $("#sltinventoryacount").val("Inventory Asset");
+            $('.colSalesAccount:first').find("#sltsalesacount").val("Sales");
+            $('.colCOGSaccount').find("#sltcogsaccount").val("Cost of Goods Sold");
+            $('#trackdiv').find("#sltinventoryacount").val("Inventory Asset");
             $("#sltCustomerType").val("Default");
         }, 1000);
         productrecord = {

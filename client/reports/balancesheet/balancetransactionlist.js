@@ -2,6 +2,11 @@ import {ReportService} from "../report-service";
 import {SalesBoardService} from '../../js/sales-service';
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
+
+import { Template } from 'meteor/templating';
+import './balancetransactionlist.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 Template.balancetransactionlist.onCreated(function(){

@@ -1664,7 +1664,9 @@ Template.receiptsoverview.onRendered(function () {
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
                 });
-                
+                let pf5 =(supplier_name != "" || supplier_name != undefined || supplier_name != null) ? supplier_name.slice(0, 5) : "";
+                $('#tblSupplierlist_filter input').val(pf5);
+                $('.btnRefreshSupplier').trigger('click');
                 if (!isExistSupplier) {
                     contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
                         if (data.tsupplier.length == 0) {
@@ -1697,9 +1699,6 @@ Template.receiptsoverview.onRendered(function () {
                             };
                         } else {
                             $('.fullScreenSpin').css('display', 'none');
-                            let pf5 =(supplier_name != "" || supplier_name != undefined || supplier_name != null) ? supplier_name.slice(0, 5) : "";
-                            $('#tblSupplierlist_filter input').val(pf5);
-                            $('.btnRefreshSupplier').trigger('click');
                             $('#supplierListModal').modal('toggle');
                             $(parentElement + ' .merchants').val(supplier_name);
                             $(parentElement + ' .merchants').attr('data-id', data.tsupplier[0].fields.ID);

@@ -1,11 +1,11 @@
 // import "../vs1_templates/loggedcompanyoverview/loggedcompanyoverview.html";
 // import "../vs1_templates/loggedcompanyoverview/loggedcompanyoverview.js";
-import "../accounts/accountlistpop.html";
-import "../accounts/accountlistpop.js";
+// import "../accounts/accountlistpop.html";
+// import "../accounts/accountlistpop.js";
 
 import "./fixedassetoverview.html";
-import "./modal/fixedassettype/fixedassettypelistpop.html";
-import "./modal/fixedassettype/fixedassettypelistpop.js";
+// import "./modal/fixedassettype/fixedassettypelistpop.html";
+// import "./modal/fixedassettype/fixedassettypelistpop.js";
 
 import "./fixedassetlist.html";
 import "./components/fixedassetlistpop/fixedassetlistpop.html";

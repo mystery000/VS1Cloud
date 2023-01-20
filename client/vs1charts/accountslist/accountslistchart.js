@@ -10,6 +10,11 @@ import { ProductService } from "../../product/product-service";
 import "../../lib/global/indexdbstorage.js";
 import XLSX from "xlsx";
 import { ReceiptService } from "../../receipts/receipt-service";
+
+import { Template } from 'meteor/templating';
+import './accountslistchart.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();

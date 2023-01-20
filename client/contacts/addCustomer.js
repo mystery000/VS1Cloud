@@ -72,6 +72,15 @@ Template.customerscard.onCreated(function() {
     templateObject.favorite_projects = new ReactiveVar([]);
     templateObject.tprojectlist = new ReactiveVar([]);
     templateObject.taskrecords = new ReactiveVar([]);
+
+    templateObject.checkedAppointments = new ReactiveVar();
+    templateObject.checkedAppointments.set(false);
+    templateObject.checkedQuotes = new ReactiveVar();
+    templateObject.checkedQuotes.set(false);
+    templateObject.checkedSalesOrders = new ReactiveVar();
+    templateObject.checkedSalesOrders.set(false);
+    templateObject.checkedInvoices = new ReactiveVar();
+    templateObject.checkedInvoices.set(true);
 });
 
 Template.customerscard.onRendered(function() {
@@ -4956,6 +4965,18 @@ Template.customerscard.helpers({
             amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
         }
         return utilityService.modifynegativeCurrencyFormat(amount) || 0.00;
+    },
+    checkedAppointments: () => {
+        return Template.instance().checkedAppointments.get();
+    },
+    checkedQuotes: () => {
+        return Template.instance().checkedQuotes.get();
+    },
+    checkedSalesOrders: () => {
+        return Template.instance().checkedSalesOrders.get();
+    },
+    checkedInvoices: () => {
+        return Template.instance().checkedInvoices.get();
     },
 });
 

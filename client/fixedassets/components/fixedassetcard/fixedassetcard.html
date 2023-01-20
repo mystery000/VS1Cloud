@@ -50,7 +50,7 @@
 
               </h1>
           </div>
-          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+          <!-- <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div> -->
           <div class="col-12 col-md-4">
               <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
                       class="icon ion-android-more-horizontal"></i></a>
@@ -163,7 +163,7 @@
                   <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Supplier</label>
-                      <input type="text" class="form-control" id="edtRegistrationNo" name="edtRegistrationNo">
+                      <input type="text" class="form-control" id="edtSupplierName" name="edtSupplierName">
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
@@ -194,105 +194,6 @@
                   </div>
                   
                 </div>
-
-                <!-- <div class="row" style="margin: 4px 12px;">
-                  <div class="col-12" style="padding: 0;">
-                    <h4 style="margin: 4px;">Purchase Info</h4>
-                  </div>
-                </div>
-                <div class="row" style="margin: 4px 12px;">
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Date of Purchase</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Depreciation Start Date</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtDescriptionStartDate"
-                          name="edtDescriptionStartDate">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Purchase Price</label><input type="text"
-                        class="form-control" id="edtPurchasePrice" name="edtPurchasePrice"></div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Bought From</label><input type="text"
-                        class="form-control" id="edtBoughtFrom" name="edtBoughtFrom"></div>
-                  </div>
-                </div> -->
-
-                <!-- <div class="row" style="margin: 4px 12px;">
-                  <div class="col-12" style="padding: 0;">
-                    <h4 style="margin: 4px;">Asset Info</h4>
-                  </div>
-                </div>
-                <div class="row" style="margin: 12px;">
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Room/Location</label><input type="text"
-                        class="form-control" id="edtRoomLocation" name="edtRoomLocation"></div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Department</label><input type="text"
-                        class="form-control" id="edtDepartment" name="edtDepartment"></div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Last Time Date</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtLastTimeDate" name="edtLastTimeDate">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Next Time Date</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtNextTimeDate" name="edtNextTimeDate">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-
-                <!-- <div class="row" style="margin: 12px;">
-                  <div class="col-6" style="padding: 0;">
-                    <div class="table-responsive">
-                      <table id="tblFixedAssetDepartment" name="tblFixedAssetDepartment"
-                        class="dataTable table table-hover table-striped table-bordered tblFixedAssetDepartment">
-                        <thead>
-                          <tr class="dasnd-moved">
-                            <th class="th">Department</th>
-                            <th class="th">Cost %</th>
-                            <th class="th">Depreciation %</th>
-                            <th class="th">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="dnd-moved" style="cursor: pointer;">
-                            <td contenteditable="false">Default</td>
-                            <td contenteditable="false">100%</td>
-                            <td contenteditable="false">100%</td>
-                            <td contenteditable="false"></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div> -->
               </div>
 
               <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec"
@@ -466,8 +367,8 @@
           <h4>Fixed Asset Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">×</span></button>
         </div>
-        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
-          {{> fixedassettypelistpop}}
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
+          {{> non_transactional_list tablename = "tblFixedAssetType"}}
         </div>
         <div class="modal-footer">
           <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
@@ -476,11 +377,20 @@
     </div>
   </div>
 
-  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeListModal">
-    {{ >fixedassettypepopup}}
-  </div> -->
-
-  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-    {{> accountlistpop}}
+  <div class="modal fade" role="dialog" tabindex="-1" id="supplierListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Supplier List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
+          {{> non_transactional_list tablename="tblSupplierlist"}}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

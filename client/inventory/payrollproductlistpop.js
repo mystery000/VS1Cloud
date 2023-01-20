@@ -810,7 +810,13 @@ Template.payrollproductlistpop.events({
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $('#scanBarcodeModalProduct').modal('toggle');
       } else {
-          Bert.alert('<strong>Please Note:</strong> This function is only available on mobile devices!', 'now-dangerorange');
+        swal({
+            title: "Please Note:",
+            text: 'This function is only available on mobile devices!',
+            type: 'warning',
+        }).then((result) => {
+
+        });
       }
   },
   'click .btnCloseProdModal': function(event) {

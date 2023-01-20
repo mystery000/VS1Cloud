@@ -1,7 +1,7 @@
 import { BaseService } from "../js/base-service.js";
 export class CRMService extends BaseService {
     getAllTaskList(EnteredByID = '') {
-        let options = {
+        var options = {
             ListType: "Detail",
             select: "pt.Active=true"
         };
@@ -18,7 +18,7 @@ export class CRMService extends BaseService {
     }
 
     getAllTasksByTaskName(TaskName = '') {
-        let options = {
+        var options = {
             ListType: "Detail",
             select: "pt.Active=true"
         };
@@ -32,7 +32,7 @@ export class CRMService extends BaseService {
     }
 
     getAllTasksByContactName(ContactName = '') {
-        let options = {
+        var options = {
             ListType: "Detail",
             select: "pt.Active=true"
         };
@@ -46,7 +46,7 @@ export class CRMService extends BaseService {
     }
 
     getAllAppointments(ClientName = '') {
-        let options = {
+        var options = {
             ListType: 'Detail',
             select: "[Active]=true"
         };
@@ -76,7 +76,7 @@ export class CRMService extends BaseService {
     }
 
     getTProjectList(EnteredByID = '') {
-        let options = {
+        var options = {
             ListType: "Detail",
             select: "[Active]=true"
         };
@@ -107,7 +107,7 @@ export class CRMService extends BaseService {
     }
 
     getAllLabels(EnteredByID = '') {
-        let options = {
+        var options = {
             ListType: "Detail",
             select: "[Active]=true"
         };
@@ -160,7 +160,7 @@ export class CRMService extends BaseService {
     }
 
     getAllLeads(fromDate) {
-        options = {
+        let options = {
             ListType: "Detail",
             select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true and [CreationDate]>'" + fromDate + "'",
         };
