@@ -1,6 +1,9 @@
 import { Template } from 'meteor/templating';
+import { Mongo } from 'meteor/mongo';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+CloudUser = new Mongo.Collection("cloudUser");
 
 var activityTimeout = setTimeout(inActive, 1800000);
 var sidebarTimeout = setTimeout(closeSideBar, 3000);
