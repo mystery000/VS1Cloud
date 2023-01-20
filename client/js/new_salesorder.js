@@ -9151,19 +9151,20 @@ Template.new_salesorder.events({
       };
     }, delayTimeAfterSound);
   },
-  'click #btnCopyToInvoice': async function () {
+  'click #btnCopyInvoice': async function () {
     playCopyAudio();
     let salesService = new SalesBoardService();
     let i = 0;
     setTimeout(async function () {
       $("#basedOnFrequency").prop('checked', true);
+      $("#formCheck-monday").prop('checked', true);
       $('#edtFrequencyDetail').css('display', 'flex');
       $(".ofMonthList input[type=checkbox]").each(function () {
         $(this).prop('checked', false);
       });
-      $(".selectDays input[type=checkbox]").each(function () {
-        $(this).prop('checked', false);
-      });
+      // $(".selectDays input[type=checkbox]").each(function () {
+      //   $(this).prop('checked', false);
+      // });
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentInvoice = getso_id[getso_id.length - 1];
@@ -9595,7 +9596,7 @@ Template.new_salesorder.events({
         productService.getProductStatus(selectedProductName).then(function (data) {
           LoadingOverlay.hide();
           if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-            swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+            swal('', 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
             event.preventDefault();
             return false;
           } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
@@ -9694,7 +9695,7 @@ Template.new_salesorder.events({
         productService.getProductStatus(selectedProductName).then(function (data) {
           LoadingOverlay.hide();
           if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-            swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+            swal('', 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
             event.preventDefault();
             return false;
           } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {

@@ -71,11 +71,11 @@ Template.customerscard.onCreated(function () {
   templateObject.taskrecords = new ReactiveVar([]);
 
   templateObject.checkedAppointments = new ReactiveVar();
-  templateObject.checkedAppointments.set(true);
+  templateObject.checkedAppointments.set(false);
   templateObject.checkedQuotes = new ReactiveVar();
-  templateObject.checkedQuotes.set(true);
+  templateObject.checkedQuotes.set(false);
   templateObject.checkedSalesOrders = new ReactiveVar();
-  templateObject.checkedSalesOrders.set(true);
+  templateObject.checkedSalesOrders.set(false);
   templateObject.checkedInvoices = new ReactiveVar();
   templateObject.checkedInvoices.set(true);
 
@@ -1088,7 +1088,7 @@ Template.customerscard.onCreated(function () {
       });
     });
   };
-  
+
   function setTermsDataVS1(data) {
     let terms = [];
     for (let i = 0; i < data.ttermsvs1.length; i++) {
@@ -1527,7 +1527,6 @@ Template.customerscard.onCreated(function () {
         contactService.getAllCustomerSideDataVS1().then(function (data) {
           templateObject.setAllCustomerSideDataVS1(data);
         }).catch(function (err) {
-          console.log("Err:", err)
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
@@ -1537,7 +1536,6 @@ Template.customerscard.onCreated(function () {
       contactService.getAllCustomerSideDataVS1().then(function (data) {
         templateObject.setAllCustomerSideDataVS1(data);
       }).catch(function (err) {
-        console.log("Err:", err)
       });
     });
   };
@@ -1763,7 +1761,7 @@ Template.customerscard.onRendered(function () {
         }
       }
     }
-    
+
     function setClientType(data, clientTypeDataName) {
       for (let i in data.tclienttype) {
         if (data.tclienttype.hasOwnProperty(i)) {
@@ -1777,7 +1775,7 @@ Template.customerscard.onRendered(function () {
       $('.fullScreenSpin').css('display', 'none');
       $('#myModalClientType').modal('toggle');
     }
-    
+
     function editableCustomerType(e, $each, offset, clientTypeDataName) {
       $('#edtClientTypeID').val('');
       $('#edtClientTypeName').val('');
@@ -2596,7 +2594,7 @@ Template.customerscard.events({
         }).then((result) => {
           if (result.value) {
             $('#edtCustomerCompany').focus();
-          } 
+          }
         });
 
         e.preventDefault();
@@ -2611,7 +2609,7 @@ Template.customerscard.events({
         }).then((result) => {
           if (result.value) {
             $('#edtFirstName').focus();
-          } 
+          }
         });
         e.preventDefault();
         return false;
@@ -2916,7 +2914,7 @@ Template.customerscard.events({
         }).catch(function (err) {
 
         });
-       
+
       }).catch(function (err) {
         swal({
           title: 'Oooops...',

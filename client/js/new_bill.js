@@ -5708,7 +5708,7 @@ Template.billcard.events({
               $("#frequencyModal").modal('toggle');
           }
       },
-    'click #btnCopyBill': function() {
+    'click #btnCopyInvoice': function() {
         playCopyAudio();
         let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
