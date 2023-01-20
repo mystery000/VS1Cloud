@@ -568,7 +568,7 @@ Template.productview.onRendered(function() {
                                                $('.fullScreenSpin').css('display', 'none');
                                                // Meteor._reload.reload();
                                            });
-                                       } 
+                                       }
                                        else {
                                            let data = JSON.parse(dataObject[0].data);
                                            let useData = data.taccountvs1;
@@ -1356,13 +1356,11 @@ Template.productview.onRendered(function() {
                 //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
                 if (splashArrayAccountList) {
                     //account datatable redraw
-                    // console.log('datatable redraw')
                     // var datatable = $('#tblAccount').DataTable();
                     // datatable.clear();
                     // datatable.rows.add(splashArrayAccountList);
                     // datatable.draw(false);
                     $('#accountListModal').modal('toggle');
-                    // console.log('modal shown');
                 }
             }
         }).catch(function(err) {
@@ -1413,7 +1411,6 @@ Template.productview.onRendered(function() {
 
     templateObject.getAccountNames = function() {
         getVS1Data('TAccountVS1').then(function(dataObject) {
-            // console.log(dataObject);
             if (dataObject.length == 0) {
                 productService.getAccountName().then(function(data) {
 
@@ -4410,7 +4407,7 @@ Template.productview.events({
         templateObject.getAllProductRecentTransactions();
     },
     'click .lblPriceEx': function(event) {
-        
+
         $(event.target).removeClass('showColumn');
         $(event.target).addClass('hiddenColumn');
         // $('.lblPriceEx').addClass('hiddenColumn');
@@ -4491,12 +4488,12 @@ Template.productview.events({
         isShowRecentTrans = $('.product_recent_trans')[0].style.display;
         if(isShowRecentTrans == 'none')
         {
-            $('.product_recent_trans').show();   
+            $('.product_recent_trans').show();
         }
         else
         {
             $('.product_recent_trans').hide();
-            
+
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -5863,7 +5860,7 @@ Template.productview.events({
                 $('.fullScreenSpin').css('display', 'none');
                 return false;
             }
-        
+
 
             let  objDetails= {
                 Caption: mainProductName,
