@@ -131,10 +131,32 @@
                               </div>
                 {{/if}}
                 {{#if includeStockAdjustment}}
-                    <button class="btn btnNav btn-primary btnStockAdjustment vs1ButtonMargin" id="btnStockAdjustment" type="button" ><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button>
+                    <!-- <button class="btn btnNav btn-primary btnStockAdjustment vs1ButtonMargin" id="btnStockAdjustment" type="button" ><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button> -->
+                    <div class="btn-group btnNav vs1ButtonMargin" >
+                        <a class="btn btn-primary btnStockAdjustment" role="button" href="/stockadjustmentoverview" id="btnStockAdjustment"
+                            name="btnStockAdjustment">Stock Adjustments</a>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                            aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item btnStockAdjustment" role="presentation" href="/stockadjustmentoverview">Stock Adjustment List</a>
+                            <a class="dropdown-item" role="presentation" href="/stockadjustmentcard" id="newStockadjust"
+                                name="newStockadjust">+ New Stock Adjustment</a>
+                        </div>
+                    </div>
                 {{/if}}
                 {{#if includeStockTransfer}}
-                    <button class="btn btnNav btn-primary btnStockTrans vs1ButtonMargin" id="btnStockTrans" type="button" ><i class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button>
+                    <!-- <button class="btn btnNav btn-primary btnStockTrans vs1ButtonMargin" id="btnStockTrans" type="button" ><i class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button> -->
+                    <div class="btn-group btnNav vs1ButtonMargin" >
+                        <a class="btn btn-primary btnStockTrans" role="button" href="/stocktransferlist" id="btnStockTrans"
+                            name="btnStockTrans">Stock Transfers</a>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                            aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu" role="menu">
+                            <a class="dropdown-item btnStockTrans" role="presentation" href="/stocktransferlist">Stock Transfer List</a>
+                            <a class="dropdown-item" role="presentation" href="/stocktransfercard" id="newStocktransfer"
+                                name="newStocktransfer">+ New Stock Transfer</a>
+                        </div>
+                    </div>
                 {{/if}}
                 {{#if equals isSNTrackchecked true}}
 
@@ -577,16 +599,135 @@
                 </div>
             </div>
             <!-- End -->
-            {{#if dataProductList}}
-                {{>productTable productList=dataProductList columns=columnData fields=displayfields}}
-            {{/if}}
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
+
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
+
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
+
+                    .hiddenColumn {
+                        display: none;
+                    }
+
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
+
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
+
+                    /* .searchInput {
+                    display: block;
+                    width: 100%;
+                    height: calc(1.5em + .75rem + 2px);
+                    padding: .375rem .75rem;
+                    font-size: 1rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: rgb(110 112 126);
+                    background-color: rgb(255 255 255);
+                    background-clip: padding-box;
+                    border: 1px solid rgb(209 211 226);
+                    border-radius: .35rem;
+                    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+                    } */
+
+                </style>
+                <!-- <div class="form-group" style="margin: 16px;margin-left: 8px;">
+        <label>Search:</label>
+        <input type="search" class="searchInput" autocomplete="off" id="myInputSearch" name="myInputSearch">
+        </div> -->
+                <!-- <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="dataTables_filter">
+                            <label style="display: flex;">Search:<input type="search" class="searchInput" placeholder="" aria-controls="tblInventoryOverview" autocomplete="off" id="myInputSearch" name="myInputSearch" style="margin-left: 0.5em;"></label>
+                        </div>
+                    </div>
+                </div> -->
+
+                <style>
+                    .lblPriceEx,
+                    .lblCostEx {
+                        color: #00a3d3;
+                    }
+
+                    .lblPriceInc,
+                    .lblCostInc {
+                        color: #17a673;
+                    }
+
+                    .fa-trans {
+                        -ms-transform: rotate(180deg);
+                        transform: rotate(180deg);
+                    }
+
+                    .lblPriceEx,
+                    .lblPriceInc,
+                    .lblCostEx,
+                    .lblCostInc {
+                        cursor: pointer;
+                        -webkit-touch-callout: none;
+                        -webkit-user-select: none;
+                        -khtml-user-select: none;
+                        -moz-user-select: none;
+                        -ms-user-select: none;
+                        user-select: none;
+                    }
+
+                    /* .showColumn {
+                        display: inline-block !important;
+                        padding: 0px !important;
+                    } */
+
+                    input.showColumn {
+                        padding: 12px !important;
+                    }
+
+                    .colCostPrice {
+                        width: 130px !important;
+                        color: #00a3d3;
+                    }
+
+                    .colCostPriceInc {
+                        width: 135px !important;
+                        color: #17a673;
+                    }
+
+                    .colSalePrice {
+                        width: 130px !important;
+                        color: #00a3d3;
+                    }
+
+                    .colSalePriceInc {
+                        width: 135px !important;
+                        color: #17a673;
+                    }
+                </style>
+                {{>non_transactional_list tablename="tblInventoryOverview"}}
+
         </div>
     </div>
-
-    <!-- {{> onBackOrderPopUp}}
-    {{> onSalesOrderPopUp}}
-    {{> onOrderPopUp}}
-    {{> recentTransactionPopUp}} -->
+</div>
+{{#if productID}}
+    {{> recentTransactionPopUp productID=productID type=transtype}}
+{{/if}}
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

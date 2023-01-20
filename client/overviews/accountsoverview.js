@@ -1,6 +1,4 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { CoreService } from "../js/core-service.js";
-import { EmployeeProfileService } from "../js/profile-service.js";
 import { AccountService } from "../accounts/account-service.js";
 import { UtilityService } from "../utility-service.js";
 import { ProductService } from "../product/product-service.js";
@@ -17,7 +15,6 @@ import { ReceiptService } from "../receipts/receipt-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
-let organisationService = new OrganisationService();
 Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
@@ -386,7 +383,7 @@ Template.accountsoverview.onRendered(function() {
         setTimeout(function() {
             $(".isBankAccount").addClass("isNotBankAccount");
             $(".isCreditAccount").addClass("isNotCreditAccount");
-            $("#addNewAccount").modal("show");
+            $("#addNewAccountModal").modal("show");
             //$('#btnAddNewAccounts').click();
         }, 500);
     }
@@ -891,7 +888,7 @@ Template.accountsoverview.onRendered(function() {
         $("#expenseCategory").val(expenseCategory);
 
         setTimeout(function() {
-            $("#addNewAccount").modal("show");
+            $("#addNewAccountModal").modal("show");
         }, 500);
     }
 
@@ -1169,6 +1166,7 @@ Template.accountsoverview.onRendered(function() {
                     var accountno = $(event.target).closest("tr").find(".colAccountNo").text() || "";
                     var taxcode = $(event.target).closest("tr").find(".colTaxCode").text() || "";
                     var accountdesc = $(event.target).closest("tr").find(".colDescription").text() || "";
+
                     var bankaccountname = $(event.target).closest("tr").find(".colBankAccountName").text() || "";
                     var bankname = localStorage.getItem("vs1companyBankName") || $(event.target).closest("tr").find(".colBankName").text() || "";
                     var bankbsb = $(event.target).closest("tr").find(".colBSB").text() || "";
@@ -1236,7 +1234,7 @@ Template.accountsoverview.onRendered(function() {
                     let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
                     $("#expenseCategory").val(category);
 
-                    $(this).closest("tr").attr("data-target", "#addNewAccount");
+                    $(this).closest("tr").attr("data-target", "#addNewAccountModal");
                     $(this).closest("tr").attr("data-toggle", "modal");
                 }
 

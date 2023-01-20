@@ -4,7 +4,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <label class="productIDOnRT" style="display: none;">{{productID}}</label>
-                    <h4><span class="productNameOnRT"></span> - Recent Transactions</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    <h4 id="transTitle">
+                        </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                     </button>
                     <!-- <div class="fullScreenSpin" style="display:none;">
                         <div class="spinner"></div>
@@ -18,7 +19,10 @@
                         </div>
                         <div class="col-12 product_recent_trans" style="display:block; margin-top: 16px;">
                             <h3>Recent Transactions</h3>
-                            {{>recentTransactionTable productID=productID type="all"}}
+                            <!-- {{>recentTransactionTable productID=productID type="all"}} -->
+                            {{#if productID}}
+                            {{>non_transactional_list tablename="productrecentlist" type=type productID = productID}}
+                            {{/if}}
                         </div>
                     </div>
                     

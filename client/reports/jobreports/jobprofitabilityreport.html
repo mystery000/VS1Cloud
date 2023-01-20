@@ -1,5 +1,5 @@
-<template name="jobprofitabilityreport"> 
-  {{# vs1_report_template tabledisplayname="Job Profitability Report" tablename="jobprofitabilityreport" dateAsAt=dateAsAt}} 
+<template name="jobprofitabilityreport">
+  {{# vs1_report_template tabledisplayname="Job Profitability Report" tablename="jobprofitabilityreport" dateAsAt=dateAsAt}}
     <div class="table-responsive">
       <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
         <thead>
@@ -11,8 +11,7 @@
                     {{/if}}
                 {{/each}}
             {{/if}}
-
-        </tr>
+            </tr>
           <!-- <tr class="table-active customDoubleTableHeading">
             <th>Company</th>
             <th>Job Name</th>
@@ -57,7 +56,7 @@
                   {{/if}}
                 {{/each}}
                 <th></th>
-          
+
                 {{#each c in currencyList }}
                   {{# if c.active}}
                     <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
@@ -74,9 +73,9 @@
 
 
               {{/if}}
-            
 
-          
+
+
 
             </tr>
           {{/if}} -->

@@ -3,8 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
 import { OrganisationService } from "../../js/organisation-service";
 import '../../lib/global/indexdbstorage.js';
-
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './tax-rates.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -50,7 +48,7 @@ Template.taxRatesSettings.onCreated(function() {
 });
 
 Template.taxRatesSettings.onRendered(function() {
-    $('.fullScreenSpin').css('display', 'inline-block');
+    // $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
 // Inactive Tax Button Change

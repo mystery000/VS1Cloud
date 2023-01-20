@@ -9,6 +9,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Template } from 'meteor/templating';
 import "./organisation.html";
 import _ from "lodash";
+// 
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1661,7 +1662,7 @@ Template.organisationsettings.events({
       $("#chkusregiontax").prop("checked", false);
       swal(
         "Ooops...",
-        "Can't alter country as the entire VS1 Database are set to this region.",
+        "Can't Alter Country Once the Database Is Set.",
         "error"
       );
       $(event.target).val("United States");

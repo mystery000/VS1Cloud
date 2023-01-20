@@ -1334,16 +1334,17 @@ Template.receiptsoverview.onRendered(function () {
     templateObject.getSuppliers = function () {
         accountService.getSupplierVS1().then(function (data) {
             let lineItems = [];
-            for (let i in data.tsuppliervs1) {
+            for (let i=0; i<data.tsuppliervs1.length; i++) {
                 if (data.tsuppliervs1.hasOwnProperty(i)) {
-                    let lineItem = {
-                        supplierid: data.tsuppliervs1[i].Id || ' ',
-                        suppliername: data.tsuppliervs1[i].ClientName || ' ',
-                        billingAddress: data.tsuppliervs[i].ClientName + "\n" + data.tsuppliervs[i].BillStreet + "\n" + data.tsuppliervs[i].BillStreet2 + "\n" + data.tsuppliervs[i].BillState + "\n" +
-                            data.tsuppliervs[i].BillPostcode + "\n" + data.tsuppliervs[i].Billcountry
-                    };
-                    lineItems.push(lineItem);
                 }
+                let lineItem = {
+                    supplierid: data.tsuppliervs1[i].Id || ' ',
+                    suppliername: data.tsuppliervs1[i].ClientName || ' '
+                    // ,
+                    // billingAddress: data.tsuppliervs[i].ClientName + "\n" + data.tsuppliervs[i].BillStreet + "\n" + data.tsuppliervs[i].BillStreet2 + "\n" + data.tsuppliervs[i].BillState + "\n" +
+                    //     data.tsuppliervs[i].BillPostcode + "\n" + data.tsuppliervs[i].Billcountry
+                };
+                lineItems.push(lineItem);
             }
             templateObject.suppliers.set(lineItems);
         }).catch(function (err) {
@@ -1599,7 +1600,6 @@ Template.receiptsoverview.onRendered(function () {
     templateObject.getOCRResultFromImage = function (imageData, fileName) {
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function (data) {
-
             let from = $('#employeeListModal').attr('data-from');
             let paymenttype = data.payment_type;
             let transactionTypeName = "Cash";
@@ -1664,14 +1664,14 @@ Template.receiptsoverview.onRendered(function () {
                         $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
                 });
-                
+                let pf5 =(supplier_name != "" || supplier_name != undefined || supplier_name != null) ? supplier_name.slice(0, 5) : "";
+                $('#tblSupplierlist_filter input').val(pf5);
+                $('.btnRefreshSupplier').trigger('click');
                 if (!isExistSupplier) {
                     contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
                         if (data.tsupplier.length == 0) {
                             // create supplier with vendor data
                             $('.fullScreenSpin').css('display', 'none');
-                            $('#supplierListModal').modal('toggle');
-
                             receiptData = {
                                 type: "TSupplier",
                                 fields: {
@@ -1696,8 +1696,10 @@ Template.receiptsoverview.onRendered(function () {
                                     PublishOnVS1: true,
                                     Notes: vendor_type
                                 }
-                            };                            
+                            };
                         } else {
+                            $('.fullScreenSpin').css('display', 'none');
+                            $('#supplierListModal').modal('toggle');
                             $(parentElement + ' .merchants').val(supplier_name);
                             $(parentElement + ' .merchants').attr('data-id', data.tsupplier[0].fields.ID);
                             const suppliers = templateObject.suppliers.get();
@@ -1713,6 +1715,7 @@ Template.receiptsoverview.onRendered(function () {
                     });
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
+                    $('#supplierListModal').modal('toggle');
                 }
             } else {
                 swal({

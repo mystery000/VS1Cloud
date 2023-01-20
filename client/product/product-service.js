@@ -201,7 +201,7 @@ export class ProductService extends BaseService {
 
     getProductRecentTransactionsAll(productID) {
         let options = {
-            select: "[ProductID]='" + productID + "'",
+            select: productID == "all" ? "" : ("[ProductID]='" + productID + "'") ,
             PropertyList: "TransactionDate,ProductName,FirstColumn,SecondColumn,ThirdColumn,Qty,TotalCost,ProductID,ClassID,TransactionNo,AverageCost,Cost,Available,InStock,so,invbo,pobo,onbuild,building,Price,TotalPrice,ExtraDesc,TranstypeDesc,Deptname",
             OrderBy: "TransactionDate DESC"
         };
@@ -430,6 +430,7 @@ export class ProductService extends BaseService {
         if (limitcount == "All") {
             options = {
                 ListType: "Detail",
+                select: "[ProcStepItemRef]='vs1BOM'",
                 // orderby: '"Description asc"',
             };
         } else {
@@ -438,9 +439,28 @@ export class ProductService extends BaseService {
                 ListType: "Detail",
                 LimitCount: parseInt(limitcount),
                 LimitFrom: parseInt(limitfrom),
+                select: "[ProcStepItemRef]='vs1BOM'",
             };
         }
         return this.getList(this.ERPObjects.TProcTree, options);
+    }
+
+    getOneBOMProductByName(productname) {
+        let options = {
+            ListType: 'Detail',
+            LimitCount: 1,
+            select: "[Caption]='"+productname+"' and [ProcStepItemRef]='vs1BOM'"
+        }
+        return this.getList(this.ERPObjects.TProcTree, options);
+    }
+
+    getOneBOMProductByID(id) {
+        let options = {
+            ListType: 'Detail',
+            LimitCount: 1,
+            select: "[ID]="+id+" and [ProcStepItemRef]='vs1BOM'"
+        }
+        return this.getList(this.ERPObjects.TProcTree, options)
     }
 
     saveBOMProduct(data) {

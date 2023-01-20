@@ -25,6 +25,11 @@ import moment from "moment";
 import Datehandler from "../DateHandler";
 import PayRunHandler from "../js/ObjectManager/PayRunHandler";
 import TableHandler from "../js/Table/TableHandler";
+import { Template } from "meteor/templating";
+import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import './payrolloverview.html';
+import '../overviews/Modal/AddPayRunModal.html';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -140,7 +145,7 @@ Template.payrolloverview.onRendered(function () {
         ],
         select: true,
         destroy: true,
-        colReorder: true,
+        // colReorder: true,
         colReorder: {
           fixedColumnsRight: 1
         },
@@ -226,7 +231,7 @@ Template.payrolloverview.onRendered(function () {
         ],
         select: true,
         destroy: true,
-        colReorder: true,
+        // colReorder: true,
         colReorder: {
           fixedColumnsRight: 1
         },
@@ -295,157 +300,157 @@ Template.payrolloverview.onRendered(function () {
 
     // TODO: Datable jquery to be added
 
-    setTimeout(() => {
+    // setTimeout(() => {
 
-      $("#tblTimeSheet").DataTable({
-        columnDefs: [
-          {
-            orderable: false,
-            targets: -1
-          }
-        ],
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        buttons: [
-          {
-            extend: "excelHtml5",
-            text: "",
-            download: "open",
-            className: "btntabletocsv hiddenColumn",
-            filename: "timesheets_" + moment().format(),
-            orientation: "portrait",
-            exportOptions: {
-              columns: ":visible"
-            }
-          }, {
-            extend: "print",
-            download: "open",
-            className: "btntabletopdf hiddenColumn",
-            text: "",
-            title: "Timesheets",
-            filename: "timesheets_" + moment().format(),
-            exportOptions: {
-              columns: ":visible"
-            }
-          }
-        ],
-        select: true,
-        destroy: true,
-        colReorder: true,
-        lengthMenu: [
-          [
-            25, -1
-          ],
-          [
-            25, "All"
-          ]
-        ],
-        // bStateSave: true,
-        // rowId: 0,
-        paging: true,
-        info: true,
-        responsive: true,
-        order: [
-          [0, "asc"]
-        ],
-        action: function () {
-          $("#tblTimeSheet").DataTable().ajax.reload();
-        },fnDrawCallback: function (oSettings) {
-          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //   $("#tblTimeSheet").DataTable({
+    //     columnDefs: [
+    //       {
+    //         orderable: false,
+    //         targets: -1
+    //       }
+    //     ],
+    //     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //     buttons: [
+    //       {
+    //         extend: "excelHtml5",
+    //         text: "",
+    //         download: "open",
+    //         className: "btntabletocsv hiddenColumn",
+    //         filename: "timesheets_" + moment().format(),
+    //         orientation: "portrait",
+    //         exportOptions: {
+    //           columns: ":visible"
+    //         }
+    //       }, {
+    //         extend: "print",
+    //         download: "open",
+    //         className: "btntabletopdf hiddenColumn",
+    //         text: "",
+    //         title: "Timesheets",
+    //         filename: "timesheets_" + moment().format(),
+    //         exportOptions: {
+    //           columns: ":visible"
+    //         }
+    //       }
+    //     ],
+    //     select: true,
+    //     destroy: true,
+    //     colReorder: true,
+    //     lengthMenu: [
+    //       [
+    //         25, -1
+    //       ],
+    //       [
+    //         25, "All"
+    //       ]
+    //     ],
+    //     // bStateSave: true,
+    //     // rowId: 0,
+    //     paging: true,
+    //     info: true,
+    //     responsive: true,
+    //     order: [
+    //       [0, "asc"]
+    //     ],
+    //     action: function () {
+    //       $("#tblTimeSheet").DataTable().ajax.reload();
+    //     },fnDrawCallback: function (oSettings) {
+    //       let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
-          $(".paginate_button.page-item").removeClass("disabled");
-          $("#tblJournalList_ellipsis").addClass("disabled");
+    //       $(".paginate_button.page-item").removeClass("disabled");
+    //       $("#tblJournalList_ellipsis").addClass("disabled");
 
-          if (oSettings._iDisplayLength == -1) {
-            if (oSettings.fnRecordsDisplay() > 150) {
-              $(".paginate_button.page-item.previous").addClass("disabled");
-              $(".paginate_button.page-item.next").addClass("disabled");
-            }
-          } else {}
-          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            $(".paginate_button.page-item.next").addClass("disabled");
-          }
+    //       if (oSettings._iDisplayLength == -1) {
+    //         if (oSettings.fnRecordsDisplay() > 150) {
+    //           $(".paginate_button.page-item.previous").addClass("disabled");
+    //           $(".paginate_button.page-item.next").addClass("disabled");
+    //         }
+    //       } else {}
+    //       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //         $(".paginate_button.page-item.next").addClass("disabled");
+    //       }
 
-          $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
-            $(".fullScreenSpin").css("display", "inline-block");
-            let dataLenght = oSettings._iDisplayLength;
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    //       $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+    //         $(".fullScreenSpin").css("display", "inline-block");
+    //         let dataLenght = oSettings._iDisplayLength;
+    //         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (
-            dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (
-            dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-            if (data.Params.IgnoreDates == true) {
-              sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                getVS1Data("TJournalEntryList").then(function (dataObjectold) {
-                  if (dataObjectold.length == 0) {} else {
-                    let dataOld = JSON.parse(dataObjectold[0].data);
+    //         let formatDateFrom = dateFrom.getFullYear() + "-" + (
+    //         dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //         let formatDateTo = dateTo.getFullYear() + "-" + (
+    //         dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //         if (data.Params.IgnoreDates == true) {
+    //           sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //             getVS1Data("TJournalEntryList").then(function (dataObjectold) {
+    //               if (dataObjectold.length == 0) {} else {
+    //                 let dataOld = JSON.parse(dataObjectold[0].data);
 
-                    var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-                    let objCombineData = {
-                      Params: dataOld.Params,
-                      tjournalentrylist: thirdaryData
-                    };
+    //                 var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
+    //                 let objCombineData = {
+    //                   Params: dataOld.Params,
+    //                   tjournalentrylist: thirdaryData
+    //                 };
 
-                    addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
-                      templateObject.resetData(objCombineData);
-                      LoadingOverlay.hide();
-                    }).catch(function (err) {
-                      LoadingOverlay.hide();
-                    });
-                  }
-                }).catch(function (err) {});
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-            } else {
-              sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                getVS1Data("TJournalEntryList").then(function (dataObjectold) {
-                  if (dataObjectold.length == 0) {} else {
-                    let dataOld = JSON.parse(dataObjectold[0].data);
+    //                 addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                   templateObject.resetData(objCombineData);
+    //                   LoadingOverlay.hide();
+    //                 }).catch(function (err) {
+    //                   LoadingOverlay.hide();
+    //                 });
+    //               }
+    //             }).catch(function (err) {});
+    //           }).catch(function (err) {
+    //             LoadingOverlay.hide();
+    //           });
+    //         } else {
+    //           sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //             getVS1Data("TJournalEntryList").then(function (dataObjectold) {
+    //               if (dataObjectold.length == 0) {} else {
+    //                 let dataOld = JSON.parse(dataObjectold[0].data);
 
-                    var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
-                    let objCombineData = {
-                      Params: dataOld.Params,
-                      tjournalentrylist: thirdaryData
-                    };
+    //                 var thirdaryData = $.merge($.merge([], dataObjectnew.tjournalentrylist), dataOld.tjournalentrylist);
+    //                 let objCombineData = {
+    //                   Params: dataOld.Params,
+    //                   tjournalentrylist: thirdaryData
+    //                 };
 
-                    addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
-                      templateObject.resetData(objCombineData);
-                      LoadingOverlay.hide();
-                    }).catch(function (err) {
-                      LoadingOverlay.hide();
-                    });
-                  }
-                }).catch(function (err) {});
-              }).catch(function (err) {
-                LoadingOverlay.hide();
-              });
-            }
-          });
+    //                 addVS1Data("TJournalEntryList", JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                   templateObject.resetData(objCombineData);
+    //                   LoadingOverlay.hide();
+    //                 }).catch(function (err) {
+    //                   LoadingOverlay.hide();
+    //                 });
+    //               }
+    //             }).catch(function (err) {});
+    //           }).catch(function (err) {
+    //             LoadingOverlay.hide();
+    //           });
+    //         }
+    //       });
 
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        },
-        fnInitComplete: function () {
-            setTimeout(function() {
-            $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
-          }, 3500);
-        },
-        language: {
-          search: "",
-          searchPlaceholder: "Search List..."
-        },
-        fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-          let countTableData = data.Params.Count || 0; //get count from API data
+    //       setTimeout(function () {
+    //         MakeNegative();
+    //       }, 100);
+    //     },
+    //     fnInitComplete: function () {
+    //         setTimeout(function() {
+    //         $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+    //       }, 3500);
+    //     },
+    //     language: {
+    //       search: "",
+    //       searchPlaceholder: "Search List..."
+    //     },
+    //     fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //       let countTableData = data.Params.Count || 0; //get count from API data
 
-          return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
-        }
+    //       return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
+    //     }
 
-      })
+    //   })
 
-    }, 500);
+    // }, 500);
 
   },
 
@@ -2208,7 +2213,7 @@ Template.payrolloverview.onRendered(function () {
   // templateObject.getJobs();
 
   templateObject.getAllProductData = function () {
-    productList = [];
+    let productList = [];
     templateObject.datatablerecords1.set([]);
     var splashArrayProductServiceList = new Array();
     //  $('#product-list').editableSelect('clear');
@@ -4638,7 +4643,7 @@ Template.payrolloverview.events({
                 contactService
                   .saveClockTimeSheet(updateTimeSheet)
                   .then(function (savedTimesheetData) {
-                    sideBarService.getAlltimeSheetList().then(function (data) {
+                    sideBarService.getAllTimeSheetList().then(function (data) {
                       addVS1Data("TTimeSheet", JSON.stringify(data));
                       setTimeout(function () {
                         templateObject.checkAccessSaveRedirect();
@@ -5042,7 +5047,7 @@ Template.payrolloverview.events({
       if (Array.isArray(clockList[clockList.length - 1].timelog)) {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog[
             clockList[clockList.length - 1].timelog.length - 1
           ].fields.ID || "";
@@ -5055,7 +5060,7 @@ Template.payrolloverview.events({
       } else {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog.fields.ID || "";
         checkStartTime =
           clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
@@ -5200,7 +5205,7 @@ Template.payrolloverview.events({
           };
           isPaused = "completed";
         } else if (checkEndTime != "") {
-          aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
+          let aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
         }
       } else {
         obj = {
@@ -5282,7 +5287,7 @@ Template.payrolloverview.events({
         .saveTimeSheet(data)
         .then(function (dataReturnRes) {
           $("#updateID").val(dataReturnRes.fields.ID);
-          sideBarService.getAlltimeSheetList().then(function (data) {
+          sideBarService.getAllTimeSheetList().then(function (data) {
             Bert.alert(
               $("#employee_name").val() + " you are now Clocked On",
               "now-success"
@@ -5381,7 +5386,7 @@ Template.payrolloverview.events({
                     .saveTimeSheetLog(updateData)
                     .then(function (data) {
                       sideBarService
-                        .getAlltimeSheetList()
+                        .getAllTimeSheetList()
                         .then(function (data) {
                           addVS1Data("TTimeSheet", JSON.stringify(data));
                           if (showTimesheetStatus == true) {
@@ -5402,7 +5407,7 @@ Template.payrolloverview.events({
               contactService
                 .saveTimeSheetLog(obj)
                 .then(function (data) {
-                  sideBarService.getAlltimeSheetList().then(function (data) {
+                  sideBarService.getAllTimeSheetList().then(function (data) {
                     addVS1Data("TTimeSheet", JSON.stringify(data));
                     setTimeout(function () {
                       if (showTimesheetStatus == true) {
@@ -5420,7 +5425,7 @@ Template.payrolloverview.events({
                 .catch(function (err) {});
             }
           } else {
-            sideBarService.getAlltimeSheetList().then(function (data) {
+            sideBarService.getAllTimeSheetList().then(function (data) {
               addVS1Data("TTimeSheet", JSON.stringify(data));
               if (showTimesheetStatus == true) {
                 setTimeout(function () {
@@ -5493,7 +5498,7 @@ Template.payrolloverview.events({
       if (Array.isArray(clockList[clockList.length - 1].timelog)) {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog[
             clockList[clockList.length - 1].timelog.length - 1
           ].fields.ID || "";
@@ -5506,7 +5511,7 @@ Template.payrolloverview.events({
       } else {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
         TimeSheetHours: clockList[clockList.length - 1].hours || "";
-        latestTimeLogId =
+        let latestTimeLogId =
           clockList[clockList.length - 1].timelog.fields.ID || "";
         checkStartTime =
           clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
@@ -5607,7 +5612,7 @@ Template.payrolloverview.events({
           };
           isPaused = "completed";
         } else if (checkEndTime != "") {
-          aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
+          let aEndDate = moment().format("YYYY-MM-DD") + " " + endTime;
         }
       } else {
         obj = {
@@ -5671,7 +5676,7 @@ Template.payrolloverview.events({
                 Allowedit: true,
                 Logs: obj,
                 Hours: hours || 0.01,
-                Status: status,
+                // Status: status,
                 // OverheadRate: 90,
                 Job: jobName || "",
                 // ServiceName: "Test"|| '',
@@ -5690,7 +5695,7 @@ Template.payrolloverview.events({
       contactService
         .saveTimeSheet(data)
         .then(function (data) {
-          sideBarService.getAlltimeSheetList().then(function (data) {
+          sideBarService.getAllTimeSheetList().then(function (data) {
             addVS1Data("TTimeSheet", JSON.stringify(data));
             if (showTimesheetStatus == true) {
               setTimeout(function () {
@@ -5745,6 +5750,7 @@ Template.payrolloverview.events({
           if (Object.keys(obj).length > 0) {
             if (obj.fields.Description == "Timesheet Processed") {
               let endTime1 = endTime;
+              let toUpdateID;let updateData;
               if (Array.isArray(clockList[clockList.length - 1].timelog)) {
                 toUpdateID =
                   clockList[clockList.length - 1].timelog[
@@ -5770,7 +5776,7 @@ Template.payrolloverview.events({
                     .saveTimeSheetLog(updateData)
                     .then(function (data) {
                       sideBarService
-                        .getAlltimeSheetList()
+                        .getAllTimeSheetList()
                         .then(function (data) {
                           addVS1Data("TTimeSheet", JSON.stringify(data));
                           if (showTimesheetStatus == true) {
@@ -5791,7 +5797,7 @@ Template.payrolloverview.events({
               contactService
                 .saveTimeSheetLog(obj)
                 .then(function (data) {
-                  sideBarService.getAlltimeSheetList().then(function (data) {
+                  sideBarService.getAllTimeSheetList().then(function (data) {
                     addVS1Data("TTimeSheet", JSON.stringify(data));
                     if (showTimesheetStatus == true) {
                       setTimeout(function () {
@@ -5807,7 +5813,7 @@ Template.payrolloverview.events({
                 .catch(function (err) {});
             }
           } else {
-            sideBarService.getAlltimeSheetList().then(function (data) {
+            sideBarService.getAllTimeSheetList().then(function (data) {
               addVS1Data("TTimeSheet", JSON.stringify(data));
               if (showTimesheetStatus == true) {
                 setTimeout(function () {
@@ -6118,10 +6124,6 @@ Template.payrolloverview.events({
       }
     }
   },
-  "click .saveTable": function (event) {
-    let lineItems = [];
-    $("#myModal2").modal("toggle");
-  },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).text();
 
@@ -6332,7 +6334,7 @@ Template.payrolloverview.events({
             contactService
               .saveTimeSheetLog(toUpdate)
               .then(function (data) {
-                sideBarService.getAlltimeSheetList().then(function (data) {
+                sideBarService.getAllTimeSheetList().then(function (data) {
                   addVS1Data("TTimeSheet", JSON.stringify(data));
                   setTimeout(function () {
                     templateObject.checkAccessSaveRedirect();
@@ -6433,7 +6435,7 @@ Template.payrolloverview.events({
           contactService
             .saveTimeSheetUpdate(data)
             .then(function (data) {
-              sideBarService.getAlltimeSheetList().then(function (data) {
+              sideBarService.getAllTimeSheetList().then(function (data) {
                 addVS1Data("TTimeSheet", JSON.stringify(data));
                 setTimeout(function () {
                   templateObject.checkAccessSaveRedirect();
@@ -6511,7 +6513,7 @@ Template.payrolloverview.events({
     //   });
 
     // sideBarService
-    //   .getAlltimeSheetList()
+    //   .getAllTimeSheetList()
     //   .then(function (data) {
     //     addVS1Data("TTimeSheet", JSON.stringify(data));
     //     setTimeout(function () {
@@ -6826,6 +6828,7 @@ Template.payrolloverview.events({
     if(employeId) {
       $('.selector-target').attr('employee-id', employeId);
       $('.selector-target').trigger('change');
+      $('.add-new-timesheet').attr('disabled', false);
     }
     $('.selector-target').removeClass('selector-target');
   },
@@ -6930,7 +6933,7 @@ Template.payrolloverview.helpers({
     return localStorage.getItem("CloudEditTimesheetHours") || false;
   },
   clockOnOff: () => {
-    return localStorage.getItem("CloudClockOnOff") || false;
+    return (localStorage.getItem("CloudClockOnOff") == "true");
   },
   launchClockOnOff: () => {
     return localStorage.getItem("launchClockOnOff") || false;
@@ -6939,7 +6942,7 @@ Template.payrolloverview.helpers({
     return localStorage.getItem("timesheetStartStop ") || false;
   },
   showTimesheet: () => {
-    return localStorage.getItem("CloudShowTimesheet") || false;
+    return (localStorage.getItem("CloudShowTimesheet") == "true");
   },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();

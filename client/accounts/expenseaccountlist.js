@@ -1,17 +1,11 @@
-import {SalesBoardService} from '../js/sales-service';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
 import {AccountService} from "../accounts/account-service";
-import {InvoiceService} from "../invoice/invoice-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
-import {OrganisationService} from '../js/organisation-service';
 import {TaxRateService} from '../settings/settings-service';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './expenseaccountlistpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -271,7 +265,7 @@ Template.expenseaccountlistpop.onRendered(function() {
             });
         });
     };
-    tempObj.getAllExpenseAccounts();
+    // tempObj.getAllExpenseAccounts();
 })
 
 Template.expenseaccountlistpop.helpers({

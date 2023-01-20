@@ -1,8 +1,12 @@
+<!-- 
+    isWizard
+ -->
 <template name="paymentmethodSettings">
     <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
+        {{#unless isWizard}}
         <div class="row">
             <div class="col-12 col-md-4">
                 <h3 class="text-dark mb-4">Payment Methods List
@@ -29,6 +33,7 @@
             </div>
             <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
         </div>
+        {{/unless}}
         <div class="row mb-3">
             <div class="col">
                 <div class="row">

@@ -887,7 +887,7 @@ Template.vatreturn.onRendered(function() {
     }
     setTimeout(function() {
         templateObject.getAllVatReturnData();
-    }, 1000);
+    }, 500);
 
     function MakeNegative() {
         var TDs = document.getElementsByTagName("td");
@@ -1179,14 +1179,6 @@ Template.vatreturn.onRendered(function() {
     setTimeout(function() {
         $(document).ready(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
-            organisationService.getOrganisationDetail().then(function(data) {
-                let mainData = data.tcompanyinfo[0];
-                $("#prt_companyName").html(mainData.CompanyName);
-                $("#prt_companyAddress").html(mainData.Address);
-                $("#prt_companyCity").html(mainData.City);
-                $("#prt_companyZipState").html(mainData.PoState + " " + mainData.Postcode);
-                $("#prt_companyPhoneNumber").html(mainData.PhoneNumber);
-            });
             var url = FlowRouter.current().path;
             if (url.indexOf('?id=') > 0) {
                 var getid = url.split('?id=');
@@ -2043,7 +2035,7 @@ Template.vatreturn.onRendered(function() {
                 }
             });
         });
-    }, 500);
+    }, 50);
 
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDepartment').val($(this).find(".colDeptName").text());

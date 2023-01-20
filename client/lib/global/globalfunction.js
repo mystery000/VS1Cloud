@@ -3,8 +3,10 @@ import '../../lib/global/indexdbstorage.js';
 import '../../lib/global/colResizable.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { Session } from 'meteor/session';
+import { HTTP } from "meteor/http";
 let sideBarService = new SideBarService();
 modalDraggable = function () {
+  //$.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
     $('.modal-dialog').draggable({
         containment: "body",
         "handle":".modal-header, .modal-footer"
@@ -709,7 +711,7 @@ checkSetupFinished = function () {
         username: ERPUsername,
         password: ERPPassword
     };
-    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+  HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
         if (error) {
           // handle error here
         } else {
@@ -751,7 +753,7 @@ checkSetupFinished2 = function () {
         username: ERPUsername,
         password: ERPPassword
     };
-    Meteor.http.call("GET", apiUrl, { headers: _headers }, (error, result) => {
+    HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
         if (error) {
           // handle error here
         } else {
@@ -1222,7 +1224,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       $("#templatePreviewModal .po3").text(object_invoce[0]["pqnumber"]);
       $("#templatePreviewModal .amountdue3").text(object_invoce[0]["bal_due"]);
 
-      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != "")
+      if (object_invoce[0]["duedate"] != "" && object_invoce[0]["duedate"] != undefined)
           $("#templatePreviewModal .due3").text(convertDateFormatForPrint2(object_invoce[0]["duedate"]));
       $("#templatePreviewModal .termdays").text($("#sltTerms").val());
       $("#templatePreviewModal .termdesc").text(localStorage.getItem("ERPTermDesc") || "-");

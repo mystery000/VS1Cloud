@@ -293,11 +293,11 @@ Template.taskDetailModal.events({
                 return;
             }
 
-            let assignId = $('#assignedID').val();
+            let assignId = $('#assignedID').val() || 0;
             let assignName = $('#crmEditSelectEmployeeList').val();
             let assignPhone = $('#contactPhoneUser').val();
             let assignEmail = $('#contactEmailUser').val();
-            let contactID = $('#contactID').val();
+            let contactID = $('#contactID').val() || 0;
             let contactName = $('#crmEditSelectLeadList').val();
             let contactPhone = $('#contactPhoneClient').val();
             let contactEmail = $('#contactEmailClient').val();
@@ -369,7 +369,10 @@ Template.taskDetailModal.events({
                 crmService.getAllTaskList().then(async function(data) {
                     if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                         await addVS1Data("TCRMTaskList", JSON.stringify(data));
-                        Meteor._reload.reload();
+                        if($("#btnRefreshList") != undefined){
+                            $("#btnRefreshList").trigger("click");
+                        }
+                        // Meteor._reload.reload();
                     }
                 }).catch(function(err) {
                     $(".fullScreenSpin").css("display", "none");
@@ -414,7 +417,10 @@ Template.taskDetailModal.events({
                         crmService.getAllTaskList().then(async function(data) {
                             if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                                 await addVS1Data("TCRMTaskList", JSON.stringify(data));
-                                Meteor._reload.reload();
+                                if($("#btnRefreshList") != undefined){
+                                    $("#btnRefreshList").trigger("click");
+                                }
+                                // Meteor._reload.reload();
                             }
                         }).catch(function(err) {
                             $(".fullScreenSpin").css("display", "none");

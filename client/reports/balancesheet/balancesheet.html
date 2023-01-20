@@ -1,13 +1,13 @@
 <template name="balancesheetreport">
     {{# vs1_report_template tabledisplayname="Balance Sheet" tablename="tblBalanceSheet" dateAsAt=dateAsAt
-    currencyList=reset_data}}
+    currencyList = currencyList}}
     <div class="table-responsive">
         <table class="table table-sm tableExportDetailDiv dataTable table-striped table-bordered" id="tblBalanceSheet"
             name="tblBalanceSheet">
             <thead>
                 <tr class="table-active tblAvoid customDoubleTableHeading">
-                    {{#if currencyList}}
-                    {{#each c in currencyList }}
+                    {{#if currencyRecord}}
+                    {{#each c in currencyRecord }}
                     {{# if c.display}}
                     <!-- <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.label }}</th> -->
 

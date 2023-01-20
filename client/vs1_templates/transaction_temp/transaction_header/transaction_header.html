@@ -217,6 +217,7 @@
           {{# if equals cardType 'Sales Order'}}
             {{> customer_selector
               label=getUserLabel
+              value=data.customer
             }}
           {{else}}
           {{> customer_selector
@@ -279,7 +280,7 @@
                 label='Order Number'
                 id='edtOrderNumber'
                 name='edtOrderNumber'
-                value=workorderrecord.salesorderid
+                defaultValue=data.salesorderid
               }}
             </div>
             {{/if}}
@@ -353,6 +354,17 @@
               data=data
             }}
             {{/if}}
+            {{#unless equals poStatus ''}}
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+              {{> default_input
+                label="POStatus"
+                id="sltPOStatus"
+                name="sltPOStatus"
+                readonly=true
+                defaultValue=data.poStatus
+              }}
+            </div>
+            {{/unless}}
           </div>
         </div>
       </div>
@@ -389,6 +401,10 @@
           showCopyTransaction=showCopyTransaction
           showCopyToInvoice=showCopyToInvoice
           showCopyToOrder=showCopyToOrder
+          showQuantityBuild=showQuantityBuild
+          data=data
+          showCompleteProcess=showCompleteProcess
+          showVendorService=showVendorService
         }}
       </div>
     </div>

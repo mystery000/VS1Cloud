@@ -78,8 +78,9 @@ let chartsPlaceList = {
     ],
 
     "Payroll_Overview": [
-        "employeecompletedjobs",
+        "employeeDaysAbsent",
         "clockedOnEmployees",
+        "employeesOnLeave"
     ],
 
     "Purchases_Overview": [
@@ -91,6 +92,11 @@ let chartsPlaceList = {
         "quotedsalesorderinvoicedamounts",
         "top10Customers",
         "resalescomparision",
+    ],
+
+    "CRM_Overview": [
+        "crmleadchart", 
+        "resalescomparision"
     ],
 };
 
@@ -803,7 +809,7 @@ Template.allChartLists.helpers({
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;
-        if (currentLoc == "/accountsoverview") {
+        if (currentLoc == "/accountsoverview" || currentLoc == "/dashboard") {
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;

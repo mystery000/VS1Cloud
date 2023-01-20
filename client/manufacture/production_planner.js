@@ -18,6 +18,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './production_planner.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { cloneDeep } from 'lodash';
 
 Template.production_planner.onCreated(function() {
     const templateObject = Template.instance();
@@ -34,187 +35,6 @@ Template.production_planner.onCreated(function() {
 let manufacturingService = new ManufacturingService();
 Template.production_planner.onRendered(async function() {
     const templateObject = Template.instance();
-
-    let staticWorkorderArray = [
-        {
-            "ID": "989_1",
-            "Customer": "TEST2",
-            "OrderTo": "TEST2\n \n   \nAustralia",
-            "PONumber": "",
-            "SaleDate": new Date(),
-            "DueDate": "19/01/2023",
-            "BOM": {
-                "productName": "just test",
-                "qty": "0.70000",
-                "process": "Painting",
-                "processNote": "",
-                "attachments": [],
-                "subs": [
-                    {
-                        "productName": "helo",
-                        "qty": "0.80000",
-                        "process": "",
-                        "processNote": "",
-                        "attachments": [],
-                        "subs": []
-                    },
-                    {
-                        "productName": "gvjj",
-                        "qty": "0.70000",
-                        "process": "",
-                        "processNote": "",
-                        "attachments": [],
-                        "subs": []
-                    }
-                ],
-                "isBuild": true,
-                "duration": 1.8
-            },
-            "SalesOrderID": "989",
-            "OrderDate": new Date(),
-            "StartTime": new Date(),
-            "Quantity": 1.8199999999999998,
-            "Line": {
-                "Type": "TSalesOrderLine",
-                "fields" :{
-                    "ShipDate": "01/05/2023"
-                }
-            }
-        },
-        {
-            "ID": "989_2",
-            "Customer": "TEST2",
-            "OrderTo": "TEST2\n \n   \nAustralia",
-            "PONumber": "",
-            "SaleDate": new Date(),
-            "DueDate": "19/01/2023",
-            "BOM": {
-                "productName": "maaannn",
-                "qty": "0.46000",
-                "process": "Welding",
-                "processNote": "",
-                "attachments": [],
-                "subs": [
-                    {
-                        "productName": "26",
-                        "qty": "0.64000",
-                        "process": "",
-                        "processNote": "",
-                        "attachments": [],
-                        "subs": []
-                    },
-                    {
-                        "productName": "3434",
-                        "qty": "1.30000",
-                        "process": "",
-                        "processNote": "",
-                        "attachments": [],
-                        "subs": []
-                    }
-                ],
-                "isBuild": true,
-                "duration": 2.4
-            },
-            "SalesOrderID": "989",
-            "OrderDate": new Date(),
-            "StartTime": new Date(),
-            "Quantity": 1.1960000000000002,
-            "Line": {
-                "Type": "TSalesOrderLine",
-                "fields" :{
-                    "ShipDate": "01/05/2023"
-                }
-            }
-
-        },
-        {
-            "ID": "989_3",
-            "Customer": "TEST2",
-            "OrderTo": "TEST2\n \n   \nAustralia",
-            "PONumber": "",
-            "SaleDate": new Date(),
-            "DueDate": "19/01/2023",
-            "BOM": {
-                "productName": "test",
-                "process": "Assembly",
-                "processNote": "",
-                "attachments": [],
-                "subs": [
-                    {
-                        "productName": "just test",
-                        "qty": "0.70000",
-                        "process": "Painting",
-                        "processNote": "",
-                        "attachments": [],
-                        "subs": [
-                            {
-                                "productName": "helo",
-                                "qty": "0.80000",
-                                "process": "",
-                                "processNote": "",
-                                "attachments": [],
-                                "subs": []
-                            },
-                            {
-                                "productName": "gvjj",
-                                "qty": "0.70000",
-                                "process": "",
-                                "processNote": "",
-                                "attachments": [],
-                                "subs": []
-                            }
-                        ],
-                        "isBuild": true,
-                        "duration": 1.8
-                    },
-                    {
-                        "productName": "maaannn",
-                        "qty": "0.46000",
-                        "process": "Painting",
-                        "processNote": "",
-                        "attachments": [],
-                        "subs": [
-                            {
-                                "productName": "26",
-                                "qty": "0.64000",
-                                "process": "",
-                                "processNote": "",
-                                "attachments": [],
-                                "subs": []
-                            },
-                            {
-                                "productName": "3434",
-                                "qty": "1.30000",
-                                "process": "",
-                                "processNote": "",
-                                "attachments": [],
-                                "subs": []
-                            }
-                        ],
-                        "isBuild": true,
-                        "duration": 2.4
-                    }
-                ],
-                "totalQtyInStock": 0,
-                "productDescription": "",
-                "duration": "3.4"
-            },
-            "SalesOrderID": "989",
-            "OrderDate": new Date(),
-            "StartTime": new Date(new Date().getTime() + 11924640),
-            "Quantity": 2.6,
-            "InProgress": true,
-            "Line": {
-                "Type": "TSalesOrderLine",
-                "fields" :{
-                    "ShipDate": "01/05/2023"
-                }
-            }
-        }
-    ]
-    if(!localStorage.getItem('TWorkorders')) {
-        localStorage.setItem('TWorkorders', JSON.stringify(staticWorkorderArray))
-    }
 
     async function getResources() {
         return new Promise(async(resolve, reject) => {
@@ -260,8 +80,21 @@ Template.production_planner.onRendered(async function() {
     }
     let resources = await getResources();
     await templateObject.resources.set(resources);
+
+    templateObject.getWorkorders = function() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TVS1Workorder').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    resolve([])
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    resolve(data.tvs1workorder)
+                }
+            })
+        })
+    }
     
-    let workorders = localStorage.getItem('TWorkorders') ? JSON.parse(localStorage.getItem('TWorkorders')) : staticWorkorderArray
+    let workorders = await templateObject.getWorkorders();
         // templateObject.workorders.set(workorders);
     async function getPlanData() {
         return new Promise(async(resolve, reject)=> {
@@ -270,11 +103,11 @@ Template.production_planner.onRendered(async function() {
                 if(dataObject.length == 0) {
                     resolve(returnVal)
                 } else {
-                    returnVal = JSON.parse(dataObject[0].data.tproductionplandata[0].fields.events)
+                    returnVal = JSON.parse(dataObject[0].data)
                     if(returnVal == undefined) {
-                        returnVal = [];
+                        resolve([])
                     }
-                    resolve(returnVal)
+                    resolve(returnVal.tproductionplandata)
                 }
             }).catch(function(e) {
                 returnVal = [];
@@ -296,18 +129,18 @@ Template.production_planner.onRendered(async function() {
             let planData = await getPlanData();
             
             let eventsData = planData;
-            if (eventsData.length == 0) {
+            // if (eventsData.length == 0) {
 
                 let tempEvents = [];
                 if(workorders && workorders.length > 0) {
                     for (let i = 0; i < workorders.length; i++) {
-                        let processName = workorders[i].BOM.process;
-                        let productName = workorders[i].BOM.productName;
+                        let processName = JSON.parse(workorders[i].fields.BOMStructure).Info;
+                        let productName = workorders[i].fields.ProductName;
                         let index = resources.findIndex(resource => {
                             return resource.title == processName;
                         })
                         let resourceId = resources[index].id;
-                        let startTime = new Date(workorders[i].StartTime);
+                        let startTime = new Date(workorders[i].fields.StartTime);
                         let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
                         if(filteredEvents.length > 1) {
                             filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
@@ -315,11 +148,11 @@ Template.production_planner.onRendered(async function() {
                         }else if(filteredEvents.length == 1) {
                             startTime = filteredEvents[0].end;
                         }
-                        let duration = workorders[i].BOM.duration;
-                        let quantity = workorders[i].Quantity || 1;
+                        let duration = JSON.parse(workorders[i].fields.BOMStructure).QtyVariation;
+                        let quantity = workorders[i].fields.Quantity;
                         let buildSubs = [];
                         let stockRaws = [];
-                        let subs = workorders[i].BOM.subs;
+                        let subs = JSON.parse(JSON.parse(workorders[i].fields.BOMStructure).Details);
                         if(subs.length > 1) {
                             for(let j = 0; j < subs.length; j++ ) {
                                 if(subs[j].isBuild == true) {
@@ -329,7 +162,7 @@ Template.production_planner.onRendered(async function() {
                                 }
                             }
                         }
-                        if (workorders[i].Quantity) duration = duration * parseFloat(workorders[i].Quantity);
+                        if (workorders[i].fields.Quantity) duration = duration * parseFloat(workorders[i].fields.Quantity);
                         let endTime = new Date();
                         endTime.setTime(startTime.getTime() + duration * 3600000)
                         var randomColor = Math.floor(Math.random() * 16777215).toString(16);
@@ -341,7 +174,7 @@ Template.production_planner.onRendered(async function() {
                             "end": endTime,
                             "color": "#" + randomColor,
                             "extendedProps": {
-                                "orderId": workorders[i].ID,
+                                "orderId": workorders[i].fields.ID,
                                 'quantity': quantity,
                                 "builds": buildSubs,
                                 "fromStocks": stockRaws
@@ -349,62 +182,15 @@ Template.production_planner.onRendered(async function() {
                         }
                         tempEvents.push(event);
                     }
-                }else {
-                   
-                    let object = {
-                        "resourceId": 0,
-                        "resourceName": "Assembly",
-                        "title": "Bom Product",
-                        "start": new Date(new Date().getTime() + 14400000),
-                        "end": new Date(new Date().getTime() + 28800000),
-                        "color": "#" + getRandomColor(),
-                        "extendedProps": {
-                            "orderId": "24_1",
-                            'quantity': 2,
-                            "builds": ["sub build 1", "sub build 2"],
-                            "fromStocks": 0
-                        }
-                    }
-                    let subObject1 = {
-                        "resourceId": 2,
-                        "resourceName": "Painting",
-                        "title": "Sub BOM 2",
-                        "start": new Date(),
-                        "end": new Date(new Date().getTime() + 14400000),
-                        "color": "#" + getRandomColor(),
-                        "extendedProps": {
-                            "orderId": "24_2",
-                            'quantity': 1.2,
-                            "builds": ["raw1", "raw2"],
-                            "fromStocks": 0
-                        }
-                    }
-                    let subObject2 = {
-                        "resourceId": 1,
-                        "resourceName": "Welding",
-                        "title": "Sub BOM 2",
-                        "start": new Date(),
-                        "end": new Date(new Date().getTime() + 9000000),
-                        "color": "#" + getRandomColor(),
-                        "extendedProps": {
-                            "orderId": "24_3",
-                            'quantity': 2,
-                            "builds": ["mat1", "mat2"],
-                            "fromStocks": 0
-                        }
-                    }
-
-                    tempEvents.push(object)
-                    tempEvents.push(subObject1);
-                    tempEvents.push(subObject2);
                 }
                 templateObject.events.set(tempEvents)
                 resolve(tempEvents);
-            } else {
-                // events = eventsData;
-                templateObject.events.set(eventsData)
-                resolve(eventsData)
-            }
+            // }
+            //  else {
+            //     // events = eventsData;
+            //     templateObject.events.set(eventsData)
+            //     resolve(eventsData)
+            // }
         })
     }
 
@@ -442,7 +228,7 @@ Template.production_planner.onRendered(async function() {
         eventOverlap: true,
         eventResourceEditable: false,
         eventClassNames: function(arg) {
-            if (arg.event.extendedProps.orderId.split('_')[0] == templateObject.selectedEventSalesorderId.get()) {
+            if (arg.event.extendedProps.orderId.toString().split('000')[0] == templateObject.selectedEventSalesorderId.get()) {
                 return [ 'highlighted' ]
               } else {
                 return [ 'normal' ]
@@ -483,10 +269,10 @@ Template.production_planner.onRendered(async function() {
                     let filteredMainEvents = events.filter(e => getSeconds(e.start) <= getSeconds(event.start) && getSeconds(e.end) > getSeconds(new Date()) && e.extendedProps.builds.includes(buildSubs[i]))
                     for (let k = 0; k< filteredMainEvents.length; k++) {
                         let filteredOrder = workorders.findIndex(order => {
-                            return order.ID == filteredMainEvents[k].extendedProps.orderId
+                            return order.fields.ID == filteredMainEvents[k].extendedProps.orderId
                         })
                         if(filteredOrder > -1) {
-                            let bom = workorders[filteredOrder].BOM.subs;
+                            let bom = JSON.parse(JSON.parse(workorders[filteredOrder].fields.BOMStructure).Details);
                             let index = bom.findIndex(item=>{
                                 return item.productName == buildSubs[i];
                             })
@@ -531,9 +317,7 @@ Template.production_planner.onRendered(async function() {
                     let progressed = current.getTime() - sTime.getTime();
                     let percent = Math.round((progressed / totalDuration) * 100);
                     customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage' style='width:"+percent+"%'>" + percent + "%</div></div>"
-                } else if (current.getTime() >= eTime.getTime()) {
-                    customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage w-100'>Completed</div></div>"
-                }
+                } 
             }
             
             // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
@@ -542,7 +326,9 @@ Template.production_planner.onRendered(async function() {
         },
         eventDidMount : function(arg) {
             let event = arg.event;
-            arg.el.ondblclick = (()=>{
+            arg.el.addEventListener('dblclick', (e)=>{
+                e.preventDefault();
+                e.stopPropagation();
                 let id = event.extendedProps.orderId;
                 FlowRouter.go('/workordercard?id=' + id)
             })
@@ -552,7 +338,7 @@ Template.production_planner.onRendered(async function() {
                 let unableProcesses = arg.el.getElementsByClassName('unable-process');
                 if(unableProcesses.length == 0) {
                     arg.el.classList.remove('fc-event-resizable');
-                    arg.el.classList.remove('fc-event-draggable');
+                    // arg.el.classList.remove('fc-event-draggable');
                 }
             }
             
@@ -668,9 +454,10 @@ Template.production_planner.onRendered(async function() {
             // window.location.reload();
         },
         eventClick: function(info) {
+            setTimeout(()=>{
                 let title = info.event.title;
                 let orderIndex = workorders.findIndex(order => {
-                    return order.BOM.productName == title;
+                    return order.fields.ProductName == title;
                 })
                 let percentage = 0;
                 if (new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
@@ -679,16 +466,16 @@ Template.production_planner.onRendered(async function() {
                     percentage = ((processedTime / overallTime) * 100).toFixed(2);
                 }
                 let object = {
-                    SONumber: workorders[orderIndex].SalesOrderID,
-                    Customer: workorders[orderIndex].Customer,
-                    OrderDate: new Date(workorders[orderIndex].OrderDate).toLocaleDateString(),
-                    ShipDate: workorders[orderIndex].Line.fields.ShipDate,
-                    JobNotes: workorders[orderIndex].BOM.processNote || '',
+                    SONumber: workorders[orderIndex].fields.SaleID,
+                    Customer: workorders[orderIndex].fields.Customer,
+                    OrderDate: new Date(workorders[orderIndex].fields.OrderDate).toLocaleDateString(),
+                    ShipDate: workorders[orderIndex].fields.ShipDate,
+                    JobNotes: JSON.parse(workorders[orderIndex].fields.BOMStructure).CustomInputClass || '',
                     Percentage: percentage + '%',
                 }
                 templateObject.viewInfoData.set(object);
                 let orderId = info.event.extendedProps.orderId;
-                let salesorderId = orderId.split('_')[0];
+                let salesorderId = orderId.toString().split('000')[0];
                 templateObject.selectedEventSalesorderId.set(salesorderId);
                 let dayIndex = info.event.start.getDay();
                 calendar.destroy();
@@ -698,6 +485,7 @@ Template.production_planner.onRendered(async function() {
                     events: templateObject.events.get()
                 })
                 calendar.render();
+            }, 300)
             }
             // expandRows: true,
             // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
@@ -711,28 +499,50 @@ Template.production_planner.onRendered(async function() {
 })
 
 Template.production_planner.events({
-    'click .btnApply': function(event) {
+    'click .btnApply': async function(event) {
         $('.fullScreenSpin').css('display', 'inline-block')
         let templateObject = Template.instance();
         let events = templateObject.events.get();
         let objectDetail = {
-            type: 'TProductionPlanData',
-            fields: {
-                events: events
-            }
+            tproductionplandata: events
         }
-        addVS1Data('TProductionPlanData', JSON.stringify(objectDetail)).then(function() {
+        let workorders = await templateObject.getWorkorders();
+        let tempOrders = cloneDeep(workorders);
+        for(let i = 0; i< events.length; i++) {
+            let workorderid = events[i].extendedProps.orderId;
+            let index = workorders.findIndex(order=> {
+                return order.fields.ID == workorderid
+            })
+            let temp = tempOrders[index];
+            temp.fields.StartTime = events[i].start
+            tempOrders.splice(index, 1, temp);
+        }
+
+        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder:tempOrders})).then(function(){
             $('.fullScreenSpin').css('display', 'none');
-            swal({
-                title: 'Success',
-                text: 'Production planner has been saved successfully',
-                type: 'success',
-                showCancelButton: false,
-                confirmButtonText: 'Continue',
-            }).then((result) => {
-                window.location.reload();
-            });
+                swal({
+                    title: 'Success',
+                    text: 'Production planner has been saved successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Continue',
+                }).then((result) => {
+                    window.location.reload();
+                });
+            // addVS1Data('TProductionPlanData', JSON.stringify(objectDetail)).then(function() {
+            //     $('.fullScreenSpin').css('display', 'none');
+            //     swal({
+            //         title: 'Success',
+            //         text: 'Production planner has been saved successfully',
+            //         type: 'success',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Continue',
+            //     }).then((result) => {
+            //         window.location.reload();
+            //     });
+            // })
         })
+        
     },
 
     'click .btn-print-event': function(event) {
@@ -828,7 +638,7 @@ Template.production_planner.events({
                     // })
 
                     for(let n = 0; n < events.length; n++) {
-                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.split('_')[0] == event.extendedProps.orderId.split('_')[0]) {
+                        if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.toString().split('_')[0] == event.extendedProps.orderId.toString().split('_')[0]) {
                             buildSubs.push(events[n])
                         }
                     }

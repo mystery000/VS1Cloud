@@ -1,7 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ContactService } from "../../contacts/contact-service";
 import { ReportService } from "../report-service";
-
 import { UtilityService } from "../../utility-service";
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';

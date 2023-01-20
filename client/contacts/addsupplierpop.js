@@ -11,7 +11,7 @@ import { Template } from 'meteor/templating';
 import './addsupplierpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-
+const _ = require("lodash");
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.addsupplierpop.onCreated(function() {

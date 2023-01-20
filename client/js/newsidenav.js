@@ -377,7 +377,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             } else if (currentLoc == "/dashboardexe") {
                 $('#sidenavaccounts').removeClass('active');
                 $('#sidenavbanking').removeClass('active');
@@ -589,7 +589,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavshipping').removeClass('active');
                 $('#sidenavreceipt').removeClass('active');
                 $('#sidenavfixedAssets').removeClass('active');
-                $('.collapse').collapse('hide');
+                // $('.collapse').collapse('hide');
             } else if ((currentLoc == "/inventorylist") || (currentLoc == '/productview') ||
                 (currentLoc == "/stockadjustmentcard") ||
                 (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
@@ -1106,8 +1106,8 @@ Template.newsidenav.onRendered(function() {
     }
 
     let isGreenTrack = localStorage.getItem('isGreenTrack')||false;
-    let loggedUserEventFired = localStorage.getItem('LoggedUserEventFired')||false;
-    if (loggedUserEventFired === "true") {
+    let loggedUserEventFired = (localStorage.getItem('LoggedUserEventFired') == "true");
+    if (loggedUserEventFired) {
         $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
         $('.headerprogressbar').addClass('headerprogressbarShow');
         $('.headerprogressbar').removeClass('headerprogressbarHidden');
@@ -1561,6 +1561,41 @@ Template.newsidenav.onRendered(function() {
             }
             addVS1Data('TProductList', JSON.stringify(data));
             $("<span class='process'>Product List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+    }
+
+    templateObject.getAllRecentTransactions = function(){
+        productService.getProductRecentTransactionsAll("all").then(function(data) {
+            countObjectTimes++;
+            progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+            $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+            $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+            $(".progressName").text("Product List ");
+            if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                }
+
+            } else if (Math.round(progressPercentage) >= 100) {
+                $('.checkmarkwrapper').removeClass("hide");
+                setTimeout(function() {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    } else {
+                        $('.headerprogressbar').removeClass('headerprogressbarShow');
+                        $('.headerprogressbar').addClass('headerprogressbarHidden');
+                    }
+
+                }, 1000);
+            }
+            addVS1Data('T_VS1_Report_Productmovement', JSON.stringify(data));
+            $("<span class='process'>Product Movement List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
 
         });
@@ -4452,7 +4487,22 @@ Template.newsidenav.onRendered(function() {
     }
 
     templateObject.getAllTExpenseClaimExData = function() {
-        sideBarService.getAllExpenseCliamExDataVS1().then(function(data) {
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if ((currentBeginDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+        } else {
+            fromDateMonth = (currentBeginDate.getMonth() + 1);
+        }
+
+        if (currentBeginDate.getDate() < 10) {
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(3, 'months')).format("YYYY-MM-DD");
+        sideBarService.getExpenseClaimList(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
             countObjectTimes++;
             progressPercentage = (countObjectTimes * 100) / allDataToLoad;
             $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -4498,6 +4548,7 @@ Template.newsidenav.onRendered(function() {
     }, 2500);
     /* Start Here */
     if (loggedUserEventFired) {
+        //alert(loggedUserEventFired);
         templateObject.getFollowedAllObjectPull = function() {
             setTimeout(function() {
                 if (isPayments) {
@@ -6447,6 +6498,24 @@ Template.newsidenav.onRendered(function() {
                         });
                     });
                     templateObject.getAllProductData();
+
+                    getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            templateObject.getAllRecentTransactions();
+                        } else {
+                            let getTimeStamp = dataObject[0].timestamp.split(' ');
+                            if (getTimeStamp) {
+                                if (loggedUserEventFired) {
+                                    if (getTimeStamp[0] != currenctTodayDate) {
+                                        templateObject.getAllRecentTransactions();
+                                    }
+                                }
+                            }
+
+                        }
+                    }).catch(function(err) {
+                        templateObject.getAllRecentTransactions();
+                    });
                     getVS1Data('TProductStocknSalePeriodReport').then(function(dataObject) {
                         if (dataObject.length == 0) {
                             templateObject.getAllTProductStocknSalePeriodReportData();
@@ -6679,6 +6748,25 @@ Template.newsidenav.onRendered(function() {
                     });
                 });
                 templateObject.getAllProductData();
+
+                getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        templateObject.getAllRecentTransactions();
+                    } else {
+                        let getTimeStamp = dataObject[0].timestamp.split(' ');
+                        if (getTimeStamp) {
+                            if (loggedUserEventFired) {
+                                if (getTimeStamp[0] != currenctTodayDate) {
+                                    templateObject.getAllRecentTransactions();
+                                }
+                            }
+                        }
+
+                    }
+                }).catch(function(err) {
+                    templateObject.getAllRecentTransactions();
+                });
+
                 getVS1Data('TProductStocknSalePeriodReport').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         templateObject.getAllTProductStocknSalePeriodReportData();

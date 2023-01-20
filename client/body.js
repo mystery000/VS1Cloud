@@ -41,7 +41,7 @@ import './js/mailchimp-service.js';
 import './js/new_bom_temp.js';
 import './js/new_credit.js';
 import './js/new_invoice.js';
-// import './js/new_process.js';
+import './js/new_process.js';
 import './js/new_processpop.js';
 import './js/new_purchaseorder.js';
 import './js/new_quote.js';
@@ -84,6 +84,7 @@ import './route.js';
 
 import './lib/global/globalfunction.js';
 import './lib/global/utBarcodeConst.js';
+// import "../lib/global/indexdbstorage.js";
 // import '/imports/startup/client';
 // Transaction Header and Footer
 import "./vs1_templates/transaction_temp/transaction_header/transaction_header.js"
@@ -280,8 +281,8 @@ import './vs1_templates/transaction_temp/transaction_print_modal.js';
 import './vs1_templates/transaction_temp/transaction_calculation.js';
 import './manufacture/bomList.js';
 import './fixedassets/fixedassets.js';
-import './settings/chart-accounts-setting/chart-accounts.js';
-import './settings/chart-accounts-setting/chart-account-settings-table.js';
+// import './settings/chart-accounts-setting/chart-accounts.js';
+// import './settings/chart-accounts-setting/chart-account-settings-table.js';
 import './settings/edi-integrations/edi-integrations.js';
 import './settings/fixed-asset_edit-asset-type/fixed-asset_edit-asset-type.js';
 import './settings/fxupdate/fxUpdateSettings.js';
@@ -291,12 +292,23 @@ import './shipping/shippinglist.js';
 import './stocktake/add-new-stock-adjust/stockadjustadd.js';
 import './timesheetdetail/timesheetdetail.js';
 import './journalEntry/journalentry_list.js';
+import './manufacture/processList.js';
+import './vs1shipping/shippingoverview.js';
+import './vs1shipping/shippingdocket.js';
+import './deposits/deposit_list.js';
 /* Tinyiko */
 
 /* Rasheed */
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
+import './lib/global/globalShipping.js';
+import './lib/global/soundalert.js';
 /* Rasheed */
+
+/* Jeyhun */
+import './manufacture/workorderList.js';
+/* Jeyhun */
 
 /* DevTop/Dev Pioneer */
 import './vs1_templates/report/accountant_header.js';
@@ -349,6 +361,11 @@ import './Dashboard/appointments-widget/ds-appointments-widget.js';
 import './vs1charts/leadlist/dsleadlistchart.js';
 import './vs1charts/opportunitiesStatus/opportunitiesStatus.js';
 import './vs1charts/leadlist/dsmleadlistchart.js';
+import './eft/eft.js';
+import './vs1charts/bankaccountschart/bankaccountschart.js';
+import './vs1charts/accountslist/accountslistchart.js';
+import './vs1charts/crmleadchart/crmleadchart.js';
+/* Sasa */
 
 /* Martin */
 import './contacts/addcustomerpop.js';
@@ -417,6 +434,9 @@ import './settings/payroll-settings/superannuation.js';
 import './settings/payroll-settings/reimbursement.js';
 import './settings/payroll-settings/leaveTypes.js';
 import './contacts/assignLeaveTypePop.js';
+import './vs1_templates/contact_title/contact_title.html';
+import './vs1charts/employeeAbsentDays/employeeAbsentDays.js';
+import './vs1charts/employeeLeave/employeeLeave.js';
 /*Vladyslav*/
 
 /* Roverto */
@@ -452,6 +472,7 @@ import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
+import './reports/balancesheet/balancetransactionlist.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -476,6 +497,26 @@ import './vs1_templates/vs1_select/default_select.html'
 /* Stefan */
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
+
+// import 'datatables.net';
+// import 'datatables.net-bs';
+// import 'datatables.net-bs4';
+// import 'datatables.net-buttons';
+// import 'datatables.net-buttons-dt';
+// import 'datatables.net-buttons/js/buttons.colVis';
+// import 'datatables.net-buttons/js/buttons.flash';
+// import 'datatables.net-buttons/js/buttons.html5';
+// import 'datatables.net-buttons/js/buttons.print';
+// import "datatables.net-colreorder";
+// import "datatables.net-fixedheader";
+// import "datatables.net-fixedcolumns";
+// import "datatables.net-select";
+
+import '../public/js/cdnjs/pdfmake.min.js';
+import '../public/js/cdnjs/split.min.js';
+import '../public/js/cdnjs/jszip.min.js';
+import '../public/js/cdnjs/vfs_fonts.js';
+
 /* Stefan */
 
 /* Arthlo */
@@ -528,18 +569,20 @@ import './vs1charts/resalescomparision/dsm_resalescomparision.js';
 /* Andrew */
 
 /* XiaoJang*/
-// import './overviews/payrolloverview.js';
-// import './overviews/payrollleave.js';
-// import './payroll/singletouchpayroll/singletouch.js';
-// import './payroll/singletouchpayroll/singletouchpayroll.js';
-// import './payroll/clockonoff/clockonoff.js';
-// import './payroll/paychexapi/paychexapi.js';
-// import './payroll/payrun/payrun.js';
-// import './payroll/payrun/payrundetails.js';
-// import './overviews/payrolloverview_tmp.html';
-// import './eft/exportModal/eftExportModal.js';
-// import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
-// import './eft/addNewEftModal/addNewEftModal.js';
+import './overviews/payrolloverview.js';
+import './overviews/payrollleave.js';
+import './payroll/singletouchpayroll/singletouch.js';
+import './payroll/singletouchpayroll/singletouchpayroll.js';
+import './payroll/clockonoff/clockonoff.js';
+import './payroll/paychexapi/paychexapi.js';
+import './payroll/payrun/payrun.js';
+import './payroll/payrun/payrundetails.js';
+import './overviews/payrolloverview_tmp.html';
+import './eft/exportModal/eftExportModal.js';
+import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
+import './eft/addNewEftModal/addNewEftModal.js';
+
+import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -559,7 +602,7 @@ Template.body.onCreated(function bodyOnCreated() {
 
 Template.body.onRendered(function() {
     const templateObject = Template.instance();
-    let isSidePanel = Session.get('CloudSidePanelMenu');
+    let isSidePanel = localStorage.getItem('CloudSidePanelMenu');
     if (isSidePanel) {
         templateObject.isCloudSidePanelMenu.set(true);
         $("html").addClass("hasSideBar");
@@ -598,7 +641,7 @@ Template.body.helpers({
         return Template.instance().isCloudSidePanelMenu.get();
     },
     isGreenTrack: function() {
-        let checkGreenTrack = Session.get('isGreenTrack') || false;
+        let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
         return checkGreenTrack;
     }
 });

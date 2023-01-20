@@ -419,6 +419,7 @@
                                                         <th class="depositClick">Description</th>
                                                         <th class="depositClick" style="width: 100px;">Payment ID</th>
                                                         <th class="depositClick text-right" style="width: 100px;">Amount</th>
+                                                        <th class="text-right hiddenColumn" style="width: 100px;">Value</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -455,6 +456,7 @@
                                                         <th>Description</th>
                                                         <th style="width: 100px;">Payment ID</th>
                                                         <th class="text-right" style="width: 100px;">Amount</th>
+                                                        <th class="text-right hiddenColumn" style="width: 100px;">Value</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -515,6 +517,7 @@
                                                     <th class="text-right" style="width: 14%;">Amount</th>
                                                     <th style="display: none;">Ref</th>
                                                     <th style="display: none;">PayID</th>
+                                                    <th style="display: none;">Value</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -527,6 +530,7 @@
                                                     <td id="{{selectitem.reconid}}_amount" class="text-right">{{selectitem.reconamount}}</td>
                                                     <td id="{{selectitem.reconid}}_ref" class="text-right" style="display: none;">{{selectitem.reconref}}</td>
                                                     <td id="{{selectitem.reconid}}_payid" class="text-right" style="display: none;">{{selectitem.reconpayid}}</td>
+                                                    <td id="{{selectitem.reconid}}_value" class="text-right" style="display: none;">{{selectitem.reconvalue}}</td>
                                                 </tr>
                                                 {{/each}}
                                                 {{else}}
@@ -554,6 +558,7 @@
                                                     <th class="text-right" style="width: 14%;">Amount</th>
                                                     <th style="display: none;">Ref</th>
                                                     <th style="display: none;">PayID</th>
+                                                    <th style="display: none;">Value</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -566,6 +571,7 @@
                                                     <td id="{{selectitemwith.reconid}}_amount" class="text-right">{{selectitemwith.reconamount}}</td>
                                                     <td id="{{selectitemwith.reconid}}_ref" class="text-right" style="display: none;">{{selectitemwith.reconref}}</td>
                                                     <td id="{{selectitemwith.reconid}}_payid" class="text-right" style="display: none;">{{selectitemwith.reconpayid}}</td>
+                                                    <td id="{{selectitemwith.reconid}}_value" class="text-right" style="display: none;">{{selectitemwith.reconvalue}}</td>
                                                 </tr>
                                                 {{/each}}
                                                 {{else}}
