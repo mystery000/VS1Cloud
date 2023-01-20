@@ -1,0 +1,189 @@
+<template name="transaction_list">
+    <style>
+        .groove {
+            border-style: solid;
+            border-width: 1px;
+            width: 200px;
+            padding: 2px;
+            border-radius: .35rem;
+        }
+
+        .custom-control-label {
+            position: absolute;
+        }
+
+        .rngRange {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: rgb(255, 255, 255);
+            background-clip: padding-box;
+            border: 1px solid rgb(133, 135, 150);
+            border-radius: .3rem;
+            border-style: solid;
+            border-width: 1px;
+            padding: 2px;
+            border-radius: .35rem;
+            color: rgb(128, 128, 128);
+            height: inherit !important;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .modal.show .modal-dialog {
+                float: inherit !important;
+                left: inherit !important;
+                top: auto !important;
+
+            }
+        }
+    </style>
+    <div class="modal fade {{tablename}}_Modal divDisplaySettings" role="dialog" tabindex="-1" id="{{tablename}}_Modal">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <label style="display:none;">{{currentproductID}}</label>
+                    <label style="display:none;">{{currenttype}}</label>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <form class="d-xl-flex align-items-xl-center">
+                            <div class="flex-grow-1">
+
+                                {{#each displayfield in trans_displayfields}}
+                                    {{#if displayfield.display}}
+                                        <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                <input class="custom-control-input chkDatatable chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
+                                                <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
+                                            </div>
+                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" valueclass="{{displayfield.class}}" min="0" max="1000">
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                {{/each}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary saveTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-warning resetTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" style='margin: 14px !important;'><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+    <div class="table-responsive">
+        <style>
+            th {
+                background-color: #ededed;
+            }
+
+            .table-striped tbody tr:nth-of-type(odd) {
+                background-color: white !important;
+            }
+
+            .table-striped tbody tr:nth-of-type(even) {
+                background-color: #0000000d !important;
+            }
+
+            .JColResizer>tbody>tr>td,
+            .JColResizer>tbody>tr>th {
+                padding: .75rem !important;
+            }
+
+            .hiddenColumn {
+                display: none;
+            }
+
+            .showColumn {
+                display: table-cell;
+                padding: .75rem;
+                vertical-align: top;
+            }
+
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                opacity: 1;
+            }
+
+            .tbl_responsive{
+                width: 100%!important;
+                overflow-x: auto!important;
+                overflow-y: hidden!important;
+            }
+            .table th.colARBalance,
+            .table th.colCreditBalance,
+            .table th.colBalance,
+            .table th.colCreditLimit,
+            .table th.colSalesOrderBalance {
+                text-align: right !important;
+            }
+            @media print {
+                table.dataTable {
+                    width: 100% !important;
+                }
+                table.dataTable tr td {
+                    font-size: 0.7rem !important;
+                    padding: 0.6rem !important;
+                }
+                table.dataTable tr th {
+                    font-size: 0.7rem !important;
+                    padding: 0.6rem !important;
+                }
+            }
+        </style>
+        <table id="{{tablename}}" class="dataTable table table-striped table-bordered {{tablename}}">
+            <thead>
+            <tr class="dnd-moved">
+                <th class="th colSortDate hiddenColumn">id</th>
+
+                {{#each displayfield in trans_displayfields}}
+                    {{#if displayfield.display}}
+                        <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
+                            {{displayfield.custfieldlabel}}
+                            {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
+                            {{else}}
+                                {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
+                                {{else}}
+                                    {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>
+                                    {{else}}
+                                        {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>
+                                        {{/if}}
+                                    {{/if}}
+                                {{/if}}
+                            {{/if}}
+                        </th>
+                    {{/if}}
+                {{/each}}
+            </tr>
+            </thead>
+            <tbody>
+<!--                {{#each item in datatablerecords}}-->
+<!--                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">-->
+<!--                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>-->
+<!--                        <td contenteditable="false" class="colPaymentDate {{#if trans_displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>-->
+<!--                        <td contenteditable="false" class="colAccountId {{#if trans_displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>-->
+<!--                        <td contenteditable="false" class="colBankAccount {{#if trans_displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.bankaccount}}</td>-->
+<!--                        <td contenteditable="false" class="colType {{#if trans_displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" >{{item.type}}</td>-->
+
+<!--                        <td contenteditable="false" class="colPaymentAmount {{#if trans_displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.paymentamount}}</td>-->
+<!--                        <td contenteditable="false" class="colDebitEx {{#if trans_displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.amountinc}}</td>-->
+
+<!--                        <td contenteditable="false" class="colDepartment {{#if trans_displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.department}}</td>-->
+<!--                        <td contenteditable="false" class="colchqrefno {{#if trans_displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.chqrefno}}</td>-->
+
+<!--                        <td contenteditable="false" class="colNotes {{#if trans_displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.notes}}</td>-->
+<!--                    </tr>-->
+<!--                {{/each}}-->
+            </tbody>
+        </table>
+    </div>
+</template>
