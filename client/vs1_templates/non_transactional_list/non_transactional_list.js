@@ -7321,7 +7321,7 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getCustomerTransactionListData = function() {
+    templateObject.getCustomerTransactionListData = function(deleteFilter = false,toggleFilter = {}) {
         let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
         getVS1Data('TJobVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -14306,7 +14306,36 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename == "tblSupplierTransactionList") {
         templateObject.getSupplierTransactionListData();
     } else if (currenttablename == "tblCustomerTransactionList") {
-        templateObject.getCustomerTransactionListData();
+        let toggleFilter = {
+            checkedInvoices:true,
+            checkedQuotes:false,
+            checkedSalesOrders:false
+        }
+        templateObject.getCustomerTransactionListData(false,toggleFilter);
+        $('#customer_transctionList_invoices_toggle').on('click',function(event){
+            let currentStatus = $(event.target).is(':checked');
+            toggleFilter = {
+                ...toggleFilter,
+                checkedInvoices:currentStatus
+            }
+            templateObject.getCustomerTransactionListData(false,toggleFilter);
+        })
+        $('#customer_transctionList_quotes_toggle').on('click',function(event){
+            let currentStatus = $(event.target).is(':checked');
+            toggleFilter = {
+                ...toggleFilter,
+                checkedQuotes:currentStatus
+            }
+            templateObject.getCustomerTransactionListData(false,toggleFilter);
+        })
+        $('#customer_transctionList_sales_orders_toggle').on('click',function(event){
+            let currentStatus = $(event.target).is(':checked');
+            toggleFilter = {
+                ...toggleFilter,
+                checkedSalesOrders:currentStatus
+            }
+            templateObject.getCustomerTransactionListData(false,toggleFilter);
+        })
     } else if (currenttablename === "tblCustomerJobDetailsList") {
         templateObject.getCustomerJobDetailsListData();
     } else if (currenttablename === "tblEmployeeTransactionList") {
