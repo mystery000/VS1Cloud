@@ -5,6 +5,7 @@ import { SideBarService } from '../js/sidebar-service';
 import { StockTransferService } from './stockadjust-service';
 import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "./serialnumberlist.html";
 
 // Define services
