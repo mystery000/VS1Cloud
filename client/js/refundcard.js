@@ -9782,7 +9782,7 @@ Template.refundcard.events({
                     "",
                     'The product "' +
                     selectedProductName +
-                    '" does not track Lot Number, Bin Location or Serial Number',
+                    '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
                     "info"
                 );
                 event.preventDefault();
@@ -9936,7 +9936,7 @@ Template.refundcard.events({
                     "",
                     'The product "' +
                     selectedProductName +
-                    '" does not track Lot Number, Bin Location or Serial Number',
+                    '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
                     "info"
                 );
                 event.preventDefault();
