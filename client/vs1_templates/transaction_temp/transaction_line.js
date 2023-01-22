@@ -71,20 +71,70 @@ Template.transaction_line.onRendered(function() {
                 default_display = TransactionFields.initRefundLine;
                 break;
         }
-        reset_data = TransactionFields.insertData(reset_data, default_display);
-
-        let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking.toString() === "true";
-        let includeBOnShippedQty = templateObject.data.includeBOnShippedQty.toString() === "true";
-        let canShowUOM = templateObject.data.canShowUOM.toString() === "true";
-        let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
+        reset_data = TransactionFields.insertData(reset_data, default_display);     
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
         let reset_data = templateObject.reset_data.get();
+        let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking.toString() === "true";
+        let includeBOnShippedQty = templateObject.data.includeBOnShippedQty.toString() === "true";
+        let canShowUOM = templateObject.data.canShowUOM.toString() === "true";
+        let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
+        // Fixet Asset
         templateObject.showCustomFieldDisplaySettings(reset_data);
-        getVS1Data("VS1_Customize").then(function(dataObject){
-            let data = JSON.parse(dataObject[0].data);
+
+        employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')); 
+        sideBarService.getNewCustomFieldsWithQuery(employeeId, listType).then(function(data) {
+            console.log("### Import VS1_Customize from API ###");
+            console.dir(data);
+        }).catch(function(err) {});
+        
+        getVS1Data("VS1_Customize").then(function(dataObject){        
+                
+            if(dataObject.length == 0) {
+                // Import VS1_Customize from API
+                employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')); 
+                sideBarService.getNewCustomFieldsWithQuery(employeeId, listType).then(function(data) {
+                    reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns; 
+                    let findItem = null;
+                    // canShowBackOrder
+                    findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                    findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                    findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                    findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+                    // canShowUOM
+                    findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
+                    // isBatchSerialNoTracking
+                    findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
+                    templateObject.showCustomFieldDisplaySettings(reset_data);
+                }).catch( function(err) {});
+            } else {
+                // Import VS1_Customize from IndexDB
+                let data = JSON.parse(dataObject[0].data);
+                console.log("### Import VS1_Customize from IndexDB ###");
+                console.dir(data);
+                if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+                    for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+                        if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+                            reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+
+                            let findItem = null;
+                            // canShowBackOrder
+                            findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                            findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                            findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                            findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+                            // canShowUOM
+                            findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
+                            // isBatchSerialNoTracking
+                            findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
+
+                            templateObject.showCustomFieldDisplaySettings(reset_data);
+                        }
+                    }
+                }
+            }
         });
     }
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
