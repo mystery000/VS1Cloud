@@ -92,7 +92,6 @@ Template.companyappsettingsdup.onRendered(function () {
         $(".plusText").html('Xero' + ' ' + '<b class="">$250</b> /MO.');
         $.get("/GreentrackModules.json").success(function (data) {
             for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
                 if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
                     recordObj = {
                         type: data.tvs1licenselevelsnmodules[i].TYPE,
@@ -174,9 +173,8 @@ Template.companyappsettingsdup.onRendered(function () {
         });
     } else {
         //$.get("VS1Modules.json").success(function(data){
-        $.get("MasterVS1Pricing.json").success( async function (data) {
+        $.get("/MasterVS1Pricing.json", function(data, status) {
             for (let i = 0; i < data.tvs1licenselevelsnmodules.length; i++) {
-
                 if (data.tvs1licenselevelsnmodules[i].Region == regionData) {
                     let tvs1ModulePrice = data.tvs1licenselevelsnmodules[i].Price || 0;
                     if (data.tvs1licenselevelsnmodules[i].ModuleName == "Add Extra User") {
@@ -240,53 +238,57 @@ Template.companyappsettingsdup.onRendered(function () {
             $(".plusTextVal").html(plusPrice.replace(/[^0-9.-]+/g, ""));
 
             let purchaedAdModuleList = []
-            let additionModuleSettings = await getVS1Data('vscloudlogininfo');
-            if( additionModuleSettings.length > 0 ){
-                let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
-                if( additionModules.length > 0 ){
-                    let adModulesList = additionModules.filter((item) => {
-                        if( item.ExtraModules == true && item.ModuleActive == true ){
-                            return item;
-                        }
-                    });
-                    if( adModulesList.length > 0 ){
-                        for (const item of adModulesList) {
-                            purchaedAdModuleList.push(item.ModuleName)
+            getVS1Data('vscloudlogininfo').then(function (additionModuleSettings) {
+                if( additionModuleSettings.length > 0 ){
+                    let additionModules = additionModuleSettings[0].data.ProcessLog.Modules.Modules;
+                    if( additionModules.length > 0 ){
+                        let adModulesList = additionModules.filter((item) => {
+                            if( item.ExtraModules == true && item.ModuleActive == true ){
+                                return item;
+                            }
+                        });
+                        if( adModulesList.length > 0 ){
+                            for (const item of adModulesList) {
+                                purchaedAdModuleList.push(item.ModuleName)
+                            }
                         }
                     }
                 }
-            }
+
+                var result = [];
+                $.each(extraArr, function (i, e) {
+                    var matchingItems = $.grep(result, function (item) {
+                        return item.moduleName === e.moduleName;
+                    });
+                    if (matchingItems.length === 0) {
+                        if( purchaedAdModuleList.includes(extraArr[i].moduleName) == false || extraArr[i].moduleName == 'Add Extra User'){
+                            result.push(e);
+                        }
+                    }
+                });
+                templateObject.extraArr.set(result);
+                var monthResult = [];
+                $.each(monthArr, function (i, e) {
+                    var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
+                        return itemMonth.moduleName === e.moduleName;
+                    });
+                    e.isPurchased = false
+                    if (matchingItemsMonth.length === 0) {
+                        if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
+                            e.isPurchased = true
+                        }
+                        monthResult.push(e);
+                    }
+                });
+                templateObject.monthArr.set(monthResult);
+
+            });
+            
 
             templateObject.simplestartArr.set(simplestartArr);
             templateObject.essentailsArr.set(essentailsArr);
             templateObject.plusArr.set(plusArr);
 
-            var result = [];
-            $.each(extraArr, function (i, e) {
-                var matchingItems = $.grep(result, function (item) {
-                    return item.moduleName === e.moduleName;
-                });
-                if (matchingItems.length === 0) {
-                    if( purchaedAdModuleList.includes(extraArr[i].moduleName) == false || extraArr[i].moduleName == 'Add Extra User'){
-                        result.push(e);
-                    }
-                }
-            });
-            templateObject.extraArr.set(result);
-            var monthResult = [];
-            $.each(monthArr, function (i, e) {
-                var matchingItemsMonth = $.grep(monthResult, function (itemMonth) {
-                    return itemMonth.moduleName === e.moduleName;
-                });
-                e.isPurchased = false
-                if (matchingItemsMonth.length === 0) {
-                    if( purchaedAdModuleList.includes(monthArr[i].moduleName) == true ){
-                        e.isPurchased = true
-                    }
-                    monthResult.push(e);
-                }
-            });
-            templateObject.monthArr.set(monthResult);
             setTimeout(function () {
                 /*
                 if(isFxCurrencyLicence == true){

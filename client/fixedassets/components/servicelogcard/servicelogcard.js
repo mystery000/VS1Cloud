@@ -83,7 +83,6 @@ Template.servicelogcard.onRendered(function () {
   if (cServiceID > 0) {
     fixedAssetService.getServiceLogDetail(cServiceID).then((data) => {
       const serviceData = data.tserviceloglist;
-      // console.log(data);
       if (serviceData.length > 0) {
         const recordInfo = serviceData[0];
         templateObject.asset_id.set(recordInfo.AssetID);
@@ -168,7 +167,6 @@ Template.servicelogcard.events({
           addVS1Data("TServiceLogList", JSON.stringify(data));
         });
       }).catch((err) => {
-        // console.log(err);
       });
       FlowRouter.go('/serviceloglist');
     } else {
@@ -178,7 +176,6 @@ Template.servicelogcard.events({
           addVS1Data("TServiceLogList", JSON.stringify(data));
         });
       }).catch((err) => {
-        // console.log(err);
       });
       FlowRouter.go('/serviceloglist');
     }
