@@ -53,6 +53,9 @@
                             <label class="form-check-label" for="frequencyOnetimeonly">
                                 One Time Only
                             </label>
+                            <script>
+                                document.getElementById("frequencyOnetimeonly").checked = true;
+                            </script>
                         </div>
                     </div>
                     <div class="col-12 col-lg-9 monthlySettings colSettings" id="monthlySettings" style="display:none">
@@ -170,7 +173,7 @@
                                 <div class="row">
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-january" value="january">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-january">January</label>
@@ -178,7 +181,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-february" value="february">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-february">February</label>
@@ -186,7 +189,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-march" value="march">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-march">March</label>
@@ -194,7 +197,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-april" value="april">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-april">April</label>
@@ -202,7 +205,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-may" value="may">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-may">May</label>
@@ -210,7 +213,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-june" value="june">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-june">June</label>
@@ -218,7 +221,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-july" value="july">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-july">July</label>
@@ -226,7 +229,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-august" value="august">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-august">August</label>
@@ -234,7 +237,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-september" value="september">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-september">September</label>
@@ -242,7 +245,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-october" value="october">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-october">October</label>
@@ -250,7 +253,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-november" value="november">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-november">November</label>
@@ -258,7 +261,7 @@
                                     </div>
                                     <div class="col-6 col-lg-4">
                                         <div class="custom-control custom-checkbox chkBox pointer">
-                                            <input class="custom-control-input chkBox pointer" type="checkbox"
+                                            <input class="custom-control-input chkBox pointer month-checkbox" type="checkbox"
                                                 id="formCheck-december" value="december">
                                             <label class="custom-control-label chkBox pointer"
                                                 for="formCheck-december">December</label>
@@ -304,18 +307,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <script>
-                                var today = new Date();
-                                var dd = String(today.getDate() + 1).padStart(2, '0');
-                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                                var yyyy = today.getFullYear();
-                            
-                                today = mm + '/' + dd + '/' + yyyy;
-                            
-                                document.getElementById('edtMonthlyStartDate').value = today;
-                            </script>
-
                         </div>
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3">
@@ -336,18 +327,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <script>
-                            var finishdate = new Date();
-                            var dd = String(finishdate.getDate() + 1).padStart(2, '0');
-                            var mm = String(finishdate.getMonth() + 1).padStart(2, '0'); //January is 0!
-                            var yyyy = finishdate.getFullYear() + 1;
-                        
-                            finishdate = mm + '/' + dd + '/' + yyyy;
-                        
-                            document.getElementById('edtMonthlyFinishDate').value = finishdate;
-                        </script>
-
                     </div>
                     <div class="col-12 col-lg-9 weeklySettings colSettings" id="weeklySettings" style="display: none;">
                         <div class="row">
@@ -482,19 +461,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <script>
-                                var today = new Date();
-                                var dd = String(today.getDate() + 1).padStart(2, '0');
-                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                                var yyyy = today.getFullYear();
-                            
-                                today = mm + '/' + dd + '/' + yyyy;
-                            
-                                document.getElementById('edtWeeklyStartDate').value = today;
-                            </script>
-
-
                         </div>
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3">
@@ -518,18 +484,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <script>
-                                var finishdate = new Date();
-                                var dd = String(finishdate.getDate() + 1).padStart(2, '0');
-                                var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
-                                var yyyy = finishdate.getFullYear();
-                            
-                                finishdate = mm + '/' + dd + '/' + yyyy;
-                            
-                                document.getElementById('edtWeeklyFinishDate').value = finishdate;
-                            </script>
-
                         </div>
                     </div>
                     <div class="col-12 col-lg-9 dailySettings colSettings" id="dailySettings" style="display: none;">
@@ -618,18 +572,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <script>
-                                var today = new Date();
-                                var dd = String(today.getDate() + 1).padStart(2, '0');
-                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                                var yyyy = today.getFullYear();
-                            
-                                today = mm + '/' + dd + '/' + yyyy;
-                            
-                                document.getElementById('edtDailyStartDate').value = today;
-                            </script>
-
                         </div>
                         <div class="row" style="margin-bottom: 8px;">
                             <div class="col-3">
@@ -649,18 +591,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <script>
-                                var finishdate = new Date();
-                                var dd = String(finishdate.getDate() + 1).padStart(2, '0');
-                                var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
-                                var yyyy = finishdate.getFullYear();
-                            
-                                finishdate = mm + '/' + dd + '/' + yyyy;
-                            
-                                document.getElementById('edtDailyFinishDate').value = finishdate;
-                            </script>
-
                         </div>
                     </div>
                     <div class="col-12 col-lg-9 oneTimeOnlySettings colSettings" id="oneTimeOnlySettings"
@@ -710,18 +640,18 @@
                                         style="display: none; color: darkred; margin: 0; font-size: 15px;">This
                                         field is required.</p>
                                 </div>
-                                <script>
-                                    var today = new Date();
-                                    var dd = String(today.getDate() + 1).padStart(2, '0');
-                                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                                    var yyyy = today.getFullYear();
-                                
-                                    today = mm + '/' + dd + '/' + yyyy;
-                                
-                                    document.getElementById('edtOneTimeOnlyDate').value = today;
-                                </script>
-                                
                             </div>
+                            
+                            <script>
+                                var today = new Date();
+                                var dd = String(today.getDate() + 1).padStart(2, '0');
+                                var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                                var yyyy = today.getFullYear();
+                            
+                                today = mm + '/' + dd + '/' + yyyy;
+                            
+                                document.getElementById('edtOneTimeOnlyDate').value = today;
+                            </script>
                         </div>
                     </div>
                 </div>
