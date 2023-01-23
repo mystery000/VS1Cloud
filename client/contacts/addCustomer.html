@@ -2919,7 +2919,11 @@
                               opacity: 1;
                             }
                           </style>
-                          {{> non_transactional_list tablename="tblCustomerTransactionList"}}
+                          {{#if checkedAppointments}}
+                            {{> non_transactional_list tablename="tblCustomerTransactionList"}}
+                          {{else}}
+                            {{> non_transactional_list tablename="tblCustomerTransactionList"}}
+                          {{/if}}
                         </div>
                       </div>
                     </div>
