@@ -1473,6 +1473,7 @@ Template.organisationsettings.events({
     let checkCompLogoData = await organisationService.getCheckTcompLogoData();
     let myFilesType = $("#fileInput")[0].files[0].type || "";
     if (imageData != null && imageData != "") {
+      addVS1Data("TVS1Image", imageData);
       localStorage.setItem("Image", imageData);
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");

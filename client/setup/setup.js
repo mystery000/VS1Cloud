@@ -4685,6 +4685,7 @@ Template.setup.events({
     let templateObject = Template.instance();
     let imageData = templateObject.imageFileData.get();
     if (imageData != null && imageData != "") {
+      addVS1Data("TVS1Image", imageData);
       localStorage.setItem("Image", imageData);
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");
