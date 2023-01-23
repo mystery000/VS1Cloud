@@ -352,7 +352,7 @@ Template.inventorylist.onRendered(function() {
                                 splashArrayProductList.push(dataList);
                                 dataTableList.push(dataList);
                             }
-                            
+
 
                             templateObject.datatablerecords.set(dataTableList);
                             templateObject.datatablebackuprecords.set(dataTableList);
@@ -380,11 +380,11 @@ Template.inventorylist.onRendered(function() {
                                     });
                                 }
                                 templateObject.productDataList.set(JSON.stringify(splashArrayProductList));
-                                
+
                                 templateObject.columnData.set(JSON.stringify(columnData));
-                                
+
                                 // $("#tblInventoryOverview").dataTable({
-                                    
+
                                 //     data: splashArrayProductList,
                                 //     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                                 //     columnDefs: columnData,
@@ -571,7 +571,7 @@ Template.inventorylist.onRendered(function() {
                     dataTableList.push(dataList);
                 }
                 // added bu matthias
-                
+
                     templateObject.datatablerecords.set(dataTableList);
                     // templateObject.datatablebackuprecords.set(dataTableList);
 
@@ -778,10 +778,10 @@ Template.inventorylist.onRendered(function() {
                             data.tproductlist[i].CUSTFLD2 || "",
                         ];
                         splashArrayProductList.push(dataList);
-                        
+
                         dataTableList.push(dataList);
                     }
-                    
+
                         templateObject.datatablerecords.set(dataTableList);
                         templateObject.datatablebackuprecords.set(dataTableList);
 
@@ -1011,7 +1011,7 @@ Template.inventorylist.onRendered(function() {
     //     var listData = $(this).closest("tr").find(".colProductID").text();
     //     var selectedProductName = $(this).closest("tr").find(".colProductName").text();
     //     if (listData) {
-    //        swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
+    //        swal('', 'The product ' + selectedProductName + ' does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
     //     }
     // });
 
@@ -2239,8 +2239,11 @@ Template.inventorylist.events({
     "click .newProduct": function(event) {
         FlowRouter.go("/productview");
     },
-    "click .newProduct": function(event) {
-        FlowRouter.go("/productview");
+    "click .newStockadjust": function(event) {
+        FlowRouter.go("/stockadjustmentcard");
+    },
+    "click .newStocktransfer": function(event) {
+        FlowRouter.go("/stocktransfercard");
     },
     "click .productList": function(event) {
         FlowRouter.go("/productlist");
@@ -2570,19 +2573,19 @@ Template.inventorylist.events({
             //$('.lblPriceEx').css('width','10%');
         }
     },
-    'click .OnBO' : function(event) {
+    'click td.OnBO' : function(event) {
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".ProductName").text();
     if (listData) {
         $('#transTitle').text(listProductName + ' - On Back Order');
-          
+
           let templateObject = Template.instance();
           templateObject.productID.set(listData);
           templateObject.transtype.set("Purchase Order");
           $('#recentTransactionPopUp').modal("show");
     }
   },
-  "click .InStock": function(event) {
+  "click td.InStock": function(event) {
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".ProductName").text();
     if (listData) {
@@ -2605,7 +2608,7 @@ Template.inventorylist.events({
     }
   },
 
-  "click .OnSO": function(event) {
+  "click td.OnSO": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       var listProductName = $(event.target).closest("tr").find(".ProductName").text();
       if (listData) {
@@ -2618,12 +2621,12 @@ Template.inventorylist.events({
       }
   },
 
-  "click .OnOrder": function(event) {
+  "click td.OnOrder": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       var listProductName = $(event.target).closest("tr").find(".ProductName").text();
       if (listData) {
           $('#transTitle').text(listProductName + ' - On Order');
-          
+
           let templateObject = Template.instance();
           templateObject.productID.set(listData);
           templateObject.transtype.set("Invoice");
@@ -2632,7 +2635,7 @@ Template.inventorylist.events({
       }
   },
 
-  "click .ProductName, click td.SalesDescription, ": function(event) {
+  "click td.ProductName, click td.SalesDescription, ": function(event) {
       var listData = $(event.target).closest("tr").find(".colProductID").text();
       if (listData) {
           FlowRouter.go("/productview?id=" + listData);

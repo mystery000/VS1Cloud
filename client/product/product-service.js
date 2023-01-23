@@ -201,7 +201,7 @@ export class ProductService extends BaseService {
 
     getProductRecentTransactionsAll(productID) {
         let options = {
-            select: "[ProductID]='" + productID + "'",
+            select: productID == "all" ? "" : ("[ProductID]='" + productID + "'") ,
             PropertyList: "TransactionDate,ProductName,FirstColumn,SecondColumn,ThirdColumn,Qty,TotalCost,ProductID,ClassID,TransactionNo,AverageCost,Cost,Available,InStock,so,invbo,pobo,onbuild,building,Price,TotalPrice,ExtraDesc,TranstypeDesc,Deptname",
             OrderBy: "TransactionDate DESC"
         };

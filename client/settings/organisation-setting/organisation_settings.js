@@ -106,17 +106,6 @@ Template.organisationsettings.onRendered(function () {
   };
   templateObject.getCountryData();
 
-  templateObject.getCompLogoData = function () {
-    organisationService.getCompLogo().then((data) => {
-      for (let i = 0; i < data.tcomplogo.length; i++) {
-        //countries.push(data.tcomplogo[i].Country)
-      }
-      countries = _.sortBy(countries);
-      templateObject.countryData.set(countries);
-    });
-  };
-  // templateObject.getCompLogoData();
-
   templateObject.getSuppliers = function () {
     getVS1Data("TSupplierVS1")
       .then(function (dataObject) {

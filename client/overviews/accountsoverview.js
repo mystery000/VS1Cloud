@@ -383,7 +383,7 @@ Template.accountsoverview.onRendered(function() {
         setTimeout(function() {
             $(".isBankAccount").addClass("isNotBankAccount");
             $(".isCreditAccount").addClass("isNotCreditAccount");
-            $("#addNewAccount").modal("show");
+            $("#addNewAccountModal").modal("show");
             //$('#btnAddNewAccounts').click();
         }, 500);
     }
@@ -888,7 +888,7 @@ Template.accountsoverview.onRendered(function() {
         $("#expenseCategory").val(expenseCategory);
 
         setTimeout(function() {
-            $("#addNewAccount").modal("show");
+            $("#addNewAccountModal").modal("show");
         }, 500);
     }
 
@@ -1166,6 +1166,7 @@ Template.accountsoverview.onRendered(function() {
                     var accountno = $(event.target).closest("tr").find(".colAccountNo").text() || "";
                     var taxcode = $(event.target).closest("tr").find(".colTaxCode").text() || "";
                     var accountdesc = $(event.target).closest("tr").find(".colDescription").text() || "";
+
                     var bankaccountname = $(event.target).closest("tr").find(".colBankAccountName").text() || "";
                     var bankname = localStorage.getItem("vs1companyBankName") || $(event.target).closest("tr").find(".colBankName").text() || "";
                     var bankbsb = $(event.target).closest("tr").find(".colBSB").text() || "";
@@ -1233,7 +1234,7 @@ Template.accountsoverview.onRendered(function() {
                     let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
                     $("#expenseCategory").val(category);
 
-                    $(this).closest("tr").attr("data-target", "#addNewAccount");
+                    $(this).closest("tr").attr("data-target", "#addNewAccountModal");
                     $(this).closest("tr").attr("data-toggle", "modal");
                 }
 

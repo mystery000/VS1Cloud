@@ -4,6 +4,7 @@
  * this provides wrapper for headers, response handler. it acts like interceptor.
  */
 import { HTTP } from "meteor/http";
+import '../lib/global/erpconnection'
 export class BaseService {
   constructor() {
     this.erpGet = erpDb();
