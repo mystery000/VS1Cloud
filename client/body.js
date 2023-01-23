@@ -499,15 +499,17 @@ import './vs1_templates/vs1_select/default_select.html'
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
 
+import './vs1_templates/transaction_list/transaction_list.js';
+
 // import 'datatables.net';
 // import 'datatables.net-bs';
-// import 'datatables.net-bs4';
-// import 'datatables.net-buttons';
+// import 'datatables.net-dt';
+// import 'datatables.net-buttons/js/dataTables.buttons.js';
 // import 'datatables.net-buttons-dt';
-// import 'datatables.net-buttons/js/buttons.colVis';
-// import 'datatables.net-buttons/js/buttons.flash';
-// import 'datatables.net-buttons/js/buttons.html5';
-// import 'datatables.net-buttons/js/buttons.print';
+// import 'datatables.net-buttons/js/buttons.colVis.js';
+// import 'datatables.net-buttons/js/buttons.flash.js';
+// import 'datatables.net-buttons/js/buttons.html5.js';
+// import 'datatables.net-buttons/js/buttons.print.js';
 // import "datatables.net-colreorder";
 // import "datatables.net-fixedheader";
 // import "datatables.net-fixedcolumns";
