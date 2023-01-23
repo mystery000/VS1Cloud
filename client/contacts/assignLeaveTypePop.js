@@ -172,52 +172,54 @@ Template.assignLeaveTypePop.onCreated(function () {
                                 return item;
                             // }
                         });
-
-                        if( tAssignteavetype.length > 0 ){
-
-                            let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
-
-                            $('#leaveCalcMethodSelect').val(leaveCalcMethod)
-                            switch(leaveCalcMethod){
-                                case 'Manually Recorded Rate':
-                                    $('#hoursLeave').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement');
-                                    $('.manuallyRecordedRate').removeClass('hideelement');
-                                    $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
-                                break;
-                                case 'No Calculation Required':
-                                    $('.handleLeaveTypeOption').addClass('hideelement')
-                                break;
-                                case 'Based on Ordinary Earnings':
-                                    $('#hoursAccruedAnnuallyFullTimeEmp').val('');
-                                    $('#hoursFullTimeEmpFortnightlyPay').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement');
-                                    $('.basedonOrdinaryEarnings').removeClass('hideelement');
-                                    $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
-                                    $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
-                                break;
-                                default:
-                                    $('#hoursAccruedAnnually').val('');
-                                    $('.handleLeaveTypeOption').addClass('hideelement');
-                                    $('.fixedAmountEachPeriodOption').removeClass('hideelement');
-                                    $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
-                                break;
-                            }
-
-                            $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
-                            $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-                            
-                            $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
-                            $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
-                            $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
-                            $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
-
-                            $('#assignteavetypeID').val(tAssignteavetype[0].fields.ID) || 0 ;
-                        }
-                        $('#assignLeaveTypeModal').modal('show');
                     }
                 }
             });
+        //                 if( tAssignteavetype.length > 0 ){
+
+        //                     let leaveCalcMethod = tAssignteavetype[0].fields.LeaveCalcMethod || '';
+
+        //                     $('#leaveCalcMethodSelect').val(leaveCalcMethod)
+        //                     switch(leaveCalcMethod){
+        //                         case 'Manually Recorded Rate':
+        //                             $('#hoursLeave').val('');
+        //                             $('.handleLeaveTypeOption').addClass('hideelement');
+        //                             $('.manuallyRecordedRate').removeClass('hideelement');
+        //                             $('#hoursLeave').val(tAssignteavetype[0].fields.HoursLeave);
+        //                         break;
+        //                         case 'No Calculation Required':
+        //                             $('.handleLeaveTypeOption').addClass('hideelement')
+        //                         break;
+        //                         case 'Based on Ordinary Earnings':
+        //                             $('#hoursAccruedAnnuallyFullTimeEmp').val('');
+        //                             $('#hoursFullTimeEmpFortnightlyPay').val('');
+        //                             $('.handleLeaveTypeOption').addClass('hideelement');
+        //                             $('.basedonOrdinaryEarnings').removeClass('hideelement');
+        //                             $('#hoursAccruedAnnuallyFullTimeEmp').val(tAssignteavetype[0].fields.HoursAccruedAnnuallyFullTimeEmp);
+        //                             $('#hoursFullTimeEmpFortnightlyPay').val(tAssignteavetype[0].fields.HoursFullTimeEmpFortnightlyPay);
+        //                         break;
+        //                         default:
+        //                             $('#hoursAccruedAnnually').val('');
+        //                             $('.handleLeaveTypeOption').addClass('hideelement');
+        //                             $('.fixedAmountEachPeriodOption').removeClass('hideelement');
+        //                             $('#hoursAccruedAnnually').val(tAssignteavetype[0].fields.HoursAccruedAnnually);
+        //                         break;
+        //                     }
+
+        //                     $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
+        //                     $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
+                            
+        //                     $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
+        //                     $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
+        //                     $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
+        //                     $("#superannuationGuarantee").prop('checked', tAssignteavetype[0].fields.SuperannuationGuarantee)
+
+        //                     $('#assignteavetypeID').val(tAssignteavetype[0].fields.ID) || 0 ;
+        //                 }
+        //                 $('#assignLeaveTypeModal').modal('show');
+        //             }
+        //         }
+        //     });
     }, 1000);
 
     $(document).on("click", "#tblAssignLeaveTypes tbody tr .colALType", function (e) {
@@ -241,7 +243,5 @@ Template.assignLeaveTypePop.helpers({
     },
     leaveTypesList: () => { 
         return Template.instance().leaveTypesList.get();
-    },
-
-    
-})
+    },  
+});
