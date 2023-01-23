@@ -20,6 +20,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './shippingcards.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {Html5QrcodeScanner} from "html5-qrcode";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();

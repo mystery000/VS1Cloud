@@ -332,70 +332,71 @@
                             </div>
                         </div>
                     </div>
-                    <table id="tblBankingOverview" class="dataTable table table-striped table-bordered tblBankingOverview">
-                        <thead>
-                            <tr class="dnd-moved">
-                                <th class="th colSortDate hiddenColumn">id</th>
-                                <!-- <th class="th colPaymentDate" style="width:80px;">Date</th>
-                                <th class="th colAccountId hiddenColumn" style="width:80px;">Transaction ID</th>
-                                <th class="th colBankAccount" style="width:100px;">Account</th>
-                                <th class="th colType" style="width:120px;">Type</th>
-                                <th class="th colPaymentAmount" style="width:80px;">Amount</th>
-                                <th class="th colDebitEx" style="width:100px;">Amount (Inc) </th>
-                                <th class="th colDepartment" style="width:80px;">Department</th>
-                                <th class="th colchqrefno hiddenColumn">Chq Ref No</th>
-                                <th class="th colNotes">Comments</th> -->
+<!--                    <table id="tblBankingOverview" class="dataTable table table-striped table-bordered tblBankingOverview">-->
+<!--                        <thead>-->
+<!--                            <tr class="dnd-moved">-->
+<!--                                <th class="th colSortDate hiddenColumn">id</th>-->
+<!--                                &lt;!&ndash; <th class="th colPaymentDate" style="width:80px;">Date</th>-->
+<!--                                <th class="th colAccountId hiddenColumn" style="width:80px;">Transaction ID</th>-->
+<!--                                <th class="th colBankAccount" style="width:100px;">Account</th>-->
+<!--                                <th class="th colType" style="width:120px;">Type</th>-->
+<!--                                <th class="th colPaymentAmount" style="width:80px;">Amount</th>-->
+<!--                                <th class="th colDebitEx" style="width:100px;">Amount (Inc) </th>-->
+<!--                                <th class="th colDepartment" style="width:80px;">Department</th>-->
+<!--                                <th class="th colchqrefno hiddenColumn">Chq Ref No</th>-->
+<!--                                <th class="th colNotes">Comments</th> &ndash;&gt;-->
 
-                                {{#each displayfield in displayfields}}
-                                  {{#if displayfield.display}}
-                                  <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                    {{displayfield.custfieldlabel}}
-                                    {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>
-                                      {{else}}
-                                      {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>
-                                        {{else}}
-                                        {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>
-                                          {{else}}
-                                          {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>
-                                          {{/if}}
-                                        {{/if}}
-                                      {{/if}}
-                                    {{/if}}
-                                  </th>
-                                  {{/if}}
-                                {{/each}}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#if datatablerecords}}
-                            {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                <td contenteditable="false" class="colPaymentDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>
-                                <td contenteditable="false" class="colAccountId {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
-                                <td contenteditable="false" class="colBankAccount {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.bankaccount}}</td>
-                                <td contenteditable="false" class="colType {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" >{{item.type}}</td>
+<!--                                {{#each displayfield in displayfields}}-->
+<!--                                  {{#if displayfield.display}}-->
+<!--                                  <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">-->
+<!--                                    {{displayfield.custfieldlabel}}-->
+<!--                                    {{#if equals displayfield.class 'AmountEx'}} <i class="fas fa-random"></i>-->
+<!--                                      {{else}}-->
+<!--                                      {{#if equals displayfield.class 'AmountInc'}} <i class="fas fa-random fa-trans"></i>-->
+<!--                                        {{else}}-->
+<!--                                        {{#if equals displayfield.class 'UnitPriceEx'}} <i class="fas fa-random"></i>-->
+<!--                                          {{else}}-->
+<!--                                          {{#if equals displayfield.class 'UnitPriceInc'}} <i class="fas fa-random fa-trans"></i>-->
+<!--                                          {{/if}}-->
+<!--                                        {{/if}}-->
+<!--                                      {{/if}}-->
+<!--                                    {{/if}}-->
+<!--                                  </th>-->
+<!--                                  {{/if}}-->
+<!--                                {{/each}}-->
+<!--                            </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                            {{#if datatablerecords}}-->
+<!--                            {{#each item in datatablerecords}}-->
+<!--                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">-->
+<!--                                <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>-->
+<!--                                <td contenteditable="false" class="colPaymentDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>-->
+<!--                                <td contenteditable="false" class="colAccountId {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>-->
+<!--                                <td contenteditable="false" class="colBankAccount {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.bankaccount}}</td>-->
+<!--                                <td contenteditable="false" class="colType {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}" >{{item.type}}</td>-->
 
-                                <!-- <td contenteditable="false" class="colRefNo">{{item.refno}}</td> -->
+<!--                                &lt;!&ndash; <td contenteditable="false" class="colRefNo">{{item.refno}}</td> &ndash;&gt;-->
 
-                                <td contenteditable="false" class="colPaymentAmount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.paymentamount}}</td>
-                                <td contenteditable="false" class="colDebitEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.amountinc}}</td>
-                                <!-- <td contenteditable="false" class="colCreditEx" style="text-align: right!important;">{{item.creditex}}</td> -->
+<!--                                <td contenteditable="false" class="colPaymentAmount {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.paymentamount}}</td>-->
+<!--                                <td contenteditable="false" class="colDebitEx {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.amountinc}}</td>-->
+<!--                                &lt;!&ndash; <td contenteditable="false" class="colCreditEx" style="text-align: right!important;">{{item.creditex}}</td> &ndash;&gt;-->
 
-                                <!-- <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.balance}}</td> -->
-                                <!-- <td contenteditable="false" class="colCustomerName">{{item.customername}}</td> -->
+<!--                                &lt;!&ndash; <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.balance}}</td> &ndash;&gt;-->
+<!--                                &lt;!&ndash; <td contenteditable="false" class="colCustomerName">{{item.customername}}</td> &ndash;&gt;-->
 
-                                <td contenteditable="false" class="colDepartment {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.department}}</td>
-                                <td contenteditable="false" class="colchqrefno {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.chqrefno}}</td>
+<!--                                <td contenteditable="false" class="colDepartment {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">{{item.department}}</td>-->
+<!--                                <td contenteditable="false" class="colchqrefno {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.chqrefno}}</td>-->
 
-                                <!-- <td contenteditable="false" class="colJobName hiddenColumn">{{item.jobname}}</td> -->
-                                <!-- <td contenteditable="false" class="colPaymentMethod hiddenColumn">{{item.paymentmethod}}</td> -->
-                                <td contenteditable="false" class="colNotes {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.notes}}</td>
-                            </tr>
-                            {{/each}}
-                            {{/if}}
-                        </tbody>
-                    </table>
+<!--                                &lt;!&ndash; <td contenteditable="false" class="colJobName hiddenColumn">{{item.jobname}}</td> &ndash;&gt;-->
+<!--                                &lt;!&ndash; <td contenteditable="false" class="colPaymentMethod hiddenColumn">{{item.paymentmethod}}</td> &ndash;&gt;-->
+<!--                                <td contenteditable="false" class="colNotes {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.notes}}</td>-->
+<!--                            </tr>-->
+<!--                            {{/each}}-->
+<!--                            {{/if}}-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+                    {{> transaction_list tablename = "tblBankingOverview" }}
                 </div>
             </div>
         </div>
