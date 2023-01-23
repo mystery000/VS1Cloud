@@ -64,19 +64,19 @@ Template.templatesettings.onRendered(function () {
 
   let templateObject = Template.instance();
   $(document).on("click", "#editPrintMore", function (e) {});
-  // $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
-  //   title = $(this).parent().attr("data-id");
-  //   number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-  //   templateObject.generateInvoiceData(title, number);
-  //   $(".modal-title#templatePreviewLabel").css("display", "none");
-  //   $("#templatePreviewModal #templatePreviewInput").css("display", "block");
-  //   $("#editPrintMore").css("display", "block");
-  //   $('#templatePreviewModal .btnCopyReport').css("display", "block");
-  //   $('#templatePreviewModal .btnImportReport').css("display", "block");
-  //   $("#templatePreviewModal #templatePreviewInput").val(
-  //     $('input[name="' + title + "_" + number + '"]').val()
-  //   );
-  // });
+  $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
+    title = $(this).parent().attr("data-id");
+    number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
+    templateObject.generateInvoiceData(title, number);
+    $(".modal-title#templatePreviewLabel").css("display", "none");
+    $("#templatePreviewModal #templatePreviewInput").css("display", "block");
+    $("#editPrintMore").css("display", "block");
+    $('#templatePreviewModal .btnCopyReport').css("display", "block");
+    $('#templatePreviewModal .btnImportReport').css("display", "block");
+    $("#templatePreviewModal #templatePreviewInput").val(
+      $('input[name="' + title + "_" + number + '"]').val()
+    );
+  });
   $(document).on("click", ".templateItem #btnPreviewTemplate", function (e) {
     title = $(this).parent().attr("data-id");
     number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
