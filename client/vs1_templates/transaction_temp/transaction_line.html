@@ -406,30 +406,26 @@
                             class="lineMemo colMemo {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.memo}}
                         </td>
-                        {{#if canShowBackOrder}}
-                        {{#if equals includeBOnShippedQty true}}
+
+                        <td class="colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
+                                class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
+
                         <td class="colOrdered {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="lineOrdered colOrdered highlightInput" type="number" value="{{item.qtyordered}}">
                         </td>
+
                         <td class="colShipped {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="lineQty colQty lineShipped highlightInput" type="number"
-                                value="{{item.qtyshipped}}"></td>
+                                value="{{item.qtyshipped}}">
+                        </td>
                         <td class="colBackOrder {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtybo}}"
                                 readonly></td>
-                        {{else}}
-                        <td class="colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
-                        {{/if}}
-                        {{else}}
-                        <td class="colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
-                        {{/if}}
-                        {{#if equals isBatchSerialNoTracking 'true'}}
+
                         <td class="th colSerialNo {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><i
                                 class="fas fa-plus-square text-success btnSnLotmodal"
                                 style="margin-left: 40px; font-size: 22px;"></i></td>
-                        {{/if}}
+
                         <td class="th colFixedAsset {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><i
                                 class="fas fa-plus-square text-success btnFixedAsset"
                                 style="margin-left: 40px; font-size: 22px;"></i></td>
@@ -514,13 +510,13 @@
                             style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
 
 
-                        {{#if canShowUOM}}
+
                         <td contenteditable="false"
                             class="lineUOM colUnits pointer {{#if displayfields.[21].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;cursor: pointer;"><input
                                 class="es-input highlightSelect colUnits lineUOM" type="search"
                                 value="{{item.UnitOfMeasure}}"></td>
-                        {{/if}}
+
                         <td contenteditable="true"
                             class="lineCustomField1 colCustomField1  {{#if displayfields.[22].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.CustomField1}}</td>

@@ -3,8 +3,6 @@ import { Mongo } from 'meteor/mongo';
 import { Session } from 'meteor/session';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-CloudUser = new Mongo.Collection("cloudUser");
-
 var activityTimeout = setTimeout(inActive, 1800000);
 var sidebarTimeout = setTimeout(closeSideBar, 3000);
 
@@ -23,12 +21,11 @@ if ($(".collapse.show")[0]){
 function inActive(){
     $(document.body).attr('class', 'inactive');
     var loc = FlowRouter.current().path;
-
+    let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
       if ((loc != '/') && (loc != '/register') && (loc != '/registerdb')
       && (loc != '/vs1greentracklogin')&& (loc != '/registersts')
     && (loc != '/paymentmethodSettings')) {
-        CloudUser.update({_id: localStorage.getItem('mycloudLogonID')},{ $set: {userMultiLogon: false}});
-        if(localStorage.getItem('isGreenTrack')){
+        if (checkGreenTrack == true) {
           window.open('/vs1greentracklogin','_self');
         }else{
           //window.open('/','_self');

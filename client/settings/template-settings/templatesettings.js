@@ -60,6 +60,7 @@ Template.templatesettings.onCreated(() => {
 Template.templatesettings.onRendered(function () {
   $("#templatePreviewModal #templatePreviewInput").keyup(function (event) {
     $('input[name="' + title + "_" + number + '"]').val($(this).val());
+    localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
   });
 
   let templateObject = Template.instance();
@@ -76,6 +77,7 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal #templatePreviewInput").val(
       $('input[name="' + title + "_" + number + '"]').val()
     );
+    localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
   });
   $(document).on("click", ".templateItem #btnPreviewTemplate", function (e) {
     title = $(this).parent().attr("data-id");
