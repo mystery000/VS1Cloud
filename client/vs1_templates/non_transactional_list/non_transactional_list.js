@@ -993,7 +993,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "" },
                 { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "" },
             ];
-        } else if (currenttablename === "tblTimeSheet"){
+        } else if (currenttablename === "tblPayRuns"){
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTimeSheetId', active: false, display: true, width: "" },
                 { index: 1, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100" },
@@ -14129,30 +14129,30 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
     
-    templateObject.getTimeSheetList = function(){
+    templateObject.getPayRunsList = function(){
       getVS1Data('TTimeSheet').then(function (dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getAllTimeSheetList(initialBaseDataLoad, 0).then(async function (data) {
                   await addVS1Data('TTimeSheet', JSON.stringify(data));
-                  templateObject.displayTimeSheetList(data);
+                  templateObject.displayPayRunsList(data);
               }).catch(function (err) {
   
               });
           } else {
               let data = JSON.parse(dataObject[0].data);
-              templateObject.displayTimeSheetList(data);
+              templateObject.displayPayRunsList(data);
           }
       }).catch(function (err) {
         sideBarService.getAllTimeSheetList(initialBaseDataLoad, 0).then(async function (data) {
             await addVS1Data('TTimeSheet', JSON.stringify(data));
-            templateObject.displayTimeSheetList(data);
+            templateObject.displayPayRunsList(data);
         }).catch(function (err) {
   
         });
       });
     }
     
-    templateObject.displayTimeSheetList = function(data){
+    templateObject.displayPayRunsList = function(data){
         let splashArrayTimeSheetList = new Array();
         for (let i = 0; i < data.ttimesheet.length; i++) {
             let ID = data.ttimesheet[i].fields.ID || '';
@@ -15547,8 +15547,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getFixedAssetData();
     } else if (currenttablename == "tblFixedAssetType") {
         templateObject.getFixedAssetTypeData();
-    } else if (currenttablename === "tblTimeSheet"){
-        templateObject.getTimeSheetList();
+    } else if (currenttablename === "tblPayRuns"){
+        templateObject.getPayRunsList();
     } else if (currenttablename === "tblSerialNumberList"){
         setTimeout(function() {
             templateObject.getSerialNumberList(false);
