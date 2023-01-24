@@ -24,7 +24,8 @@ import { HTTP } from "meteor/http";
 import './organization-settings.js'
 import './taxrate-settings.js'
 import './payment-settings.js'
-import './terms/terms-settings.js'
+import './terms/terms-settings.js';
+import './employments/employment-settings.js'
 
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
