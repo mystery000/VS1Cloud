@@ -95,6 +95,8 @@ Template.payrolloverview.onRendered(function () {
       }
     });
 
+    console.log('++++++++++++:',data)
+
     data = data.response;
     const payRuns = PayRun.fromList(data);
 
@@ -105,6 +107,7 @@ Template.payrolloverview.onRendered(function () {
   templateObject.loadDraftPayrun = async () => {
 
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
+    console.log('payRunsHistory:',payRunsHistory)
 
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
 

@@ -2705,6 +2705,7 @@ Template.employeescard.onRendered(function() {
                 }
             });
             $('#edtPayrollCalendar').editableSelect();
+            $('#edtHolidays').editableSelect();
         }, 1000)
 
         //On Click Client Type List
@@ -2736,6 +2737,14 @@ Template.employeescard.onRendered(function() {
             }
             $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
             $('#employeeTitlePopModal').modal('toggle');
+        });
+        $(document).on("click", "#tblPayCalendars tbody tr", function (e) {
+            $('#edtPayrollCalendar').val($(this).find(".colPayCalendarName").text());
+            $('#payrollCalendarPopModal').modal('toggle');
+        });
+        $(document).on("click", "#tblHolidays tbody tr", function (e) {
+            $('#edtHolidays').val($(this).find(".colHolidayName").text());
+            $('#holidaysPopModal').modal('toggle');
         });
     });
 
@@ -11107,6 +11116,12 @@ Template.employeescard.events({
 
     "click input#edtPayPeriod": (e, ui) => {
         $('#SelectPayRunModal').modal("show");
+    },
+    "click input#edtPayrollCalendar": (e, ui) => {
+        $('#payrollCalendarPopModal').modal("show");
+    },
+    "click input#edtHolidays": (e, ui) => {
+        $('#holidaysPopModal').modal("show");
     },
     "click .earningLineDropDown": (e, ui) => {
         $(e.currentTarget).addClass('paste-earnings');
