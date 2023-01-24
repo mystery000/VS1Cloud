@@ -816,7 +816,7 @@ Template.serialnumberlist.onRendered(function() {
 
     }
 
-    templateObject.getAllSerialNumberData();
+    // templateObject.getAllSerialNumberData();
     tableResize();
 });
 

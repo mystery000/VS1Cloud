@@ -40,12 +40,15 @@
             <div class="col">
                 <button class="btn btn-primary printConfirm float-right btnNav" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
                 <button class="btn btn-primary export float-right btnNav" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                <div class="dropdown float-right" style="margin: 12px;">
+                    <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
+                </div>
             </div>
         </div>
 
         <div style="padding: 0px 12px;">
             <div class="card-body p-3 rounded">
-                <div class="table-responsive">
+                <!-- <div class="table-responsive">
                     <table id="tblSerialNumberList" class="dataTable table table-striped table-bordered tblStockTransferList">
                         <thead>
                             <tr class="dnd-moved">
@@ -72,13 +75,14 @@
                             {{/each}}
                         </tbody>
                     </table>
-                </div>
+                </div> -->
+                {{> non_transactional_list tablename = "tblSerialNumberList"}}
             </div>
         </div>
     </div>
 
     <!-- Start PDF -->
-    <div style="width: 280mm;background-color: #ffffff;padding: 8px; display:none!important;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">
+    <!-- <div style="width: 280mm;background-color: #ffffff;padding: 8px; display:none!important;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">
         <div class="d-xl-flex align-items-xl-start">
             <div class="d-flex d-xl-flex flex-column flex-nowrap align-items-xl-center" >
                 <div class="d-lg-flex d-xl-flex flex-grow-0 align-items-lg-start align-items-xl-start">
@@ -149,7 +153,7 @@
 
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- END PDF -->
 
 
@@ -157,6 +161,22 @@
         modalDraggable();
     </script>
 
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblDepartmentList"}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Ok</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">

@@ -528,7 +528,7 @@ Template.lotnumberlist.onRendered(function() {
 
     }
 
-    templateObject.getAllSerialNumberData();
+    // templateObject.getAllSerialNumberData();
     tableResize();
 });
 
