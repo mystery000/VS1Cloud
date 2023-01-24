@@ -115,6 +115,15 @@ Template.transaction_list.onRendered(function() {
                 { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
                 { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
             ]
+        }else if(currenttablename === "tblPayleaveToReview"){
+            reset_data = [
+                { index: 0, label: 'ID', class: 'colPayrollLeaveID', active: false, display: true, width: "" },
+                { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
+                { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
+                { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
+                { index: 4, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+            ]  
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -1603,6 +1612,206 @@ Template.transaction_list.onRendered(function() {
         }, 0);
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+    templateObject.getPayrollLeaveData = function(){
+        getVS1Data('TLeavRequest').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                let data = await CachedHttp.get(erpObject.TLeavRequest, async () => {
+                    return await payRunHandler.loadFromLocal();
+                  }, {
+                    forceOverride: false,
+                    validate: (cachedResponse) => {
+                      return true;
+                    }
+                  });
+              
+                data = data.response;
+                const payRuns = PayRun.fromList(data);
+                await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
+                templateObject.displayPayrollLeaveData(payRuns);
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayPayrollLeaveData(data);
+            }
+        }).catch(async function (err) {
+            let data = await CachedHttp.get(erpObject.TLeavRequest, async () => {
+                return await payRunHandler.loadFromLocal();
+              }, {
+                forceOverride: false,
+                validate: (cachedResponse) => {
+                  return true;
+                }
+              });
+          
+            data = data.response;
+            const payRuns = PayRun.fromList(data);
+            await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
+            templateObject.displayPayrollLeaveData(payRuns);
+        });
+    }
+
+    templateObject.displayPayrollLeaveData = function(payRunsHistory){
+        let splashArrayPayRunHistory = new Array();
+        let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        for (let i = 0; i < data.length; i++) {
+            var dataPayRunHistory = [
+                data[i].fields.ID || "",
+                data[i].fields.LeaveType || "",
+                data[i].fields.LeaveCalcMethod || "",
+                data[i].fields.HoursAccruedAnnually || "",
+                data[i].fields.HoursAccruedAnnuallyFullTimeEmp || "",
+              ];
+            splashArrayPayRunHistory.push(dataPayRunHistory);
+            templateObject.transactiondatatablerecords.set(splashArrayPayRunHistory);
+        }
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayPayRunHistory,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colPayrollLeaveID hiddenColumn", 
+                        targets:0,
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        className: "colName", 
+                        targets: 1,
+                        width:'100px'
+                    },
+                    {
+                        className: "colType",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colDate",
+                        targets: 3,
+                        width:'100px'
+                    },
+                    {
+                        className: "colDescription",
+                        targets: 4,
+                        width:'100px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 5,
+                        width:'100px'
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
@@ -1624,6 +1833,8 @@ Template.transaction_list.onRendered(function() {
         templateObject.getBankingOverviewData("");
     } else if (currenttablename === "tblPayRunHistory"){
         templateObject.getPayRunHistoryData("");
+    }else if (currenttablename === "tblPayleaveToReview"){
+        templateObject.getPayrollLeaveData("");
     }
     tableResize();
 
