@@ -525,7 +525,6 @@ Template.agedreceivables.events({
     //     let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
     //     let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
     //     //localStorage.setItem('showHeader',true);
-    //     console.log("console 1===");
     //     await clearData('TAccountRunningBalanceReport');
     //     window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
     // },
