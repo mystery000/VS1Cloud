@@ -10,6 +10,7 @@ import { ManufacturingService } from "../../manufacture/manufacturing-service";
 import { CRMService } from "../../crm/crm-service";
 import { ReportService } from "../../reports/report-service";
 import { FixedAssetService } from "../../fixedassets/fixedasset-service";
+import { StockTransferService } from '../../inventory/stockadjust-service';
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
 import { Template } from 'meteor/templating';
@@ -23,6 +24,7 @@ let manufacturingService = new ManufacturingService();
 let crmService = new CRMService();
 let reportService = new ReportService();
 let fixedAssetService = new FixedAssetService();
+let stockTransferService = new StockTransferService();
 const taxRateService = new TaxRateService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
@@ -999,15 +1001,6 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "150" },
                 { index: 5, label: 'Last edited', class: 'colLastEdited', active: true, display: true, width: "250" },
                 { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
-            ]
-        } else if (currenttablename === 'taxRatesList') {
-            reset_data = [
-                { index: 0, label: 'Name', class: 'colFirstName', active: true, display: true },
-                { index: 1, label: 'Description', class: 'colSurname', active: true, display: true, },
-                { index: 2, label: 'Rate', class: 'colPeriod', active: true, display: true },
-                { index: 3, label: 'Purchase Default', class: 'colStatus', active: true, display: true, width: '20' },
-                { index: 4, label: 'Sales Default', class: 'colLastEdited', active: true, display: true, width: '20' },
-                { index: 5, label: '', class: 'colDelete', active: true, display: true}
             ]
         }
         templateObject.reset_data.set(reset_data);
@@ -14279,165 +14272,6 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
-
-    // TaxRate tables
-    templateObject.getTaxRates = function(){
-        getVS1Data('TTaxcodeVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                taxRateService.getTaxRateVS1().then(function(data) {
-                    console.log(data)
-                    addVS1Data('TTaxcodeVS1', JSON.stringify(data))
-                    templateObject.displayTaxRateList(data);
-                }).catch(function(err) {
-                    $(".fullScreenSpin").css("display", "none");
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                templateObject.displayTaxRateList(data)
-            }
-        }).catch(function(err) {
-            taxRateService.getTaxRateVS1().then(function(data) {
-                addVS1Data('TTaxcodeVS1', JSON.stringify(data))
-                templateObject.displayTaxRateList(data)
-            }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        });
-    }
-    templateObject.displayTaxRateList = function(data){
-        const dataTableList = [];
-        const tableHeaderList = [];
-        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
-            const id = data.ttaxcodevs1[i].Id || '';
-            const codeName = data.ttaxcodevs1[i].CodeName || '-';
-            const description = data.ttaxcodevs1[i].Description || '-';
-            const rate = taxRate || '-';
-            const purchasesDefault =  `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioP" name="optradioP"
-            id="formCheckP-${id}" value="${codeName}"><label
-            class="custom-control-label" for="formCheckP-${id}"></label></div>`;
-            const salesDefault =  `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioS" name="optradioS"
-            id="formCheckS-${id}" value="${codeName}"><label
-            class="custom-control-label" for="formCheckS-${id}"></label></div>`
-            const dataList = [
-                codeName,
-                description,
-                rate,
-                purchasesDefault,
-                salesDefault,
-                `<span class="table-remove"><button type="button"
-                class="btn btn-danger btn-rounded btn-sm my-0"><i
-                  class="fa fa-remove"></i></button></span>`
-            ]
-            dataTableList.push(dataList);
-        }
-        templateObject.transactiondatatablerecords.set(dataTableList);
-        setTimeout(function() {
-            MakeNegative();
-        }, 100);
-        $(".fullScreenSpin").css("display", "none");
-        $("#taxRatesList").DataTable({
-            data: templateObject.transactiondatatablerecords.get(),
-            columnDefs: [
-                { type: "date", targets: 0 },
-                { orderable: false, targets: -1 },
-            ],
-            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [{
-                    extend: 'excelHtml5',
-                    text: '',
-                    download: 'open',
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "taxratelist_" + moment().format(),
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: ":visible",
-                    },
-                },
-                {
-                    extend: "print",
-                    download: "open",
-                    className: "btntabletopdf hiddenColumn",
-                    text: "",
-                    title: "Tax Rate List",
-                    filename: "taxratelist_" + moment().format(),
-                    exportOptions: {
-                        columns: ":visible",
-                    },
-                    paging: false,
-                    info: true,
-                    responsive: true,
-                    "order": [
-                        [0, "asc"]
-                    ],
-                    action: function() {
-                        $('#taxRatesList').DataTable().ajax.reload();
-                    },
-                },
-                {
-                    extend: "print",
-                    download: "open",
-                    className: "btntabletopdf hiddenColumn",
-                    text: "",
-                    title: "Tax Rate List",
-                    filename: "taxratelist_" + moment().format(),
-                    exportOptions: {
-                        columns: ":visible",
-                    },
-                },
-            ],
-            select: true,
-            destroy: true,
-            colReorder: {
-                fixedColumnsRight: 1,
-            },
-            paging: false,
-            info: true,
-            responsive: true,
-            order: [
-                [0, "asc"]
-            ],
-            action: function() {
-                $("#taxRatesList").DataTable().ajax.reload();
-            },
-            fnDrawCallback: function(oSettings) {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            },
-        })
-        .on("column-reorder", function() {})
-        .on("length.dt", function(e, settings, len) {
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        });
-        $(".fullScreenSpin").css("display", "none");
-        var columns = $("#taxRatesList th");
-        let sWidth = "";
-        let columVisible = false;
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-    }
-
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -14547,8 +14381,6 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getFixedAssetTypeData();
     } else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetList();
-    } else if (currenttablename === 'taxRatesList'){
-        templateObject.getTaxRates();
     }
     
     tableResize();
@@ -14570,10 +14402,41 @@ Template.non_transactional_list.onRendered(function() {
         }
     });
 
-    $(document).on("click", "#tblAllTaskDatatable tbody tr", function(e) {
-        setTimeout(function() {
-            templateObject.getSubtaskData(false);
-        }, 10);
+    $(document).on("click", "#myModalDepartment .btnDepartmentSelect", function(e) {
+        if (currenttablename === "tblSerialNumberList") {
+            if($("#tblSerialNumberList_wrapper .btnViewDeleted").html() == undefined){
+                templateObject.getSerialNumberList(true);
+            }
+            else{
+                templateObject.getSerialNumberList(false);
+            }
+            
+        } else if (currenttablename === "tblLotNumberList") {
+            if($("#tblLotNumberList_wrapper .btnViewDeleted").html() == undefined){
+                templateObject.getLotNumberList(true);
+            }
+            else{
+                templateObject.getLotNumberList(false);
+            }
+        }
+        $("#myModalDepartment").modal("toggle");
+    });
+
+    $(document).on("click", "#btnRefreshList", function(e) {
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+
+        if (currenttablename === "tblLeadCrmListWithDate") {
+            templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblCustomerCrmListWithDate") {
+            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblSupplierCrmListWithDate") {
+            templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
+        } else if (currenttablename === "tblBASReturnList") {
+            templateObject.getBasReturnData(false, datefrom, dateto);
+        } else if (currenttablename === "tblVATReturnList") {
+            templateObject.getVatReturnData(false, datefrom, dateto);
+        }
     });
 });
 
@@ -14590,8 +14453,8 @@ Template.non_transactional_list.events({
         e.stopImmediatePropagation();
         const templateObject = Template.instance();
         let currenttablename = await templateObject.tablename.get() || '';
-        $('.btnViewDeleted').css('display', 'none');
-        $('.btnHideDeleted').css('display', 'inline-block');
+        // $('.btnViewDeleted').css('display', 'none');
+        // $('.btnHideDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
             await clearData('TERPCombinedContactsVS1');
@@ -14689,6 +14552,10 @@ Template.non_transactional_list.events({
             templateObject.getVatReturnData(true, datefrom, dateto);
         } else if (currenttablename === "tblSubtaskDatatable"){
             templateObject.getSubtaskData(true);
+        } else if (currenttablename === "tblSerialNumberList"){
+            templateObject.getSerialNumberList(true);
+        } else if (currenttablename === "tblLotNumberList"){
+            templateObject.getLotNumberList(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -14700,8 +14567,8 @@ Template.non_transactional_list.events({
         // var datatable = $(`#${currenttablename}`).DataTable();
         // datatable.clear();
         // datatable.draw(false);
-        $('.btnHideDeleted').css('display', 'none');
-        $('.btnViewDeleted').css('display', 'inline-block');
+        // $('.btnHideDeleted').css('display', 'none');
+        // $('.btnViewDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
             await clearData('TERPCombinedContactsVS1');
@@ -14789,8 +14656,11 @@ Template.non_transactional_list.events({
             templateObject.getVatReturnData(false, datefrom, dateto);
         } else if (currenttablename === "tblSubtaskDatatable"){
             templateObject.getSubtaskData(false);
+        } else if (currenttablename === "tblSerialNumberList"){
+            templateObject.getSerialNumberList(false);
+        } else if (currenttablename === "tblLotNumberList"){
+            templateObject.getLotNumberList(false);
         }
-
     },
     'change .custom-range': async function(event) {
         const tableHandler = new TableHandler();
