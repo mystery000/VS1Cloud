@@ -5656,7 +5656,7 @@ Template.payrollrules.onRendered(function() {
             rateTypeId: rateType.ID,
             rate: rate,
             hourlyMultiplier: hourlyMultiplier,
-            rate,
+            // rate,
             rule: rate == "Weekend"? `${weekEndDay}` : `Greater than ${hours} hours`,
             day: rate == "Weekend" ? weekEndDay: null
 
@@ -21265,6 +21265,7 @@ Template.payrollrules.events({
         let imageData=templateObject.imageFileData.get();
         if(imageData!=null && imageData!="")
         {
+            addVS1Data("TVS1Image", imageData);
             localStorage.setItem("Image",imageData);
             $('#uploadedImage').attr('src', imageData);
             //$('#uploadedImage').attr('width','100%');
