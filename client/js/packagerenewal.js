@@ -1,5 +1,7 @@
 import {Mongo} from 'meteor/mongo';
-
+import { Template } from 'meteor/templating';
+import '../Login/packagerenewal.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 Template.packagerenewal.onCreated(function() {
 
   // Meteor.call('sendEmail', {

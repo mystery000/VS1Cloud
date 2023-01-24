@@ -7,6 +7,7 @@ import TransactionFields from './transaction_line_setting.js';
 import { Template } from 'meteor/templating';
 import './transaction_line.html';
 
+
 let sideBarService = new SideBarService();
 export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
 
@@ -20,6 +21,11 @@ Template.transaction_line.onCreated(function(){
 Template.transaction_line.onRendered(function() {
     let templateObject = Template.instance();
     let currenttranstablename = templateObject.data.tablename||"";
+    let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking.toString() === "true";
+    let includeBOnShippedQty = templateObject.data.includeBOnShippedQty.toString() === "true";
+    let canShowUOM = templateObject.data.canShowUOM.toString() === "true";
+    let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
+    let allowedExRateTables = ['tblPurchaseOrderLine', 'tblInvoiceLine'];
     templateObject.init_reset_data = function() {
         let reset_data = [
             { index: 0,  label: "Product Name",       class: "ProductName",   width: "300",       active: true,   display: true },
@@ -71,27 +77,29 @@ Template.transaction_line.onRendered(function() {
                 default_display = TransactionFields.initRefundLine;
                 break;
         }
-        reset_data = TransactionFields.insertData(reset_data, default_display);     
+        reset_data = TransactionFields.insertData(reset_data, default_display);
+
+        let findItem = null;
+        // canShowBackOrder
+        if(allowedExRateTables.includes(currenttranstablename)){
+            findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+            findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+            findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+            findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+        }
+        // canShowUOM
+        findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
+        // isBatchSerialNoTracking
+        findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
+        
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        let reset_data = templateObject.reset_data.get();
-        let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking.toString() === "true";
-        let includeBOnShippedQty = templateObject.data.includeBOnShippedQty.toString() === "true";
-        let canShowUOM = templateObject.data.canShowUOM.toString() === "true";
-        let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
+        let reset_data = templateObject.reset_data.get();     
         // Fixet Asset
         templateObject.showCustomFieldDisplaySettings(reset_data);
-
-        employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')); 
-        sideBarService.getNewCustomFieldsWithQuery(employeeId, listType).then(function(data) {
-            console.log("### Import VS1_Customize from API ###");
-            console.dir(data);
-        }).catch(function(err) {});
-        
-        getVS1Data("VS1_Customize").then(function(dataObject){        
-                
+        getVS1Data("VS1_Customize").then(function(dataObject){                        
             if(dataObject.length == 0) {
                 // Import VS1_Customize from API
                 employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')); 
@@ -99,10 +107,12 @@ Template.transaction_line.onRendered(function() {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns; 
                     let findItem = null;
                     // canShowBackOrder
-                    findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
-                    findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
-                    findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
-                    findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+                    if(allowedExRateTables.includes(listType)){
+                        findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                        findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                        findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                        findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+                    }
                     // canShowUOM
                     findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
                     // isBatchSerialNoTracking
@@ -112,8 +122,6 @@ Template.transaction_line.onRendered(function() {
             } else {
                 // Import VS1_Customize from IndexDB
                 let data = JSON.parse(dataObject[0].data);
-                console.log("### Import VS1_Customize from IndexDB ###");
-                console.dir(data);
                 if (data.ProcessLog.Obj.CustomLayout.length > 0) {
                     for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                         if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
@@ -121,10 +129,12 @@ Template.transaction_line.onRendered(function() {
 
                             let findItem = null;
                             // canShowBackOrder
-                            findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
-                            findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
-                            findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
-                            findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+                            if(allowedExRateTables.includes(listType)){
+                                findItem = reset_data.find(item => item.class === "Ordered"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                                findItem = reset_data.find(item => item.class === "Shipped"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                                findItem = reset_data.find(item => item.class === "BackOrder"); if(findItem != undefined) findItem.display = findItem.active = (canShowBackOrder && includeBOnShippedQty);
+                                findItem = reset_data.find(item => item.class === "Qty"); if(findItem != undefined) findItem.display = findItem.active = !(canShowBackOrder && includeBOnShippedQty);
+                            }
                             // canShowUOM
                             findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
                             // isBatchSerialNoTracking
@@ -179,7 +189,7 @@ Template.transaction_line.events({
     "click .btnResetGridSettings": async function(event) {
         let templateObject = Template.instance();
         let currenttranstablename = templateObject.data.tablename||"";
-        let reset_data = templateObject.reset_data.get();
+        let reset_data = await templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display);
         $(".displaySettings").each(function(index) {
             let $tblrow = $(this);

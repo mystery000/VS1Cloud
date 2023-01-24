@@ -39,6 +39,7 @@ Template.salesreport.onCreated(() => {
   FxGlobalFunctions.initVars(templateObject);
 });
 
+
 Template.salesreport.onRendered(() => {
   const templateObject = Template.instance();
   LoadingOverlay.show();
@@ -47,12 +48,12 @@ Template.salesreport.onRendered(() => {
     { index: 1, label: 'Customer ID', class: 'colCustomerID', active: true, display: true, width: "110" },
     { index: 2, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "100" },
     { index: 3, label: 'Invoice~Number', class: 'colInvoiceNumber', active: true, display: true, width: "140" },
-    { index: 4, label: 'Transaction~Type', class: 'colTransactionType', active: true, display: true, width: "110" },
-    { index: 5, label: 'Customer~Type', class: 'colCustomerType', active: true, display: true, width: "100" },
+    { index: 4, label: 'Transaction~Type', class: 'colTransactionType', active: true, display: true, width: "150" },
+    { index: 5, label: 'Customer~Type', class: 'colCustomerType', active: true, display: true, width: "140" },
     { index: 6, label: 'Amount(Ex)', class: 'colAmountEx', active: true, display: true, width: "100" },
     { index: 7, label: 'Tax', class: 'colTax', active: true, display: true, width: "85" },
     { index: 8, label: 'Amount(Inc)', class: 'colAmountInc', active: true, display: true, width: "110" },
-    { index: 9, label: 'Qty Shipped', class: 'colQtyShipped', active: true, display: true, width: "100" },
+    { index: 9, label: 'Qty Shipped', class: 'colQtyShipped', active: true, display: true, width: "130" },
     { index: 10, label: 'UOM', class: 'colUOM', active: false, display: true, width: "85" },
     { index: 11, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
     { index: 12, label: 'Catagory', class: 'colCatagory', active: true, display: true, width: "85" },
@@ -121,7 +122,11 @@ Template.salesreport.onRendered(() => {
   const deptrecords = [];
 
   templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
+    // let imageData = localStorage.getItem("Image");
+    let imageData;
+    getVS1Data("Image").then(function (dataObject) {
+      imageData =JSON.parse(dataObject[0]).data;
+    });
     if (imageData) {
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");
@@ -152,14 +157,14 @@ Template.salesreport.onRendered(() => {
       }
     });
     data = data.response;
-
     let totalRecord = [];
     let grandtotalRecord = [];
 
 
 
     if (data.tsaleslist.length) {
-      localStorage.setItem('VS1Sales_Report', JSON.stringify(data) || '');
+      // localStorage.setItem('VS1Sales_Report', JSON.stringify(data) || '');
+      addVS1Data('TVS1Sales_Report', JSON.stringify(data) || '');
       let records = [];
       let allRecords = [];
       let current = [];
@@ -545,7 +550,8 @@ Template.salesreport.events({
   // },
   'click .btnRefresh': function () {
     LoadingOverlay.show();
-    localStorage.setItem('VS1Sales_Report', '');
+    // localStorage.setItem('VS1Sales_Report', '');
+    addVS1Data('TVS1Sales_Report', '');
     Meteor._reload.reload();
   },
   // 'click td a': function(event) {
@@ -831,7 +837,8 @@ Template.salesreport.events({
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
     LoadingOverlay.show();
-    localStorage.setItem("VS1Sales_Report", "");
+    // localStorage.setItem("VS1Sales_Report", "");
+    addVS1Data('TVS1Sales_Report', '');
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.getSalesReports(null, null, true);
@@ -839,7 +846,8 @@ Template.salesreport.events({
   "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
     LoadingOverlay.show();
-    localStorage.setItem("VS1Sales_Report", "");
+    // localStorage.setItem("VS1Sales_Report", "");
+    addVS1Data('TVS1Sales_Report', '');
     templateObject.getSalesReports(
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),

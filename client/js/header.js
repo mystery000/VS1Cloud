@@ -323,7 +323,7 @@ Template.header.onRendered(function () {
                         rowId: 0,
                         select: true,
                         destroy: true,
-                        colReorder: true,
+                        // colReorder: true,
                         colReorder: {
                             fixedColumnsLeft: 1
                         },
@@ -1294,7 +1294,7 @@ Template.header.onRendered(function () {
                                 rowId: 0,
                                 select: true,
                                 destroy: true,
-                                colReorder: true,
+                                // colReorder: true,
                                 colReorder: {
                                     fixedColumnsLeft: 1
                                 },
@@ -1714,6 +1714,7 @@ Template.header.onRendered(function () {
                 let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture || '';
                 let logoPictureType = dataLogo.tcomplogo[0].Pictype || '';
                 let logoImageData = 'data:image/' + logoPictureType + ';base64,' + logoImagePicture;
+                addVS1Data("TVS1Image", logoImageData);
                 localStorage.setItem("Image", logoImageData);
             };
         });

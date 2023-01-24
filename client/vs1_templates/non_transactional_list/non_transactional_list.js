@@ -1003,13 +1003,16 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblSerialNumberList"){
             reset_data = [
-                { index: 0, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
-                { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
+                { index: 0, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
+                { index: 1, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
                 { index: 2, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
-                { index: 3, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },
-                { index: 4, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
-                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
-                { index: 6, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 4, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
+                { index: 5, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 6, label: 'Transaction', class: 'colTransaction', active: true, display: true, width: "" },
+                { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
+                { index: 8, label: 'Bin', class: 'colBin', active: true, display: true, width: "" },
+                { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },
             ]
         } else if (currenttablename === "tblLotNumberList"){
             reset_data = [
@@ -14337,6 +14340,9 @@ Template.non_transactional_list.onRendered(function() {
             let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
             let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
             let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
+            let qty = data.tserialnumberlistcurrentreport[i].Quantity;
+            let transaction = data.tserialnumberlistcurrentreport[i].Quantity;
+            let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
             let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
             let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
             let status = data.tserialnumberlistcurrentreport[i].AllocType;
@@ -14344,13 +14350,16 @@ Template.non_transactional_list.onRendered(function() {
             let cssclass = tclass;
 
             var dataTimeSheetList = [
-                productname,
-                department,
-                salsedes,
-                barcode,
                 serialnumber,
+                productname,
+                salsedes,
                 status === ""?"Draft":status,
+                qty,
                 date,
+                transaction,
+                department,
+                bin,
+                barcode,
                 cssclass,
             ];
 
@@ -14390,17 +14399,17 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
+                        className: "colSerialNumber",
+                        targets: 0,
+                        width:'8%'
+                    },
+                    {
                         className: "colProductName", 
-                        targets:0,
+                        targets: 1,
                         width:'14%',
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("data-serialnumber", rowData[4]);
                         }
-                    },
-                    {
-                        className: "colDepartment", 
-                        targets: 1,
-                        width:'14%'
                     },
                     {
                         className: "colDescription",
@@ -14408,28 +14417,43 @@ Template.non_transactional_list.onRendered(function() {
                         width:'14%'
                     },
                     {
-                        className: "colBarcode",
-                        targets: 3,
-                        width:'14%'
-                    },
-                    {
-                        className: "colSerialNumber",
-                        targets: 4,
-                        width:'14%'
-                    },
-                    {
                         className: "colStatus",
-                        targets: 5,
-                        width:'16%',
+                        targets: 3,
+                        width:'8%',
                         createdCell: function (td, cellData, rowData, row, col) {
-                        $(td).addClass(rowData[7]);
-                    }
+                            $(td).addClass(rowData[10]);
+                        }
+                    },
+                    {
+                        className: "colQty",
+                        targets: 4,
+                        width:'8%'
                     },
                     {
                         className: "colDate",
+                        targets: 5,
+                        width:'8%'
+                    },
+                    {
+                        className: "colTransaction",
                         targets: 6,
+                        width:'8%'
+                    },
+                    {
+                        className: "colDepartment", 
+                        targets: 7,
                         width:'14%'
-                    }
+                    },
+                    {
+                        className: "colBin",
+                        targets: 8,
+                        width:'8%'
+                    },
+                    {
+                        className: "colBarcode",
+                        targets: 9,
+                        width:'8%'
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
