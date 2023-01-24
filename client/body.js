@@ -186,7 +186,7 @@ import './vs1_templates/kpi_card/kpi_card_body.html';
 import './vs1_templates/kpi_card/kpi_card_single_value.html';
 import './vs1_templates/contact_card_header/vs1_contact_card_header.html';
 import './vs1_templates/toggle_button/toggle_button.html';
-import './popUps/copyfrequencypop.html';
+import './popUps/copyfrequencypop.js';
 import './Template/AppTableModal.html';
 
 
