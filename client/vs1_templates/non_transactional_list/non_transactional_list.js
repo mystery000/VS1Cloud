@@ -12,7 +12,6 @@ import { ReportService } from "../../reports/report-service";
 import { FixedAssetService } from "../../fixedassets/fixedasset-service";
 import '../../lib/global/indexdbstorage.js';
 import TableHandler from '../../js/Table/TableHandler';
-import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './non_transactional_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -1003,12 +1002,12 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === 'taxRatesList') {
             reset_data = [
-                { index: 0, label: 'Name', class: 'colFirstName', active: true, display: true, width: "100px" },
+                { index: 0, label: 'Name', class: 'colFirstName', active: true, display: true },
                 { index: 1, label: 'Description', class: 'colSurname', active: true, display: true, },
-                { index: 2, label: 'Rate', class: 'colPeriod', active: true, display: true, width: "80px" },
-                { index: 3, label: 'Purchase Default', class: 'colStatus', active: true, display: true, width: "40px" },
-                { index: 4, label: 'Sales Default', class: 'colLastEdited', active: true, display: true, width: "40px" },
-                { index: 5, label: '', class: 'colDelete', active: true, display: true, width: '40px'}
+                { index: 2, label: 'Rate', class: 'colPeriod', active: true, display: true },
+                { index: 3, label: 'Purchase Default', class: 'colStatus', active: true, display: true, width: '20' },
+                { index: 4, label: 'Sales Default', class: 'colLastEdited', active: true, display: true, width: '20' },
+                { index: 5, label: '', class: 'colDelete', active: true, display: true}
             ]
         }
         templateObject.reset_data.set(reset_data);
@@ -14308,59 +14307,37 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.displayTaxRateList = function(data){
         const dataTableList = [];
         const tableHeaderList = [];
-        console.log("Non Transactional List Data:", data);
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + '%';
-            var dataList = {
-                id: data.ttaxcodevs1[i].Id || '',
-                codename: data.ttaxcodevs1[i].CodeName || '-',
-                description: data.ttaxcodevs1[i].Description || '-',
-                region: data.ttaxcodevs1[i].RegionName || '-',
-                rate: taxRate || '-',
-                isUSTax: data.ttaxcodevs1[i].Lines ? true : false,
-                lines: data.ttaxcodevs1[i].Lines || [],
-            };
+            const id = data.ttaxcodevs1[i].Id || '';
+            const codeName = data.ttaxcodevs1[i].CodeName || '-';
+            const description = data.ttaxcodevs1[i].Description || '-';
+            const rate = taxRate || '-';
+            const purchasesDefault =  `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioP" name="optradioP"
+            id="formCheckP-${id}" value="${codeName}"><label
+            class="custom-control-label" for="formCheckP-${id}"></label></div>`;
+            const salesDefault =  `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioS" name="optradioS"
+            id="formCheckS-${id}" value="${codeName}"><label
+            class="custom-control-label" for="formCheckS-${id}"></label></div>`
+            const dataList = [
+                codeName,
+                description,
+                rate,
+                purchasesDefault,
+                salesDefault,
+                `<span class="table-remove"><button type="button"
+                class="btn btn-danger btn-rounded btn-sm my-0"><i
+                  class="fa fa-remove"></i></button></span>`
+            ]
             dataTableList.push(dataList);
         }
         templateObject.transactiondatatablerecords.set(dataTableList);
-        // if (templateObject.transactiondatatablerecords.get()) {
-        //     Meteor.call(
-        //         "readPrefMethod",
-        //         localStorage.getItem("mycloudLogonID"),
-        //         "taxRatesList",
-        //         function(error, result) {
-        //             if (error) {} else {
-        //                 if (result) {
-        //                     for (let i = 0; i < result.customFields.length; i++) {
-        //                         let customcolumn = result.customFields;
-        //                         let columData = customcolumn[i].label;
-        //                         let columHeaderUpdate = customcolumn[i].thclass.replace(
-        //                             / /g,
-        //                             "."
-        //                         );
-        //                         let hiddenColumn = customcolumn[i].hidden;
-        //                         let columnClass = columHeaderUpdate.split(".")[1];
-        //                         let columnWidth = customcolumn[i].width;
-        //                         let columnindex = customcolumn[i].index + 1;
-
-        //                         if (hiddenColumn == true) {
-        //                             $("." + columnClass + "").addClass("hiddenColumn");
-        //                             $("." + columnClass + "").removeClass("showColumn");
-        //                         } else if (hiddenColumn == false) {
-        //                             $("." + columnClass + "").removeClass("hiddenColumn");
-        //                             $("." + columnClass + "").addClass("showColumn");
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     );
-        //     setTimeout(function() {
-        //         MakeNegative();
-        //     }, 100);
-        // }
+        setTimeout(function() {
+            MakeNegative();
+        }, 100);
         $(".fullScreenSpin").css("display", "none");
         $("#taxRatesList").DataTable({
+            data: templateObject.transactiondatatablerecords.get(),
             columnDefs: [
                 { type: "date", targets: 0 },
                 { orderable: false, targets: -1 },
@@ -14387,12 +14364,7 @@ Template.non_transactional_list.onRendered(function() {
                     exportOptions: {
                         columns: ":visible",
                     },
-                    // bStateSave: true,
-                    // rowId: 0,
-                    // pageLength: 25,
                     paging: false,
-                    //                      "scrollY": "400px",
-                    //                      "scrollCollapse": true,
                     info: true,
                     responsive: true,
                     "order": [
