@@ -38,15 +38,15 @@ Template.agedreceivables.onRendered(() => {
     const templateObject = Template.instance();
 
     let reset_data = [
-        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "70" },
+        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "120" },
         { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "70" },
-        { index: 3, label: 'AR Notes', class: 'colARNotes', active: true, display: true, width: "80" },
-        { index: 4, label: 'Amount~Due', class: 'colAmountDue', active: true, display: true, width: "100" },
+        { index: 3, label: 'AR Notes', class: 'colARNotes', active: true, display: true, width: "100" },
+        { index: 4, label: 'Amount~Due', class: 'colAmountDue', active: true, display: true, width: "120" },
         { index: 5, label: 'Current', class: 'colCurrent', active: true, display: true, width: "80" },
-        { index: 6, label: '1-30 Days', class: 'col1-30Days', active: true, display: true, width: "90" },
-        { index: 7, label: '30-60 Days', class: 'col30-60Days', active: true, display: true, width: "90" },
-        { index: 8, label: '60-90 Days', class: 'col60-90Days', active: true, display: true, width: "90" },
-        { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "90" },
+        { index: 6, label: '1-30 Days', class: 'col1-30Days', active: true, display: true, width: "110" },
+        { index: 7, label: '30-60 Days', class: 'col30-60Days', active: true, display: true, width: "110" },
+        { index: 8, label: '60-90 Days', class: 'col60-90Days', active: true, display: true, width: "110" },
+        { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "110" },
         { index: 10, label: 'Avg Days Customer~Takes to pay', class: 'colAvgDaysCustomer', active: false, display: true, width: "150" },
         { index: 11, label: 'Invoice#', class: 'colInvoice', active: true, display: true, width: "90" },
         { index: 12, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "90" },
@@ -99,7 +99,11 @@ Template.agedreceivables.onRendered(() => {
     };
 
     templateObject.initUploadedImage = () => {
-        let imageData = localStorage.getItem("Image");
+        // let imageData = localStorage.getItem("Image");
+        let imageData;
+        getVS1Data("Image").then(function (dataObject) {
+            imageData =JSON.parse(dataObject[0]).data;
+        });
         if (imageData) {
           $("#uploadedImage").attr("src", imageData);
           $("#uploadedImage").attr("width", "50%");
@@ -515,15 +519,16 @@ Template.agedreceivables.events({
         //   await $('.colAccountTree').css('width', range);
         $('.dataTable').resizable();
       },
-    'click td a': async function (event) {
-        let id = $(event.target).closest('tr').attr('id').split("item-value-");
-        var accountName = id[1].split('_').join(' ');
-        let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
-        let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
-        //localStorage.setItem('showHeader',true);
-        await clearData('TAccountRunningBalanceReport');
-        window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
-    },
+    // 'click td a': async function (event) {
+    //     let id = $(event.target).closest('tr').attr('id').split("item-value-");
+    //     var accountName = id[1].split('_').join(' ');
+    //     let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
+    //     let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
+    //     //localStorage.setItem('showHeader',true);
+    //     console.log("console 1===");
+    //     await clearData('TAccountRunningBalanceReport');
+    //     window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
+    // },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1AgedReceivables_Report', '');
@@ -533,7 +538,6 @@ Template.agedreceivables.events({
         let redirectid = $(event.target).closest('tr').attr('id');
 
         let transactiontype = $(event.target).closest('tr').attr('class'); ;
-
         if (redirectid && transactiontype) {
             if (transactiontype === 'Quote') {
                 window.open('/quotecard?id=' + redirectid, '_self');
