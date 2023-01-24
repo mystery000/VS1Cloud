@@ -17,7 +17,11 @@ Template.fxhistorylist.onCreated(() => {
 
 Template.fxhistorylist.onRendered(() => {
     const templateObject = Template.instance();
-    let imageData = (localStorage.getItem("Image"));
+    // let imageData = (localStorage.getItem("Image"));
+    let imageData;
+    getVS1Data("Image").then(function (dataObject) {
+        imageData =JSON.parse(dataObject[0]).data;
+    });
     let begunDate = moment().format("DD/MM/YYYY");
     if (imageData) {
         $('#uploadedImage').attr('src', imageData);
