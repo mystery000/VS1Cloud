@@ -304,6 +304,9 @@ import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
 import './lib/global/soundalert.js';
+import './js/packagerenewal.js';
+import './Navigation/onsuccesswaterfall.js';
+import './Help_Form/help_advisor.js';
 /* Rasheed */
 
 /* Jeyhun */
