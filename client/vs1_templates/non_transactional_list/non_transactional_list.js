@@ -1579,7 +1579,6 @@ Template.non_transactional_list.onRendered(function() {
 
     //Employee List Data
     templateObject.getEmployeeListData = async function(deleteFilter = false) {
-        var customerpage = 0;
         getVS1Data('TEmployeeList').then(function(dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllTEmployeeList(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
@@ -1603,8 +1602,6 @@ Template.non_transactional_list.onRendered(function() {
     }
     templateObject.displayEmployeeListData = async function(data) {
         var splashArrayEmployeeList = new Array();
-        let lineItems = [];
-        let lineItemObj = {};
         let deleteFilter = false;
         if (data.Params.Search.replace(/\s/g, "") == "") {
             deleteFilter = true;
@@ -1613,8 +1610,6 @@ Template.non_transactional_list.onRendered(function() {
         };
 
         for (let i = 0; i < data.temployeelist.length; i++) {
-            let mobile = "";
-            //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
             let linestatus = '';
             if (data.temployeelist[i].Active == true) {
                 linestatus = "";
@@ -1640,12 +1635,8 @@ Template.non_transactional_list.onRendered(function() {
                 data.temployeelist[i].Country || "",
             ];
 
-            //if (data.temployeelist[i].EmployeeName.replace(/\s/g, "") !== "") {
             splashArrayEmployeeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayEmployeeList);
-            //}
-
-            //}
         }
 
         if (templateObject.transactiondatatablerecords.get()) {
@@ -1653,261 +1644,250 @@ Template.non_transactional_list.onRendered(function() {
                 MakeNegative();
             }, 100);
         }
-        //$('.fullScreenSpin').css('display','none');
-        setTimeout(function() {
-            //$('#'+currenttablename).removeClass('hiddenColumn');
-            $('#' + currenttablename).DataTable({
-                data: splashArrayEmployeeList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [{
-                        targets: 0,
-                        className: "colEmployeeNo colID hiddenColumn",
-                        width: "10px",
-                        createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                        }
-                    },
-                    {
-                        targets: 1,
-                        className: "colEmployeeName",
-                        width: "200px",
-                    },
-                    {
-                        targets: 2,
-                        className: "colFirstName",
-                        width: "85px",
-                    },
-                    {
-                        targets: 3,
-                        className: "colLastName",
-                        width: "85px",
-                    },
-                    {
-                        targets: 4,
-                        className: "colPhone",
-                        width: "95px",
-                    },
-                    {
-                        targets: 5,
-                        className: "colMobile hiddenColumn",
-                        width: "95px",
-                    },
-                    {
-                        targets: 6,
-                        className: "colEmail",
-                        width: "200px",
-                    },
-                    {
-                        targets: 7,
-                        className: "colDepartment hiddenColumn",
-                        width: "100px",
-                    },
-                    {
-                        targets: 8,
-                        className: "colCustFld1 hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 9,
-                        className: "colCustFld2 hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 10,
-                        className: "colStatus",
-                        width: "100px",
-                    },
-                    {
-                        targets: 11,
-                        className: "colAddress colStreetAddress"
-                    },
-                    {
-                        targets: 12,
-                        className: "colCity colSuburb hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 13,
-                        className: "colState hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 14,
-                        className: "colPostcode colZipCode hiddenColumn",
-                        width: "80px",
-                    },
-                    {
-                        targets: 15,
-                        className: "colCountry hiddenColumn",
-                        width: "200px",
-                    }
-                ],
-                buttons: [{
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Employee List",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Employee List',
-                        filename: "Employee List",
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "Employee List",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
 
+        $('#' + currenttablename).DataTable({
+            data: splashArrayEmployeeList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: [{
+                    targets: 0,
+                    className: "colEmployeeNo colID hiddenColumn",
+                    width: "10px",
+                    createdCell: function(td, cellData, rowData, row, col) {
+                        $(td).closest("tr").attr("id", rowData[0]);
                     }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
-                info: true,
-                responsive: true,
-                "order": [
-                    [1, "asc"]
-                ],
-                action: function() {
-                    $('#' + currenttablename).DataTable().ajax.reload();
                 },
-                "fnDrawCallback": function(oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
-
-                        }
-                    } else {
-
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
-
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        //var splashArrayCustomerListDupp = new Array();
-                        let dataLenght = oSettings._iDisplayLength;
-                        let customerSearch = $('#' + currenttablename + '_filter input').val();
-
-                        sideBarService.getAllTEmployeeList(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-
-                            for (let j = 0; j < dataObjectnew.temployeelist.length; j++) {
-                                let mobile = sideBarService.changeDialFormat(dataObjectnew.temployeelist[j].Mobile, dataObjectnew.temployeelist[j].Country);
-                                let linestatus = '';
-                                if (dataObjectnew.temployeelist[j].Active == true) {
-                                    linestatus = "";
-                                } else if (dataObjectnew.temployeelist[j].Active == false) {
-                                    linestatus = "In-Active";
-                                };
-
-
-                                var dataListDupp = [
-                                    dataObjectnew.temployeelist[j].EmployeeID || "",
-                                    dataObjectnew.temployeelist[j].EmployeeName || "",
-                                    dataObjectnew.temployeelist[j].FirstName || "",
-                                    dataObjectnew.temployeelist[j].LastName || "",
-                                    dataObjectnew.temployeelist[j].Phone || "",
-                                    mobile || '',
-                                    dataObjectnew.temployeelist[j].Email || '',
-                                    dataObjectnew.temployeelist[j].DefaultClassName || '',
-                                    dataObjectnew.temployeelist[j].CustFld1 || '',
-                                    dataObjectnew.temployeelist[j].CustFld2 || '',
-                                    linestatus,
-                                    dataObjectnew.temployeelist[j].Street || "",
-                                    dataObjectnew.temployeelist[j].Street2 || "",
-                                    dataObjectnew.temployeelist[j].State || "",
-                                    dataObjectnew.temployeelist[j].Postcode || "",
-                                    dataObjectnew.temployeelist[j].Country || "",
-                                ];
-
-                                splashArrayEmployeeList.push(dataListDupp);
-                                //}
-                            }
-                            let uniqueChars = [...new Set(splashArrayEmployeeList)];
-                            templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
-                            datatable.clear();
-                            datatable.rows.add(uniqueChars);
-                            datatable.draw(false);
-                            setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
-                            }, 400);
-
-                            $('.fullScreenSpin').css('display', 'none');
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-
-                    });
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
+                {
+                    targets: 1,
+                    className: "colEmployeeName",
+                    width: "200px",
                 },
-                language: { search: "", searchPlaceholder: "Search List..." },
-                "fnInitComplete": function(oSettings) {
-                    if (data.Params.Search.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                {
+                    targets: 2,
+                    className: "colFirstName",
+                    width: "85px",
                 },
-                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
+                {
+                    targets: 3,
+                    className: "colLastName",
+                    width: "85px",
+                },
+                {
+                    targets: 4,
+                    className: "colPhone",
+                    width: "95px",
+                },
+                {
+                    targets: 5,
+                    className: "colMobile hiddenColumn",
+                    width: "95px",
+                },
+                {
+                    targets: 6,
+                    className: "colEmail",
+                    width: "200px",
+                },
+                {
+                    targets: 7,
+                    className: "colDepartment hiddenColumn",
+                    width: "100px",
+                },
+                {
+                    targets: 8,
+                    className: "colCustFld1 hiddenColumn",
+                    width: "120px",
+                },
+                {
+                    targets: 9,
+                    className: "colCustFld2 hiddenColumn",
+                    width: "120px",
+                },
+                {
+                    targets: 10,
+                    className: "colStatus",
+                    width: "100px",
+                },
+                {
+                    targets: 11,
+                    className: "colAddress colStreetAddress"
+                },
+                {
+                    targets: 12,
+                    className: "colCity colSuburb hiddenColumn",
+                    width: "120px",
+                },
+                {
+                    targets: 13,
+                    className: "colState hiddenColumn",
+                    width: "120px",
+                },
+                {
+                    targets: 14,
+                    className: "colPostcode colZipCode hiddenColumn",
+                    width: "80px",
+                },
+                {
+                    targets: 15,
+                    className: "colCountry hiddenColumn",
+                    width: "200px",
+                }
+            ],
+            buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Employee List",
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Employee List',
+                    filename: "Employee List",
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: false
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    title: '',
+                    download: 'open',
+                    className: "btntabletoexcel hiddenColumn",
+                    filename: "Employee List",
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
 
-                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "asc"]
+            ],
+            action: function() {
+                $('#' + currenttablename).DataTable().ajax.reload();
+            },
+            "fnDrawCallback": function(oSettings) {
+                $('.paginate_button.page-item').removeClass('disabled');
+                $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                if (oSettings._iDisplayLength == -1) {
+                    if (oSettings.fnRecordsDisplay() > 150) {
+
+                    }
+                } else {
+
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                    $('.paginate_button.page-item.next').addClass('disabled');
                 }
 
-            }).on('page', function() {
+                $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    sideBarService.getAllTEmployeeList(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+                        for (let j = 0; j < dataObjectnew.temployeelist.length; j++) {
+                            let mobile = sideBarService.changeDialFormat(dataObjectnew.temployeelist[j].Mobile, dataObjectnew.temployeelist[j].Country);
+                            let linestatus = '';
+                            if (dataObjectnew.temployeelist[j].Active == true) {
+                                linestatus = "";
+                            } else if (dataObjectnew.temployeelist[j].Active == false) {
+                                linestatus = "In-Active";
+                            };
+
+                            var dataListDupp = [
+                                dataObjectnew.temployeelist[j].EmployeeID || "",
+                                dataObjectnew.temployeelist[j].EmployeeName || "",
+                                dataObjectnew.temployeelist[j].FirstName || "",
+                                dataObjectnew.temployeelist[j].LastName || "",
+                                dataObjectnew.temployeelist[j].Phone || "",
+                                mobile || '',
+                                dataObjectnew.temployeelist[j].Email || '',
+                                dataObjectnew.temployeelist[j].DefaultClassName || '',
+                                dataObjectnew.temployeelist[j].CustFld1 || '',
+                                dataObjectnew.temployeelist[j].CustFld2 || '',
+                                linestatus,
+                                dataObjectnew.temployeelist[j].Street || "",
+                                dataObjectnew.temployeelist[j].Street2 || "",
+                                dataObjectnew.temployeelist[j].State || "",
+                                dataObjectnew.temployeelist[j].Postcode || "",
+                                dataObjectnew.temployeelist[j].Country || "",
+                            ];
+                            splashArrayEmployeeList.push(dataListDupp);
+                        }
+                        let uniqueChars = [...new Set(splashArrayEmployeeList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#' + currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function() {
+                            $('#' + currenttablename).dataTable().fnPageChange('last');
+                        }, 400);
+
+                        $('.fullScreenSpin').css('display', 'none');
+
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+
+                });
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
-            }).on('column-reorder', function() {
+            },
+            language: { search: "", searchPlaceholder: "Search List..." },
+            "fnInitComplete": function(oSettings) {
+                if (data.Params.Search.replace(/\s/g, "") == "") {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+            },
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data.Params.Count || 0; //get count from API data
 
-            }).on('length.dt', function(e, settings, len) {
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
 
-                $(".fullScreenSpin").css("display", "inline-block");
-                let dataLenght = settings._iDisplayLength;
-                if (dataLenght == -1) {
-                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                        $(".fullScreenSpin").css("display", "none");
-                    } else {
-                        $(".fullScreenSpin").css("display", "none");
-                    }
+        }).on('page', function() {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }).on('column-reorder', function() {
+
+        }).on('length.dt', function(e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                    $(".fullScreenSpin").css("display", "none");
                 } else {
                     $(".fullScreenSpin").css("display", "none");
                 }
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            });
-            $(".fullScreenSpin").css("display", "none");
-        }, 0);
+            } else {
+                $(".fullScreenSpin").css("display", "none");
+            }
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        });
+        $(".fullScreenSpin").css("display", "none");
 
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }

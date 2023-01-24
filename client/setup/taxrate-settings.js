@@ -753,7 +753,8 @@ Template.wizard_taxrate.events({
     setTimeout(function () {
       history.back(1);
     }, delayTimeAfterSound);
-  }
+  },
+
 });
 
 Template.wizard_taxrate.helpers({
