@@ -14441,7 +14441,6 @@ Template.non_transactional_list.onRendered(function() {
 });
 
 Template.non_transactional_list.events({
-    // "click .openEditTaskModal": async function(e) {
     "click #tblCustomerCrmListWithDate tbody tr, click .tblLeadCrmListWithDate tbody tr, click .tblSupplierCrmListWithDate tbody tr, click .tblAllTaskDatatable tbody tr": async function(e) {
         const templateObject = Template.instance();
         setTimeout(function() {
@@ -14453,8 +14452,6 @@ Template.non_transactional_list.events({
         e.stopImmediatePropagation();
         const templateObject = Template.instance();
         let currenttablename = await templateObject.tablename.get() || '';
-        // $('.btnViewDeleted').css('display', 'none');
-        // $('.btnHideDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
             await clearData('TERPCombinedContactsVS1');
