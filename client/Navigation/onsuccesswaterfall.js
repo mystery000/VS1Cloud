@@ -143,7 +143,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 79;
+  let allDataToLoad = 78;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -299,7 +299,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               setTimeout(function () {
                 $('.headerprogressbar').removeClass('headerprogressbarShow');
                 $('.headerprogressbar').addClass('headerprogressbarHidden');
-                $('.headerprogressbar').addClass('killProgressBar');
+                templateObject.dashboardRedirectOnLogin();
                 if (launchAllocations) {
                   setTimeout(function () {
                     $('.allocationModal').removeClass('killAllocationPOP');
@@ -320,7 +320,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               setTimeout(function () {
                 $('.headerprogressbar').removeClass('headerprogressbarShow');
                 $('.headerprogressbar').addClass('headerprogressbarHidden');
-                $('.headerprogressbar').addClass('killProgressBar');
+                templateObject.dashboardRedirectOnLogin();
                 if (launchAllocations) {
                   setTimeout(function () {
                     $('.allocationModal').removeClass('killAllocationPOP');
@@ -3056,7 +3056,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           setTimeout(function () {
             $('.headerprogressbar').removeClass('headerprogressbarShow');
             $('.headerprogressbar').addClass('headerprogressbarHidden');
-            $('.headerprogressbar').addClass('killProgressBar');
+            templateObject.dashboardRedirectOnLogin();
             if (launchAllocations) {
               setTimeout(function () {
                 $('.allocationModal').removeClass('killAllocationPOP');
@@ -3081,7 +3081,7 @@ Template.onsuccesswaterfall.onRendered(function () {
         setTimeout(function () {
           $('.headerprogressbar').removeClass('headerprogressbarShow');
           $('.headerprogressbar').addClass('headerprogressbarHidden');
-          $('.headerprogressbar').addClass('killProgressBar');
+          templateObject.dashboardRedirectOnLogin();
           if (launchAllocations) {
             setTimeout(function () {
               $('.allocationModal').removeClass('killAllocationPOP');
