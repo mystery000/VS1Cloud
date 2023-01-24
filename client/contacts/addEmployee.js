@@ -2704,6 +2704,7 @@ Template.employeescard.onRendered(function() {
 
                 }
             });
+            $('#edtPayrollCalendar').editableSelect();
         }, 1000)
 
         //On Click Client Type List
