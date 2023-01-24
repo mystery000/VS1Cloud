@@ -1,13 +1,14 @@
-import { PaymentsService } from '../../../payments/payments-service';
+import { Template } from 'meteor/templating';
+import { PaymentsService } from '../../../payments/payments-service.js';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../../../js/core-service';
-import { EmployeeProfileService } from "../../../js/profile-service";
-import { AccountService } from "../../../accounts/account-service";
-import { UtilityService } from "../../../utility-service";
-import { SideBarService } from '../../../js/sidebar-service';
+import { CoreService } from '../../../js/core-service.js';
+import { EmployeeProfileService } from "../../../js/profile-service.js";
+import { AccountService } from "../../../accounts/account-service.js";
+import { UtilityService } from "../../../utility-service.js";
+import { SideBarService } from '../../../js/sidebar-service.js';
 
 import {Session} from 'meteor/session';
-import { Template } from 'meteor/templating';
+
 import './bankingoverviewcards.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { _ } from 'meteor/underscore';
