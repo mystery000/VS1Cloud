@@ -1,6 +1,8 @@
+import { Template } from 'meteor/templating';
 import {VS1ChartService} from "../vs1charts-service";
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
+import './profitandlosschart.html';
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
@@ -55,9 +57,7 @@ Template.profitandlosschart.onRendered(()=>{
   templateObject.dateAsAt.set(begunDate);
  const dataTableList = [];
  const deptrecords = [];
-
  if ((!localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash'))) {
-
     templateObject.getProfitandLossReports = function (dateFrom, dateTo, ignoreDate) {
         vs1chartService.getProfitandLoss(dateFrom, dateTo, ignoreDate).then(function (data) {
           let records = [];
@@ -180,7 +180,6 @@ Template.profitandlosschart.onRendered(()=>{
        let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
        let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;
        let totalNetIncome = localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash') || 0;
-
        let totalSalesPerc = 0;
 
        let totalnetIncome = 0;
@@ -221,7 +220,7 @@ Template.profitandlosschart.onRendered(()=>{
 
   });
 
-  Template.profitlossreport.events({
+  Template.profitandlosschart.events({
     'click td a':async function (event) {
         let id= $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName =id[1].split('_').join(' ');
