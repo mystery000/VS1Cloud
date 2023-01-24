@@ -999,7 +999,16 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Last edited', class: 'colLastEdited', active: true, display: true, width: "250" },
                 { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename === "tblPayCalendars"){
+            reset_data = [
+                { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
+                { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "100" },
+                { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
+                { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "150" },
+                { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "150" },
+            ]
         }
+
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -14272,6 +14281,189 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+
+    templateObject.getPayCalendars = function(){
+        getVS1Data('TPayrollCalendars').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TPayrollCalendars', JSON.stringify(data));
+                    templateObject.displayPayCalendars(data);
+                }).catch(function (err) {
+    
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayPayCalendars(data);
+            }
+        }).catch(function (err) {
+          sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+              await addVS1Data('TPayrollCalendars', JSON.stringify(data));
+              templateObject.displayPayCalendars(data);
+          }).catch(function (err) {
+    
+          });
+        });
+    }
+
+    templateObject.displayPayCalendars = function(data){
+        let splashArrayPayrollCalendars = new Array();
+        for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+            let ID = data.tpayrollcalendars[i].fields.ID || '';
+            var dataPayrollCalendars = [
+                ID,
+                data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+                data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+                moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+                moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+              ];
+            splashArrayPayrollCalendars.push(dataPayrollCalendars);
+            templateObject.transactiondatatablerecords.set(splashArrayPayrollCalendars);
+        }
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayPayrollCalendars,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colCalenderID hiddenColumn", 
+                        targets:0,
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        className: "colPayCalendarName", 
+                        targets: 1,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayPeriod",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colNextPayPeriod",
+                        targets: 3,
+                        width:'150px'
+                    },
+                    {
+                        className: "colNextPaymentDate",
+                        targets: 4,
+                        width:'150px'
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -14410,6 +14602,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getFixedAssetTypeData();
     } else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetList();
+    } else if (currenttablename === "tblPayCalendars"){
+        templateObject.getPayCalendars();
     }
     
     tableResize();
