@@ -1,6 +1,11 @@
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './deletepop.html';
+import { InvoiceService } from "../invoice/invoice-service";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
+let invoiceService = new InvoiceService();
+
 const TransactionTypeTemplates = {
   sales: 
     {
@@ -113,9 +118,9 @@ const TransactionTypeTemplates = {
   }
 };
 
-// Template.deletepop.onRendered(function () {
-//   const { type } = Template.currentData();
-// })
+Template.deletepop.onRendered(function () {
+  hasFollowings();
+})
 
 Template.deletepop.helpers({
   itemName1: () => {
@@ -148,3 +153,33 @@ Template.deletepop.helpers({
   }
 
 })
+
+const hasFollowings = async function() {
+  const templateInstance = Template.instance();
+  if('invoices' == templateInstance.data.formType) {
+    var url = FlowRouter.current().path;
+    var getso_id = url.split('?id=');
+    var currentInvoice = getso_id[getso_id.length - 1];
+    const templateObject = Template.instance();
+    templateObject.datatablerecords = new ReactiveVar([]);
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        console.log(currentInvoice)
+        let apptIds = await invoiceService.getPurchaseOrder();
+        let apptIdList = apptIds.tinvoice;
+        let cnt = 0;
+        for (let i = 0; i < apptIdList.length; i++) {
+            if (apptIdList[i].Id > currentInvoice) {
+                cnt++;
+            }
+        }
+        // console.log(cnt);
+        $("#following_cnt").val(cnt);
+        if (cnt > 1) {
+            $("#btn_follow2").css("display", "inline-block");
+        } else {
+            $("#btn_follow2").css("display", "none");
+        }
+    }
+  }
+}

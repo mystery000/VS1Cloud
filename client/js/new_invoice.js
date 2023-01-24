@@ -8406,7 +8406,7 @@ Template.new_invoice.events({
     setTimeout(async function () {
 
       swal({
-        title: 'Delete Invoice',
+        title: 'You are deleting ' + $("#following_cnt").val() + ' invoices',
         text: "Do you wish to delete this transaction and all others associated with it moving forward?",
         type: 'question',
         showCancelButton: true,
