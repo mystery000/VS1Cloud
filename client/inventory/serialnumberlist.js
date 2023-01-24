@@ -64,6 +64,9 @@ Template.serialnumberlist.onRendered(function() {
         Meteor._reload.reload();
         // window.open('/serialnumberlist?page=last', '_self');
     }
+
+    shareFunctionByName.initTable(localStorage.getItem("ERPDefaultDepartment"), "tblDepartmentCheckbox");
+    
     templateObject.getAllSerialNumberData = function() {
         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
             // sideBarService.getAllSerialNumber().then(function(data) {
