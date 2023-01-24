@@ -1828,37 +1828,37 @@ Template.bankingoverview.events({
     //     });
 
     // },
-    // 'click .btnOpenSettings': function(event) {
-    //     let templateObject = Template.instance();
-    //     var columns = $('#tblBankingOverview th');
+    'click .btnOpenSettings': function(event) {
+        let templateObject = Template.instance();
+        var columns = $('#tblBankingOverview th');
 
-    //     const tableHeaderList = [];
-    //     let sTible = "";
-    //     let sWidth = "";
-    //     let sIndex = "";
-    //     let sVisible = "";
-    //     let columVisible = false;
-    //     let sClass = "";
-    //     $.each(columns, function(i, v) {
-    //         if (v.hidden === false) {
-    //             columVisible = true;
-    //         }
-    //         if ((v.className.includes("hiddenColumn"))) {
-    //             columVisible = false;
-    //         }
-    //         sWidth = v.style.width.replace('px', "");
+        const tableHeaderList = [];
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden === false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
 
-    //         let datatablerecordObj = {
-    //             sTitle: v.innerText || '',
-    //             sWidth: sWidth || '',
-    //             sIndex: v.cellIndex || 0,
-    //             sVisible: columVisible || false,
-    //             sClass: v.className || ''
-    //         };
-    //         tableHeaderList.push(datatablerecordObj);
-    //     });
-    //     templateObject.tableheaderrecords.set(tableHeaderList);
-    // },
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+    },
     'click .exportbtn': function() {
 
         $('.fullScreenSpin').css('display', 'inline-block');
