@@ -60,24 +60,24 @@ Template.fixedassetcard.onCreated(function () {
       records.push(dataList);
     }
     templateObject.allAcounts.set(records);
-    templateObject.allAcounts.get().forEach((account) => {
-      $('#edtCostAssetAccount').editableSelect('add', function(){
-        $(this).val(account.id);
-        $(this).text(account.accountName);
-      });
-      $('#editBankAccount').editableSelect('add', function(){
-        $(this).val(account.id);
-        $(this).text(account.accountName);
-      });
-      $('#edtDepreciationAssetAccount').editableSelect('add', function(){
-        $(this).val(account.id);
-        $(this).text(account.accountName);
-      });
-      $('#edtDepreciationExpenseAccount').editableSelect('add', function(){
-        $(this).val(account.id);
-        $(this).text(account.accountName);
-      });
-    });
+    // templateObject.allAcounts.get().forEach((account) => {
+    //   $('#edtCostAssetAccount').editableSelect('add', function(){
+    //     $(this).val(account.id);
+    //     $(this).text(account.accountName);
+    //   });
+    //   $('#editBankAccount').editableSelect('add', function(){
+    //     $(this).val(account.id);
+    //     $(this).text(account.accountName);
+    //   });
+    //   $('#edtDepreciationAssetAccount').editableSelect('add', function(){
+    //     $(this).val(account.id);
+    //     $(this).text(account.accountName);
+    //   });
+    //   $('#edtDepreciationExpenseAccount').editableSelect('add', function(){
+    //     $(this).val(account.id);
+    //     $(this).text(account.accountName);
+    //   });
+    // });
   }
 
 
@@ -87,10 +87,10 @@ Template.fixedassetcard.onRendered(function () {
   const templateObject = Template.instance();
   $('#edtAssetType').editableSelect();
   $('#edtAssetType').editableSelect().on('click.editable-select', function (e, li) {
-    $('#selectLineID').val('sltJobTerms');
-    const $each = $(this);
-    const offset = $each.offset();
-    const assetTypeName = e.target.value || '';
+    // $('#selectLineID').val('sltJobTerms');
+    // const $each = $(this);
+    // const offset = $each.offset();
+    // const assetTypeName = e.target.value || '';
     // editableAssetType(e, $each, offset, assetTypeName);
     $('#fixedAssetTypeListModal').modal('toggle');
   });
@@ -110,33 +110,33 @@ Template.fixedassetcard.onRendered(function () {
       }
     });
 
-  $('#edtCostAssetAccount').editableSelect()
-    .on('select.editable-select', function (e, li) {
-      if (li) {
-        templateObject.edtCostAssetAccount.set(parseInt(li.val() || 0));
-      }
-    });
+  // $('#edtCostAssetAccount').editableSelect()
+  //   .on('select.editable-select', function (e, li) {
+  //     if (li) {
+  //       templateObject.edtCostAssetAccount.set(parseInt(li.val() || 0));
+  //     }
+  //   });
 
-  $('#editBankAccount').editableSelect()
-    .on('select.editable-select', function (e, li) {
-      if (li) {
-        templateObject.editBankAccount.set(parseInt(li.val() || 0));
-      }
-    });
+  // $('#editBankAccount').editableSelect()
+  //   .on('select.editable-select', function (e, li) {
+  //     if (li) {
+  //       templateObject.editBankAccount.set(parseInt(li.val() || 0));
+  //     }
+  //   });
 
-  $('#edtDepreciationAssetAccount').editableSelect()
-    .on('select.editable-select', function (e, li) {
-      if (li) {
-        templateObject.edtDepreciationAssetAccount.set(parseInt(li.val() || 0));
-      }
-    });
+  // $('#edtDepreciationAssetAccount').editableSelect()
+  //   .on('select.editable-select', function (e, li) {
+  //     if (li) {
+  //       templateObject.edtDepreciationAssetAccount.set(parseInt(li.val() || 0));
+  //     }
+  //   });
 
-  $('#edtDepreciationExpenseAccount').editableSelect()
-    .on('select.editable-select', function (e, li) {
-      if (li) {
-        templateObject.edtDepreciationExpenseAccount.set(parseInt(li.val() || 0));
-      }
-    });
+  // $('#edtDepreciationExpenseAccount').editableSelect()
+  //   .on('select.editable-select', function (e, li) {
+  //     if (li) {
+  //       templateObject.edtDepreciationExpenseAccount.set(parseInt(li.val() || 0));
+  //     }
+  //   });
 
   $("#date-input,#edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate").datepicker({
     showOn: 'button',
@@ -158,6 +158,7 @@ Template.fixedassetcard.onRendered(function () {
     fixedassetSercie.getTFixedAssetByNameOrID(currentAssetID).then((data) => {
       const assetData = data.tfixedassets;
       if (assetData.length > 0) {
+        const allAccountsData = templateObject.allAcounts.get();
         const assetInfo = assetData[0].fields;
         $('input#edtAssetCode').val(assetInfo.AssetCode);
         $('input#edtAssetName').val(assetInfo.AssetName);
@@ -184,19 +185,19 @@ Template.fixedassetcard.onRendered(function () {
         $("#edtDepreciationType").val(accountName);
 
         templateObject.edtCostAssetAccount.set(assetInfo.FixedAssetCostAccountID);
-        accountName = $("#edtCostAssetAccount").parent().find("li[value="+assetInfo.FixedAssetCostAccountID+"]").html();
+        accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetCostAccountID)['accountName'];
         $("#edtCostAssetAccount").val(accountName);
 
         templateObject.editBankAccount.set(assetInfo.CUSTFLD6); // FixedAssetBankAccountID
-        accountName = $("#editBankAccount").parent().find("li[value="+assetInfo.CUSTFLD6+"]").html();
+        accountName = allAccountsData.find((account) => account.id == assetInfo.CUSTFLD6)['accountName'];
         $("#editBankAccount").val(accountName);
 
         templateObject.edtDepreciationAssetAccount.set(assetInfo.FixedAssetDepreciationAccountID); //FixedAssetDepreciationExpenseAccountID
-        accountName = $("#edtDepreciationAssetAccount").parent().find("li[value="+assetInfo.FixedAssetDepreciationAccountID+"]").html();
+        accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAccountID)['accountName'];
         $("#edtDepreciationAssetAccount").val(accountName);
 
         templateObject.edtDepreciationExpenseAccount.set(assetInfo.FixedAssetDepreciationAssetAccountID);
-        accountName = $("#edtDepreciationExpenseAccount").parent().find("li[value="+assetInfo.FixedAssetDepreciationAssetAccountID+"]").html();
+        accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID)['accountName'];
         $("#edtDepreciationExpenseAccount").val(accountName);
 
         $('input#edtSalvageValue').val(assetInfo.Salvage);
@@ -216,6 +217,27 @@ Template.fixedassetcard.onRendered(function () {
     $('input#edtSupplierName').val($(this).find('td.colCompany').html());
     templateObject.edtSupplierId.set(parseInt($(this).attr('id')));
     $('#supplierListModal').modal('hide');
+  });
+
+  $(document).on("click", "#tblAccountOverview tbody tr", function(e) {
+    const accountName = $(this).find('td.colAccountName').html();
+    const accountId = parseInt($(this).attr('id'));
+    switch ($('input#edtAccountType').val()) {
+      case 'edtCostAssetAccount':
+        templateObject.edtCostAssetAccount.set(accountId);
+        break;
+      case 'editBankAccount':
+        templateObject.editBankAccount.set(accountId);
+        break;
+      case 'edtDepreciationAssetAccount':
+        templateObject.edtDepreciationAssetAccount.set(accountId);
+        break;
+      case 'edtDepreciationExpenseAccount':
+        templateObject.edtDepreciationExpenseAccount.set(accountId);
+        break;
+    }
+    $('input#'+$('input#edtAccountType').val()).val(accountName);
+    $('#accountListModal').modal('hide');
   });
 
   function getDatePickerForm(dateStr) {
@@ -312,18 +334,42 @@ Template.fixedassetcard.events({
   "click input#edtSupplierName": function() {
     $('#supplierListModal').modal('show');
   },
-  'change select#edtCostAssetAccount': function(event) {
-    Template.instance().edtCostAssetAccount.set(event.target.value);
+  "click input#edtCostAssetAccount": function() {
+    $('#accountListModal').modal('show');
+    $('#accountListModal button#btnRefreshList').hide();
+    $('#accountListModal button#btnViewDeleted').hide();
+    $('input#edtAccountType').val('edtCostAssetAccount');
   },
-  'change select#editBankAccount': function(event) {
-    Template.instance().editBankAccount.set(event.target.value);
+  "click input#editBankAccount": function() {
+    $('#accountListModal').modal('show');
+    $('#accountListModal button#btnRefreshList').hide();
+    $('#accountListModal button#btnViewDeleted').hide();
+    $('input#edtAccountType').val('editBankAccount');
   },
-  'change select#edtDepreciationAssetAccount': function(event) {
-    Template.instance().edtDepreciationAssetAccount.set(event.target.value);
+  "click input#edtDepreciationAssetAccount": function() {
+    $('#accountListModal').modal('show');
+    $('#accountListModal button#btnRefreshList').hide();
+    $('#accountListModal button#btnViewDeleted').hide();
+    $('input#edtAccountType').val('edtDepreciationAssetAccount');
   },
-  'change select#dtDepreciationExpenseAccount': function(event) {
-    Template.instance().dtDepreciationExpenseAccount.set(event.target.value);
+  "click input#edtDepreciationExpenseAccount": function() {
+    $('#accountListModal').modal('show');
+    $('#accountListModal button#btnRefreshList').hide();
+    $('#accountListModal button#btnViewDeleted').hide();
+    $('input#edtAccountType').val('edtDepreciationExpenseAccount');
   },
+  // 'change select#edtCostAssetAccount': function(event) {
+  //   Template.instance().edtCostAssetAccount.set(event.target.value);
+  // },
+  // 'change select#editBankAccount': function(event) {
+  //   Template.instance().editBankAccount.set(event.target.value);
+  // },
+  // 'change select#edtDepreciationAssetAccount': function(event) {
+  //   Template.instance().edtDepreciationAssetAccount.set(event.target.value);
+  // },
+  // 'change select#dtDepreciationExpenseAccount': function(event) {
+  //   Template.instance().dtDepreciationExpenseAccount.set(event.target.value);
+  // },
   'change input#chkEnterAmount': function(e) {
     const templateObject = Template.instance();
     const status = templateObject.chkEnterAmount.get();

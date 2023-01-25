@@ -985,9 +985,9 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === "tblFixedAssetType") {
             reset_data = [
                 { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
-                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "" },
-                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "" },
-                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "" },
+                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "100" },
+                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "100" },
+                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "100" },
             ];
         } else if (currenttablename === "tblTimeSheet"){
             reset_data = [

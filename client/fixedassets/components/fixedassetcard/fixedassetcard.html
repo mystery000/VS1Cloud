@@ -157,7 +157,7 @@
                   <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Cost</label>
-                      <input type="text" class="form-control" id="edtPurchCost" name="edtPurchCost">
+                      <input type="text" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
@@ -198,6 +198,7 @@
 
               <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec"
                 style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                  <input type="hidden" id="edtAccountType" />
                   <div class="row" style="margin: 4px 12px;">
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
@@ -393,4 +394,22 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
+          {{> non_transactional_list tablename="tblAccountOverview"}}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
