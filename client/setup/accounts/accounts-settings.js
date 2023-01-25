@@ -52,9 +52,6 @@ Template.wizard_accounts.onCreated(() => {
   templateObject.abn = new ReactiveVar();
   templateObject.referenceNumber = new ReactiveVar();
   templateObject.statusrecords = new ReactiveVar([]);
-})
-
-Template.wizard_accounts.onRendered(() => {
 
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
@@ -278,6 +275,14 @@ Template.wizard_accounts.onRendered(() => {
       });
     }
   };
+})
+
+Template.wizard_accounts.onRendered(() => {
+
+  const templateObject = Template.instance();
+  templateObject.loadAccountTypes();
+  templateObject.loadAccountList();
+  templateObject.loadAllTaxCodes();
 
   $("#tblAccountOverview tbody").on(
     "click",
@@ -377,6 +382,8 @@ Template.wizard_accounts.onRendered(() => {
       }
     }
   );
+
+
 })
 
 Template.wizard_accounts.events({
@@ -1087,6 +1094,78 @@ Template.wizard_accounts.events({
         }
       }
     }
+  },
+  "click .setup-wizard .setup-step-6 .btnRefresh": (e, template) => {
+    template.loadAccountList();
+  },
+  "click .setup-step-6 .templateDownload": (e, templateObject) => {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleAccounts" + ".csv";
+
+    const customers = templateObject.accountList.get();
+    rows.push([
+      "Account Name",
+      "Description",
+      "Account No",
+      "Type",
+      "Balance",
+      "Tax Code",
+      "Bank Account Name",
+      "BSB",
+      "Bank Account No",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.accountname,
+        customer.description,
+        customer.accountnumber,
+        customer.accounttypename,
+        customer.balance,
+        customer.taxcode,
+        customer.bankaccountname,
+        customer.bsb,
+        customer.bankaccountnumber
+      ]);
+    });
+
+
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .setup-step-6 .templateDownloadXLSX": (e, templateObject) => {
+
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SampleAccounts" + ".xls";
+
+    const customers = templateObject.accountList.get();
+    rows.push([
+      "Account Name",
+      "Description",
+      "Account No",
+      "Type",
+      "Balance",
+      "Tax Code",
+      "Bank Account Name",
+      "BSB",
+      "Bank Account No",
+    ]);
+
+    customers.forEach((customer) => {
+      rows.push([
+        customer.accountname,
+        customer.description,
+        customer.accountnumber,
+        customer.accounttypename,
+        customer.balance,
+        customer.taxcode,
+        customer.bankaccountname,
+        customer.bsb,
+        customer.bankaccountnumber
+      ]);
+    });
+    utilityService.exportToCsv(rows, filename, "xls");
   },
 })
 

@@ -37,7 +37,7 @@ Template.wizard_employment.onCreated(() => {
 })
 
 Template.wizard_employment.onRendered(() => [
-
+  
 ])
 
 Template.wizard_employment.helpers({

@@ -12312,7 +12312,7 @@ Template.non_transactional_list.onRendered(function() {
         }
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function() {
-            $('#' + currenttablename).DataTable({
+            $('#tblVATReturnList').DataTable({
                 data: splashArrayLeadList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
@@ -13815,6 +13815,7 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayCustomerList = async function(data){
         let dataTableList = [];
+        const splashArrayCustomerList = [];
         for (let i = 0; i < data.tcustomervs1.length; i++) {
             let arBalance = utilityService.modifynegativeCurrencyFormat(data.tcustomervs1[i].fields.ARBalance)|| 0.00;
             let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tcustomervs1[i].fields.CreditBalance) || 0.00;
@@ -13859,231 +13860,231 @@ Template.non_transactional_list.onRendered(function() {
                 MakeNegative();
             }, 100);
         }
-        $('.fullScreenSpin').css('display', 'none');
-        setTimeout(function() {
-            $('#' + currenttablename).DataTable({
-                data: splashArrayCustomerList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [
-                    {
-                        className: "colCustomerID colID hiddenColumn", 
-                        targets:0,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                            $(td).closest("tr").attr("isjob", rowData[2]);
-                        }
-                    },
-                    {
-                        className: "colCompany", 
-                        targets: 1
-                    },
-                    {
-                        className: "colJob",
-                        targets: 2
-                    },
-                    {
-                        className: "colPhone",
-                        targets: 3
-                    },
-                    {
-                        className: "colMobile hiddenColumn",
-                        targets: 4
-                    },
-                    {
-                        className: "colARBalance hiddenColumn text-right",
-                        targets: 5
-                    },
-                    {
-                        className: "colCreditBalance hiddenColumn text-right",
-                        targets: 6
-                    },
-                    {
-                        className: "colBalance text-right",
-                        targets: 7
-                    },
-                    {
-                        className: "colCreditLimit text-right",
-                        targets: 8
-                    },
-                    {
-                        className: "colSalesOrderBalance text-right",
-                        targets: 9
-                    },
-                    {
-                        className: "colStreetAddress hiddenColumn",
-                        targets: 10
-                    },
-                    {
-                        className: "colSuburb colCity",
-                        targets: 11
-                    },
-                    {
-                        className: "colState hiddenColumn",
-                        targets: 12
-                    },
-                    {
-                        className: "colZipCode hiddenColumn",
-                        targets: 13
-                    },
-                    {
-                        className: "colCountry",
-                        targets: 14
-                    },
-                    {
-                        className: "colEmail hiddenColumn",
-                        targets: 15
-                    },
-                    {
-                        className: "colAccountNo hiddenColumn",
-                        targets: 16
-                    },
-                    {
-                        className: "colCustomerType hiddenColumn",
-                        targets: 17
-                    },
-                    {
-                        className: "colCustomerDiscount hiddenColumn",
-                        targets: 18
-                    },
-                    {
-                        className: "colCustomerTermName hiddenColumn",
-                        targets: 19
-                    },
-                    {
-                        className: "colCustomerFirstName hiddenColumn",
-                        targets: 20
-                    },
-                    {
-                        className: "colCustomerLastName hiddenColumn",
-                        targets: 21
-                    },
-                    {
-                        className: "colCustomerTaxCode hiddenColumn",
-                        targets: 22
-                    },
-                    {
-                        className: "colClientNo hiddenColumn",
-                        targets: 23
-                    },
-                    {
-                        className: "colJobTitle hiddenColumn",
-                        targets: 24
-                    },
-                    {
-                        className: "colNotes","targets": 25
-                    },
-                ],
-                buttons: [{
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "STP List",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'STP List',
-                        filename: "STP List",
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "STP List",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
 
+        $('#' + currenttablename).DataTable({
+            data: templateObject.transactiondatatablerecords.get(),
+            "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: [
+                {
+                    className: "colCustomerID colID hiddenColumn", 
+                    targets:0,
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        $(td).closest("tr").attr("id", rowData[0]);
+                        $(td).closest("tr").attr("isjob", rowData[2]);
                     }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
-                info: true,
-                responsive: true,
-                "order": [
-                    [1, "asc"]
-                ],
-                action: function() {
-                    $('#' + currenttablename).DataTable().ajax.reload();
                 },
-                "fnDrawCallback": function(oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
-
-                        }
-                    } else {
-
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
-
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                    });
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
+                {
+                    className: "colCompany", 
+                    targets: 1
                 },
-                language: { search: "", searchPlaceholder: "Search ST Payroll..." },
-                "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                {
+                    className: "colJob",
+                    targets: 2
                 },
-                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.length || 0; //get count from API data
-                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                {
+                    className: "colPhone",
+                    targets: 3
+                },
+                {
+                    className: "colMobile hiddenColumn",
+                    targets: 4
+                },
+                {
+                    className: "colARBalance hiddenColumn text-right",
+                    targets: 5
+                },
+                {
+                    className: "colCreditBalance hiddenColumn text-right",
+                    targets: 6
+                },
+                {
+                    className: "colBalance text-right",
+                    targets: 7
+                },
+                {
+                    className: "colCreditLimit text-right",
+                    targets: 8
+                },
+                {
+                    className: "colSalesOrderBalance text-right",
+                    targets: 9
+                },
+                {
+                    className: "colStreetAddress hiddenColumn",
+                    targets: 10
+                },
+                {
+                    className: "colSuburb colCity",
+                    targets: 11
+                },
+                {
+                    className: "colState hiddenColumn",
+                    targets: 12
+                },
+                {
+                    className: "colZipCode hiddenColumn",
+                    targets: 13
+                },
+                {
+                    className: "colCountry",
+                    targets: 14
+                },
+                {
+                    className: "colEmail hiddenColumn",
+                    targets: 15
+                },
+                {
+                    className: "colAccountNo hiddenColumn",
+                    targets: 16
+                },
+                {
+                    className: "colCustomerType hiddenColumn",
+                    targets: 17
+                },
+                {
+                    className: "colCustomerDiscount hiddenColumn",
+                    targets: 18
+                },
+                {
+                    className: "colCustomerTermName hiddenColumn",
+                    targets: 19
+                },
+                {
+                    className: "colCustomerFirstName hiddenColumn",
+                    targets: 20
+                },
+                {
+                    className: "colCustomerLastName hiddenColumn",
+                    targets: 21
+                },
+                {
+                    className: "colCustomerTaxCode hiddenColumn",
+                    targets: 22
+                },
+                {
+                    className: "colClientNo hiddenColumn",
+                    targets: 23
+                },
+                {
+                    className: "colJobTitle hiddenColumn",
+                    targets: 24
+                },
+                {
+                    className: "colNotes","targets": 25
+                },
+            ],
+            buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "STP List",
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'STP List',
+                    filename: "STP List",
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: false
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    title: '',
+                    download: 'open',
+                    className: "btntabletoexcel hiddenColumn",
+                    filename: "STP List",
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+                }
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "asc"]
+            ],
+            action: function() {
+                $('#' + currenttablename).DataTable().ajax.reload();
+            },
+            "fnDrawCallback": function(oSettings) {
+                $('.paginate_button.page-item').removeClass('disabled');
+                $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                if (oSettings._iDisplayLength == -1) {
+                    if (oSettings.fnRecordsDisplay() > 150) {
+
+                    }
+                } else {
+
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                    $('.paginate_button.page-item.next').addClass('disabled');
                 }
 
-            }).on('page', function() {
+                $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                });
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
-            }).on('column-reorder', function() {
+            },
+            language: { search: "", searchPlaceholder: "Search ST Payroll..." },
+            "fnInitComplete": function(oSettings) {
+                if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+            },
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data.length || 0; //get count from API data
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
 
-            }).on('length.dt', function(e, settings, len) {
+        }).on('page', function() {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }).on('column-reorder', function() {
 
-                $(".fullScreenSpin").css("display", "inline-block");
-                let dataLenght = settings._iDisplayLength;
-                if (dataLenght == -1) {
-                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                        $(".fullScreenSpin").css("display", "none");
-                    } else {
-                        $(".fullScreenSpin").css("display", "none");
-                    }
+        }).on('length.dt', function(e, settings, len) {
+
+            $(".fullScreenSpin").css("display", "inline-block");
+            let dataLenght = settings._iDisplayLength;
+            if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                    $(".fullScreenSpin").css("display", "none");
                 } else {
                     $(".fullScreenSpin").css("display", "none");
                 }
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            });
-            $(".fullScreenSpin").css("display", "none");
-        }, 0);
-       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+            } else {
+                $(".fullScreenSpin").css("display", "none");
+            }
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        });
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        $('.fullScreenSpin').css('display', 'none');
+
     }
     
     templateObject.getTimeSheetList = function(){
