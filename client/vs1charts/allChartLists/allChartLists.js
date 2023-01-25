@@ -18,17 +18,17 @@ import { Template } from 'meteor/templating';
 import './allChartLists.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-import '../bankaccountschart/bankaccountschart.html'
-import '../monthlyprofitandloss/monthlyprofitandloss.html'
-import '../profitandlosschart/profitandlosschart.html'
-import '../resalescomparision/resalescomparision.html'
-import '../expenses/expenseschart.html'
-import '../accountslist/accountslistchart.html'
-import '../mytaskswdiget/mytaskswidgetchart.html'
+import '../bankaccountschart/bankaccountschart.html';
+import '../monthlyprofitandloss/monthlyprofitandloss.html';
+import '../profitandlosschart/profitandlosschart.js';
+import '../resalescomparision/resalescomparision.html';
+import '../expenses/expenseschart.html';
+import '../accountslist/accountslistchart.html';
+import '../mytaskswdiget/mytaskswidgetchart.html';
 
-import '../top10Customers/dsm_top10Customers.html'
-import '../../Dashboard/appointments-widget/dsm-appointments-widget.html'
-import '../../Dashboard/appointments-widget/ds-appointments-widget.html'
+import '../top10Customers/dsm_top10Customers.html';
+import '../../Dashboard/appointments-widget/dsm-appointments-widget.html';
+import '../../Dashboard/appointments-widget/ds-appointments-widget.html';
 
 
 let _ = require("lodash");
@@ -95,7 +95,7 @@ let chartsPlaceList = {
     ],
 
     "CRM_Overview": [
-        "crmleadchart", 
+        "crmleadchart",
         "resalescomparision"
     ],
 };

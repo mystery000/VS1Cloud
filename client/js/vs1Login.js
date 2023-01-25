@@ -1589,22 +1589,7 @@ Template.vs1login.onRendered(function () {
 
             setTimeout(function(){
               if(isSetupWizard == true){
-                if (isAppointmentScheduling == true) {
-                    if (isAllocationLaunch == true) {
-                        window.open('/appointments#allocationModal', '_self');
-                      //FlowRouter.go('/appointments#allocationModal');
-                      //   FlowRouter.go('/appointments');
-                    } else if (isAppointmentLaunch == true) {
-                       //FlowRouter.go('/appointments');
-                        window.open('/appointments', '_self');
-                    } else {
-                       //FlowRouter.go('/dashboard');
-                        window.open('/dashboard', '_self');
-                    }
-                } else {
-                   //FlowRouter.go('/dashboard');
-                  window.open('/dashboard', '_self');
-                }
+                window.open('/onloginsuccess', '_self');
               }else{
                 handleSetupRedirection();
               };

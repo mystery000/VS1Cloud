@@ -7,6 +7,7 @@ import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "./cheque_list.html";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 

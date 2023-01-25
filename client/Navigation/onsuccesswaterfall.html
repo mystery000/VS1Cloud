@@ -4,11 +4,7 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                   <div class="modal-header">
-                      <h5 class="modal-title"><span class="headerprogressLabel">Hi <span class="first-name-label"></span>, just loading your company information on your device.</span></h5>
-                      <script>
-                          const loggedEmployeedName1 = localStorage.getItem('vs1LoggedEmployeeName').split(" ");
-                          $(".first-name-label").html(loggedEmployeedName1[0] || '');
-                      </script>
+                      <h5 class="modal-title"><span class="headerprogressLabel">Hi <span class="first-name-label">{{loggedFirstName}}</span>, just loading your company information on your device.</span></h5>
                       <i class="fas fa-spinner fa-pulse" style="font-size: 16px; margin-top: 6px;"></i>
                   </div>
                   <div class="modal-body" style="padding-top: 0px;">

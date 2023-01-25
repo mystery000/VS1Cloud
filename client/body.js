@@ -49,7 +49,6 @@ import './js/new_salesorder.js';
 import './js/new_workorder.js';
 import './js/ocr-service.js';
 import './js/organisation-service.js';
-// import './js/packagerenewal.js';
 import './js/profile-service.js';
 import './js/purchase-service.js';
 // import './js/purchasedb.js';
@@ -186,7 +185,7 @@ import './vs1_templates/kpi_card/kpi_card_body.html';
 import './vs1_templates/kpi_card/kpi_card_single_value.html';
 import './vs1_templates/contact_card_header/vs1_contact_card_header.html';
 import './vs1_templates/toggle_button/toggle_button.html';
-import './popUps/copyfrequencypop.html';
+import './popUps/copyfrequencypop.js';
 import './Template/AppTableModal.html';
 
 
@@ -304,6 +303,9 @@ import { _ } from 'meteor/underscore';
 import 'datatables.net-responsive-bs4';
 import './lib/global/globalShipping.js';
 import './lib/global/soundalert.js';
+import './js/packagerenewal.js';
+import './Navigation/onsuccesswaterfall.js';
+import './Help_Form/help_advisor.js';
 /* Rasheed */
 
 /* Jeyhun */
@@ -499,15 +501,17 @@ import './vs1_templates/vs1_select/default_select.html'
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
 
+import './vs1_templates/transaction_list/transaction_list.js';
+
 // import 'datatables.net';
 // import 'datatables.net-bs';
-// import 'datatables.net-bs4';
-// import 'datatables.net-buttons';
+// import 'datatables.net-dt';
+// import 'datatables.net-buttons/js/dataTables.buttons.js';
 // import 'datatables.net-buttons-dt';
-// import 'datatables.net-buttons/js/buttons.colVis';
-// import 'datatables.net-buttons/js/buttons.flash';
-// import 'datatables.net-buttons/js/buttons.html5';
-// import 'datatables.net-buttons/js/buttons.print';
+// import 'datatables.net-buttons/js/buttons.colVis.js';
+// import 'datatables.net-buttons/js/buttons.flash.js';
+// import 'datatables.net-buttons/js/buttons.html5.js';
+// import 'datatables.net-buttons/js/buttons.print.js';
 // import "datatables.net-colreorder";
 // import "datatables.net-fixedheader";
 // import "datatables.net-fixedcolumns";
@@ -533,7 +537,6 @@ import './credit/credit_list.js';
 import './purchase/purchaseorder_express_list_tables.js';
 import './purchase/purchaseorderbo_express_list_tables.js';
 import './purchase/purchase-service.js';
-import './Help_Form/help_advisor.js';
 import './fixedassets/components/fixedassetlistpop/fixedassetlistpop.js';
 /* Arthlo */
 

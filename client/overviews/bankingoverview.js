@@ -14,6 +14,8 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+Template.bankingoverview.inheritsHooksFrom('transaction_list');
+
 Template.bankingoverview.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -31,6 +33,7 @@ Template.bankingoverview.onCreated(function() {
 });
 
 Template.bankingoverview.onRendered(function() {
+/*
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -329,104 +332,6 @@ Template.bankingoverview.onRendered(function() {
       });
     });
 
-/*
-    getVS1Data('TPurchaseOrderEx').then(function(dataObject) {
-        if (dataObject.length == 0) {
-            paymentService.getOverviewAwaitingSupplierDetails().then(function(data) {
-                let itemsSuppAwaitingPaymentcount = [];
-                let itemsSuppOverduePaymentcount = [];
-                let dataListAwaitingSupp = {};
-                let customerawaitingpaymentCount = '';
-                let supptotAmount = 0;
-                let supptotAmountOverDue = 0;
-                for (let i = 0; i < data.tpurchaseorder.length; i++) {
-                    dataListAwaitingSupp = {
-                        id: data.tpurchaseorder[i].Id || '',
-                    };
-                    if (data.tpurchaseorder[i].TotalBalance > 0) {
-                        // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                        supptotAmount += Number(data.tpurchaseorder[i].TotalBalance);
-                        itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                        let date = new Date(data.tpurchaseorder[i].DueDate);
-                        if (date < new Date()) {
-                            supptotAmountOverDue += Number(data.tpurchaseorder[i].TotalBalance);
-                            itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                        }
-                    }
-
-                }
-                $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-                $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-                // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
-            });
-        } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.tpurchaseorderex;
-            let itemsSuppAwaitingPaymentcount = [];
-            let itemsSuppOverduePaymentcount = [];
-            let dataListAwaitingSupp = {};
-            let customerawaitingpaymentCount = '';
-            let supptotAmount = 0;
-            let supptotAmountOverDue = 0;
-            for (let i = 0; i < useData.length; i++) {
-                dataListAwaitingSupp = {
-                    id: useData[i].Id || '',
-                };
-                if (useData[i].TotalBalance > 0) {
-                    // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                    supptotAmount += Number(useData[i].TotalBalance);
-                    itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                    let date = new Date(useData[i].DueDate);
-                    if (date < new Date()) {
-                        supptotAmountOverDue += Number(useData[i].TotalBalance);
-                        itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                    }
-                }
-
-            }
-            $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-            $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-            $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-            $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-
-        }
-    }).catch(function(err) {
-        paymentService.getOverviewAwaitingSupplierDetails().then(function(data) {
-            let itemsSuppAwaitingPaymentcount = [];
-            let itemsSuppOverduePaymentcount = [];
-            let dataListAwaitingSupp = {};
-            let customerawaitingpaymentCount = '';
-            let supptotAmount = 0;
-            let supptotAmountOverDue = 0;
-            for (let i = 0; i < data.tpurchaseorder.length; i++) {
-                dataListAwaitingSupp = {
-                    id: data.tpurchaseorder[i].Id || '',
-                };
-                if (data.tpurchaseorder[i].TotalBalance > 0) {
-                    // supptotAmount = data.tpurchaseorder[i].TotalBalance + data.tpurchaseorder[i].TotalBalance;
-                    supptotAmount += Number(data.tpurchaseorder[i].TotalBalance);
-                    itemsSuppAwaitingPaymentcount.push(dataListAwaitingSupp);
-                    let date = new Date(data.tpurchaseorder[i].DueDate);
-                    if (date < new Date()) {
-                        supptotAmountOverDue += Number(data.tpurchaseorder[i].TotalBalance);
-                        itemsSuppOverduePaymentcount.push(dataListAwaitingSupp);
-                    }
-                }
-
-            }
-            $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-            $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
-
-            $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-            $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
-            // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
-        });
-    });
-    */
 
     templateObject.resetData = function (dataVal) {
         window.open('/bankingoverview?page=last', '_self');
@@ -1471,6 +1376,7 @@ Template.bankingoverview.onRendered(function() {
       }
     }
   tableResize();
+*/
 });
 
 Template.bankingoverview.events({
@@ -1922,37 +1828,37 @@ Template.bankingoverview.events({
     //     });
 
     // },
-    // 'click .btnOpenSettings': function(event) {
-    //     let templateObject = Template.instance();
-    //     var columns = $('#tblBankingOverview th');
+    'click .btnOpenSettings': function(event) {
+        let templateObject = Template.instance();
+        var columns = $('#tblBankingOverview th');
 
-    //     const tableHeaderList = [];
-    //     let sTible = "";
-    //     let sWidth = "";
-    //     let sIndex = "";
-    //     let sVisible = "";
-    //     let columVisible = false;
-    //     let sClass = "";
-    //     $.each(columns, function(i, v) {
-    //         if (v.hidden === false) {
-    //             columVisible = true;
-    //         }
-    //         if ((v.className.includes("hiddenColumn"))) {
-    //             columVisible = false;
-    //         }
-    //         sWidth = v.style.width.replace('px', "");
+        const tableHeaderList = [];
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden === false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
 
-    //         let datatablerecordObj = {
-    //             sTitle: v.innerText || '',
-    //             sWidth: sWidth || '',
-    //             sIndex: v.cellIndex || 0,
-    //             sVisible: columVisible || false,
-    //             sClass: v.className || ''
-    //         };
-    //         tableHeaderList.push(datatablerecordObj);
-    //     });
-    //     templateObject.tableheaderrecords.set(tableHeaderList);
-    // },
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+    },
     'click .exportbtn': function() {
 
         $('.fullScreenSpin').css('display', 'inline-block');
