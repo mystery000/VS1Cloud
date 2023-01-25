@@ -1437,6 +1437,25 @@ Template.transaction_list.onRendered(function() {
     }
 
     templateObject.displayPayRunHistory = function(payRunsHistory){
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineID = "";
         let splashArrayPayRunHistory = new Array();
         let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
         for (let i = 0; i < data.length; i++) {
@@ -1451,21 +1470,20 @@ Template.transaction_list.onRendered(function() {
                 data[i].calendar.netPay || "",
               ];
             splashArrayPayRunHistory.push(dataPayRunHistory);
-            templateObject.transactiondatatablerecords.set(splashArrayPayRunHistory);
         }
-        if (templateObject.transactiondatatablerecords.get()) {
+        templateObject.datatablerecords.set(splashArrayPayRunHistory);
+        if (templateObject.datatablerecords.get()) {
             setTimeout(function() {
                 MakeNegative();
             }, 100);
         }
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function() {
-            $('#' + currenttablename).DataTable({
+            $('#tblPayRunHistory').DataTable({
                 data: splashArrayPayRunHistory,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colDraftPayRunID hiddenColumn", 
+                        className: "colPayRunHistoryID hiddenColumn", 
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -1507,34 +1525,34 @@ Template.transaction_list.onRendered(function() {
                         width:'100px'
                     },
                 ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 buttons: [{
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "STP List",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'STP List',
-                        filename: "STP List",
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Pay Run History - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Pay Run History',
+                    filename: "Pay Run History - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
                     {
                         extend: 'excelHtml5',
                         title: '',
                         download: 'open',
                         className: "btntabletoexcel hiddenColumn",
-                        filename: "STP List",
+                        filename: "Pay Run History - " + moment().format(),
                         orientation: 'portrait',
                         exportOptions: {
                             columns: ':visible'
@@ -1544,73 +1562,108 @@ Template.transaction_list.onRendered(function() {
                 select: true,
                 destroy: true,
                 colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
                 info: true,
                 responsive: true,
-                "order": [
-                    [1, "asc"]
-                ],
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
                 action: function() {
-                    $('#' + currenttablename).DataTable().ajax.reload();
+                    $('#tblPayRunHistory').DataTable().ajax.reload();
                 },
-                "fnDrawCallback": function(oSettings) {
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
                     $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    $('#tblPayRunHistory_ellipsis').addClass('disabled');
+
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
                         }
-                    } else {
-                    }
+                    } else {}
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                    });
-                    setTimeout(function() {
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+
+                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                            }else{
+                            }
+                        });
+
+                    setTimeout(function () {
                         MakeNegative();
                     }, 100);
                 },
-                language: { search: "", searchPlaceholder: "Search..." },
-                "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPayRunHistory_filter");
+                    }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPayRunHistory_filter");
                     }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshPayRunHistory' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayRunHistory_filter");
+
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
                 },
-                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.length || 0; //get count from API data
-                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                 }
+
             }).on('page', function() {
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+
             }).on('column-reorder', function() {
-            }).on('length.dt', function(e, settings, len) {
-                $(".fullScreenSpin").css("display", "inline-block");
-                let dataLenght = settings._iDisplayLength;
-                if (dataLenght == -1) {
-                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                        $(".fullScreenSpin").css("display", "none");
-                    } else {
-                        $(".fullScreenSpin").css("display", "none");
-                    }
-                } else {
-                    $(".fullScreenSpin").css("display", "none");
-                }
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
+
             });
-            $(".fullScreenSpin").css("display", "none");
+            $('.fullScreenSpin').css('display', 'none');
+
         }, 0);
-        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+
+        var columns = $('#tblPayRunHistory th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
     templateObject.getPayrollLeaveData = function(){
         getVS1Data('TLeavRequest').then(async function (dataObject) {
@@ -1650,6 +1703,25 @@ Template.transaction_list.onRendered(function() {
     }
 
     templateObject.displayPayrollLeaveData = function(payRunsHistory){
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineID = "";
         let splashArrayPayRunHistory = new Array();
         let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
         for (let i = 0; i < data.length; i++) {
@@ -1661,18 +1733,17 @@ Template.transaction_list.onRendered(function() {
                 data[i].fields.HoursAccruedAnnuallyFullTimeEmp || "",
               ];
             splashArrayPayRunHistory.push(dataPayRunHistory);
-            templateObject.transactiondatatablerecords.set(splashArrayPayRunHistory);
         }
-        if (templateObject.transactiondatatablerecords.get()) {
+        templateObject.datatablerecords.set(splashArrayPayRunHistory);
+        if (templateObject.datatablerecords.get()) {
             setTimeout(function() {
                 MakeNegative();
             }, 100);
         }
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function() {
-            $('#' + currenttablename).DataTable({
+            $('#tblPayleaveToReview').DataTable({
                 data: splashArrayPayRunHistory,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colPayrollLeaveID hiddenColumn", 
@@ -1705,36 +1776,36 @@ Template.transaction_list.onRendered(function() {
                         className: "colStatus",
                         targets: 5,
                         width:'100px'
-                    },
+                    }
                 ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 buttons: [{
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "STP List",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'STP List',
-                        filename: "STP List",
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Pay Leave To Review',
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
                     {
                         extend: 'excelHtml5',
                         title: '',
                         download: 'open',
                         className: "btntabletoexcel hiddenColumn",
-                        filename: "STP List",
+                        filename: "Pay Leave To Review - " + moment().format(),
                         orientation: 'portrait',
                         exportOptions: {
                             columns: ':visible'
@@ -1744,73 +1815,108 @@ Template.transaction_list.onRendered(function() {
                 select: true,
                 destroy: true,
                 colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
                 info: true,
                 responsive: true,
-                "order": [
-                    [1, "asc"]
-                ],
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
                 action: function() {
-                    $('#' + currenttablename).DataTable().ajax.reload();
+                    $('#tblPayleaveToReview').DataTable().ajax.reload();
                 },
-                "fnDrawCallback": function(oSettings) {
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
                     $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    $('#tblPayleaveToReview_ellipsis').addClass('disabled');
+
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
                         }
-                    } else {
-                    }
+                    } else {}
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                    });
-                    setTimeout(function() {
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+
+                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                            }else{
+                            }
+                        });
+
+                    setTimeout(function () {
                         MakeNegative();
                     }, 100);
                 },
-                language: { search: "", searchPlaceholder: "Search..." },
-                "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPayleaveToReview_filter");
+                    }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPayleaveToReview_filter");
                     }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    $("<button class='btn btn-primary btnRefreshPayLeaveToReview' type='button' id='btnRefreshPayLeaveToReview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayleaveToReview_filter");
+
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
                 },
-                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.length || 0; //get count from API data
-                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                 }
+
             }).on('page', function() {
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+
             }).on('column-reorder', function() {
-            }).on('length.dt', function(e, settings, len) {
-                $(".fullScreenSpin").css("display", "inline-block");
-                let dataLenght = settings._iDisplayLength;
-                if (dataLenght == -1) {
-                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                        $(".fullScreenSpin").css("display", "none");
-                    } else {
-                        $(".fullScreenSpin").css("display", "none");
-                    }
-                } else {
-                    $(".fullScreenSpin").css("display", "none");
-                }
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
+
             });
-            $(".fullScreenSpin").css("display", "none");
+            $('.fullScreenSpin').css('display', 'none');
+
         }, 0);
-        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+
+        var columns = $('#tblPayleaveToReview th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
