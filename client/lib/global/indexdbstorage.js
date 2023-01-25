@@ -363,6 +363,7 @@ openDb = function (dbName) {
       db.createObjectStore("TCRMLeadBarChart", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCRMLeadPieChart", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTemplateSettings", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TPrintTemplateDetail", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProfitLossEditLayout", {
         keyPath: "EmployeeEmail",
       });
