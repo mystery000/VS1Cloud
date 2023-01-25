@@ -1719,718 +1719,718 @@ Template.payrollrules.onRendered(function() {
 
 
 
-    templateObject.getCalenders = async (refresh = false) => {
-        let _data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
-            return await sideBarService.getCalender(initialBaseDataLoad, 0);
-        }, {
-            useIndexDb: true,
-            useLocalStorage: false,
-            forceOverride: refresh,
-            validate: (cachedResponse) => {
-                return true;
-            }
-        });
-
-        let data = _data.response;
-
-        for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-            var dataListAllowance = [
-                data.tpayrollcalendars[i].fields.ID || '',
-                data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ];
-
-            splashArrayCalenderList.push(dataListAllowance);
-        }
-
-        setTimeout(function () {
-            MakeNegative();
-        }, 100);
-        setTimeout(function () {
-            $('#tblPayCalendars').DataTable({
-
-                data: splashArrayCalenderList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [
-                    {
-                      className: "colCalenderID hiddenColumn",
-                      "targets": [0]
-                    },
-                    {
-                        className: "colPayCalendarName",
-                        "targets": [1]
-                    },
-                    {
-                        className: "colPayPeriod",
-                        "targets": [2]
-                    },
-                    {
-                        className: "colNextPayPeriod",
-                        "targets": [3]
-                    },
-                    {
-                        className: "colNextPaymentDate",
-                        "targets": [4]
-                    },
-                    {
-                        className: "colDeleteCalenders",
-                        "orderable": false,
-                        "targets": -1
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                info: true,
-                responsive: true,
-                "order": [[0, "asc"]],
-                action: function () {
-                    $('#tblPayCalendars').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function (oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#tblPayCalendars_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
-
-                        }
-                    } else {
-
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
-
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                        .on('click', function () {
-                            // $('.fullScreenSpin').css('display', 'inline-block');
-                            var splashArrayCalenderListDupp = new Array();
-                            let dataLenght = oSettings._iDisplayLength;
-                            let customerSearch = $('#tblPayCalendars_filter input').val();
-
-                            sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-                                  var dataListAllowance = [
-                                      data.tpayrollcalendars[i].fields.ID || '',
-                                      data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-                                      data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-                                      moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-                                      moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-                                      '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                  ];
-
-                                  splashArrayCalenderList.push(dataListAllowance);
-                              }
-
-                                        let uniqueChars = [...new Set(splashArrayCalenderList)];
-                                        var datatable = $('#tblPayCalendars').DataTable();
-                                        datatable.clear();
-                                        datatable.rows.add(uniqueChars);
-                                        datatable.draw(false);
-                                        setTimeout(function () {
-                                          $("#tblPayCalendars").dataTable().fnPageChange('last');
-                                        }, 400);
-
-                                        LoadingOverlay.hide();
-
-
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-
-                        });
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                },
-                "fnInitComplete": function () {
-
-                    $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                    $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
-
-                }
-
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-
-            }).on('column-reorder', function () {
-
-            }).on('length.dt', function (e, settings, len) {
-              //// $('.fullScreenSpin').css('display', 'inline-block');
-              let dataLenght = settings._iDisplayLength;
-              splashArrayCalenderList = [];
-              if (dataLenght == -1) {
-                LoadingOverlay.hide();
-
-              } else {
-                  if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                      LoadingOverlay.hide();
-                  } else {
-                      sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-                          addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                              templateObject.resetData(dataNonBo);
-                              LoadingOverlay.hide();
-                          }).catch(function (err) {
-                              LoadingOverlay.hide();
-                          });
-                      }).catch(function (err) {
-                          LoadingOverlay.hide();
-                      });
-                  }
-              }
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-
-
-        }, 0);
-
-        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-        // getVS1Data('TPayrollCalendars').then(function(dataObject) {
-
-        //     if (dataObject.length == 0) {
-        //       sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
-
-        //           addVS1Data('TPayrollCalendars', JSON.stringify(data));
-        //           let lineItems = [];
-        //           let lineItemObj = {};
-
-        //           for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-        //               var dataListAllowance = [
-        //                   data.tpayrollcalendars[i].fields.ID || '',
-        //                   data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-        //                   data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-        //                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-        //                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-        //                   '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-        //               ];
-
-        //               splashArrayCalenderList.push(dataListAllowance);
-        //           }
-
-        //           setTimeout(function () {
-        //               MakeNegative();
-        //           }, 100);
-        //           setTimeout(function () {
-        //               $('#tblPayCalendars').DataTable({
-
-        //                   data: splashArrayCalenderList,
-        //                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        //                   columnDefs: [
-        //                       {
-        //                         className: "colCalenderID hiddenColumn",
-        //                         "targets": [0]
-        //                       },
-        //                       {
-        //                           className: "colPayCalendarName",
-        //                           "targets": [1]
-        //                       },
-        //                       {
-        //                           className: "colPayPeriod",
-        //                           "targets": [2]
-        //                       },
-        //                       {
-        //                           className: "colNextPayPeriod",
-        //                           "targets": [3]
-        //                       },
-        //                       {
-        //                           className: "colNextPaymentDate",
-        //                           "targets": [4]
-        //                       },
-        //                       {
-        //                           className: "colDeleteCalenders",
-        //                           "orderable": false,
-        //                           "targets": -1
-        //                       }
-        //                   ],
-        //                   select: true,
-        //                   destroy: true,
-        //                   colReorder: true,
-        //                   pageLength: initialDatatableLoad,
-        //                   lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-        //                   info: true,
-        //                   responsive: true,
-        //                   "order": [[0, "asc"]],
-        //                   action: function () {
-        //                       $('#tblPayCalendars').DataTable().ajax.reload();
-        //                   },
-        //                   "fnDrawCallback": function (oSettings) {
-        //                       $('.paginate_button.page-item').removeClass('disabled');
-        //                       $('#tblPayCalendars_ellipsis').addClass('disabled');
-        //                       if (oSettings._iDisplayLength == -1) {
-        //                           if (oSettings.fnRecordsDisplay() > 150) {
-
-        //                           }
-        //                       } else {
-
-        //                       }
-        //                       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-        //                           $('.paginate_button.page-item.next').addClass('disabled');
-        //                       }
-
-        //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
-        //                           .on('click', function () {
-        //                               // $('.fullScreenSpin').css('display', 'inline-block');
-        //                               var splashArrayCalenderListDupp = new Array();
-        //                               let dataLenght = oSettings._iDisplayLength;
-        //                               let customerSearch = $('#tblPayCalendars_filter input').val();
-
-        //                               sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-        //                                   for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-        //                                     var dataListAllowance = [
-        //                                         data.tpayrollcalendars[i].fields.ID || '',
-        //                                         data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-        //                                         data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-        //                                         moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-        //                                         moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-        //                                         '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-        //                                     ];
-
-        //                                     splashArrayCalenderList.push(dataListAllowance);
-        //                                 }
-
-        //                                           let uniqueChars = [...new Set(splashArrayCalenderList)];
-        //                                           var datatable = $('#tblPayCalendars').DataTable();
-        //                                           datatable.clear();
-        //                                           datatable.rows.add(uniqueChars);
-        //                                           datatable.draw(false);
-        //                                           setTimeout(function () {
-        //                                             $("#tblPayCalendars").dataTable().fnPageChange('last');
-        //                                           }, 400);
-
-        //                                           LoadingOverlay.hide();
-
-
-        //                               }).catch(function (err) {
-        //                                   LoadingOverlay.hide();
-        //                               });
-
-        //                           });
-        //                       setTimeout(function () {
-        //                           MakeNegative();
-        //                       }, 100);
-        //                   },
-        //                   "fnInitComplete": function () {
-
-        //                       $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-        //                       $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
-
-        //                   }
-
-        //               }).on('page', function () {
-        //                   setTimeout(function () {
-        //                       MakeNegative();
-        //                   }, 100);
-
-        //               }).on('column-reorder', function () {
-
-        //               }).on('length.dt', function (e, settings, len) {
-        //                 //// $('.fullScreenSpin').css('display', 'inline-block');
-        //                 let dataLenght = settings._iDisplayLength;
-        //                 splashArrayCalenderList = [];
-        //                 if (dataLenght == -1) {
-        //                   LoadingOverlay.hide();
-
-        //                 } else {
-        //                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-        //                         LoadingOverlay.hide();
-        //                     } else {
-        //                         sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-        //                             addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-        //                                 templateObject.resetData(dataNonBo);
-        //                                 LoadingOverlay.hide();
-        //                             }).catch(function (err) {
-        //                                 LoadingOverlay.hide();
-        //                             });
-        //                         }).catch(function (err) {
-        //                             LoadingOverlay.hide();
-        //                         });
-        //                     }
-        //                 }
-        //                   setTimeout(function () {
-        //                       MakeNegative();
-        //                   }, 100);
-        //               });
-
-
-        //           }, 0);
-
-        //           $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-        //           LoadingOverlay.hide();
-        //       }).catch(function (err) {
-        //         LoadingOverlay.hide();
-        //       });
-        //     }else{
-
-        //       let data = JSON.parse(dataObject[0].data);
-
-        //       let useData = data;
-        //       let lineItems = [];
-        //       let lineItemObj = {};
-        //       for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-        //         var dataListAllowance = [
-        //             data.tpayrollcalendars[i].fields.ID || '',
-        //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-        //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-        //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-        //         ];
-
-        //         splashArrayCalenderList.push(dataListAllowance);
-        //     }
-
-
-
-
-        //       setTimeout(function () {
-        //           MakeNegative();
-        //       }, 100);
-        //       setTimeout(function () {
-        //           $('#tblPayCalendars').DataTable({
-
-        //               data: splashArrayCalenderList,
-        //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        //               columnDefs: [
-        //                 {
-        //                   className: "colCalenderID hiddenColumn",
-        //                   "targets": [0]
-        //                 },
-        //                 {
-        //                     className: "colPayCalendarName",
-        //                     "targets": [1]
-        //                 },
-        //                 {
-        //                     className: "colPayPeriod",
-        //                     "targets": [2]
-        //                 },
-        //                 {
-        //                     className: "colNextPayPeriod",
-        //                     "targets": [3]
-        //                 },
-        //                 {
-        //                     className: "colNextPaymentDate",
-        //                     "targets": [4]
-        //                 },
-        //                 {
-        //                     className: "colDeleteCalenders",
-        //                     "orderable": false,
-        //                     "targets": -1
-        //                 }
-        //             ],
-        //               select: true,
-        //               destroy: true,
-        //               colReorder: true,
-        //               pageLength: initialDatatableLoad,
-        //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-        //               info: true,
-        //               responsive: true,
-        //               "order": [[0, "asc"]],
-        //               action: function () {
-        //                   $('#tblPayCalendars').DataTable().ajax.reload();
-        //               },
-        //               "fnDrawCallback": function (oSettings) {
-        //                   $('.paginate_button.page-item').removeClass('disabled');
-        //                   $('#tblPayCalendars_ellipsis').addClass('disabled');
-        //                   if (oSettings._iDisplayLength == -1) {
-        //                       if (oSettings.fnRecordsDisplay() > 150) {
-
-        //                       }
-        //                   } else {
-
-        //                   }
-        //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-        //                       $('.paginate_button.page-item.next').addClass('disabled');
-        //                   }
-
-        //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
-        //                       .on('click', function () {
-        //                           // $('.fullScreenSpin').css('display', 'inline-block');
-        //                           var splashArrayCalenderListDupp = new Array();
-        //                           let dataLenght = oSettings._iDisplayLength;
-        //                           let customerSearch = $('#tblPayCalendars_filter input').val();
-
-        //                           sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-        //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-        //                                 var dataListAllowance = [
-        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarStartDate || '',
-        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate || '',
-        //                                     '<td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-        //                                 ];
-
-        //                                 splashArrayCalenderList.push(dataListAllowance);
-        //                             }
-
-        //                                       let uniqueChars = [...new Set(splashArrayCalenderList)];
-        //                                       var datatable = $('#tblPayCalendars').DataTable();
-        //                                       datatable.clear();
-        //                                       datatable.rows.add(uniqueChars);
-        //                                       datatable.draw(false);
-        //                                       setTimeout(function () {
-        //                                         $("#tblPayCalendars").dataTable().fnPageChange('last');
-        //                                       }, 400);
-
-        //                                       LoadingOverlay.hide();
-
-
-        //                           }).catch(function (err) {
-        //                               LoadingOverlay.hide();
-        //                           });
-
-        //                       });
-        //                   setTimeout(function () {
-        //                       MakeNegative();
-        //                   }, 100);
-        //               },
-        //               "fnInitComplete": function () {
-        //                   $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-        //                   $("<button class='btn btn-primary btnRefreshcalender' type='button' id='btnRefreshcalender' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
-
-        //               }
-
-        //           }).on('page', function () {
-        //               setTimeout(function () {
-        //                   MakeNegative();
-        //               }, 100);
-
-        //           }).on('column-reorder', function () {
-
-        //           }).on('length.dt', function (e, settings, len) {
-        //             //// $('.fullScreenSpin').css('display', 'inline-block');
-        //             let dataLenght = settings._iDisplayLength;
-        //             splashArrayCalenderList = [];
-        //             if (dataLenght == -1) {
-        //               LoadingOverlay.hide();
-
-        //             } else {
-        //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-        //                     LoadingOverlay.hide();
-        //                 } else {
-        //                     sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-        //                         addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-        //                             templateObject.resetData(dataNonBo);
-        //                             LoadingOverlay.hide();
-        //                         }).catch(function (err) {
-        //                             LoadingOverlay.hide();
-        //                         });
-        //                     }).catch(function (err) {
-        //                         LoadingOverlay.hide();
-        //                     });
-        //                 }
-        //             }
-        //               setTimeout(function () {
-        //                   MakeNegative();
-        //               }, 100);
-        //           });
-
-
-        //       }, 0);
-
-        //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        //       LoadingOverlay.hide();
-
-        //     }
-        // }).catch(function(err) {
-        //   sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
-        //       addVS1Data('TPayrollCalendars', JSON.stringify(data));
-        //       let lineItems = [];
-        //       let lineItemObj = {};
-        //       for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-        //         var dataListAllowance = [
-        //             data.tpayrollcalendars[i].fields.ID || '',
-        //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-        //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-        //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-        //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-        //         ];
-
-        //         splashArrayCalenderList.push(dataListAllowance);
-        //     }
-
-
-        //       setTimeout(function () {
-        //           MakeNegative();
-        //       }, 100);
-        //       setTimeout(function () {
-        //           $('#tblPayCalendars').DataTable({
-
-        //               data: splashArrayCalenderList,
-        //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        //               columnDefs: [
-        //                 {
-        //                   className: "colCalenderID hiddenColumn",
-        //                   "targets": [0]
-        //                 },
-        //                 {
-        //                     className: "colPayCalendarName",
-        //                     "targets": [1]
-        //                 },
-        //                 {
-        //                     className: "colPayPeriod",
-        //                     "targets": [2]
-        //                 },
-        //                 {
-        //                     className: "colNextPayPeriod",
-        //                     "targets": [3]
-        //                 },
-        //                 {
-        //                     className: "colNextPaymentDate",
-        //                     "targets": [4]
-        //                 },
-        //                 {
-        //                     className: "colDeleteCalenders",
-        //                     "orderable": false,
-        //                     "targets": -1
-        //                 }
-        //             ],
-        //               select: true,
-        //               destroy: true,
-        //               colReorder: true,
-        //               pageLength: initialDatatableLoad,
-        //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-        //               info: true,
-        //               responsive: true,
-        //               "order": [[0, "asc"]],
-        //               action: function () {
-        //                   $('#tblPayCalendars').DataTable().ajax.reload();
-        //               },
-        //               "fnDrawCallback": function (oSettings) {
-        //                   $('.paginate_button.page-item').removeClass('disabled');
-        //                   $('#tblPayCalendars_ellipsis').addClass('disabled');
-        //                   if (oSettings._iDisplayLength == -1) {
-        //                       if (oSettings.fnRecordsDisplay() > 150) {
-
-        //                       }
-        //                   } else {
-
-        //                   }
-        //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-        //                       $('.paginate_button.page-item.next').addClass('disabled');
-        //                   }
-
-        //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
-        //                       .on('click', function () {
-        //                           // $('.fullScreenSpin').css('display', 'inline-block');
-        //                           var splashArrayCalenderListDupp = new Array();
-        //                           let dataLenght = oSettings._iDisplayLength;
-        //                           let customerSearch = $('#tblPayCalendars_filter input').val();
-
-        //                           sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-        //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
-
-        //                                 var dataListAllowance = [
-        //                                     data.tpayrollcalendars[i].fields.ID || '',
-        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
-        //                                     data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
-        //                                     moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-        //                                     moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-        //                                     '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-        //                                 ];
-
-        //                                 splashArrayCalenderList.push(dataListAllowance);
-        //                             }
-
-        //                                  let uniqueChars = [...new Set(splashArrayCalenderList)];
-        //                                  var datatable = $('#tblPayCalendars').DataTable();
-        //                                       datatable.clear();
-        //                                       datatable.rows.add(uniqueChars);
-        //                                       datatable.draw(false);
-        //                                       setTimeout(function () {
-        //                                         $("#tblPayCalendars").dataTable().fnPageChange('last');
-        //                                       }, 400);
-
-        //                                       LoadingOverlay.hide();
-
-
-        //                           }).catch(function (err) {
-        //                               LoadingOverlay.hide();
-        //                           });
-
-        //                       });
-        //                   setTimeout(function () {
-        //                       MakeNegative();
-        //                   }, 100);
-        //               },
-        //               "fnInitComplete": function () {
-        //                   $("<button class='btn btn-primary btnAddNewPayCalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-        //                   $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshCalender' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
-
-        //               }
-
-        //           }).on('page', function () {
-        //               setTimeout(function () {
-        //                   MakeNegative();
-        //               }, 100);
-
-        //           }).on('column-reorder', function () {
-
-        //           }).on('length.dt', function (e, settings, len) {
-        //             //// $('.fullScreenSpin').css('display', 'inline-block');
-        //             let dataLenght = settings._iDisplayLength;
-        //             splashArrayCalenderList = [];
-        //             if (dataLenght == -1) {
-        //               LoadingOverlay.hide();
-
-        //             } else {
-        //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-        //                     LoadingOverlay.hide();
-        //                 } else {
-        //                     sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
-
-        //                         addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
-        //                             templateObject.resetData(dataNonBo);
-        //                             LoadingOverlay.hide();
-        //                         }).catch(function (err) {
-        //                             LoadingOverlay.hide();
-        //                         });
-        //                     }).catch(function (err) {
-        //                         LoadingOverlay.hide();
-        //                     });
-        //                 }
-        //             }
-        //               setTimeout(function () {
-        //                   MakeNegative();
-        //               }, 100);
-        //           });
-
-
-        //       }, 0);
-
-        //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-        //       LoadingOverlay.hide();
-        //   }).catch(function (err) {
-        //     LoadingOverlay.hide();
-        //   });
-        // });
-    };
+    // templateObject.getCalenders = async (refresh = false) => {
+    //     let _data = await CachedHttp.get(erpObject.TPayrollCalendars, async () => {
+    //         return await sideBarService.getCalender(initialBaseDataLoad, 0);
+    //     }, {
+    //         useIndexDb: true,
+    //         useLocalStorage: false,
+    //         forceOverride: refresh,
+    //         validate: (cachedResponse) => {
+    //             return true;
+    //         }
+    //     });
+
+    //     let data = _data.response;
+
+    //     for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //         var dataListAllowance = [
+    //             data.tpayrollcalendars[i].fields.ID || '',
+    //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //         ];
+
+    //         splashArrayCalenderList.push(dataListAllowance);
+    //     }
+
+    //     setTimeout(function () {
+    //         MakeNegative();
+    //     }, 100);
+    //     setTimeout(function () {
+    //         $('#tblPayCalendars').DataTable({
+
+    //             data: splashArrayCalenderList,
+    //             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //             columnDefs: [
+    //                 {
+    //                   className: "colCalenderID hiddenColumn",
+    //                   "targets": [0]
+    //                 },
+    //                 {
+    //                     className: "colPayCalendarName",
+    //                     "targets": [1]
+    //                 },
+    //                 {
+    //                     className: "colPayPeriod",
+    //                     "targets": [2]
+    //                 },
+    //                 {
+    //                     className: "colNextPayPeriod",
+    //                     "targets": [3]
+    //                 },
+    //                 {
+    //                     className: "colNextPaymentDate",
+    //                     "targets": [4]
+    //                 },
+    //                 {
+    //                     className: "colDeleteCalenders",
+    //                     "orderable": false,
+    //                     "targets": -1
+    //                 }
+    //             ],
+    //             select: true,
+    //             destroy: true,
+    //             colReorder: true,
+    //             pageLength: initialDatatableLoad,
+    //             lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //             info: true,
+    //             responsive: true,
+    //             "order": [[0, "asc"]],
+    //             action: function () {
+    //                 $('#tblPayCalendars').DataTable().ajax.reload();
+    //             },
+    //             "fnDrawCallback": function (oSettings) {
+    //                 $('.paginate_button.page-item').removeClass('disabled');
+    //                 $('#tblPayCalendars_ellipsis').addClass('disabled');
+    //                 if (oSettings._iDisplayLength == -1) {
+    //                     if (oSettings.fnRecordsDisplay() > 150) {
+
+    //                     }
+    //                 } else {
+
+    //                 }
+    //                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //                     $('.paginate_button.page-item.next').addClass('disabled');
+    //                 }
+
+    //                 $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                     .on('click', function () {
+    //                         // $('.fullScreenSpin').css('display', 'inline-block');
+    //                         var splashArrayCalenderListDupp = new Array();
+    //                         let dataLenght = oSettings._iDisplayLength;
+    //                         let customerSearch = $('#tblPayCalendars_filter input').val();
+
+    //                         sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+    //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //                               var dataListAllowance = [
+    //                                   data.tpayrollcalendars[i].fields.ID || '',
+    //                                   data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //                                   data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //                                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //                                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //                                   '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //                               ];
+
+    //                               splashArrayCalenderList.push(dataListAllowance);
+    //                           }
+
+    //                                     let uniqueChars = [...new Set(splashArrayCalenderList)];
+    //                                     var datatable = $('#tblPayCalendars').DataTable();
+    //                                     datatable.clear();
+    //                                     datatable.rows.add(uniqueChars);
+    //                                     datatable.draw(false);
+    //                                     setTimeout(function () {
+    //                                       $("#tblPayCalendars").dataTable().fnPageChange('last');
+    //                                     }, 400);
+
+    //                                     LoadingOverlay.hide();
+
+
+    //                         }).catch(function (err) {
+    //                             LoadingOverlay.hide();
+    //                         });
+
+    //                     });
+    //                 setTimeout(function () {
+    //                     MakeNegative();
+    //                 }, 100);
+    //             },
+    //             "fnInitComplete": function () {
+
+    //                 $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+    //                 $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
+
+    //             }
+
+    //         }).on('page', function () {
+    //             setTimeout(function () {
+    //                 MakeNegative();
+    //             }, 100);
+
+    //         }).on('column-reorder', function () {
+
+    //         }).on('length.dt', function (e, settings, len) {
+    //           //// $('.fullScreenSpin').css('display', 'inline-block');
+    //           let dataLenght = settings._iDisplayLength;
+    //           splashArrayCalenderList = [];
+    //           if (dataLenght == -1) {
+    //             LoadingOverlay.hide();
+
+    //           } else {
+    //               if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //                   LoadingOverlay.hide();
+    //               } else {
+    //                   sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+    //                       addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //                           templateObject.resetData(dataNonBo);
+    //                           LoadingOverlay.hide();
+    //                       }).catch(function (err) {
+    //                           LoadingOverlay.hide();
+    //                       });
+    //                   }).catch(function (err) {
+    //                       LoadingOverlay.hide();
+    //                   });
+    //               }
+    //           }
+    //             setTimeout(function () {
+    //                 MakeNegative();
+    //             }, 100);
+    //         });
+
+
+    //     }, 0);
+
+    //     $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+    //     // getVS1Data('TPayrollCalendars').then(function(dataObject) {
+
+    //     //     if (dataObject.length == 0) {
+    //     //       sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
+
+    //     //           addVS1Data('TPayrollCalendars', JSON.stringify(data));
+    //     //           let lineItems = [];
+    //     //           let lineItemObj = {};
+
+    //     //           for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //     //               var dataListAllowance = [
+    //     //                   data.tpayrollcalendars[i].fields.ID || '',
+    //     //                   data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //     //                   data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //     //                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //     //                   moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //     //                   '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //     //               ];
+
+    //     //               splashArrayCalenderList.push(dataListAllowance);
+    //     //           }
+
+    //     //           setTimeout(function () {
+    //     //               MakeNegative();
+    //     //           }, 100);
+    //     //           setTimeout(function () {
+    //     //               $('#tblPayCalendars').DataTable({
+
+    //     //                   data: splashArrayCalenderList,
+    //     //                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //     //                   columnDefs: [
+    //     //                       {
+    //     //                         className: "colCalenderID hiddenColumn",
+    //     //                         "targets": [0]
+    //     //                       },
+    //     //                       {
+    //     //                           className: "colPayCalendarName",
+    //     //                           "targets": [1]
+    //     //                       },
+    //     //                       {
+    //     //                           className: "colPayPeriod",
+    //     //                           "targets": [2]
+    //     //                       },
+    //     //                       {
+    //     //                           className: "colNextPayPeriod",
+    //     //                           "targets": [3]
+    //     //                       },
+    //     //                       {
+    //     //                           className: "colNextPaymentDate",
+    //     //                           "targets": [4]
+    //     //                       },
+    //     //                       {
+    //     //                           className: "colDeleteCalenders",
+    //     //                           "orderable": false,
+    //     //                           "targets": -1
+    //     //                       }
+    //     //                   ],
+    //     //                   select: true,
+    //     //                   destroy: true,
+    //     //                   colReorder: true,
+    //     //                   pageLength: initialDatatableLoad,
+    //     //                   lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //     //                   info: true,
+    //     //                   responsive: true,
+    //     //                   "order": [[0, "asc"]],
+    //     //                   action: function () {
+    //     //                       $('#tblPayCalendars').DataTable().ajax.reload();
+    //     //                   },
+    //     //                   "fnDrawCallback": function (oSettings) {
+    //     //                       $('.paginate_button.page-item').removeClass('disabled');
+    //     //                       $('#tblPayCalendars_ellipsis').addClass('disabled');
+    //     //                       if (oSettings._iDisplayLength == -1) {
+    //     //                           if (oSettings.fnRecordsDisplay() > 150) {
+
+    //     //                           }
+    //     //                       } else {
+
+    //     //                       }
+    //     //                       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //     //                           $('.paginate_button.page-item.next').addClass('disabled');
+    //     //                       }
+
+    //     //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //     //                           .on('click', function () {
+    //     //                               // $('.fullScreenSpin').css('display', 'inline-block');
+    //     //                               var splashArrayCalenderListDupp = new Array();
+    //     //                               let dataLenght = oSettings._iDisplayLength;
+    //     //                               let customerSearch = $('#tblPayCalendars_filter input').val();
+
+    //     //                               sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+    //     //                                   for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //     //                                     var dataListAllowance = [
+    //     //                                         data.tpayrollcalendars[i].fields.ID || '',
+    //     //                                         data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //     //                                         data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //     //                                         moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //     //                                         moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //     //                                         '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //     //                                     ];
+
+    //     //                                     splashArrayCalenderList.push(dataListAllowance);
+    //     //                                 }
+
+    //     //                                           let uniqueChars = [...new Set(splashArrayCalenderList)];
+    //     //                                           var datatable = $('#tblPayCalendars').DataTable();
+    //     //                                           datatable.clear();
+    //     //                                           datatable.rows.add(uniqueChars);
+    //     //                                           datatable.draw(false);
+    //     //                                           setTimeout(function () {
+    //     //                                             $("#tblPayCalendars").dataTable().fnPageChange('last');
+    //     //                                           }, 400);
+
+    //     //                                           LoadingOverlay.hide();
+
+
+    //     //                               }).catch(function (err) {
+    //     //                                   LoadingOverlay.hide();
+    //     //                               });
+
+    //     //                           });
+    //     //                       setTimeout(function () {
+    //     //                           MakeNegative();
+    //     //                       }, 100);
+    //     //                   },
+    //     //                   "fnInitComplete": function () {
+
+    //     //                       $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+    //     //                       $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
+
+    //     //                   }
+
+    //     //               }).on('page', function () {
+    //     //                   setTimeout(function () {
+    //     //                       MakeNegative();
+    //     //                   }, 100);
+
+    //     //               }).on('column-reorder', function () {
+
+    //     //               }).on('length.dt', function (e, settings, len) {
+    //     //                 //// $('.fullScreenSpin').css('display', 'inline-block');
+    //     //                 let dataLenght = settings._iDisplayLength;
+    //     //                 splashArrayCalenderList = [];
+    //     //                 if (dataLenght == -1) {
+    //     //                   LoadingOverlay.hide();
+
+    //     //                 } else {
+    //     //                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //     //                         LoadingOverlay.hide();
+    //     //                     } else {
+    //     //                         sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+    //     //                             addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //     //                                 templateObject.resetData(dataNonBo);
+    //     //                                 LoadingOverlay.hide();
+    //     //                             }).catch(function (err) {
+    //     //                                 LoadingOverlay.hide();
+    //     //                             });
+    //     //                         }).catch(function (err) {
+    //     //                             LoadingOverlay.hide();
+    //     //                         });
+    //     //                     }
+    //     //                 }
+    //     //                   setTimeout(function () {
+    //     //                       MakeNegative();
+    //     //                   }, 100);
+    //     //               });
+
+
+    //     //           }, 0);
+
+    //     //           $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+    //     //           LoadingOverlay.hide();
+    //     //       }).catch(function (err) {
+    //     //         LoadingOverlay.hide();
+    //     //       });
+    //     //     }else{
+
+    //     //       let data = JSON.parse(dataObject[0].data);
+
+    //     //       let useData = data;
+    //     //       let lineItems = [];
+    //     //       let lineItemObj = {};
+    //     //       for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //     //         var dataListAllowance = [
+    //     //             data.tpayrollcalendars[i].fields.ID || '',
+    //     //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //     //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //     //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //     //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //     //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //     //         ];
+
+    //     //         splashArrayCalenderList.push(dataListAllowance);
+    //     //     }
+
+
+
+
+    //     //       setTimeout(function () {
+    //     //           MakeNegative();
+    //     //       }, 100);
+    //     //       setTimeout(function () {
+    //     //           $('#tblPayCalendars').DataTable({
+
+    //     //               data: splashArrayCalenderList,
+    //     //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //     //               columnDefs: [
+    //     //                 {
+    //     //                   className: "colCalenderID hiddenColumn",
+    //     //                   "targets": [0]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colPayCalendarName",
+    //     //                     "targets": [1]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colPayPeriod",
+    //     //                     "targets": [2]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colNextPayPeriod",
+    //     //                     "targets": [3]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colNextPaymentDate",
+    //     //                     "targets": [4]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colDeleteCalenders",
+    //     //                     "orderable": false,
+    //     //                     "targets": -1
+    //     //                 }
+    //     //             ],
+    //     //               select: true,
+    //     //               destroy: true,
+    //     //               colReorder: true,
+    //     //               pageLength: initialDatatableLoad,
+    //     //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //     //               info: true,
+    //     //               responsive: true,
+    //     //               "order": [[0, "asc"]],
+    //     //               action: function () {
+    //     //                   $('#tblPayCalendars').DataTable().ajax.reload();
+    //     //               },
+    //     //               "fnDrawCallback": function (oSettings) {
+    //     //                   $('.paginate_button.page-item').removeClass('disabled');
+    //     //                   $('#tblPayCalendars_ellipsis').addClass('disabled');
+    //     //                   if (oSettings._iDisplayLength == -1) {
+    //     //                       if (oSettings.fnRecordsDisplay() > 150) {
+
+    //     //                       }
+    //     //                   } else {
+
+    //     //                   }
+    //     //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //     //                       $('.paginate_button.page-item.next').addClass('disabled');
+    //     //                   }
+
+    //     //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //     //                       .on('click', function () {
+    //     //                           // $('.fullScreenSpin').css('display', 'inline-block');
+    //     //                           var splashArrayCalenderListDupp = new Array();
+    //     //                           let dataLenght = oSettings._iDisplayLength;
+    //     //                           let customerSearch = $('#tblPayCalendars_filter input').val();
+
+    //     //                           sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+    //     //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //     //                                 var dataListAllowance = [
+    //     //                                     data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //     //                                     data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //     //                                     data.tpayrollcalendars[i].fields.PayrollCalendarStartDate || '',
+    //     //                                     data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate || '',
+    //     //                                     '<td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //     //                                 ];
+
+    //     //                                 splashArrayCalenderList.push(dataListAllowance);
+    //     //                             }
+
+    //     //                                       let uniqueChars = [...new Set(splashArrayCalenderList)];
+    //     //                                       var datatable = $('#tblPayCalendars').DataTable();
+    //     //                                       datatable.clear();
+    //     //                                       datatable.rows.add(uniqueChars);
+    //     //                                       datatable.draw(false);
+    //     //                                       setTimeout(function () {
+    //     //                                         $("#tblPayCalendars").dataTable().fnPageChange('last');
+    //     //                                       }, 400);
+
+    //     //                                       LoadingOverlay.hide();
+
+
+    //     //                           }).catch(function (err) {
+    //     //                               LoadingOverlay.hide();
+    //     //                           });
+
+    //     //                       });
+    //     //                   setTimeout(function () {
+    //     //                       MakeNegative();
+    //     //                   }, 100);
+    //     //               },
+    //     //               "fnInitComplete": function () {
+    //     //                   $("<button class='btn btn-primary btnAddNewpaycalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+    //     //                   $("<button class='btn btn-primary btnRefreshcalender' type='button' id='btnRefreshcalender' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
+
+    //     //               }
+
+    //     //           }).on('page', function () {
+    //     //               setTimeout(function () {
+    //     //                   MakeNegative();
+    //     //               }, 100);
+
+    //     //           }).on('column-reorder', function () {
+
+    //     //           }).on('length.dt', function (e, settings, len) {
+    //     //             //// $('.fullScreenSpin').css('display', 'inline-block');
+    //     //             let dataLenght = settings._iDisplayLength;
+    //     //             splashArrayCalenderList = [];
+    //     //             if (dataLenght == -1) {
+    //     //               LoadingOverlay.hide();
+
+    //     //             } else {
+    //     //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //     //                     LoadingOverlay.hide();
+    //     //                 } else {
+    //     //                     sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+    //     //                         addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //     //                             templateObject.resetData(dataNonBo);
+    //     //                             LoadingOverlay.hide();
+    //     //                         }).catch(function (err) {
+    //     //                             LoadingOverlay.hide();
+    //     //                         });
+    //     //                     }).catch(function (err) {
+    //     //                         LoadingOverlay.hide();
+    //     //                     });
+    //     //                 }
+    //     //             }
+    //     //               setTimeout(function () {
+    //     //                   MakeNegative();
+    //     //               }, 100);
+    //     //           });
+
+
+    //     //       }, 0);
+
+    //     //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //     //       LoadingOverlay.hide();
+
+    //     //     }
+    //     // }).catch(function(err) {
+    //     //   sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
+    //     //       addVS1Data('TPayrollCalendars', JSON.stringify(data));
+    //     //       let lineItems = [];
+    //     //       let lineItemObj = {};
+    //     //       for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //     //         var dataListAllowance = [
+    //     //             data.tpayrollcalendars[i].fields.ID || '',
+    //     //             data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //     //             data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //     //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //     //             moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //     //             '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //     //         ];
+
+    //     //         splashArrayCalenderList.push(dataListAllowance);
+    //     //     }
+
+
+    //     //       setTimeout(function () {
+    //     //           MakeNegative();
+    //     //       }, 100);
+    //     //       setTimeout(function () {
+    //     //           $('#tblPayCalendars').DataTable({
+
+    //     //               data: splashArrayCalenderList,
+    //     //               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //     //               columnDefs: [
+    //     //                 {
+    //     //                   className: "colCalenderID hiddenColumn",
+    //     //                   "targets": [0]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colPayCalendarName",
+    //     //                     "targets": [1]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colPayPeriod",
+    //     //                     "targets": [2]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colNextPayPeriod",
+    //     //                     "targets": [3]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colNextPaymentDate",
+    //     //                     "targets": [4]
+    //     //                 },
+    //     //                 {
+    //     //                     className: "colDeleteCalenders",
+    //     //                     "orderable": false,
+    //     //                     "targets": -1
+    //     //                 }
+    //     //             ],
+    //     //               select: true,
+    //     //               destroy: true,
+    //     //               colReorder: true,
+    //     //               pageLength: initialDatatableLoad,
+    //     //               lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //     //               info: true,
+    //     //               responsive: true,
+    //     //               "order": [[0, "asc"]],
+    //     //               action: function () {
+    //     //                   $('#tblPayCalendars').DataTable().ajax.reload();
+    //     //               },
+    //     //               "fnDrawCallback": function (oSettings) {
+    //     //                   $('.paginate_button.page-item').removeClass('disabled');
+    //     //                   $('#tblPayCalendars_ellipsis').addClass('disabled');
+    //     //                   if (oSettings._iDisplayLength == -1) {
+    //     //                       if (oSettings.fnRecordsDisplay() > 150) {
+
+    //     //                       }
+    //     //                   } else {
+
+    //     //                   }
+    //     //                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //     //                       $('.paginate_button.page-item.next').addClass('disabled');
+    //     //                   }
+
+    //     //                   $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //     //                       .on('click', function () {
+    //     //                           // $('.fullScreenSpin').css('display', 'inline-block');
+    //     //                           var splashArrayCalenderListDupp = new Array();
+    //     //                           let dataLenght = oSettings._iDisplayLength;
+    //     //                           let customerSearch = $('#tblPayCalendars_filter input').val();
+
+    //     //                           sideBarService.getCalender(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+    //     //                             for (let i = 0; i < data.tpayrollcalendars.length; i++) {
+
+    //     //                                 var dataListAllowance = [
+    //     //                                     data.tpayrollcalendars[i].fields.ID || '',
+    //     //                                     data.tpayrollcalendars[i].fields.PayrollCalendarName || '',
+    //     //                                     data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
+    //     //                                     moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
+    //     //                                     moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+    //     //                                     '<td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //     //                                 ];
+
+    //     //                                 splashArrayCalenderList.push(dataListAllowance);
+    //     //                             }
+
+    //     //                                  let uniqueChars = [...new Set(splashArrayCalenderList)];
+    //     //                                  var datatable = $('#tblPayCalendars').DataTable();
+    //     //                                       datatable.clear();
+    //     //                                       datatable.rows.add(uniqueChars);
+    //     //                                       datatable.draw(false);
+    //     //                                       setTimeout(function () {
+    //     //                                         $("#tblPayCalendars").dataTable().fnPageChange('last');
+    //     //                                       }, 400);
+
+    //     //                                       LoadingOverlay.hide();
+
+
+    //     //                           }).catch(function (err) {
+    //     //                               LoadingOverlay.hide();
+    //     //                           });
+
+    //     //                       });
+    //     //                   setTimeout(function () {
+    //     //                       MakeNegative();
+    //     //                   }, 100);
+    //     //               },
+    //     //               "fnInitComplete": function () {
+    //     //                   $("<button class='btn btn-primary btnAddNewPayCalender' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+    //     //                   $("<button class='btn btn-primary btnRefreshCalender' type='button' id='btnRefreshCalender' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayCalendars_filter");
+
+    //     //               }
+
+    //     //           }).on('page', function () {
+    //     //               setTimeout(function () {
+    //     //                   MakeNegative();
+    //     //               }, 100);
+
+    //     //           }).on('column-reorder', function () {
+
+    //     //           }).on('length.dt', function (e, settings, len) {
+    //     //             //// $('.fullScreenSpin').css('display', 'inline-block');
+    //     //             let dataLenght = settings._iDisplayLength;
+    //     //             splashArrayCalenderList = [];
+    //     //             if (dataLenght == -1) {
+    //     //               LoadingOverlay.hide();
+
+    //     //             } else {
+    //     //                 if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //     //                     LoadingOverlay.hide();
+    //     //                 } else {
+    //     //                     sideBarService.getCalender(dataLenght, 0).then(function (dataNonBo) {
+
+    //     //                         addVS1Data('TPayrollCalendars', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //     //                             templateObject.resetData(dataNonBo);
+    //     //                             LoadingOverlay.hide();
+    //     //                         }).catch(function (err) {
+    //     //                             LoadingOverlay.hide();
+    //     //                         });
+    //     //                     }).catch(function (err) {
+    //     //                         LoadingOverlay.hide();
+    //     //                     });
+    //     //                 }
+    //     //             }
+    //     //               setTimeout(function () {
+    //     //                   MakeNegative();
+    //     //               }, 100);
+    //     //           });
+
+
+    //     //       }, 0);
+
+    //     //       $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+    //     //       LoadingOverlay.hide();
+    //     //   }).catch(function (err) {
+    //     //     LoadingOverlay.hide();
+    //     //   });
+    //     // });
+    // };
 
 
     // This has been improved
@@ -5809,7 +5809,7 @@ Template.payrollrules.onRendered(function() {
         await templateObject.getPayrollOrgainzations(refresh);
         await templateObject.getAllAllowance(refresh);
         await templateObject.getAllDeductions(refresh);
-        await templateObject.getCalenders(refresh);
+        // await templateObject.getCalenders(refresh);
         await templateObject.getHolidayData(refresh);
 
         //await templateObject.getEarningData(refresh);

@@ -7150,7 +7150,7 @@ Template.new_quote.events({
         setTimeout(async function(){
 
         swal({
-            title: 'Delete Quote',
+            title: 'You are deleting ' + $("#following_cnt").val() + ' Quote',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,

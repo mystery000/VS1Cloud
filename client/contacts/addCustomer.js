@@ -4084,6 +4084,42 @@ Template.customerscard.events({
     $(".btnJobTask").attr("disabled", false);
     event.preventDefault();
   },
+"click #customer_transctionList_invoices_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedInvoices.set(true)
+    }else{
+        templateObject.checkedInvoices.set(false)
+    }
+},
+"click #customer_transctionList_appointments_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedAppointments.set(true)
+    }else{
+        templateObject.checkedAppointments.set(false)
+    }
+},
+"click #customer_transctionList_quotes_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedQuotes.set(true)
+    }else{
+        templateObject.checkedQuotes.set(false)
+    }
+},
+"click #customer_transctionList_sales_orders_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedSalesOrders.set(true)
+    }else{
+        templateObject.checkedSalesOrders.set(false)
+    }
+},
 });
 
 Template.customerscard.helpers({
