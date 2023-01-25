@@ -3789,7 +3789,7 @@ Template.journalentrycard.events({
         setTimeout(async function(){
 
         swal({
-            title: 'Delete Journal Entry',
+            title: 'You are deleting ' + $("#following_cnt").val() + ' Journal Entry',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,

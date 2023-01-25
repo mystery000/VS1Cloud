@@ -6690,7 +6690,7 @@ Template.new_salesorder.events({
     let salesService = new SalesBoardService();
     setTimeout(async function () {
       swal({
-        title: 'Delete Sales Order',
+      title: 'You are deleting ' + $("#following_cnt").val() + ' Sales Order',
         text: "Do you wish to delete this transaction and all others associated with it moving forward?",
         type: 'question',
         showCancelButton: true,

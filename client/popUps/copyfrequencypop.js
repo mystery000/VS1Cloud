@@ -4,7 +4,7 @@ Template.copyfrequencypop.events({
     'click input[name="frequencyRadio"]': function(event) {
         if (event.target.id == "frequencyMonthly") {
             var today = new Date();
-            var dd = String(today.getDate() + 1).padStart(2, '0');
+            var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
             document.getElementsByClassName("month-checkbox")[today.getMonth()].checked = true;
@@ -15,7 +15,7 @@ Template.copyfrequencypop.events({
             document.getElementById("sltDay").value = 'day' + dd;
             
             var finishdate = new Date();
-            var dd = String(finishdate.getDate() + 1).padStart(2, '0');
+            var dd = String(finishdate.getDate()).padStart(2, '0');
             var mm = String(finishdate.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = finishdate.getFullYear() + 1;
         
@@ -24,7 +24,7 @@ Template.copyfrequencypop.events({
             document.getElementById('edtMonthlyFinishDate').value = finishdate;
         } else if (event.target.id == "frequencyWeekly") {
             var today = new Date();
-            var dd = String(today.getDate() + 1).padStart(2, '0');
+            var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
         
@@ -46,7 +46,7 @@ Template.copyfrequencypop.events({
             document.getElementById('edtWeeklyFinishDate').value = finishdate;
         } else if (event.target.id == "frequencyDaily") {
             var today = new Date();
-            var dd = String(today.getDate() + 1).padStart(2, '0');
+            var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
         
@@ -65,7 +65,7 @@ Template.copyfrequencypop.events({
             document.getElementById('edtDailyFinishDate').value = finishdate;
         } else if (event.target.id == "frequencyOnetimeonly") {
             var today = new Date();
-            var dd = String(today.getDate() + 1).padStart(2, '0');
+            var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
         

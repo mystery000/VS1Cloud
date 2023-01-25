@@ -2185,7 +2185,7 @@ Template.stockadjustmentcard.events({
         var currentDate = new Date();
 
         swal({
-            title: 'Delete Stock Adjustment',
+            title: 'You are deleting ' + $("#following_cnt").val() + ' Stock Adjustment',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,

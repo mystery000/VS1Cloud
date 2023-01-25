@@ -386,6 +386,7 @@
                 </div>
               </div>
             </div>
+            {{JSON.stringify(datatablerecords)}}
             <table id="tblInvoicelist" name="tblInvoicelist" style="width:100%; margin-top: 0px !important;"
               class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
               <thead>
@@ -472,6 +473,9 @@
                   <td contenteditable="false"
                     class="colSaleCustField2 customFieldColumn {{#if custfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                     {{item.custfield2}}</td>
+                  <td contenteditable="false"
+                    class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.custfield3}}</td>
                   <td contenteditable="false"
                     class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">
                     {{item.custfield3}}</td>
