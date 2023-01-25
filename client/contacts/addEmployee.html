@@ -1553,34 +1553,13 @@
                                                                 </style>
                                                                 <div class="row">
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePaySetting.TaxFreeThreshold true}}
-                                                                            <input class="custom-control-input" type="checkbox" name="includeHolidaysInPayslips" id="includeHolidaysInPayslips" checked>
-                                                                            {{else}}
-                                                                            <input class="custom-control-input" type="checkbox" name="includeHolidaysInPayslips" id="includeHolidaysInPayslips">
-                                                                            {{/if}}
-                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="includeHolidaysInPayslips">Include holidays in Payslips</label>
-                                                                        </div>
+                                                                        {{> toggle_button className="chkGlobalSettings" id="employee_includeHolidaysInPayslips_toggle" width="131px" for="employee_includeHolidaysInPayslips_toggle" displayName="Include holidays in Payslips"}}
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;padding-left:12px;">
-                                                                            {{#if equals employeePaySetting.StudyTrainingSupportLoan true}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveLeave" id="authorisedToApproveLeave" checked>
-                                                                            {{else}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveLeave" id="authorisedToApproveLeave">
-                                                                            {{/if}}
-                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="authorisedToApproveLeave">Authorised to Approve Leave</label>
-                                                                        </div>
+                                                                        {{> toggle_button className="chkGlobalSettings" id="employee_authorisedToApproveLeave_toggle" width="131px" for="employee_authorisedToApproveLeave_toggle" displayName="Authorised to Approve Leave"}}
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePaySetting.EligibleToReceiveLeaveLoading true}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveTimesheets" id="authorisedToApproveTimesheets" checked>
-                                                                            {{else}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveTimesheets" id="authorisedToApproveTimesheets">
-                                                                            {{/if}}
-                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="authorisedToApproveTimesheets">Authorised To Approve Timesheets</label>
-                                                                        </div>
+                                                                        {{> toggle_button className="chkGlobalSettings" id="employee_authorisedToApproveTimesheets_toggle" width="131px" for="employee_authorisedToApproveTimesheets_toggle" displayName="Authorised To Approve Timesheets"}}
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
