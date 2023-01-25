@@ -181,22 +181,33 @@ Template.setup.onCreated(() => {
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
   templateObject.skippedSteps = new ReactiveVar([]);
-
-  // Step 4 variables
-  // Step 5 variables
-  // Step 6 variables
-  
-  // Step 7 variables
-
-  // Step 8 variables
-  // Step 9 variables
   templateObject.inventoryList = new ReactiveVar([]);
 
   templateObject.setCurrentStep = (stepId = 1) => {
     if (isNaN(stepId)) return false;
-    let templateObject = Template.instance();
     templateObject.currentStep.set(stepId);
     return localStorage.setItem("VS1Cloud_SETUP_STEP", parseInt(stepId));
+  }
+
+  templateObject.isStepActive = function (stepId) {
+    let currentStepID = $(".setup-stepper .current a.gotToStepID").attr(
+      "data-step-id"
+    );
+    if (stepId < currentStepID) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  templateObject.goToNextStep = function (stepId, isConfirmed = false, onStepChange = (stepId) => {}) 
+  {
+    isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
+    stepId = stepId + 1;
+    templateObject.setCurrentStep(stepId);
+    $(".setup-step").removeClass("show");
+    $(`.setup-step-${stepId}`).addClass("show");
+    onStepChange(stepId);
   }
 });
 
@@ -265,7 +276,7 @@ Template.setup.onRendered(function () {
     for (let i = 0; i < currentStep; i++) {
       if (confirmedSteps.includes(i + 1))
         $(`.setup-stepper li:nth-child(${i + 1})`).addClass("completed");
-      if (isStepActive(i + 1) == true) {
+      if (templateObject.isStepActive(i + 1) == true) {
         $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass(
           "clickDisabled"
         );
@@ -306,25 +317,6 @@ Template.setup.onRendered(function () {
   $( function() {
     $( ".resizablePopup" ).resizable();
   } );
-  // Step 1 Render functionalities
-  // Step 2 Render functionalities
-
-  // STEP 3
-  // Step 4 Render functionalities
-
-
-  // Step 5 Render functionalities
-
-
-  // Step 6 Render functionalities
-
-
-  // Step 7 Render functionalities
-
-
-
-  // Step 8 Render functionalities
-  // Step 9 Render functionalities
   templateObject.loadInventory = async (refresh = false) => {
     LoadingOverlay.show();
     let _inventoryList = [];
@@ -423,69 +415,10 @@ Template.setup.onRendered(function () {
       }, refreshTableTimout);
     }
   };
-  /**
-   * This function will lazy load the setup, in order to avoid any loading issues
-   * @param {number} stepId
-   * @returns
-   */
-  templateObject.lazyLoader = (stepId = 1) => {
-    if (isAlreadyLoaded(stepId) == false) {
-      switch (stepId) {
-        case 1:
-          break;
-        case 2:
-          break;
-        case 3:
-          break;
-        case 4:
-          break;
-        case 5:
-          break;
-        case 6:
-          break;
-        case 7:
-          break;
-        case 8:
-          break;
-        case 9:
-          // templateObject.loadInventory();
-          break;
-        case 10:
-          break;
-        default:
-        // code block
-      }
-      setAlreadyLoaded(stepId, true);
-    }
-  };
-
-  templateObject.lazyLoader(currentStep);
 
 });
 
-function isStepActive(stepId) {
-  let currentStepID = $(".setup-stepper .current a.gotToStepID").attr(
-    "data-step-id"
-  );
-  if (stepId < currentStepID) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
-function goToNextStep(
-  stepId,
-  isConfirmed = false,
-  onStepChange = (stepId) => {}
-) {
-  isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
-  stepId = stepId + 1;
-  templateObject.setCurrentStep(stepId);
-  $(".setup-step").removeClass("show");
-  $(`.setup-step-${stepId}`).addClass("show");
-  onStepChange(stepId);
-}
 
 Template.setup.events({
   "click #start-wizard": (e) => {
@@ -496,27 +429,23 @@ Template.setup.events({
     templateObject.setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn": (event, templateObject) => {
+  "click .confirmBtn": (event) => {
     LoadingOverlay.show();
-
+    const templateObject = Template.instance();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-    goToNextStep(stepId, true, (step) => {
-      templateObject.lazyLoader(step);
-    });
+    templateObject.goToNextStep(stepId, true, (step) => {});
     templateObject.loadSteps();
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .btnBack": (event, templateObject) => {
+  "click .btnBack": (event) => {
+    const templateObject = Template.instance();
     playCancelAudio();
     setTimeout(function(){
-      console.log("click back!")
       LoadingOverlay.show();
       let skippedSteps = templateObject.skippedSteps.get();
       let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-      goToNextStep(stepId, false, (step) => {
-        templateObject.lazyLoader(step);
-      });
+      templateObject.goToNextStep(stepId, false, (step) => {});
       if (!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
       templateObject.skippedSteps.set(skippedSteps);
       templateObject.loadSteps();
@@ -533,7 +462,6 @@ Template.setup.events({
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     templateObj.setCurrentStep(stepId);
     templateObj.loadSteps();
-    templateObj.lazyLoader(stepId);
   },
   "click #launchBtn": function () {
     const templateObject = Template.instance();
@@ -545,23 +473,6 @@ Template.setup.events({
   "click #edtCountry": async function (event) {
     await clearData('TTaxcodeVS1');
   },
-
-
-
-  // TODO: Step 2
-  // Active Tax Rates
-
-  // TODO: Step 3
-  // Payment method settings
- 
-
-  // TODO: Step 4
-  // Term settings
-  
-  // TODO: Step 5
-
-  // TODO: Step 6
-
   // Accounts Import functionality
   "click .new_attachment_btn_inventory": function (event) {
     $("#attachment-upload-inventory").val("");
