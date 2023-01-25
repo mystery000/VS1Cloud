@@ -340,7 +340,9 @@
           {{/if}}
         </div>
         <div class="setup-step setup-step-8 {{#if isActive currentStep '8'}} show {{/if}}">
-          
+          {{#if isActive currentStep '8'}}
+          {{> wizard_suppliers}}
+          {{/if}}
         </div>
         <div class="setup-step setup-step-9 {{#if isActive currentStep '9'}} show {{/if}}">
           <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">

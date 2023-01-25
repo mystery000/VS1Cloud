@@ -29,6 +29,7 @@ import './terms/terms-settings.js';
 import './employments/employment-settings.js'
 import './accounts/accounts-settings.js'
 import './customers/customers-settings.js'
+import './suppliers/suppliers-settings.js'
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
@@ -636,7 +637,6 @@ Template.setup.onRendered(function () {
         case 7:
           break;
         case 8:
-          templateObject.loadSuppliers();
           break;
         case 9:
           templateObject.loadInventory();
