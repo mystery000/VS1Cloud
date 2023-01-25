@@ -53,7 +53,7 @@ export class FixedAssetService extends BaseService {
   getServiceLogDetail(ID) {
     let options = {
       ListType: "Detail",
-      select: '[ServiceID] f7like "' + ID + '"',
+      select: '[ServiceID]="' + ID + '"',
     };
     return this.getList(this.ERPObjects.TServiceLogList, options);
   }

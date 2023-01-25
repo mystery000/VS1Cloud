@@ -1,13 +1,13 @@
-import "../../../lib/global/indexdbstorage.js";
+import "../../lib/global/indexdbstorage.js";
 
-Template.fixedassettypelistpop.onCreated(function () {
+Template.fixedassettypepopup.onCreated(function () {
   const templateObject = Template.instance();
 });
 
-Template.fixedassettypelistpop.onRendered(function () {
+Template.fixedassettypepopup.onRendered(function () {
 });
 
-Template.fixedassettypelistpop.events({
+Template.fixedassettypepopup.events({
   "mouseover .card-header": (e) => {
     $(e.currentTarget).parent(".card").addClass("hovered");
   },

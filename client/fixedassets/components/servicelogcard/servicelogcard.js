@@ -94,7 +94,7 @@ Template.servicelogcard.onRendered(function () {
         $("#edtServiceProvider").val(recordInfo.ServiceProvider);
         // ServiceType: $("#edtServiceProvider").val(),
         $("#dtServiceDate").val(getDatePickerForm(recordInfo.ServiceDate));
-        $("#dtNextServiceDate").val(getDatePickerForm(recordInfo.NetServiceDate));
+        $("#dtNextServiceDate").val(getDatePickerForm(recordInfo.NextServiceDate));
         $('#edtHours').val(recordInfo.HoursForNextService);
         $('#edtKms').val(recordInfo.KmsForNextService);
         $("#txtServiceNotes").val(recordInfo.ServiceNotes);
@@ -143,7 +143,7 @@ Template.servicelogcard.events({
         ServiceProvider: $("#edtServiceProvider").val(),
         // ServiceType: $("#edtServiceProvider").val(),
         ServiceDate: getDateStr($("#dtServiceDate").datepicker("getDate")),
-        NetServiceDate: getDateStr($("#dtNextServiceDate").datepicker("getDate")),
+        NextServiceDate: getDateStr($("#dtNextServiceDate").datepicker("getDate")),
         HoursForNextService: parseInt($('#edtHours').val()) || 0,
         KmsForNextService: parseInt($('#edtKms').val()) || 0,
         ServiceNotes: $("#txtServiceNotes").val(),
@@ -166,18 +166,20 @@ Template.servicelogcard.events({
         fixedAssetService.getServiceLogList().then(function (data) {
           addVS1Data("TServiceLogList", JSON.stringify(data));
         });
+        FlowRouter.go('/serviceloglist');
       }).catch((err) => {
+        console.log(err);
       });
-      FlowRouter.go('/serviceloglist');
     } else {
       newServiceLog.fields['ServiceID'] = templateObject.currentServiceLogID.get();
       fixedAssetService.saveServiceLog(newServiceLog).then((data) => {
         fixedAssetService.getServiceLogList().then(function (data) {
           addVS1Data("TServiceLogList", JSON.stringify(data));
         });
+        FlowRouter.go('/serviceloglist');
       }).catch((err) => {
+        console.log(err);
       });
-      FlowRouter.go('/serviceloglist');
     }
   },
   "click input#chkDone": function() {

@@ -50,11 +50,6 @@
 
               </h1>
           </div>
-          <!-- <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div> -->
-          <div class="col-12 col-md-4">
-              <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
-                      class="icon ion-android-more-horizontal"></i></a>
-          </div>
       </header>
 
       <div class="row" style="background-color: #ededed;">
@@ -361,22 +356,7 @@
     </form>
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeListModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
-      <div class="modal-content customerListContent">
-        <div class="modal-header">
-          <h4>Fixed Asset Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
-        </div>
-        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
-          {{> non_transactional_list tablename = "tblFixedAssetType"}}
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {{> fixedassettypepopup modalID='fixedAssetTypeListModal'}}
 
   <div class="modal fade" role="dialog" tabindex="-1" id="supplierListModal">
     <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
@@ -388,9 +368,9 @@
         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
           {{> non_transactional_list tablename="tblSupplierlist"}}
         </div>
-        <div class="modal-footer">
+        <!-- <div class="modal-footer">
           <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -405,9 +385,9 @@
         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
           {{> non_transactional_list tablename="tblAccountOverview"}}
         </div>
-        <div class="modal-footer">
+        <!-- <div class="modal-footer">
           <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
