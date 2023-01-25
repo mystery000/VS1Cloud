@@ -645,7 +645,6 @@ Template.taxRatesSettings.onRendered(function() {
     templateObject.getSubTaxCodes = function() {
 
         let subTaxTableList = [];
-
         getVS1Data('TSubTaxVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
                 taxRateService.getSubTaxCode().then(function(data) {

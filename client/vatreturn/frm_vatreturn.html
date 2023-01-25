@@ -41,36 +41,40 @@
             </div>
 
             <div class="row" style="padding: 32px; padding-bottom: 0px; background-color: #ededed;">
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label>Description</label>
                         <input type="text" class="form-control" id="description" name="description" value="">
                     </div>
                 </div>
-                <div class="col-12 col-md-6" style="padding-top: 40px;">
+                <div class="col-12 col-md-8" style="padding-top: 40px;">
                     <div class="custom-control" style="float:left">
                         <label>Enable: </label>
                     </div>
-                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:110px;">
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:138px;">
                         <input class="custom-control-input" type="checkbox" name="vatreturnCategory1" id="vatreturnCategory1" checked style="cursor: pointer;">
-                        <label class="custom-control-label" for="vatreturnCategory1" style="cursor: pointer;">SERVICES</label>
+                        <label class="custom-control-label" for="vatreturnCategory1" style="cursor: pointer;">OUTPUT TAX</label>
                     </div>
-                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:118px;">
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:120px;">
                         <input class="custom-control-input" type="checkbox" name="vatreturnCategory2" id="vatreturnCategory2" checked style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory2" style="cursor: pointer;">INPUT TAX</label>
                     </div>
-                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:158px;">
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:160px;">
                         <input class="custom-control-input" type="checkbox" name="vatreturnCategory3" id="vatreturnCategory3" style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory3" style="cursor: pointer;">DIESEL REFUND</label>
                     </div>
-                    <!-- <div class="custom-control custom-switch" style="float:left; margin-left: 20px;">
-                        <input class="custom-control-input" type="checkbox" name="basreturnCategory4" id="basreturnCategory4" style="cursor: pointer;" value="2">
-                        <label class="custom-control-label" for="basreturnCategory4" style="cursor: pointer;">Wine And Luxury</label>
-                    </div> -->
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:180px">
+                        <input class="custom-control-input" type="checkbox" name="basreturnCategory4" id="basreturnCategory4" checked style="cursor: pointer;">
+                        <label class="custom-control-label" for="basreturnCategory4" style="cursor: pointer;">PAYMENT DETAILS</label>
+                    </div>
+                    <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:170px;">
+                        <input class="custom-control-input" type="checkbox" name="vatreturnCategory5" id="vatreturnCategory5" checked style="cursor: pointer;">
+                        <label class="custom-control-label" for="vatreturnCategory5" style="cursor: pointer;">REFUND DETAILS</label>
+                    </div>
                 </div>
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md-1">
                     <div class="form-group">
-                        <a role="button" data-toggle="modal" href="#vatoptionmodal" class="btn btn-primary" id="selVatOption" style="margin-top: 32px; float:right" autocomplete="off">VAT Option</a>
+                        <a role="button" data-toggle="modal" href="#vatoptionmodal" class="btn btn-primary" id="selVatOption" style="margin-top: 32px; float:right" autocomplete="off">Option</a>
                     </div>
                     <div class="modal fade" role="dialog" tabindex="-1" id="vatoptionmodal">
                         <div class="modal-dialog modal-center" role="document">
@@ -121,10 +125,11 @@
                             <div class="card-body rounded" style="padding: 0px !important;">
                                 <div>
                                     <ul class="nav nav-tabs nav-fill">
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link active supplierTab" role="tab" data-toggle="tab" data-target="#tab-1">OUTPUT TAX AND IMPORTED SERVICES</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-2">INPUT TAX</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-3">DIESEL REFUND IN TERMS OF THE CUSTOMS AND EXCISE ACT</a></li>
-                                        <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-4">BAS Debits and Credits</a></li> -->
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link active categoryTab1" role="tab" data-toggle="tab" data-target="#tab-1">OUTPUT TAX</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab2" role="tab" data-toggle="tab" data-target="#tab-2">INPUT TAX</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab3" role="tab" data-toggle="tab" data-target="#tab-3">DIESEL REFUND</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab4" role="tab" data-toggle="tab" data-target="#tab-4">PAYMENT DETAILS</a></li>
+                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab5" role="tab" data-toggle="tab" data-target="#tab-5">REFUND DETAILS</a></li>
                                     </ul>
                                     <div class="tab-content">
                                         <style>
@@ -186,7 +191,7 @@
                                             }
                                         </style>
 
-                                        <div class="tab-pane active border rounded-0 tab-2" role="tabpanel" id="tab-1" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                        <div class="tab-pane active border rounded-0 tab-1" role="tabpanel" id="tab-1" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12" style="padding: 15px 8px;">
                                                     <h4 style="text-align:center;">CALCULATION OF OUTPUT TAX AND IMPORTED SERVICES</h4>
@@ -460,7 +465,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane border rounded-0 tab-1" role="tabpanel" id="tab-2" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                        <div class="tab-pane border rounded-0 tab-2" role="tabpanel" id="tab-2" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12" style="padding: 15px 8px;">
                                                     <h4 style="text-align:center;">CALCULATION OF INPUT TAX</h4>
@@ -652,7 +657,7 @@
                                                 </div>
                                             </div>                                          
                                         </div>
-                                        <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-3" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                        <div class="tab-pane border rounded-0 tab-3" role="tabpanel" id="tab-3" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12" style="padding: 15px 8px;">
                                                     <h4 style="text-align:center;">CALCULATION OF DIESEL REFUND IN TERMS OF THE CUSTOMS AND EXCISE ACT</h4>
@@ -981,221 +986,105 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                       </div>
-                                        <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-4" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                        </div>
+                                        <div class="tab-pane border rounded-0 tab-4" role="tabpanel" id="tab-4" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12" style="padding: 15px 8px;">
-                                                    <h4 style="text-align:center;">VAT Sheet - Debits & Credits</h4>
+                                                    <h4 style="text-align:center;">PAYMENT DETAILS</h4>
                                                 </div>                                                
                                             </div>
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12 col-md-6" style="padding: 15px 22px;">
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12" style="text-align: center; align-items: center; display: flex; justify-content: center;"><h5>DEBITS</h5></div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Goods and services tax payable</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1A
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Reference No</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits1cost" name="debits1cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="payment_refno" name="payment_refno" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Wine equalisation tax payable</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1C
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Total</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits2cost" name="debits2cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="payment_total" name="payment_total" value="0" style="float:left; width:90%;" readonly="readonly">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Luxury car tax payable</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1E
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Diesel</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits3cost" name="debits3cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Add 1A + 1C + 1E</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            2A
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits4cost" name="debits4cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">2A minus 2B GST net amount</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            3
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits5cost" name="debits5cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Pay As You Go withholding</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            4
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits6cost" name="debits6cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Pay As You Go instalment</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            5A
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits7cost" name="debits7cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Fringe benefits tax instalment</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            6A
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits8cost" name="debits8cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Deferred company / fund instalment</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            7
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits9cost" name="debits9cost" value="0" style="float:left; width:90%;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Add 1A + 4 + 5A + 7</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            8A
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits10cost" name="debits10cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">8A minus 8B Net amount for this statement</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            9
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="debits11cost" name="debits11cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="payment_diesel" name="payment_diesel" value="0" style="float:left; width:90%;" readonly="readonly">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6" style="padding: 15px 22px;">
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12" style="text-align: center; align-items: center; display: flex; justify-content: center;"><h5>CREDITS</h5></div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Credit for goods and services tax paid</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1B
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Period (CCYYMM)</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits1cost" name="credits1cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="payment_period" name="payment_period" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Wine equalisation tax refundable</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1D
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">VAT</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits2cost" name="credits2cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="payment_vat" name="payment_vat" value="0" style="float:left; width:90%;" readonly="readonly">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Luxury car tax refundable</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1F
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Penalty and Interest</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits3cost" name="credits3cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="payment_penalty" name="payment_penalty" value="0" style="float:left; width:90%;">
+                                                        </div>
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane border rounded-0 tab-5" role="tabpanel" id="tab-5" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                            <div class="row no-gutters" style="padding: 8px;">
+                                                <div class="col-12" style="padding: 15px 8px;">
+                                                    <h4 style="text-align:center;">REFUND DETAILS</h4>
+                                                </div>                                                
+                                            </div>
+                                            <div class="row no-gutters" style="padding: 8px;">
+                                                <div class="col-12 col-md-6" style="padding: 15px 22px;">
+                                                    <div class="row" style="margin-bottom:10px">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Reference No</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
+                                                            <span style="float:left;">R&nbsp;</span>
+                                                            <input type="text" class="form-control" id="refund_refno" name="refund_refno" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Special credit for wholesale sales tax</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            1G
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Total</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits4cost" name="credits4cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="refund_total" name="refund_total" value="0" style="float:left; width:90%;" readonly="readonly">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Add 1B + 1D + 1F + 1G</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            2B
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Diesel</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits5cost" name="credits5cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="refund_diesel" name="refund_diesel" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6" style="padding: 15px 22px;">
+                                                    <div class="row" style="margin-bottom:10px">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Period (CCYYMM)</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
+                                                            <span style="float:left;">R&nbsp;</span>
+                                                            <input type="text" class="form-control" id="refund_period" name="refund_period" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
                                                     <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Credit arising from reduced Pay As You Go instalments</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            5B
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
+                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">VAT</div>
+                                                        <div class="col-12 col-md-6" style="align-items: center; display: flex;">
                                                             <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits6cost" name="credits6cost" value="0" style="float:left; width:90%;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Credit arising from reduced fringe benefits tax instalments</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            6B
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits7cost" name="credits7cost" value="0" style="float:left; width:90%;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Fuel Tax Credit (Do not claim in Litres)</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            7D
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits8cost" name="credits8cost" value="0" style="float:left; width:90%;" readonly="readonly">
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" style="margin-bottom:10px">
-                                                        <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Add 2B + 5B + 6B + 7D</div>
-                                                        <div style="float:left; padding-right:20px; align-items: center; display: flex; justify-content: center; width:68px;">
-                                                            8B
-                                                        </div>
-                                                        <div class="col-12 col-md-4" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
-                                                            <input type="text" class="form-control" id="credits9cost" name="credits9cost" value="0" style="float:left; width:90%;" readonly="readonly">
+                                                            <input type="text" class="form-control" id="refund_vat" name="refund_vat" value="0" style="float:left; width:90%;" readonly="readonly">
                                                         </div>
                                                     </div>
                                                 </div>

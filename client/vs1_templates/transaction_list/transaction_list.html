@@ -56,8 +56,8 @@
                                     {{#if displayfield.display}}
                                         <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                <input class="custom-control-input chkDatatable chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
-                                                <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
+                                                <input class="custom-control-input chkDatatable chk{{displayfield.class}}" type="checkbox" id="{{displayfield.class}}" checked="{{displayfield.active}}">
+                                                <label class="custom-control-label" for="{{displayfield.class}}"></label>
                                                 <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
                                             </div>
                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">

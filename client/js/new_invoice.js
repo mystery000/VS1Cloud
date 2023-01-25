@@ -8214,191 +8214,191 @@ Template.new_invoice.events({
       event.preventDefault();
     }
   },
-  "click .btnRemove": async function (event) {
-    let templateObject = Template.instance();
-    let taxcodeList = templateObject.taxraterecords.get();
-    let utilityService = new UtilityService();
-    var targetID = $(event.target).closest("tr").attr("id");
-    $("#selectDeleteLineID").val(targetID);
-    if (targetID != undefined) {
-      times++;
-      if (times == 1) {
-        $("#deleteLineModal").modal("toggle");
-      } else {
-        if ($("#tblInvoiceLine tbody>tr").length > 1) {
-          this.click;
-          $(event.target).closest("tr").remove();
-          $(".invoice_print #" + targetID).remove();
-          event.preventDefault();
-          let $tblrows = $("#tblInvoiceLine tbody tr");
-          let $printrows = $(".invoice_print tbody tr");
-          let subGrandTotal = 0;
-          let taxGrandTotal = 0;
-          let subDiscountTotal = 0; // New Discount
-          let taxGrandTotalPrint = 0;
+  // "click .btnRemove": async function (event) {
+  //   let templateObject = Template.instance();
+  //   let taxcodeList = templateObject.taxraterecords.get();
+  //   let utilityService = new UtilityService();
+  //   var targetID = $(event.target).closest("tr").attr("id");
+  //   $("#selectDeleteLineID").val(targetID);
+  //   if (targetID != undefined) {
+  //     times++;
+  //     if (times == 1) {
+  //       $("#deleteLineModal").modal("toggle");
+  //     } else {
+  //       if ($("#tblInvoiceLine tbody>tr").length > 1) {
+  //         this.click;
+  //         $(event.target).closest("tr").remove();
+  //         $(".invoice_print #" + targetID).remove();
+  //         event.preventDefault();
+  //         let $tblrows = $("#tblInvoiceLine tbody tr");
+  //         let $printrows = $(".invoice_print tbody tr");
+  //         let subGrandTotal = 0;
+  //         let taxGrandTotal = 0;
+  //         let subDiscountTotal = 0; // New Discount
+  //         let taxGrandTotalPrint = 0;
 
-          let subGrandTotalNet = 0;
-          let taxGrandTotalNet = 0;
-          $tblrows.each(function (index) {
-            var $tblrow = $(this);
-            var qty = $tblrow.find(".lineQty").val() || 0;
-            var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-            var taxRate = $tblrow.find(".lineTaxCode").val();
+  //         let subGrandTotalNet = 0;
+  //         let taxGrandTotalNet = 0;
+  //         $tblrows.each(function (index) {
+  //           var $tblrow = $(this);
+  //           var qty = $tblrow.find(".lineQty").val() || 0;
+  //           var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+  //           var taxRate = $tblrow.find(".lineTaxCode").val();
 
-            var taxrateamount = 0;
-            if (taxcodeList) {
-              for (var i = 0; i < taxcodeList.length; i++) {
-                if (taxcodeList[i].codename == taxRate) {
-                  taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-                }
-              }
-            }
+  //           var taxrateamount = 0;
+  //           if (taxcodeList) {
+  //             for (var i = 0; i < taxcodeList.length; i++) {
+  //               if (taxcodeList[i].codename == taxRate) {
+  //                 taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+  //               }
+  //             }
+  //           }
 
-            var subTotal =
-              parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-            var taxTotal =
-              parseFloat(qty, 10) *
-              Number(price.replace(/[^0-9.-]+/g, "")) *
-              parseFloat(taxrateamount);
-            var lineDiscountPerc =
-              parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
-            let lineTotalAmount = subTotal + taxTotal;
+  //           var subTotal =
+  //             parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+  //           var taxTotal =
+  //             parseFloat(qty, 10) *
+  //             Number(price.replace(/[^0-9.-]+/g, "")) *
+  //             parseFloat(taxrateamount);
+  //           var lineDiscountPerc =
+  //             parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+  //           let lineTotalAmount = subTotal + taxTotal;
 
-            let lineDiscountTotal = lineDiscountPerc / 100;
+  //           let lineDiscountTotal = lineDiscountPerc / 100;
 
-            var discountTotal = lineTotalAmount * lineDiscountTotal;
-            var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-            var subTotalWithDiscountTotalLine =
-              subTotal - subTotalWithDiscount || 0;
-            var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-            var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-            if (!isNaN(discountTotal)) {
-              subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+  //           var discountTotal = lineTotalAmount * lineDiscountTotal;
+  //           var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+  //           var subTotalWithDiscountTotalLine =
+  //             subTotal - subTotalWithDiscount || 0;
+  //           var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+  //           var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+  //           if (!isNaN(discountTotal)) {
+  //             subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
-              document.getElementById("subtotal_discount").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-            }
-            $tblrow
-              .find(".lineTaxAmount")
-              .text(
-                utilityService.modifynegativeCurrencyFormat(
-                  taxTotalWithDiscountTotalLine
-                )
-              );
+  //             document.getElementById("subtotal_discount").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+  //           }
+  //           $tblrow
+  //             .find(".lineTaxAmount")
+  //             .text(
+  //               utilityService.modifynegativeCurrencyFormat(
+  //                 taxTotalWithDiscountTotalLine
+  //               )
+  //             );
 
-            let unitPriceIncCalc =
-              Number(price.replace(/[^0-9.-]+/g, "")) *
-              parseFloat(taxrateamount) || 0;
-            let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-            let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
-            $tblrow
-              .find(".colUnitPriceExChange")
-              .val(
-                utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
-              );
-            $tblrow
-              .find(".colUnitPriceIncChange")
-              .val(
-                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-              );
+  //           let unitPriceIncCalc =
+  //             Number(price.replace(/[^0-9.-]+/g, "")) *
+  //             parseFloat(taxrateamount) || 0;
+  //           let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+  //           let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
+  //           $tblrow
+  //             .find(".colUnitPriceExChange")
+  //             .val(
+  //               utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
+  //             );
+  //           $tblrow
+  //             .find(".colUnitPriceIncChange")
+  //             .val(
+  //               utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+  //             );
 
-            if (!isNaN(subTotal)) {
-              $tblrow
-                .find(".colAmountEx")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-              $tblrow
-                .find(".colAmountInc")
-                .text(
-                  utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
-                );
-              subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-                0 :
-                subTotalWithDiscountTotalLine;
-              subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-              document.getElementById("subtotal_total").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-            }
+  //           if (!isNaN(subTotal)) {
+  //             $tblrow
+  //               .find(".colAmountEx")
+  //               .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+  //             $tblrow
+  //               .find(".colAmountInc")
+  //               .text(
+  //                 utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
+  //               );
+  //             subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
+  //               0 :
+  //               subTotalWithDiscountTotalLine;
+  //             subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+  //             document.getElementById("subtotal_total").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+  //           }
 
-            if (!isNaN(taxTotal)) {
-              taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-                0 :
-                taxTotalWithDiscountTotalLine;
-              taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-              document.getElementById("subtotal_tax").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-            }
+  //           if (!isNaN(taxTotal)) {
+  //             taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
+  //               0 :
+  //               taxTotalWithDiscountTotalLine;
+  //             taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+  //             document.getElementById("subtotal_tax").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+  //           }
 
-            if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-              let GrandTotal =
-                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-              let GrandTotalNet =
-                parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
-              document.getElementById("subtotal_nett").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-              document.getElementById("grandTotal").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
-              document.getElementById("balanceDue").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
-              document.getElementById("totalBalanceDue").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            }
-          });
+  //           if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+  //             let GrandTotal =
+  //               parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+  //             let GrandTotalNet =
+  //               parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+  //             document.getElementById("subtotal_nett").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+  //             document.getElementById("grandTotal").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(GrandTotal);
+  //             document.getElementById("balanceDue").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(GrandTotal);
+  //             document.getElementById("totalBalanceDue").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(GrandTotal);
+  //           }
+  //         });
 
-          $printrows.each(function (index) {
-            var $printrows = $(this);
-            var qty = $printrows.find("#lineQty").text() || 0;
-            var price = $printrows.find("#lineUnitPrice").text() || "0";
-            var taxrateamount = 0;
-            var taxRate = $printrows.find("#lineTaxCode").text();
-            if (taxcodeList) {
-              for (var i = 0; i < taxcodeList.length; i++) {
-                if (taxcodeList[i].codename == taxRate) {
-                  taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-                }
-              }
-            }
-            var subTotal =
-              parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-            var taxTotal =
-              parseFloat(qty, 10) *
-              Number(price.replace(/[^0-9.-]+/g, "")) *
-              parseFloat(taxrateamount);
-            $printrows
-              .find("#lineTaxAmount")
-              .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-            if (!isNaN(subTotal)) {
-              $printrows
-                .find("#lineAmt")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-              subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-              document.getElementById("subtotal_totalPrint").innerHTML =
-                $("#subtotal_total").text();
-            }
+  //         $printrows.each(function (index) {
+  //           var $printrows = $(this);
+  //           var qty = $printrows.find("#lineQty").text() || 0;
+  //           var price = $printrows.find("#lineUnitPrice").text() || "0";
+  //           var taxrateamount = 0;
+  //           var taxRate = $printrows.find("#lineTaxCode").text();
+  //           if (taxcodeList) {
+  //             for (var i = 0; i < taxcodeList.length; i++) {
+  //               if (taxcodeList[i].codename == taxRate) {
+  //                 taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+  //               }
+  //             }
+  //           }
+  //           var subTotal =
+  //             parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+  //           var taxTotal =
+  //             parseFloat(qty, 10) *
+  //             Number(price.replace(/[^0-9.-]+/g, "")) *
+  //             parseFloat(taxrateamount);
+  //           $printrows
+  //             .find("#lineTaxAmount")
+  //             .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+  //           if (!isNaN(subTotal)) {
+  //             $printrows
+  //               .find("#lineAmt")
+  //               .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+  //             subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+  //             document.getElementById("subtotal_totalPrint").innerHTML =
+  //               $("#subtotal_total").text();
+  //           }
 
-            if (!isNaN(taxTotal)) {
-              taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-              document.getElementById("totalTax_totalPrint").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-            }
-            if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-              let GrandTotal =
-                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-              document.getElementById("grandTotalPrint").innerHTML =
-                $("#grandTotal").text();
-              document.getElementById("totalBalanceDuePrint").innerHTML =
-                $("#totalBalanceDue").text();
-            }
-          });
-          return false;
-        } else {
-          $("#deleteLineModal").modal("toggle");
-        }
-      }
-    } else {
-      if (templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
-      else $("#footerDeleteModal1").modal("toggle");
-    }
-  },
+  //           if (!isNaN(taxTotal)) {
+  //             taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+  //             document.getElementById("totalTax_totalPrint").innerHTML =
+  //               utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+  //           }
+  //           if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+  //             let GrandTotal =
+  //               parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+  //             document.getElementById("grandTotalPrint").innerHTML =
+  //               $("#grandTotal").text();
+  //             document.getElementById("totalBalanceDuePrint").innerHTML =
+  //               $("#totalBalanceDue").text();
+  //           }
+  //         });
+  //         return false;
+  //       } else {
+  //         $("#deleteLineModal").modal("toggle");
+  //       }
+  //     }
+  //   } else {
+  //     if (templateObject.hasFollow.get()) $("#footerDeleteModal2").modal("toggle");
+  //     else $("#footerDeleteModal1").modal("toggle");
+  //   }
+  // },
   "click .btnDeleteFollowingInvoices": async function (event) {
     playDeleteAudio();
     var currentDate = new Date();
@@ -8406,7 +8406,7 @@ Template.new_invoice.events({
     setTimeout(async function () {
 
       swal({
-        title: 'Delete Invoice',
+        title: 'You are deleting ' + $("#following_cnt").val() + ' invoices',
         text: "Do you wish to delete this transaction and all others associated with it moving forward?",
         type: 'question',
         showCancelButton: true,
@@ -11050,12 +11050,12 @@ Template.new_invoice.events({
   "click #btnCopyInvoice": async function () {
     playCopyAudio();
     setTimeout(async function () {
-      $("#basedOnFrequency").prop('checked', true);
-      $("#formCheck-monday").prop('checked', true);
+      // $("#basedOnFrequency").prop('checked', true);
+      // $("#formCheck-monday").prop('checked', true);
       $('#edtFrequencyDetail').css('display', 'flex');
-      $(".ofMonthList input[type=checkbox]").each(function () {
-        $(this).prop('checked', false);
-      });
+      // $(".ofMonthList input[type=checkbox]").each(function () {
+      //   $(this).prop('checked', false);
+      // });
       // $(".selectDays input[type=checkbox]").each(function () {
       //   $(this).prop('checked', true);
       // });
@@ -11384,6 +11384,153 @@ Template.new_invoice.events({
         } else { }
       }
     } else { }
+  },
+  "focusout .lineShipped": function (event) {
+    // $(".fullScreenSpin").css("display", "inline-block");
+    var target = event.target;
+    let selectedunit = $(target).closest("tr").find(".lineOrdered").val();
+    localStorage.setItem("productItem", selectedunit);
+    let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
+    localStorage.setItem("selectedProductName", selectedProductName);
+    let productService = new ProductService();
+    const templateObject = Template.instance();
+    const InvoiceData = templateObject.invoicerecord.get();
+    let existProduct = false;
+    if(parseInt($(target).val()) > 0){
+      InvoiceData.LineItems.forEach(async (element) => {
+        if (element.item == selectedProductName) {
+          existProduct = true;
+          productService.getProductStatus(selectedProductName).then(function (data) {
+            // $(".fullScreenSpin").css("display", "none");
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              // swal("", 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', "info");
+              // event.preventDefault();
+              return false;
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+              $("#lotNumberModal").attr("data-row", row + 1);
+              $("#lotNumberModal").modal("show");
+              if (element.pqaseriallotdata == "null") { } else {
+                if (element.pqaseriallotdata.fields.PQABatch == "null") { } else {
+                  if (element.pqaseriallotdata.fields.PQABatch.length == 0) { } else {
+                    let shtml = "";
+                    let i = 0;
+                    shtml += `<tr><td rowspan="2"></td><td colspan="3" class="text-center">Allocate Lot Numbers</td></tr>
+                        <tr><td class="text-start">#</td><td class="text-start">Lot Number</td><td class="text-start">Expiry Date</td></tr>`;
+                    for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                      const dates = element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate.split(" ")[0].split("-") || "";
+                      if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") { } else {
+                        i++;
+                        shtml += `<tr>
+                            <td></td>
+                            <td>${Number(i)}</td><td contenteditable="true" class="lineLotnumbers">${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td>
+                            <td class="lotExpiryDate">
+                                <div class="form-group m-0">
+                                  <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control" style="height: 25px;" value="${dates[2]}/${dates[1]}/${dates[0]}">
+                                    <div class="input-group-addon">
+                                      <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                          </tr>`;
+                      }
+                    }
+                    $("#tblLotlist tbody").html(shtml);
+                    $(".lotExpiryDate input").datepicker({
+                      showOn: "focus",
+                      buttonImageOnly: false,
+                      dateFormat: "dd/mm/yy",
+                      showOtherMonths: true,
+                      selectOtherMonths: true,
+                      changeMonth: true,
+                      changeYear: true,
+                      yearRange: "-90:+10",
+                    });
+                  }
+                }
+              }
+            } else if (
+              data.tproductvs1[0].Batch == false &&
+              data.tproductvs1[0].SNTracking == true
+            ) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+              $("#serialNumberModal").attr("data-row", row + 1);
+              $("#serialNumberModal").modal("show");
+              if (element.pqaseriallotdata == "null") { } else {
+                if (element.pqaseriallotdata.fields.PQASN == "null") { } else {
+                  if (element.pqaseriallotdata.fields.PQASN.length == 0) { } else {
+                    let shtml = "";
+                    let i = 0;
+                    shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                        <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>`;
+                    for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
+                      if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") { } else {
+                        i++;
+                        shtml += `<tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>`;
+                      }
+                    }
+                    $("#tblSeriallist tbody").html(shtml);
+                  }
+                }
+              }
+            }
+          });
+        }
+      });
+      if (!existProduct) {
+        if (selectedProductName == "") {
+          // $(".fullScreenSpin").css("display", "none");
+          swal("You have to select Product.", "", "info");
+          event.preventDefault();
+          return false;
+        } else {
+          productService.getProductStatus(selectedProductName).then(async function (data) {
+            // $(".fullScreenSpin").css("display", "none");
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              // swal("", "The product " + selectedProductName + " does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.", "info");
+              // event.preventDefault();
+              return false;
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+              $("#lotNumberModal").attr("data-row", row + 1);
+              $("#lotNumberModal").modal("show");
+            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+              // $("#serialNumberModal").attr("data-row", row + 1);
+              // $("#serialNumberModal").modal("show");
+              
+              const serialList = await sideBarService.getAllSerialNumber();
+              const productName = selectedProductName;
+              const filteredList = serialList.tserialnumberlistcurrentreport.filter(serial => serial.ProductName === productName && serial.AllocType === 'In-Stock');
+              const serialNumberList = filteredList.map(serial => serial.SerialNumber);
+              let htmlList = `<tr>
+                  <td rowspan="2"></td>
+                  <td colspan="2" class="text-center">Available Serial Numbers</td>
+              </tr>
+              <tr>
+                  <td class="text-start">#</td>
+                  <td class="text-start">Serial number</td>
+              </tr>`;
+              let i = 1;
+              serialNumberList.forEach(serialNumber => {
+                  htmlList += `<tr class="serial-no-row">
+                      <td></td>
+                      <td class="serialNo">${i}</td>
+                      <td>${serialNumber}</td>
+                  </tr>`;
+                  i++;
+              });
+
+              $("#availableSerialNumberModal").attr("data-row", row + 1);
+              $('#tblAvailableSeriallist tbody').html(htmlList);
+              $('#availableSerialNumberModal').modal('show');
+            }
+          });
+        }
+      }
+    }
   },
   "click .btnSnLotmodal": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");

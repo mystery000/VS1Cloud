@@ -2611,6 +2611,7 @@ Template.basreturn.onRendered(function() {
 
             $(document).on("click", "#basreturnCategory1", function(e) {
                 if ($("#basreturnCategory1").prop('checked') == true) {
+                    $("#nav-item1").show();
                     document.getElementById("gstG1").setAttribute("href", "#gstG1option");
                     document.getElementById("gstG2").setAttribute("href", "#gstG2option");
                     document.getElementById("gstG3").setAttribute("href", "#gstG3option");
@@ -2623,6 +2624,20 @@ Template.basreturn.onRendered(function() {
                     document.getElementById("gstG15").setAttribute("href", "#gstG15option");
                     document.getElementById("gstG18").setAttribute("href", "#gstG18option");
                 } else {
+                    $("#nav-item1").hide();
+                    if($("#tab-1").hasClass("active")){
+                        if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                            alert($("#tab-1").hasClass("active"));
+                            $("#nav-item2 a").click();
+                        }
+                        else if($("#basreturnCategory4").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else{
+                            $("#nav-item4 a").click();
+                        }
+                    }
+                    
                     document.getElementById("gstG1").setAttribute("href", "#");
                     document.getElementById("gstG2").setAttribute("href", "#");
                     document.getElementById("gstG3").setAttribute("href", "#");

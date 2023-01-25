@@ -3541,7 +3541,7 @@ Template.paymentcard.onRendered(() => {
                         bankAccount: data.fields.AccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Notes,
-                        deleted: ata.fields.Deleted || false,
+                        deleted: data.fields.Deleted || false,
                         LineItems: lineItems,
                         checkpayment: data.fields.PaymentMethodName,
                         department: data.fields.DeptClassName,
@@ -9673,7 +9673,7 @@ Template.paymentcard.events({
         setTimeout(async function(){
 
         swal({
-            title: 'Delete Payment',
+            title: 'You are deleting ' + $("#following_cnt").val() + ' Payment',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,

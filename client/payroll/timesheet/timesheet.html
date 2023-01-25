@@ -859,7 +859,8 @@
                                 width: 4% !important;
                             } */
                         </style>
-                        <table id="tblTimeSheet" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
+                        {{> transaction_list tablename = "tblTimeSheet" }}
+                        <!-- <table id="tblTimeSheet" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th colFlag noExport" style="width: 2% !important;">
@@ -869,8 +870,6 @@
                                         </div>
                                     </th>
                                     <th class="th colID">ID</th>
-                                    <!-- <th class="th colEntry sorting_disabled noExport">Action</th> -->
-                                    
                                     <th class="th colName">Employee</th>
                                     <th class="th colDate">Date</th>
                                     <th class="th colJob">Job</th>
@@ -881,65 +880,16 @@
                                     <th class="th colDouble ">Double</th>
                                     <th class="th colAdditional ">Additional</th>
                                     <th class="th colPaycheckTips ">Tips</th>
-                                    <!-- <th class="th colCashTips" style="width:50px;">Cash Tips</th> -->
-                                    <!-- <th class="th colGrossPay" style="width:50px;">Gross Pay</th> -->
                                     <th class="th colNotes">Technical Notes</th>
                                     <th class="th colDescription">Break</th>
                                     <th class="th colStatus">Status</th>
                                     <th class="th colInvoiced hiddenColumn">Invoiced</th>
                                     <th class="th colHourlyrate hiddenColumn">Hourly Rate</th>
                                     <th class="th colView sorting_disabled noExport">View</th>
-
-                                    <!-- <th class="" style="max-width: 50px;">Edit</th> -->
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- {{#if datatablerecords}}
-                                    {{#each item in datatablerecords}}
-                                        <tr class="dnd-moved" id="{{item.id}}" name="{{item.id}}">
-                                            <td class="colFlag">
-                                                <div class="custom-control custom-checkbox pointer">
-                                                    <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-{{item.id}}" name="{{item.id}}">
-                                                    <label class="custom-control-label" for="f-{{item.id}}"></label>
-                                                </div>
-                                            </td>
-                                            <td class="colID" contenteditable="false" empname="{{item.id}}"><a href="#">{{item.id}}</a></td>
-                                            <td class="colName" contenteditable="false" empname="{{item.employee}}" emplid="{{item.employeeID}}" hourlyrate="{{item.hourlyrateval}}"><a href="#">{{item.employee}}</a></td>
-                                            <td class="colDate" contenteditable="false"><span style="display:none;">{{item.sortdate}}</span> {{item.timesheetdate}}</td>
-                                            <td class="colJob" contenteditable="false">{{item.job}}</td>
-                                            <td class="colProduct">{{item.product}}</td>
-                                            <td style="text-align: right!important;" class="hiddenColumn"><input class="colRegHours highlightInput" type="number" value="{{item.hours}}"><span class="colRegHours"
-                                                    style="display: none;">{{item.hours}}</span></td>
-                                            <td class="" style="text-align: right!important;">
-                                                <input class="colRegHoursOne highlightInput" type="text" value="{{item.hourFormat}}" autocomplete="off">
-                                            </td>
-                                            <td style="text-align: right!important;"><input class="colOvertime highlightInput" type="number" value="{{item.overtime}}"><span class="colOvertime" style="display: none;">{{item.overtime}}</span></td>
-                                            <td style="text-align: right!important;"><input class="colDouble highlightInput" type="number" value="{{item.double}}"><span class="colDouble" style="display: none;">{{item.double}}</span></td>
-                                            <td style="text-align: right!important;"><input class="colAdditional highlightInput cashamount" type="text" value="{{item.additional}}"><span class="colAdditional"
-                                                    style="display: none;">{{item.additional}}</span></td>
-                                            <td style="text-align: right!important;"><input class="colPaycheckTips highlightInput cashamount" type="text" value="{{item.paychecktips}}"><span class="colPaycheckTips"
-                                                    style="display: none;">{{item.paychecktips}}</span></td>
-                                            <td class="colNotes">{{item.notes}}</td>
-                                            {{#if equals item.status "Unprocessed"}}
-                                                <td class="colStatus" style="background-color: #f6c23e !important; color:#fff">
-                                                    Unprocessed
-                                                </td>
-                                            {{else}}
-                                                {{#if equals item.status "Processed"}}
-                                                    <td class="colStatus" style="background-color: #1cc88a !important; color:#fff">
-                                                        Processed
-                                                    </td>
-                                                {{/if}}
-                                            {{/if}}
-
-                                            <td class="viewTimeLog"><a href="/timesheettimelog?id={{item.id}}" class="btn btn-sm btn-success btnTimesheetListOne" style="width: 36px;" id="" autocomplete="off"><i class="far fa-clock"></i></a></td>
-
-                                        </tr>
-                                    {{/each}}
-                                {{/if}} -->
-
                             </tbody>
-
                             <tfoot style="display:none!important">
                                 <tr class="dnd-moved" style="font-weight: 700;">
                                     <td contenteditable="false"></td>
@@ -959,7 +909,7 @@
                                     <td></td>
                                 </tr>
                             </tfoot>
-                        </table>
+                        </table> -->
                     </div>
                 </div>
             </div>
