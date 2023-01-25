@@ -12610,7 +12610,7 @@ Template.supplierpaymentcard.events({
     setTimeout(async function(){
 
     swal({
-        title: 'Delete Payment',
+      title: 'You are deleting ' + $("#following_cnt").val() + ' Payment',
         text: "Do you wish to delete this transaction and all others associated with it moving forward?",
         type: 'question',
         showCancelButton: true,

@@ -1,6 +1,17 @@
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './deletepop.html';
+import { InvoiceService } from "../invoice/invoice-service";
+import { SalesBoardService } from "../js/sales-service";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { SideBarService } from "../js/sidebar-service";
+import { PaymentsService } from "../payments/payments-service";
+import { StockTransferService } from "../inventory/stockadjust-service";
+import { PurchaseBoardService } from "../js/purchase-service";
+
+let invoiceService = new InvoiceService();
+const sideBarService = new SideBarService();
+
 const TransactionTypeTemplates = {
   sales: 
     {
@@ -113,9 +124,9 @@ const TransactionTypeTemplates = {
   }
 };
 
-// Template.deletepop.onRendered(function () {
-//   const { type } = Template.currentData();
-// })
+Template.deletepop.onRendered(function () {
+  hasFollowings();
+})
 
 Template.deletepop.helpers({
   itemName1: () => {
@@ -148,3 +159,338 @@ Template.deletepop.helpers({
   }
 
 })
+
+const hasFollowings = async function() {
+  const templateInstance = Template.instance();
+  let salesService = new SalesBoardService();
+  let paymentService = new PaymentsService();
+  let stockTransferService = new StockTransferService();
+  let purchaseService = new PurchaseBoardService();
+  var url = FlowRouter.current().path;
+  var getso_id = url.split('?id=');
+  var currentInvoice = getso_id[getso_id.length - 1];
+  const currentDate = new Date();
+  if('invoices' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+      var saleDate = invData.fields.SaleDate;
+      var fromDate = saleDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingInvoices = await sideBarService.getAllTInvoiceListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var invList = followingInvoices.tinvoicelist;
+        $("#following_cnt").val(invList.length);
+        if (invList.length > 0) {
+            $("#btn_follow2").css("display", "inline-block");
+        } else {
+            $("#btn_follow2").css("display", "none");
+        }
+    }
+  }
+  if('customer_payment' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var paymentData = await paymentService.getOneCustomerPayment(currentInvoice);
+      var paymentDate = paymentData.fields.PaymentDate;
+      var fromDate = paymentDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingPayments = await sideBarService.getAllTCustomerPaymentListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+      );
+      var paymentList = followingPayments.tcustomerpaymentlist;
+      $("#following_cnt").val(paymentList.length);
+      if (paymentList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('stockadjustment' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
+      var adjustmentDate = stockData.fields.AdjustmentDate;
+      var fromDate = adjustmentDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
+      var stockList = followingStocks.tstockadjustentry;
+      $("#following_cnt").val(stockList.length);
+      if (stockList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('cheques' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
+      var orderDate = chequeData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingCheques = await sideBarService.getAllChequeListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var chequeList = followingCheques.tchequelist;
+      $("#following_cnt").val(chequeList.length);
+      if (chequeList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('deposit' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var depositEntryData = await purchaseService.getOneDepositEnrtyData(currentInvoice);
+      var depositDate = depositEntryData.fields.DepositDate;
+      var fromDate = depositDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingDeposits = await sideBarService.getAllTBankDepositListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+      );
+      var depositList = followingDeposits.tbankdepositlist;
+      $("#following_cnt").val(depositList.length);
+      if (depositList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('bills' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var billData = await purchaseService.getOneBilldataEx(currentInvoice);
+      var orderDate = billData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingBills = await sideBarService.getAllBillListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+      );
+      var billList = followingBills.tbilllist;
+      $("#following_cnt").val(billList.length);
+      if (billList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('credits' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var creditData = await purchaseService.getOneCreditData(
+        currentInvoice
+      );
+      var orderDate = creditData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate =
+        currentDate.getFullYear() +
+        "-" +
+        ("0" + (currentDate.getMonth() + 1)).slice(-2) +
+        "-" +
+        ("0" + currentDate.getDate()).slice(-2);
+      var followingCredits = await sideBarService.getTCreditListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var creditList = followingCredits.tcreditlist;
+      $("#following_cnt").val(creditList.length);
+      if (creditList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('purchaseorders' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
+      var orderDate = poData.fields.OrderDate;
+      var fromDate = orderDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingPOs = await sideBarService.getAllTPurchaseOrderListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+      );
+      var poList = followingPOs.tpurchaseorderlist;
+      $("#following_cnt").val(poList.length);
+      if (poList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('quotes' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
+      var saleDate = quoteData.fields.SaleDate;
+      var fromDate = saleDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingQuotes = await sideBarService.getAllTQuoteListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+      );
+      var quoteList = followingQuotes.tquotelist;
+      $("#following_cnt").val(quoteList.length);
+      if (quoteList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('sales' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
+      var saleDate = soData.fields.SaleDate;
+      var fromDate = saleDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingSOs = await sideBarService.getAllTSalesOrderListData(
+        fromDate,
+        toDate,
+        false,
+        initialReportLoad,
+        0
+      );
+      var soList = followingSOs.tsalesorderlist;
+      $("#following_cnt").val(soList.length);
+      if (soList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('refunds' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var refundData = await salesService.getRefundSales(currentInvoice);
+      var saleDate = refundData.fields.SaleDate;
+      var fromDate = saleDate.substring(0, 10);
+      var toDate =
+          currentDate.getFullYear() +
+          "-" +
+          ("0" + (currentDate.getMonth() + 1)).slice(-2) +
+          "-" +
+          ("0" + currentDate.getDate()).slice(-2);
+      var followingRefunds =
+          await sideBarService.getAllTRefundSaleListData(
+              fromDate,
+              toDate,
+              false,
+              initialReportLoad,
+              0
+          );
+      var refundList = followingRefunds.trefundsalelist;
+      $("#following_cnt").val(refundList.length);
+      if (refundList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('supplierpayments' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
+      var paymentDate = paymentData.fields.PaymentDate;
+      var fromDate = paymentDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingPayments = await sideBarService.getAllTSupplierPaymentListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+      );
+      var paymentList = followingPayments.tsupplierpaymentlist;
+      $("#following_cnt").val(paymentList.length);
+      if (paymentList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('stocktransfer' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var stockData = await stockTransferService.getOneStockTransferData(currentInvoice);
+      var transferDate = stockData.fields.DateTransferred;
+      var fromDate = transferDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingStocks = await sideBarService.getAllStockTransferEntry("All", stockData.fields.Recno);//initialDataLoad
+      var stockList = followingStocks.tstocktransferentry;
+      $("#following_cnt").val(stockList.length);
+      if (stockList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+  if('shippingdocket' == templateInstance.data.formType) {
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      var invData = await salesService.getOneInvoicedataEx(currentInvoice);
+      var saleDate = invData.fields.SaleDate;
+      var fromDate = saleDate.substring(0, 10);
+      var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
+      var followingInvoices = await sideBarService.getAllTInvoiceListData(
+          fromDate,
+          toDate,
+          false,
+          initialReportLoad,
+          0
+        );
+      var invList = followingInvoices.tinvoicelist;
+      $("#following_cnt").val(invList.length);
+      if (invList.length > 0) {
+          $("#btn_follow2").css("display", "inline-block");
+      } else {
+          $("#btn_follow2").css("display", "none");
+      }
+    }
+  }
+}
