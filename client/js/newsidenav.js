@@ -358,6 +358,7 @@ Template.newsidenav.onRendered(function () {
         $('#sidenavcontacts').removeClass('active');
         $('#sidenavcrm').removeClass('active');
         $('#sidenavinventory').removeClass('active');
+        $('#sidenavmanufacturing').removeClass('active');
         $('#sidenavpayments').removeClass('active');
         $('#sidenavpurchases').removeClass('active');
         $('#sidenavreports, #sidenavreports2').removeClass('active');
@@ -867,7 +868,7 @@ Template.newsidenav.onRendered(function () {
         $('.collapse').collapse('hide');
         $('#sidenavfixedAssets').removeClass('active');
         $('#sidenavshipping').addClass('active');
-      } else if ((currentLoc == "/processlist") || (currentLoc == '/workordercard') || (currentLoc == '/workorderlist') || (currentLoc == '/bomlist') || (currentLoc == '/bomsetupcard') || (currentLoc == '/productionplanner')) {
+      } else if ((currentLoc == '/manufacturingoverview')||(currentLoc == "/processlist") || (currentLoc == '/workordercard') || (currentLoc == '/workorderlist') || (currentLoc == '/bomlist') || (currentLoc == '/bomsetupcard') || (currentLoc == '/productionplanner')) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -3359,6 +3360,39 @@ Template.newsidenav.events({
       }
     } else {
       FlowRouter.go('/inventorylist');
+      let templateObject = Template.instance();
+      templateObject.getSetSideNavFocus();
+    }
+  },
+  'click .manufacturingLiHeader': function(event) {
+    event.preventDefault();
+    var url = window.location.pathname;
+    if (url == "/bankrecon") {
+      let reconHoldState = localStorage.getItem("reconHoldState") || "false";
+      if (reconHoldState == "true") {
+        swal({
+          title: "Select OK to place Reconciliation On Hold",
+          text: "You must Hold the Reconciliation to save the flagged items",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.value) {
+            $("#btnHold").trigger("click");
+            localStorage.setItem("reconHoldState", "false");
+          } else {
+            FlowRouter.go('/manufacturingoverview');
+            let templateObject = Template.instance();
+            templateObject.getSetSideNavFocus();
+          }
+        });
+      } else {
+        FlowRouter.go('/manufacturingoverview');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+      }
+    } else {
+      FlowRouter.go('/manufacturingoverview');
       let templateObject = Template.instance();
       templateObject.getSetSideNavFocus();
     }
