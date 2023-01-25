@@ -60,14 +60,15 @@ Template.templatesettings.onCreated(() => {
 Template.templatesettings.onRendered(function () {
   $("#templatePreviewModal #templatePreviewInput").keyup(function (event) {
     $('input[name="' + title + "_" + number + '"]').val($(this).val());
-    localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
+    // localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
+    templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
   });
 
   let templateObject = Template.instance();
-  $(document).on("click", "#editPrintMore", function (e) {});
+
   $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
-    title = $(this).parent().attr("data-id");
-    number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
+    title = $(this).parent().parent().attr("data-id");
+    number = $(this).parent().parent().attr("data-template-id"); //e.getAttribute("data-template-id");
     templateObject.generateInvoiceData(title, number);
     $(".modal-title#templatePreviewLabel").css("display", "none");
     $("#templatePreviewModal #templatePreviewInput").css("display", "block");
@@ -77,11 +78,12 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal #templatePreviewInput").val(
       $('input[name="' + title + "_" + number + '"]').val()
     );
-    localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
+    // localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
+    templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
   });
   $(document).on("click", ".templateItem #btnPreviewTemplate", function (e) {
-    title = $(this).parent().attr("data-id");
-    number = $(this).parent().attr("data-template-id"); //e.getAttribute("data-template-id");
+    title = $(this).parent().parent().attr("data-id");
+    number = $(this).parent().parent().attr("data-template-id"); //e.getAttribute("data-template-id");
     templateObject.generateInvoiceData(title, number);
     $(".modal-title#templatePreviewLabel").css("display", "block");
     $("#templatePreviewModal #templatePreviewInput").css("display", "none");
@@ -92,6 +94,10 @@ Template.templatesettings.onRendered(function () {
       $('input[name="' + title + "_" + number + '"]').val()
     );
   });
+
+  templateObject.setPrintTemplateDetail = function (input_value) {
+    addVS1Data("TPrintTemplateDetail", JSON.stringify(input_value));
+  }
 
   templateObject.getTemplateInfoNew = function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -169,7 +175,7 @@ Template.templatesettings.onRendered(function () {
                       data.ttemplatesettings[i].fields.Description
                     );
                     if (data.ttemplatesettings[i].fields.Active == true) {
-                      // $('#Customer_Payments_1').attr('checked','checked');
+                      $('#Customer_Payments_1').attr('checked','checked');
                     }
                   }
                   if (data.ttemplatesettings[i].fields.Template == 2) {
@@ -177,7 +183,7 @@ Template.templatesettings.onRendered(function () {
                       data.ttemplatesettings[i].fields.Description
                     );
                     if (data.ttemplatesettings[i].fields.Active == true) {
-                      //  $('#Customer_Payments_2').attr('checked','checked');
+                       $('#Customer_Payments_2').attr('checked','checked');
                     }
                   }
 
@@ -567,7 +573,7 @@ Template.templatesettings.onRendered(function () {
                   data.ttemplatesettings[i].fields.Description
                 );
                 if (data.ttemplatesettings[i].fields.Active == true) {
-                  // $('#Customer_Payments_1').attr('checked','checked');
+                  $('#Customer_Payments_1').attr('checked','checked');
                 }
               }
               if (data.ttemplatesettings[i].fields.Template == 2) {
@@ -575,7 +581,7 @@ Template.templatesettings.onRendered(function () {
                   data.ttemplatesettings[i].fields.Description
                 );
                 if (data.ttemplatesettings[i].fields.Active == true) {
-                  //  $('#Customer_Payments_2').attr('checked','checked');
+                   $('#Customer_Payments_2').attr('checked','checked');
                 }
               }
 
@@ -959,7 +965,7 @@ Template.templatesettings.onRendered(function () {
                     data.ttemplatesettings[i].fields.Description
                   );
                   if (data.ttemplatesettings[i].fields.Active == true) {
-                    // $('#Customer_Payments_1').attr('checked','checked');
+                    $('#Customer_Payments_1').attr('checked','checked');
                   }
                 }
                 if (data.ttemplatesettings[i].fields.Template == 2) {
@@ -967,7 +973,7 @@ Template.templatesettings.onRendered(function () {
                     data.ttemplatesettings[i].fields.Description
                   );
                   if (data.ttemplatesettings[i].fields.Active == true) {
-                    //  $('#Customer_Payments_2').attr('checked','checked');
+                     $('#Customer_Payments_2').attr('checked','checked');
                   }
                 }
 

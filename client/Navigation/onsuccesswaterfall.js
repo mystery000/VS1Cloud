@@ -4704,15 +4704,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
     templateObject.dashboardRedirectOnLogin = async function() {
     let dataReturnRes = await getVS1Data('VS1_Dashboard');
-    setTimeout(function () {
-      if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
-        $('.headerprogressbar').removeClass('headerprogressbarShow');
-        $('.headerprogressbar').addClass('headerprogressbarHidden');
-      } else {
-        $('.headerprogressbar').removeClass('headerprogressbarShow');
-        $('.headerprogressbar').addClass('headerprogressbarHidden');
-      }
-    }, 1000);
+
     if (dataReturnRes.length > 0) {
       let vs1DashboardData = JSON.parse(dataReturnRes[0].data);
       if(vs1DashboardData.ProcessLog.TUser.LoginDefault == "Accounts"){

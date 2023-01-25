@@ -52,8 +52,12 @@ Template.lotnumberlist.onRendered(function() {
     };
 
     templateObject.resetData = function(dataVal) {
-        window.open('/lotnumberlist?page=last', '_self');
+        Meteor._reload.reload();
+        // window.open('/lotnumberlist?page=last', '_self');
     }
+
+    shareFunctionByName.initTable(localStorage.getItem("ERPDefaultDepartment"), "tblDepartmentCheckbox");
+
     templateObject.getAllSerialNumberData = function() {
         sideBarService.getAllSerialNumber().then(function(data) {
 
@@ -528,7 +532,7 @@ Template.lotnumberlist.onRendered(function() {
 
     }
 
-    templateObject.getAllSerialNumberData();
+    // templateObject.getAllSerialNumberData();
     tableResize();
 });
 
