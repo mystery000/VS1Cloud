@@ -1029,7 +1029,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Tax', class: 'colPayRunTax', active: true, display: true, width: "100" },
                 { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
                 { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
-            ] 
+            ]
         } else if (currenttablename === 'taxRatesList') {
             reset_data = [
                 { index: 0, label: 'Name', class: 'colFirstName', active: true, display: true },
@@ -14115,13 +14115,8 @@ Template.non_transactional_list.onRendered(function() {
         $('.fullScreenSpin').css('display', 'none');
 
     }
-<<<<<<< HEAD
 
-    templateObject.getTimeSheetList = function(){
-=======
-    
     templateObject.getPayRunsList = function(){
->>>>>>> 5846474aaff9b2737f503730787a02faef6a54d8
       getVS1Data('TTimeSheet').then(function (dataObject) {
           if (dataObject.length == 0) {
               sideBarService.getAllTimeSheetList(initialBaseDataLoad, 0).then(async function (data) {
@@ -14143,13 +14138,8 @@ Template.non_transactional_list.onRendered(function() {
         });
       });
     }
-<<<<<<< HEAD
 
-    templateObject.displayTimeSheetList = function(data){
-=======
-    
     templateObject.displayPayRunsList = function(data){
->>>>>>> 5846474aaff9b2737f503730787a02faef6a54d8
         let splashArrayTimeSheetList = new Array();
         for (let i = 0; i < data.ttimesheet.length; i++) {
             let ID = data.ttimesheet[i].fields.ID || '';
@@ -15000,7 +14990,7 @@ Template.non_transactional_list.onRendered(function() {
                     await addVS1Data('TPayrollCalendars', JSON.stringify(data));
                     templateObject.displayPayCalendars(data);
                 }).catch(function (err) {
-    
+
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -15011,7 +15001,7 @@ Template.non_transactional_list.onRendered(function() {
               await addVS1Data('TPayrollCalendars', JSON.stringify(data));
               templateObject.displayPayCalendars(data);
           }).catch(function (err) {
-    
+
           });
         });
     }
@@ -15042,14 +15032,14 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colCalenderID hiddenColumn", 
+                        className: "colCalenderID hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colPayCalendarName", 
+                        className: "colPayCalendarName",
                         targets: 1,
                         width:'100px'
                     },
@@ -15182,7 +15172,7 @@ Template.non_transactional_list.onRendered(function() {
                     await addVS1Data('TPayrollHolidays', JSON.stringify(data));
                     templateObject.displayHolidaysData(data);
                 }).catch(function (err) {
-    
+
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -15193,7 +15183,7 @@ Template.non_transactional_list.onRendered(function() {
               await addVS1Data('TPayrollHolidays', JSON.stringify(data));
               templateObject.displayHolidaysData(data);
           }).catch(function (err) {
-    
+
           });
         });
     }
@@ -15222,14 +15212,14 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colHolidayID hiddenColumn", 
+                        className: "colHolidayID hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colHolidayName", 
+                        className: "colHolidayName",
                         targets: 1,
                         width:'100px'
                     },
@@ -15362,7 +15352,7 @@ Template.non_transactional_list.onRendered(function() {
                       return true;
                     }
                   });
-              
+
                 data = data.response;
                 const payRuns = PayRun.fromList(data);
                 await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
@@ -15380,7 +15370,7 @@ Template.non_transactional_list.onRendered(function() {
                   return true;
                 }
               });
-          
+
             data = data.response;
             const payRuns = PayRun.fromList(data);
             await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
@@ -15417,14 +15407,14 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colDraftPayRunID hiddenColumn", 
+                        className: "colDraftPayRunID hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colPayRunCalendar", 
+                        className: "colPayRunCalendar",
                         targets: 1,
                         width:'100px'
                     },
