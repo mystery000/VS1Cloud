@@ -28,7 +28,7 @@
                 <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
             </header>
 
-            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                 <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -87,9 +87,9 @@
                                                 <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
                                             </div>
                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
+                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span></label>
                                                 <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
+                                                <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div>
                                             </div>
                                         </div>
 
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">
@@ -220,11 +220,11 @@
                                 </div>
                             </div>
                         </div>
-                        <table id="tblchequelist" name="tblchequelist" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblchequelist">
+                        <!-- <table id="tblchequelist" name="tblchequelist" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblchequelist">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <!-- <th class="th colAccountName" style="width:90px;">Account Name</th> -->
-                                    <!-- <th class="th colSortDate hiddenColumn">id</th>
+                                    <th class="th colAccountName" style="width:90px;">Account Name</th>
+                                    <th class="th colSortDate hiddenColumn">id</th>
                                     <th class="th colOrderDate" style="width:84px;">Order Date</th>
                                     <th class="th colChequeID " style="width:50px; !important">#ID</th>
                                     <th class="th colBankAccount" style="width:84px;">Bank Account</th>
@@ -242,7 +242,7 @@
                                     <th class="th colPurchaseCustField1 hiddenColumn">Custom Field 1</th>
                                     <th class="th colPurchaseCustField2 hiddenColumn">Custom Field 2</th>
                                     <th class="th colEmployee hiddenColumn">Employee</th>
-                                    <th class="th colComments">Comments</th> -->
+                                    <th class="th colComments">Comments</th>
                                     {{#each displayfield in displayfields}}
                                         {{#if displayfield.display}}
                                             {{#if equals displayfield.class 'PurchaseNo'}}
@@ -263,19 +263,19 @@
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <!-- <td contendeditable="false" class="colAccountName">{{item.accountname}}</td> -->
+                                    <td contendeditable="false" class="colAccountName">{{item.accountname}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate">{{item.sortdate}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colOrderDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colChequeID">{{item.id}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colBankAccount">{{item.accountname}}</td>
-                                    <!-- <td contenteditable="false" class=" {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colPurchaseNo">{{item.chequeNumber}}</td> -->
+                                    <td contenteditable="false" class=" {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colPurchaseNo">{{item.chequeNumber}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colSupplier">{{item.suppliername}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colReference">{{item.reference}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colVia">{{item.via}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colCurrency">{{item.currency}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                    <!-- <td contenteditable="false" class=" {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colTax" style="text-align: right!important;">{{item.totaltax}}</td> -->
-                                    <!-- <td contenteditable="false" class=" {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colAmount" style="text-align: right!important;">{{item.totalamount}}</td> -->
+                                    <td contenteditable="false" class=" {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colTax" style="text-align: right!important;">{{item.totaltax}}</td>
+                                    <td contenteditable="false" class=" {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
                                     <td contenteditable="false" class=" {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
@@ -287,7 +287,8 @@
                                 {{/each}}
                                 {{/if}}
                             </tbody>
-                        </table>
+                        </table> -->
+                        {{> transaction_list tablename = "tblchequelist" }}
                     </div>
                 </div>
 
