@@ -50,7 +50,7 @@ Template.non_transactional_list.onCreated(function() {
         templateObject.currentproductID.set(currentProductID);
         let currenttype = curdata.type || "";
         templateObject.currenttype.set(currenttype);
-        
+
         templateObject.getAllProductRecentTransactions = async function(deptname) {
         // templateObject.initCustomFieldDisplaySettings("", currenttablename);
             getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
@@ -60,7 +60,7 @@ Template.non_transactional_list.onCreated(function() {
                     let data = JSON.parse(dataObject[0].data);
                     for(let i=0;i<data.t_vs1_report_productmovement.length;i++){
                         let data_productID = data.t_vs1_report_productmovement[i].ProductID;
-                        
+
                         if(parseInt(currentProductID) == data_productID){
                             need_API = false;
                             break;
@@ -311,16 +311,16 @@ Template.non_transactional_list.onRendered(function() {
 
     var url = FlowRouter.current().path;
     let currenttablename = templateObject.data.tablename || "";
-    
-    
+
+
     templateObject.tablename.set(currenttablename);
-    
+
     const curdata = Template.currentData();
     let currentProductID = curdata.productID || "";
     templateObject.currentproductID.set(currentProductID);
     let currenttype = curdata.type || "";
     templateObject.currenttype.set(currenttype);
-    
+
 
 
     // set initial table rest_data
@@ -850,7 +850,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
                 { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
               ];
-              
+
         } else if(currenttablename === "tblBASReturnList"){
             reset_data = [
                 { index: 0, label: "BAS Number", class: "colBasNumber", width: "80", active: true, display: true },
@@ -1010,7 +1010,7 @@ Template.non_transactional_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
-        
+
         // try {
         //     getVS1Data("VS1_Customize").then(function(dataObject) {
         //         if (dataObject.length == 0) {
@@ -1895,7 +1895,7 @@ Template.non_transactional_list.onRendered(function() {
                 if(typeFilter != 'all') {
                     sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
                         templateObject.displayAccountsOverviewListData(data);
-                    })                
+                    })
                 }else {
                     templateObject.displayAccountsOverviewListData(data);
                 }
@@ -2284,7 +2284,7 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.getAllProductData = async function(deptname) {
         await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
         getVS1Data("TProductList").then(function(dataObject) {
-            
+
                 if (dataObject.length == 0) {
                     sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
                             addVS1Data("TProductList", JSON.stringify(data));
@@ -2292,7 +2292,7 @@ Template.non_transactional_list.onRendered(function() {
                             // addVS1Data('TProductVS1',JSON.stringify(data));
                             //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
                         });
-                            
+
                 } else {
                     let data = JSON.parse(dataObject[0].data);
                     templateObject.displayAllProductData(data,deptname);
@@ -2351,7 +2351,7 @@ Template.non_transactional_list.onRendered(function() {
             splashArrayProductList.push(dataList);
             dataTableList.push(dataList);
         }
-        
+
 
         templateObject.transactiondatatablerecords.set(dataTableList);
         // templateObject.datatablebackuprecords.set(dataTableList);
@@ -2379,7 +2379,7 @@ Template.non_transactional_list.onRendered(function() {
                 });
             }
             $("#" + currenttablename).dataTable({
-                
+
                 data: splashArrayProductList,
                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: columnData,
@@ -2524,7 +2524,7 @@ Template.non_transactional_list.onRendered(function() {
                     let data = JSON.parse(dataObject[0].data);
                     for(let i=0;i<data.t_vs1_report_productmovement.length;i++){
                         let data_productID = data.t_vs1_report_productmovement[i].ProductID;
-                        
+
                         if(parseInt(currentProductID) == data_productID){
                             need_API = false;
                             break;
@@ -2738,19 +2738,19 @@ Template.non_transactional_list.onRendered(function() {
             // templateObject.getAllProductRecentTransactions(currenttype);
 
         }
-    
+
     //Recent Sales Order Data
     templateObject.getAllSOListData = async function() {
         templateObject.initCustomFieldDisplaySettings("",currenttablename);
         getVS1Data("TSalesOrderList").then(function(dataObject) {
-            
+
                 if (dataObject.length == 0) {
                     sideBarService.getProductRecentTransactionsAll(initialBaseDataLoad, 0).then(function(data) {
                             addVS1Data("TSalesOrderList", JSON.stringify(data));
                             templateObject.displayAllSOListData(data);
-                            
+
                         });
-                            
+
                 } else {
                     let data = JSON.parse(dataObject[0].data);
                     templateObject.displayAllSOListData(data);
@@ -6443,7 +6443,7 @@ Template.non_transactional_list.onRendered(function() {
             fallBackToLocal: true,
         });
         const response = data.response;
-    
+
         data =  response.tpayratetype ? response.tpayratetype.map(e => e.fields) : null;
         templateObject.displayRateTypeListData(data); //Call this function to display data on the table
     }
@@ -8532,7 +8532,7 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
-                
+
                 for (let i = 0; i < all_records.length; i++) {
                     let sort_date = all_records[i].fields.MsTimeStamp == "" ? "1770-01-01" : all_records[i].fields.MsTimeStamp;
                     sort_date = new Date(sort_date);
@@ -9484,13 +9484,13 @@ Template.non_transactional_list.onRendered(function() {
         if(customerName == ""){
             customerName = $('#edtJobCustomerCompany').val() || "";
         }
-        
+
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
-        
+
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
-        
+
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName().then(async function(data) {
@@ -11554,7 +11554,7 @@ Template.non_transactional_list.onRendered(function() {
 
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
-        
+
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
@@ -11831,7 +11831,7 @@ Template.non_transactional_list.onRendered(function() {
         var splashArrayLeadList = new Array();
         let lineItems = [];
         let lineItemObj = {};
-        
+
         for (let i = 0; i < data.length; i++) {
             var dataList = [
                 data[i].basnumber || '',
@@ -12102,7 +12102,7 @@ Template.non_transactional_list.onRendered(function() {
 
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
-        
+
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
 
@@ -12139,7 +12139,7 @@ Template.non_transactional_list.onRendered(function() {
                                 tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
                                 tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                             }
-        
+
                             var dataList = {
                                 basnumber: data.tvatreturn[i].fields.ID || '',
                                 description: data.tvatreturn[i].fields.VatSheetDesc || '',
@@ -12243,7 +12243,7 @@ Template.non_transactional_list.onRendered(function() {
                             tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
                             tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                         }
-    
+
                         var dataList = {
                             basnumber: data.tvatreturn[i].fields.ID || '',
                             description: data.tvatreturn[i].fields.VatSheetDesc || '',
@@ -12273,9 +12273,9 @@ Template.non_transactional_list.onRendered(function() {
         var splashArrayLeadList = new Array();
         let lineItems = [];
         let lineItemObj = {};
-        
+
         for (let i = 0; i < data.length; i++) {
-            let linestatus = '';        
+            let linestatus = '';
             var dataList = [
                 data[i].vatnumber || '',
                 data[i].description || '',
@@ -12531,7 +12531,7 @@ Template.non_transactional_list.onRendered(function() {
         let dataTableList = [];
         $(".fullScreenSpin").css("display", "inline-block");
         let taskID = $("#txtCrmSubTaskID").val() || "";
-        
+
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName().then(async function(data) {
@@ -12542,7 +12542,7 @@ Template.non_transactional_list.onRendered(function() {
                                 if(data.tprojecttasks[i].fields.subtasks != null){
                                     if (typeof data.tprojecttasks[i].fields.subtasks == 'object') {
                                         if (deleteFilter == false) {
-                                            if (data.tprojecttasks[i].fields.subtasks.fields.Active) {                                        
+                                            if (data.tprojecttasks[i].fields.subtasks.fields.Active) {
                                                 dataTableList.push(data.tprojecttasks[i].fields.subtasks.fields);
                                             }
                                         }
@@ -12553,7 +12553,7 @@ Template.non_transactional_list.onRendered(function() {
                                     else{
                                         for (let j = 0; j < data.tprojecttasks[i].fields.subtasks.length; j++) {
                                             if (deleteFilter == false) {
-                                                if (data.tprojecttasks[i].fields.subtasks[j].fields.Active) {                                        
+                                                if (data.tprojecttasks[i].fields.subtasks[j].fields.Active) {
                                                     dataTableList.push(data.tprojecttasks[i].fields.subtasks[j].fields);
                                                 }
                                             }
@@ -12572,15 +12572,15 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let all_records = data.tprojecttasks;
-                
+
                 for (let i = 0; i < all_records.length; i++) {
                     if (taskID == all_records[i].fields.ID ) {
                         if(all_records[i].fields.subtasks != null){
                             // dataTableList = all_records[i].fields.subtasks;
-                
+
                             if (typeof all_records[i].fields.subtasks == 'object') {
                                 if (deleteFilter == false) {
-                                    if (all_records[i].fields.subtasks.fields.Active) {                                        
+                                    if (all_records[i].fields.subtasks.fields.Active) {
                                         dataTableList.push(all_records[i].fields.subtasks.fields);
                                     }
                                 }
@@ -12591,7 +12591,7 @@ Template.non_transactional_list.onRendered(function() {
                             else{
                                 for (let j = 0; j < all_records[i].fields.subtasks.length; j++) {
                                     if (deleteFilter == false) {
-                                        if (all_records[i].fields.subtasks[j].fields.Active) {                                        
+                                        if (all_records[i].fields.subtasks[j].fields.Active) {
                                             dataTableList.push(all_records[i].fields.subtasks[j].fields);
                                         }
                                     }
@@ -12614,7 +12614,7 @@ Template.non_transactional_list.onRendered(function() {
                             if(data.tprojecttasks[i].fields.subtasks != null){
                                 if (typeof data.tprojecttasks[i].fields.subtasks == 'object') {
                                     if (deleteFilter == false) {
-                                        if (data.tprojecttasks[i].fields.subtasks.fields.Active) {                                        
+                                        if (data.tprojecttasks[i].fields.subtasks.fields.Active) {
                                             dataTableList.push(data.tprojecttasks[i].fields.subtasks.fields);
                                         }
                                     }
@@ -12625,7 +12625,7 @@ Template.non_transactional_list.onRendered(function() {
                                 else{
                                     for (let j = 0; j < data.tprojecttasks[i].fields.subtasks.length; j++) {
                                         if (deleteFilter == false) {
-                                            if (data.tprojecttasks[i].fields.subtasks[j].fields.Active) {                                        
+                                            if (data.tprojecttasks[i].fields.subtasks[j].fields.Active) {
                                                 dataTableList.push(data.tprojecttasks[i].fields.subtasks[j].fields);
                                             }
                                         }
@@ -12661,7 +12661,7 @@ Template.non_transactional_list.onRendered(function() {
 
         let chk_complete, completed = "";
         let completed_style = "";
-        
+
         for (let i = 0; i < data.length; i++) {
             let linestatus = '';
             if (data[i].Completed) {
@@ -12922,7 +12922,7 @@ Template.non_transactional_list.onRendered(function() {
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + tablename + '_filter');
                     }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + tablename + '_filter');                    
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + tablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.length || 0; //get count from API data
@@ -12974,11 +12974,11 @@ Template.non_transactional_list.onRendered(function() {
           });
       });
     };
-    
+
     templateObject.setServiceLogList = function (data) {
       addVS1Data('TServiceLogList', JSON.stringify(data));
       const dataTableList = new Array();
-  
+
       for (const log of data.tserviceloglist) {
         const dataList = [
           log.ServiceID || "",
@@ -13231,7 +13231,7 @@ Template.non_transactional_list.onRendered(function() {
         });
       });
     };
-    
+
     templateObject.setAssetRegisterList = function (data) {
       addVS1Data('TFixedAssets', JSON.stringify(data));
       const dataTableList = new Array();
@@ -13461,7 +13461,7 @@ Template.non_transactional_list.onRendered(function() {
         });
       });
     };
-    
+
     templateObject.setFixedAssetList = function (data) {
       addVS1Data('TFixedAssets', JSON.stringify(data));
       const dataTableList = new Array();
@@ -13560,7 +13560,7 @@ Template.non_transactional_list.onRendered(function() {
                   }
               } else {
 
-  
+
 
               }
               if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
@@ -13571,7 +13571,7 @@ Template.non_transactional_list.onRendered(function() {
                   $('.fullScreenSpin').css('display', 'inline-block');
                   //var splashArrayCustomerListDupp = new Array();
                   let dataLenght = oSettings._iDisplayLength;
-                  let customerSearch = $('#' + currenttablename + '_filter input').val();                 
+                  let customerSearch = $('#' + currenttablename + '_filter input').val();
 
               });
               setTimeout(function() {
@@ -13642,7 +13642,7 @@ Template.non_transactional_list.onRendered(function() {
           });
         });
       };
-      
+
     templateObject.setFixedAssetTypeList = function (data) {
       addVS1Data('TFixedAssetType', JSON.stringify(data));
       const dataTableList = new Array();
@@ -13728,7 +13728,7 @@ Template.non_transactional_list.onRendered(function() {
                   $('.fullScreenSpin').css('display', 'inline-block');
                   //var splashArrayCustomerListDupp = new Array();
                   let dataLenght = oSettings._iDisplayLength;
-                  let customerSearch = $('#' + currenttablename + '_filter input').val();                 
+                  let customerSearch = $('#' + currenttablename + '_filter input').val();
 
               });
               setTimeout(function() {
@@ -13785,7 +13785,7 @@ Template.non_transactional_list.onRendered(function() {
                     await addVS1Data('TCustomerVS1', JSON.stringify(data));
                     templateObject.displayCustomerList(data);
                 }).catch(function (err) {
-    
+
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -13796,7 +13796,7 @@ Template.non_transactional_list.onRendered(function() {
               await addVS1Data('TCustomerVS1', JSON.stringify(data));
               templateObject.displayCustomerList(data);
           }).catch(function (err) {
-    
+
           });
         });
     }
@@ -13810,7 +13810,7 @@ Template.non_transactional_list.onRendered(function() {
             let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tcustomervs1[i].fields.CreditLimit)|| 0.00;
             let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tcustomervs1[i].fields.SalesOrderBalance)|| 0.00;
             let mobile = contactService.changeMobileFormat(data.tcustomervs1[i].fields.Mobile);
-      
+
             var dataListCustomer = [
                   data.tcustomervs1[i].fields.ID || '',
                   data.tcustomervs1[i].fields.ClientName || '-',
@@ -13854,7 +13854,7 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colCustomerID colID hiddenColumn", 
+                        className: "colCustomerID colID hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
@@ -13862,7 +13862,7 @@ Template.non_transactional_list.onRendered(function() {
                         }
                     },
                     {
-                        className: "colCompany", 
+                        className: "colCompany",
                         targets: 1
                     },
                     {
@@ -14073,7 +14073,7 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
-    
+
     templateObject.getTimeSheetList = function(){
       getVS1Data('TTimeSheet').then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -14081,7 +14081,7 @@ Template.non_transactional_list.onRendered(function() {
                   await addVS1Data('TTimeSheet', JSON.stringify(data));
                   templateObject.displayTimeSheetList(data);
               }).catch(function (err) {
-  
+
               });
           } else {
               let data = JSON.parse(dataObject[0].data);
@@ -14092,11 +14092,11 @@ Template.non_transactional_list.onRendered(function() {
             await addVS1Data('TTimeSheet', JSON.stringify(data));
             templateObject.displayTimeSheetList(data);
         }).catch(function (err) {
-  
+
         });
       });
     }
-    
+
     templateObject.displayTimeSheetList = function(data){
         let splashArrayTimeSheetList = new Array();
         for (let i = 0; i < data.ttimesheet.length; i++) {
@@ -14130,14 +14130,14 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colTimeSheetId hiddenColumn", 
+                        className: "colTimeSheetId hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colFirstName", 
+                        className: "colFirstName",
                         targets: 1,
                         width:'100px'
                     },
@@ -14382,13 +14382,12 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetList();
     }
-    
+
     tableResize();
 
     $(document).on("click", "#btnRefreshList", function(e) {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
-
         if (currenttablename === "tblLeadCrmListWithDate") {
             templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
         } else if (currenttablename === "tblCustomerCrmListWithDate") {

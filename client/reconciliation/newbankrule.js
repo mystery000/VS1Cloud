@@ -303,7 +303,7 @@ Template.newbankrule.events({
     let tmp = Template.instance().bankRuleData.get();
     if (tmp.length === 0) {
       swal("Please add columns", "", "error");
-    } else if ($("#bankAccountID").val() === "") {
+    } else if ($("#bankAccountName").val() === "") {
       swal("Please select bank account", "", "error");
     } else {
       // LoadingOverlay.show();

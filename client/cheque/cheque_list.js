@@ -45,7 +45,7 @@ Template.chequelist.onRendered(function() {
             { index: 12, label: "PurchaseCustField1", class: "Custom Field 1", active: false, display: true, width: "" },
             { index: 13, label: "PurchaseCustField2", class: "Custom Field 2", active: false, display: true, width: "" },
             { index: 13, label: "Employee", class: "Employee", active: false, display: true, width: "" },
-            { index: 13, label: "Comments", class: "Comments", active: true, display: true, width: "" },
+            { index: 13, label: "Comments", class: "Comments", active: false, display: true, width: "" },
         ];
 
         let templateObject = Template.instance();
