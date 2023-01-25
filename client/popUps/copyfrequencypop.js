@@ -9,7 +9,7 @@ Template.copyfrequencypop.events({
             var yyyy = today.getFullYear();
             document.getElementsByClassName("month-checkbox")[today.getMonth()].checked = true;
         
-            today = mm + '/' + dd + '/' + yyyy;
+            today = dd + '/' + mm + '/' + yyyy;
             
             document.getElementById('edtMonthlyStartDate').value = today;
             document.getElementById("sltDay").value = 'day' + dd;
@@ -19,7 +19,7 @@ Template.copyfrequencypop.events({
             var mm = String(finishdate.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = finishdate.getFullYear() + 1;
         
-            finishdate = mm + '/' + dd + '/' + yyyy;
+            finishdate = dd + '/' + mm + '/' + yyyy;
         
             document.getElementById('edtMonthlyFinishDate').value = finishdate;
         } else if (event.target.id == "frequencyWeekly") {
@@ -28,8 +28,8 @@ Template.copyfrequencypop.events({
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
         
-            today = mm + '/' + dd + '/' + yyyy;
-            var todayDate = new Date(today);
+            var todayDate = today;
+            today = dd + '/' + mm + '/' + yyyy;
             console.log(todayDate.getDay() == 0 ? 6 : todayDate.getDay() - 1)
             $(".chkBoxDays").prop("checked", false);
             document.getElementsByClassName('chkBoxDays')[todayDate.getDay() == 0 ? 6 : todayDate.getDay() - 1].checked = true;
@@ -37,11 +37,11 @@ Template.copyfrequencypop.events({
             document.getElementById('edtWeeklyStartDate').value = today;
 
             var finishdate = new Date();
-            var dd = String(finishdate.getDate() + 1).padStart(2, '0');
+            var dd = String(finishdate.getDate()).padStart(2, '0');
             var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
             var yyyy = finishdate.getFullYear();
         
-            finishdate = mm + '/' + dd + '/' + yyyy;
+            finishdate = dd + '/' + mm + '/' + yyyy;
         
             document.getElementById('edtWeeklyFinishDate').value = finishdate;
         } else if (event.target.id == "frequencyDaily") {
@@ -50,17 +50,17 @@ Template.copyfrequencypop.events({
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
         
-            today = mm + '/' + dd + '/' + yyyy;
+            today = dd + '/' + mm + '/' + yyyy;
         
             document.getElementById('edtDailyStartDate').value = today;
             $("#dailyEveryDay").click();
             
             var finishdate = new Date();
-            var dd = String(finishdate.getDate() + 1).padStart(2, '0');
+            var dd = String(finishdate.getDate()).padStart(2, '0');
             var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
             var yyyy = finishdate.getFullYear();
         
-            finishdate = mm + '/' + dd + '/' + yyyy;
+            finishdate = dd + '/' + mm + '/' + yyyy;
         
             document.getElementById('edtDailyFinishDate').value = finishdate;
         } else if (event.target.id == "frequencyOnetimeonly") {
@@ -69,9 +69,19 @@ Template.copyfrequencypop.events({
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
         
-            today = mm + '/' + dd + '/' + yyyy;
+            today = dd + '/' + mm + '/' + yyyy;
         
             document.getElementById('edtOneTimeOnlyDate').value = today;
         }
     }
+})
+Template.copyfrequencypop.onRendered(() => {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = dd + '/' + mm + '/' + yyyy;
+
+    document.getElementById('edtOneTimeOnlyDate').value = today;
 })
