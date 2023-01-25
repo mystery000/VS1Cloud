@@ -1664,25 +1664,25 @@ Template.bankingoverview.events({
     'click #btnNewCheck': function(event) {
         FlowRouter.go('/chequecard');
     },
-    'click .chkDatatable': function(event) {
-        var columns = $('#tblBankingOverview th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText === columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
+    // 'click .chkDatatable': function(event) {
+    //     var columns = $('#tblBankingOverview th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function(i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText === columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
 
 
   // custom field displaysettings
@@ -1789,16 +1789,17 @@ Template.bankingoverview.events({
       let colClassName = $(event.target).attr("valueclass");
       $('.col' + colClassName).css('width', range);
     },
-    'click .custom-control-input': function(event) {
-      let colClassName = $(event.target).attr("id");
-      if ($(event.target).is(':checked')) {
-        $('.col' + colClassName).addClass('showColumn');
-        $('.col' + colClassName).removeClass('hiddenColumn');
-      } else {
-        $('.col' + colClassName).addClass('hiddenColumn');
-        $('.col' + colClassName).removeClass('showColumn');
-      }
-    },
+    // 'click .custom-control-input': function(event) {
+    //   let colClassName = $(event.target).attr("id");
+    //   console.log("==========", colClassName);
+    //   if ($(event.target).is(':checked')) {
+    //     $('.col' + colClassName).addClass('showColumn');
+    //     $('.col' + colClassName).removeClass('hiddenColumn');
+    //   } else {
+    //     $('.col' + colClassName).addClass('hiddenColumn');
+    //     $('.col' + colClassName).removeClass('showColumn');
+    //   }
+    // },
 
     // 'blur .divcolumn': function(event) {
     //     let columData = $(event.target).text();
