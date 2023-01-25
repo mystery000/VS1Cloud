@@ -82,6 +82,11 @@ Template.copyfrequencypop.onRendered(() => {
     var yyyy = today.getFullYear();
 
     today = dd + '/' + mm + '/' + yyyy;
-
     document.getElementById('edtOneTimeOnlyDate').value = today;
+})
+
+$(document).ready(() => {
+    $("#btnCopyInvoice").click(() => {
+        $("#frequencyOnetimeonly").click();
+    })
 })
