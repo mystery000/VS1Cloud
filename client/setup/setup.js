@@ -41,7 +41,7 @@ const refreshTableTimout = 300;
 
 let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
 
-export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
+export const handleSetupRedirection = (onSetupFinished = "/onloginsuccess", onSetupUnFinished = "/setup") => {
     let ERPIPAddress = localStorage.getItem('EIPAddress');
     let ERPUsername = localStorage.getItem('EUserName');
     let ERPPassword = localStorage.getItem('EPassword');
