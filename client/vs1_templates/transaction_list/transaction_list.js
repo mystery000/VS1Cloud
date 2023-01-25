@@ -2029,6 +2029,7 @@ Template.transaction_list.onRendered(function() {
         let lineID = "";
         let splashArrayTimeSheetList = new Array();
         for (let t = 0; t < data.ttimesheet.length; t++) {
+            let sortdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("YYYY/MM/DD") : data.ttimesheet[t].fields.TimeSheetDate;
             let timesheetdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data.ttimesheet[t].fields.TimeSheetDate;
             let hoursFormatted = templateObject.timeFormat(data.ttimesheet[t].fields.Hours) || '';
             let description = '';
@@ -2047,15 +2048,16 @@ Template.transaction_list.onRendered(function() {
             var dataTimeSheet = [
                 data.ttimesheet[t].fields.ID || "",
                 data.ttimesheet[t].fields.EmployeeName || "",
-                timesheetdate || "",
+                '<span style="display:none;">' + sortdate + '</span> ' + timesheetdate || '',
                 data.ttimesheet[t].fields.Job || '',
                 data.ttimesheet[t].fields.ServiceName || '',
-                data.ttimesheet[t].fields.Hours || "",
-                hoursFormatted || "",
-                0,
-                0,
-                Currency + '0.00',
-                Currency + '0.00',
+                '<input class="colRegHours highlightInput" type="number" value="' + data.ttimesheet[t].fields.Hours + '"><span class="colRegHours" style="display: none;">' + data.ttimesheet[t].fields.Hours + '</span>' || '',
+                '<input class="colRegHoursOne highlightInput" type="text" value="' + hoursFormatted + '" autocomplete="off">' || '',
+                '<input class="colOvertime highlightInput" type="number" value="0"><span class="colOvertime" style="display: none;">0</span>' || '',
+                '<input class="colDouble highlightInput" type="number" value="0"><span class="colDouble" style="display: none;">0</span>' || '',
+                '<input class="colAdditional highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colAdditional" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                '<input class="colPaycheckTips highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colPaycheckTips" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                
                 data.ttimesheet[t].fields.Notes || '',
                 description || '',
                 checkStatus || '',
@@ -2354,6 +2356,15 @@ Template.transaction_list.events({
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
             templateObject.getBankingOverviewData();
+        }else if (currenttablename === "tblPayRunHistory"){
+            await clearData('TPayRunHistory');
+            templateObject.getPayRunHistoryData("");
+        }else if (currenttablename === "tblPayleaveToReview"){
+            await clearData('TLeavRequest');
+            templateObject.getPayrollLeaveData("");
+        }else if (currenttablename === "tblTimeSheet"){
+            await clearData('TTimeSheet');
+            templateObject.getTimeSheetListData()
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -2371,6 +2382,15 @@ Template.transaction_list.events({
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
             templateObject.getBankingOverviewData();
+        }else if (currenttablename === "tblPayRunHistory"){
+            await clearData('TPayRunHistory');
+            templateObject.getPayRunHistoryData("");
+        }else if (currenttablename === "tblPayleaveToReview"){
+            await clearData('TLeavRequest');
+            templateObject.getPayrollLeaveData("");
+        }else if (currenttablename === "tblTimeSheet"){
+            await clearData('TTimeSheet');
+            templateObject.getTimeSheetListData()
         }
 
     },
