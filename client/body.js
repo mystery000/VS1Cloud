@@ -310,6 +310,10 @@ import './Help_Form/help_advisor.js';
 
 /* Jeyhun */
 import './manufacture/workorderList.js';
+
+import './manufacture/manufacturing_dashboard';
+
+import './vs1charts/mfgPlanner/mfgPlannerchart';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
