@@ -62,19 +62,28 @@
         </div>
     </div>
     <script>
-        document.getElementById("accountant_detail").innerHTML = localStorage.getItem("accountant_detail");
+        async function getPrintTDetail() {
+            try {
+                let dataObject = await getVS1Data("TPrintTemplateDetail");
+                let data = JSON.parse(dataObject[0].data);
+                return data;
+            } catch (e) {
+                return {};
+            }
+        }
         function append(){
-            var $html = $('#card-body');    
-            var str = $html.prop('outerHTML');
+            var $html = $('#templatePreviewModal .modal-body');
+            var str = $html.prop('innerHTML');
             const result = encodeURI(str);
             saveFile(result);
         }
-        function saveFile(textToWrite)
+        async function saveFile(textToWrite)
         {  
             // get the textbox data...
             var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
             var downloadLink = document.createElement("a");
-            downloadLink.download = localStorage.getItem("accountant_detail")+".xml";
+            var pt_detail = await getPrintTDetail();
+            downloadLink.download = pt_detail + ".xml";
             downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
             downloadLink.click();
         }
@@ -86,7 +95,7 @@
 			    let reader = new FileReader();
                 reader.readAsText(files);
                 reader.onload = function() {
-                const div = document.getElementById("import_File");
+                const div = $('#templatePreviewModal .modal-body');
                 div.innerHTML = decodeURI(reader.result);
                 };
             };
