@@ -14,7 +14,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './transaction_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import '../../lib/global/globalfunction';
+import '../../lib/global/globalfunction.js';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -355,11 +355,12 @@ Template.transaction_list.onRendered(function() {
                                 {
                                     targets: 0,
                                     className: "colSortDate hiddenColumn",
-                                    type: "date"
+                                    width: "100px",
                                 },
                                 {
                                     targets: 1,
                                     className: trans_displayfields[1].active == true ? "colPaymentDate" : "colPaymentDate hiddenColumn",
+                                    width: "100px",
                                     createdCell: function(td, cellData, rowData, row, col) {
                                         $(td).closest("tr").attr("id", rowData[2]);
                                         $(td).closest("tr").addClass("dnd-moved");
@@ -368,36 +369,43 @@ Template.transaction_list.onRendered(function() {
                                 {
                                     targets: 2,
                                     className: trans_displayfields[2].active == true ? "colAccountId" : "colAccountId hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 3,
                                     className: trans_displayfields[3].active == true ? "colBankAccount" : "colBankAccount hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 4,
                                     className: trans_displayfields[4].active == true ? "colType" : "colType hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 5,
                                     className: trans_displayfields[5].active == true ? "colPaymentAmount" : "colPaymentAmount hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 6,
                                     className: trans_displayfields[6].active == true ? "colDebitEx" : "colDebitEx hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 7,
                                     className: trans_displayfields[7].active == true ? "colDepartment" : "colDepartment hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 8,
                                     className: trans_displayfields[8].active == true ? "colchqrefno" : "colchqrefno hiddenColumn",
+                                    width: "120px",
                                 },
                                 {
                                     targets: 9,
                                     className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                    width: "100px",
                                 },
-
                             ],
                             "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             buttons: [{
@@ -786,7 +794,7 @@ Template.transaction_list.onRendered(function() {
                             {
                                 targets: 8,
                                 className: trans_displayfields[8].active == true ? "colchqrefno" : "colchqrefno hiddenColumn",
-                                width: "100px",
+                                width: "120px",
                             },
                             {
                                 targets: 9,
@@ -1125,11 +1133,12 @@ Template.transaction_list.onRendered(function() {
                             {
                                 targets: 0,
                                 className: "colSortDate hiddenColumn",
-                                type: "date"
+                                width: "100px",
                             },
                             {
                                 targets: 1,
                                 className: trans_displayfields[1].active == true ? "colPaymentDate" : "colPaymentDate hiddenColumn",
+                                width: "100px",
                                 createdCell: function(td, cellData, rowData, row, col) {
                                     $(td).closest("tr").attr("id", rowData[2]);
                                     $(td).closest("tr").addClass("dnd-moved");
@@ -1138,34 +1147,42 @@ Template.transaction_list.onRendered(function() {
                             {
                                 targets: 2,
                                 className: trans_displayfields[2].active == true ? "colAccountId" : "colAccountId hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 3,
                                 className: trans_displayfields[3].active == true ? "colBankAccount" : "colBankAccount hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 4,
                                 className: trans_displayfields[4].active == true ? "colType" : "colType hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 5,
                                 className: trans_displayfields[5].active == true ? "colPaymentAmount" : "colPaymentAmount hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 6,
                                 className: trans_displayfields[6].active == true ? "colDebitEx" : "colDebitEx hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 7,
                                 className: trans_displayfields[7].active == true ? "colDepartment" : "colDepartment hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 8,
                                 className: trans_displayfields[8].active == true ? "colchqrefno" : "colchqrefno hiddenColumn",
+                                width: "120px",
                             },
                             {
                                 targets: 9,
                                 className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                width: "100px",
                             },
                         ],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -2332,8 +2349,13 @@ Template.transaction_list.events({
         await $('.' + colClassName).css('width', range);
         $('.dataTable').resizable();
     },
-    'click .chkDatatable': function(event) {
+    'click .chkDatatable': async function(event) {
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+
+        let range = $('.rngRange' +  columnDataValue).val() || 0;
+        await $('.' + columnDataValue).css('width', range);
+        $('.dataTable').resizable();
+
         if ($(event.target).is(':checked')) {
             $('.' + columnDataValue).addClass('showColumn');
             $('.' + columnDataValue).removeClass('hiddenColumn');
@@ -2478,6 +2500,7 @@ Template.transaction_list.helpers({
         }
     },
     trans_displayfields: () => {
+        //console.log("display", Template.instance().trans_displayfields.get());
         return Template.instance().trans_displayfields.get();
     },
     datatablerecords: () => {
