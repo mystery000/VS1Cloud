@@ -137,17 +137,29 @@
                   <div class="panelfield lastchild">
                     <div class="col-lg-12 paddingMargin">
                       <div class="col-md-7">
-                        <img class="imageUpload uploadedImageLogo img-fluid mb-3 mt-4" id="uploadedImage"
-                          data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" width="160" height="160">
+                        <img 
+                          class="imageUpload uploadedImageLogo img-fluid mb-3 mt-4" 
+                          id="uploadedImage"
+                          data-toggle="modal" 
+                          data-target="#myModal" 
+                          src="assets/img/VS1.png" 
+                          width="160"
+                          height="160">
                       </div>
                     </div>
                   </div>
                 </div>
                 <!-- End Replace Image -->
                 <br>
-                <button class="btn btn-primary alerts-border" type="button" id="changeLogo" data-toggle="modal"
-                  data-target="#changeLogoModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload
-                  Logo</button>
+                <button 
+                  class="btn btn-primary alerts-border" 
+                  type="button"
+                  id="changeLogo" 
+                  data-toggle="modal"
+                  data-target="#changeLogoModal">
+                  <i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>
+                  Upload Logo
+                </button>
                 <button class="btn btn-primary" id="removeLogo">Remove logo</button>
               </div>
             </div>
@@ -235,12 +247,12 @@
                         <div class="custom-control custom-control-inline custom-switch"
                           style="margin-right: -6px; height: 24px !important;">
                           <div class="form-group" style="margin-bottom: 7px;">
-                            <input class="custom-control-input" type="radio" id="chkIsDefailtEmail"
+                            <input class="custom-control-input" type="checkbox" id="chkIsDefailtEmail"
                               name="chkIsDefailtEmail">
                             <label class="custom-control-label" for="chkIsDefailtEmail"></label>
                           </div>
                         </div>
-                        {{#if equals useEmailAsLogin true}}
+                        {{#if useEmailAsLogin}}
                         <span class="customTooltipSpan" style="color: #808080;">used for all
                           emailing</span>
                         <i class="far fa-question-circle customTooltipIcon" data-toggle="tooltip" data-placement="top"
@@ -311,7 +323,7 @@
                     <label>Country</label>
                     <select class="form-control" id="edtCountry" name="edtCountry">
                       {{#each item in countryList}}
-                      {{#if country equals item}}
+                      {{#if equals country item}}
                       <option value="{{item}}" selected>{{item}}</option>
                       {{else}}
                       <option value="{{item}}">{{item}}</option>
@@ -334,13 +346,13 @@
               <h4 class="text-left" style="margin-top: 20px;">Postal Address</h4>
               <div class="form-group">
                 <div class="custom-control custom-switch d-xl-flex justify-content-xl-start">
-                  <input class="custom-control-input" type="radio" id="chksameaddress" name="chksameaddress"
-                    style="cursor: pointer;" {{isPostalAddressSamePhysicAddress}}>
+                  <input class="custom-control-input" type="checkbox" id="chksameaddress" name="chksameaddress"
+                    style="cursor: pointer;" checked>
                   <label class="custom-control-label" for="chksameaddress" style="cursor: pointer;">Same As Physical
                     Address</label>
                 </div>
               </div>
-              <div id="show_address_data" style="display: none;">
+              <div id="show_address_data" class="{{isPostalAddressSamePhysicAddress}}">
                 <div class="form-group d-xl-flex flex-column align-items-xl-start">
                   <label>Address</label>
                   <input class="form-control" type="text" id="edtpostaladdress" name="edtpostaladdress" value="{{postalAddress}}">
@@ -367,7 +379,11 @@
                       <label>Country</label>
                       <select class="form-control" id="edtPostalCountry" name="edtPostalCountry">
                         {{#each item in countryList}}
+                        {{#if equals postalCountry item}}
+                        <option value="{{item}}" selected>{{item}}</option>
+                        {{else}}
                         <option value="{{item}}">{{item}}</option>
+                        {{/if}}
                         {{/each}}
                       </select>
                     </div>
@@ -388,6 +404,65 @@
               data-step-id="1">Confirm</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="changeLogoModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Upload logo</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+            <p class="maximums">
+              The maximum file size is 1MB. For best results, upload the largest logo you have, at least 140 pixels on its shortest side.
+            </p>
+          </div>
+          <hr>
+          <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+            <p style="margin-bottom: 0px;font-weight: bold;">Choose a file to upload</p>
+            <p style="margin-left: 16px;margin-bottom: 0px;margin-top: 4px;">
+              Save your updated template and you're ready to go.
+            </p>
+            <div class="divTable" id="file-display"></div>
+            <label for="FileName" class="browseBtn"></label>
+            <label for="exampleFormControlFile1" class="step1_choose_file">No file selected</label>
+            <input type="file" name="fileInput" id="step1-fileInput" style="display:none;" accept="image/*">
+            <div id="row1">
+              <div id="column1"></div>
+              {{> vs1_button
+                type='button'
+                classes='btnUploadFile new_attachment_btn btnUploadLogoImgFile'
+                id='uploadFileSelector'
+                iconName='cloud-upload'
+                title='Browse'
+              }}
+              <div class="file-name" id="column2"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button 
+            class="btn btn-primary btnImport" 
+            data-dismiss="modal" 
+            type="button"
+            id="step1-uploadImg" disabled>
+            <i class="fas fa-file-import" style="margin-right: 5px;"></i>
+            Upload
+          </button>
+          <button 
+            class="btn btn-secondary" 
+            data-dismiss="modal" 
+            type="button">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>
