@@ -79,7 +79,11 @@ Template.payrollhistoryreport.onRendered(() => {
   };
 
   templateObject.initUploadedImage = () => {
-    let imageData = localStorage.getItem("Image");
+    // let imageData = localStorage.getItem("Image");
+    let imageData;
+    getVS1Data("Image").then(function (dataObject) {
+      imageData =JSON.parse(dataObject[0]).data;
+    });
     if (imageData) {
       $("#uploadedImage").attr("src", imageData);
       $("#uploadedImage").attr("width", "50%");
