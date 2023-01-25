@@ -106,14 +106,14 @@ Template.transaction_list.onRendered(function() {
             ];
         }else if(currenttablename === "tblPayRunHistory"){
             reset_data = [
-                { index: 0, label: 'ID', class: 'colDraftPayRunID', active: false, display: true, width: "" },
+                { index: 0, label: 'ID', class: 'colPayRunHistoryID', active: false, display: true, width: "" },
                 { index: 1, label: 'Calendar', class: 'colPayRunCalendar', active: true, display: true, width: "100" },
                 { index: 2, label: 'Period', class: 'colPayRunPeriod', active: true, display: true, width: "100" },
                 { index: 3, label: 'Payment Date', class: 'colPayRunPaymentDate', active: true, display: true, width: "150" },
                 { index: 4, label: 'Wages', class: 'colPayRunWages', active: true, display: true, width: "150" },
                 { index: 5, label: 'Tax', class: 'colPayRunTax', active: true, display: true, width: "100" },
-                { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
-                { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
+                { index: 6, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
+                { index: 7, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
             ]
         }else if(currenttablename === "tblPayleaveToReview"){
             reset_data = [
@@ -1614,7 +1614,6 @@ Template.transaction_list.onRendered(function() {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPayRunHistory_filter");
                     }
                     $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshPayRunHistory' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayRunHistory_filter");
-
                     $('.myvarFilterForm').appendTo(".colDateFilter");
                 },
                 "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
