@@ -2309,6 +2309,20 @@ Template.transaction_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getAllAppointmentListData = function(){
+        getVS1Data('TAppointmentList').then(async function(dataObject) {
+            if (dataObject.length == 0) {
+            }else{
+                
+            }
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    }
+
+    templateObject.displayAppointmentListData = function(){
+    }
+
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
     let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
@@ -2333,6 +2347,8 @@ Template.transaction_list.onRendered(function() {
         templateObject.getPayrollLeaveData("");
     }else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetListData()
+    }else if (currenttablename === "tblappointmentlist"){
+        templateObject.getAllAppointmentListData();
     }
     tableResize();
 
@@ -2365,6 +2381,8 @@ Template.transaction_list.events({
         }else if (currenttablename === "tblTimeSheet"){
             await clearData('TTimeSheet');
             templateObject.getTimeSheetListData()
+        }else if (currenttablename === "tblappointmentlist"){
+            templateObject.getAllAppointmentListData();
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -2391,6 +2409,8 @@ Template.transaction_list.events({
         }else if (currenttablename === "tblTimeSheet"){
             await clearData('TTimeSheet');
             templateObject.getTimeSheetListData()
+        }else if (currenttablename === "tblappointmentlist"){
+            templateObject.getAllAppointmentListData();
         }
 
     },
