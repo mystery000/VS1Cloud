@@ -1502,7 +1502,7 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Payroll Calendar</label>
-                                                                            <input type="search" class="form-control paste-selected-pay-period-js" name="edtPayPeriod" id="edtPayPeriod" />
+                                                                            <input type="search" class="form-control es-input" name="edtPayrollCalendar" id="edtPayrollCalendar" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
@@ -1521,11 +1521,7 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Holiday Group</label>
-                                                                            <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
-                                                                                <option value="true">Australian Resident</option>
-                                                                                <option value="false">Foreign Resident</option>
-                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option>
-                                                                            </select>
+                                                                            <input type="search" class="form-control es-input" name="edtHolidays" id="edtHolidays" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
@@ -4139,6 +4135,34 @@
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="employeeTitlePopModal">
         {{> title_list_pop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="payrollCalendarPopModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblPayCalendars"}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="holidaysPopModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblHolidays"}}
+                </div>
+            </div>
+        </div>
     </div>
 
     {{> taskDetailModal}}
