@@ -619,8 +619,6 @@
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -632,23 +630,7 @@
         </div>
         <div class="setup-step setup-step-11 {{#if isActive currentStep '11'}} show {{/if}}">
           {{#if isActive currentStep '11'}}
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col">
-                <div class="card shadow" style="padding-top: 30px; padding-left: 20%; padding-bottom: 30px;">
-                  {{> dashboardoptionspopup}}
-                </div>
-              </div>
-            </div>
-            <div class="row no-gutters">
-              <div class="col">
-                <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;"
-                  data-step-id="11">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;"
-                  data-step-id="11">Confirm</button>
-              </div>
-            </div>
-          </div>
+          {{> wizard_dashboard}}
           {{/if}}
         </div>
         <div class="setup-step setup-step-12 {{#if isActive currentStep '12'}} show {{/if}}">

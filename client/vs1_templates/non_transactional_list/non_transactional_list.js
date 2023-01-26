@@ -1080,6 +1080,13 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 3, label: 'Show On Trasactions', class: 'colShowontransactions', active: true, display: true, width: "100" },
             ];
             
+        } else if (currenttablename == 'tblSetupDashboardOptions') {
+            reset_data = [
+                { index: 0, label: '#ID', class: 'colOptionsID', active: false, display: false, width: "" },
+                { index: 1, label: 'Options Name', class: 'colOptionsName', active: true, display: true, width: "" },
+                { index: 2, label: 'Show Dashboards', class: 'colShowDef', active: true, display: true, width: "" },
+                { index: 3, label: 'Dashboard load at login', class: 'colLogginDef', active: true, display: true, width: "" },
+            ]
         }
 
         templateObject.reset_data.set(reset_data);
@@ -1152,6 +1159,78 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.resetData = function(dataVal) {
         location.reload();
     };
+
+    // Dashboard options table
+    templateObject.getDashboardOptions = async function() {
+        let data;
+        const initialData = require('../../popUps/dashboardoptions.json');
+        try {
+            const dataObject = await getVS1Data('TVS1DashboardStatus');
+            if(dataObject.length) {
+                data = JSON.parse(dataObject[0].data)
+            } else {
+                data = initialData;
+            }
+        } catch(error) {
+            data = initialData;
+        }
+        templateObject.transactiondatatablerecords.set(data);
+        templateObject.displayDashboardOptions(data);
+      }
+
+      templateObject.displayDashboardOptions = function(data) {
+        const dataTableList = []
+        for (let i = 0; i < data.length; i++) {
+            const dataList = [
+                data[i].Id || '',
+                data[i].name || '',
+                data[i].isdefaultlogin || false,
+                data[i].isshowdefault || false
+            ]
+            dataTableList.push(dataList);
+        }
+  
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: dataTableList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                select: true,
+                destroy: true,
+                colReorder: true,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: 'colOptionsID',
+                        orderable: false,
+                        width: "10px"
+                    },
+                    {
+                        targets: 1,
+                        className: "colOptionsName",
+                    },
+                    {
+                        targets: 2,
+                        className: "colShowDef",
+                    },
+                    {
+                        targets: 3,
+                        className: "colLogginDef",
+                    },
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                paging: false,
+                info: true,
+                responsive: true,
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnRefreshDashboardOption' type='button' id='btnRefreshDashboardOption' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDashboardOptions_filter");
+                },
+            })
+            $('.fullScreenSpin').css('display', 'none');
+        }, 10);
+  
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      }
 
     //Contact Overview Data
     templateObject.getContactOverviewData = async function(deleteFilter = false) {
@@ -15929,7 +16008,9 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getContactOverviewData();
     } else if (currenttablename == "tblEmployeelist") {
         templateObject.getEmployeeListData();
-    } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
+    } else if (currenttablename == 'tblSetupDashboardOptions'){
+        templateObject.getDashboardOptions();
+    }  else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
         templateObject.getAccountsOverviewData();
     } else if (currenttablename == 'tblBankAccountsOverview') {
         templateObject.getBankAccountsOverviewData();

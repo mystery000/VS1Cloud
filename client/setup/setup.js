@@ -27,6 +27,7 @@ import './accounts/accounts-settings.js'
 import './customers/customers-settings.js'
 import './suppliers/suppliers-settings.js'
 import './bankaccounts/bankaccounts-settings.js'
+import './dashboard/dashboard-settings.js'
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
