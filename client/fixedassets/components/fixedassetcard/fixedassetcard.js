@@ -283,7 +283,6 @@ Template.fixedassetcard.events({
       }
       planList.push(plan);
     }
-    console.log(planList);
     let newFixedAsset = {
       "type":"TFixedAssets",
       "fields":{
@@ -343,7 +342,6 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetsoverview');
       })
       .catch((err) => {
-        console.log(err);
       });
     } else {
       newFixedAsset.fields['ID'] = templateObject.currentAssetID.get();
@@ -356,7 +354,6 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetsoverview');
       })
       .catch((err) => {
-        console.log(err);
       });
     }
   },

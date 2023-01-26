@@ -168,7 +168,6 @@ Template.servicelogcard.events({
         });
         FlowRouter.go('/serviceloglist');
       }).catch((err) => {
-        console.log(err);
       });
     } else {
       newServiceLog.fields['ServiceID'] = templateObject.currentServiceLogID.get();
@@ -178,7 +177,6 @@ Template.servicelogcard.events({
         });
         FlowRouter.go('/serviceloglist');
       }).catch((err) => {
-        console.log(err);
       });
     }
   },

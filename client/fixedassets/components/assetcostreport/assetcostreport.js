@@ -91,7 +91,6 @@ Template.assetcostreport.onRendered(function () {
       };
       custFields.push(customData);
     }
-    console.log(custFields);
     templateObject.displayfields.set(custFields);
   }
 

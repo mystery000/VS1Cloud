@@ -135,6 +135,7 @@ Template.newsidenav.onCreated(function () {
   templateObject.isSerialNumberList = new ReactiveVar();
   templateObject.isSerialNumberList.set(false);
   sideBarService.getVS1MenuConfig().then((data) => {
+    console.log(data);
     if (data.tpreference && !!data.tpreference.length) {
       const latestAction = data.tpreference[data.tpreference.length - 1];
       const menuItem = JSON.parse(latestAction.PrefValue);
