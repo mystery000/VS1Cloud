@@ -135,7 +135,7 @@ Template.accessleveldup.onRendered(function(){
             getTableData('All');
         }, 1000);
 
-    });
+        });
       }else{
         let data = JSON.parse(dataObject[0].data);
         let useData = data.terpform;
@@ -334,7 +334,6 @@ Template.accessleveldup.onRendered(function(){
     //templateObject.getAllEmployees();
 
     function getTableData(employeeID){
-
         /* Lincence Check for Menu Options */
         let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
         let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
@@ -804,6 +803,20 @@ Template.accessleveldup.onRendered(function(){
                                             $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
                                             },500);
                                           }
+                                        }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Utilities") && (data.temployeeformaccessdetail[i].fields.Description === "Utilities")){
+                                            formClassHidden = 'hiddenRow';
+                                            if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                                setTimeout(function () {
+                                                $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                                },500);
+                                            }
+                                        }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "FixedAssets") && (data.temployeeformaccessdetail[i].fields.Description === "FixedAssets")){
+                                            formClassHidden = 'hiddenRow';
+                                            if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                                setTimeout(function () {
+                                                $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                                },500);
+                                            }
                                         }else{
                                           formClassHidden = '';
                                         }
@@ -1034,12 +1047,26 @@ Template.accessleveldup.onRendered(function(){
                                     },500);
                                   }
                                 }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Shipping") && (data.temployeeformaccessdetail[i].fields.Description === "Shipping")){
-                                  formClassHidden = 'hiddenRow';
-                                  if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                    formClassHidden = 'hiddenRow';
+                                    if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                      setTimeout(function () {
+                                      $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                      },500);
+                                    }
+                                }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Utilities") && (data.temployeeformaccessdetail[i].fields.Description === "Utilities")){
+                                formClassHidden = 'hiddenRow';
+                                if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
                                     setTimeout(function () {
                                     $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
                                     },500);
-                                  }
+                                }
+                                }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "FixedAssets") && (data.temployeeformaccessdetail[i].fields.Description === "FixedAssets")){
+                                    formClassHidden = 'hiddenRow';
+                                    if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
+                                        setTimeout(function () {
+                                        $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
+                                        },500);
+                                    }
                                 }else{
                                   formClassHidden = '';
                                 }
@@ -1093,7 +1120,6 @@ Template.accessleveldup.onRendered(function(){
                 // let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID');
                 if((employeeID == loggedEmpID) && (loggedEmpID !== null)){
                     localStorage.setItem('VS1AccessLevelList', JSON.stringify(splashArrayAccess));
-                    console.log(splashArrayAccess)
                     templateObject.accesslevelrecord.set(lineItemslevel);
                 }else{
                     templateObject.accesslevelrecord.set(lineItemslevel);
@@ -1612,7 +1638,6 @@ Template.accessleveldup.onRendered(function(){
                                   }else{
                                   formClassHidden = '';
                                 }
-                                console.log(data.temployeeformaccessdetail[i].fields.SkinsGroup)
                                 lineItemObjlevel = {
                                     accessID: data.temployeeformaccessdetail[i].fields.ID || '',
                                     formID: data.temployeeformaccessdetail[i].fields.FormId || '',
@@ -2246,7 +2271,6 @@ Template.accessleveldup.onRendered(function(){
         }else{
 
             accesslevelService.getEmpFormAccessDetail(employeeID).then(function(data){
-                console.log(data, splashArray)
                 let lineItemslevel = [];
                 let lineItemObjlevel = {};
                 var groups = {};
@@ -2525,7 +2549,6 @@ Template.accessleveldup.onRendered(function(){
 
                 //                 }
 
-                //                 console.log(groups)
                 //                 groups[groupName].sort(function(a, b){
                 //                     if (a.description == 'NA') {
                 //                         return 1;

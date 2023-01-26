@@ -338,7 +338,6 @@ Template.vs1login.onRendered(function () {
                             formName: data.temployeeformaccessdetail[i].fields.FormName || '',
                             accessID: data.temployeeformaccessdetail[i].fields.ID || '',
                         };
-                        console.log(data.temployeeformaccessdetail[i].fields)
                         if (data.temployeeformaccessdetail[i].fields.AccessLevelName === "Full Access") {
                             if (data.temployeeformaccessdetail[i].fields.Description === "Print Delivery Docket") {
                                 isDocket = true;
