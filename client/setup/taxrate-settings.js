@@ -35,6 +35,14 @@ const numberInputValidate = (event) => {
 
 
 Template.wizard_taxrate.onCreated(() => {
+  const templateObject = Template.instance();
+  templateObject.defaultpurchasetaxcode = new ReactiveVar();
+  templateObject.defaultsaletaxcode = new ReactiveVar();
+
+  templateObject.isChkUSRegionTax = new ReactiveVar(false);
+
+  templateObject.subtaxcodes = new ReactiveVar([]);
+  templateObject.subtaxlines = new ReactiveVar([]);
 })
 
 Template.wizard_taxrate.onRendered(() => {
@@ -405,7 +413,7 @@ Template.wizard_taxrate.events({
     $('#subTaxPercentageOn').prop('readonly', false);
     $('#subTaxCapAmt').val('0');
     $('#subTaxThresholdAmt').val('0');
-    $('#add-subtax-title').text('Add Sub Tax');
+    $('#edtTaxName').text('Add Sub Tax');
   },
   'click .btnSaveTaxRate': function () {
     let templateObject = Template.instance();
@@ -450,9 +458,6 @@ Template.wizard_taxrate.events({
               PublishOnVS1: true,
             },
           };
-          if (templateObject.isChkUSRegionTax.get()) {
-            objDetails.fields.Lines = lines;
-          }
           taxRateService
             .saveTaxRate(objDetails)
             .then(function (objDetails) {
@@ -497,9 +502,6 @@ Template.wizard_taxrate.events({
                 PublishOnVS1: true,
               },
             };
-            if (templateObject.isChkUSRegionTax.get()) {
-              objDetails.fields.Lines = lines;
-            }
 
             taxRateService
               .saveTaxRate(objDetails)
@@ -546,10 +548,6 @@ Template.wizard_taxrate.events({
             PublishOnVS1: true,
           },
         };
-        if (templateObject.isChkUSRegionTax.get()) {
-          objDetails.fields.Lines = lines;
-        }
-
         taxRateService
           .saveTaxRate(objDetails)
           .then(function (objDetails) {
@@ -595,45 +593,7 @@ Template.wizard_taxrate.events({
     $('#edtTaxRate').val('4');
     $('#edtTaxDesc').val('Sales Tax Default');
     let templateObject = Template.instance();
-
-    if (templateObject.isChkUSRegionTax.get()) {
-      let newSubTaxLines = [{
-        RowId: `subtax_0`,
-        SubTaxCode: 'STRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }, {
-        RowId: `subtax_1`,
-        SubTaxCode: 'CTRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }, {
-        RowId: `subtax_2`,
-        SubTaxCode: 'SPRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }, {
-        RowId: `subtax_3`,
-        SubTaxCode: 'CONRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }];
-      templateObject.subtaxlines.set(newSubTaxLines);
-    } else {
-      templateObject.subtaxlines.set([]);
-    }
+    templateObject.subtaxlines.set([]);
 
   },
   "click #subTaxList td.clickable": (e) => SubTaxEditListener(e),

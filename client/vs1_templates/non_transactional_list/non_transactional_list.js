@@ -14320,6 +14320,7 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data)
                 templateObject.displayTaxRateList(data)
             }
         }).catch(function(err) {

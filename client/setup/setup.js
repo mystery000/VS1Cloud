@@ -26,6 +26,7 @@ import './employments/employment-settings.js'
 import './accounts/accounts-settings.js'
 import './customers/customers-settings.js'
 import './suppliers/suppliers-settings.js'
+import './bankaccounts/bankaccounts-settings.js'
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
@@ -34,7 +35,7 @@ const productService = new ProductService();
 
 const refreshTableTimout = 300;
 
-let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
+let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", 'Bank Accounts', "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
 
 export const handleSetupRedirection = (onSetupFinished = "/onloginsuccess", onSetupUnFinished = "/setup") => {
   let ERPIPAddress = localStorage.getItem('EIPAddress');
@@ -188,7 +189,7 @@ Template.setup.onCreated(() => {
 });
 
 Template.setup.onRendered(function () {
-  LoadingOverlay.show();
+  // LoadingOverlay.show();
   const templateObject = Template.instance();
 
   templateObject.isSetupFinished = async () => {
@@ -286,8 +287,10 @@ Template.setup.onRendered(function () {
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    // window.location.href = "/";
-    FlowRouter.go("onloginsuccess");
+    window.location.href = "/";
+    // FlowRouter.go("onloginsuccess");
+    LoadingOverlay.hide();
+
   };
   
   $(function () {
