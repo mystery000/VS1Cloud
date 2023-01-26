@@ -1791,7 +1791,8 @@ Template.transaction_list.onRendered(function() {
         let lineItemObj = {};
         let lineID = "";
         let splashArrayPayRunHistory = new Array();
-        let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        // let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        let data = payRunsHistory.tleavrequest.filter(p => p.stpFilling == PayRun.STPFilling.draft);
         for (let i = 0; i < data.length; i++) {
             var dataPayRunHistory = [
                 data[i].fields.ID || "",

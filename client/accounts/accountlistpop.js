@@ -1540,75 +1540,6 @@ Template.accountlistpop.events({
                         }
                     }
                 }
-
-                var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-                if (getcurrentCloudDetails) {
-                    if (getcurrentCloudDetails._id.length > 0) {
-                        var clientID = getcurrentCloudDetails._id;
-                        var clientUsername = getcurrentCloudDetails.cloudUsername;
-                        var clientEmail = getcurrentCloudDetails.cloudEmail;
-                        var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'creditcard' });
-
-                        if (checkPrefDetails) {
-                            CloudPreference.update({ _id: checkPrefDetails._id }, {
-                                $set: {
-                                    username: clientUsername,
-                                    useremail: clientEmail,
-                                    PrefGroup: 'purchaseform',
-                                    PrefName: 'creditcard',
-                                    published: true,
-                                    customFields: [{
-                                        index: '1',
-                                        label: getcustomField1,
-                                        hidden: getchkcustomField1
-                                    }, {
-                                        index: '2',
-                                        label: getcustomField2,
-                                        hidden: getchkcustomField2
-                                    }],
-                                    updatedAt: new Date()
-                                }
-                            }, function(err, idTag) {
-                                if (err) {
-
-                                } else {
-
-
-                                }
-                            });
-                        } else {
-                            CloudPreference.insert({
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: 'purchaseform',
-                                PrefName: 'creditcard',
-                                published: true,
-                                customFields: [{
-                                    index: '1',
-                                    label: getcustomField1,
-                                    hidden: getchkcustomField1
-                                }, {
-                                    index: '2',
-                                    label: getcustomField2,
-                                    hidden: getchkcustomField2
-                                }],
-                                createdAt: new Date()
-                            }, function(err, idTag) {
-                                if (err) {
-
-                                } else {
-
-
-                                }
-                            });
-                        }
-                    }
-                } else {
-
-                }
-
-
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -1771,104 +1702,14 @@ Template.accountlistpop.events({
 
         });
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblCreditLine' });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'purchaseform',
-                            PrefName: 'tblCreditLine',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'purchaseform',
-                        PrefName: 'tblCreditLine',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-
-                        }
-                    });
-
-                }
-            }
-        }
         $('#myModal2').modal('toggle');
         }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblCreditLine' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
 
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
     },
     'click .btnResetSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'creditcard' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
 
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
     },
     'click .new_attachment_btn': function(event) {
         $('#attachment-upload').trigger('click');
@@ -2128,71 +1969,7 @@ Template.accountlistpop.events({
                     });
                 }
                 let linesave = objDetails.fields.ID;
-
-                var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-                if (getcurrentCloudDetails) {
-                    if (getcurrentCloudDetails._id.length > 0) {
-                        var clientID = getcurrentCloudDetails._id;
-                        var clientUsername = getcurrentCloudDetails.cloudUsername;
-                        var clientEmail = getcurrentCloudDetails.cloudEmail;
-                        var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'creditcard' });
-
-                        if (checkPrefDetails) {
-                            CloudPreference.update({ _id: checkPrefDetails._id }, {
-                                $set: {
-                                    username: clientUsername,
-                                    useremail: clientEmail,
-                                    PrefGroup: 'purchaseform',
-                                    PrefName: 'creditcard',
-                                    published: true,
-                                    customFields: [{
-                                        index: '1',
-                                        label: getcustomField1,
-                                        hidden: getchkcustomField1
-                                    }, {
-                                        index: '2',
-                                        label: getcustomField2,
-                                        hidden: getchkcustomField2
-                                    }],
-                                    updatedAt: new Date()
-                                }
-                            }, function(err, idTag) {
-                                if (err) {
-                                    window.open('/paymentcard?soid=' + linesave, '_self');
-                                } else {
-                                    window.open('/paymentcard?soid=' + linesave, '_self');
-
-                                }
-                            });
-                        } else {
-                            CloudPreference.insert({
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: 'purchaseform',
-                                PrefName: 'creditcard',
-                                published: true,
-                                customFields: [{
-                                    index: '1',
-                                    label: getcustomField1,
-                                    hidden: getchkcustomField1
-                                }, {
-                                    index: '2',
-                                    label: getcustomField2,
-                                    hidden: getchkcustomField2
-                                }],
-                                createdAt: new Date()
-                            }, function(err, idTag) {
-                                if (err) {
-                                    window.open('/paymentcard?soid=' + linesave, '_self');
-                                } else {
-                                    window.open('/paymentcard?soid=' + linesave, '_self');
-
-                                }
-                            });
-                        }
-                    }
-                }
+                window.open('/paymentcard?soid=' + linesave, '_self');
 
 
             }).catch(function(err) {

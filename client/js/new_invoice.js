@@ -2655,9 +2655,10 @@ Template.new_invoice.onCreated(function () {
 });
 
 Template.new_invoice.onRendered(function () {
-  
+
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
+
   templateObject.hasFollowings = async function() {
     let salesService = new SalesBoardService();
     var url = FlowRouter.current().path;
@@ -9745,78 +9746,7 @@ Template.new_invoice.events({
             }
           }
           addAttachment();
-
-          var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem("mycloudLogonID"),
-            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-          });
-          if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-              var clientID = getcurrentCloudDetails._id;
-              var clientUsername = getcurrentCloudDetails.cloudUsername;
-              var clientEmail = getcurrentCloudDetails.cloudEmail;
-              var checkPrefDetails = CloudPreference.findOne({
-                userid: clientID,
-                PrefName: "new_invoice",
-              });
-              if (checkPrefDetails) {
-                CloudPreference.update({
-                  _id: checkPrefDetails._id,
-                }, {
-                  $set: {
-                    username: clientUsername,
-                    useremail: clientEmail,
-                    PrefGroup: "salesform",
-                    PrefName: "new_invoice",
-                    published: true,
-                    customFields: [{
-                      index: "1",
-                      label: getcustomField1,
-                      hidden: getchkcustomField1,
-                    },
-                    {
-                      index: "2",
-                      label: getcustomField2,
-                      hidden: getchkcustomField2,
-                    },
-                    ],
-                    updatedAt: new Date(),
-                  },
-                },
-                  function (err, idTag) {
-                    if (err) { } else { }
-                  }
-                );
-              } else {
-                CloudPreference.insert({
-                  userid: clientID,
-                  username: clientUsername,
-                  useremail: clientEmail,
-                  PrefGroup: "salesform",
-                  PrefName: "new_invoice",
-                  published: true,
-                  customFields: [{
-                    index: "1",
-                    label: getcustomField1,
-                    hidden: getchkcustomField1,
-                  },
-                  {
-                    index: "2",
-                    label: getcustomField2,
-                    hidden: getchkcustomField2,
-                  },
-                  ],
-                  createdAt: new Date(),
-                },
-                  function (err, idTag) {
-                    if (err) { } else { }
-                  }
-                );
-              }
-            }
-          } else { }
-        })
-          .catch(function (err) {
+        }).catch(function (err) {
             $("#html-Invoice-pdfwrapper").css("display", "none");
             swal({
               title: "Oooops...",
@@ -10148,30 +10078,7 @@ Template.new_invoice.events({
   },
 
   "click .btnResetSettings": function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: localStorage.getItem("mycloudLogonID"),
-      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "new_invoice",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.remove({
-            _id: checkPrefDetails._id,
-          },
-            function (err, idTag) {
-              if (err) { } else {
-                Meteor._reload.reload();
-              }
-            }
-          );
-        }
-      }
-    }
+
   },
   "click .new_attachment_btn": function (event) {
     $("#attachment-upload").trigger("click");
@@ -10889,75 +10796,6 @@ Template.new_invoice.events({
           }
           if (customerID !== " ") { }
           let linesave = objDetails.fields.ID;
-          var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem("mycloudLogonID"),
-            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-          });
-          if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-              var clientID = getcurrentCloudDetails._id;
-              var clientUsername = getcurrentCloudDetails.cloudUsername;
-              var clientEmail = getcurrentCloudDetails.cloudEmail;
-              var checkPrefDetails = CloudPreference.findOne({
-                userid: clientID,
-                PrefName: "new_invoice",
-              });
-              if (checkPrefDetails) {
-                CloudPreference.update({
-                  _id: checkPrefDetails._id,
-                }, {
-                  $set: {
-                    username: clientUsername,
-                    useremail: clientEmail,
-                    PrefGroup: "salesform",
-                    PrefName: "new_invoice",
-                    published: true,
-                    customFields: [{
-                      index: "1",
-                      label: getcustomField1,
-                      hidden: getchkcustomField1,
-                    },
-                    {
-                      index: "2",
-                      label: getcustomField2,
-                      hidden: getchkcustomField2,
-                    },
-                    ],
-                    updatedAt: new Date(),
-                  },
-                },
-                  function (err, idTag) {
-                    if (err) { } else { }
-                  }
-                );
-              } else {
-                CloudPreference.insert({
-                  userid: clientID,
-                  username: clientUsername,
-                  useremail: clientEmail,
-                  PrefGroup: "salesform",
-                  PrefName: "new_invoice",
-                  published: true,
-                  customFields: [{
-                    index: "1",
-                    label: getcustomField1,
-                    hidden: getchkcustomField1,
-                  },
-                  {
-                    index: "2",
-                    label: getcustomField2,
-                    hidden: getchkcustomField2,
-                  },
-                  ],
-                  createdAt: new Date(),
-                },
-                  function (err, idTag) {
-                    if (err) { } else { }
-                  }
-                );
-              }
-            }
-          } else { }
 
           sideBarService
             .getAllInvoiceList(initialDataLoad, 0)
@@ -11517,7 +11355,7 @@ Template.new_invoice.events({
               var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
               // $("#serialNumberModal").attr("data-row", row + 1);
               // $("#serialNumberModal").modal("show");
-              
+
               const serialList = await sideBarService.getAllSerialNumber();
               const productName = selectedProductName;
               const filteredList = serialList.tserialnumberlistcurrentreport.filter(serial => serial.ProductName === productName && serial.AllocType === 'In-Stock');
@@ -11575,7 +11413,7 @@ Template.new_invoice.events({
                 cancelButtonText: 'No'
                 // cancelButtonClass: "btn-default"
             }).then((result) => {
-                if (result.value) {                        
+                if (result.value) {
                 } else if (result.dismiss === 'cancel') {
                     // $('.essentialsdiv .custom-control-input').prop("checked", false);
                     event.preventDefault();
@@ -11674,7 +11512,7 @@ Template.new_invoice.events({
                 cancelButtonText: 'No'
                 // cancelButtonClass: "btn-default"
             }).then((result) => {
-                if (result.value) {                        
+                if (result.value) {
                 } else if (result.dismiss === 'cancel') {
                     // $('.essentialsdiv .custom-control-input').prop("checked", false);
                     event.preventDefault();
