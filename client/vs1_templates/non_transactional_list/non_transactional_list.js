@@ -586,7 +586,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
                 { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
             ];
-        } else if (currenttablename == "tblSupplierlist") { //Done Something Here
+        } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') { //Done Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
@@ -884,7 +884,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 9, label: "REFUND\nFrom", class: "t3From", width: "120", active: true, display: true },
                 { index: 10, label: "REFUND\nTo", class: "t3To", width: "120", active: true, display: true },
             ];
-        }else if(currenttablename === "tblCustomerlist"){
+        }else if(currenttablename === "tblCustomerlist" || currenttablename == 'tblSetupCustomerlist'){
              reset_data = [
                 { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "0" },
                 { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "200" },
@@ -2998,8 +2998,6 @@ Template.non_transactional_list.onRendered(function() {
     }
     templateObject.displaySuppliersListData = async function(data) {
         var splashArraySuppliersList = new Array();
-        let lineItems = [];
-        let lineItemObj = {};
         let deleteFilter = false;
         if (data.Params.Search.replace(/\s/g, "") == "") {
             deleteFilter = true;
@@ -3008,8 +3006,6 @@ Template.non_transactional_list.onRendered(function() {
         };
 
         for (let i = 0; i < data.tsuppliervs1list.length; i++) {
-            let mobile = "";
-            //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
             let linestatus = '';
             if (data.tsuppliervs1list[i].Active == true) {
                 linestatus = "";
@@ -3230,9 +3226,6 @@ Template.non_transactional_list.onRendered(function() {
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         //var splashArrayCustomerListDupp = new Array();
-                        let dataLenght = oSettings._iDisplayLength;
-                        let customerSearch = $('#' + currenttablename + '_filter input').val();
-
                         sideBarService.getAllSuppliersDataVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
 
                             for (let j = 0; j < dataObjectnew.tsuppliervs1list.length; j++) {
@@ -14277,6 +14270,7 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data)
                 templateObject.displayTaxRateList(data)
             }
         }).catch(function(err) {
@@ -15698,7 +15692,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getUOMListData();
     } else if (currenttablename == "tblBOMList") {
         templateObject.getBOMListData();
-    } else if (currenttablename == "tblSupplierlist") {
+    } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
         templateObject.getSupplierListData();
     } else if (currenttablename == "tblLeadlist") {
         templateObject.getLeadListData();
@@ -15796,7 +15790,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getBasReturnData(false, datefrom, dateto);
     } else if (currenttablename == "tblVATReturnList") {
         templateObject.getVatReturnData();
-    } else if (currenttablename === "tblCustomerlist"){
+    } else if (currenttablename === "tblCustomerlist" || currenttablename == 'tblSetupCustomerlist'){
         templateObject.getCustomerList();
         $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
         $("#dateTo").val(moment().format('DD/MM/YYYY'));
@@ -15937,7 +15931,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblUOMList") {
             await clearData('TUOMList');
             templateObject.getUOMListData(true);
-        } else if (currenttablename == "tblSupplierlist") {
+        } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
             await clearData('TSupplierVS1List');
             templateObject.getSupplierListData(true);
         } else if (currenttablename == "tblLeadlist") {
@@ -16053,7 +16047,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblUOMList") {
             await clearData('TUOMList');
             templateObject.getUOMListData(false);
-        } else if (currenttablename == "tblSupplierlist") {
+        } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
             await clearData('TSupplierVS1List');
             templateObject.getSupplierListData(false);
         } else if (currenttablename == "tblLeadlist") {
@@ -16148,6 +16142,8 @@ Template.non_transactional_list.events({
     },
     'click .resetTable': async function(event) {
         let templateObject = Template.instance();
+        console.log(templateObject)
+
         let reset_data = templateObject.reset_data.get();
         let currenttablename = await templateObject.tablename.get() || '';
         //reset_data[9].display = false;

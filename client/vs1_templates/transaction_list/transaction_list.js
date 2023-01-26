@@ -228,7 +228,7 @@ Template.transaction_list.onRendered(function() {
     };
 
     //Banking Overview Data
-    templateObject.getBankingOverviewData = async function(viewdeleted) {
+    templateObject.getBankingOverviewData = async function(deleteFilter = false) {
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -248,11 +248,14 @@ Template.transaction_list.onRendered(function() {
         getVS1Data('TBankAccountReport').then(function(dataObject) {
 
             if (dataObject.length == 0) {
-                sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+                sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
                     addVS1Data('TBankAccountReport', JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineID = "";
+
+                    let useData = data.tbankaccountreport;
+
                     for (let i = 0; i < data.tbankaccountreport.length; i++) {
                         let amount = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amount) || 0.00;
                         let amountInc = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amountinc) || 0.00;
@@ -298,8 +301,6 @@ Template.transaction_list.onRendered(function() {
                             lineID = data.tbankaccountreport[i].TransID;
                         }
 
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tbankaccountreport;
 
                         var dataList = [
                             useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
@@ -540,9 +541,9 @@ Template.transaction_list.onRendered(function() {
                             "fnInitComplete": function () {
                                 this.fnPageChange('last');
                                 if(data.Params.Search.replace(/\s/g, "") == ""){
-                                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                                 }else{
-                                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                                 }
                                 $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -935,9 +936,9 @@ Template.transaction_list.onRendered(function() {
                         "fnInitComplete": function () {
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }else{
-                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }
                             $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1028,11 +1029,13 @@ Template.transaction_list.onRendered(function() {
 
             }
         }).catch(function(err) {
-            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0,viewdeleted).then(function(data) {
+            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0,deleteFilter).then(function(data) {
                 addVS1Data('TBankAccountReport', JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
+                let useData = data.tbankaccountreport;
+
                 for (let i = 0; i < data.tbankaccountreport.length; i++) {
                     let amount = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amount) || 0.00;
                     let amountInc = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amountinc) || 0.00;
@@ -1077,9 +1080,6 @@ Template.transaction_list.onRendered(function() {
                     }else {
                         lineID = data.tbankaccountreport[i].TransID;
                     }
-
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tbankaccountreport;
 
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
@@ -1318,9 +1318,9 @@ Template.transaction_list.onRendered(function() {
                         "fnInitComplete": function () {
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }else{
-                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }
                             $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1417,8 +1417,8 @@ Template.transaction_list.onRendered(function() {
         //$(".fullScreenSpin").css("display", "none");
     }
 
-    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate) {
-        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0).then(function(data) {
+    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate, deleteFilter = false) {
+        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(function(data) {
 
             addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
                 window.open('/bankingoverview?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate='+ignoreDate,'_self');
@@ -1646,9 +1646,9 @@ Template.transaction_list.onRendered(function() {
                 "fnInitComplete": function () {
                     this.fnPageChange('last');
                     if(data?.Params?.Search?.replace(/\s/g, "") == ""){
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPayRunHistory_filter");
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblPayRunHistory_filter");
                     }else{
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPayRunHistory_filter");
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblPayRunHistory_filter");
                     }
                     $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshPayRunHistory' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayRunHistory_filter");
                     $('.myvarFilterForm').appendTo(".colDateFilter");
@@ -1900,9 +1900,9 @@ Template.transaction_list.onRendered(function() {
                 "fnInitComplete": function () {
                     this.fnPageChange('last');
                     if(data?.Params?.Search?.replace(/\s/g, "") == ""){
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblPayleaveToReview_filter");
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblPayleaveToReview_filter");
                     }else{
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblPayleaveToReview_filter");
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblPayleaveToReview_filter");
                     }
                     $("<button class='btn btn-primary btnRefreshPayLeaveToReview' type='button' id='btnRefreshPayLeaveToReview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayleaveToReview_filter");
 
@@ -2252,9 +2252,9 @@ Template.transaction_list.onRendered(function() {
                 "fnInitComplete": function () {
                     this.fnPageChange('last');
                     if(data?.Params?.Search?.replace(/\s/g, "") == ""){
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblTimeSheet_filter");
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblTimeSheet_filter");
                     }else{
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblTimeSheet_filter");
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblTimeSheet_filter");
                     }
                     $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
 
@@ -2366,8 +2366,8 @@ Template.transaction_list.events({
         e.stopImmediatePropagation();
         const templateObject = Template.instance();
         let currenttablename = await templateObject.tablename.get() || '';
-        $('.btnViewDeleted').css('display', 'none');
-        $('.btnHideDeleted').css('display', 'inline-block');
+        // $('.btnViewDeleted').css('display', 'none');
+        // $('.btnHideDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
@@ -2383,6 +2383,7 @@ Template.transaction_list.events({
             templateObject.getTimeSheetListData()
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
+            templateObject.getBankingOverviewData(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -2394,8 +2395,8 @@ Template.transaction_list.events({
         // var datatable = $(`#${currenttablename}`).DataTable();
         // datatable.clear();
         // datatable.draw(false);
-        $('.btnHideDeleted').css('display', 'none');
-        $('.btnViewDeleted').css('display', 'inline-block');
+        // $('.btnHideDeleted').css('display', 'none');
+        // $('.btnViewDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
