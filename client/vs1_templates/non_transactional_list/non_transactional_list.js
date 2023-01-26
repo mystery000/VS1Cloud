@@ -1188,7 +1188,7 @@ Template.non_transactional_list.onRendered(function() {
             <label class="custom-control-label" for="formShowP-${data[i].Id}"></label></div>`;
 
             const isShowDefaultCheckbox = `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioDL"
-            name="optradioDL" id="formCheckP-${data[i].Id}" value="${data[i].name}" ${data[i].isshowdefault ? "checked" : ""}>
+            name="showdefaultinput" id="formCheckP-${data[i].Id}" value="${data[i].name}" ${data[i].isshowdefault ? "checked" : ""}>
             <label class="custom-control-label" for="formCheckP-${data[i].Id}"></label></div>`;
             const dataList = [
                 data[i].Id || '',
