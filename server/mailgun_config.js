@@ -158,7 +158,7 @@ Meteor.methods({
       SyncedCron.remove(details.EID + "_" + details.FormID);
     }
   },
-  calculateNextDate: function(details) {
+  calculateNextDate(details) {
     let startDate;
     if (details.NextDueDate) startDate = new Date(details.NextDueDate);
     else {

@@ -1,0 +1,17 @@
+<template name="mfgPlannerChart">
+    {{# draggablePanel
+        xs=xs sm=sm md=md lg=lg xl=xl
+        defaultPosition=defaultPosition
+        key=key
+        hLenght=100
+        id="manufactureplanner"
+        headerClass="mfgplannerchartheader"
+        headerColor="primary"
+        headerTitle="Production Planner"
+        hrefDetails=""
+        editModalID="editDashboardModal"
+    }}
+        <!-- <canvas id="top10customers" name="top10customers"></canvas> -->
+        {{>production_planner_template}}
+    {{/draggablePanel}}
+</template>

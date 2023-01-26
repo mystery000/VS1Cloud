@@ -123,7 +123,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
                 { index: 4, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
                 { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-            ]
+            ]  
         }else if(currenttablename === "tblTimeSheet"){
            reset_data = [
                 { index: 0, label: 'ID', class: 'colID', active: true, display: true, width: "100" },
@@ -143,7 +143,25 @@ Template.transaction_list.onRendered(function() {
                 { index: 14, label: 'Invoiced', class: 'colInvoiced hiddenColumn', active: false, display: true, width: "100" },
                 { index: 15, label: 'Hourly Rate', class: 'colHourlyrate hiddenColumn', active: false, display: true, width: "100" },
                 { index: 16, label: 'View', class: 'colView', active: true, display: true, width: "100" },
-            ]
+            ] 
+        } else if(currenttablename == 'tblWorkorderList') {
+            // <td contenteditable="false" class="colId">{{item.fields.ID}}</td>
+            // <td contenteditable="false" class="colOrderNumber">{{item.fields.SaleID}}</td>
+            // <td contenteditable="false" class="colCustomer">{{item.fields.Customer}}</td>
+            // <td contenteditable="false" class="colPONumber">{{item.fields.PONumber}}</td>
+            // <td contenteditable="false" class="colSaleDate">{{item.fields.SaleDate}}</td>
+            // <td contenteditable="false" class="colDueDate">{{item.fields.DueDate}}</td>
+            reset_data = [
+                { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
+                { index: 1, label: "SalesOrderID", class: "colOrderNumber", width: "80", active: true, display: true },
+                { index: 2, label: "Customer", class: "colCustomer", width: "80", active: true, display: true },
+                { index: 3, label: "PO Number", class: "colPONumber", width: "100", active: true, display: true },
+                { index: 4, label: "Sale Date", class: "colSaleDate", width: "200", active: true, display: true },
+                { index: 5, label: "Due Date", class: "colDueDate", width: "200", active: true, display: true },
+                { index: 6, label: "Product", class: "colProductName", width: "120", active: true, display: true },
+                { index: 7, label: "Amount", class: "colAmount", width: "80", active: true, display: true },
+                { index: 8, label: "Comments", class: "colComment", width: "", active: true, display: true },
+            ];
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -1447,7 +1465,7 @@ Template.transaction_list.onRendered(function() {
                       return true;
                     }
                   });
-
+              
                 data = data.response;
                 const payRuns = PayRun.fromList(data);
                 await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
@@ -1465,7 +1483,7 @@ Template.transaction_list.onRendered(function() {
                   return true;
                 }
               });
-
+          
             data = data.response;
             const payRuns = PayRun.fromList(data);
             await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
@@ -1520,14 +1538,14 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayPayRunHistory,
                 columnDefs: [
                     {
-                        className: "colPayRunHistoryID hiddenColumn",
+                        className: "colPayRunHistoryID hiddenColumn", 
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colPayRunCalendar",
+                        className: "colPayRunCalendar", 
                         targets: 1,
                         width:'100px'
                     },
@@ -1712,7 +1730,7 @@ Template.transaction_list.onRendered(function() {
                       return true;
                     }
                   });
-
+              
                 data = data.response;
                 const payRuns = PayRun.fromList(data);
                 await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
@@ -1730,7 +1748,7 @@ Template.transaction_list.onRendered(function() {
                   return true;
                 }
               });
-
+          
             data = data.response;
             const payRuns = PayRun.fromList(data);
             await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
@@ -1782,14 +1800,14 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayPayRunHistory,
                 columnDefs: [
                     {
-                        className: "colPayrollLeaveID hiddenColumn",
+                        className: "colPayrollLeaveID hiddenColumn", 
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colName",
+                        className: "colName", 
                         targets: 1,
                         width:'100px'
                     },
@@ -2047,14 +2065,14 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayTimeSheetList,
                 columnDefs: [
                     {
-                        className: "colID",
+                        className: "colID", 
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colName",
+                        className: "colName", 
                         targets: 1,
                         width:'100px'
                     },
@@ -2275,6 +2293,259 @@ Template.transaction_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    //workorders data
+    templateObject.getWorkorderData = async function(viewDeleted) {
+        getVS1Data('TVS1Workorder').then(function(dataObject) {
+            if(dataObject.length == 0) {$('.fullScreenSpin').css('display', 'none')}
+            else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tvs1workorder;
+                // if(data.Params.IgnoreDates == true){
+                //     $('#dateFrom').attr('readonly', true);
+                //     $('#dateTo').attr('readonly', true);
+                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
+                // }else{
+                //     $('#dateFrom').attr('readonly', false);
+                //     $('#dateTo').attr('readonly', false);
+                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+                // }
+                let lineItems = [];
+                let lineItemObj = {};
+                let lineID = "";
+                for (let i = 0; i < useData.length; i++) {
+                    var dataList = [
+                        useData[i].fields.ID ,
+                        useData[i].fields.SaleID || '',
+                        useData[i].fields.Customer || '',
+                        useData[i].fields.PONumber || '',
+                        useData[i].fields.SaleDate || '',
+                        useData[i].fields.DueDate || '',
+                        useData[i].fields.ProductName || '',
+                        useData[i].fields.Quantity || '',
+                        useData[i].fields.Comment || '',                    
+                    ];
+                        dataTableList.push(dataList);
+
+                }
+                //awaitingpaymentCount
+                templateObject.datatablerecords.set(dataTableList);
+                if (templateObject.datatablerecords.get()) {
+
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                }
+
+                let trans_displayfields = templateObject.trans_displayfields.get();
+
+                $('.fullScreenSpin').css('display', 'none');
+                setTimeout(function() {
+                    $('#tblWorkorderList').DataTable({
+                        // dom: 'lBfrtip',
+                        //data: dataTableList,
+                        data: dataTableList,
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                className: "colID hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 1,
+                                className: trans_displayfields[1].active == true ? "colOrderNumber" : "colOrderNumber hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 2,
+                                className: trans_displayfields[2].active == true ? "colCustomer" : "colCustomer hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 3,
+                                className: trans_displayfields[3].active == true ? "colPONumber" : "colPONumber hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 4,
+                                className: trans_displayfields[4].active == true ? "colSaleDate" : "colSaleDate hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 5,
+                                className: trans_displayfields[5].active == true ? "colDueDate" : "colDueDate hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 6,
+                                className: trans_displayfields[6].active == true ? "colProductName" : "colProductName hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 7,
+                                className: trans_displayfields[7].active == true ? "colAmount" : "colAmount hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 8,
+                                className: trans_displayfields[8].active == true ? "colComment" : "colComment hiddenColumn",
+                                width: "100px",
+                            },
+                        ],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [{
+                            extend: 'csvHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Work Order List - " + moment().format(),
+                            orientation: 'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }, {
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Work Order List',
+                            filename: "Work Order List - " + moment().format(),
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                            {
+                                extend: 'excelHtml5',
+                                title: '',
+                                download: 'open',
+                                className: "btntabletoexcel hiddenColumn",
+                                filename: "Work Order List - " + moment().format(),
+                                orientation: 'portrait',
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        // bStateSave: true,
+                        // rowId: 0,
+                        pageLength: initialReportDatatableLoad,
+                        "bLengthChange": false,
+                        lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                        // "aaSorting": [[1,'desc']],
+                        action: function() {
+                            $('#tblWorkorderList').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblWorkorderList_ellipsis').addClass('disabled');
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    let dataLenght = oSettings._iDisplayLength;
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+                                      
+                                            $('.fullScreenSpin').css('display', 'none');
+                                    }else{
+                                            $('.fullScreenSpin').css('display', 'none');
+                                    }
+                                });
+
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        language: { search: "",searchPlaceholder: "Search List..." },
+                        "fnInitComplete": function () {
+                            this.fnPageChange('last');
+                                // $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblWorkorderList_filter");
+                            $("<button class='btn btn-primary btnRefreshWorkorderList' type='button' id='btnRefreshWorkorderList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblWorkorderList_filter");
+
+                            $('.myvarFilterForm').appendTo(".colDateFilter");
+                        },
+                        "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                            let countTableData = data.tvs1workorder.length || 0; //get count from API data
+
+                            return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                        }
+
+                    }).on('page', function() {
+                        setTimeout(function() {
+                            MakeNegative();
+                        }, 100);
+                        let draftRecord = templateObject.datatablerecords.get();
+                        templateObject.datatablerecords.set(draftRecord);
+
+                    }).on('column-reorder', function() {
+
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+
+                }, 0);
+
+                var columns = $('#tblWorkorderList th');
+                let sTible = "";
+                let sWidth = "";
+                let sIndex = "";
+                let sVisible = "";
+                let columVisible = false;
+                let sClass = "";
+                $.each(columns, function(i, v) {
+                    if (v.hidden == false) {
+                        columVisible = true;
+                    }
+                    if ((v.className.includes("hiddenColumn"))) {
+                        columVisible = false;
+                    }
+                    sWidth = v.style.width.replace('px', "");
+
+                    let datatablerecordObj = {
+                        sTitle: v.innerText || '',
+                        sWidth: sWidth || '',
+                        sIndex: v.cellIndex || 0,
+                        sVisible: columVisible || false,
+                        sClass: v.className || ''
+                    };
+                    tableHeaderList.push(datatablerecordObj);
+                });
+                templateObject.tableheaderrecords.set(tableHeaderList);
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                $('#tblWorkorderList tbody').on('click', 'tr', function() {
+                    var listData = $(this).closest('tr').attr('id');
+                    var orderId = $(event.target).closest("tr").find(".colID").text();
+                    if ((listData) && (orderId)) {
+                        FlowRouter.go('/workordercard?id='+ orderId)
+                    }
+                });
+
+
+            }
+        })
+    }
+
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
     let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
@@ -2299,6 +2570,8 @@ Template.transaction_list.onRendered(function() {
         templateObject.getPayrollLeaveData("");
     }else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetListData()
+    }else if (currenttablename == 'tblWorkorderList') {
+        templateObject.getWorkorderData("");
     }
     tableResize();
 
@@ -2500,6 +2773,7 @@ Template.transaction_list.helpers({
         }
     },
     trans_displayfields: () => {
+        //console.log("display", Template.instance().trans_displayfields.get());
         return Template.instance().trans_displayfields.get();
     },
     datatablerecords: () => {
