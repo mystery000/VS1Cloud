@@ -255,14 +255,14 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
-authenticatedRoutes.route('/onloginsuccess', {
-    name: 'onsuccesswaterfall',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'onsuccesswaterfall'
-        });
-    }
-});
+// authenticatedRoutes.route('/onloginsuccess', {
+//     name: 'onsuccesswaterfall',
+//     action() {
+//         BlazeLayout.render('layout', {
+//             yield: 'onsuccesswaterfall'
+//         });
+//     }
+// });
 
 
 authenticatedRoutes.route('/dashboardexe', {
