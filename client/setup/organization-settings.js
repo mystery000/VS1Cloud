@@ -146,6 +146,9 @@ Template.wizard_organisation.onCreated(() => {
     LoadingOverlay.hide();
   };
 
+  
+
+  getVS1Data('TBankAccounts').then(res => console.log(res))
 });
 
 Template.wizard_organisation.onRendered(() => {

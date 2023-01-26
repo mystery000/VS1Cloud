@@ -335,7 +335,9 @@
           {{/if}}
         </div>
         <div class="setup-step setup-step-7 {{#if isActive currentStep '7'}} show {{/if}}">
-
+          {{#if isActive currentStep '7'}}
+          {{> wizard_bankaccounts}}
+          {{/if}}
         </div>
         <div class="setup-step setup-step-8 {{#if isActive currentStep '8'}} show {{/if}}">
           {{#if isActive currentStep '8'}}
@@ -601,106 +603,19 @@
                         </div>
                         <div class="col-sm-4 float-left text-right flex-grow-1 pl-0">
                           <button class="btn btn-success float-right confirmBtn" type="button"
-                            style="margin: 12px; margin-right: 0;" data-step-id="9">Confirm</button>
+                            style="margin: 12px; margin-right: 0;" data-step-id="10">Confirm</button>
                         </div>
                       </div>
                       <div class="table-responsive">
-                        <style>
-                          th {
-                            background-color: #ededed;
-                          }
-
-                          .table-striped tbody tr:nth-of-type(odd) {
-                            background-color: white !important;
-                          }
-
-                          .table-striped tbody tr:nth-of-type(even) {
-                            background-color: #0000000d !important;
-                          }
-
-                          .JColResizer>tbody>tr>td,
-                          .JColResizer>tbody>tr>th {
-                            padding: .75rem !important;
-                          }
-
-                          .hiddenColumn {
-                            display: none;
-                          }
-
-                          .showColumn {
-                            display: table-cell;
-                            padding: .75rem;
-                            vertical-align: top;
-                          }
-
-                          input[type=number]::-webkit-inner-spin-button,
-                          input[type=number]::-webkit-outer-spin-button {
-                            opacity: 1;
-                          }
-                        </style>
-                        <style>
-                          .lblPriceEx,
-                          .lblCostEx {
-                            color: #00a3d3;
-                          }
-
-                          .lblPriceInc,
-                          .lblCostInc {
-                            color: #17a673;
-                          }
-
-                          .fa-trans {
-                            -ms-transform: rotate(180deg);
-                            transform: rotate(180deg);
-                          }
-
-                          .lblPriceEx,
-                          .lblPriceInc,
-                          .lblCostEx,
-                          .lblCostInc {
-                            cursor: pointer;
-                            -webkit-touch-callout: none;
-                            -webkit-user-select: none;
-                            -khtml-user-select: none;
-                            -moz-user-select: none;
-                            -ms-user-select: none;
-                            user-select: none;
-                          }
-
-                          .showColumn {
-                            display: inline-block !important;
-                            padding: 0px !important;
-                          }
-
-                          input.showColumn {
-                            padding: 12px !important;
-                          }
-
-                          .colCostPrice {
-                            width: 130px !important;
-                          }
-
-                          .colCostPriceInc {
-                            width: 135px !important;
-                          }
-
-                          .colSalePrice {
-                            width: 130px !important;
-                          }
-
-                          .colSalePriceInc {
-                            width: 135px !important;
-                          }
-                        </style>
                         {{>non_transactional_list tablename="tblInventoryOverview"}}
                       </div>
                     </div>
                     <div class="row no-gutters">
                       <div class="col">
                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;"
-                          data-step-id="9">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
+                          data-step-id="10">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
                         <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;"
-                          data-step-id="9">Confirm</button>
+                          data-step-id="10">Confirm</button>
                       </div>
                     </div>
                   </div>
@@ -728,9 +643,9 @@
             <div class="row no-gutters">
               <div class="col">
                 <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;"
-                  data-step-id="10">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
+                  data-step-id="11">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
                 <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;"
-                  data-step-id="10">Confirm</button>
+                  data-step-id="11">Confirm</button>
               </div>
             </div>
           </div>

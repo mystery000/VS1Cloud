@@ -1072,6 +1072,14 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Net Pay', class: 'colNetPay', active: true, display: true, width: "100" },
                 { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename == 'tblBankAccountsOverview') {
+            reset_data = [
+                { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
+                { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
+                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+                { index: 3, label: 'Show On Trasactions', class: 'colShowontransactions', active: true, display: true, width: "100" },
+            ];
+            
         }
 
         templateObject.reset_data.set(reset_data);
@@ -2219,12 +2227,7 @@ Template.non_transactional_list.onRendered(function() {
 
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
                         $('.fullScreenSpin').css('display', 'inline-block');
-                        //var splashArrayCustomerListDupp = new Array();
-                        let dataLenght = oSettings._iDisplayLength;
-                        let customerSearch = $('#' + currenttablename + '_filter input').val();
-
                         sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-
                             for (let j = 0; j < dataObjectnew.taccountvs1list.length; j++) {
                                 if (!isNaN(dataObjectnew.taccountvs1list[j].Balance)) {
                                     accBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.taccountvs1list[j].Balance) || 0.0;
@@ -2300,6 +2303,258 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    // Bank Accounts for setup wizard
+    templateObject.getBankAccountsOverviewData = async function(deleteFilter = false, typeFilter = 'all') {
+        getVS1Data('TAccountVS1').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getAccountListVS1(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                    if(typeFilter == 'all') {
+                        await addVS1Data('TAccountVS1', JSON.stringify(data));
+                    }
+                    templateObject.displayBankAccountsOverviewListData(data);
+                }).catch(function(err) {
+                    console.log("error:", err)
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayBankAccountsOverviewListData(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getAccountListVS1(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                if(typeFilter == 'all') {
+                    await addVS1Data('TAccountVS1', JSON.stringify(data));
+                }
+                templateObject.displayBankAccountsOverviewListData(data);
+            }).catch(function(err) {
+
+            });
+        });
+    }
+
+    templateObject.displayBankAccountsOverviewListData = async function(data) {
+        var splashArrayAccountsOverview = new Array();
+        let deleteFilter = false;
+        const bankAccounts = data.taccountvs1.filter(tac => tac.fields.AccountTypeName === 'BANK').map(tac => tac.fields);
+        for (let i = 0; i < bankAccounts.length; i++) {
+            if (!isNaN(bankAccounts[i].Balance)) {
+                accBalance = utilityService.modifynegativeCurrencyFormat(bankAccounts[i].Balance) || 0.0;
+            } else {
+                accBalance = Currency + "0.00";
+            }
+            if (bankAccounts[i].ReceiptCategory && bankAccounts[i].ReceiptCategory != '') {
+                usedCategories.push(bankAccounts[i].fields);
+            }
+            if (bankAccounts[i].Active == true) {
+                linestatus = "";
+            } else if (bankAccounts[i].Active == false) {
+                linestatus = "In-Active";
+            };
+            var dataList = [
+                bankAccounts[i].ID || "",
+                bankAccounts[i].AccountName || "",
+                bankAccounts[i].Description || "",
+                `<div class="custom-control custom-switch chkBox text-center">
+                    <input class="custom-control-input chkBox showontransactioninput" name='showontransactioninput' type="radio" value="${bankAccounts[i].ID}" id="showontransaction-${bankAccounts[i].ID}">
+                    <label class="custom-control-label chkBox" for="showontransaction-${bankAccounts[i].ID}"></label>
+                </div>`,
+            ];
+            splashArrayAccountsOverview.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayAccountsOverview);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        //$('.fullScreenSpin').css('display','none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayAccountsOverview,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "colAccountId colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
+                        className: "colAccountName",
+                        width: "200px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colDescription"
+                    },
+                    {
+                        targets: 3,
+                        className: "colShowontransactions",
+                        width: "100px",
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Accounts Overview",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Accounts Overview',
+                        filename: "Accounts Overview",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Accounts Overview",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+                            const bankAccounts = dataObjectnew.taccountvs1list.filter(tac => tac.AccountType === 'BANK');
+                            for (let i = 0; i < bankAccounts.length; i++) {
+                                if (!isNaN(bankAccounts[i].Balance)) {
+                                    accBalance = utilityService.modifynegativeCurrencyFormat(bankAccounts[i].Balance) || 0.0;
+                                } else {
+                                    accBalance = Currency + "0.00";
+                                }
+                                if (bankAccounts[i].ReceiptCategory && bankAccounts[i].ReceiptCategory != '') {
+                                    usedCategories.push(bankAccounts[i].fields);
+                                }
+                                let linestatus = '';
+                                if (bankAccounts[i].Active == true) {
+                                    linestatus = "";
+                                } else if (bankAccounts[i].Active == false) {
+                                    linestatus = "In-Active";
+                                };
+                                var dataList = [
+                                    bankAccounts[i].AccountID || "",
+                                    bankAccounts[i].AccountName || "",
+                                    bankAccounts[i].Description || "",
+                                    "Show on transaction",
+                                ];
+
+                                splashArrayAccountsOverview.push(dataList);
+                                templateObject.transactiondatatablerecords.set(splashArrayAccountsOverview);
+
+                            }
+                            let uniqueChars = [...new Set(splashArrayAccountsOverview)];
+                            templateObject.transactiondatatablerecords.set(uniqueChars);
+                            var datatable = $('#' + currenttablename).DataTable();
+                            datatable.clear();
+                            datatable.rows.add(uniqueChars);
+                            datatable.draw(false);
+                            setTimeout(function() {
+                                $('#' + currenttablename).dataTable().fnPageChange('last');
+                            }, 400);
+
+                            $('.fullScreenSpin').css('display', 'none');
+
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data.Params?.Search.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params?.Count || 0; //get count from API data
 
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
@@ -15677,6 +15932,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getEmployeeListData();
     } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
         templateObject.getAccountsOverviewData();
+    } else if (currenttablename == 'tblBankAccountsOverview') {
+        templateObject.getBankAccountsOverviewData();
     } else if (currenttablename == "tblClienttypeList") {
         templateObject.getClientTypeListData();
     } else if (currenttablename == "tblLeadStatusList") {
