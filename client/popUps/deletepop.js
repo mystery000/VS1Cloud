@@ -185,7 +185,6 @@ const hasFollowings = async function() {
         0
       );
       var invList = followingInvoices.tinvoicelist;
-      console.log(invList)
         $("#following_cnt").val(invList.length);
         if (invList.length > 0) {
             $("#btn_follow2").css("display", "inline-block");
@@ -209,7 +208,6 @@ const hasFollowings = async function() {
           0
       );
       var paymentList = followingPayments.tcustomerpaymentlist;
-      console.log(paymentList)
       $("#following_cnt").val(paymentList.length);
       if (paymentList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -227,7 +225,6 @@ const hasFollowings = async function() {
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
       var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
       var stockList = followingStocks.tstockadjustentry;
-      console.log(stockList)
       $("#following_cnt").val(stockList.length);
       if (stockList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -251,7 +248,6 @@ const hasFollowings = async function() {
         0
       );
       var chequeList = followingCheques.tchequelist;
-      console.log(chequeList)
       $("#following_cnt").val(chequeList.length);
       if (chequeList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -275,7 +271,6 @@ const hasFollowings = async function() {
           0
       );
       var depositList = followingDeposits.tbankdepositlist;
-      console.log(depositList)
       $("#following_cnt").val(depositList.length);
       if (depositList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -299,7 +294,6 @@ const hasFollowings = async function() {
           0
       );
       var billList = followingBills.tbilllist;
-      console.log(billList)
       $("#following_cnt").val(billList.length);
       if (billList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -330,7 +324,6 @@ const hasFollowings = async function() {
         0
       );
       var creditList = followingCredits.tcreditlist;
-      console.log(creditList)
       $("#following_cnt").val(creditList.length);
       if (creditList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -354,7 +347,6 @@ const hasFollowings = async function() {
           0
       );
       var poList = followingPOs.tpurchaseorderlist;
-      console.log(poList)
       $("#following_cnt").val(poList.length);
       if (poList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -378,7 +370,6 @@ const hasFollowings = async function() {
           0
       );
       var quoteList = followingQuotes.tquotelist;
-      console.log(quoteList)
       $("#following_cnt").val(quoteList.length);
       if (quoteList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -402,7 +393,6 @@ const hasFollowings = async function() {
         0
       );
       var soList = followingSOs.tsalesorderlist;
-      console.log(soList)
       $("#following_cnt").val(soList.length);
       if (soList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -432,7 +422,6 @@ const hasFollowings = async function() {
               0
           );
       var refundList = followingRefunds.trefundsalelist;
-      console.log(refundList)
       $("#following_cnt").val(refundList.length);
       if (refundList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -456,7 +445,6 @@ const hasFollowings = async function() {
           0
       );
       var paymentList = followingPayments.tsupplierpaymentlist;
-      console.log(paymentList)
       $("#following_cnt").val(paymentList.length);
       if (paymentList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -474,7 +462,6 @@ const hasFollowings = async function() {
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
       var followingStocks = await sideBarService.getAllStockTransferEntry("All", stockData.fields.Recno);//initialDataLoad
       var stockList = followingStocks.tstocktransferentry;
-      console.log(stockList)
       $("#following_cnt").val(stockList.length);
       if (stockList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
@@ -498,7 +485,6 @@ const hasFollowings = async function() {
           0
         );
       var invList = followingInvoices.tinvoicelist;
-      console.log(invList)
       $("#following_cnt").val(invList.length);
       if (invList.length > 0) {
           $("#btn_follow2").css("display", "inline-block");
