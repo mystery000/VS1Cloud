@@ -43,6 +43,7 @@ export default class TableHandler {
       gripInnerHtml: "<div class='grip JCLRgrips'></div>",
       draggingClass: "dragging",
       resizeMode: "overflow",
+      passive: true,
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr("id");
@@ -131,9 +132,9 @@ export default class TableHandler {
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
       pageLength: options.pageLength || 25,
       paging: true,
-      colReorder: {
-        fixedColumnsLeft: 1
-      },
+      // colReorder: {
+      //   fixedColumnsLeft: 1
+      // },
       // lengthChange: false,
       // lengthMenu: [
       //   [
