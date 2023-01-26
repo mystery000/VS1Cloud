@@ -306,6 +306,7 @@ import './lib/global/soundalert.js';
 import './js/packagerenewal.js';
 import './Navigation/onsuccesswaterfall.js';
 import './Help_Form/help_advisor.js';
+import './js/Table/TableHandler.js';
 /* Rasheed */
 
 /* Jeyhun */

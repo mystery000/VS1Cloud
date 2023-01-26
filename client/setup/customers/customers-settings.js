@@ -27,7 +27,6 @@ Template.wizard_customers.events({
     var listData = tr.attr("id");
     var transactiontype = tr.attr("isjob");
     var url = FlowRouter.current().path;
-    console.log("list Data:", listData);
   },
   "click #btn-refresh-customers-table"(e) {
     $(".fullScreenSpin").css("display", "inline-block");

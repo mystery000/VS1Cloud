@@ -1069,14 +1069,30 @@ Template.vs1login.onRendered(function () {
             isSetupWizard = true;
           };
 
+          let onloginredirect = dataReturnRes.ProcessLog.TUser.LoginDefault||'';
+          let passloginredirect = 'dashboard';
+          if(onloginredirect == "Accounts"){
+            passloginredirect = 'dashboard';
+          }else if(onloginredirect == "Executive"){
+            passloginredirect = 'dashboardexe';
+          }else if(onloginredirect == "Marketing"){
+            passloginredirect = 'dashboardsalesmanager';
+          }else if(onloginredirect == "Sales"){
+            passloginredirect = 'dashboardsales';
+          }else if(onloginredirect == "Sales Manager"){
+            passloginredirect = 'dashboardsalesmanager';
+          }else{
+            passloginredirect = 'dashboard';
+          };
+
           if (userAccessOptions != "") {
-              getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard);
+              getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard,passloginredirect);
           }
         /*Ends Here*/
       }
    };
 
-    function getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard) {
+    function getAccessLevelData(userAccessOptions, isSameUserLogin, isSetupWizard,passloginredirect) {
         let lineItemslevel = [];
         let lineItemObjlevel = {};
         let lineItemsAccesslevel = [];
@@ -1588,7 +1604,18 @@ Template.vs1login.onRendered(function () {
 
             setTimeout(function(){
               if(isSetupWizard == true){
-                window.open('/onloginsuccess', '_self');
+                if (isAppointmentScheduling == true) {
+                    if (isAllocationLaunch == true) {
+                      //FlowRouter.go('/appointments#allocationModal');
+                      window.open('/appointments#allocationModal', '_self');
+                    } else if (isAppointmentLaunch == true) {
+                       window.open('/appointments', '_self');
+                    } else {
+                       window.open('/'+passloginredirect, '_self');
+                    }
+                } else {
+                   window.open('/'+passloginredirect, '_self');
+                };
               }else{
                 handleSetupRedirection();
               };

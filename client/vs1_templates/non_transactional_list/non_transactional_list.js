@@ -12232,7 +12232,7 @@ Template.non_transactional_list.onRendered(function() {
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
                     if (deleteFilter) {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>View Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     }
@@ -14524,7 +14524,6 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data)
                 templateObject.displayTaxRateList(data)
             }
         }).catch(function(err) {
@@ -16398,7 +16397,6 @@ Template.non_transactional_list.events({
     },
     'click .resetTable': async function(event) {
         let templateObject = Template.instance();
-        console.log(templateObject)
 
         let reset_data = templateObject.reset_data.get();
         let currenttablename = await templateObject.tablename.get() || '';

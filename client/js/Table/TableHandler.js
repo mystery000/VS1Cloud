@@ -47,9 +47,16 @@ export default class TableHandler {
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr("id");
-        if ((tableName != "tblBasReturnList") && (tableName != "tblInvoiceLine")) {
-          this.saveTableColumns(tableName);
-        }
+        let tableClassName = table.context.className||'';
+        if (tableClassName.indexOf("transactionLines") >= 0){
+
+        }else{
+          if ((tableName != "tblBasReturnList") && (tableName != "tblInvoiceLine")) {
+            this.saveTableColumns(tableName);
+          }
+        };
+
+
         let tableWidth = [];
         // $("#tblcontactoverview th").each(function () {
         //   tableWidth.push($(this).outerWidth());
