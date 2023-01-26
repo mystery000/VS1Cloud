@@ -2658,7 +2658,6 @@ Template.new_invoice.onRendered(function () {
   
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
-  
   templateObject.hasFollowings = async function() {
     let salesService = new SalesBoardService();
     var url = FlowRouter.current().path;
