@@ -244,7 +244,7 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
-                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue">
+                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue" value="0" min="0">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
@@ -259,13 +259,13 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Life (Years)</label>
-                        <input type="text" class="form-control" id="edtAssetLife" name="edtAssetLife">
+                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" min="1">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Business Use (%)</label>
-                        <input type="text" class="form-control" id="edtBusinessUse" name="edtBusinessUse">
+                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" min="0" max="100">
                       </div>
                     </div>
                   </div>
@@ -309,19 +309,21 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr class="dnd-moved" style="cursor: pointer;">
-                              <td>2009</td>
-                              <td>$2,000.00</td>
-                              <td>$2,000.00</td>
-                              <td>$2,000.00</td>
-                            </tr>
+                            {{#each history in deprecitationPlans}}
+                              <tr>
+                                <td>{{history.Year}}</td>
+                                <td> - ${{history.Depreciation}}</td>
+                                <td> - ${{history.TotalDepreciation}}</td>
+                                <td>${{history.BookValue}}</td>
+                              </tr>
+                            {{/each}}
                           </tbody>
                         </table>
                       </div>
                     </div>
                     
                     <div class="col-12">
-                      <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px 0; width: 100px; float: right;">
+                      <button class="btn btn-success btnCalculate btnFooter" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
                       </button>
                     </div>
