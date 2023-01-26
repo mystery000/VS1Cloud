@@ -1797,9 +1797,11 @@ Template.transaction_list.onRendered(function() {
         let lineItemObj = {};
         let lineID = "";
         let splashArrayPayRunHistory = new Array();
-        let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        // let data = payRunsHistory.tleavrequest
+        let data = payRunsHistory.tleavrequest.filter(p => p.stpFilling == PayRun.STPFilling.draft);
         for (let i = 0; i < data.length; i++) {
             var dataPayRunHistory = [
+                data[i].fields.ID || "",
                 data[i].fields.ID || "",
                 data[i].fields.LeaveType || "",
                 data[i].fields.LeaveCalcMethod || "",
@@ -1826,7 +1828,7 @@ Template.transaction_list.onRendered(function() {
                     },
                     {
                         className: "colName", 
-                        targets: 1,
+                        targets: 0,
                         width:'100px',
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[2]);
@@ -1835,22 +1837,22 @@ Template.transaction_list.onRendered(function() {
                     },
                     {
                         className: "colType",
-                        targets: 2,
+                        targets: 1,
                         width:'100px'
                     },
                     {
                         className: "colDate",
-                        targets: 3,
+                        targets: 2,
                         width:'100px'
                     },
                     {
                         className: "colDescription",
-                        targets: 4,
+                        targets: 3,
                         width:'100px'
                     },
                     {
                         className: "colStatus",
-                        targets: 5,
+                        targets: 4,
                         width:'100px'
                     }
                 ],
