@@ -50,11 +50,6 @@
 
               </h1>
           </div>
-          <!-- <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div> -->
-          <div class="col-12 col-md-4">
-              <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i
-                      class="icon ion-android-more-horizontal"></i></a>
-          </div>
       </header>
 
       <div class="row" style="background-color: #ededed;">
@@ -141,7 +136,7 @@
                   <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Capacity Volume</label>
-                      <input type="text" class="form-control" id="edtCapacityVolume" name="edtCapacityVolume">
+                      <input type="number" class="form-control" id="edtCapacityVolume" name="edtCapacityVolume">
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
@@ -157,7 +152,7 @@
                   <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Cost</label>
-                      <input type="text" class="form-control" id="edtPurchCost" name="edtPurchCost">
+                      <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
@@ -198,6 +193,7 @@
 
               <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec"
                 style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                  <input type="hidden" id="edtAccountType" />
                   <div class="row" style="margin: 4px 12px;">
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
@@ -248,7 +244,7 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
-                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue">
+                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue" value="0" min="0">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
@@ -263,13 +259,13 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Life (Years)</label>
-                        <input type="text" class="form-control" id="edtAssetLife" name="edtAssetLife">
+                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" value="1" min="0">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Business Use (%)</label>
-                        <input type="text" class="form-control" id="edtBusinessUse" name="edtBusinessUse">
+                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
                       </div>
                     </div>
                   </div>
@@ -313,19 +309,21 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr class="dnd-moved" style="cursor: pointer;">
-                              <td>2009</td>
-                              <td>$2,000.00</td>
-                              <td>$2,000.00</td>
-                              <td>$2,000.00</td>
-                            </tr>
+                            {{#each history in deprecitationPlans}}
+                              <tr>
+                                <td>{{history.year}}</td>
+                                <td> - ${{history.depreciation}}</td>
+                                <td> - ${{history.accDepreciation}}</td>
+                                <td>${{history.bookValue}}</td>
+                              </tr>
+                            {{/each}}
                           </tbody>
                         </table>
                       </div>
                     </div>
                     
                     <div class="col-12">
-                      <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 14px 0; width: 100px; float: right;">
+                      <button class="btn btn-success btnCalculate" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
                       </button>
                     </div>
@@ -360,22 +358,7 @@
     </form>
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="fixedAssetTypeListModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
-      <div class="modal-content customerListContent">
-        <div class="modal-header">
-          <h4>Fixed Asset Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
-        </div>
-        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
-          {{> non_transactional_list tablename = "tblFixedAssetType"}}
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  {{> fixedassettypepopup modalID='fixedAssetTypeListModal'}}
 
   <div class="modal fade" role="dialog" tabindex="-1" id="supplierListModal">
     <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
@@ -387,10 +370,28 @@
         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
           {{> non_transactional_list tablename="tblSupplierlist"}}
         </div>
-        <div class="modal-footer">
+        <!-- <div class="modal-footer">
           <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
+          {{> non_transactional_list tablename="tblAccountOverview"}}
+        </div>
+        <!-- <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
 </template>

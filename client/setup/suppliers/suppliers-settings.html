@@ -139,8 +139,9 @@
               <div class="row d-xl-flex flex-row justify-content-xl-center m-0">
 
                 <div class="col-sm-9 text-left float-left flex-grow-1 pl-0">
-                  <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i
-                      class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                  <button class="btn btn-primary" id="btn-supplier-refresh" type="button" style="margin: 12px; margin-left: 0;">
+                    <i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh
+                  </button>
                   <button data-toggle="#addSupplierModal" id="btnNewSupplier" name="btnNewSupplier"
                     class="btn btn-primary alerts-border" type="button" style="margin: 12px; margin-left: 0;"><i
                       class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
@@ -247,7 +248,9 @@
                     style="margin: 12px; margin-right: 0" data-step-id="8">Confirm</button>
                 </div>
               </div>
-              {{> non_transactional_list tablename='tblSupplierlist'}}
+              <div class="table-responsive">
+                {{>non_transactional_list tablename='tblSetupSupplierlist'}}
+              </div>
             </div>
             <div class="row no-gutters">
               <div class="col">

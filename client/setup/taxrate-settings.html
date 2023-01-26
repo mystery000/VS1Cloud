@@ -169,76 +169,7 @@
             </button>
           </div>
         </div>
-        <div class="card newTaxRate" id="newTaxRate">
-          <div class="row no-gutters d-xl-flex flex-column justify-content-xl-center">
-            <div class="col d-xl-flex align-items-xl-end">
-              <div class="form-group flex-grow-1" style="margin: 8px;">
-                <label 
-                  data-toggle="tooltip" 
-                  data-bs-tooltip=""
-                  data-placement="bottom" 
-                  title="The name for the Tax Rate to appear in VS1 Cloud">
-                  Name
-                </label>
-                <input type="text" class="form-control">
-              </div>
-              <div class="form-group flex-grow-1" style="margin: 8px;">
-                <label 
-                  data-toggle="tooltip" 
-                  data-bs-tooltip=""
-                  data-placement="bottom" 
-                  title="The name for the Tax Rate to appear in VS1 Cloud">
-                  Tax Type
-                </label>
-                <select class="custom-select">
-                  <optgroup label="This is a group">
-                    <option value="12" selected="">This is item 1</option>
-                    <option value="13">This is item 2</option>
-                    <option value="14">This is item 3</option>
-                  </optgroup>
-                </select></div>
-              <div class="form-group flex-grow-0" style="margin: 8px;">
-                <label 
-                  data-toggle="tooltip" 
-                  data-bs-tooltip=""
-                  data-placement="bottom"
-                  title="The name for the Tax Rate to appear in VS1 Cloud">
-                  Percentage
-                </label>
-                <input type="text" class="form-control" placeholder="0 %">
-              </div>
-              <div class="form-group flex-grow-1" style="margin: 8px;">
-                <label 
-                  data-toggle="tooltip" 
-                  data-bs-tooltip=""
-                  data-placement="bottom"
-                  title="The name for the Tax Rate to appear in VS1 Cloud">
-                  Description
-                </label>
-                <input type="text" class="form-control">
-              </div>
-            </div>
-          </div>
-          <div class="row no-gutters">
-            <div class="col">
-              <button 
-                class="btn btn-secondary float-right btnCloseAddNewTax" 
-                type="button" 
-                style="margin: 8px;">
-                <i class="fa fa-close" style="margin-right: 5px;"></i>
-                Cancel
-              </button>
-              <button 
-                class="btn btn-success float-right" 
-                type="button" 
-                style="margin: 8px;">
-                <i class="fa fa-save" style="margin-right: 5px;"></i>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-
+        
         <div class="table-responsive">
          {{> non_transactional_list tablename='taxRatesList'}}
         </div>
