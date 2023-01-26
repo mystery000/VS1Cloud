@@ -194,7 +194,7 @@ Template.setup.onRendered(function () {
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
     if (isFinished == true || isFinished == "true") {
-      FlowRouter.go("dashboard");
+      FlowRouter.go("onloginsuccess");
     }
   };
 
@@ -286,7 +286,8 @@ Template.setup.onRendered(function () {
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    FlowRouter.go("dashboard");
+    // window.location.href = "/";
+    FlowRouter.go("onloginsuccess");
   };
   
   $(function () {
