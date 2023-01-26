@@ -30,7 +30,7 @@ export default class TableHandler {
     await this.disableDatatableResizable();
     this.enableDatatableResizable();
   }
-
+x
   /***
      * Then we need to add back the listeners
      *
@@ -131,9 +131,9 @@ export default class TableHandler {
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
       pageLength: options.pageLength || 25,
       paging: true,
-      colReorder: {
-        fixedColumnsLeft: 1
-      },
+      // colReorder: {
+      //   fixedColumnsLeft: 1
+      // },
       // lengthChange: false,
       // lengthMenu: [
       //   [

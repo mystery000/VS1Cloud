@@ -541,7 +541,6 @@ Template.transaction_list.onRendered(function() {
                             },
                             language: { search: "",searchPlaceholder: "Search List..." },
                             "fnInitComplete": function () {
-                                //console.log("===== first ====", data);
                                 this.fnPageChange('last');
                                 if(data.Params.Search.replace(/\s/g, "") == ""){
                                     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
@@ -854,7 +853,6 @@ Template.transaction_list.onRendered(function() {
                             $('#tblBankingOverview').DataTable().ajax.reload();
                         },
                         "fnDrawCallback": function (oSettings) {
-                            //console.log(oSettings);
                             let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
 
                             $('.paginate_button.page-item').removeClass('disabled');
@@ -938,7 +936,6 @@ Template.transaction_list.onRendered(function() {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
-                            //console.log("===== middle ====", data);
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
                                 $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
@@ -1321,7 +1318,6 @@ Template.transaction_list.onRendered(function() {
                         },
                         language: { search: "",searchPlaceholder: "Search List..." },
                         "fnInitComplete": function () {
-                            //console.log("===== last ====", data);
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
                                 $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
