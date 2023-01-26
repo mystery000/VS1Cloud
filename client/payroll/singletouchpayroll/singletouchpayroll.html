@@ -214,7 +214,7 @@
 
         <div class="row">
             <div class="col-12">
-                <h4 style="font-weight: 600; margin-left: 32px;"><span>3 Employees</span> Included</h4>
+                <h4 style="font-weight: 600; margin-left: 32px;"><span>Employees</span> Included</h4>
             </div>
             <div class="col-12">
                 <div class="card-body p-5 rounded" style="padding: 0rem 2rem !important;">
@@ -277,7 +277,8 @@
                         }
                     </style>
                     <div class="table-responsive">
-                        <table id="tblSingleTouchPayroll" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSingleTouchPayroll">
+                        {{> non_transactional_list tablename="tblSingleTouchPayroll"}}
+                        <!-- <table id="tblSingleTouchPayroll" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSingleTouchPayroll">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th colPayRunDetailsFirstName" style="">First Name</th>
@@ -341,7 +342,7 @@
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table> -->
                     </div>
                 </div>
             </div>
