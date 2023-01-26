@@ -502,7 +502,6 @@ import './vs1_templates/vs1_select/default_select.html'
 /* Stefan */
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
-
 import './vs1_templates/transaction_list/transaction_list.js';
 
 // import 'datatables.net';
@@ -514,7 +513,7 @@ import './vs1_templates/transaction_list/transaction_list.js';
 // import 'datatables.net-buttons/js/buttons.flash.js';
 // import 'datatables.net-buttons/js/buttons.html5.js';
 // import 'datatables.net-buttons/js/buttons.print.js';
-// import "datatables.net-colreorder";
+import "datatables.net-colreorder";
 // import "datatables.net-fixedheader";
 // import "datatables.net-fixedcolumns";
 // import "datatables.net-select";
