@@ -1620,7 +1620,6 @@ Template.generalledger.helpers({
   },
   currencyColumnSize: (count) => {
     let siz = count > 0 ? count * 130 : 90;
-    //alert(siz);
     return siz;          //column size auto per 85px
   },
   isNegativeAmount(amount) {

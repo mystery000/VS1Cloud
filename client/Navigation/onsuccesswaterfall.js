@@ -2693,7 +2693,6 @@ Template.onsuccesswaterfall.onRendered(function () {
 
   /* Start Here */
   if (loggedUserEventFired) {
-    //alert(loggedUserEventFired);
     templateObject.getFollowedAllObjectPull = function () {
       setTimeout(function () {
         if (isPayments) {

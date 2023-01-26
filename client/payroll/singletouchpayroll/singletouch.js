@@ -48,7 +48,6 @@ Template.singletouch.onRendered(function() {
     }
     $('#tblSingleTouchPayroll tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
-        console.log('')
         if(listData){
             FlowRouter.go('/singletouchpayroll?id=' + listData);
         }

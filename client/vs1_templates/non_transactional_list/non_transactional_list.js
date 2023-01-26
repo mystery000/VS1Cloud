@@ -14269,7 +14269,6 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data)
                 templateObject.displayTaxRateList(data)
             }
         }).catch(function(err) {
@@ -16141,7 +16140,6 @@ Template.non_transactional_list.events({
     },
     'click .resetTable': async function(event) {
         let templateObject = Template.instance();
-        console.log(templateObject)
 
         let reset_data = templateObject.reset_data.get();
         let currenttablename = await templateObject.tablename.get() || '';

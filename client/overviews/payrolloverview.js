@@ -294,7 +294,7 @@ Template.payrolloverview.onRendered(function () {
     });
     templateObject.timeSheetList.set(timesheets);
 
-    
+
 
     // TODO: Datable jquery to be added
 
@@ -5009,14 +5009,14 @@ Template.payrolloverview.events({
     let contactService = new ContactService();
     setTimeout(async function(){
     LoadingOverlay.show();
-    
+
     let showTimesheetStatus = localStorage.getItem("CloudShowTimesheet") || true;
     let checkStatus = "";
     let checkStartTime = "";
     let checkEndTime = "";
     let TimeSheetHours = 0;
     let updateID = $("#updateID").val() || "";
-    
+
     let clockList = templateObject.timesheetrecords.get();
 
     let getEmpIDFromLine = $(".employee_name").val() || "";
@@ -6779,7 +6779,7 @@ Template.payrolloverview.events({
     if($(e.currentTarget).attr('payrun-id')) {
       const id = $(e.currentTarget).attr('payrun-id');
       window.location.href = `/payrundetails?id=${id}`;
-    } 
+    }
     // else {
     //   const id = $(e.currentTarget).attr('calendar-id');
     //   window.location.href = `/payrundetails?cid=${id}`;
@@ -6809,7 +6809,6 @@ Template.payrolloverview.events({
   "click #tblPayRuns tbody tr": (e, ui) => {
   // "click .tblTimeSheet tbody tr": (e, ui) => {
     const timesheetId = $(e.currentTarget).attr('id');
-    console.log('timesheetId:',timesheetId)
     window.location.href = `/timesheetdetail?tid=${timesheetId}`;
   },
 
