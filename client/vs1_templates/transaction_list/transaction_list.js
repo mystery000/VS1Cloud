@@ -146,25 +146,25 @@ Template.transaction_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblchequelist") {
             reset_data = [
-                { index: 0, label: 'ID', class:'ID', active: false, display: true, width: "0" },
-                { index: 1, label: "Order Date", class: "OrderDate", active: true, display: true, width: "" },
-                { index: 2, label: "#ID", class: "ChequeID", active: true, display: true, width: "" },
-                { index: 3, label: "Bank Account", class: "BankAccount", active: true, display: true, width: "" },
-                { index: 4, label: "Company", class: "Supplier", active: true, display: true, width: "" },
-                { index: 5, label: "Reference", class: "Reference", active: true, display: true, width: "" },
-                { index: 6, label: "Via", class: "Via", active: true, display: true, width: "" },
-                { index: 7, label: "Currency", class: "Currency", active: true, display: true, width: "" },
-                { index: 8, label: "AmountEx", class: "Amount", active: true, display: true, width: "" },
-                { index: 9, label: "Paid", class: "Paid", active: true, display: true, width: "" },
-                { index: 10, label: "Outstanding", class: "Outstanding", active: true, display: true, width: "" },
-                { index: 11, label: "Status", class: "Status", active: true, display: true, width: "" },
-                { index: 12, label: "PurchaseCustField1", class: "Custom Field 1", active: false, display: true, width: "" },
-                { index: 13, label: "PurchaseCustField2", class: "Custom Field 2", active: false, display: true, width: "" },
-                { index: 14, label: "Employee", class: "Employee", active: false, display: true, width: "" },
-                { index: 15, label: "Comments", class: "Comments", active: false, display: true, width: "" },
-                { index: 16, label: "Comments", class: "Comments", active: false, display: true, width: "" },
-                { index: 17, label: "Comments", class: "Comments", active: false, display: true, width: "" },
-                { index: 18, label: "Comments", class: "Comments", active: false, display: true, width: "" },
+                { index: 0, label: 'ID', class:'ID', active: false, display: false, width: "0" },
+                { index: 1, label: "Order Date", class: "OrderDate", active: true, display: true, width: "100" },
+                { index: 2, label: "#ID", class: "ChequeID", active: true, display: true, width: "100" },
+                { index: 3, label: "Bank Account", class: "BankAccount", active: true, display: true, width: "100" },
+                { index: 4, label: "PurchaseNo", class: "PurchaseNo", active: true, display: true, width: "100" },
+                { index: 5, label: "Supplier", class: "Supplier", active: true, display: true, width: "100" },
+                { index: 6, label: "Reference", class: "Reference", active: true, display: true, width: "100" },
+                { index: 7, label: "Via", class: "Via", active: true, display: true, width: "100" },
+                { index: 8, label: "Currency", class: "Currency", active: true, display: true, width: "100" },
+                { index: 9, label: "AmountEx", class: "AmountEx", active: true, display: true, width: "100" },
+                { index: 10, label: "Tax", class: "Tax", active: true, display: true, width: "100" },
+                { index: 11, label: "Amount", class: "Amount", active: true, display: true, width: "100" },
+                { index: 12, label: "Paid", class: "Paid", active: true, display: true, width: "100" },
+                { index: 13, label: "Outstanding", class: "Outstanding", active: true, display: true, width: "100" },
+                { index: 14, label: "Status", class: "Status", active: true, display: true, width: "100" },
+                { index: 15, label: "PurchaseCustField1", class: "PurchaseCustField1", active: false, display: true, width: "100" },
+                { index: 16, label: "PurchaseCustField2", class: "PurchaseCustField2", active: false, display: true, width: "100" },
+                { index: 17, label: "Employee", class: "Employee", active: false, display: true, width: "100" },
+                { index: 18, label: "Comments", class: "Comments", active: true, display: true, width: "100" },
             ];
         }
         templateObject.reset_data.set(reset_data);
@@ -176,48 +176,48 @@ Template.transaction_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
-        if (listType === "tblBankingOverview" || listType === "tblchequelist") {
-            try {
-              getVS1Data("VS1_Customize").then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  sideBarService
-                    .getNewCustomFieldsWithQuery(
-                      parseInt(
-                        localStorage.getItem("mySessionEmployeeLoggedID")
-                      ),
-                      listType
-                    )
-                    .then(function (data) {
-                      // reset_data = data.ProcessLog.CustomLayout.Columns;
-                      reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                      templateObject.showCustomFieldDisplaySettings(reset_data);
-                    })
-                    .catch(function (err) {});
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  if (data.ProcessLog.Obj.CustomLayout.length > 0) {
-                    for (
-                      let i = 0;
-                      i < data.ProcessLog.Obj.CustomLayout.length;
-                      i++
-                    ) {
-                      if (
-                        data.ProcessLog.Obj.CustomLayout[i].TableName ==
-                        listType
-                      ) {
-                        reset_data =
-                          data.ProcessLog.Obj.CustomLayout[i].Columns;
-                        templateObject.showCustomFieldDisplaySettings(
-                          reset_data
-                        );
-                      }
-                    }
-                  }
-                  // handle process here
-                }
-              });
-            } catch (error) {}
-        }
+        // if (listType === "tblBankingOverview" || listType === "tblchequelist") {
+        //     try {
+        //       getVS1Data("VS1_Customize").then(function (dataObject) {
+        //         if (dataObject.length == 0) {
+        //           sideBarService
+        //             .getNewCustomFieldsWithQuery(
+        //               parseInt(
+        //                 localStorage.getItem("mySessionEmployeeLoggedID")
+        //               ),
+        //               listType
+        //             )
+        //             .then(function (data) {
+        //               // reset_data = data.ProcessLog.CustomLayout.Columns;
+        //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+        //               templateObject.showCustomFieldDisplaySettings(reset_data);
+        //             })
+        //             .catch(function (err) {});
+        //         } else {
+        //           let data = JSON.parse(dataObject[0].data);
+        //           if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+        //             for (
+        //               let i = 0;
+        //               i < data.ProcessLog.Obj.CustomLayout.length;
+        //               i++
+        //             ) {
+        //               if (
+        //                 data.ProcessLog.Obj.CustomLayout[i].TableName ==
+        //                 listType
+        //               ) {
+        //                 reset_data =
+        //                   data.ProcessLog.Obj.CustomLayout[i].Columns;
+        //                 templateObject.showCustomFieldDisplaySettings(
+        //                   reset_data
+        //                 );
+        //               }
+        //             }
+        //           }
+        //           // handle process here
+        //         }
+        //       });
+        //     } catch (error) {}
+        // }
     }
 
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
@@ -2452,7 +2452,6 @@ Template.transaction_list.onRendered(function() {
         }
 
         let trans_displayfields = templateObject.trans_displayfields.get();
-        console.log('here', trans_displayfields)
         setTimeout(function() {
             $('.fullScreenSpin').css('display', 'none');
             $('#tblchequelist').DataTable({

@@ -185,23 +185,7 @@ Template.chequelist.events({
             $(".btnRefresh").trigger("click");
         }
     },
-    'click .chkDatatable': function(event) {
-        const columns = $('#tblchequelist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    // $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
+
     'keyup #tblchequelist_filter input': function (event) {
           if($(event.target).val() != ''){
             $(".btnRefreshCheque").addClass('btnSearchAlert');
