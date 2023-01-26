@@ -38,7 +38,7 @@
 
 
 	//append required CSS rules
-    h.append("<style type='text/css'>  .JColResizer{table-layout:fixed;} .JCLRgrips{ height:0px; position:relative;margin-left: -12px} .JCLRgrip{margin-left:2px; position:absolute; z-index:5; } .JCLRgrip .JColResizer{position:absolute;background-color:red;filter:alpha(opacity=1);opacity:0;width:10px;height:100%;cursor: col-resize;top:0px} .JCLRLastGrip{position:absolute; width:1px; } .JCLRgripDrag{ border-left:1px dotted black;	} .JCLRFlex{width:100%!important;} </style>");
+    h.append("<style type='text/css'>  .JColResizer{table-layout:fixed;} .JCLRgrips{ height:0px; position:relative;margin-left: -12px} .JCLRgrip{margin-left:2px; position:absolute; z-index:5; } .JCLRgrip .JColResizer{position:absolute;background-color:red;filter:alpha(opacity=1);opacity:0;width:40px;left:-15px !important;height:100%;cursor: col-resize;top:0px} .JCLRLastGrip{position:absolute; width:1px; } .JCLRgripDrag{ border-left:1px dotted black;	} .JCLRFlex{width:100%!important;} </style>");
 
 
 	/**
@@ -400,6 +400,7 @@
 				useLocalStorage: false,	 	 	//use localStorage to save table layout instead of sessionStorage
                 disabledColumns: [],            //column indexes to be excluded
                 removePadding: true,           //for some uses (such as multiple range slider), it is advised to set this modifier to true, it will remove padding from the header cells.
+				passive: true,
 
 				//events:
 				onDrag: null, 					//callback function to be fired during the column resizing process if liveDrag is enabled
