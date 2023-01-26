@@ -1082,10 +1082,10 @@ Template.non_transactional_list.onRendered(function() {
             
         } else if (currenttablename == 'tblSetupDashboardOptions') {
             reset_data = [
-                { index: 0, label: '#ID', class: 'colOptionsID', active: false, display: false, width: "" },
+                { index: 0, label: '#ID', class: 'colOptionsID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Options Name', class: 'colOptionsName', active: true, display: true, width: "" },
-                { index: 2, label: 'Show Dashboards', class: 'colShowDef', active: true, display: true, width: "" },
-                { index: 3, label: 'Dashboard load at login', class: 'colLogginDef', active: true, display: true, width: "" },
+                { index: 2, label: 'Show Dashboards', class: 'colShowDef', active: true, display: true, width: "200" },
+                { index: 3, label: 'Dashboard load at login', class: 'colLogginDef', active: true, display: true, width: "200" },
             ]
         }
 
@@ -1181,53 +1181,60 @@ Template.non_transactional_list.onRendered(function() {
       templateObject.displayDashboardOptions = function(data) {
         const dataTableList = []
         for (let i = 0; i < data.length; i++) {
+
+            const isDefaultLoginCheckBox = `<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input optradioDL"
+            name="optcheckboxDL" id="formShowP-${data[i].Id}"
+            value="${data[i].name}" ${data[i].isdefaultlogin ? "checked" : ""}>
+            <label class="custom-control-label" for="formShowP-${data[i].Id}"></label></div>`;
+
+            const isShowDefaultCheckbox = `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioDL"
+            name="optradioDL" id="formCheckP-${data[i].Id}" value="${data[i].name}" ${data[i].isshowdefault ? "checked" : ""}>
+            <label class="custom-control-label" for="formCheckP-${data[i].Id}"></label></div>`;
             const dataList = [
                 data[i].Id || '',
                 data[i].name || '',
-                data[i].isdefaultlogin || false,
-                data[i].isshowdefault || false
+                isDefaultLoginCheckBox,
+                isShowDefaultCheckbox
             ]
             dataTableList.push(dataList);
         }
-  
-        setTimeout(function() {
-            $('#' + currenttablename).DataTable({
-                data: dataTableList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                select: true,
-                destroy: true,
-                colReorder: true,
-                columnDefs: [
-                    {
-                        targets: 0,
-                        className: 'colOptionsID',
-                        orderable: false,
-                        width: "10px"
-                    },
-                    {
-                        targets: 1,
-                        className: "colOptionsName",
-                    },
-                    {
-                        targets: 2,
-                        className: "colShowDef",
-                    },
-                    {
-                        targets: 3,
-                        className: "colLogginDef",
-                    },
-                ],
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                paging: false,
-                info: true,
-                responsive: true,
-                language: { search: "",searchPlaceholder: "Search List..." },
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnRefreshDashboardOption' type='button' id='btnRefreshDashboardOption' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDashboardOptions_filter");
+
+        $('#' + currenttablename).DataTable({
+            data: dataTableList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: [{
+                    targets: 0,
+                    className: 'colOptionsID hiddenColumn',
+                    orderable: false,
+                    width: "10px"
                 },
-            })
-            $('.fullScreenSpin').css('display', 'none');
-        }, 10);
+                {
+                    targets: 1,
+                    className: "colOptionsName",
+                },
+                {
+                    targets: 2,
+                    className: "colShowDef",
+                    width: "200px"
+                },
+                {
+                    targets: 3,
+                    className: "colLogginDef",
+                    width: "200px"
+                },
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            paging: false,
+            info: true,
+            responsive: true,
+            language: { search: "",searchPlaceholder: "Search List..." },
+            "fnInitComplete": function () {
+                $("<button class='btn btn-primary btnRefreshDashboardOption' type='button' id='btnRefreshDashboardOption' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDashboardOptions_filter");
+            },
+        })
+        $('.fullScreenSpin').css('display', 'none');
   
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }

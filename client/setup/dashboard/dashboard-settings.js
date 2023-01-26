@@ -1,7 +1,5 @@
 import './dashboard-settings.html'
-import {TaxRateService} from "../../settings/settings-service";
 import {ReactiveVar} from 'meteor/reactive-var';
-import {SideBarService} from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 
