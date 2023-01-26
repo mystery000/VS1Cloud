@@ -2290,7 +2290,6 @@ Template.header.helpers({
         // if (parseInt(cntConfirmedSteps) == confirmStepCount)
         //     allStepsConfirmed = true;
         const allStepsConfirmed = localStorage.getItem("IS_SETUP_FINISHED");
-        console.log("Is Setup Completed:", allStepsConfirmed)
         return allStepsConfirmed;
     },
     searchdatatablerecords: () => {
