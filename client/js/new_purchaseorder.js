@@ -12677,9 +12677,22 @@ Template.purchaseordercard.events({
                 productService.getProductStatus(selectedProductName).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        swal('', 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
-                        event.preventDefault();
-                        return false;
+                        swal({
+                            title: '',
+                            text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
+                            type: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No'
+                            // cancelButtonClass: "btn-default"
+                        }).then((result) => {
+                            if (result.value) {                        
+                            } else if (result.dismiss === 'cancel') {
+                                // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                         var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                         $('#lotNumberModal').attr('data-row', row + 1);
@@ -12776,9 +12789,22 @@ Template.purchaseordercard.events({
                 productService.getProductStatus(selectedProductName).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        swal('', 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
-                        event.preventDefault();
-                        return false;
+                        swal({
+                            title: '',
+                            text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
+                            type: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No'
+                            // cancelButtonClass: "btn-default"
+                        }).then((result) => {
+                            if (result.value) {                        
+                            } else if (result.dismiss === 'cancel') {
+                                // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                         var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                         $('#lotNumberModal').attr('data-row', row + 1);
