@@ -522,6 +522,7 @@ import '../public/js/cdnjs/split.min.js';
 import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
 
+import './js/Table/TableHandler.js';
 /* Stefan */
 
 /* Arthlo */
