@@ -18,11 +18,7 @@ Template.mfgPlannerChart.onCreated(function () {
 
 Template.mfgPlannerChart.onRendered(function () {
   const templateObject = Template.instance();
-
-  setTimeout((()=>{
-    $('#calendar').render();
-  }))
-}),200;
+})
 
 
 Template.mfgPlannerChart.helpers({

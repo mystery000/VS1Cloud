@@ -558,6 +558,12 @@ Template.workorderlist.events({
             $('.fullScreenSpin').css('display', 'none');
         }, delayTimeAfterSound);
         },
+
+        'click #tblWorkorderList tbody tr': function (event) {
+            var id = $(event.target).closest('tr').find('.colID').text();
+            FlowRouter.go('/workordercard?id='+id)
+        }
+
         
 
 })
