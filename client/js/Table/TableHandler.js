@@ -30,7 +30,7 @@ export default class TableHandler {
     await this.disableDatatableResizable();
     this.enableDatatableResizable();
   }
-x
+
   /***
      * Then we need to add back the listeners
      *
