@@ -315,7 +315,7 @@ Template.fixedassetcard.events({
         FixedAssetDepreciationAssetAccountID: templateObject.edtDepreciationExpenseAccount.get(),
         Salvage: parseInt($('input#edtSalvageValue').val()) || 0,
         SalvageType: parseInt($('select#edtSalvageValueType').val()) || 0,
-        life: parseInt($('input#edtAssetLife').val()) || 1,
+        Life: parseInt($('input#edtAssetLife').val()) || 1,
         BusinessUsePercent: parseInt($('input#edtBusinessUse').val()) || 100,
         Active: true
       }
