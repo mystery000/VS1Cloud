@@ -24,6 +24,9 @@ import "./components/serviceloglisttable/serviceloglisttable.js";
 import "./components/servicelogcard/servicelogcard.html";
 import "./components/servicelogcard/servicelogcard.js";
 
+import "./fixedassettypepopup/fixedassettypepopup.html";
+import "./fixedassettypepopup/fixedassettypepopup.js";
+
 import "./components/overviewchart/fixedassetchart.js";
 import "./components/fixedassetcard/fixedassetcard.js";
-import "./components/fixedassetlisttable/fixedassetlisttable.js";
+import "./components/fixedAssetListTable/fixedAssetListTable.js";

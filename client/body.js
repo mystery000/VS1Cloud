@@ -306,10 +306,13 @@ import './lib/global/soundalert.js';
 import './js/packagerenewal.js';
 import './Navigation/onsuccesswaterfall.js';
 import './Help_Form/help_advisor.js';
+import './js/Table/TableHandler.js';
 /* Rasheed */
 
 /* Jeyhun */
 import './manufacture/workorderList.js';
+import './manufacture/manufacturing_dashboard.js';
+import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -500,7 +503,6 @@ import './vs1_templates/vs1_select/default_select.html'
 /* Stefan */
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
-
 import './vs1_templates/transaction_list/transaction_list.js';
 
 // import 'datatables.net';

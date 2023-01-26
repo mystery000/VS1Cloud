@@ -9,7 +9,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Template } from 'meteor/templating';
 import "./organisation.html";
 import _ from "lodash";
-// 
+//
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1074,7 +1074,6 @@ Template.organisationsettings.events({
     if ($(event.target).is(":checked")) {
       templateObj.iscompanyemail.set(true);
     } else {
-      //alert("not checked");
       templateObj.iscompanyemail.set(false);
     }
   },

@@ -4,7 +4,6 @@ import { Template } from 'meteor/templating';
 import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 import { UtilityService } from "../../utility-service";
-import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { AccountService } from "../../accounts/account-service";
 import { ProductService } from "../../product/product-service";
@@ -16,6 +15,21 @@ const accountService = new AccountService();
 const utilityService = new UtilityService();
 const productService = new ProductService();
 const clientService = new SalesBoardService();
+
+function MakeNegative() {
+  $("td").each(function () {
+    if (
+      $(this)
+        .text()
+        .indexOf("-" + Currency) >= 0
+    )
+      $(this).addClass("text-danger");
+  });
+}
+
+
+Template.wizard_accounts.inheritsEventsFrom('non_transactional_list');
+Template.wizard_accounts.inheritsHelpersFrom('non_transactional_list');
 
 Template.wizard_accounts.onCreated(() => {
   const templateObject = Template.instance();
@@ -191,7 +205,7 @@ Template.wizard_accounts.onCreated(() => {
             MakeNegative();
           }, 100);
         });
-    }, refreshTableTimout);
+    }, 100);
 
     LoadingOverlay.hide();
   };
@@ -278,7 +292,6 @@ Template.wizard_accounts.onCreated(() => {
 })
 
 Template.wizard_accounts.onRendered(() => {
-
   const templateObject = Template.instance();
   templateObject.loadAccountTypes();
   templateObject.loadAccountList();
@@ -383,11 +396,7 @@ Template.wizard_accounts.onRendered(() => {
     }
   );
 
-
-})
-
-Template.wizard_accounts.events({
-  "click .btnAddNewAccounts"(event) {
+  $(".btnAddNewAccounts").on('click', (event) => {
     $("#add-account-title").text("Add New Account");
     $("#edtAccountID").val("");
     $("#sltAccountType").val("");
@@ -407,160 +416,24 @@ Template.wizard_accounts.events({
     $(".showOnTransactions").prop("checked", false);
     $(".isBankAccount").addClass("isNotBankAccount");
     $(".isCreditAccount").addClass("isNotCreditAccount");
-  },
-  "click .btnRefreshAccount"(event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    var splashArrayAccountList = [];
-    let dataSearchName = $("#tblAccount_filter input").val();
-    var currentLoc = FlowRouter.current().route.path;
-    if (dataSearchName.replace(/\s/g, "") !== "") {
-      sideBarService
-        .getAllAccountDataVS1ByName(dataSearchName)
-        .then(function (data) {
-          if (data.taccountvs1.length > 0) {
-            for (let i = 0; i < data.taccountvs1.length; i++) {
-              var dataList = [
-                data.taccountvs1[i].fields.AccountName || "-",
-                data.taccountvs1[i].fields.Description || "",
-                data.taccountvs1[i].fields.AccountNumber || "",
-                data.taccountvs1[i].fields.AccountTypeName || "",
-                utilityService.modifynegativeCurrencyFormat(
-                  Math.floor(data.taccountvs1[i].fields.Balance * 100) / 100
-                ) || 0,
-                data.taccountvs1[i].fields.TaxCode || "",
-                data.taccountvs1[i].fields.ID || "",
-              ];
-              if (currentLoc === "/billcard") {
-                if (
-                  data.taccountvs1[i].fields.AccountTypeName !== "AP" &&
-                  data.taccountvs1[i].fields.AccountTypeName !== "AR" &&
-                  data.taccountvs1[i].fields.AccountTypeName !== "CCARD" &&
-                  data.taccountvs1[i].fields.AccountTypeName !== "BANK"
-                ) {
-                  splashArrayAccountList.push(dataList);
-                }
-              } else if (currentLoc === "/journalentrycard") {
-                if (
-                  data.taccountvs1[i].fields.AccountTypeName !== "AP" &&
-                  data.taccountvs1[i].fields.AccountTypeName !== "AR"
-                ) {
-                  splashArrayAccountList.push(dataList);
-                }
-              } else if (currentLoc === "/chequecard") {
-                if (
-                  data.taccountvs1[i].fields.AccountTypeName === "EQUITY" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "BANK" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "CCARD" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "COGS" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "EXP" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "FIXASSET" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "INC" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "LTLIAB" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "OASSET" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "OCASSET" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "OCLIAB" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "EXEXP" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "EXINC"
-                ) {
-                  splashArrayAccountList.push(dataList);
-                }
-              } else if (
-                currentLoc === "/paymentcard" ||
-                currentLoc === "/supplierpaymentcard"
-              ) {
-                if (
-                  data.taccountvs1[i].fields.AccountTypeName === "BANK" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "CCARD" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "OCLIAB"
-                ) {
-                  splashArrayAccountList.push(dataList);
-                }
-              } else if (
-                currentLoc === "/bankrecon" ||
-                currentLoc === "/newbankrecon"
-              ) {
-                if (
-                  data.taccountvs1[i].fields.AccountTypeName === "BANK" ||
-                  data.taccountvs1[i].fields.AccountTypeName === "CCARD"
-                ) {
-                  splashArrayAccountList.push(dataList);
-                }
-              } else {
-                splashArrayAccountList.push(dataList);
-              }
-            }
-            var datatable = $("#tblAccountlist").DataTable();
-            datatable.clear();
-            datatable.rows.add(splashArrayAccountList);
-            datatable.draw(false);
+  })
+ 
 
-            LoadingOverlay.hide();
-          } else {
-            LoadingOverlay.hide();
-            $("#accountListModal").modal("toggle");
-            swal({
-              title: "Question",
-              text: "Account does not exist, would you like to create it?",
-              type: "question",
-              showCancelButton: true,
-              confirmButtonText: "Yes",
-              cancelButtonText: "No",
-            }).then((result) => {
-              if (result.value) {
-                $("#addAccountModal").modal("toggle");
-                $("#edtAccountName").val(dataSearchName);
-              } else if (result.dismiss === "cancel") {
-                $("#accountListModal").modal("toggle");
-              }
-            });
-          }
-        })
-        .catch(function (err) {
-          LoadingOverlay.hide();
-        });
-    } else {
-      sideBarService
-        .getAccountListVS1()
-        .then(function (data) {
-          for (let i = 0; i < data.taccountvs1.length; i++) {
-            var dataList = [
-              data.taccountvs1[i].fields.AccountName || "-",
-              data.taccountvs1[i].fields.Description || "",
-              data.taccountvs1[i].fields.AccountNumber || "",
-              data.taccountvs1[i].fields.AccountTypeName || "",
-              utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.taccountvs1[i].fields.Balance * 100) / 100
-              ),
-              data.taccountvs1[i].fields.TaxCode || "",
-              data.taccountvs1[i].fields.ID || "",
-            ];
-
-            splashArrayAccountList.push(dataList);
-          }
-          var datatable = $("#tblAccountlist").DataTable();
-          datatable.clear();
-          datatable.rows.add(splashArrayAccountList);
-          datatable.draw(false);
-
-          LoadingOverlay.hide();
-        })
-        .catch(function (err) {
-          LoadingOverlay.hide();
-        });
-    }
-  },
-  "keyup #tblAccount_filter input"(event) {
+  $("#tblAccountOverview_filter input").on('keyup', (event) => {
     if (event.keyCode === 13) {
       $(".btnRefreshAccount").trigger("click");
     }
-  },
-  "change #sltStatus"(event) {
+  })
+
+
+  $("#sltStatus").on('change', (event) => {
     let status = $("#sltStatus").find(":selected").val();
     if (status === "newstatus") {
       $("#statusModal").modal();
     }
-  },
-  "click .btnSaveStatus"() {
+  })
+
+  $(".btnSaveStatus").on('click', (event) => {
     playSaveAudio();
     setTimeout(function(){
       $(".fullScreenSpin").css("display", "inline-block");
@@ -629,14 +502,16 @@ Template.wizard_accounts.events({
         });
       }
     }, delayTimeAfterSound);
-  },
-  "blur .lineMemo"(event) {
+  })
+
+  $('.lineMemo').on('blur', (event) => {
     var targetID = $(event.target).closest("tr").attr("id");
     $("#" + targetID + " #lineMemo").text(
       $("#" + targetID + " .lineMemo").text()
     );
-  },
-  "blur .colAmount"(event) {
+  })
+
+  $('.colAmount').on('blur', (event) => {
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
@@ -674,7 +549,6 @@ Template.wizard_accounts.events({
       );
     }
 
-    let lineAmount = 0;
     let subGrandTotal = 0;
     let taxGrandTotal = 0;
     let taxGrandTotalPrint = 0;
@@ -725,10 +599,7 @@ Template.wizard_accounts.events({
       }
     });
 
-    if (
-      $(".printID").attr("id") !== undefined ||
-      $(".printID").attr("id") !== ""
-    ) {
+    if ($(".printID").attr("id") !== undefined || $(".printID").attr("id") !== "") {
       $printrows.each(function (index) {
         var $printrows = $(this);
         var amount = $printrows.find("#lineAmount").text() || "0";
@@ -774,16 +645,18 @@ Template.wizard_accounts.events({
         }
       });
     }
-  },
-  "click #btnCustomFileds"(event) {
+  })
+
+  $('#btnCustomFileds').on('click', (event) => {
     var x = document.getElementById("divCustomFields");
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {
       x.style.display = "none";
     }
-  },
-  "click .lineAccountName"(event) {
+  })
+
+  $(".lineAccountName").on('click', (event) => {
     $("#tblCreditLine tbody tr .lineAccountName").attr("data-toggle", "modal");
     $("#tblCreditLine tbody tr .lineAccountName").attr(
       "data-target",
@@ -795,13 +668,15 @@ Template.wizard_accounts.events({
     setTimeout(function () {
       $("#tblAccount_filter .form-control-sm").focus();
     }, 500);
-  },
-  "click #accountListModal #refreshpagelist"() {
+  })
+
+  $("#accountListModal #refreshpagelist").on('click', () => {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     templateObject.getAllAccountss();
-  },
-  "click .lineTaxRate"(event) {
+  })
+
+  $(".lineTaxRate").on('click', (event) => {
     $("#tblCreditLine tbody tr .lineTaxRate").attr("data-toggle", "modal");
     $("#tblCreditLine tbody tr .lineTaxRate").attr(
       "data-target",
@@ -809,8 +684,9 @@ Template.wizard_accounts.events({
     );
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectLineID").val(targetID);
-  },
-  "click .lineTaxCode"(event) {
+  })
+
+  $(".lineTaxCode").on("click", (event) => {
     $("#tblCreditLine tbody tr .lineTaxCode").attr("data-toggle", "modal");
     $("#tblCreditLine tbody tr .lineTaxCode").attr(
       "data-target",
@@ -818,8 +694,10 @@ Template.wizard_accounts.events({
     );
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectLineID").val(targetID);
-  },
-  "keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount"(event) {
+  })
+
+
+  $('.lineQty, keydown .lineUnitPrice, keydown .lineAmount').on('keydown', (event) => {
     if (
       $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
       (event.keyCode === 65 &&
@@ -847,8 +725,9 @@ Template.wizard_accounts.events({
     } else {
       event.preventDefault();
     }
-  },
-  "click .chkAccountName"(event) {
+  })
+
+  $(".chkAccountName").on("click", (event) => {
     if ($(event.target).is(":checked")) {
       $(".colAccountName").css("display", "table-cell");
       $(".colAccountName").css("padding", ".75rem");
@@ -856,8 +735,9 @@ Template.wizard_accounts.events({
     } else {
       $(".colAccountName").css("display", "none");
     }
-  },
-  "click .chkMemo"(event) {
+  })
+
+  $('.chkMemo').on('click', (event) => {
     if ($(event.target).is(":checked")) {
       $(".colMemo").css("display", "table-cell");
       $(".colMemo").css("padding", ".75rem");
@@ -865,8 +745,9 @@ Template.wizard_accounts.events({
     } else {
       $(".colMemo").css("display", "none");
     }
-  },
-  "click .chkAmount"(event) {
+  })
+
+  $(".chkAmount").on("click", (event) => {
     if ($(event.target).is(":checked")) {
       $(".colAmount").css("display", "table-cell");
       $(".colAmount").css("padding", ".75rem");
@@ -874,8 +755,9 @@ Template.wizard_accounts.events({
     } else {
       $(".colAmount").css("display", "none");
     }
-  },
-  "click .chkTaxRate"(event) {
+  })
+
+  $(".chkTaxRate").on('click', (event) => {
     if ($(event.target).is(":checked")) {
       $(".colTaxRate").css("display", "table-cell");
       $(".colTaxRate").css("padding", ".75rem");
@@ -883,8 +765,8 @@ Template.wizard_accounts.events({
     } else {
       $(".colTaxRate").css("display", "none");
     }
-  },
-  "click .chkTaxCode"(event) {
+  })
+  $(".chkTaxCode").on("click", (event) => {
     if ($(event.target).is(":checked")) {
       $(".colTaxCode").css("display", "table-cell");
       $(".colTaxCode").css("padding", ".75rem");
@@ -892,8 +774,9 @@ Template.wizard_accounts.events({
     } else {
       $(".colTaxCode").css("display", "none");
     }
-  },
-  "click .chkCustomField1"(event) {
+  })
+
+  $(".chkCustomField1").on("click", (event) => {
     if ($(event.target).is(":checked")) {
       $(".colCustomField1").css("display", "table-cell");
       $(".colCustomField1").css("padding", ".75rem");
@@ -901,8 +784,9 @@ Template.wizard_accounts.events({
     } else {
       $(".colCustomField1").css("display", "none");
     }
-  },
-  "click .chkCustomField2"(event) {
+  })
+
+  $(".chkCustomField2").on('click', (event) => {
     if ($(event.target).is(":checked")) {
       $(".colCustomField2").css("display", "table-cell");
       $(".colCustomField2").css("padding", ".75rem");
@@ -910,48 +794,56 @@ Template.wizard_accounts.events({
     } else {
       $(".colCustomField2").css("display", "none");
     }
-  },
-  "change .rngRangeAccountName"(event) {
+  })
+
+  $(".rngRangeAccountName").on('change', (event) => {
     let range = $(event.target).val();
     $(".spWidthAccountName").html(range + "%");
     $(".colAccountName").css("width", range + "%");
-  },
-  "change .rngRangeMemo"(event) {
+  })
+
+
+  $(".rngRangeMemo").on('change', (event) => {
     let range = $(event.target).val();
     $(".spWidthMemo").html(range + "%");
     $(".colMemo").css("width", range + "%");
-  },
-  "change .rngRangeAmount"(event) {
+  })
+
+  $(".rngRangeAmount").on("change", (event) => {
     let range = $(event.target).val();
     $(".spWidthAmount").html(range + "%");
     $(".colAmount").css("width", range + "%");
-  },
-  "change .rngRangeTaxRate"(event) {
+  })
+  $(".rngRangeTaxRate").on('change', (event) => {
     let range = $(event.target).val();
     $(".spWidthTaxRate").html(range + "%");
     $(".colTaxRate").css("width", range + "%");
-  },
-  "change .rngRangeTaxCode"(event) {
+  })
+  $('.rngRangeTaxCode').on("change", (event) => {
     let range = $(event.target).val();
     $(".spWidthTaxCode").html(range + "%");
     $(".colTaxCode").css("width", range + "%");
-  },
-  "change .rngRangeCustomField1"(event) {
+  })
+
+  $(".rngRangeCustomField1").on('change', (event) => {
     let range = $(event.target).val();
     $(".spWidthCustomField1").html(range + "%");
     $(".colCustomField1").css("width", range + "%");
-  },
-  "change .rngRangeCustomField2"(event) {
+  })
+
+  $(".rngRangeCustomField2").on('change', (event) => {
     let range = $(event.target).val();
     $(".spWidthCustomField2").html(range + "%");
     $(".colCustomField2").css("width", range + "%");
-  },
-  "blur .divcolumnAccount"(event) {
+  })
+
+  $(".divcolumnAccount").on('blur', (event) => {
     let columData = $(event.target).html();
     let columHeaderUpdate = $(event.target).attr("valueupdate");
     $("" + columHeaderUpdate + "").html(columData);
-  },
-  "click .btnSaveGridSettings"(event) {
+  })
+
+  $(".btnSaveGridSettings").on('click', (event) => {
     playSaveAudio();
     setTimeout(function(){
       let lineItems = [];
@@ -1038,8 +930,9 @@ Template.wizard_accounts.events({
       }
       $("#myModal2").modal("toggle");
     }, delayTimeAfterSound);
-  },
-  "click .btnResetGridSettings"(event) {
+  })
+
+  $(".btnResetGridSettings").on('click', (event) => {
     var getcurrentCloudDetails = CloudUser.findOne({
       _id: localStorage.getItem("mycloudLogonID"),
       clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
@@ -1066,8 +959,9 @@ Template.wizard_accounts.events({
         }
       }
     }
-  },
-  "click .btnResetSettings"(event) {
+  })
+
+  $(".btnResetSettings").on("click", (event) => {
     var getcurrentCloudDetails = CloudUser.findOne({
       _id: localStorage.getItem("mycloudLogonID"),
       clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
@@ -1094,80 +988,14 @@ Template.wizard_accounts.events({
         }
       }
     }
-  },
-  "click .setup-wizard .setup-step-6 .btnRefresh": (e, template) => {
-    template.loadAccountList();
-  },
-  "click .setup-step-6 .templateDownload": (e, templateObject) => {
-    let utilityService = new UtilityService();
-    let rows = [];
-    const filename = "SampleAccounts" + ".csv";
+  })
 
-    const customers = templateObject.accountList.get();
-    rows.push([
-      "Account Name",
-      "Description",
-      "Account No",
-      "Type",
-      "Balance",
-      "Tax Code",
-      "Bank Account Name",
-      "BSB",
-      "Bank Account No",
-    ]);
-
-    customers.forEach((customer) => {
-      rows.push([
-        customer.accountname,
-        customer.description,
-        customer.accountnumber,
-        customer.accounttypename,
-        customer.balance,
-        customer.taxcode,
-        customer.bankaccountname,
-        customer.bsb,
-        customer.bankaccountnumber
-      ]);
-    });
-
-
-    utilityService.exportToCsv(rows, filename, "csv");
-  },
-  "click .setup-step-6 .templateDownloadXLSX": (e, templateObject) => {
-
-    let utilityService = new UtilityService();
-    let rows = [];
-    const filename = "SampleAccounts" + ".xls";
-
-    const customers = templateObject.accountList.get();
-    rows.push([
-      "Account Name",
-      "Description",
-      "Account No",
-      "Type",
-      "Balance",
-      "Tax Code",
-      "Bank Account Name",
-      "BSB",
-      "Bank Account No",
-    ]);
-
-    customers.forEach((customer) => {
-      rows.push([
-        customer.accountname,
-        customer.description,
-        customer.accountnumber,
-        customer.accounttypename,
-        customer.balance,
-        customer.taxcode,
-        customer.bankaccountname,
-        customer.bsb,
-        customer.bankaccountnumber
-      ]);
-    });
-    utilityService.exportToCsv(rows, filename, "xls");
-  },
+  $("#btnRefreshAccount").on('click', () => {
+    $(".fullScreenSpin").css("display", "inline-block");
+    location.reload();
+  })
 })
+
 
 Template.wizard_accounts.helpers({
   bsbRegionName: () => {

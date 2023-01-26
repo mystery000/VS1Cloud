@@ -22,105 +22,18 @@ Template.wizard_customers.events({
     const target = $(e.currentTarget).attr("data-toggle");
     $(target).modal("toggle");
   },
-  "click #tblCustomerlist tbody tr"(e){
+  "click #tblSetupCustomerlist tbody tr"(e){
     const tr = $(e.currentTarget);
     var listData = tr.attr("id");
     var transactiontype = tr.attr("isjob");
     var url = FlowRouter.current().path;
   },
-  "click .setup-step-7 .btnRefresh"(e) {
+  "click #btn-refresh-customers-table"(e) {
+    $(".fullScreenSpin").css("display", "inline-block");
     const templateObject = Template.instance();
-    templateObject.loadDefaultCustomer(true);
+    location.reload();
+    // templateObject.loadDefaultCustomer(true);
     $(".modal.show").modal("hide");
-  },
-
-  "click .setup-step-7 .templateDownload"(e){
-    const templateObject = Template.instance();
-    let utilityService = new UtilityService();
-    let rows = [];
-    const filename = "SampleCustomers" + ".csv";
-
-    const customers = templateObject.customerList.get();
-
-    rows.push([
-      "Company",
-      "First Name",
-      "Last Name",
-      "Phone",
-      "Mobile",
-      "Email",
-      "Skype",
-      "Street",
-      "City/Suburb",
-      "State",
-      "Post Code",
-      "Country",
-      "Tax Code"
-    ]);
-
-    customers.forEach((customer) => {
-      rows.push([
-        customer.company,
-        customer.firstname,
-        customer.lastname,
-        customer.phone,
-        customer.mobile,
-        customer.skype,
-        customer.street,
-        customer.city,
-        customer.state,
-        customer.postcode,
-        customer.country,
-        customer.taxcode,
-      ]);
-    });
-    utilityService.exportToCsv(rows, filename, "csv");
-  },
-  "click .setup-step-7 .templateDownloadXLSX"(e){
-    const templateObject = Template.instance();
-    let utilityService = new UtilityService();
-    let rows = [];
-    const filename = "SampleCustomers" + ".xls";
-
-    const customers = templateObject.customerList.get();
-    rows.push([
-      "Company",
-      "First Name",
-      "Last Name",
-      "Phone",
-      "Mobile",
-      "Email",
-      "Skype",
-      "Street",
-      "City/Suburb",
-      "State",
-      "Post Code",
-      "Country",
-      "Tax Code"
-    ]);
-
-    customers.forEach((customer) => {
-      rows.push([
-        customer.company,
-        customer.firstname,
-        customer.lastname,
-        customer.phone,
-        customer.mobile,
-        customer.skype,
-        customer.street,
-        customer.city,
-        customer.state,
-        customer.postcode,
-        customer.country,
-        customer.taxcode,
-      ]);
-    });
-    utilityService.exportToCsv(rows, filename, "xls");
-  },
-  "click .btnUploadFile-customer": function (event) {
-    $("#attachment-upload-customer").val("");
-    $(".file-name").text("");
-    $("#attachment-upload-customer").trigger("click");
   },
   "change #attachment-upload-customer"(e) {
     let templateObj = Template.instance();

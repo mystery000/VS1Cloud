@@ -2,17 +2,13 @@ import { Meteor } from "meteor/meteor";
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
 import { OrganisationService } from "../js/organisation-service";
-import { CountryService } from "../js/country-service";
-import { TaxRateService } from "../settings/settings-service.js";
 import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { ProductService } from "../product/product-service";
 import LoadingOverlay from "../LoadingOverlay";
-import Employee from "../js/Api/Model/Employee";
 import { AccountService } from "../accounts/account-service";
 import "jquery-editable-select";
-import { ContactService } from "../contacts/contact-service";
 import XLSX from 'xlsx';
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import '../lib/global/utBarcodeConst.js';
@@ -30,54 +26,54 @@ import './employments/employment-settings.js'
 import './accounts/accounts-settings.js'
 import './customers/customers-settings.js'
 import './suppliers/suppliers-settings.js'
+import './bankaccounts/bankaccounts-settings.js'
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
-const contactService = new ContactService();
 const utilityService = new UtilityService();
 const productService = new ProductService();
 
 const refreshTableTimout = 300;
 
-let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
+let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", 'Bank Accounts', "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
 
-export const handleSetupRedirection = (onSetupFinished = "/onloginsuccess", onSetupUnFinished = "/setup") => {
-    let ERPIPAddress = localStorage.getItem('EIPAddress');
-    let ERPUsername = localStorage.getItem('EUserName');
-    let ERPPassword = localStorage.getItem('EPassword');
-    let ERPDatabase = localStorage.getItem('EDatabase');
-    let ERPPort = localStorage.getItem('EPort');
-    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
-    const _headers = {
-        database: ERPDatabase,
-        username: ERPUsername,
-        password: ERPPassword
-    };
-    HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
-        if (error) {
-          // handle error here
-        } else {
-          if(result.data != undefined) {
-            if( result.data.tcompanyinfo.length > 0 ){
-              let data = result.data.tcompanyinfo[0];
-              let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
-              let bSetupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
-              localStorage.setItem("IS_SETUP_FINISHED", bSetupFinished); //data.IsSetUpWizard
-              if(bSetupFinished == true) { // data.IsSetUpWizard
-                window.open(onSetupFinished, '_self');
-              } else {
-                window.open(onSetupUnFinished, '_self');
-              }
-            }
+export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
+  let ERPIPAddress = localStorage.getItem('EIPAddress');
+  let ERPUsername = localStorage.getItem('EUserName');
+  let ERPPassword = localStorage.getItem('EPassword');
+  let ERPDatabase = localStorage.getItem('EDatabase');
+  let ERPPort = localStorage.getItem('EPort');
+  const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
+  const _headers = {
+    database: ERPDatabase,
+    username: ERPUsername,
+    password: ERPPassword
+  };
+  HTTP.get(apiUrl, { headers: _headers }, (error, result) => {
+    if (error) {
+      // handle error here
+    } else {
+      if (result.data != undefined) {
+        if (result.data.tcompanyinfo.length > 0) {
+          let data = result.data.tcompanyinfo[0];
+          let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+          let bSetupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
+          localStorage.setItem("IS_SETUP_FINISHED", bSetupFinished); //data.IsSetUpWizard
+          if (bSetupFinished == true) { // data.IsSetUpWizard
+            window.open(onSetupFinished, '_self');
           } else {
             window.open(onSetupUnFinished, '_self');
           }
-
         }
-    });
+      } else {
+        window.open(onSetupUnFinished, '_self');
+      }
+
+    }
+  });
 };
 
-export const isSetupFinished  = async () => {
+export const isSetupFinished = async () => {
   const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
   if (isFinished == true || isFinished == "true") {
     return true;
@@ -85,28 +81,10 @@ export const isSetupFinished  = async () => {
   return false;
 }
 
-function MakeNegative() {
-  $("td").each(function () {
-    if (
-      $(this)
-        .text()
-        .indexOf("-" + Currency) >= 0
-    )
-      $(this).addClass("text-danger");
-  });
-}
-
 const numberOfSteps = confirmStepCount + 1;
-
 
 function setAlreadyLoaded(step, bool = false) {
   return localStorage.setItem(`SETUP_STEP_ALREADY-${step}`, bool);
-}
-
-function isAlreadyLoaded(step) {
-  const string = localStorage.getItem(`SETUP_STEP_ALREADY-${step}`) || false;
-
-  return string == "true" || string == true ? true : false;
 }
 
 function getCurrentStep(onNaN = 1) {
@@ -181,33 +159,43 @@ Template.setup.onCreated(() => {
   templateObject.stepNumber = new ReactiveVar(1);
   templateObject.steps = new ReactiveVar([]);
   templateObject.skippedSteps = new ReactiveVar([]);
-
-  // Step 4 variables
-  // Step 5 variables
-  // Step 6 variables
-
-  // Step 7 variables
-
-  // Step 8 variables
-  // Step 9 variables
   templateObject.inventoryList = new ReactiveVar([]);
 
   templateObject.setCurrentStep = (stepId = 1) => {
     if (isNaN(stepId)) return false;
-    let templateObject = Template.instance();
     templateObject.currentStep.set(stepId);
     return localStorage.setItem("VS1Cloud_SETUP_STEP", parseInt(stepId));
+  }
+
+  templateObject.isStepActive = function (stepId) {
+    let currentStepID = $(".setup-stepper .current a.gotToStepID").attr(
+      "data-step-id"
+    );
+    if (stepId < currentStepID) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  templateObject.goToNextStep = function (stepId, isConfirmed = false, onStepChange = (stepId) => { }) {
+    isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
+    stepId = stepId + 1;
+    templateObject.setCurrentStep(stepId);
+    $(".setup-step").removeClass("show");
+    $(`.setup-step-${stepId}`).addClass("show");
+    onStepChange(stepId);
   }
 });
 
 Template.setup.onRendered(function () {
-  LoadingOverlay.show();
+  // LoadingOverlay.show();
   const templateObject = Template.instance();
 
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
     if (isFinished == true || isFinished == "true") {
-      FlowRouter.go("onloginsuccess");
+      FlowRouter.go("dashboard");
     }
   };
 
@@ -218,7 +206,7 @@ Template.setup.onRendered(function () {
     let remainingSteps = 0;
     for (let i = 1; i <= numberOfSteps - 1; i++) {
       let isStepConfirm = isConfirmedStep(i);
-      if( isStepConfirm == false ){
+      if (isStepConfirm == false) {
         remainingSteps++;
       }
       _steps.push({
@@ -236,9 +224,9 @@ Template.setup.onRendered(function () {
     _steps.push({
       id: numberOfSteps,
       index: numberOfSteps,
-      active: ( getCurrentStep() == numberOfSteps) ? true : false,
+      active: (getCurrentStep() == numberOfSteps) ? true : false,
       clickable: !isClickableStep(numberOfSteps),
-      isConfirmed: ( remainingSteps == 0 ) ? true : false,
+      isConfirmed: (remainingSteps == 0) ? true : false,
       skippedSteps: isStepSkipped(numberOfSteps),
       title: stepTitles[numberOfSteps - 1]
     });
@@ -265,7 +253,7 @@ Template.setup.onRendered(function () {
     for (let i = 0; i < currentStep; i++) {
       if (confirmedSteps.includes(i + 1))
         $(`.setup-stepper li:nth-child(${i + 1})`).addClass("completed");
-      if (isStepActive(i + 1) == true) {
+      if (templateObject.isStepActive(i + 1) == true) {
         $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass(
           "clickDisabled"
         );
@@ -281,7 +269,6 @@ Template.setup.onRendered(function () {
    */
   templateObject.setSetupFinished = async () => {
     LoadingOverlay.show();
-    let dashboardArray = [];
     let data = await organisationService.getOrganisationDetail();
     let companyInfo = data.tcompanyinfo[0];
 
@@ -300,31 +287,16 @@ Template.setup.onRendered(function () {
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    // window.location.href = "/";
-    FlowRouter.go("onloginsuccess");
+    window.location.href = "/";
+    // FlowRouter.go("onloginsuccess");
+    LoadingOverlay.hide();
+
   };
-  $( function() {
-    $( ".resizablePopup" ).resizable();
-  } );
-  // Step 1 Render functionalities
-  // Step 2 Render functionalities
 
-  // STEP 3
-  // Step 4 Render functionalities
-
-
-  // Step 5 Render functionalities
-
-
-  // Step 6 Render functionalities
-
-
-  // Step 7 Render functionalities
-
-
-
-  // Step 8 Render functionalities
-  // Step 9 Render functionalities
+  $(function () {
+    $(".resizablePopup").resizable();
+  });
+  
   templateObject.loadInventory = async (refresh = false) => {
     LoadingOverlay.show();
     let _inventoryList = [];
@@ -337,7 +309,6 @@ Template.setup.onRendered(function () {
 
       data.tproductvs1.forEach((product) => {
         let availableQty = 0;
-        let onBOOrder = 0;
         let onSOORDer = 0;
 
         if (product.fields.ProductClass != null) {
@@ -347,8 +318,7 @@ Template.setup.onRendered(function () {
           }
         }
         product.fields.AvailableQuantity = availableQty;
-        product.fields.onBOOrder =
-          product.fields.TotalQtyInStock - availableQty;
+        product.fields.onBOOrder = product.fields.TotalQtyInStock - availableQty;
         product.fields.onSOOrder = onSOORDer;
 
         (product.fields.CostPrice = utilityService.modifynegativeCurrencyFormat(
@@ -373,8 +343,6 @@ Template.setup.onRendered(function () {
     await templateObject.inventoryList.set(_inventoryList);
 
     if (await templateObject.inventoryList.get()) {
-      //if (refresh) $("#InventoryTable").DataTable().destroy();
-
       if ($.fn.dataTable.isDataTable("#InventoryTable")) {
         $("#InventoryTable").DataTable().destroy();
       }
@@ -394,7 +362,7 @@ Template.setup.onRendered(function () {
             action: function () {
               $("#InventoryTable").DataTable().ajax.reload();
             },
-            language: { search: "",searchPlaceholder: "Search List..." },
+            language: { search: "", searchPlaceholder: "Search List..." },
             fnInitComplete: function () {
               $(
                 "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
@@ -404,7 +372,6 @@ Template.setup.onRendered(function () {
           .on("length.dt", function (e, settings, len) {
             $(".fullScreenSpin").css("display", "inline-block");
             let dataLenght = settings._iDisplayLength;
-            // splashArrayProductList = [];
             if (dataLenght == -1) {
               LoadingOverlay.hide();
             } else {
@@ -423,69 +390,10 @@ Template.setup.onRendered(function () {
       }, refreshTableTimout);
     }
   };
-  /**
-   * This function will lazy load the setup, in order to avoid any loading issues
-   * @param {number} stepId
-   * @returns
-   */
-  templateObject.lazyLoader = (stepId = 1) => {
-    if (isAlreadyLoaded(stepId) == false) {
-      switch (stepId) {
-        case 1:
-          break;
-        case 2:
-          break;
-        case 3:
-          break;
-        case 4:
-          break;
-        case 5:
-          break;
-        case 6:
-          break;
-        case 7:
-          break;
-        case 8:
-          break;
-        case 9:
-          // templateObject.loadInventory();
-          break;
-        case 10:
-          break;
-        default:
-        // code block
-      }
-      setAlreadyLoaded(stepId, true);
-    }
-  };
-
-  templateObject.lazyLoader(currentStep);
 
 });
 
-function isStepActive(stepId) {
-  let currentStepID = $(".setup-stepper .current a.gotToStepID").attr(
-    "data-step-id"
-  );
-  if (stepId < currentStepID) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
-function goToNextStep(
-  stepId,
-  isConfirmed = false,
-  onStepChange = (stepId) => {}
-) {
-  isConfirmed == true ? addConfirmedStep(stepId) : addSkippedStep(stepId);
-  stepId = stepId + 1;
-  templateObject.setCurrentStep(stepId);
-  $(".setup-step").removeClass("show");
-  $(`.setup-step-${stepId}`).addClass("show");
-  onStepChange(stepId);
-}
 
 Template.setup.events({
   "click #start-wizard": (e) => {
@@ -496,26 +404,23 @@ Template.setup.events({
     templateObject.setCurrentStep(1);
     templateObject.loadSteps();
   },
-  "click .confirmBtn": (event, templateObject) => {
+  "click .confirmBtn": (event) => {
     LoadingOverlay.show();
-
+    const templateObject = Template.instance();
     let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-    goToNextStep(stepId, true, (step) => {
-      templateObject.lazyLoader(step);
-    });
+    templateObject.goToNextStep(stepId, true, (step) => { });
     templateObject.loadSteps();
     window.scrollTo(0, 0);
     LoadingOverlay.hide();
   },
-  "click .btnBack": (event, templateObject) => {
+  "click .btnBack": (event) => {
+    const templateObject = Template.instance();
     playCancelAudio();
-    setTimeout(function(){
+    setTimeout(function () {
       LoadingOverlay.show();
       let skippedSteps = templateObject.skippedSteps.get();
       let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
-      goToNextStep(stepId, false, (step) => {
-        templateObject.lazyLoader(step);
-      });
+      templateObject.goToNextStep(stepId, false, (step) => { });
       if (!skippedSteps.includes(stepId)) skippedSteps.push(stepId);
       templateObject.skippedSteps.set(skippedSteps);
       templateObject.loadSteps();
@@ -523,7 +428,7 @@ Template.setup.events({
       LoadingOverlay.hide();
     }, delayTimeAfterSound);
   },
-  "click .gotToStepID": (event ) => {
+  "click .gotToStepID": (event) => {
     const templateObj = Template.instance();
     const stepId = parseInt($(event.currentTarget).attr("data-step-id"));
     $(".setup-step").removeClass("show");
@@ -532,7 +437,6 @@ Template.setup.events({
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     templateObj.setCurrentStep(stepId);
     templateObj.loadSteps();
-    templateObj.lazyLoader(stepId);
   },
   "click #launchBtn": function () {
     const templateObject = Template.instance();
@@ -544,23 +448,6 @@ Template.setup.events({
   "click #edtCountry": async function (event) {
     await clearData('TTaxcodeVS1');
   },
-
-
-
-  // TODO: Step 2
-  // Active Tax Rates
-
-  // TODO: Step 3
-  // Payment method settings
-
-
-  // TODO: Step 4
-  // Term settings
-
-  // TODO: Step 5
-
-  // TODO: Step 6
-
   // Accounts Import functionality
   "click .new_attachment_btn_inventory": function (event) {
     $("#attachment-upload-inventory").val("");
@@ -573,7 +460,6 @@ Template.setup.events({
     var fileExtension = filename.split(".").pop().toLowerCase();
     var validExtensions = ["csv", "txt", "xlsx", "xls"];
     var validCSVExtensions = ["csv", "txt"];
-    var validExcelExtensions = ["xlsx", "xls"];
 
     if (validExtensions.indexOf(fileExtension) == -1) {
       swal(
@@ -635,103 +521,97 @@ Template.setup.events({
     let templateObject = Template.instance();
     let accountService = new AccountService();
     Papa.parse(templateObject.selectedFile.get(), {
-      complete: function(results) {
-          if (results.data.length > 0) {
-              if (
-                  results.data[0][0] == "Product Name" &&
-                  results.data[0][1] == "Sales Description" &&
-                  results.data[0][2] == "Sale Price" &&
-                  results.data[0][3] == "Sales Account" &&
-                  results.data[0][4] == "Tax Code" &&
-                  results.data[0][5] == "Barcode" &&
-                  results.data[0][6] == "Purchase Description" &&
-                  results.data[0][7] == "COGGS Account" &&
-                  results.data[0][8] == "Purchase Tax Code" &&
-                  results.data[0][9] == "Cost" &&
-                  results.data[0][10] == "Product Type"
-              ) {
-                  let dataLength = results.data.length * 3000;
-                  setTimeout(function() {
-                      // $('#importModal').modal('toggle');
-                      Meteor._reload.reload();
-                      $(".fullScreenSpin").css("display", "none");
-                  }, parseInt(dataLength));
-
-                  for (let i = 0; i < results.data.length - 1; i++) {
-                      objDetails = {
-                          type: "TProductVS1",
-                          fields: {
-                              Active: true,
-                              ProductType: results.data[i + 1][10] || "INV",
-
-                              ProductPrintName: results.data[i + 1][0],
-                              ProductName: results.data[i + 1][0],
-                              SalesDescription: results.data[i + 1][1],
-                              SellQty1Price: parseFloat(
-                                  results.data[i + 1][2].replace(/[^0-9.-]+/g, "")
-                              ) || 0,
-                              IncomeAccount: results.data[i + 1][3],
-                              TaxCodeSales: results.data[i + 1][4],
-                              Barcode: results.data[i + 1][5],
-                              PurchaseDescription: results.data[i + 1][6],
-
-                              // AssetAccount:results.data[i+1][0],
-                              CogsAccount: results.data[i + 1][7],
-
-                              TaxCodePurchase: results.data[i + 1][8],
-
-                              BuyQty1Cost: parseFloat(
-                                  results.data[i + 1][9].replace(/[^0-9.-]+/g, "")
-                              ) || 0,
-
-                              PublishOnVS1: true,
-                          },
-                      };
-                      if (results.data[i + 1][1]) {
-                          if (results.data[i + 1][1] !== "") {
-                              productService
-                                  .saveProductVS1(objDetails)
-                                  .then(function(data) {
-                                      //$('.fullScreenSpin').css('display','none');
-                                      Meteor._reload.reload();
-                                  })
-                                  .catch(function(err) {
-                                      //$('.fullScreenSpin').css('display','none');
-                                      swal({
-                                          title: "Oooops...",
-                                          text: err,
-                                          type: "error",
-                                          showCancelButton: false,
-                                          confirmButtonText: "Try Again",
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              Meteor._reload.reload();
-                                          } else if (result.dismiss === "cancel") {
-                                              Meteor._reload.reload();
-                                          }
-                                      });
-                                  });
-                          }
-                      }
-                  }
-              } else {
-                  $(".fullScreenSpin").css("display", "none");
-                  // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-                  swal(
-                      "Invalid Data Mapping fields ",
-                      "Please check that you are importing the correct file with the correct column headers.",
-                      "error"
-                  );
-              }
-          } else {
+      complete: function (results) {
+        if (results.data.length > 0) {
+          if (
+            results.data[0][0] == "Product Name" &&
+            results.data[0][1] == "Sales Description" &&
+            results.data[0][2] == "Sale Price" &&
+            results.data[0][3] == "Sales Account" &&
+            results.data[0][4] == "Tax Code" &&
+            results.data[0][5] == "Barcode" &&
+            results.data[0][6] == "Purchase Description" &&
+            results.data[0][7] == "COGGS Account" &&
+            results.data[0][8] == "Purchase Tax Code" &&
+            results.data[0][9] == "Cost" &&
+            results.data[0][10] == "Product Type"
+          ) {
+            let dataLength = results.data.length * 3000;
+            setTimeout(function () {
+              // Meteor._reload.reload();
               $(".fullScreenSpin").css("display", "none");
-              // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-              swal(
-                  "Invalid Data Mapping fields ",
-                  "Please check that you are importing the correct file with the correct column headers.",
-                  "error"
-              );
+            }, parseInt(dataLength));
+
+            for (let i = 0; i < results.data.length - 1; i++) {
+              objDetails = {
+                type: "TProductVS1",
+                fields: {
+                  Active: true,
+                  ProductType: results.data[i + 1][10] || "INV",
+
+                  ProductPrintName: results.data[i + 1][0],
+                  ProductName: results.data[i + 1][0],
+                  SalesDescription: results.data[i + 1][1],
+                  SellQty1Price: parseFloat(
+                    results.data[i + 1][2].replace(/[^0-9.-]+/g, "")
+                  ) || 0,
+                  IncomeAccount: results.data[i + 1][3],
+                  TaxCodeSales: results.data[i + 1][4],
+                  Barcode: results.data[i + 1][5],
+                  PurchaseDescription: results.data[i + 1][6],
+
+                  CogsAccount: results.data[i + 1][7],
+
+                  TaxCodePurchase: results.data[i + 1][8],
+
+                  BuyQty1Cost: parseFloat(
+                    results.data[i + 1][9].replace(/[^0-9.-]+/g, "")
+                  ) || 0,
+
+                  PublishOnVS1: true,
+                },
+              };
+              if (results.data[i + 1][1]) {
+                if (results.data[i + 1][1] !== "") {
+                  productService
+                    .saveProductVS1(objDetails)
+                    .then(function (data) {
+                      // Meteor._reload.reload();
+                    })
+                    .catch(function (err) {
+                      swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                      }).then((result) => {
+                        if (result.value) {
+                          // Meteor._reload.reload();
+                        } else if (result.dismiss === "cancel") {
+                          // Meteor._reload.reload();
+                        }
+                      });
+                    });
+                }
+              }
+            }
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+            swal(
+              "Invalid Data Mapping fields ",
+              "Please check that you are importing the correct file with the correct column headers.",
+              "error"
+            );
           }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+          swal(
+            "Invalid Data Mapping fields ",
+            "Please check that you are importing the correct file with the correct column headers.",
+            "error"
+          );
+        }
       },
     });
   },
@@ -741,7 +621,6 @@ Template.setup.events({
     var fileExtension = filename.split(".").pop().toLowerCase();
     var validExtensions = ["csv", "txt", "xlsx", "xls"];
     var validCSVExtensions = ["csv", "txt"];
-    var validExcelExtensions = ["xlsx", "xls"];
 
     if (validExtensions.indexOf(fileExtension) == -1) {
       swal(
@@ -763,9 +642,7 @@ Template.setup.events({
     } else if (fileExtension == "xls") {
       $(".file-name").text(filename);
       let selectedFile = event.target.files[0];
-      var oFileIn;
       var oFile = selectedFile;
-      var sFilename = oFile.name;
       // Create A File Reader HTML5
       var reader = new FileReader();
 
@@ -787,7 +664,6 @@ Template.setup.events({
 
           if (roa.length) result[sheetName] = roa;
         });
-        // see the result, caution: it works after reader event is done.
       };
       reader.readAsArrayBuffer(oFile);
 
@@ -803,103 +679,93 @@ Template.setup.events({
     let templateObject = Template.instance();
     let accountService = new AccountService();
     Papa.parse(templateObject.selectedFile.get(), {
-      complete: function(results) {
-          if (results.data.length > 0) {
-              if (
-                  results.data[0][0] == "Account Name" &&
-                  results.data[0][1] == "Description" &&
-                  results.data[0][2] == "Account No" &&
-                  results.data[0][3] == "Type" &&
-                  results.data[0][4] == "Balance" &&
-                  results.data[0][5] == "Tax Code" &&
-                  results.data[0][6] == "Bank Acc Name" &&
-                  results.data[0][7] == "BSB" &&
-                  results.data[0][8] == "Bank Acc No"
-              ) {
-                  let dataLength = results.data.length * 500;
-                  setTimeout(function() {
-                      // $('#importModal').modal('toggle');
-                      //Meteor._reload.reload();
-                      sideBarService
-                          .getAccountListVS1()
-                          .then(function(dataReload) {
-                              addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                                  .then(function(datareturn) {
-                                      Meteor._reload.reload();
-                                  })
-                                  .catch(function(err) {
-                                      Meteor._reload.reload();
-                                  });
-                          })
-                          .catch(function(err) {
-                              Meteor._reload.reload();
-                          });
-                  }, parseInt(dataLength));
-                  for (let i = 0; i < results.data.length - 1; i++) {
-                      objDetails = {
-                          type: "TAccount",
-                          fields: {
-                              Active: true,
-                              AccountName: results.data[i + 1][0],
-                              Description: results.data[i + 1][1],
-                              AccountNumber: results.data[i + 1][2],
-                              AccountTypeName: results.data[i + 1][3],
-                              Balance: Number(
-                                  results.data[i + 1][4].replace(/[^0-9.-]+/g, "")
-                              ) || 0,
-                              TaxCode: results.data[i + 1][5],
-                              BankAccountName: results.data[i + 1][6],
-                              BSB: results.data[i + 1][7],
-                              BankAccountNumber: results.data[i + 1][8],
-                              PublishOnVS1: true,
-                          },
-                      };
-                      if (results.data[i + 1][1]) {
-                          if (results.data[i + 1][1] !== "") {
-                              accountService
-                                  .saveAccount(objDetails)
-                                  .then(function(data) {})
-                                  .catch(function(err) {
-                                      //$('.fullScreenSpin').css('display','none');
-                                      swal({
-                                          title: "Oooops...",
-                                          text: err,
-                                          type: "error",
-                                          showCancelButton: false,
-                                          confirmButtonText: "Try Again",
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              Meteor._reload.reload();
-                                          } else if (result.dismiss === "cancel") {}
-                                      });
-                                  });
-                          }
-                      }
-                  }
-              } else {
-                  $(".fullScreenSpin").css("display", "none");
-                  swal(
-                      "Invalid Data Mapping fields ",
-                      "Please check that you are importing the correct file with the correct column headers.",
-                      "error"
-                  );
+      complete: function (results) {
+        if (results.data.length > 0) {
+          if (
+            results.data[0][0] == "Account Name" &&
+            results.data[0][1] == "Description" &&
+            results.data[0][2] == "Account No" &&
+            results.data[0][3] == "Type" &&
+            results.data[0][4] == "Balance" &&
+            results.data[0][5] == "Tax Code" &&
+            results.data[0][6] == "Bank Acc Name" &&
+            results.data[0][7] == "BSB" &&
+            results.data[0][8] == "Bank Acc No"
+          ) {
+            let dataLength = results.data.length * 500;
+            setTimeout(function () {
+              sideBarService
+                .getAccountListVS1()
+                .then(function (dataReload) {
+                  addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                    .then(function (datareturn) {
+                    })
+                    .catch(function (err) {
+                    });
+                })
+                .catch(function (err) {
+                  Meteor._reload.reload();
+                });
+            }, parseInt(dataLength));
+            for (let i = 0; i < results.data.length - 1; i++) {
+              objDetails = {
+                type: "TAccount",
+                fields: {
+                  Active: true,
+                  AccountName: results.data[i + 1][0],
+                  Description: results.data[i + 1][1],
+                  AccountNumber: results.data[i + 1][2],
+                  AccountTypeName: results.data[i + 1][3],
+                  Balance: Number(
+                    results.data[i + 1][4].replace(/[^0-9.-]+/g, "")
+                  ) || 0,
+                  TaxCode: results.data[i + 1][5],
+                  BankAccountName: results.data[i + 1][6],
+                  BSB: results.data[i + 1][7],
+                  BankAccountNumber: results.data[i + 1][8],
+                  PublishOnVS1: true,
+                },
+              };
+              if (results.data[i + 1][1]) {
+                if (results.data[i + 1][1] !== "") {
+                  accountService
+                    .saveAccount(objDetails)
+                    .then(function (data) { })
+                    .catch(function (err) {
+                      swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                      }).then((result) => {
+                        if (result.value) {
+                          Meteor._reload.reload();
+                        } else if (result.dismiss === "cancel") { }
+                      });
+                    });
+                }
               }
+            }
           } else {
-              $(".fullScreenSpin").css("display", "none");
-              swal(
-                  "Invalid Data Mapping fields ",
-                  "Please check that you are importing the correct file with the correct column headers.",
-                  "error"
-              );
+            $(".fullScreenSpin").css("display", "none");
+            swal(
+              "Invalid Data Mapping fields ",
+              "Please check that you are importing the correct file with the correct column headers.",
+              "error"
+            );
           }
-        },
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+          swal(
+            "Invalid Data Mapping fields ",
+            "Please check that you are importing the correct file with the correct column headers.",
+            "error"
+          );
+        }
+      },
     });
   },
-  // Customer Import functions
-
-  // Supplier import
-
-  // Inventory import
   "click .new_attachment_btn_account": function (event) {
     $("#attachment-upload-account").val("");
     $(".file-name").text("");
@@ -960,19 +826,19 @@ Template.setup.events({
     } else if (
       type === "application/msword" ||
       type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       previewFile.class = "docx-class";
     } else if (
       type === "application/vnd.ms-excel" ||
       type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
       previewFile.class = "excel-class";
     } else if (
       type === "application/vnd.ms-powerpoint" ||
       type ===
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     ) {
       previewFile.class = "ppt-class";
     } else if (
@@ -1051,7 +917,6 @@ Template.setup.events({
         let tdaccount = $("#" + lineID + " .lineAccountName").text();
         let tddmemo = $("#" + lineID + " .lineMemo").text();
         let tdamount = $("#" + lineID + " .lineAmount").val();
-        let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
         let tdtaxCode = $("#" + lineID + " .lineTaxCode").text();
 
         if (tdaccount !== "") {
@@ -1109,12 +974,9 @@ Template.setup.events({
       let comments = $("#txaComment").val();
       let pickingInfrmation = $("#txapickmemo").val();
 
-      let saleCustField1 = $("#edtSaleCustField1").val();
-      let saleCustField2 = $("#edtSaleCustField2").val();
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
       var currentCredit = getso_id[getso_id.length - 1];
-      let uploadedItems = templateObject.uploadedFiles.get();
       var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       var objDetails = "";
       if (getso_id[1]) {
@@ -1180,7 +1042,7 @@ Template.setup.events({
             };
             purchaseService
               .saveSupplierEmail(supplierEmailData)
-              .then(function (supplierEmailData) {});
+              .then(function (supplierEmailData) { });
           }
           let linesave = objDetails.fields.ID;
 
@@ -1329,143 +1191,133 @@ Template.setup.events({
   },
   "click .printConfirm": (e) => {
     playPrintAudio();
-    setTimeout(function(){
-    const type = $(e.currentTarget).attr("data-target");
-    if (type) {
-      LoadingOverlay.show();
-      jQuery(`${type} .dt-buttons .btntabletopdf`).click();
-      LoadingOverlay.hide();
-    }
-  }, delayTimeAfterSound);
+    setTimeout(function () {
+      const type = $(e.currentTarget).attr("data-target");
+      if (type) {
+        LoadingOverlay.show();
+        jQuery(`${type} .dt-buttons .btntabletopdf`).click();
+        LoadingOverlay.hide();
+      }
+    }, delayTimeAfterSound);
   },
-
-  // STEP 6
-
-
-  // TODO: Step 7
-
-
-  // TODO: Step 8
-
-  // TODO: Step 9
   "click .setup-step-9 .btnRefresh": (e) => {
     const templateObject = Template.instance();
     templateObject.loadInventory(true);
     $(".modal.show").modal("hide");
   },
-  "click .setup-step-9 .templateDownload": function() {
+  "click .setup-step-9 .templateDownload": function () {
     let utilityService = new UtilityService();
     let rows = [];
     const filename = "SampleProduct" + ".csv";
     rows[0] = [
-        "Product Name",
-        "Sales Description",
-        "Sale Price",
-        "Sales Account",
-        "Tax Code",
-        "Barcode",
-        "Purchase Description",
-        "COGGS Account",
-        "Purchase Tax Code",
-        "Cost",
-        "Product Type",
+      "Product Name",
+      "Sales Description",
+      "Sale Price",
+      "Sales Account",
+      "Tax Code",
+      "Barcode",
+      "Purchase Description",
+      "COGGS Account",
+      "Purchase Tax Code",
+      "Cost",
+      "Product Type",
     ];
     rows[1] = [
-        "TSL - Black",
-        "T-Shirt Large Black",
-        "600",
-        "Sales",
-        "NT",
-        "",
-        "T-Shirt Large Black",
-        "Cost of Goods Sold",
-        "NT",
-        "700",
-        "NONINV",
+      "TSL - Black",
+      "T-Shirt Large Black",
+      "600",
+      "Sales",
+      "NT",
+      "",
+      "T-Shirt Large Black",
+      "Cost of Goods Sold",
+      "NT",
+      "700",
+      "NONINV",
     ];
     rows[2] = [
-        "TSL - Blue",
-        "T-Shirt Large Blue",
-        "600",
-        "Sales",
-        "NT",
-        "",
-        "T-Shirt Large Blue",
-        "Cost of Goods Sold",
-        "NT",
-        "700",
-        "INV",
+      "TSL - Blue",
+      "T-Shirt Large Blue",
+      "600",
+      "Sales",
+      "NT",
+      "",
+      "T-Shirt Large Blue",
+      "Cost of Goods Sold",
+      "NT",
+      "700",
+      "INV",
     ];
     rows[3] = [
-        "TSL - Yellow",
-        "T-Shirt Large Yellow",
-        "600",
-        "Sales",
-        "NT",
-        "",
-        "T-Shirt Large Yellow",
-        "Cost of Goods Sold",
-        "NT",
-        "700",
-        "OTHER",
+      "TSL - Yellow",
+      "T-Shirt Large Yellow",
+      "600",
+      "Sales",
+      "NT",
+      "",
+      "T-Shirt Large Yellow",
+      "Cost of Goods Sold",
+      "NT",
+      "700",
+      "OTHER",
     ];
     utilityService.exportToCsv(rows, filename, "csv");
   },
-  "click .setup-step-9 .templateDownloadXLSX": function(e) {
+  "click .setup-step-9 .templateDownloadXLSX": function (e) {
     let utilityService = new UtilityService();
     let rows = [];
     const filename = "SampleProduct" + ".xls";
     rows[0] = [
-        "Product Name",
-        "Sales Description",
-        "Sale Price",
-        "Sales Account",
-        "Tax Code",
-        "Barcode",
-        "Purchase Description",
-        "COGGS Account",
-        "Purchase Tax Code",
-        "Cost",
-        "Product Type",
+      "Product Name",
+      "Sales Description",
+      "Sale Price",
+      "Sales Account",
+      "Tax Code",
+      "Barcode",
+      "Purchase Description",
+      "COGGS Account",
+      "Purchase Tax Code",
+      "Cost",
+      "Product Type",
     ];
     rows[1] = [
-        "TSL - Black",
-        "T-Shirt Large Black",
-        "600",
-        "Sales",
-        "NT",
-        "",
-        "T-Shirt Large Black",
-        "Cost of Goods Sold",
-        "NT",
-        "700",
-        "NONINV",
+      "TSL - Black",
+      "T-Shirt Large Black",
+      "600",
+      "Sales",
+      "NT",
+      "",
+      "T-Shirt Large Black",
+      "Cost of Goods Sold",
+      "NT",
+      "700",
+      "NONINV",
     ];
     rows[2] = [
-        "TSL - Blue",
-        "T-Shirt Large Blue",
-        "600",
-        "Sales",
-        "NT",
-        "",
-        "T-Shirt Large Blue",
-        "Cost of Goods Sold",
-        "NT",
-        "700",
-        "INV",
+      "TSL - Blue",
+      "T-Shirt Large Blue",
+      "600",
+      "Sales",
+      "NT",
+      "",
+      "T-Shirt Large Blue",
+      "Cost of Goods Sold",
+      "NT",
+      "700",
+      "INV",
     ];
     rows[3] = [
-        "TSL - Yellow",
-        "T-Shirt Large Yellow",
-        "600",
-        "Sales",
-        "NT",
-        "",
-        "T-Shirt Large Yellow",
-        "Cost of Goods Sold",
-        "NT",
-        "700",
-        "OTHER",
+      "TSL - Yellow",
+      "T-Shirt Large Yellow",
+      "600",
+      "Sales",
+      "NT",
+      "",
+      "T-Shirt Large Yellow",
+      "Cost of Goods Sold",
+      "NT",
+      "700",
+      "OTHER",
     ];
     utilityService.exportToCsv(rows, filename, "xls");
   },
@@ -1476,12 +1328,8 @@ Template.setup.events({
     } else {
       $(".lblCostEx").addClass("hiddenColumn");
       $(".lblCostInc").removeClass("hiddenColumn");
-
       $(".colCostPriceInc").removeClass("hiddenColumn");
-
       $(".colCostPrice").addClass("hiddenColumn");
-
-      //$('.lblCostInc').css('width','10.1%');
     }
   },
   "click .lblCostInc": function (event) {
@@ -1490,13 +1338,9 @@ Template.setup.events({
     if (event.pageX > offset.left + $earch.width() - 10) {
     } else {
       $(".lblCostInc").addClass("hiddenColumn");
-
       $(".lblCostEx").removeClass("hiddenColumn");
-
       $(".colCostPrice").removeClass("hiddenColumn");
-
       $(".colCostPriceInc").addClass("hiddenColumn");
-      //$('.lblCostEx').css('width','10%');
     }
   },
   "click .lblPriceEx": function (event) {
@@ -1506,11 +1350,8 @@ Template.setup.events({
     } else {
       $(".lblPriceEx").addClass("hiddenColumn");
       $(".lblPriceInc").removeClass("hiddenColumn");
-
       $(".colSalePriceInc").removeClass("hiddenColumn");
       $(".colSalePrice").addClass("hiddenColumn");
-
-      //$('.lblPriceInc').css('width','10.1%');
     }
   },
   "click .lblPriceInc": function (event) {
@@ -1520,11 +1361,8 @@ Template.setup.events({
     } else {
       $(".lblPriceInc").addClass("hiddenColumn");
       $(".lblPriceEx").removeClass("hiddenColumn");
-
       $(".colSalePrice").removeClass("hiddenColumn");
       $(".colSalePriceInc").addClass("hiddenColumn");
-
-      //$('.lblPriceEx').css('width','10%');
     }
   },
   "click #btnNewProduct": (e) => {
@@ -1540,7 +1378,6 @@ Template.setup.helpers({
   steps: () => {
     return Template.instance().steps.get();
   },
-
   // Step 2 helpers
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
@@ -1553,13 +1390,6 @@ Template.setup.helpers({
       return true;
     }
   },
-  // Step 3 helpers
-
-  // Step 4 helpers
-
-
-
-  // Step 6 helpers
 
   statusrecords: () => {
     return Template.instance()
@@ -1610,31 +1440,6 @@ Template.setup.helpers({
     return isMobile;
   },
   isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
-
-  // Step 7 helpers
-
-  customerList: () => {
-    return Template.instance().customerList.get().sort(function (a, b) {
-      if (a.company === "NA") {
-        return 1;
-      } else if (b.company === "NA") {
-        return -1;
-      }
-      return a.company.toUpperCase() > b.company.toUpperCase()
-        ? 1
-        : -1;
-    });
-  },
-  // customerListHeaders: () => {
-  //   return Template.instance().customerListHeaders.get();
-  // },
-  // Step 8 helpers
-  supplierList: () => {
-    return Template.instance().supplierList.get();
-  },
-  // supplierListHeaders: () => {
-  //   return Template.instance().customerListHeaders.get();
-  // },
 
   // Step 9 helpers
   inventoryList: () => {
