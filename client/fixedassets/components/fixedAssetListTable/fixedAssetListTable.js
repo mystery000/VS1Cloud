@@ -5,18 +5,22 @@ import { SideBarService } from "../../../js/sidebar-service";
 import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
 
-import "./fixedassetlisttable.html";
+import "./fixedAssetListTable.html";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
 
-Template.fixedassetlisttable.onCreated(function () {
+Template.fixedAssetListTable.onCreated(function () {
 });
 
-Template.fixedassetlisttable.onRendered(function () {
+Template.fixedAssetListTable.onRendered(function () {
+  $("#tblFixedAssetList tbody").on("click", "tr", function() {
+    var assetID = $(this).attr("id");
+    FlowRouter.go("/fixedassetcard?assetId=" + assetID );
+  });
 });
 
-Template.fixedassetlisttable.events({
+Template.fixedAssetListTable.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     fixedAssetService.getTFixedAssetsList().then(function (data) {
