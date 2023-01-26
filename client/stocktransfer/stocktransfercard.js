@@ -4294,7 +4294,8 @@ Template.stocktransfercard.events({
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes'
+            confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
         }).then(async (result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'inline-block');

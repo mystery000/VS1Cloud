@@ -338,7 +338,7 @@ Template.vs1login.onRendered(function () {
                             formName: data.temployeeformaccessdetail[i].fields.FormName || '',
                             accessID: data.temployeeformaccessdetail[i].fields.ID || '',
                         };
-
+                        console.log(data.temployeeformaccessdetail[i].fields)
                         if (data.temployeeformaccessdetail[i].fields.AccessLevelName === "Full Access") {
                             if (data.temployeeformaccessdetail[i].fields.Description === "Print Delivery Docket") {
                                 isDocket = true;
@@ -1111,16 +1111,16 @@ Template.vs1login.onRendered(function () {
         let isContacts = false;
         let isAccounts = false;
         let isReports = false;
-        let isSettings = false;
+        let isSettings = true;
 
-        let isSidePanel = true;
+        let isSidePanel = false;
         let isTopPanel = false;
         let isSidePanelID = '';
         let isTopPanelID = '';
         let isSidePanelFormID = '';
         let isTopPanelFormID = '';
 
-        let isSeedToSale = true;
+        let isSeedToSale = false;
         let isBanking = false;
         let isPayroll = false;
         let isTimesheetEntry = false;

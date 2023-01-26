@@ -7998,6 +7998,7 @@ Template.refundcard.events({
         type: "question",
         showCancelButton: true,
         confirmButtonText: "Yes",
+        cancelButtonText: 'No',
       }).then(async (result) => {
         if (result.value) {
           var url = FlowRouter.current().path;
