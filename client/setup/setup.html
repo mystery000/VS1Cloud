@@ -335,17 +335,20 @@
           {{/if}}
         </div>
         <div class="setup-step setup-step-7 {{#if isActive currentStep '7'}} show {{/if}}">
-          {{#if isActive currentStep '7'}}
-          {{> wizard_customers}}
-          {{/if}}
+
         </div>
         <div class="setup-step setup-step-8 {{#if isActive currentStep '8'}} show {{/if}}">
           {{#if isActive currentStep '8'}}
-          {{> wizard_suppliers}}
+          {{> wizard_customers}}
           {{/if}}
         </div>
         <div class="setup-step setup-step-9 {{#if isActive currentStep '9'}} show {{/if}}">
           {{#if isActive currentStep '9'}}
+          {{> wizard_suppliers}}
+          {{/if}}
+        </div>
+        <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}">
+          {{#if isActive currentStep '10'}}
           <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
             <div class="row">
               <div class="col">
@@ -712,8 +715,8 @@
           </div>
           {{/if}}
         </div>
-        <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}">
-          {{#if isActive currentStep '10'}}
+        <div class="setup-step setup-step-11 {{#if isActive currentStep '11'}} show {{/if}}">
+          {{#if isActive currentStep '11'}}
           <div class="container-fluid">
             <div class="row">
               <div class="col">
@@ -733,7 +736,7 @@
           </div>
           {{/if}}
         </div>
-        <div class="setup-step setup-step-11 {{#if isActive currentStep '11'}} show {{/if}}">
+        <div class="setup-step setup-step-12 {{#if isActive currentStep '12'}} show {{/if}}">
           <div class="first-page-container" style="margin: auto;">
             <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png" /></div>
             <h1 class="text-center">Initial set up is completed</h1>
@@ -922,7 +925,7 @@
     }
 
     .setup-stepper li {
-      width: 110px;
+      width: 150px;
       flex: 1;
       height: 50px;
       margin-right: 5px;

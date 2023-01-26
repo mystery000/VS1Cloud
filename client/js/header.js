@@ -2285,10 +2285,12 @@ Template.header.helpers({
         return localStorage.getItem("IS_SETUP_FINISHED") || false;
     },
     isAllStepsConfirmed: function() {
-        let cntConfirmedSteps = Template.instance().confirmedStepCount.get();
-        let allStepsConfirmed = false;
-        if (parseInt(cntConfirmedSteps) == confirmStepCount)
-            allStepsConfirmed = true;
+        // let cntConfirmedSteps = Template.instance().confirmedStepCount.get();
+        // let allStepsConfirmed = false;
+        // if (parseInt(cntConfirmedSteps) == confirmStepCount)
+        //     allStepsConfirmed = true;
+        const allStepsConfirmed = localStorage.getItem("IS_SETUP_FINISHED");
+        console.log("Is Setup Completed:", allStepsConfirmed)
         return allStepsConfirmed;
     },
     searchdatatablerecords: () => {

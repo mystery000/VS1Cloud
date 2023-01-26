@@ -148,7 +148,7 @@
                 </style>
 
                 <div class="col-sm-8 float-left text-left flex-grow-1 pl-0">
-                  <button class="btn btn-primary btnRefresh refresh-customer-table" type="button"
+                  <button class="btn btn-primary btnRefresh" id="btn-refresh-customers-table" type="button"
                     style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o"
                       style="padding-right: 5px;"></i>Refresh</button>
                   <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer"
@@ -262,7 +262,7 @@
                   </div>
                 </div>
               </div>
-              {{> non_transactional_list tablename='tblCustomerlist'}}
+              {{> non_transactional_list tablename='tblSetupCustomerlist'}}
             </div>
             <div class="row no-gutters">
               <div class="col">
