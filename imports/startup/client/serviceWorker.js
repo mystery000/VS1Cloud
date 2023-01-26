@@ -1,5 +1,10 @@
 import { Meteor } from 'meteor/meteor'
 
+Meteor.startup(() => {
+  navigator.serviceWorker.register('/sw.js').then(() => console.info('service worker registered')).catch(error => {
+      console.log('serviceWorker registration failed: ', error)
+    })
+})
 
 let isApple = ['iPhone', 'iPad', 'iPod'].includes(navigator.platform);
 const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
