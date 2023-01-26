@@ -185,7 +185,7 @@ Template.setup.onCreated(() => {
   // Step 4 variables
   // Step 5 variables
   // Step 6 variables
-  
+
   // Step 7 variables
 
   // Step 8 variables
@@ -207,7 +207,7 @@ Template.setup.onRendered(function () {
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
     if (isFinished == true || isFinished == "true") {
-      FlowRouter.go("dashboard");
+      FlowRouter.go("onloginsuccess");
     }
   };
 
@@ -301,7 +301,7 @@ Template.setup.onRendered(function () {
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
     // window.location.href = "/";
-    FlowRouter.go("dashboard");
+    FlowRouter.go("onloginsuccess");
   };
   $( function() {
     $( ".resizablePopup" ).resizable();
@@ -510,7 +510,6 @@ Template.setup.events({
   "click .btnBack": (event, templateObject) => {
     playCancelAudio();
     setTimeout(function(){
-      console.log("click back!")
       LoadingOverlay.show();
       let skippedSteps = templateObject.skippedSteps.get();
       let stepId = parseInt($(event.currentTarget).attr("data-step-id"));
@@ -553,11 +552,11 @@ Template.setup.events({
 
   // TODO: Step 3
   // Payment method settings
- 
+
 
   // TODO: Step 4
   // Term settings
-  
+
   // TODO: Step 5
 
   // TODO: Step 6
@@ -1555,13 +1554,13 @@ Template.setup.helpers({
     }
   },
   // Step 3 helpers
- 
+
   // Step 4 helpers
-  
- 
+
+
 
   // Step 6 helpers
- 
+
   statusrecords: () => {
     return Template.instance()
       .statusrecords.get()

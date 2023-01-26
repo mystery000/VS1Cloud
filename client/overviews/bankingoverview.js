@@ -1791,7 +1791,6 @@ Template.bankingoverview.events({
     },
     // 'click .custom-control-input': function(event) {
     //   let colClassName = $(event.target).attr("id");
-    //   console.log("==========", colClassName);
     //   if ($(event.target).is(':checked')) {
     //     $('.col' + colClassName).addClass('showColumn');
     //     $('.col' + colClassName).removeClass('hiddenColumn');

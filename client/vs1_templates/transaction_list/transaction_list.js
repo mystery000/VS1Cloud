@@ -123,7 +123,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
                 { index: 4, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
                 { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-            ]  
+            ]
         }else if(currenttablename === "tblTimeSheet"){
            reset_data = [
                 { index: 0, label: 'ID', class: 'colID', active: true, display: true, width: "100" },
@@ -143,7 +143,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 14, label: 'Invoiced', class: 'colInvoiced hiddenColumn', active: false, display: true, width: "100" },
                 { index: 15, label: 'Hourly Rate', class: 'colHourlyrate hiddenColumn', active: false, display: true, width: "100" },
                 { index: 16, label: 'View', class: 'colView', active: true, display: true, width: "100" },
-            ] 
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -1451,7 +1451,7 @@ Template.transaction_list.onRendered(function() {
                       return true;
                     }
                   });
-              
+
                 data = data.response;
                 const payRuns = PayRun.fromList(data);
                 await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
@@ -1469,7 +1469,7 @@ Template.transaction_list.onRendered(function() {
                   return true;
                 }
               });
-          
+
             data = data.response;
             const payRuns = PayRun.fromList(data);
             await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
@@ -1524,14 +1524,14 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayPayRunHistory,
                 columnDefs: [
                     {
-                        className: "colPayRunHistoryID hiddenColumn", 
+                        className: "colPayRunHistoryID hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colPayRunCalendar", 
+                        className: "colPayRunCalendar",
                         targets: 1,
                         width:'100px'
                     },
@@ -1716,7 +1716,7 @@ Template.transaction_list.onRendered(function() {
                       return true;
                     }
                   });
-              
+
                 data = data.response;
                 const payRuns = PayRun.fromList(data);
                 await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
@@ -1734,7 +1734,7 @@ Template.transaction_list.onRendered(function() {
                   return true;
                 }
               });
-          
+
             data = data.response;
             const payRuns = PayRun.fromList(data);
             await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
@@ -1786,14 +1786,14 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayPayRunHistory,
                 columnDefs: [
                     {
-                        className: "colPayrollLeaveID hiddenColumn", 
+                        className: "colPayrollLeaveID hiddenColumn",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colName", 
+                        className: "colName",
                         targets: 1,
                         width:'100px'
                     },
@@ -2051,14 +2051,14 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayTimeSheetList,
                 columnDefs: [
                     {
-                        className: "colID", 
+                        className: "colID",
                         targets:0,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[0]);
                         }
                     },
                     {
-                        className: "colName", 
+                        className: "colName",
                         targets: 1,
                         width:'100px'
                     },
@@ -2504,7 +2504,6 @@ Template.transaction_list.helpers({
         }
     },
     trans_displayfields: () => {
-        //console.log("display", Template.instance().trans_displayfields.get());
         return Template.instance().trans_displayfields.get();
     },
     datatablerecords: () => {
