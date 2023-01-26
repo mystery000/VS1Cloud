@@ -106,17 +106,41 @@ Template.transaction_list.onRendered(function() {
             ];
         }else if(currenttablename === "tblPayRunHistory"){
             reset_data = [
-                { index: 0, label: 'ID', class: 'colPayRunHistoryID', active: false, display: true, width: "" },
-                { index: 1, label: 'Calendar', class: 'colPayRunCalendar', active: true, display: true, width: "100" },
-                { index: 2, label: 'Period', class: 'colPayRunPeriod', active: true, display: true, width: "100" },
-                { index: 3, label: 'Payment Date', class: 'colPayRunPaymentDate', active: true, display: true, width: "150" },
-                { index: 4, label: 'Wages', class: 'colPayRunWages', active: true, display: true, width: "150" },
-                { index: 5, label: 'Tax', class: 'colPayRunTax', active: true, display: true, width: "100" },
-                { index: 6, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
-                { index: 7, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
+                { index: 0, label: 'Calendar', class: 'PayRunCalendar', active: true, display: true, width: "100" },
+                { index: 1, label: 'Period', class: 'PayRunPeriod', active: true, display: true, width: "100" },
+                { index: 2, label: 'Payment Date', class: 'PayRunPaymentDate', active: true, display: true, width: "150" },
+                { index: 3, label: 'Wages', class: 'PayRunWages', active: true, display: true, width: "150" },
+                { index: 4, label: 'Tax', class: 'PayRunTax', active: true, display: true, width: "100" },
+                { index: 5, label: 'Super', class: 'PayRunSuper', active: true, display: true, width: "100" },
+                { index: 6, label: 'Net Pay', class: 'PayRunNetPay', active: true, display: true, width: "100" },
             ]
         }else if(currenttablename === "tblPayleaveToReview"){
             reset_data = [
+                { index: 0, label: 'Name', class: 'Name', active: true, display: true, width: "100" },
+                { index: 1, label: 'Type', class: 'Type', active: true, display: true, width: "100" },
+                { index: 2, label: 'Date', class: 'Date', active: true, display: true, width: "150" },
+                { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+            ]
+        }else if(currenttablename === "tblTimeSheet"){
+           reset_data = [
+                { index: 0, label: 'Employee', class: 'Name', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'Date', active: true, display: true, width: "100" },
+                { index: 2, label: 'Job', class: 'Job', active: true, display: true, width: "150" },
+                { index: 3, label: 'Product', class: 'Product', active: true, display: true, width: "150" },
+                { index: 4, label: 'HiddenHours', class: 'RegHours', active: false, display: true, width: "100" },
+                { index: 5, label: 'Hours', class: 'RegHoursOne', active: true, display: true, width: "50" },
+                { index: 6, label: 'Overtime', class: 'Overtime', active: true, display: true, width: "80" },
+                { index: 7, label: 'Double', class: 'Double', active: true, display: true, width: "50" },
+                { index: 8, label: 'Additional', class: 'Additional', active: true, display: true, width: "100" },
+                { index: 9, label: 'Tips', class: 'PaycheckTips', active: true, display: true, width: "50" },
+                { index: 10, label: 'Technical Notes', class: 'Notes', active: true, display: true, width: "100" },
+                { index: 11, label: 'Break', class: 'Description', active: true, display: true, width: "100" },
+                { index: 12, label: 'Status', class: 'Status', active: true, display: true, width: "100" },
+                { index: 13, label: 'Invoiced', class: 'Invoiced', active: false, display: true, width: "100" },
+                { index: 14, label: 'Hourly Rate', class: 'Hourlyrate', active: false, display: true, width: "100" },
+                { index: 15, label: 'View', class: 'View', active: true, display: true, width: "100" },
+            ]
                 { index: 0, label: 'ID', class: 'colPayrollLeaveID', active: false, display: true, width: "" },
                 { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
                 { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
@@ -163,6 +187,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 8, label: "Comments", class: "colComment", width: "", active: true, display: true },
             ];
         }
+        
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -1538,16 +1563,18 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayPayRunHistory,
                 columnDefs: [
                     {
-                        className: "colPayRunHistoryID hiddenColumn", 
-                        targets:0,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                        }
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
                     },
                     {
                         className: "colPayRunCalendar", 
                         targets: 1,
-                        width:'100px'
+                        width:'100px',
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
                     },
                     {
                         className: "colPayRunPeriod",
@@ -1800,16 +1827,18 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayPayRunHistory,
                 columnDefs: [
                     {
-                        className: "colPayrollLeaveID hiddenColumn", 
-                        targets:0,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                        }
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
                     },
                     {
                         className: "colName", 
                         targets: 1,
-                        width:'100px'
+                        width:'100px',
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
                     },
                     {
                         className: "colType",
@@ -1973,6 +2002,19 @@ Template.transaction_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.timeFormat = function(hours) {
+        var decimalTime = parseFloat(hours).toFixed(2);
+        decimalTime = decimalTime * 60 * 60;
+        var hours = Math.floor((decimalTime / (60 * 60)));
+        decimalTime = decimalTime - (hours * 60 * 60);
+        var minutes = Math.abs(decimalTime / 60);
+        decimalTime = decimalTime - (minutes * 60);
+        hours = ("0" + hours).slice(-2);
+        minutes = ("0" + Math.round(minutes)).slice(-2);
+        let time = hours + ":" + minutes;
+        return time;
+    }
+
     templateObject.getTimeSheetListData = function(){
         getVS1Data('TTimeSheet').then(async function (dataObject) {
             if (dataObject.length == 0) {
@@ -2032,24 +2074,41 @@ Template.transaction_list.onRendered(function() {
         let lineID = "";
         let splashArrayTimeSheetList = new Array();
         for (let t = 0; t < data.ttimesheet.length; t++) {
+            let sortdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("YYYY/MM/DD") : data.ttimesheet[t].fields.TimeSheetDate;
+            let timesheetdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data.ttimesheet[t].fields.TimeSheetDate;
+            let hoursFormatted = templateObject.timeFormat(data.ttimesheet[t].fields.Hours) || '';
+            let description = '';
+            let lineEmpID = '';
+            if (data.ttimesheet[t].fields.Logs) {
+                if (Array.isArray(data.ttimesheet[t].fields.Logs)) {
+                    // It is array
+                    lineEmpID = data.ttimesheet[t].fields.Logs[0].fields.EmployeeID || '';
+                    description = data.ttimesheet[t].fields.Logs[data.ttimesheet[t].fields.Logs.length - 1].fields.Description || '';
+                } else {
+                    lineEmpID = data.ttimesheet[t].fields.Logs.fields.EmployeeID || '';
+                    description = data.ttimesheet[t].fields.Logs.fields.Description || '';
+                }
+            }
+            let checkStatus = data.ttimesheet[t].fields.Status || 'Unprocessed';
             var dataTimeSheet = [
                 data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
-                data.ttimesheet[t].fields.ID || "",
+                data.ttimesheet[t].fields.EmployeeName || "",
+                '<span style="display:none;">' + sortdate + '</span> ' + timesheetdate || '',
+                data.ttimesheet[t].fields.Job || '',
+                data.ttimesheet[t].fields.ServiceName || '',
+                '<input class="colRegHours highlightInput" type="number" value="' + data.ttimesheet[t].fields.Hours + '"><span class="colRegHours" style="display: none;">' + data.ttimesheet[t].fields.Hours + '</span>' || '',
+                '<input class="colRegHoursOne highlightInput" type="text" value="' + hoursFormatted + '" autocomplete="off">' || '',
+                '<input class="colOvertime highlightInput" type="number" value="0"><span class="colOvertime" style="display: none;">0</span>' || '',
+                '<input class="colDouble highlightInput" type="number" value="0"><span class="colDouble" style="display: none;">0</span>' || '',
+                '<input class="colAdditional highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colAdditional" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                '<input class="colPaycheckTips highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colPaycheckTips" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                
+                data.ttimesheet[t].fields.Notes || '',
+                description || '',
+                checkStatus || '',
+                "",
+                data.ttimesheet[t].fields.HourlyRate || '',
+                '<a href="/timesheettimelog?id=' + data.ttimesheet[t].fields.ID + '" class="btn btn-sm btn-success btnTimesheetListOne" style="width: 36px;" id="" autocomplete="off"><i class="far fa-clock"></i></a>' || ''
               ];
             splashArrayTimeSheetList.push(dataTimeSheet);
         }
@@ -2065,16 +2124,18 @@ Template.transaction_list.onRendered(function() {
                 data: splashArrayTimeSheetList,
                 columnDefs: [
                     {
-                        className: "colID", 
-                        targets:0,
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                        }
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
                     },
                     {
                         className: "colName", 
                         targets: 1,
-                        width:'100px'
+                        width:'100px',
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
                     },
                     {
                         className: "colDate",
@@ -2087,7 +2148,7 @@ Template.transaction_list.onRendered(function() {
                         width:'100px'
                     },
                     {
-                        className: "colRate",
+                        className: "colProduct",
                         targets: 4,
                         width:'100px'
                     },
@@ -2099,17 +2160,17 @@ Template.transaction_list.onRendered(function() {
                     {
                         className: "colRegHoursOne",
                         targets: 6,
-                        width:'100px'
+                        width:'50px'
                     },
                     {
                         className: "colOvertime",
                         targets: 7,
-                        width:'100px'
+                        width:'80px'
                     },
                     {
                         className: "colDouble",
                         targets: 8,
-                        width:'100px'
+                        width:'50px'
                     },
                     {
                         className: "colAdditional",
@@ -2119,7 +2180,7 @@ Template.transaction_list.onRendered(function() {
                     {
                         className: "colPaycheckTips",
                         targets: 10,
-                        width:'100px'
+                        width:'50px'
                     },
                     {
                         className: "colNotes",
@@ -2293,6 +2354,19 @@ Template.transaction_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getAllAppointmentListData = function(){
+        getVS1Data('TAppointmentList').then(async function(dataObject) {
+            if (dataObject.length == 0) {
+            }else{
+                
+            }
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    }
+
+    templateObject.displayAppointmentListData = function(){
+    }
     //workorders data
     templateObject.getWorkorderData = async function(viewDeleted) {
         getVS1Data('TVS1Workorder').then(function(dataObject) {
@@ -2570,6 +2644,8 @@ Template.transaction_list.onRendered(function() {
         templateObject.getPayrollLeaveData("");
     }else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetListData()
+    }else if (currenttablename === "tblappointmentlist"){
+        templateObject.getAllAppointmentListData();
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
     }
@@ -2594,6 +2670,18 @@ Template.transaction_list.events({
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
+            templateObject.getBankingOverviewData();
+        }else if (currenttablename === "tblPayRunHistory"){
+            await clearData('TPayRunHistory');
+            templateObject.getPayRunHistoryData("");
+        }else if (currenttablename === "tblPayleaveToReview"){
+            await clearData('TLeavRequest');
+            templateObject.getPayrollLeaveData("");
+        }else if (currenttablename === "tblTimeSheet"){
+            await clearData('TTimeSheet');
+            templateObject.getTimeSheetListData()
+        }else if (currenttablename === "tblappointmentlist"){
+            templateObject.getAllAppointmentListData();
             templateObject.getBankingOverviewData(true);
         }
     },
@@ -2612,6 +2700,17 @@ Template.transaction_list.events({
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
             templateObject.getBankingOverviewData();
+        }else if (currenttablename === "tblPayRunHistory"){
+            await clearData('TPayRunHistory');
+            templateObject.getPayRunHistoryData("");
+        }else if (currenttablename === "tblPayleaveToReview"){
+            await clearData('TLeavRequest');
+            templateObject.getPayrollLeaveData("");
+        }else if (currenttablename === "tblTimeSheet"){
+            await clearData('TTimeSheet');
+            templateObject.getTimeSheetListData()
+        }else if (currenttablename === "tblappointmentlist"){
+            templateObject.getAllAppointmentListData();
         }
 
     },
