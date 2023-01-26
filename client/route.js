@@ -2412,6 +2412,15 @@ authenticatedRoutes.route('/serviceloglist', {
     }
 });
 
+authenticatedRoutes.route('/manufacturingoverview', {
+    name: 'manufacturingoverview',
+    action(){
+        BlazeLayout.render('layout', {
+            yield: 'manufacturingoverview'
+        })
+    }
+});
+
 authenticatedRoutes.route('/bomlist', {
     name: 'bom_list',
     action(){
