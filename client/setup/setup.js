@@ -37,7 +37,7 @@ const refreshTableTimout = 300;
 
 let stepTitles = ["Organization", "Tax Rates", "Payment", "Terms", "Employees", "Accounts", 'Bank Accounts', "Customers", "Suppliers", "Inventory", "Dashboard", "Launch"];
 
-export const handleSetupRedirection = (onSetupFinished = "/onloginsuccess", onSetupUnFinished = "/setup") => {
+export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUnFinished = "/setup") => {
   let ERPIPAddress = localStorage.getItem('EIPAddress');
   let ERPUsername = localStorage.getItem('EUserName');
   let ERPPassword = localStorage.getItem('EPassword');
@@ -195,7 +195,7 @@ Template.setup.onRendered(function () {
   templateObject.isSetupFinished = async () => {
     const isFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
     if (isFinished == true || isFinished == "true") {
-      FlowRouter.go("onloginsuccess");
+      FlowRouter.go("dashboard");
     }
   };
 
@@ -292,7 +292,7 @@ Template.setup.onRendered(function () {
     LoadingOverlay.hide();
 
   };
-  
+
   $(function () {
     $(".resizablePopup").resizable();
   });

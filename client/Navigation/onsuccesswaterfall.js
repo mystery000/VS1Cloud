@@ -204,7 +204,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   // here get menu bar preference from local storage and set menubarPositionClass
 
   let loggedUserEventFired = (localStorage.getItem('LoggedUserEventFired') == "true");
-  if (loggedUserEventFired) {
+  if (JSON.parse(loggedUserEventFired)) {
     $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
     $('.headerprogressbar').addClass('headerprogressbarShow');
     $('.headerprogressbar').removeClass('headerprogressbarHidden');
@@ -274,7 +274,7 @@ Template.onsuccesswaterfall.onRendered(function () {
       } else {
         let getTimeStamp = dataObject[0].timestamp.split(' ');
         if (getTimeStamp) {
-          if (loggedUserEventFired) {
+          if (JSON.parse(loggedUserEventFired)) {
             if (getTimeStamp[0] != currenctTodayDate) {
               sideBarService.getCurrentLoggedUser().then(function (data) {
                 addVS1Data('TAppUser', JSON.stringify(data));
@@ -2692,7 +2692,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   /* Start Here */
-  if (loggedUserEventFired) {
+  if (JSON.parse(loggedUserEventFired)) {
     templateObject.getFollowedAllObjectPull = function () {
       setTimeout(function () {
         if (isPayments) {
@@ -2702,7 +2702,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTStatementListData();
                   }
@@ -2721,7 +2721,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTVS1BankDepositData();
                   }
@@ -2740,7 +2740,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTimeSheetData();
                   }
@@ -2757,7 +2757,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           //     } else {
           //         let getTimeStamp = dataObject[0].timestamp.split(' ');
           //         if (getTimeStamp) {
-          //             if (loggedUserEventFired) {
+          //             if (JSON.parse(loggedUserEventFired)) {
           //                 if (getTimeStamp[0] != currenctTodayDate) {
           //                     templateObject.getAllPayRunData();
           //                 }
@@ -2774,7 +2774,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllPayHistoryData();
                   }
@@ -2791,7 +2791,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllAllowanceData();
                   }
@@ -2808,7 +2808,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllEmployeepaysettingsData();
                   }
@@ -2832,7 +2832,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               }
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllJournalEntryLineData();
                   }
@@ -2894,7 +2894,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                 } else {
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if (getTimeStamp) {
-                    if (loggedUserEventFired) {
+                    if (JSON.parse(loggedUserEventFired)) {
                       if (getTimeStamp[0] != currenctTodayDate) {
                         templateObject.getAllTStockAdjustEntryData();
                       }
@@ -2917,7 +2917,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTARReportData();
                   }
@@ -2934,7 +2934,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTAPReportData();
                   }
@@ -2953,7 +2953,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTPaymentListData();
                   }
@@ -2970,7 +2970,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTSupplierPaymentData();
                   }
@@ -2987,7 +2987,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getTCustomerPaymentData();
                   }
@@ -3030,7 +3030,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTTransactionListReportData();
                   }
@@ -3108,7 +3108,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                 } else {
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if (getTimeStamp) {
-                    if (loggedUserEventFired) {
+                    if (JSON.parse(loggedUserEventFired)) {
                       if (getTimeStamp[0] != currenctTodayDate) {
                         templateObject.getAllTCreditData();
                       }
@@ -3203,7 +3203,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                 } else {
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if (getTimeStamp) {
-                    if (loggedUserEventFired) {
+                    if (JSON.parse(loggedUserEventFired)) {
                       if (getTimeStamp[0] != currenctTodayDate) {
                         sideBarService.getAllBillExList(initialDataLoad, 0).then(function (data) {
                           countObjectTimes++;
@@ -3286,7 +3286,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                   } else {
                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                     if (getTimeStamp) {
-                      if (loggedUserEventFired) {
+                      if (JSON.parse(loggedUserEventFired)) {
                         if (getTimeStamp[0] != currenctTodayDate) {
                           templateObject.getAllTChequeData();
                         }
@@ -3375,7 +3375,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               } else {
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                  if (loggedUserEventFired) {
+                  if (JSON.parse(loggedUserEventFired)) {
                     if (getTimeStamp[0] != currenctTodayDate) {
                       sideBarService.getAllPurchaseOrderList(initialDataLoad, 0).then(function (data) {
                         countObjectTimes++;
@@ -3466,7 +3466,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                   } else {
                     let getTimeStamp = dataObject[0].timestamp.split(' ');
                     if (getTimeStamp) {
-                      if (loggedUserEventFired) {
+                      if (JSON.parse(loggedUserEventFired)) {
                         if (getTimeStamp[0] != currenctTodayDate) {
                           templateObject.getAllTChequeData();
                         }
@@ -3667,7 +3667,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                       countObjectTimes++;
@@ -3748,7 +3748,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllAppointmentPrefData();
                   }
@@ -3765,7 +3765,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTERPPreferenceData();
                   }
@@ -3782,7 +3782,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTERPPreferenceExtraData();
                   }
@@ -3823,7 +3823,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTSalesListData();
                   }
@@ -3898,7 +3898,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                  if (loggedUserEventFired) {
+                  if (JSON.parse(loggedUserEventFired)) {
                     if (getTimeStamp[0] != currenctTodayDate) {
                       sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
                         countObjectTimes++;
@@ -3980,7 +3980,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               } else {
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                  if (loggedUserEventFired) {
+                  if (JSON.parse(loggedUserEventFired)) {
                     if (getTimeStamp[0] != currenctTodayDate) {
                       templateObject.getAllSalesOrderExListData();
                     }
@@ -4003,7 +4003,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               } else {
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                  if (loggedUserEventFired) {
+                  if (JSON.parse(loggedUserEventFired)) {
                     if (getTimeStamp[0] != currenctTodayDate) {
                       templateObject.getAllRefundListData();
                     }
@@ -4036,7 +4036,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                 } else {
                   let getTimeStamp = dataObject[0].timestamp.split(' ');
                   if (getTimeStamp) {
-                    if (loggedUserEventFired) {
+                    if (JSON.parse(loggedUserEventFired)) {
                       if (getTimeStamp[0] != currenctTodayDate) {
                         templateObject.getAllTQuoteData();
                       }
@@ -4069,7 +4069,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               } else {
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                  if (loggedUserEventFired) {
+                  if (JSON.parse(loggedUserEventFired)) {
                     if (getTimeStamp[0] != currenctTodayDate) {
                       templateObject.getAllBackOrderInvoicetData();
                     }
@@ -4173,7 +4173,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllCustomersData();
                   }
@@ -4190,7 +4190,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTJobVS1Data();
                   }
@@ -4207,7 +4207,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllSuppliersData();
                   }
@@ -4224,7 +4224,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllEmployeeData();
                   }
@@ -4251,7 +4251,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllAppointmentData();
                 }
@@ -4268,7 +4268,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllAppointmentPrefData();
                 }
@@ -4285,7 +4285,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllTERPPreferenceData();
                 }
@@ -4302,7 +4302,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllTERPPreferenceExtraData();
                 }
@@ -4322,7 +4322,7 @@ Template.onsuccesswaterfall.onRendered(function () {
               } else {
                 let getTimeStamp = dataObject[0].timestamp.split(' ');
                 if (getTimeStamp) {
-                  if (loggedUserEventFired) {
+                  if (JSON.parse(loggedUserEventFired)) {
                     if (getTimeStamp[0] != currenctTodayDate) {
                       templateObject.getAllProductServiceData();
                     }
@@ -4364,7 +4364,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function (data) {
                       countObjectTimes++;
@@ -4432,7 +4432,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllRecentTransactions();
                   }
@@ -4449,7 +4449,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTProductStocknSalePeriodReportData();
                   }
@@ -4467,7 +4467,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllTStockTransferEntryData();
                   }
@@ -4514,7 +4514,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllAccountsData();
                 }
@@ -4533,7 +4533,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
-                if (loggedUserEventFired) {
+                if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
                     templateObject.getAllProductServiceData();
                   }
@@ -4575,7 +4575,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function (data) {
                     countObjectTimes++;
@@ -4643,7 +4643,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllRecentTransactions();
                 }
@@ -4661,7 +4661,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllTProductStocknSalePeriodReportData();
                 }
@@ -4679,7 +4679,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           } else {
             let getTimeStamp = dataObject[0].timestamp.split(' ');
             if (getTimeStamp) {
-              if (loggedUserEventFired) {
+              if (JSON.parse(loggedUserEventFired)) {
                 if (getTimeStamp[0] != currenctTodayDate) {
                   templateObject.getAllTStockTransferEntryData();
                 }
@@ -4702,6 +4702,8 @@ Template.onsuccesswaterfall.onRendered(function () {
 
 
     templateObject.dashboardRedirectOnLogin = async function() {
+      $('.headerprogressbar').addClass('killProgressBar');
+      /*
     let dataReturnRes = await getVS1Data('VS1_Dashboard');
 
     if (dataReturnRes.length > 0) {
@@ -4742,6 +4744,7 @@ Template.onsuccesswaterfall.onRendered(function () {
          FlowRouter.go('/dashboard');
       };
     }
+    */
   };
     // templateObject.dashboardRedirectOnLogin();
 });
@@ -4760,6 +4763,6 @@ Template.onsuccesswaterfall.helpers({
   },
   loggedFirstName: () => {
       const loggedEmployeedName1 = localStorage.getItem('vs1LoggedEmployeeName').split(" ");
-      return loggedEmployeedName1;
+      return loggedEmployeedName1[0]||'';
   }
 });
