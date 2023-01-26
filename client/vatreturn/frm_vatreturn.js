@@ -326,30 +326,30 @@ Template.vatreturn.onRendered(function() {
                                     $("#datemethod2-t3").prop('checked', true);
                                 }
 
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
-                                shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2ASelected, "tbltaxCodeCheckbox_2A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT3Selected, "tbltaxCodeCheckbox_3");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT5Selected, "tbltaxCodeCheckbox_5");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT7Selected, "tbltaxCodeCheckbox_7");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT10Selected, "tbltaxCodeCheckbox_10");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT12Selected, "tbltaxCodeCheckbox_12");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14Selected, "tbltaxCodeCheckbox_14");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14ASelected, "tbltaxCodeCheckbox_14A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15Selected, "tbltaxCodeCheckbox_15");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15ASelected, "tbltaxCodeCheckbox_15A");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT16Selected, "tbltaxCodeCheckbox_16");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT17Selected, "tbltaxCodeCheckbox_17");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT18Selected, "tbltaxCodeCheckbox_18");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT21Selected, "tbltaxCodeCheckbox_21");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT22Selected, "tbltaxCodeCheckbox_22");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT26Selected, "tbltaxCodeCheckbox_26");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT27Selected, "tbltaxCodeCheckbox_27");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT30Selected, "tbltaxCodeCheckbox_30");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT31Selected, "tbltaxCodeCheckbox_31");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
+                                shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                             }
                             if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
                                 let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
@@ -532,30 +532,30 @@ Template.vatreturn.onRendered(function() {
                                 $("#datemethod2-t3").prop('checked', true);
                             }
 
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2ASelected, "tbltaxCodeCheckbox_2A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT3Selected, "tbltaxCodeCheckbox_3");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT5Selected, "tbltaxCodeCheckbox_5");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT7Selected, "tbltaxCodeCheckbox_7");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT10Selected, "tbltaxCodeCheckbox_10");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT12Selected, "tbltaxCodeCheckbox_12");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14Selected, "tbltaxCodeCheckbox_14");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14ASelected, "tbltaxCodeCheckbox_14A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15Selected, "tbltaxCodeCheckbox_15");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15ASelected, "tbltaxCodeCheckbox_15A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT16Selected, "tbltaxCodeCheckbox_16");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT17Selected, "tbltaxCodeCheckbox_17");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT18Selected, "tbltaxCodeCheckbox_18");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT21Selected, "tbltaxCodeCheckbox_21");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT22Selected, "tbltaxCodeCheckbox_22");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT26Selected, "tbltaxCodeCheckbox_26");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT27Selected, "tbltaxCodeCheckbox_27");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT30Selected, "tbltaxCodeCheckbox_30");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT31Selected, "tbltaxCodeCheckbox_31");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                         }
                         if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
                             let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
@@ -714,30 +714,30 @@ Template.vatreturn.onRendered(function() {
                                 $("#datemethod2-t3").prop('checked', true);
                             }
 
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
-                            shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2ASelected, "tbltaxCodeCheckbox_2A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT3Selected, "tbltaxCodeCheckbox_3");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT5Selected, "tbltaxCodeCheckbox_5");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT7Selected, "tbltaxCodeCheckbox_7");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT10Selected, "tbltaxCodeCheckbox_10");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT12Selected, "tbltaxCodeCheckbox_12");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14Selected, "tbltaxCodeCheckbox_14");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14ASelected, "tbltaxCodeCheckbox_14A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15Selected, "tbltaxCodeCheckbox_15");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15ASelected, "tbltaxCodeCheckbox_15A");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT16Selected, "tbltaxCodeCheckbox_16");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT17Selected, "tbltaxCodeCheckbox_17");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT18Selected, "tbltaxCodeCheckbox_18");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT21Selected, "tbltaxCodeCheckbox_21");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT22Selected, "tbltaxCodeCheckbox_22");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT26Selected, "tbltaxCodeCheckbox_26");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT27Selected, "tbltaxCodeCheckbox_27");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT30Selected, "tbltaxCodeCheckbox_30");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT31Selected, "tbltaxCodeCheckbox_31");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
+                            shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                         }
                         if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
                             let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
@@ -1000,61 +1000,61 @@ Template.vatreturn.onRendered(function() {
 
                     var tax4cost = parseFloat($("#tax1cost").val()) * 15 / (100 + 15);
                     $("#tax4cost").val(tax4cost.toFixed(2));
-                    $("#prt_tax4cost").html("$" + tax4cost.toFixed(2));
+                    $("#prt_tax4cost").html("R" + tax4cost.toFixed(2));
                     var tax4Acost = parseFloat($("#tax1Acost").val()) * 15 / (100 + 15);
                     $("#tax4Acost").val(tax4Acost.toFixed(2));
-                    $("#prt_tax4Acost").html("$" + tax4Acost.toFixed(2));
+                    $("#prt_tax4Acost").html("R" + tax4Acost.toFixed(2));
                     var tax6cost = parseFloat($("#tax5Acost").val()) * 60 / 100;
                     $("#tax6cost").val(tax6cost.toFixed(2));
-                    $("#prt_tax6cost").html("$" + tax6cost.toFixed(2));
+                    $("#prt_tax6cost").html("R" + tax6cost.toFixed(2));
                     var tax8cost = tax6cost + parseFloat($("#tax7cost").val());
                     $("#tax8cost").val(tax8cost.toFixed(2));
-                    $("#prt_tax8cost").html("$" + tax8cost.toFixed(2));
+                    $("#prt_tax8cost").html("R" + tax8cost.toFixed(2));
                     var tax9cost = tax8cost * 15 / 100;
                     $("#tax9cost").val(tax9cost.toFixed(2));
-                    $("#prt_tax9cost").html("$" + tax9cost.toFixed(2));
+                    $("#prt_tax9cost").html("R" + tax9cost.toFixed(2));
                     var tax11cost = parseFloat($("#tax10cost").val()) * 15 / (100 + 15);
                     $("#tax11cost").val(tax11cost.toFixed(2));
-                    $("#prt_tax11cost").html("$" + tax11cost.toFixed(2));
+                    $("#prt_tax11cost").html("R" + tax11cost.toFixed(2));
                     var tax13cost = tax4cost + tax4acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
                     $("#tax13cost").val(tax13cost.toFixed(2));
-                    $("#prt_tax13cost").html("$" + tax13cost.toFixed(2));
+                    $("#prt_tax13cost").html("R" + tax13cost.toFixed(2));
                     var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14Acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15Acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
                     $("#tax19cost").val(tax19cost.toFixed(2));
-                    $("#prt_tax19cost").html("$" + tax19cost.toFixed(2));
+                    $("#prt_tax19cost").html("R" + tax19cost.toFixed(2));
                     var tax20cost = tax13cost - tax19cost;
                     $("#tax20cost").val(tax20cost.toFixed(2));
-                    $("#prt_tax20cost").html("$" + tax20cost.toFixed(2));
+                    $("#prt_tax20cost").html("R" + tax20cost.toFixed(2));
                     var tax23cost = parseFloat($("#tax21cost").val()) - parseFloat($("#tax22cost").val());
                     $("#tax23cost").val(tax23cost.toFixed(2));
-                    $("#prt_tax23cost").html("$" + tax23cost.toFixed(2));
+                    $("#prt_tax23cost").html("R" + tax23cost.toFixed(2));
                     var tax24cost = tax23cost * 80 / 100;
                     $("#tax24cost").val(tax24cost.toFixed(2));
-                    $("#prt_tax24cost").html("$" + tax24cost.toFixed(2));
+                    $("#prt_tax24cost").html("R" + tax24cost.toFixed(2));
                     var tax25cost = tax24cost * 332.8 / 100;
                     $("#tax25cost").val(tax25cost.toFixed(2));
-                    $("#prt_tax25cost").html("$" + tax25cost.toFixed(2));
+                    $("#prt_tax25cost").html("R" + tax25cost.toFixed(2));
                     var tax28cost = parseFloat($("#tax26cost").val()) - parseFloat($("#tax27cost").val());
                     $("#tax28cost").val(tax28cost.toFixed(2));
-                    $("#prt_tax28cost").html("$" + tax28cost.toFixed(2));
+                    $("#prt_tax28cost").html("R" + tax28cost.toFixed(2));
                     var tax29cost = tax28cost * 562 / 100;
                     $("#tax29cost").val(tax29cost.toFixed(2));
-                    $("#prt_tax29cost").html("$" + tax29cost.toFixed(2));
+                    $("#prt_tax29cost").html("R" + tax29cost.toFixed(2));
                     var tax32cost = parseFloat($("#tax30cost").val()) - parseFloat($("#tax31cost").val());
                     $("#tax32cost").val(tax32cost.toFixed(2));
-                    $("#prt_tax32cost").html("$" + tax32cost.toFixed(2));
+                    $("#prt_tax32cost").html("R" + tax32cost.toFixed(2));
                     var tax33cost = tax32cost * 207 / 100;
                     $("#tax33cost").val(tax33cost.toFixed(2));
-                    $("#prt_tax33cost").html("$" + tax33cost.toFixed(2));
+                    $("#prt_tax33cost").html("R" + tax33cost.toFixed(2));
                     var tax36cost = parseFloat($("#tax34cost").val()) - parseFloat($("#tax35cost").val());
                     $("#tax36cost").val(tax36cost.toFixed(2));
-                    $("#prt_tax36cost").html("$" + tax36cost.toFixed(2));
+                    $("#prt_tax36cost").html("R" + tax36cost.toFixed(2));
                     var tax37cost = tax36cost * 384.5 / 100;
                     $("#tax37cost").val(tax37cost.toFixed(2));
-                    $("#prt_tax37cost").html("$" + tax37cost.toFixed(2));
+                    $("#prt_tax37cost").html("R" + tax37cost.toFixed(2));
                     var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
                     $("#tax38cost").val(tax38cost.toFixed(2));
-                    $("#prt_tax38cost").html("$" + tax38cost.toFixed(2));
+                    $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
                 });
             }
 
@@ -1198,34 +1198,56 @@ Template.vatreturn.onRendered(function() {
                                 $("#vatreturnCategory1").prop('checked', data.tvatreturn[0].fields.HasTab1);
                                 $("#vatreturnCategory2").prop('checked', data.tvatreturn[0].fields.HasTab2);
                                 $("#vatreturnCategory3").prop('checked', data.tvatreturn[0].fields.HasTab3);
+                                $("#vatreturnCategory4").prop('checked', data.tvatreturn[0].fields.HasTab4);
+                                $("#vatreturnCategory5").prop('checked', data.tvatreturn[0].fields.HasTab5);
                                 if (data.tvatreturn[0].fields.HasTab1 == true) {
+                                    $("#nav-item1").show();
                                     document.getElementById("tax1").setAttribute("href", "#taxCode1option");
                                     document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                                     document.getElementById("tax2").setAttribute("href", "#taxCode2option");
                                     document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                                     document.getElementById("tax3").setAttribute("href", "#taxCode3option");
-                                    $("#tax4cost").attr("disabled", "disabled");
-                                    $("#tax4acost").attr("disabled", "disabled");
                                     document.getElementById("tax5").setAttribute("href", "#taxCode5option");
                                     document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                     document.getElementById("tax10").setAttribute("href", "#taxCode10option");
-                                    $("#tax11cost").attr("disabled", "disabled");
                                     document.getElementById("tax12").setAttribute("href", "#taxCode12option");
+                
+                                    $("#tax4cost").removeAttr("disabled");
+                                    $("#tax4acost").removeAttr("disabled");
+                                    $("#tax11cost").removeAttr("disabled");
                                 } else {
+                                    $("#nav-item1").hide();
+                                    if($("#tab-1").hasClass("active")){
+                                        if ($("#vatreturnCategory2").prop('checked') == true) {
+                                            $("#nav-item2 a").click();
+                                        }
+                                        else if($("#vatreturnCategory3").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else if($("#vatreturnCategory4").prop('checked') == true){
+                                            $("#nav-item4 a").click();
+                                        }
+                                        else if($("#vatreturnCategory5").prop('checked') == true){
+                                            $("#nav-item5 a").click();
+                                        }
+                                    }
                                     document.getElementById("tax1").setAttribute("href", "#");
                                     document.getElementById("tax1A").setAttribute("href", "#");
                                     document.getElementById("tax2").setAttribute("href", "#");
                                     document.getElementById("tax2A").setAttribute("href", "#");
                                     document.getElementById("tax3").setAttribute("href", "#");
-                                    $("#tax4cost").attr("disabled", "disabled");
-                                    $("#tax4acost").attr("disabled", "disabled");
                                     document.getElementById("tax5").setAttribute("href", "#");
                                     document.getElementById("tax7").setAttribute("href", "#");
                                     document.getElementById("tax10").setAttribute("href", "#");
-                                    $("#tax11cost").attr("disabled", "disabled");
                                     document.getElementById("tax12").setAttribute("href", "#");
+                
+                                    $("#tax4cost").attr("disabled", "disabled");
+                                    $("#tax4acost").attr("disabled", "disabled");
+                                    $("#tax11cost").attr("disabled", "disabled");
                                 }
+                            
                                 if (data.tvatreturn[0].fields.HasTab2 == true) {
+                                    $("#nav-item2").show();
                                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
                                     document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                                     document.getElementById("tax15").setAttribute("href", "#taxCode15option");
@@ -1234,6 +1256,21 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                                     document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                                 } else {
+                                    $("#nav-item2").hide();
+                                    if($("#tab-2").hasClass("active")){
+                                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if($("#vatreturnCategory3").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else if($("#vatreturnCategory4").prop('checked') == true){
+                                            $("#nav-item4 a").click();
+                                        }
+                                        else if($("#vatreturnCategory5").prop('checked') == true){
+                                            $("#nav-item5 a").click();
+                                        }
+                                    }
                                     document.getElementById("tax14").setAttribute("href", "#");
                                     document.getElementById("tax14A").setAttribute("href", "#");
                                     document.getElementById("tax15").setAttribute("href", "#");
@@ -1242,24 +1279,99 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax17").setAttribute("href", "#");
                                     document.getElementById("tax18").setAttribute("href", "#");
                                 }
+                            
                                 if (data.tvatreturn[0].fields.HasTab3 == true) {
+                                    $("#nav-item3").show();
                                     document.getElementById("tax21").setAttribute("href", "#taxCode21option");
                                     document.getElementById("tax22").setAttribute("href", "#taxCode22option");
+                                    document.getElementById("tax23").setAttribute("href", "#taxCode23option");
                                     document.getElementById("tax26").setAttribute("href", "#taxCode26option");
                                     document.getElementById("tax27").setAttribute("href", "#taxCode27option");
+                                    document.getElementById("tax28").setAttribute("href", "#taxCode28option");
                                     document.getElementById("tax30").setAttribute("href", "#taxCode30option");
                                     document.getElementById("tax31").setAttribute("href", "#taxCode31option");
+                                    document.getElementById("tax32").setAttribute("href", "#taxCode32option");
                                     document.getElementById("tax34").setAttribute("href", "#taxCode34option");
                                     document.getElementById("tax35").setAttribute("href", "#taxCode35option");
+                                    document.getElementById("tax36").setAttribute("href", "#taxCode36option");
                                 } else {
-                                    document.getElementById("tax21").setAttribute("href", "#taxCode21option");
-                                    document.getElementById("tax22").setAttribute("href", "#taxCode22option");
-                                    document.getElementById("tax26").setAttribute("href", "#taxCode26option");
-                                    document.getElementById("tax27").setAttribute("href", "#taxCode27option");
-                                    document.getElementById("tax30").setAttribute("href", "#taxCode30option");
-                                    document.getElementById("tax31").setAttribute("href", "#taxCode31option");
-                                    document.getElementById("tax34").setAttribute("href", "#taxCode34option");
-                                    document.getElementById("tax35").setAttribute("href", "#taxCode35option");
+                                    $("#nav-item3").hide();
+                                    if($("#tab-3").hasClass("active")){
+                                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if($("#vatreturnCategory2").prop('checked') == true){
+                                            $("#nav-item2 a").click();
+                                        }
+                                        else if($("#vatreturnCategory4").prop('checked') == true){
+                                            $("#nav-item4 a").click();
+                                        }
+                                        else if($("#vatreturnCategory5").prop('checked') == true){
+                                            $("#nav-item5 a").click();
+                                        }
+                                    }
+                                    document.getElementById("tax21").setAttribute("href", "#");
+                                    document.getElementById("tax22").setAttribute("href", "#");
+                                    document.getElementById("tax23").setAttribute("href", "#");
+                                    document.getElementById("tax26").setAttribute("href", "#");
+                                    document.getElementById("tax27").setAttribute("href", "#");
+                                    document.getElementById("tax28").setAttribute("href", "#");
+                                    document.getElementById("tax30").setAttribute("href", "#");
+                                    document.getElementById("tax31").setAttribute("href", "#");
+                                    document.getElementById("tax32").setAttribute("href", "#");
+                                    document.getElementById("tax34").setAttribute("href", "#");
+                                    document.getElementById("tax35").setAttribute("href", "#");
+                                    document.getElementById("tax36").setAttribute("href", "#");
+                                }
+                            
+                                if (data.tvatreturn[0].fields.HasTab4 == true) {
+                                    $("#nav-item4").show();
+                                    $("#payment_refno").removeAttr("disabled");
+                                    $("#payment_period").removeAttr("disabled");
+                                    $("#payment_penalty").removeAttr("disabled");
+                                } else {
+                                    $("#nav-item4").hide();
+                                    if($("#tab-4").hasClass("active")){
+                                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if($("#vatreturnCategory2").prop('checked') == true){
+                                            $("#nav-item2 a").click();
+                                        }
+                                        else if($("#vatreturnCategory3").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else if($("#vatreturnCategory5").prop('checked') == true){
+                                            $("#nav-item5 a").click();
+                                        }
+                                    }
+                                    $("#payment_refno").attr("disabled", "disabled");
+                                    $("#payment_period").attr("disabled", "disabled");
+                                    $("#payment_penalty").attr("disabled", "disabled");
+                                }
+                            
+                                if (data.tvatreturn[0].fields.HasTab5 == true) {
+                                    $("#nav-item5").show();
+                                    $("#refund_refno").removeAttr("disabled");
+                                    $("#refund_period").removeAttr("disabled");
+                                } else {
+                                    $("#nav-item5").hide();
+                                    if($("#tab-5").hasClass("active")){
+                                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if($("#vatreturnCategory2").prop('checked') == true){
+                                            $("#nav-item2 a").click();
+                                        }
+                                        else if($("#vatreturnCategory3").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else if($("#vatreturnCategory4").prop('checked') == true){
+                                            $("#nav-item4 a").click();
+                                        }
+                                    }
+                                    $("#refund_refno").attr("disabled", "disabled");
+                                    $("#refund_period").attr("disabled", "disabled");
                                 }
 
                                 if (data.tvatreturn[0].fields.ClassID > 0) {
@@ -1300,58 +1412,58 @@ Template.vatreturn.onRendered(function() {
                                 }
                                 $("#endDate").val(tab1endDate);
                                 $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
-                                $("#tax1cost").val(data.tvatreturn[0].fields._1);
-                                $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields._1);
-                                $("#tax1Acost").val(data.tvatreturn[0].fields._1A);
-                                $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields._1A);
-                                $("#tax2cost").val(data.tvatreturn[0].fields._2);
-                                $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields._2);
-                                $("#tax2Acost").val(data.tvatreturn[0].fields._2A);
-                                $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields._2A);
-                                $("#tax3cost").val(data.tvatreturn[0].fields._3);
-                                $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields._3);
-                                $("#tax4cost").val(data.tvatreturn[0].fields._4);
-                                $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields._4);
-                                $("#tax4Acost").val(data.tvatreturn[0].fields._4A);
-                                $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields._4A);
-                                $("#tax5cost").val(data.tvatreturn[0].fields._5);
-                                $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields._5);
-                                $("#tax7cost").val(data.tvatreturn[0].fields._7);
-                                $("#prt_tax7cost").html("$" + data.tvatreturn[0].fields._7);
-                                $("#tax10cost").val(data.tvatreturn[0].fields._10);
-                                $("#prt_tax10cost").html("$" + data.tvatreturn[0].fields._10);
-                                $("#tax11cost").val(data.tvatreturn[0].fields._11);
-                                $("#prt_tax11cost").html("$" + data.tvatreturn[0].fields._11);
-                                $("#tax12cost").val(data.tvatreturn[0].fields._12);
-                                $("#prt_tax12cost").html("$" + data.tvatreturn[0].fields._12);
-                                let tax13cost = data.tvatreturn[0].fields._4 + data.tvatreturn[0].fields._4A + data.tvatreturn[0].fields._9 + data.tvatreturn[0].fields._11 + data.tvatreturn[0].fields._12;
+                                $("#tax1cost").val(data.tvatreturn[0].fields.VAT1);
+                                $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields.VAT1);
+                                $("#tax1Acost").val(data.tvatreturn[0].fields.VAT1A);
+                                $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields.VAT1A);
+                                $("#tax2cost").val(data.tvatreturn[0].fields.VAT2);
+                                $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields.VAT2);
+                                $("#tax2Acost").val(data.tvatreturn[0].fields.VAT2A);
+                                $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields.VAT2A);
+                                $("#tax3cost").val(data.tvatreturn[0].fields.VAT3);
+                                $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields.VAT3);
+                                $("#tax4cost").val(data.tvatreturn[0].fields.VAT4);
+                                $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields.VAT4);
+                                $("#tax4Acost").val(data.tvatreturn[0].fields.VAT4A);
+                                $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields.VAT4A);
+                                $("#tax5cost").val(data.tvatreturn[0].fields.VAT5);
+                                $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields.VAT5);
+                                $("#tax7cost").val(data.tvatreturn[0].fields.VAT7);
+                                $("#prt_tax7cost").html("$" + data.tvatreturn[0].fields.VAT7);
+                                $("#tax10cost").val(data.tvatreturn[0].fields.VAT10);
+                                $("#prt_tax10cost").html("$" + data.tvatreturn[0].fields.VAT10);
+                                $("#tax11cost").val(data.tvatreturn[0].fields.VAT11);
+                                $("#prt_tax11cost").html("$" + data.tvatreturn[0].fields.VAT11);
+                                $("#tax12cost").val(data.tvatreturn[0].fields.VAT12);
+                                $("#prt_tax12cost").html("$" + data.tvatreturn[0].fields.VAT12);
+                                let tax13cost = data.tvatreturn[0].fields.VAT4 + data.tvatreturn[0].fields.VAT4A + data.tvatreturn[0].fields.VAT9 + data.tvatreturn[0].fields.VAT11 + data.tvatreturn[0].fields.VAT12;
                                 $("#tax13cost").val(tax13cost);
                                 $("#prt_tax13cost").html("$" + tax13cost);
 
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._1Selected, "tbltaxCodeCheckbox_1");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._1ASelected, "tbltaxCodeCheckbox_1A");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._2Selected, "tbltaxCodeCheckbox_2");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._2ASelected, "tbltaxCodeCheckbox_2A");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._3Selected, "tbltaxCodeCheckbox_3");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._5Selected, "tbltaxCodeCheckbox_5");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._7Selected, "tbltaxCodeCheckbox_7");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._10Selected, "tbltaxCodeCheckbox_10");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._12Selected, "tbltaxCodeCheckbox_12");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._14Selected, "tbltaxCodeCheckbox_14");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._14ASelected, "tbltaxCodeCheckbox_14A");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._15Selected, "tbltaxCodeCheckbox_15");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._15ASelected, "tbltaxCodeCheckbox_15A");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._16Selected, "tbltaxCodeCheckbox_16");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._17Selected, "tbltaxCodeCheckbox_17");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._18Selected, "tbltaxCodeCheckbox_18");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._21Selected, "tbltaxCodeCheckbox_21");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._22Selected, "tbltaxCodeCheckbox_22");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._26Selected, "tbltaxCodeCheckbox_26");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._27Selected, "tbltaxCodeCheckbox_27");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._30Selected, "tbltaxCodeCheckbox_30");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._31Selected, "tbltaxCodeCheckbox_31");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._34Selected, "tbltaxCodeCheckbox_34");
-                                shareFunctionByName.initTable(data.tvatreturn[0].fields._35Selected, "tbltaxCodeCheckbox_35");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2ASelected, "tbltaxCodeCheckbox_2A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT3Selected, "tbltaxCodeCheckbox_3");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT5Selected, "tbltaxCodeCheckbox_5");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT7Selected, "tbltaxCodeCheckbox_7");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT10Selected, "tbltaxCodeCheckbox_10");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT12Selected, "tbltaxCodeCheckbox_12");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT14Selected, "tbltaxCodeCheckbox_14");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT14ASelected, "tbltaxCodeCheckbox_14A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT15Selected, "tbltaxCodeCheckbox_15");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT15ASelected, "tbltaxCodeCheckbox_15A");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT16Selected, "tbltaxCodeCheckbox_16");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT17Selected, "tbltaxCodeCheckbox_17");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT18Selected, "tbltaxCodeCheckbox_18");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT21Selected, "tbltaxCodeCheckbox_21");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT22Selected, "tbltaxCodeCheckbox_22");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT26Selected, "tbltaxCodeCheckbox_26");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT27Selected, "tbltaxCodeCheckbox_27");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT30Selected, "tbltaxCodeCheckbox_30");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT31Selected, "tbltaxCodeCheckbox_31");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
+                                shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                                 if (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") {
                                     $("#datemethod1-t2").prop('checked', true);
                                     $("#datemethod2-t2").prop('checked', false);
@@ -1369,21 +1481,21 @@ Template.vatreturn.onRendered(function() {
                                 }
                                 $("#endDate-t2").val(tab2endDate);
                                 // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
-                                $("#tax14cost").val(data.tvatreturn[0].fields._14);
-                                $("#prt_tax14cost").html("$" + data.tvatreturn[0].fields._14);
-                                $("#tax14acost").val(data.tvatreturn[0].fields._14A);
-                                $("#prt_tax14acost").html("$" + data.tvatreturn[0].fields._14A);
-                                $("#tax15cost").val(data.tvatreturn[0].fields._15);
-                                $("#prt_tax15cost").html("$" + data.tvatreturn[0].fields._15);
-                                $("#tax15acost").val(data.tvatreturn[0].fields._15A);
-                                $("#prt_tax15acost").html("$" + data.tvatreturn[0].fields._15A);
-                                $("#tax16cost").val(data.tvatreturn[0].fields._16);
-                                $("#prt_tax16cost").html("$" + data.tvatreturn[0].fields._16);
-                                $("#tax17cost").val(data.tvatreturn[0].fields._17);
-                                $("#prt_tax17cost").html("$" + data.tvatreturn[0].fields._17);
-                                $("#tax18cost").val(data.tvatreturn[0].fields._18);
-                                $("#prt_tax18cost").html("$" + data.tvatreturn[0].fields._18);
-                                let tax19cost = data.tvatreturn[0].fields._14 + data.tvatreturn[0].fields._14A + data.tvatreturn[0].fields._15 + data.tvatreturn[0].fields._15A + data.tvatreturn[0].fields._16 + data.tvatreturn[0].fields._17 + data.tvatreturn[0].fields._18;
+                                $("#tax14cost").val(data.tvatreturn[0].fields.VAT14);
+                                $("#prt_tax14cost").html("$" + data.tvatreturn[0].fields.VAT14);
+                                $("#tax14acost").val(data.tvatreturn[0].fields.VAT14A);
+                                $("#prt_tax14acost").html("$" + data.tvatreturn[0].fields.VAT14A);
+                                $("#tax15cost").val(data.tvatreturn[0].fields.VAT15);
+                                $("#prt_tax15cost").html("$" + data.tvatreturn[0].fields.VAT15);
+                                $("#tax15acost").val(data.tvatreturn[0].fields.VAT15A);
+                                $("#prt_tax15acost").html("$" + data.tvatreturn[0].fields.VAT15A);
+                                $("#tax16cost").val(data.tvatreturn[0].fields.VAT16);
+                                $("#prt_tax16cost").html("$" + data.tvatreturn[0].fields.VAT16);
+                                $("#tax17cost").val(data.tvatreturn[0].fields.VAT17);
+                                $("#prt_tax17cost").html("$" + data.tvatreturn[0].fields.VAT17);
+                                $("#tax18cost").val(data.tvatreturn[0].fields.VAT18);
+                                $("#prt_tax18cost").html("$" + data.tvatreturn[0].fields.VAT18);
+                                let tax19cost = data.tvatreturn[0].fields.VAT14 + data.tvatreturn[0].fields.VAT14A + data.tvatreturn[0].fields.VAT15 + data.tvatreturn[0].fields.VAT15A + data.tvatreturn[0].fields.VAT16 + data.tvatreturn[0].fields.VAT17 + data.tvatreturn[0].fields.VAT18;
                                 $("#tax19cost").val(tax19cost);
                                 $("#prt_tax19cost").html("$" + tax19cost);
                                 let tax20cost = tax13cost - tax19cost;
@@ -1406,32 +1518,32 @@ Template.vatreturn.onRendered(function() {
                                 }
                                 $("#endDate-t3").val(tab3endDate);
                                 // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
-                                $("#tax21cost").val(data.tvatreturn[0].fields._21);
-                                $("#prt_tax21cost").html("$" + data.tvatreturn[0].fields._21);
-                                $("#tax22cost").val(data.tvatreturn[0].fields._22);
-                                $("#prt_tax22cost").html("$" + data.tvatreturn[0].fields._22);
-                                var tax23cost = parseFloat(data.tvatreturn[0].fields._21) - parseFloat(data.tvatreturn[0].fields._22);
+                                $("#tax21cost").val(data.tvatreturn[0].fields.VAT21);
+                                $("#prt_tax21cost").html("$" + data.tvatreturn[0].fields.VAT21);
+                                $("#tax22cost").val(data.tvatreturn[0].fields.VAT22);
+                                $("#prt_tax22cost").html("$" + data.tvatreturn[0].fields.VAT22);
+                                var tax23cost = parseFloat(data.tvatreturn[0].fields.VAT21) - parseFloat(data.tvatreturn[0].fields.VAT22);
                                 $("#tax23cost").val(tax23cost.toFixed(2));
-                                $("#prt_tax23cost").html("$" + data.tvatreturn[0].fields._23);
+                                $("#prt_tax23cost").html("$" + data.tvatreturn[0].fields.VAT23);
                                 var tax24cost = tax23cost * 80 / 100;
                                 $("#tax24cost").val(tax24cost.toFixed(2));
                                 $("#prt_tax24cost").val(tax24cost.toFixed(2));
                                 var tax25cost = tax24cost * 332.8 / 100;
                                 $("#tax25cost").val(tax25cost.toFixed(2));
                                 $("#prt_tax25cost").val(tax25cost.toFixed(2));
-                                var tax28cost = parseFloat(data.tvatreturn[0].fields._26) - parseFloat(data.tvatreturn[0].fields._27);
+                                var tax28cost = parseFloat(data.tvatreturn[0].fields.VAT26) - parseFloat(data.tvatreturn[0].fields.VAT27);
                                 $("#tax28cost").val(tax28cost.toFixed(2));
                                 $("#prt_tax28cost").val(tax28cost.toFixed(2));
                                 var tax29cost = tax28cost * 562 / 100;
                                 $("#tax29cost").val(tax29cost.toFixed(2));
                                 $("#prt_tax29cost").val(tax29cost.toFixed(2));
-                                var tax32cost = parseFloat(data.tvatreturn[0].fields._30) - parseFloat(data.tvatreturn[0].fields._31);
+                                var tax32cost = parseFloat(data.tvatreturn[0].fields.VAT30) - parseFloat(data.tvatreturn[0].fields.VAT31);
                                 $("#tax32cost").val(tax32cost.toFixed(2));
                                 $("#prt_tax32cost").val(tax32cost.toFixed(2));
                                 var tax33cost = tax32cost * 207 / 100;
                                 $("#tax33cost").val(tax33cost.toFixed(2));
                                 $("#prt_tax33cost").val(tax33cost.toFixed(2));
-                                var tax36cost = parseFloat(data.tvatreturn[0].fields._34) - parseFloat(data.tvatreturn[0].fields._35);
+                                var tax36cost = parseFloat(data.tvatreturn[0].fields.VAT34) - parseFloat(data.tvatreturn[0].fields.VAT35);
                                 $("#tax36cost").val(tax36cost.toFixed(2));
                                 $("#prt_tax36cost").val(tax36cost.toFixed(2));
                                 var tax37cost = tax36cost * 384.5 / 100;
@@ -1449,34 +1561,57 @@ Template.vatreturn.onRendered(function() {
                                     $("#vatreturnCategory1").prop('checked', data.tvatreturn[i].fields.HasTab1);
                                     $("#vatreturnCategory2").prop('checked', data.tvatreturn[i].fields.HasTab2);
                                     $("#vatreturnCategory3").prop('checked', data.tvatreturn[i].fields.HasTab3);
+                                    $("#vatreturnCategory4").prop('checked', data.tvatreturn[i].fields.HasTab4);
+                                    $("#vatreturnCategory5").prop('checked', data.tvatreturn[i].fields.HasTab5);
+                                    
                                     if (data.tvatreturn[i].fields.HasTab1 == true) {
+                                        $("#nav-item1").show();
                                         document.getElementById("tax1").setAttribute("href", "#taxCode1option");
                                         document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                                         document.getElementById("tax2").setAttribute("href", "#taxCode2option");
                                         document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                                         document.getElementById("tax3").setAttribute("href", "#taxCode3option");
-                                        $("#tax4cost").attr("disabled", "disabled");
-                                        $("#tax4acost").attr("disabled", "disabled");
                                         document.getElementById("tax5").setAttribute("href", "#taxCode5option");
                                         document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                         document.getElementById("tax10").setAttribute("href", "#taxCode10option");
-                                        $("#tax11cost").attr("disabled", "disabled");
                                         document.getElementById("tax12").setAttribute("href", "#taxCode12option");
+                    
+                                        $("#tax4cost").removeAttr("disabled");
+                                        $("#tax4acost").removeAttr("disabled");
+                                        $("#tax11cost").removeAttr("disabled");
                                     } else {
+                                        $("#nav-item1").hide();
+                                        if($("#tab-1").hasClass("active")){
+                                            if ($("#vatreturnCategory2").prop('checked') == true) {
+                                                $("#nav-item2 a").click();
+                                            }
+                                            else if($("#vatreturnCategory3").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else if($("#vatreturnCategory4").prop('checked') == true){
+                                                $("#nav-item4 a").click();
+                                            }
+                                            else if($("#vatreturnCategory5").prop('checked') == true){
+                                                $("#nav-item5 a").click();
+                                            }
+                                        }
                                         document.getElementById("tax1").setAttribute("href", "#");
                                         document.getElementById("tax1A").setAttribute("href", "#");
                                         document.getElementById("tax2").setAttribute("href", "#");
                                         document.getElementById("tax2A").setAttribute("href", "#");
                                         document.getElementById("tax3").setAttribute("href", "#");
-                                        $("#tax4cost").attr("disabled", "disabled");
-                                        $("#tax4acost").attr("disabled", "disabled");
                                         document.getElementById("tax5").setAttribute("href", "#");
                                         document.getElementById("tax7").setAttribute("href", "#");
                                         document.getElementById("tax10").setAttribute("href", "#");
-                                        $("#tax11cost").attr("disabled", "disabled");
                                         document.getElementById("tax12").setAttribute("href", "#");
+                    
+                                        $("#tax4cost").attr("disabled", "disabled");
+                                        $("#tax4acost").attr("disabled", "disabled");
+                                        $("#tax11cost").attr("disabled", "disabled");
                                     }
+                                
                                     if (data.tvatreturn[i].fields.HasTab2 == true) {
+                                        $("#nav-item2").show();
                                         document.getElementById("tax14").setAttribute("href", "#taxCode14option");
                                         document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                                         document.getElementById("tax15").setAttribute("href", "#taxCode15option");
@@ -1485,6 +1620,21 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                                         document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                                     } else {
+                                        $("#nav-item2").hide();
+                                        if($("#tab-2").hasClass("active")){
+                                            if ($("#vatreturnCategory1").prop('checked') == true) {
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if($("#vatreturnCategory3").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else if($("#vatreturnCategory4").prop('checked') == true){
+                                                $("#nav-item4 a").click();
+                                            }
+                                            else if($("#vatreturnCategory5").prop('checked') == true){
+                                                $("#nav-item5 a").click();
+                                            }
+                                        }
                                         document.getElementById("tax14").setAttribute("href", "#");
                                         document.getElementById("tax14A").setAttribute("href", "#");
                                         document.getElementById("tax15").setAttribute("href", "#");
@@ -1493,24 +1643,99 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax17").setAttribute("href", "#");
                                         document.getElementById("tax18").setAttribute("href", "#");
                                     }
+                                
                                     if (data.tvatreturn[i].fields.HasTab3 == true) {
+                                        $("#nav-item3").show();
                                         document.getElementById("tax21").setAttribute("href", "#taxCode21option");
                                         document.getElementById("tax22").setAttribute("href", "#taxCode22option");
+                                        document.getElementById("tax23").setAttribute("href", "#taxCode23option");
                                         document.getElementById("tax26").setAttribute("href", "#taxCode26option");
                                         document.getElementById("tax27").setAttribute("href", "#taxCode27option");
+                                        document.getElementById("tax28").setAttribute("href", "#taxCode28option");
                                         document.getElementById("tax30").setAttribute("href", "#taxCode30option");
                                         document.getElementById("tax31").setAttribute("href", "#taxCode31option");
+                                        document.getElementById("tax32").setAttribute("href", "#taxCode32option");
                                         document.getElementById("tax34").setAttribute("href", "#taxCode34option");
                                         document.getElementById("tax35").setAttribute("href", "#taxCode35option");
+                                        document.getElementById("tax36").setAttribute("href", "#taxCode36option");
                                     } else {
-                                        document.getElementById("tax21").setAttribute("href", "#taxCode21option");
-                                        document.getElementById("tax22").setAttribute("href", "#taxCode22option");
-                                        document.getElementById("tax26").setAttribute("href", "#taxCode26option");
-                                        document.getElementById("tax27").setAttribute("href", "#taxCode27option");
-                                        document.getElementById("tax30").setAttribute("href", "#taxCode30option");
-                                        document.getElementById("tax31").setAttribute("href", "#taxCode31option");
-                                        document.getElementById("tax34").setAttribute("href", "#taxCode34option");
-                                        document.getElementById("tax35").setAttribute("href", "#taxCode35option");
+                                        $("#nav-item3").hide();
+                                        if($("#tab-3").hasClass("active")){
+                                            if ($("#vatreturnCategory1").prop('checked') == true) {
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if($("#vatreturnCategory2").prop('checked') == true){
+                                                $("#nav-item2 a").click();
+                                            }
+                                            else if($("#vatreturnCategory4").prop('checked') == true){
+                                                $("#nav-item4 a").click();
+                                            }
+                                            else if($("#vatreturnCategory5").prop('checked') == true){
+                                                $("#nav-item5 a").click();
+                                            }
+                                        }
+                                        document.getElementById("tax21").setAttribute("href", "#");
+                                        document.getElementById("tax22").setAttribute("href", "#");
+                                        document.getElementById("tax23").setAttribute("href", "#");
+                                        document.getElementById("tax26").setAttribute("href", "#");
+                                        document.getElementById("tax27").setAttribute("href", "#");
+                                        document.getElementById("tax28").setAttribute("href", "#");
+                                        document.getElementById("tax30").setAttribute("href", "#");
+                                        document.getElementById("tax31").setAttribute("href", "#");
+                                        document.getElementById("tax32").setAttribute("href", "#");
+                                        document.getElementById("tax34").setAttribute("href", "#");
+                                        document.getElementById("tax35").setAttribute("href", "#");
+                                        document.getElementById("tax36").setAttribute("href", "#");
+                                    }
+                                
+                                    if (data.tvatreturn[i].fields.HasTab4 == true) {
+                                        $("#nav-item4").show();
+                                        $("#payment_refno").removeAttr("disabled");
+                                        $("#payment_period").removeAttr("disabled");
+                                        $("#payment_penalty").removeAttr("disabled");
+                                    } else {
+                                        $("#nav-item4").hide();
+                                        if($("#tab-4").hasClass("active")){
+                                            if ($("#vatreturnCategory1").prop('checked') == true) {
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if($("#vatreturnCategory2").prop('checked') == true){
+                                                $("#nav-item2 a").click();
+                                            }
+                                            else if($("#vatreturnCategory3").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else if($("#vatreturnCategory5").prop('checked') == true){
+                                                $("#nav-item5 a").click();
+                                            }
+                                        }
+                                        $("#payment_refno").attr("disabled", "disabled");
+                                        $("#payment_period").attr("disabled", "disabled");
+                                        $("#payment_penalty").attr("disabled", "disabled");
+                                    }
+                                
+                                    if (data.tvatreturn[i].fields.HasTab5 == true) {
+                                        $("#nav-item5").show();
+                                        $("#refund_refno").removeAttr("disabled");
+                                        $("#refund_period").removeAttr("disabled");
+                                    } else {
+                                        $("#nav-item5").hide();
+                                        if($("#tab-5").hasClass("active")){
+                                            if ($("#vatreturnCategory1").prop('checked') == true) {
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if($("#vatreturnCategory2").prop('checked') == true){
+                                                $("#nav-item2 a").click();
+                                            }
+                                            else if($("#vatreturnCategory3").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else if($("#vatreturnCategory4").prop('checked') == true){
+                                                $("#nav-item4 a").click();
+                                            }
+                                        }
+                                        $("#refund_refno").attr("disabled", "disabled");
+                                        $("#refund_period").attr("disabled", "disabled");
                                     }
 
                                     if (data.tvatreturn[i].fields.ClassID > 0) {
@@ -1551,58 +1776,58 @@ Template.vatreturn.onRendered(function() {
                                     }
                                     $("#endDate").val(tab1endDate);
                                     $("#prt_beginningDate").html(data.tvatreturn[i].fields.Tab1_Month + " " + data.tvatreturn[i].fields.Tab1_Year);
-                                    $("#tax1cost").val(data.tvatreturn[i].fields._1);
-                                    $(".prt_tax1cost").html("$" + data.tvatreturn[i].fields._1);
-                                    $("#tax1Acost").val(data.tvatreturn[i].fields._1A);
-                                    $("#prt_tax1Acost").html("$" + data.tvatreturn[i].fields._1A);
-                                    $("#tax2cost").val(data.tvatreturn[i].fields._2);
-                                    $("#prt_tax2cost").html("$" + data.tvatreturn[i].fields._2);
-                                    $("#tax2Acost").val(data.tvatreturn[i].fields._2A);
-                                    $("#prt_tax2Acost").html("$" + data.tvatreturn[i].fields._2A);
-                                    $("#tax3cost").val(data.tvatreturn[i].fields._3);
-                                    $("#prt_tax3cost").html("$" + data.tvatreturn[i].fields._3);
-                                    $("#tax4cost").val(data.tvatreturn[i].fields._4);
-                                    $("#prt_tax4cost").html("$" + data.tvatreturn[i].fields._4);
-                                    $("#tax4Acost").val(data.tvatreturn[i].fields._4A);
-                                    $("#prt_tax4Acost").html("$" + data.tvatreturn[i].fields._4A);
-                                    $("#tax5cost").val(data.tvatreturn[i].fields._5);
-                                    $("#prt_tax5cost").html("$" + data.tvatreturn[i].fields._5);
-                                    $("#tax7cost").val(data.tvatreturn[i].fields._7);
-                                    $("#prt_tax7cost").html("$" + data.tvatreturn[i].fields._7);
-                                    $("#tax10cost").val(data.tvatreturn[i].fields._10);
-                                    $("#prt_tax10cost").html("$" + data.tvatreturn[i].fields._10);
-                                    $("#tax11cost").val(data.tvatreturn[i].fields._11);
-                                    $("#prt_tax11cost").html("$" + data.tvatreturn[i].fields._11);
-                                    $("#tax12cost").val(data.tvatreturn[i].fields._12);
-                                    $("#prt_tax12cost").html("$" + data.tvatreturn[i].fields._12);
-                                    let tax13cost = data.tvatreturn[i].fields._4 + data.tvatreturn[i].fields._4A + data.tvatreturn[i].fields._9 + data.tvatreturn[i].fields._11 + data.tvatreturn[i].fields._12;
+                                    $("#tax1cost").val(data.tvatreturn[i].fields.VAT1);
+                                    $(".prt_tax1cost").html("$" + data.tvatreturn[i].fields.VAT1);
+                                    $("#tax1Acost").val(data.tvatreturn[i].fields.VAT1A);
+                                    $("#prt_tax1Acost").html("$" + data.tvatreturn[i].fields.VAT1A);
+                                    $("#tax2cost").val(data.tvatreturn[i].fields.VAT2);
+                                    $("#prt_tax2cost").html("$" + data.tvatreturn[i].fields.VAT2);
+                                    $("#tax2Acost").val(data.tvatreturn[i].fields.VAT2A);
+                                    $("#prt_tax2Acost").html("$" + data.tvatreturn[i].fields.VAT2A);
+                                    $("#tax3cost").val(data.tvatreturn[i].fields.VAT3);
+                                    $("#prt_tax3cost").html("$" + data.tvatreturn[i].fields.VAT3);
+                                    $("#tax4cost").val(data.tvatreturn[i].fields.VAT4);
+                                    $("#prt_tax4cost").html("$" + data.tvatreturn[i].fields.VAT4);
+                                    $("#tax4Acost").val(data.tvatreturn[i].fields.VAT4A);
+                                    $("#prt_tax4Acost").html("$" + data.tvatreturn[i].fields.VAT4A);
+                                    $("#tax5cost").val(data.tvatreturn[i].fields.VAT5);
+                                    $("#prt_tax5cost").html("$" + data.tvatreturn[i].fields.VAT5);
+                                    $("#tax7cost").val(data.tvatreturn[i].fields.VAT7);
+                                    $("#prt_tax7cost").html("$" + data.tvatreturn[i].fields.VAT7);
+                                    $("#tax10cost").val(data.tvatreturn[i].fields.VAT10);
+                                    $("#prt_tax10cost").html("$" + data.tvatreturn[i].fields.VAT10);
+                                    $("#tax11cost").val(data.tvatreturn[i].fields.VAT11);
+                                    $("#prt_tax11cost").html("$" + data.tvatreturn[i].fields.VAT11);
+                                    $("#tax12cost").val(data.tvatreturn[i].fields.VAT12);
+                                    $("#prt_tax12cost").html("$" + data.tvatreturn[i].fields.VAT12);
+                                    let tax13cost = data.tvatreturn[i].fields.VAT4 + data.tvatreturn[i].fields.VAT4A + data.tvatreturn[i].fields.VAT9 + data.tvatreturn[i].fields.VAT11 + data.tvatreturn[i].fields.VAT12;
                                     $("#tax13cost").val(tax13cost);
                                     $("#prt_tax13cost").html("$" + tax13cost);
 
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._1Selected, "tbltaxCodeCheckbox_1");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._1ASelected, "tbltaxCodeCheckbox_1A");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._2Selected, "tbltaxCodeCheckbox_2");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._2ASelected, "tbltaxCodeCheckbox_2A");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._3Selected, "tbltaxCodeCheckbox_3");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._5Selected, "tbltaxCodeCheckbox_5");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._7Selected, "tbltaxCodeCheckbox_7");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._10Selected, "tbltaxCodeCheckbox_10");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._12Selected, "tbltaxCodeCheckbox_12");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._14Selected, "tbltaxCodeCheckbox_14");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._14ASelected, "tbltaxCodeCheckbox_14A");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._15Selected, "tbltaxCodeCheckbox_15");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._15ASelected, "tbltaxCodeCheckbox_15A");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._16Selected, "tbltaxCodeCheckbox_16");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._17Selected, "tbltaxCodeCheckbox_17");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._18Selected, "tbltaxCodeCheckbox_18");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._27Selected, "tbltaxCodeCheckbox_27");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._30Selected, "tbltaxCodeCheckbox_30");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._31Selected, "tbltaxCodeCheckbox_31");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._34Selected, "tbltaxCodeCheckbox_34");
-                                    shareFunctionByName.initTable(data.tvatreturn[i].fields._35Selected, "tbltaxCodeCheckbox_35");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT2ASelected, "tbltaxCodeCheckbox_2A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT3Selected, "tbltaxCodeCheckbox_3");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT5Selected, "tbltaxCodeCheckbox_5");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT7Selected, "tbltaxCodeCheckbox_7");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT10Selected, "tbltaxCodeCheckbox_10");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT12Selected, "tbltaxCodeCheckbox_12");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14Selected, "tbltaxCodeCheckbox_14");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT14ASelected, "tbltaxCodeCheckbox_14A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15Selected, "tbltaxCodeCheckbox_15");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT15ASelected, "tbltaxCodeCheckbox_15A");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT16Selected, "tbltaxCodeCheckbox_16");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT17Selected, "tbltaxCodeCheckbox_17");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT18Selected, "tbltaxCodeCheckbox_18");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT21Selected, "tbltaxCodeCheckbox_21");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT22Selected, "tbltaxCodeCheckbox_22");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT26Selected, "tbltaxCodeCheckbox_26");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT27Selected, "tbltaxCodeCheckbox_27");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT30Selected, "tbltaxCodeCheckbox_30");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT31Selected, "tbltaxCodeCheckbox_31");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
+                                    shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                                     if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                         $("#datemethod1-t2").prop('checked', true);
                                         $("#datemethod2-t2").prop('checked', false);
@@ -1620,21 +1845,21 @@ Template.vatreturn.onRendered(function() {
                                     }
                                     $("#endDate-t2").val(tab2endDate);
                                     // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
-                                    $("#tax14cost").val(data.tvatreturn[i].fields._14);
-                                    $("#prt_tax14cost").html("$" + data.tvatreturn[i].fields._14);
-                                    $("#tax14acost").val(data.tvatreturn[i].fields._14A);
-                                    $("#prt_tax14acost").html("$" + data.tvatreturn[i].fields._14A);
-                                    $("#tax15cost").val(data.tvatreturn[i].fields._15);
-                                    $("#prt_tax15cost").html("$" + data.tvatreturn[i].fields._15);
-                                    $("#tax15acost").val(data.tvatreturn[i].fields._15A);
-                                    // $("#prt_tax15acost").html("$" + data.tvatreturn[i].fields._15A);
-                                    $("#tax16cost").val(data.tvatreturn[i].fields._16);
-                                    // $("#prt_tax16cost").html("$" + data.tvatreturn[i].fields._16);
-                                    $("#tax17cost").val(data.tvatreturn[i].fields._17);
-                                    // $("#prt_tax17cost").html("$" + data.tvatreturn[i].fields._17);
-                                    $("#tax18cost").val(data.tvatreturn[i].fields._18);
-                                    // $("#prt_tax18cost").html("$" + data.tvatreturn[i].fields._18);
-                                    let tax19cost = data.tvatreturn[i].fields._14 + data.tvatreturn[i].fields._14A + data.tvatreturn[i].fields._15 + data.tvatreturn[i].fields._15A + data.tvatreturn[i].fields._16 + data.tvatreturn[i].fields._17 + data.tvatreturn[i].fields._18;
+                                    $("#tax14cost").val(data.tvatreturn[i].fields.VAT14);
+                                    $("#prt_tax14cost").html("$" + data.tvatreturn[i].fields.VAT14);
+                                    $("#tax14acost").val(data.tvatreturn[i].fields.VAT14A);
+                                    $("#prt_tax14acost").html("$" + data.tvatreturn[i].fields.VAT14A);
+                                    $("#tax15cost").val(data.tvatreturn[i].fields.VAT15);
+                                    $("#prt_tax15cost").html("$" + data.tvatreturn[i].fields.VAT15);
+                                    $("#tax15acost").val(data.tvatreturn[i].fields.VAT15A);
+                                    // $("#prt_tax15acost").html("$" + data.tvatreturn[i].fields.VAT15A);
+                                    $("#tax16cost").val(data.tvatreturn[i].fields.VAT16);
+                                    // $("#prt_tax16cost").html("$" + data.tvatreturn[i].fields.VAT16);
+                                    $("#tax17cost").val(data.tvatreturn[i].fields.VAT17);
+                                    // $("#prt_tax17cost").html("$" + data.tvatreturn[i].fields.VAT17);
+                                    $("#tax18cost").val(data.tvatreturn[i].fields.VAT18);
+                                    // $("#prt_tax18cost").html("$" + data.tvatreturn[i].fields.VAT18);
+                                    let tax19cost = data.tvatreturn[i].fields.VAT14 + data.tvatreturn[i].fields.VAT14A + data.tvatreturn[i].fields.VAT15 + data.tvatreturn[i].fields.VAT15A + data.tvatreturn[i].fields.VAT16 + data.tvatreturn[i].fields.VAT17 + data.tvatreturn[i].fields.VAT18;
                                     $("#tax19cost").val(tax19cost);
                                     $("#prt_tax19cost").html("$" + tax19cost);
                                     let tax20cost = tax13cost - tax19cost;
@@ -1657,32 +1882,32 @@ Template.vatreturn.onRendered(function() {
                                     }
                                     $("#endDate-t3").val(tab3endDate);
                                     // $("#prt_beginningDateT3").html(data.tvatreturn[i].fields.Tab4_Month + " " + data.tvatreturn[i].fields.Tab4_Year);
-                                    $("#tax21cost").val(data.tvatreturn[i].fields._21);
-                                    $("#prt_tax21cost").html("$" + data.tvatreturn[i].fields._21);
-                                    $("#tax22cost").val(data.tvatreturn[i].fields._22);
-                                    $("#prt_tax22cost").html("$" + data.tvatreturn[i].fields._22);
-                                    var tax23cost = parseFloat(data.tvatreturn[i].fields._21) - parseFloat(data.tvatreturn[i].fields._22);
+                                    $("#tax21cost").val(data.tvatreturn[i].fields.VAT21);
+                                    $("#prt_tax21cost").html("$" + data.tvatreturn[i].fields.VAT21);
+                                    $("#tax22cost").val(data.tvatreturn[i].fields.VAT22);
+                                    $("#prt_tax22cost").html("$" + data.tvatreturn[i].fields.VAT22);
+                                    var tax23cost = parseFloat(data.tvatreturn[i].fields.VAT21) - parseFloat(data.tvatreturn[i].fields.VAT22);
                                     $("#tax23cost").val(tax23cost.toFixed(2));
-                                    $("#prt_tax23cost").html("$" + data.tvatreturn[i].fields._23);
+                                    $("#prt_tax23cost").html("$" + data.tvatreturn[i].fields.VAT23);
                                     var tax24cost = tax23cost * 80 / 100;
                                     $("#tax24cost").val(tax24cost.toFixed(2));
                                     $("#prt_tax24cost").val(tax24cost.toFixed(2));
                                     var tax25cost = tax24cost * 332.8 / 100;
                                     $("#tax25cost").val(tax25cost.toFixed(2));
                                     $("#prt_tax25cost").val(tax25cost.toFixed(2));
-                                    var tax28cost = parseFloat(data.tvatreturn[i].fields._26) - parseFloat(data.tvatreturn[i].fields._27);
+                                    var tax28cost = parseFloat(data.tvatreturn[i].fields.VAT26) - parseFloat(data.tvatreturn[i].fields.VAT27);
                                     $("#tax28cost").val(tax28cost.toFixed(2));
                                     $("#prt_tax28cost").val(tax28cost.toFixed(2));
                                     var tax29cost = tax28cost * 562 / 100;
                                     $("#tax29cost").val(tax29cost.toFixed(2));
                                     $("#prt_tax29cost").val(tax29cost.toFixed(2));
-                                    var tax32cost = parseFloat(data.tvatreturn[i].fields._30) - parseFloat(data.tvatreturn[i].fields._31);
+                                    var tax32cost = parseFloat(data.tvatreturn[i].fields.VAT30) - parseFloat(data.tvatreturn[i].fields.VAT31);
                                     $("#tax32cost").val(tax32cost.toFixed(2));
                                     $("#prt_tax32cost").val(tax32cost.toFixed(2));
                                     var tax33cost = tax32cost * 207 / 100;
                                     $("#tax33cost").val(tax33cost.toFixed(2));
                                     $("#prt_tax33cost").val(tax33cost.toFixed(2));
-                                    var tax36cost = parseFloat(data.tvatreturn[i].fields._34) - parseFloat(data.tvatreturn[i].fields._35);
+                                    var tax36cost = parseFloat(data.tvatreturn[i].fields.VAT34) - parseFloat(data.tvatreturn[i].fields.VAT35);
                                     $("#tax36cost").val(tax36cost.toFixed(2));
                                     $("#prt_tax36cost").val(tax36cost.toFixed(2));
                                     var tax37cost = tax36cost * 384.5 / 100;
@@ -1702,34 +1927,57 @@ Template.vatreturn.onRendered(function() {
                             $("#vatreturnCategory1").prop('checked', data.tvatreturn[0].fields.HasTab1);
                             $("#vatreturnCategory2").prop('checked', data.tvatreturn[0].fields.HasTab2);
                             $("#vatreturnCategory3").prop('checked', data.tvatreturn[0].fields.HasTab3);
+                            $("#vatreturnCategory4").prop('checked', data.tvatreturn[0].fields.HasTab4);
+                            $("#vatreturnCategory5").prop('checked', data.tvatreturn[0].fields.HasTab5);
+                            
                             if (data.tvatreturn[0].fields.HasTab1 == true) {
+                                $("#nav-item1").show();
                                 document.getElementById("tax1").setAttribute("href", "#taxCode1option");
                                 document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                                 document.getElementById("tax2").setAttribute("href", "#taxCode2option");
                                 document.getElementById("tax2A").setAttribute("href", "#taxCode2Aoption");
                                 document.getElementById("tax3").setAttribute("href", "#taxCode3option");
-                                $("#tax4cost").attr("disabled", "disabled");
-                                $("#tax4acost").attr("disabled", "disabled");
                                 document.getElementById("tax5").setAttribute("href", "#taxCode5option");
                                 document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                 document.getElementById("tax10").setAttribute("href", "#taxCode10option");
-                                $("#tax11cost").attr("disabled", "disabled");
                                 document.getElementById("tax12").setAttribute("href", "#taxCode12option");
+            
+                                $("#tax4cost").removeAttr("disabled");
+                                $("#tax4acost").removeAttr("disabled");
+                                $("#tax11cost").removeAttr("disabled");
                             } else {
+                                $("#nav-item1").hide();
+                                if($("#tab-1").hasClass("active")){
+                                    if ($("#vatreturnCategory2").prop('checked') == true) {
+                                        $("#nav-item2 a").click();
+                                    }
+                                    else if($("#vatreturnCategory3").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else if($("#vatreturnCategory4").prop('checked') == true){
+                                        $("#nav-item4 a").click();
+                                    }
+                                    else if($("#vatreturnCategory5").prop('checked') == true){
+                                        $("#nav-item5 a").click();
+                                    }
+                                }
                                 document.getElementById("tax1").setAttribute("href", "#");
                                 document.getElementById("tax1A").setAttribute("href", "#");
                                 document.getElementById("tax2").setAttribute("href", "#");
                                 document.getElementById("tax2A").setAttribute("href", "#");
                                 document.getElementById("tax3").setAttribute("href", "#");
-                                $("#tax4cost").attr("disabled", "disabled");
-                                $("#tax4acost").attr("disabled", "disabled");
                                 document.getElementById("tax5").setAttribute("href", "#");
                                 document.getElementById("tax7").setAttribute("href", "#");
                                 document.getElementById("tax10").setAttribute("href", "#");
-                                $("#tax11cost").attr("disabled", "disabled");
                                 document.getElementById("tax12").setAttribute("href", "#");
+            
+                                $("#tax4cost").attr("disabled", "disabled");
+                                $("#tax4acost").attr("disabled", "disabled");
+                                $("#tax11cost").attr("disabled", "disabled");
                             }
+                        
                             if (data.tvatreturn[0].fields.HasTab2 == true) {
+                                $("#nav-item2").show();
                                 document.getElementById("tax14").setAttribute("href", "#taxCode14option");
                                 document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                                 document.getElementById("tax15").setAttribute("href", "#taxCode15option");
@@ -1738,6 +1986,21 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                                 document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                             } else {
+                                $("#nav-item2").hide();
+                                if($("#tab-2").hasClass("active")){
+                                    if ($("#vatreturnCategory1").prop('checked') == true) {
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if($("#vatreturnCategory3").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else if($("#vatreturnCategory4").prop('checked') == true){
+                                        $("#nav-item4 a").click();
+                                    }
+                                    else if($("#vatreturnCategory5").prop('checked') == true){
+                                        $("#nav-item5 a").click();
+                                    }
+                                }
                                 document.getElementById("tax14").setAttribute("href", "#");
                                 document.getElementById("tax14A").setAttribute("href", "#");
                                 document.getElementById("tax15").setAttribute("href", "#");
@@ -1746,26 +2009,101 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax17").setAttribute("href", "#");
                                 document.getElementById("tax18").setAttribute("href", "#");
                             }
+                        
                             if (data.tvatreturn[0].fields.HasTab3 == true) {
+                                $("#nav-item3").show();
                                 document.getElementById("tax21").setAttribute("href", "#taxCode21option");
                                 document.getElementById("tax22").setAttribute("href", "#taxCode22option");
+                                document.getElementById("tax23").setAttribute("href", "#taxCode23option");
                                 document.getElementById("tax26").setAttribute("href", "#taxCode26option");
                                 document.getElementById("tax27").setAttribute("href", "#taxCode27option");
+                                document.getElementById("tax28").setAttribute("href", "#taxCode28option");
                                 document.getElementById("tax30").setAttribute("href", "#taxCode30option");
                                 document.getElementById("tax31").setAttribute("href", "#taxCode31option");
+                                document.getElementById("tax32").setAttribute("href", "#taxCode32option");
                                 document.getElementById("tax34").setAttribute("href", "#taxCode34option");
                                 document.getElementById("tax35").setAttribute("href", "#taxCode35option");
+                                document.getElementById("tax36").setAttribute("href", "#taxCode36option");
                             } else {
-                                document.getElementById("tax21").setAttribute("href", "#taxCode21option");
-                                document.getElementById("tax22").setAttribute("href", "#taxCode22option");
-                                document.getElementById("tax26").setAttribute("href", "#taxCode26option");
-                                document.getElementById("tax27").setAttribute("href", "#taxCode27option");
-                                document.getElementById("tax30").setAttribute("href", "#taxCode30option");
-                                document.getElementById("tax31").setAttribute("href", "#taxCode31option");
-                                document.getElementById("tax34").setAttribute("href", "#taxCode34option");
-                                document.getElementById("tax35").setAttribute("href", "#taxCode35option");
+                                $("#nav-item3").hide();
+                                if($("#tab-3").hasClass("active")){
+                                    if ($("#vatreturnCategory1").prop('checked') == true) {
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if($("#vatreturnCategory2").prop('checked') == true){
+                                        $("#nav-item2 a").click();
+                                    }
+                                    else if($("#vatreturnCategory4").prop('checked') == true){
+                                        $("#nav-item4 a").click();
+                                    }
+                                    else if($("#vatreturnCategory5").prop('checked') == true){
+                                        $("#nav-item5 a").click();
+                                    }
+                                }
+                                document.getElementById("tax21").setAttribute("href", "#");
+                                document.getElementById("tax22").setAttribute("href", "#");
+                                document.getElementById("tax23").setAttribute("href", "#");
+                                document.getElementById("tax26").setAttribute("href", "#");
+                                document.getElementById("tax27").setAttribute("href", "#");
+                                document.getElementById("tax28").setAttribute("href", "#");
+                                document.getElementById("tax30").setAttribute("href", "#");
+                                document.getElementById("tax31").setAttribute("href", "#");
+                                document.getElementById("tax32").setAttribute("href", "#");
+                                document.getElementById("tax34").setAttribute("href", "#");
+                                document.getElementById("tax35").setAttribute("href", "#");
+                                document.getElementById("tax36").setAttribute("href", "#");
                             }
-
+                        
+                            if (data.tvatreturn[0].fields.HasTab4 == true) {
+                                $("#nav-item4").show();
+                                $("#payment_refno").removeAttr("disabled");
+                                $("#payment_period").removeAttr("disabled");
+                                $("#payment_penalty").removeAttr("disabled");
+                            } else {
+                                $("#nav-item4").hide();
+                                if($("#tab-4").hasClass("active")){
+                                    if ($("#vatreturnCategory1").prop('checked') == true) {
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if($("#vatreturnCategory2").prop('checked') == true){
+                                        $("#nav-item2 a").click();
+                                    }
+                                    else if($("#vatreturnCategory3").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else if($("#vatreturnCategory5").prop('checked') == true){
+                                        $("#nav-item5 a").click();
+                                    }
+                                }
+                                $("#payment_refno").attr("disabled", "disabled");
+                                $("#payment_period").attr("disabled", "disabled");
+                                $("#payment_penalty").attr("disabled", "disabled");
+                            }
+                        
+                            if (data.tvatreturn[0].fields.HasTab5 == true) {
+                                $("#nav-item5").show();
+                                $("#refund_refno").removeAttr("disabled");
+                                $("#refund_period").removeAttr("disabled");
+                            } else {
+                                $("#nav-item5").hide();
+                                if($("#tab-5").hasClass("active")){
+                                    if ($("#vatreturnCategory1").prop('checked') == true) {
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if($("#vatreturnCategory2").prop('checked') == true){
+                                        $("#nav-item2 a").click();
+                                    }
+                                    else if($("#vatreturnCategory3").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else if($("#vatreturnCategory4").prop('checked') == true){
+                                        $("#nav-item4 a").click();
+                                    }
+                                }
+                                $("#refund_refno").attr("disabled", "disabled");
+                                $("#refund_period").attr("disabled", "disabled");
+                            }
+                            
                             if (data.tvatreturn[0].fields.ClassID > 0) {
                                 for (var i = 0; i < deptrecords.length; i++) {
                                     if (deptrecords[i].id == data.tvatreturn[0].fields.ClassID) {
@@ -1804,58 +2142,58 @@ Template.vatreturn.onRendered(function() {
                             }
                             $("#endDate").val(tab1endDate);
                             $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
-                            $("#tax1cost").val(data.tvatreturn[0].fields._1);
-                            $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields._1);
-                            $("#tax1Acost").val(data.tvatreturn[0].fields._1A);
-                            $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields._1A);
-                            $("#tax2cost").val(data.tvatreturn[0].fields._2);
-                            $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields._2);
-                            $("#tax2Acost").val(data.tvatreturn[0].fields._2A);
-                            $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields._2A);
-                            $("#tax3cost").val(data.tvatreturn[0].fields._3);
-                            $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields._3);
-                            $("#tax4cost").val(data.tvatreturn[0].fields._4);
-                            $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields._4);
-                            $("#tax4Acost").val(data.tvatreturn[0].fields._4A);
-                            $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields._4A);
-                            $("#tax5cost").val(data.tvatreturn[0].fields._5);
-                            $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields._5);
-                            $("#tax7cost").val(data.tvatreturn[0].fields._7);
-                            $("#prt_tax7cost").html("$" + data.tvatreturn[0].fields._7);
-                            $("#tax10cost").val(data.tvatreturn[0].fields._10);
-                            $("#prt_tax10cost").html("$" + data.tvatreturn[0].fields._10);
-                            $("#tax11cost").val(data.tvatreturn[0].fields._11);
-                            $("#prt_tax11cost").html("$" + data.tvatreturn[0].fields._11);
-                            $("#tax12cost").val(data.tvatreturn[0].fields._12);
-                            $("#prt_tax12cost").html("$" + data.tvatreturn[0].fields._12);
-                            let tax13cost = data.tvatreturn[0].fields._4 + data.tvatreturn[0].fields._4A + data.tvatreturn[0].fields._9 + data.tvatreturn[0].fields._11 + data.tvatreturn[0].fields._12;
+                            $("#tax1cost").val(data.tvatreturn[0].fields.VAT1);
+                            $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields.VAT1);
+                            $("#tax1Acost").val(data.tvatreturn[0].fields.VAT1A);
+                            $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields.VAT1A);
+                            $("#tax2cost").val(data.tvatreturn[0].fields.VAT2);
+                            $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields.VAT2);
+                            $("#tax2Acost").val(data.tvatreturn[0].fields.VAT2A);
+                            $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields.VAT2A);
+                            $("#tax3cost").val(data.tvatreturn[0].fields.VAT3);
+                            $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields.VAT3);
+                            $("#tax4cost").val(data.tvatreturn[0].fields.VAT4);
+                            $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields.VAT4);
+                            $("#tax4Acost").val(data.tvatreturn[0].fields.VAT4A);
+                            $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields.VAT4A);
+                            $("#tax5cost").val(data.tvatreturn[0].fields.VAT5);
+                            $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields.VAT5);
+                            $("#tax7cost").val(data.tvatreturn[0].fields.VAT7);
+                            $("#prt_tax7cost").html("$" + data.tvatreturn[0].fields.VAT7);
+                            $("#tax10cost").val(data.tvatreturn[0].fields.VAT10);
+                            $("#prt_tax10cost").html("$" + data.tvatreturn[0].fields.VAT10);
+                            $("#tax11cost").val(data.tvatreturn[0].fields.VAT11);
+                            $("#prt_tax11cost").html("$" + data.tvatreturn[0].fields.VAT11);
+                            $("#tax12cost").val(data.tvatreturn[0].fields.VAT12);
+                            $("#prt_tax12cost").html("$" + data.tvatreturn[0].fields.VAT12);
+                            let tax13cost = data.tvatreturn[0].fields.VAT4 + data.tvatreturn[0].fields.VAT4A + data.tvatreturn[0].fields.VAT9 + data.tvatreturn[0].fields.VAT11 + data.tvatreturn[0].fields.VAT12;
                             $("#tax13cost").val(tax13cost);
                             $("#prt_tax13cost").html("$" + tax13cost);
 
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._1Selected, "tbltaxCodeCheckbox_1");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._1ASelected, "tbltaxCodeCheckbox_1A");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._2Selected, "tbltaxCodeCheckbox_2");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._2ASelected, "tbltaxCodeCheckbox_2A");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._3Selected, "tbltaxCodeCheckbox_3");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._5Selected, "tbltaxCodeCheckbox_5");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._7Selected, "tbltaxCodeCheckbox_7");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._10Selected, "tbltaxCodeCheckbox_10");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._12Selected, "tbltaxCodeCheckbox_12");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._14Selected, "tbltaxCodeCheckbox_14");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._14ASelected, "tbltaxCodeCheckbox_14A");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._15Selected, "tbltaxCodeCheckbox_15");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._15ASelected, "tbltaxCodeCheckbox_15A");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._16Selected, "tbltaxCodeCheckbox_16");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._17Selected, "tbltaxCodeCheckbox_17");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._18Selected, "tbltaxCodeCheckbox_18");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._21Selected, "tbltaxCodeCheckbox_21");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._22Selected, "tbltaxCodeCheckbox_22");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._26Selected, "tbltaxCodeCheckbox_26");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._27Selected, "tbltaxCodeCheckbox_27");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._30Selected, "tbltaxCodeCheckbox_30");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._31Selected, "tbltaxCodeCheckbox_31");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._34Selected, "tbltaxCodeCheckbox_34");
-                            shareFunctionByName.initTable(data.tvatreturn[0].fields._35Selected, "tbltaxCodeCheckbox_35");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2ASelected, "tbltaxCodeCheckbox_2A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT3Selected, "tbltaxCodeCheckbox_3");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT5Selected, "tbltaxCodeCheckbox_5");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT7Selected, "tbltaxCodeCheckbox_7");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT10Selected, "tbltaxCodeCheckbox_10");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT12Selected, "tbltaxCodeCheckbox_12");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT14Selected, "tbltaxCodeCheckbox_14");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT14ASelected, "tbltaxCodeCheckbox_14A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT15Selected, "tbltaxCodeCheckbox_15");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT15ASelected, "tbltaxCodeCheckbox_15A");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT16Selected, "tbltaxCodeCheckbox_16");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT17Selected, "tbltaxCodeCheckbox_17");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT18Selected, "tbltaxCodeCheckbox_18");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT21Selected, "tbltaxCodeCheckbox_21");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT22Selected, "tbltaxCodeCheckbox_22");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT26Selected, "tbltaxCodeCheckbox_26");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT27Selected, "tbltaxCodeCheckbox_27");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT30Selected, "tbltaxCodeCheckbox_30");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT31Selected, "tbltaxCodeCheckbox_31");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
+                            shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                             if (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") {
                                 $("#datemethod1-t2").prop('checked', true);
                                 $("#datemethod2-t2").prop('checked', false);
@@ -1873,21 +2211,21 @@ Template.vatreturn.onRendered(function() {
                             }
                             $("#endDate-t2").val(tab2endDate);
                             // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
-                            $("#tax14cost").val(data.tvatreturn[0].fields._14);
-                            $("#prt_tax14cost").html("$" + data.tvatreturn[0].fields._14);
-                            $("#tax14acost").val(data.tvatreturn[0].fields._14A);
-                            $("#prt_tax14acost").html("$" + data.tvatreturn[0].fields._14A);
-                            $("#tax15cost").val(data.tvatreturn[0].fields._15);
-                            $("#prt_tax15cost").html("$" + data.tvatreturn[0].fields._15);
-                            $("#tax15acost").val(data.tvatreturn[0].fields._15A);
-                            // $("#prt_tax15acost").html("$" + data.tvatreturn[0].fields._15A);
-                            $("#tax16cost").val(data.tvatreturn[0].fields._16);
-                            // $("#prt_tax16cost").html("$" + data.tvatreturn[0].fields._16);
-                            $("#tax17cost").val(data.tvatreturn[0].fields._17);
-                            // $("#prt_tax17cost").html("$" + data.tvatreturn[0].fields._17);
-                            $("#tax18cost").val(data.tvatreturn[0].fields._18);
-                            // $("#prt_tax18cost").html("$" + data.tvatreturn[0].fields._18);
-                            let tax19cost = data.tvatreturn[0].fields._14 + data.tvatreturn[0].fields._14A + data.tvatreturn[0].fields._15 + data.tvatreturn[0].fields._15A + data.tvatreturn[0].fields._16 + data.tvatreturn[0].fields._17 + data.tvatreturn[0].fields._18;
+                            $("#tax14cost").val(data.tvatreturn[0].fields.VAT14);
+                            $("#prt_tax14cost").html("$" + data.tvatreturn[0].fields.VAT14);
+                            $("#tax14acost").val(data.tvatreturn[0].fields.VAT14A);
+                            $("#prt_tax14acost").html("$" + data.tvatreturn[0].fields.VAT14A);
+                            $("#tax15cost").val(data.tvatreturn[0].fields.VAT15);
+                            $("#prt_tax15cost").html("$" + data.tvatreturn[0].fields.VAT15);
+                            $("#tax15acost").val(data.tvatreturn[0].fields.VAT15A);
+                            // $("#prt_tax15acost").html("$" + data.tvatreturn[0].fields.VAT15A);
+                            $("#tax16cost").val(data.tvatreturn[0].fields.VAT16);
+                            // $("#prt_tax16cost").html("$" + data.tvatreturn[0].fields.VAT16);
+                            $("#tax17cost").val(data.tvatreturn[0].fields.VAT17);
+                            // $("#prt_tax17cost").html("$" + data.tvatreturn[0].fields.VAT17);
+                            $("#tax18cost").val(data.tvatreturn[0].fields.VAT18);
+                            // $("#prt_tax18cost").html("$" + data.tvatreturn[0].fields.VAT18);
+                            let tax19cost = data.tvatreturn[0].fields.VAT14 + data.tvatreturn[0].fields.VAT14A + data.tvatreturn[0].fields.VAT15 + data.tvatreturn[0].fields.VAT15A + data.tvatreturn[0].fields.VAT16 + data.tvatreturn[0].fields.VAT17 + data.tvatreturn[0].fields.VAT18;
                             $("#tax19cost").val(tax19cost);
                             $("#prt_tax19cost").html("$" + tax19cost);
                             let tax20cost = tax13cost - tax19cost;
@@ -1910,32 +2248,32 @@ Template.vatreturn.onRendered(function() {
                             }
                             $("#endDate-t3").val(tab3endDate);
                             // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
-                            $("#tax21cost").val(data.tvatreturn[0].fields._21);
-                            $("#prt_tax21cost").html("$" + data.tvatreturn[0].fields._21);
-                            $("#tax22cost").val(data.tvatreturn[0].fields._22);
-                            $("#prt_tax22cost").html("$" + data.tvatreturn[0].fields._22);
-                            var tax23cost = parseFloat(data.tvatreturn[0].fields._21) - parseFloat(data.tvatreturn[0].fields._22);
+                            $("#tax21cost").val(data.tvatreturn[0].fields.VAT21);
+                            $("#prt_tax21cost").html("$" + data.tvatreturn[0].fields.VAT21);
+                            $("#tax22cost").val(data.tvatreturn[0].fields.VAT22);
+                            $("#prt_tax22cost").html("$" + data.tvatreturn[0].fields.VAT22);
+                            var tax23cost = parseFloat(data.tvatreturn[0].fields.VAT21) - parseFloat(data.tvatreturn[0].fields.VAT22);
                             $("#tax23cost").val(tax23cost.toFixed(2));
-                            $("#prt_tax23cost").html("$" + data.tvatreturn[0].fields._23);
+                            $("#prt_tax23cost").html("$" + data.tvatreturn[0].fields.VAT23);
                             var tax24cost = tax23cost * 80 / 100;
                             $("#tax24cost").val(tax24cost.toFixed(2));
                             $("#prt_tax24cost").val(tax24cost.toFixed(2));
                             var tax25cost = tax24cost * 332.8 / 100;
                             $("#tax25cost").val(tax25cost.toFixed(2));
                             $("#prt_tax25cost").val(tax25cost.toFixed(2));
-                            var tax28cost = parseFloat(data.tvatreturn[0].fields._26) - parseFloat(data.tvatreturn[0].fields._27);
+                            var tax28cost = parseFloat(data.tvatreturn[0].fields.VAT26) - parseFloat(data.tvatreturn[0].fields.VAT27);
                             $("#tax28cost").val(tax28cost.toFixed(2));
                             $("#prt_tax28cost").val(tax28cost.toFixed(2));
                             var tax29cost = tax28cost * 562 / 100;
                             $("#tax29cost").val(tax29cost.toFixed(2));
                             $("#prt_tax29cost").val(tax29cost.toFixed(2));
-                            var tax32cost = parseFloat(data.tvatreturn[0].fields._30) - parseFloat(data.tvatreturn[0].fields._31);
+                            var tax32cost = parseFloat(data.tvatreturn[0].fields.VAT30) - parseFloat(data.tvatreturn[0].fields.VAT31);
                             $("#tax32cost").val(tax32cost.toFixed(2));
                             $("#prt_tax32cost").val(tax32cost.toFixed(2));
                             var tax33cost = tax32cost * 207 / 100;
                             $("#tax33cost").val(tax33cost.toFixed(2));
                             $("#prt_tax33cost").val(tax33cost.toFixed(2));
-                            var tax36cost = parseFloat(data.tvatreturn[0].fields._34) - parseFloat(data.tvatreturn[0].fields._35);
+                            var tax36cost = parseFloat(data.tvatreturn[0].fields.VAT34) - parseFloat(data.tvatreturn[0].fields.VAT35);
                             $("#tax36cost").val(tax36cost.toFixed(2));
                             $("#prt_tax36cost").val(tax36cost.toFixed(2));
                             var tax37cost = tax36cost * 384.5 / 100;
@@ -1955,6 +2293,7 @@ Template.vatreturn.onRendered(function() {
 
             $(document).on("click", "#vatreturnCategory1", function(e) {
                 if ($("#vatreturnCategory1").prop('checked') == true) {
+                    $("#nav-item1").show();
                     document.getElementById("tax1").setAttribute("href", "#taxCode1option");
                     document.getElementById("tax1A").setAttribute("href", "#taxCode1Aoption");
                     document.getElementById("tax2").setAttribute("href", "#taxCode2option");
@@ -1969,6 +2308,21 @@ Template.vatreturn.onRendered(function() {
                     $("#tax4acost").removeAttr("disabled");
                     $("#tax11cost").removeAttr("disabled");
                 } else {
+                    $("#nav-item1").hide();
+                    if($("#tab-1").hasClass("active")){
+                        if ($("#vatreturnCategory2").prop('checked') == true) {
+                            $("#nav-item2 a").click();
+                        }
+                        else if($("#vatreturnCategory3").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else if($("#vatreturnCategory4").prop('checked') == true){
+                            $("#nav-item4 a").click();
+                        }
+                        else if($("#vatreturnCategory5").prop('checked') == true){
+                            $("#nav-item5 a").click();
+                        }
+                    }
                     document.getElementById("tax1").setAttribute("href", "#");
                     document.getElementById("tax1A").setAttribute("href", "#");
                     document.getElementById("tax2").setAttribute("href", "#");
@@ -1987,6 +2341,7 @@ Template.vatreturn.onRendered(function() {
 
             $(document).on("click", "#vatreturnCategory2", function(e) {
                 if ($("#vatreturnCategory2").prop('checked') == true) {
+                    $("#nav-item2").show();
                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
                     document.getElementById("tax14A").setAttribute("href", "#taxCode14Aoption");
                     document.getElementById("tax15").setAttribute("href", "#taxCode15option");
@@ -1995,6 +2350,21 @@ Template.vatreturn.onRendered(function() {
                     document.getElementById("tax17").setAttribute("href", "#taxCode17option");
                     document.getElementById("tax18").setAttribute("href", "#taxCode18option");
                 } else {
+                    $("#nav-item2").hide();
+                    if($("#tab-2").hasClass("active")){
+                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                            $("#nav-item1 a").click();
+                        }
+                        else if($("#vatreturnCategory3").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else if($("#vatreturnCategory4").prop('checked') == true){
+                            $("#nav-item4 a").click();
+                        }
+                        else if($("#vatreturnCategory5").prop('checked') == true){
+                            $("#nav-item5 a").click();
+                        }
+                    }
                     document.getElementById("tax14").setAttribute("href", "#");
                     document.getElementById("tax14A").setAttribute("href", "#");
                     document.getElementById("tax15").setAttribute("href", "#");
@@ -2007,6 +2377,7 @@ Template.vatreturn.onRendered(function() {
 
             $(document).on("click", "#vatreturnCategory3", function(e) {
                 if ($("#vatreturnCategory3").prop('checked') == true) {
+                    $("#nav-item3").show();
                     document.getElementById("tax21").setAttribute("href", "#taxCode21option");
                     document.getElementById("tax22").setAttribute("href", "#taxCode22option");
                     document.getElementById("tax23").setAttribute("href", "#taxCode23option");
@@ -2020,6 +2391,21 @@ Template.vatreturn.onRendered(function() {
                     document.getElementById("tax35").setAttribute("href", "#taxCode35option");
                     document.getElementById("tax36").setAttribute("href", "#taxCode36option");
                 } else {
+                    $("#nav-item3").hide();
+                    if($("#tab-3").hasClass("active")){
+                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                            $("#nav-item1 a").click();
+                        }
+                        else if($("#vatreturnCategory2").prop('checked') == true){
+                            $("#nav-item2 a").click();
+                        }
+                        else if($("#vatreturnCategory4").prop('checked') == true){
+                            $("#nav-item4 a").click();
+                        }
+                        else if($("#vatreturnCategory5").prop('checked') == true){
+                            $("#nav-item5 a").click();
+                        }
+                    }
                     document.getElementById("tax21").setAttribute("href", "#");
                     document.getElementById("tax22").setAttribute("href", "#");
                     document.getElementById("tax23").setAttribute("href", "#");
@@ -2032,6 +2418,60 @@ Template.vatreturn.onRendered(function() {
                     document.getElementById("tax34").setAttribute("href", "#");
                     document.getElementById("tax35").setAttribute("href", "#");
                     document.getElementById("tax36").setAttribute("href", "#");
+                }
+            });
+
+            $(document).on("click", "#vatreturnCategory4", function(e) {
+                if ($("#vatreturnCategory4").prop('checked') == true) {
+                    $("#nav-item4").show();
+                    $("#payment_refno").removeAttr("disabled");
+                    $("#payment_period").removeAttr("disabled");
+                    $("#payment_penalty").removeAttr("disabled");
+                } else {
+                    $("#nav-item4").hide();
+                    if($("#tab-4").hasClass("active")){
+                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                            $("#nav-item1 a").click();
+                        }
+                        else if($("#vatreturnCategory2").prop('checked') == true){
+                            $("#nav-item2 a").click();
+                        }
+                        else if($("#vatreturnCategory3").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else if($("#vatreturnCategory5").prop('checked') == true){
+                            $("#nav-item5 a").click();
+                        }
+                    }
+                    $("#payment_refno").attr("disabled", "disabled");
+                    $("#payment_period").attr("disabled", "disabled");
+                    $("#payment_penalty").attr("disabled", "disabled");
+                }
+            });
+
+            $(document).on("click", "#vatreturnCategory5", function(e) {
+                if ($("#vatreturnCategory5").prop('checked') == true) {
+                    $("#nav-item5").show();
+                    $("#refund_refno").removeAttr("disabled");
+                    $("#refund_period").removeAttr("disabled");
+                } else {
+                    $("#nav-item5").hide();
+                    if($("#tab-5").hasClass("active")){
+                        if ($("#vatreturnCategory1").prop('checked') == true) {
+                            $("#nav-item1 a").click();
+                        }
+                        else if($("#vatreturnCategory2").prop('checked') == true){
+                            $("#nav-item2 a").click();
+                        }
+                        else if($("#vatreturnCategory3").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else if($("#vatreturnCategory4").prop('checked') == true){
+                            $("#nav-item4 a").click();
+                        }
+                    }
+                    $("#refund_refno").attr("disabled", "disabled");
+                    $("#refund_period").attr("disabled", "disabled");
                 }
             });
         });
@@ -2109,15 +2549,11 @@ Template.vatreturn.events({
             $("#vatoptionmodal").modal("toggle");
         }
     },
-    // "click #allDepart": (e) => {
-    //     if ($("#allDepart").prop('checked') == true) {
-    //         $("#sltDepartment").attr("disabled", "disabled");
-    //     } else {
-    //         $("#sltDepartment").removeAttr("disabled");
-    //     }
-    // },
-    "click #datemethod1": (e) => {
-
+    "change #payment_refno, change #refund_refno": (e) => {
+        $("#payment_refno, #refund_refno").val($(e.target).val())
+    },
+    "change #payment_period, change #refund_period": (e) => {
+        $("#payment_period, #refund_period").val($(e.target).val())
     },
     "click #datemethod2": (e) => {
 
@@ -2456,64 +2892,64 @@ Template.vatreturn.events({
                                         Tab1_Type: tab1_type,
                                         Tab1_Month: tab1_month,
                                         Tab1_Year: tab1_year,
-                                        _1: parseFloat(tax1cost),
-                                        _1Selected: taxcodes1,
-                                        _1A: parseFloat(tax1acost),
-                                        _1ASelected: taxcodes1A,
-                                        _2: parseFloat(tax2cost),
-                                        _2Selected: taxcodes2,
-                                        _2A: parseFloat(tax2Acost),
-                                        _2ASelected: taxcodes2A,
-                                        _3: parseFloat(tax3cost),
-                                        _3Selected: taxcodes3,
-                                        _4: parseFloat(tax4cost),
-                                        _4A: parseFloat(tax4Acost),
-                                        _5: parseFloat(tax5cost),
-                                        _5Selected: taxcodes5,
-                                        _7: parseFloat(tax7cost),
-                                        _7Selected: taxcodes7,
-                                        _10: parseFloat(tax10cost),
-                                        _10Selected: taxcodes10,
-                                        _12: parseFloat(tax12cost),
-                                        _12Selected: taxcodes12,
+                                        VAT1: parseFloat(tax1cost),
+                                        VAT1Selected: taxcodes1,
+                                        VAT1A: parseFloat(tax1acost),
+                                        VAT1ASelected: taxcodes1A,
+                                        VAT2: parseFloat(tax2cost),
+                                        VAT2Selected: taxcodes2,
+                                        VAT2A: parseFloat(tax2Acost),
+                                        VAT2ASelected: taxcodes2A,
+                                        VAT3: parseFloat(tax3cost),
+                                        VAT3Selected: taxcodes3,
+                                        VAT4: parseFloat(tax4cost),
+                                        VAT4A: parseFloat(tax4Acost),
+                                        VAT5: parseFloat(tax5cost),
+                                        VAT5Selected: taxcodes5,
+                                        VAT7: parseFloat(tax7cost),
+                                        VAT7Selected: taxcodes7,
+                                        VAT10: parseFloat(tax10cost),
+                                        VAT10Selected: taxcodes10,
+                                        VAT12: parseFloat(tax12cost),
+                                        VAT12Selected: taxcodes12,
                                         HasTab2: hasTab2,
                                         Tab2_Type: tab2_type,
                                         Tab2_Month: tab2_month,
                                         Tab2_Year: tab2_year,
-                                        _14: parseFloat(tax14cost),
-                                        _14Selected: taxcodes14,
-                                        _14A: parseFloat(tax14Acost),
-                                        _14ASelected: taxcodes14A,
-                                        _15: parseFloat(tax15cost),
-                                        _15Selected: taxcodes15,
-                                        _15A: parseFloat(tax15Acost),
-                                        _15ASelected: taxcodes15A,
-                                        _16: parseFloat(tax16cost),
-                                        _16Selected: taxcodes16,
-                                        _17: parseFloat(tax17cost),
-                                        _17Selected: taxcodes17,
-                                        _18: parseFloat(tax18cost),
-                                        _18Selected: taxcodes18,
+                                        VAT14: parseFloat(tax14cost),
+                                        VAT14Selected: taxcodes14,
+                                        VAT14A: parseFloat(tax14Acost),
+                                        VAT14ASelected: taxcodes14A,
+                                        VAT15: parseFloat(tax15cost),
+                                        VAT15Selected: taxcodes15,
+                                        VAT15A: parseFloat(tax15Acost),
+                                        VAT15ASelected: taxcodes15A,
+                                        VAT16: parseFloat(tax16cost),
+                                        VAT16Selected: taxcodes16,
+                                        VAT17: parseFloat(tax17cost),
+                                        VAT17Selected: taxcodes17,
+                                        VAT18: parseFloat(tax18cost),
+                                        VAT18Selected: taxcodes18,
                                         HasTab3: hasTab3,
                                         Tab3_Type: tab3_type,
                                         Tab3_Month: tab3_month,
                                         Tab3_Year: tab3_year,
-                                        _21: parseFloat(tax21cost),
-                                        _21Selected: taxcodes21,
-                                        _22: parseFloat(tax22cost),
-                                        _22Selected: taxcodes22,
-                                        _26: parseFloat(tax26cost),
-                                        _26Selected: taxcodes26,
-                                        _27: parseFloat(tax27cost),
-                                        _27Selected: taxcodes27,
-                                        _30: parseFloat(tax30cost),
-                                        _30Selected: taxcodes30,
-                                        _31: parseFloat(tax31cost),
-                                        _31Selected: taxcodes31,
-                                        _34: parseFloat(tax34cost),
-                                        _34Selected: taxcodes34,
-                                        _35: parseFloat(tax35cost),
-                                        _35Selected: taxcodes35,
+                                        VAT21: parseFloat(tax21cost),
+                                        VAT21Selected: taxcodes21,
+                                        VAT22: parseFloat(tax22cost),
+                                        VAT22Selected: taxcodes22,
+                                        VAT26: parseFloat(tax26cost),
+                                        VAT26Selected: taxcodes26,
+                                        VAT27: parseFloat(tax27cost),
+                                        VAT27Selected: taxcodes27,
+                                        VAT30: parseFloat(tax30cost),
+                                        VAT30Selected: taxcodes30,
+                                        VAT31: parseFloat(tax31cost),
+                                        VAT31Selected: taxcodes31,
+                                        VAT34: parseFloat(tax34cost),
+                                        VAT34Selected: taxcodes34,
+                                        VAT35: parseFloat(tax35cost),
+                                        VAT35Selected: taxcodes35,
                                     }
                                 }
 
@@ -2888,64 +3324,64 @@ Template.vatreturn.events({
                             Tab1_Type: tab1_type,
                             Tab1_Month: tab1_month,
                             Tab1_Year: tab1_year,
-                            _1: parseFloat(tax1cost),
-                            _1Selected: taxcodes1,
-                            _1A: parseFloat(tax1Acost),
-                            _1ASelected: taxcodes1A,
-                            _2: parseFloat(tax2cost),
-                            _2Selected: taxcodes2,
-                            _2A: parseFloat(tax2Acost),
-                            _2ASelected: taxcodes2A,
-                            _3: parseFloat(tax3cost),
-                            _3Selected: taxcodes3,
-                            _4: parseFloat(tax4cost),
-                            _4A: parseFloat(tax4Acost),
-                            _5: parseFloat(tax5cost),
-                            _5Selected: taxcodes5,
-                            _7: parseFloat(tax7cost),
-                            _7Selected: taxcodes7,
-                            _10: parseFloat(tax10cost),
-                            _10Selected: taxcodes10,
-                            _12: parseFloat(tax12cost),
-                            _12Selected: taxcodes12,
+                            VAT1: parseFloat(tax1cost),
+                            VAT1Selected: taxcodes1,
+                            VAT1A: parseFloat(tax1Acost),
+                            VAT1ASelected: taxcodes1A,
+                            VAT2: parseFloat(tax2cost),
+                            VAT2Selected: taxcodes2,
+                            VAT2A: parseFloat(tax2Acost),
+                            VAT2ASelected: taxcodes2A,
+                            VAT3: parseFloat(tax3cost),
+                            VAT3Selected: taxcodes3,
+                            VAT4: parseFloat(tax4cost),
+                            VAT4A: parseFloat(tax4Acost),
+                            VAT5: parseFloat(tax5cost),
+                            VAT5Selected: taxcodes5,
+                            VAT7: parseFloat(tax7cost),
+                            VAT7Selected: taxcodes7,
+                            VAT10: parseFloat(tax10cost),
+                            VAT10Selected: taxcodes10,
+                            VAT12: parseFloat(tax12cost),
+                            VAT12Selected: taxcodes12,
                             HasTab2: hasTab2,
                             Tab2_Type: tab2_type,
                             Tab2_Month: tab2_month,
                             Tab2_Year: tab2_year,
-                            _14: parseFloat(tax14cost),
-                            _14Selected: taxcodes14,
-                            _14A: parseFloat(tax14Acost),
-                            _14ASelected: taxcodes14A,
-                            _15: parseFloat(tax15cost),
-                            _15Selected: taxcodes15,
-                            _15A: parseFloat(tax15Acost),
-                            _15ASelected: taxcodes15A,
-                            _16: parseFloat(tax16cost),
-                            _16Selected: taxcodes16,
-                            _17: parseFloat(tax17cost),
-                            _17Selected: taxcodes17,
-                            _18: parseFloat(tax18cost),
-                            _18Selected: taxcodes18,
+                            VAT14: parseFloat(tax14cost),
+                            VAT14Selected: taxcodes14,
+                            VAT14A: parseFloat(tax14Acost),
+                            VAT14ASelected: taxcodes14A,
+                            VAT15: parseFloat(tax15cost),
+                            VAT15Selected: taxcodes15,
+                            VAT15A: parseFloat(tax15Acost),
+                            VAT15ASelected: taxcodes15A,
+                            VAT16: parseFloat(tax16cost),
+                            VAT16Selected: taxcodes16,
+                            VAT17: parseFloat(tax17cost),
+                            VAT17Selected: taxcodes17,
+                            VAT18: parseFloat(tax18cost),
+                            VAT18Selected: taxcodes18,
                             HasTab3: hasTab3,
                             Tab3_Type: tab3_type,
                             Tab3_Month: tab3_month,
                             Tab3_Year: tab3_year,
-                            _21: parseFloat(tax21cost),
-                            _21Selected: taxcodes21,
-                            _22: parseFloat(tax22cost),
-                            _22Selected: taxcodes22,
-                            _26: parseFloat(tax26cost),
-                            _26Selected: taxcodes26,
-                            _27: parseFloat(tax27cost),
-                            _27Selected: taxcodes27,
-                            _30: parseFloat(tax30cost),
-                            _30Selected: taxcodes30,
-                            _31: parseFloat(tax31cost),
-                            _31Selected: taxcodes31,
-                            _34: parseFloat(tax34cost),
-                            _34Selected: taxcodes34,
-                            _35: parseFloat(tax35cost),
-                            _35Selected: taxcodes35,
+                            VAT21: parseFloat(tax21cost),
+                            VAT21Selected: taxcodes21,
+                            VAT22: parseFloat(tax22cost),
+                            VAT22Selected: taxcodes22,
+                            VAT26: parseFloat(tax26cost),
+                            VAT26Selected: taxcodes26,
+                            VAT27: parseFloat(tax27cost),
+                            VAT27Selected: taxcodes27,
+                            VAT30: parseFloat(tax30cost),
+                            VAT30Selected: taxcodes30,
+                            VAT31: parseFloat(tax31cost),
+                            VAT31Selected: taxcodes31,
+                            VAT34: parseFloat(tax34cost),
+                            VAT34Selected: taxcodes34,
+                            VAT35: parseFloat(tax35cost),
+                            VAT35Selected: taxcodes35,
                         }
                     }
 
