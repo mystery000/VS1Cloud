@@ -4853,8 +4853,6 @@ Template.frmappointmentpop.events({
                     };
                 }
                 var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
-
-                console.log("=========", dayObj);
                 var oPost = new XMLHttpRequest();
                 oPost.open(
                     "POST",
