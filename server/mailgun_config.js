@@ -6,13 +6,10 @@ FutureTasks = new Meteor.Collection('email_settings');
 Meteor.startup(function(){
     if (Meteor.isServer) {
       process.env.MAIL_URL='smtps://noreply%40vs1cloud.com:Jp9CvV2M5g@mail.vs1cloud.com:465/';
-      process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
-      process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
-
       var minutesToAdd=2;
       var currentDate = new Date();
       var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
-      
+
       FutureTasks.find().forEach(function(mail) {
         if (mail.date < new Date()) {
           Meteor.call('sendEmail', mail);
@@ -410,13 +407,13 @@ Meteor.methods({
   // get: function(url){
   //     var that = this;
   //     var promise = new Promise(function(resolve, reject) {
-  //         HTTP.get("https://" + ipAddress + ':' + port + '/erpapi/' + url + "?ListType=Detail", 
+  //         HTTP.get("https://" + ipAddress + ':' + port + '/erpapi/' + url + "?ListType=Detail",
   //         { headers : {
   //           database: database,
   //           username: username,
   //           password: password||'',
   //         }}, function(err, response){
-  //           Meteor.call('responseHandler', url, response, function(error, result) { 
+  //           Meteor.call('responseHandler', url, response, function(error, result) {
   //             if(error) {
   //               reject(error);
   //             }else if(result) {
@@ -437,20 +434,20 @@ Meteor.methods({
 
   post: function(url, data, connectionInfo) {
     let promise = new Promise(function (resolve, reject) {
-        HTTP.post("https://" + connectionInfo.ipAddress + ':' + connectionInfo.port + '/erpapi/' + url, 
+        HTTP.post("https://" + connectionInfo.ipAddress + ':' + connectionInfo.port + '/erpapi/' + url,
         { headers : {
           database: connectionInfo.database,
           username: connectionInfo.username,
           password: connectionInfo.password||'',
         }, data: data}, function (err, response) {
 
-          Meteor.call('responseHandler', url, response, function(error, result) { 
+          Meteor.call('responseHandler', url, response, function(error, result) {
             if(error) {
               reject(error);
             }else if(result) {
               resolve(result)
             }
-          })  
+          })
             // let data = that.responseHandler(url, response);
             // if(err){
             //     reject(data);
