@@ -140,13 +140,6 @@ Template.transaction_list.onRendered(function() {
                 { index: 13, label: 'Invoiced', class: 'Invoiced', active: false, display: true, width: "100" },
                 { index: 14, label: 'Hourly Rate', class: 'Hourlyrate', active: false, display: true, width: "100" },
                 { index: 15, label: 'View', class: 'View', active: true, display: true, width: "100" },
-            ]
-                { index: 0, label: 'ID', class: 'colPayrollLeaveID', active: false, display: true, width: "" },
-                { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
-                { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
-                { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
-                { index: 4, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
-                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ]  
         }else if(currenttablename === "tblTimeSheet"){
            reset_data = [
