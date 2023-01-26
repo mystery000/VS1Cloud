@@ -48,6 +48,7 @@ Template.singletouch.onRendered(function() {
     }
     $('#tblSingleTouchPayroll tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
+        console.log('')
         if(listData){
             FlowRouter.go('/singletouchpayroll?id=' + listData);
         }
@@ -467,7 +468,7 @@ Template.singletouch.events({
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/singletouchpayroll');
     },
-    'click #payrun100': function(event) {
+    'click #100': function(event) {
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/singletouchpayroll');
     }

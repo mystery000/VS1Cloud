@@ -354,17 +354,19 @@
               data=data
             }}
             {{/if}}
-            {{#unless equals poStatus ''}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_input
-                label="POStatus"
-                id="sltPOStatus"
-                name="sltPOStatus"
-                readonly=true
-                defaultValue=data.poStatus
-              }}
-            </div>
-            {{/unless}}
+            {{#if poStatus}}
+              {{#unless equals poStatus ''}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> default_input
+                  label="POStatus"
+                  id="sltPOStatus"
+                  name="sltPOStatus"
+                  readonly=true
+                  defaultValue=data.poStatus
+                }}
+              </div>
+              {{/unless}}
+            {{/if}}
           </div>
         </div>
       </div>

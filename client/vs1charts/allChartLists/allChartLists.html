@@ -302,6 +302,11 @@
             {{> crmleadchart md=12 defaultPosition=0 key="crm__crm_overview" }}
         {{/if}}
 
+        {{#if is_available_chart currentTemplate "productionplannerChart"}}
+            {{> mfgPlannerChart md=12 defaultPosition=34 key="manufacturing__manufacturing_overview" }}
+        {{/if}}
+
+
     </div>
     <div class="row no-gutters justify-content-center">
         <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">

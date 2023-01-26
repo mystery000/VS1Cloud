@@ -369,7 +369,8 @@
                         }
                     </style>
                     <div class="table-responsive">
-                        <table id="tblAllSingleTouchPayroll" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAllSingleTouchPayroll">
+                        {{> non_transactional_list tablename="tblAllSingleTouchPayroll"}}
+                        <!-- <table id="tblAllSingleTouchPayroll" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAllSingleTouchPayroll">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th col" style="width: 5%;">ID</th>
@@ -419,7 +420,7 @@
                                     <td class="colStatus isUnprocessedColumn" contenteditable="false" style="width: 9%;">Draft</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table> -->
                     </div>
                 </div>
             </div>
