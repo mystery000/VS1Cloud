@@ -77,6 +77,10 @@ let chartsPlaceList = {
         "top10Suppliers",
     ],
 
+    "Manufacturing_Overview": [
+        "productionplannerChart"
+    ],
+
     "Payroll_Overview": [
         "employeeDaysAbsent",
         "clockedOnEmployees",

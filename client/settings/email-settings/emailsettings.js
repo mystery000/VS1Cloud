@@ -2715,7 +2715,7 @@ Template.emailsettings.onRendered(function () {
                             addVS1Data(
                               "TReportSchedules",
                               JSON.stringify(dataUpdate)
-                            ).then(() => {}).catch(function(error){ });
+                            ).then(() => {}).catch(function(error){});
                           })
                           .catch(function (error) {});
                       })
@@ -3897,6 +3897,7 @@ Template.emailsettings.events({
       .getEmailHistoryByTransName(_transType)
       .then(function (dataObject) {
         let items = dataObject.temailhistory;
+
         // items = data.filter(item=>{
         //     return item.fields.Subject == _transType
         // })

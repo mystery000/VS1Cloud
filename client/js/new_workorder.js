@@ -942,7 +942,7 @@ Template.new_workorder.events({
                     })
                     let count = savedworkorders.length;
                     let temp = cloneDeep(record);
-                    temp = {...temp, isStarted: true}
+                    // temp = {...temp, isStarted: true}
                     templateObject.workorderrecord.set(temp);
                     record = templateObject.workorderrecord.get();
                     let objDetail = {
@@ -1579,30 +1579,33 @@ Template.new_workorder.events({
             //     // })
             // }
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), }
+            tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), IsCompleted: true}
             workorders.splice(workorderindex, 1, tempworkorder)
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
-                async function getSalesOrders() {
-                    return new Promise(async(resolve, reject)=> {
-                        // getVS1Data('TSalesOrderEx').then(function(dataObject) {
-                        //     if (dataObject.length === 0) {
-                        //         accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data) {
+                // async function getSalesOrders() {
+                //     return new Promise(async(resolve, reject)=> {
+                //         getVS1Data('TSalesOrderEx').then(function(dataObject) {
+                //             if (dataObject.length === 0) {
+                //                 accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data) {
 
-                        //         })
-                        //     }else {
-                        //         let data = JSON.parse(dataObject[0].data);
-                        //         let useData = data.tsalesorderex;
-                        //         let index = useData.findIndex(order=> {
-                        //             return order.fields.ID == templateObject.salesOrderId.get()
-                        //         })
-                        //         if(index > -1) {
+                //                 })
+                //             }else {
+                //                 let data = JSON.parse(dataObject[0].data);
+                //                 let useData = data.tsalesorderex;
+                //                 let index = useData.findIndex(order=> {
+                //                     return order.fields.ID == templateObject.salesOrderId.get()
+                //                 })
+                //                 if(index > -1) {
+                //                     accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data) {
+                //                         let cloneData = cloneDeep(data.fields);
+                //                         cloneData.
+                //                     })
+                //                 }
+                //             }
+                //         })
 
-                        //         }
-                        //     }
-                        // })
-
-                    })
-                }
+                //     })
+                // }
 
                 $('.fullScreenSpin').css('display', 'none')
                 swal('Process Completed', '', 'success');
