@@ -4528,7 +4528,7 @@ Template.stocktransfercard.events({
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                     swal({
                         title: '',
-                        text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
+                        text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                         type: 'info',
                         showCancelButton: true,
                         confirmButtonText: 'Yes',

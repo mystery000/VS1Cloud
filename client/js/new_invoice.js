@@ -11404,7 +11404,7 @@ Template.new_invoice.events({
           productService.getProductStatus(selectedProductName).then(function (data) {
             // $(".fullScreenSpin").css("display", "none");
             if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-              // swal("", 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', "info");
+              // swal("", 'The product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.', "info");
               // event.preventDefault();
               return false;
             } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
@@ -11490,7 +11490,7 @@ Template.new_invoice.events({
           productService.getProductStatus(selectedProductName).then(async function (data) {
             // $(".fullScreenSpin").css("display", "none");
             if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-              // swal("", "The product " + selectedProductName + " does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.", "info");
+              // swal("", "The product " + selectedProductName + " does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.", "info");
               // event.preventDefault();
               return false;
             } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
@@ -11552,7 +11552,7 @@ Template.new_invoice.events({
           if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
             swal({
                 title: '',
-                text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
+                text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                 type: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -11651,7 +11651,7 @@ Template.new_invoice.events({
           if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
             swal({
                 title: '',
-                text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.',
+                text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                 type: 'info',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
