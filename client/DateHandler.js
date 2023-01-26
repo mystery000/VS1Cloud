@@ -66,17 +66,16 @@ export default class Datehandler {
 
   static initOneMonth() {
     const currentDate = new Date();
-
     /**
-         * This will init dates
-         */
+     * This will init dates
+     */
     let begunDate = moment(currentDate).format("DD/MM/YYYY");
 
     let fromDateMonth = currentDate.getMonth() + 1;
     let fromDateDay = currentDate.getDate();
     if (currentDate.getMonth() + 1 < 10) {
       fromDateMonth = "0" + (
-      currentDate.getMonth() + 1);
+          currentDate.getMonth() + 1);
     }
 
     let prevMonth = moment().subtract(1, "months").format("MM");
@@ -85,7 +84,9 @@ export default class Datehandler {
       fromDateDay = "0" + currentDate.getDate();
     }
     // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
-    var fromDate = fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
+    let differ = 0;
+    if(currentDate.getMonth() == 0) differ = 1;
+    var fromDate = fromDateDay + "/" + prevMonth + "/" + (currentDate.getFullYear() - differ);
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
       showOn: "button",
@@ -178,7 +179,6 @@ export default class Datehandler {
     this.domDateToUpdate(dateTo, format);
   }
 
-  
   static previousQuarter( format = "DD/MM/YYYY", templateObject = null ){
     const dateFrom =  moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     const dateTo = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
@@ -250,9 +250,9 @@ export default class Datehandler {
   }
 
   /**
-     * Use this to avoid copy pasting a lot of codes
-     *
-     */
+   * Use this to avoid copy pasting a lot of codes
+   *
+   */
   static getDateRangeEvents() {
     return {
       "click #today": (e, templateObject) => {
@@ -260,7 +260,7 @@ export default class Datehandler {
       },
       "click #thisweek": (e, templateObject) => {
         Datehandler.currentWeek(Datehandler.defaultFormat, templateObject);
-      },      
+      },
       "click #last12Months": (e, templateObject) => {
         Datehandler.last12Months(Datehandler.defaultFormat, templateObject);
       },
@@ -278,11 +278,11 @@ export default class Datehandler {
       },
       "click #previousmonth": (e, templateObject) => {
         Datehandler.previousMonth(Datehandler.defaultFormat, templateObject);
-      },   
+      },
       "click #previousquarter": (e, templateObject) => {
         Datehandler.previousQuarter(Datehandler.defaultFormat, templateObject);
       },
-      "click #previousfinancialyear": (e, templateObject) => {        
+      "click #previousfinancialyear": (e, templateObject) => {
         Datehandler.lastFinYear(Datehandler.defaultFormat, templateObject);
       },
       "click #lastMonth": (e, templateObject) => {

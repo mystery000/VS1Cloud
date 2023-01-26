@@ -754,9 +754,9 @@ Template.generalledger.onRendered(() => {
   }
 
   templateObject.getGeneralLedgerData(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-    false
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
   );
   templateObject.displayGeneralLedgerData = async function (data) {
     var splashArrayBalanceSheetReport = new Array();
@@ -1070,7 +1070,7 @@ Template.generalledger.events({
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
         _currencyList[index].active = _currencySelectedList.find(
-          (c) => c.id == _currencyList[index].id
+            (c) => c.id == _currencyList[index].id
         ).active;
       } else {
         _currencyList[index].active = false;
@@ -1126,14 +1126,14 @@ Template.generalledger.events({
       document.getElementById("selectedDateRange").value = "This Quarter";
     } else if (dateRangeID == "thisFinYear") {
       document.getElementById("selectedDateRange").value =
-        "This Financial Year";
+          "This Financial Year";
     } else if (dateRangeID == "lastMonth") {
       document.getElementById("selectedDateRange").value = "Last Month";
     } else if (dateRangeID == "lastQuarter") {
       document.getElementById("selectedDateRange").value = "Last Quarter";
     } else if (dateRangeID == "lastFinYear") {
       document.getElementById("selectedDateRange").value =
-        "Last Financial Year";
+          "Last Financial Year";
     } else if (dateRangeID == "monthToDate") {
       document.getElementById("selectedDateRange").value = "Month to Date";
     } else if (dateRangeID == "quarterToDate") {
@@ -1145,18 +1145,18 @@ Template.generalledger.events({
   "click #ignoreDate": (e, templateObject) => {
     localStorage.setItem("VS1GeneralLedger_Report", "");
     templateObject.getGeneralLedgerReports(
-      null,
-      null,
-      true
+        null,
+        null,
+        true
     )
   },
   "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
     localStorage.setItem("VS1GeneralLedger_Report", "");
     templateObject.getGeneralLedgerReports(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+        false
     )
   },
   ...Datehandler.getDateRangeEvents(),
@@ -1421,17 +1421,17 @@ Template.generalledger.events({
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
     let formatDateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      (dateFrom.getMonth() + 1) +
-      "-" +
-      dateFrom.getDate();
+        dateFrom.getFullYear() +
+        "-" +
+        (dateFrom.getMonth() + 1) +
+        "-" +
+        dateFrom.getDate();
     let formatDateTo =
-      dateTo.getFullYear() +
-      "-" +
-      (dateTo.getMonth() + 1) +
-      "-" +
-      dateTo.getDate();
+        dateTo.getFullYear() +
+        "-" +
+        (dateTo.getMonth() + 1) +
+        "-" +
+        dateTo.getDate();
 
     const filename = loggedCompany + "-General Ledger" + ".csv";
     utilityService.exportReportToCsvTable("tblgeneralledger", filename, "csv");
@@ -1601,9 +1601,9 @@ Template.generalledger.helpers({
     }); // Add commas
 
     let convertedAmount =
-      isMinus == true
-        ? `- ${currencyData.symbol} ${amount}`
-        : `${currencyData.symbol} ${amount}`;
+        isMinus == true
+            ? `- ${currencyData.symbol} ${amount}`
+            : `${currencyData.symbol} ${amount}`;
 
 
     return convertedAmount;
@@ -1717,7 +1717,7 @@ Template.generalledger.helpers({
   },
   deptrecords: () => {
     return Template.instance()
-      .deptrecords.get()
+        .deptrecords.get()
     // .sort(function (a, b) {
     //   if (a.department == "NA") {
     //     return 1;

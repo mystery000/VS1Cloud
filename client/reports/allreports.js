@@ -137,311 +137,622 @@ Template.allreports.onRendered(() => {
     // let isBalanceSheet = localStorage.getItem('cloudBalanceSheet');
     let isBalanceSheet;
     getVS1Data("BalanceSheetReport").then(function (dataObject) {
-        isBalanceSheet =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('BalanceSheetReport', JSON.stringify(false));
+            isBalanceSheet = false;
+        } else {
+            isBalanceSheet = JSON.parse(dataObject[0].data);
+        }
     });
     // let isProfitLoss = localStorage.getItem('cloudProfitLoss');
     let isProfitLoss;
     getVS1Data("ProfitLossReport").then(function (dataObject) {
-        isProfitLoss =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ProfitLossReport', JSON.stringify(false));
+            isProfitLoss = false;
+        } else {
+            isProfitLoss = JSON.parse(dataObject[0].data);
+        }
     });
     let isPLMonthly;
     getVS1Data("PLMonthlyReport").then(function (dataObject) {
-        isPLMonthly =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PLMonthlyReport', JSON.stringify(false));
+            isPLMonthly = false;
+        } else {
+            isPLMonthly = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPLQuarterly = localStorage.getItem('cloudPLQuarterly');
     let isPLQuarterly;
     getVS1Data("PLQuarterlyReport").then(function (dataObject) {
-        isPLQuarterly =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PLQuarterlyReport', JSON.stringify(false));
+            isPLQuarterly = false;
+        } else {
+            isPLQuarterly = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPLYearly = localStorage.getItem('cloudPLYearly');
     let isPLYearly;
     getVS1Data("PLYearlyReport").then(function (dataObject) {
-        isPLYearly =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PLYearlyReport', JSON.stringify(false));
+            isPLYearly = false;
+        } else {
+            isPLYearly = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPLYTD = localStorage.getItem('cloudPLYTD');
     let isPLYTD;
     getVS1Data("PLYTDReport").then(function (dataObject) {
-        isPLYTD =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PLYTDReport', JSON.stringify(false));
+            isPLYTD = false;
+        } else {
+            isPLYTD = JSON.parse(dataObject[0].data);
+        }
     });
     // let isJobSalesSummary = localStorage.getItem('cloudJobSalesSummary');
     let isJobSalesSummary;
     getVS1Data("JobSalesSummaryReport").then(function (dataObject) {
-        isJobSalesSummary =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('JobSalesSummaryReport', JSON.stringify(false));
+            isJobSalesSummary = false;
+        } else {
+            isJobSalesSummary = JSON.parse(dataObject[0].data);
+        }
     });
     // let isAgedReceivables = localStorage.getItem('cloudAgedReceivables');
     let isAgedReceivables;
     getVS1Data("AgedReceivablesReport").then(function (dataObject) {
-        isAgedReceivables =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('AgedReceivablesReport', JSON.stringify(false));
+            isAgedReceivables = false;
+        } else {
+            isAgedReceivables = JSON.parse(dataObject[0].data);
+        }
     });
     // let isAgedReceivablesSummary = localStorage.getItem('cloudAgedReceivablesSummary');
     let isAgedReceivablesSummary;
     getVS1Data("AgedReceivablesSummaryReport").then(function (dataObject) {
-        isAgedReceivablesSummary =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('AgedReceivablesSummaryReport', JSON.stringify(false));
+            isAgedReceivablesSummary = false;
+        } else {
+            isAgedReceivablesSummary = JSON.parse(dataObject[0].data);
+        }
     });
     // let isProductSalesReport = localStorage.getItem('cloudProductSalesReport');
     let isProductSalesReport;
     getVS1Data("ProductSalesReport").then(function (dataObject) {
-        isProductSalesReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ProductSalesReport', JSON.stringify(false));
+            isProductSalesReport = false;
+        } else {
+            isProductSalesReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSalesReport = localStorage.getItem('cloudSalesReport');
     let isSalesReport;
     getVS1Data("SalesReport").then(function (dataObject) {
-        isSalesReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SalesReport', JSON.stringify(false));
+            isSalesReport = false;
+        } else {
+            isSalesReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isJobProfitReport = localStorage.getItem('cloudJobProfit');
     let isJobProfitReport;
     getVS1Data("JobProfitReport").then(function (dataObject) {
-        isJobProfitReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('JobProfitReport', JSON.stringify(false));
+            isJobProfitReport = false;
+        } else {
+            isJobProfitReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSupplierDetails = localStorage.getItem('cloudSupplierDetails');
     let isSupplierDetails;
     getVS1Data("SupplierDetailsReport").then(function (dataObject) {
-        isSupplierDetails =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SupplierDetailsReport', JSON.stringify(false));
+            isSupplierDetails = false;
+        } else {
+            isSupplierDetails = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSupplierProduct = localStorage.getItem('cloudSupplierProduct');
     let isSupplierProduct;
     getVS1Data("SupplierProductReport").then(function (dataObject) {
-        isSupplierProduct =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SupplierProductReport', JSON.stringify(false));
+            isSupplierProduct = false;
+        } else {
+            isSupplierProduct = JSON.parse(dataObject[0].data);
+        }
     });
     // let isCustomerDetails = localStorage.getItem('cloudCustomerDetails');
     let isCustomerDetails;
     getVS1Data("CustomerDetailsReport").then(function (dataObject) {
+        if (dataObject.length === 0) {
+            addVS1Data('CustomerDetailsReport', JSON.stringify(false));
+            isPLMonthly = false;
+        } else {
+            isPLMonthly = JSON.parse(dataObject[0].data);
+        }
         isCustomerDetails =JSON.parse(dataObject[0]).data;
     });
     // let isCustomerSummary = localStorage.getItem('cloudCustomerSummary');
     let isCustomerSummary;
     getVS1Data("CustomerSummaryReport").then(function (dataObject) {
-        isCustomerSummary =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('CustomerSummaryReport', JSON.stringify(false));
+            isCustomerSummary = false;
+        } else {
+            isCustomerSummary = JSON.parse(dataObject[0].data);
+        }
     });
     // let isLotReport = localStorage.getItem('cloudLotReport');
     let isLotReport;
     getVS1Data("LotReport").then(function (dataObject) {
-        isLotReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('LotReport', JSON.stringify(false));
+            isLotReport = false;
+        } else {
+            isLotReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isStockValue = localStorage.getItem('cloudStockValue');
     let isStockValue;
     getVS1Data("StockValueReport").then(function (dataObject) {
-        isStockValue =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('StockValueReport', JSON.stringify(false));
+            isStockValue = false;
+        } else {
+            isStockValue = JSON.parse(dataObject[0].data);
+        }
     });
     // let isStockQuantity = localStorage.getItem('cloudStockQuantity');
     let isStockQuantity;
     getVS1Data("StockQuantityReport").then(function (dataObject) {
-        isStockQuantity =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('StockQuantityReport', JSON.stringify(false));
+            isStockQuantity = false;
+        } else {
+            isStockQuantity = JSON.parse(dataObject[0].data);
+        }
     });
     // let isStockMovementReport = localStorage.getItem('cloudStockMovementReport');
     let isStockMovementReport;
     getVS1Data("StockMovementReport").then(function (dataObject) {
-        isStockMovementReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('StockMovementReport', JSON.stringify(false));
+            isStockMovementReport = false;
+        } else {
+            isStockMovementReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPayrollHistoryReport = localStorage.getItem('cloudPayrollHistoryReport');
     let isPayrollHistoryReport;
     getVS1Data("PayrollHistoryReport").then(function (dataObject) {
-        isPayrollHistoryReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PayrollHistoryReport', JSON.stringify(false));
+            isPayrollHistoryReport = false;
+        } else {
+            isPayrollHistoryReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isForeignExchangeHistoryList = localStorage.getItem('cloudForeignExchangeHistoryList');
     let isForeignExchangeHistoryList;
     getVS1Data("ForeignExchangeHistoryListReport").then(function (dataObject) {
-        isForeignExchangeHistoryList =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ForeignExchangeHistoryListReport', JSON.stringify(false));
+            isForeignExchangeHistoryList = false;
+        } else {
+            isForeignExchangeHistoryList = JSON.parse(dataObject[0].data);
+        }
     });
     // let isForeignExchangeList = localStorage.getItem('cloudForeignExchangeList');
     let isForeignExchangeList;
     getVS1Data("ForeignExchangeListReport").then(function (dataObject) {
-        isForeignExchangeList =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ForeignExchangeListReport', JSON.stringify(false));
+            isForeignExchangeList = false;
+        } else {
+            isForeignExchangeList = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSalesSummaryReport = localStorage.getItem('cloudSalesSummaryReport');
     let isSalesSummaryReport;
     getVS1Data("SalesSummaryReport").then(function (dataObject) {
-        isSalesSummaryReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SalesSummaryReport', JSON.stringify(false));
+            isSalesSummaryReport = false;
+        } else {
+            isSalesSummaryReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isGeneralLedger = localStorage.getItem('cloudGeneralLedger');
     let isGeneralLedger;
     getVS1Data("GeneralLedgerReport").then(function (dataObject) {
-        isGeneralLedger =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('GeneralLedgerReport', JSON.stringify(false));
+            isGeneralLedger = false;
+        } else {
+            isGeneralLedger = JSON.parse(dataObject[0].data);
+        }
     });
     // let isTaxSummaryReport = localStorage.getItem('cloudTaxSummaryReport');
     let isTaxSummaryReport;
     getVS1Data("TaxSummaryReport").then(function (dataObject) {
-        isTaxSummaryReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('TaxSummaryReport', JSON.stringify(false));
+            isTaxSummaryReport = false;
+        } else {
+            isTaxSummaryReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isTrialBalance = localStorage.getItem('cloudTrialBalance');
     let isTrialBalance;
     getVS1Data("TrialBalanceReport").then(function (dataObject) {
-        isTrialBalance =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('TrialBalanceReport', JSON.stringify(false));
+            isTrialBalance = false;
+        } else {
+            isTrialBalance = JSON.parse(dataObject[0].data);
+        }
     });
     // let isTimeSheetSummary = localStorage.getItem('cloudTimeSheetSummary');
     let isTimeSheetSummary;
     getVS1Data("TimeSheetSummaryReport").then(function (dataObject) {
-        isTimeSheetSummary =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('TimeSheetSummaryReport', JSON.stringify(false));
+            isTimeSheetSummary = false;
+        } else {
+            isTimeSheetSummary = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPayrollLeaveAccrued = localStorage.getItem('cloudPayrollLeaveAccrued');
     let isPayrollLeaveAccrued;
     getVS1Data("PayrollLeaveAccruedReport").then(function (dataObject) {
-        isPayrollLeaveAccrued =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PayrollLeaveAccruedReport', JSON.stringify(false));
+            isPayrollLeaveAccrued = false;
+        } else {
+            isPayrollLeaveAccrued = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPayrollLeaveTaken = localStorage.getItem('cloudPayrollLeaveTaken');
     let isPayrollLeaveTaken;
     getVS1Data("PayrollLeaveTakenReport").then(function (dataObject) {
-        isPayrollLeaveTaken =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PayrollLeaveTakenReport', JSON.stringify(false));
+            isPayrollLeaveTaken = false;
+        } else {
+            isPayrollLeaveTaken = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSerialNumberReport = localStorage.getItem('cloudSerialNumberReport');
     let isSerialNumberReport;
     getVS1Data("SerialNumberReport").then(function (dataObject) {
-        isSerialNumberReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SerialNumberReport', JSON.stringify(false));
+            isSerialNumberReport = false;
+        } else {
+            isSerialNumberReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let is1099Transaction = localStorage.getItem('cloud1099Transaction');
     let is1099Transaction;
     getVS1Data("1099TransactionReport").then(function (dataObject) {
-        is1099Transaction =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('1099TransactionReport', JSON.stringify(false));
+            is1099Transaction = false;
+        } else {
+            is1099Transaction = JSON.parse(dataObject[0].data);
+        }
     });
     // let isAccountsLists = localStorage.getItem('cloudAccountList');
     let isAccountsLists;
     getVS1Data("AccountsListsReport").then(function (dataObject) {
-        isAccountsLists =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('AccountsListsReport', JSON.stringify(false));
+            isAccountsLists = false;
+        } else {
+            isAccountsLists = JSON.parse(dataObject[0].data);
+        }
     });
     // let isBinLocations = localStorage.getItem('cloudBinLocations');
     let isBinLocations;
     getVS1Data("BinLocationsReport").then(function (dataObject) {
-        isBinLocations =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('BinLocationsReport', JSON.stringify(false));
+            isBinLocations = false;
+        } else {
+            isBinLocations = JSON.parse(dataObject[0].data);
+        }
     });
     // let isTransactionJournal = localStorage.getItem('cloudTransactionJournal');
     let isTransactionJournal;
     getVS1Data("TransactionJournalReport").then(function (dataObject) {
-        isTransactionJournal =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('TransactionJournalReport', JSON.stringify(false));
+            isTransactionJournal = false;
+        } else {
+            isTransactionJournal = JSON.parse(dataObject[0].data);
+        }
     });
     // let isUnpaidBills = localStorage.getItem('cloudBillsUnpaid');
     let isUnpaidBills;
     getVS1Data("UnpaidBillsReport").then(function (dataObject) {
-        isUnpaidBills =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('UnpaidBillsReport', JSON.stringify(false));
+            isUnpaidBills = false;
+        } else {
+            isUnpaidBills = JSON.parse(dataObject[0].data);
+        }
     });
     // let isUnpaidPO = localStorage.getItem('cloudPurchaseOrderUnpaid');
     let isUnpaidPO;
     getVS1Data("UnpaidPOReport").then(function (dataObject) {
-        isUnpaidPO =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('UnpaidPOReport', JSON.stringify(false));
+            isUnpaidPO = false;
+        } else {
+            isUnpaidPO = JSON.parse(dataObject[0].data);
+        }
     });
     // let isBackOrderedPO = localStorage.getItem('cloudPurchaseOrderBO');
     let isBackOrderedPO;
     getVS1Data("BackOrderedPOReport").then(function (dataObject) {
-        isBackOrderedPO =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('BackOrderedPOReport', JSON.stringify(false));
+            isBackOrderedPO = false;
+        } else {
+            isBackOrderedPO = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSalesOrderConverted = localStorage.getItem('cloudSalesOrderConverted');
     let isSalesOrderConverted;
     getVS1Data("SalesOrderConvertedReport").then(function (dataObject) {
-        isSalesOrderConverted =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SalesOrderConvertedReport', JSON.stringify(false));
+            isSalesOrderConverted = false;
+        } else {
+            isSalesOrderConverted = JSON.parse(dataObject[0].data);
+        }
     });
     // let isSalesOrderUnconverted = localStorage.getItem('cloudSalesOrderUnconverted');
     let isSalesOrderUnconverted;
     getVS1Data("SalesOrderUnconvertedReport").then(function (dataObject) {
-        isSalesOrderUnconverted =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('SalesOrderUnconvertedReport', JSON.stringify(false));
+            isSalesOrderUnconverted = false;
+        } else {
+            isSalesOrderUnconverted = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPaymentMethodsList = localStorage.getItem('cloudPaymentMethodList');
     let isPaymentMethodsList;
     getVS1Data("PaymentMethodsListReport").then(function (dataObject) {
-        isPaymentMethodsList =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PaymentMethodsListReport', JSON.stringify(false));
+            isPaymentMethodsList = false;
+        } else {
+            isPaymentMethodsList = JSON.parse(dataObject[0].data);
+        }
     });
     // let isBackOrderedInvoices = localStorage.getItem('cloudInvoicesBackOrdered');
     let isBackOrderedInvoices;
     getVS1Data("BackOrderedInvoicesReport").then(function (dataObject) {
-        isBackOrderedInvoices =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('BackOrderedInvoicesReport', JSON.stringify(false));
+            isBackOrderedInvoices = false;
+        } else {
+            isBackOrderedInvoices = JSON.parse(dataObject[0].data);
+        }
     });
     // let isQuotesConverted = localStorage.getItem('cloudQuotesConverted');
     let isQuotesConverted;
     getVS1Data("QuotesConvertedReport").then(function (dataObject) {
-        isQuotesConverted =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('QuotesConvertedReport', JSON.stringify(false));
+            isQuotesConverted = false;
+        } else {
+            isQuotesConverted = JSON.parse(dataObject[0].data);
+        }
     });
     // let isQuotesUnconverted = localStorage.getItem('cloudQuotesUnconverted');
     let isQuotesUnconverted;
     getVS1Data("QuotesUnconvertedReport").then(function (dataObject) {
-        isQuotesUnconverted =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('QuotesUnconvertedReport', JSON.stringify(false));
+            isQuotesUnconverted = false;
+        } else {
+            isQuotesUnconverted = JSON.parse(dataObject[0].data);
+        }
     });
     // let isInvoicesPaid = localStorage.getItem('cloudInvoicesPaid');
     let isInvoicesPaid;
     getVS1Data("InvoicesPaidReport").then(function (dataObject) {
-        isInvoicesPaid =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('InvoicesPaidReport', JSON.stringify(false));
+            isInvoicesPaid = false;
+        } else {
+            isInvoicesPaid = JSON.parse(dataObject[0].data);
+        }
     });
     // let isInvoicesUnpaid = localStorage.getItem('cloudInvoicesUnpaid');
     let isInvoicesUnpaid;
     getVS1Data("InvoicesUnpaidReport").then(function (dataObject) {
-        isInvoicesUnpaid =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('InvoicesUnpaidReport', JSON.stringify(false));
+            isInvoicesUnpaid = false;
+        } else {
+            isInvoicesUnpaid = JSON.parse(dataObject[0].data);
+        }
     });
     // let isTimeSheetDetails = localStorage.getItem('cloudTimeSheet');
     let isTimeSheetDetails;
     getVS1Data("TimeSheetDetailsReport").then(function (dataObject) {
-        isTimeSheetDetails =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('TimeSheetDetailsReport', JSON.stringify(false));
+            isTimeSheetDetails = false;
+        } else {
+            isTimeSheetDetails = JSON.parse(dataObject[0].data);
+        }
     });
     // let isChequeList = localStorage.getItem('cloudChequeList');
     let isChequeList;
     getVS1Data("ChequeListReport").then(function (dataObject) {
-        isChequeList =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ChequeListReport', JSON.stringify(false));
+            isChequeList = false;
+        } else {
+            isChequeList = JSON.parse(dataObject[0].data);
+        }
     });
     // let isStockAdjustmentList = localStorage.getItem('cloudStockAdjustmentList');
     let isStockAdjustmentList;
     getVS1Data("StockAdjustmentListReport").then(function (dataObject) {
-        isStockAdjustmentList =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('StockAdjustmentListReport', JSON.stringify(false));
+            isStockAdjustmentList = false;
+        } else {
+            isStockAdjustmentList = JSON.parse(dataObject[0].data);
+        }
     });
     // let isJournalEntryList = localStorage.getItem('cloudJournalEntryList');
     let isJournalEntryList;
     getVS1Data("JournalEntryListReport").then(function (dataObject) {
-        isJournalEntryList =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('JournalEntryListReport', JSON.stringify(false));
+            isJournalEntryList = false;
+        } else {
+            isJournalEntryList = JSON.parse(dataObject[0].data);
+        }
     });
     // let isAgedPayables = localStorage.getItem('cloudAgedPayables');
     let isAgedPayables;
     getVS1Data("AgedPayablesReport").then(function (dataObject) {
-        isAgedPayables =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('AgedPayablesReport', JSON.stringify(false));
+            isAgedPayables = false;
+        } else {
+            isAgedPayables = JSON.parse(dataObject[0].data);
+        }
     });
     // let isAgedPayablesSummary = localStorage.getItem('cloudAgedPayablesSummary');
     let isAgedPayablesSummary;
     getVS1Data("AgedPayablesSummaryReport").then(function (dataObject) {
-        isAgedPayablesSummary =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('AgedPayablesSummaryReport', JSON.stringify(false));
+            isAgedPayablesSummary = false;
+        } else {
+            isAgedPayablesSummary = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPurchaseReport = localStorage.getItem('cloudPurchaseReport');
     let isPurchaseReport;
     getVS1Data("PurchaseReport").then(function (dataObject) {
-        isPurchaseReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PurchaseReport', JSON.stringify(false));
+            isPurchaseReport = false;
+        } else {
+            isPurchaseReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPurchaseSummaryReport = localStorage.getItem('cloudPurchaseSummaryReport');
     let isPurchaseSummaryReport;
     getVS1Data("PurchaseSummaryReport").then(function (dataObject) {
-        isPurchaseSummaryReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PurchaseSummaryReport', JSON.stringify(false));
+            isPurchaseSummaryReport = false;
+        } else {
+            isPurchaseSummaryReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPrintStatement = localStorage.getItem('cloudPrintStatement');
     let isPrintStatement;
     getVS1Data("PrintStatementReport").then(function (dataObject) {
-        isPrintStatement =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PrintStatementReport', JSON.stringify(false));
+            isPrintStatement = false;
+        } else {
+            isPrintStatement = JSON.parse(dataObject[0].data);
+        }
     });
     // let isExecutiveSummary = localStorage.getItem('cloudExecutiveSummary');
     let isExecutiveSummary;
     getVS1Data("ExecutiveSummaryReport").then(function (dataObject) {
-        isExecutiveSummary =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ExecutiveSummaryReport', JSON.stringify(false));
+            isExecutiveSummary = false;
+        } else {
+            isExecutiveSummary = JSON.parse(dataObject[0].data);
+        }
     });
     // let isCashReport = localStorage.getItem('cloudCashReport');
     let isCashReport;
     getVS1Data("CashReport").then(function (dataObject) {
-        isCashReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('CashReport', JSON.stringify(false));
+            isCashReport = false;
+        } else {
+            isCashReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isProfitabilityReport = localStorage.getItem('cloudProfitabilityReport');
     let isProfitabilityReport;
     getVS1Data("ProfitabilityReport").then(function (dataObject) {
-        isProfitabilityReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('ProfitabilityReport', JSON.stringify(false));
+            isProfitabilityReport = false;
+        } else {
+            isProfitabilityReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPerformanceReport = localStorage.getItem('cloudPerformanceReport');
     let isPerformanceReport;
     getVS1Data("PerformanceReport").then(function (dataObject) {
-        isPerformanceReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PerformanceReport', JSON.stringify(false));
+            isPerformanceReport = false;
+        } else {
+            isPerformanceReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isBalanceSheetReport = localStorage.getItem('cloudBalanceSheetReport');
     let isBalanceSheetReport;
     getVS1Data("BalanceSheetReports").then(function (dataObject) {
-        isBalanceSheetReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('BalanceSheetReports', JSON.stringify(false));
+            isBalanceSheetReport = false;
+        } else {
+            isBalanceSheetReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isIncomeReport = localStorage.getItem('cloudIncomeReport');
     let isIncomeReport;
     getVS1Data("IncomeReport").then(function (dataObject) {
-        isIncomeReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('IncomeReport', JSON.stringify(false));
+            isIncomeReport = false;
+        } else {
+            isIncomeReport = JSON.parse(dataObject[0].data);
+        }
     });
     // let isPositionReport = localStorage.getItem('cloudPositionReport');
     let isPositionReport;
     getVS1Data("PositionReport").then(function (dataObject) {
-        isPositionReport =JSON.parse(dataObject[0]).data;
+        if (dataObject.length === 0) {
+            addVS1Data('PositionReport', JSON.stringify(false));
+            isPositionReport = false;
+        } else {
+            isPositionReport = JSON.parse(dataObject[0].data);
+        }
     });
     const taxRateService = new TaxRateService();
 
