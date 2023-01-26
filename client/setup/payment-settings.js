@@ -12,13 +12,13 @@ const sideBarService = new SideBarService();
 const taxRateService = new TaxRateService();
 
 Template.wizard_payment.onCreated(() => {
-  const templateObject = this;
-  this.includeCreditCard = new ReactiveVar(false);
-  this.deptrecords = new ReactiveVar();
-  this.includeCreditCard = new ReactiveVar(false);
-  this.includeAccountID = new ReactiveVar(false);
-  this.accountID = new ReactiveVar();
-  this.loadStripe = () => {
+  const templateObject = Template.instance();
+  templateObject.includeCreditCard = new ReactiveVar(false);
+  templateObject.deptrecords = new ReactiveVar();
+  templateObject.includeCreditCard = new ReactiveVar(false);
+  templateObject.includeAccountID = new ReactiveVar(false);
+  templateObject.accountID = new ReactiveVar();
+  templateObject.loadStripe = () => {
     let url = window.location.href;
     if (url.indexOf("?code") > 0) {
       $(".fullScreenSpin").css("display", "inline-block");
@@ -90,7 +90,8 @@ Template.wizard_payment.onCreated(() => {
 })
 
 Template.wizard_payment.onRendered(() => {
-  this.loadStripe()
+  const templateObject = Template.instance();
+  templateObject.loadStripe()
 })
 
 Template.wizard_payment.events({
@@ -143,206 +144,6 @@ Template.wizard_payment.events({
     if ($(event.target).is(":checked")) {
       $(".feeOnTopInput").attr("checked", false);
     }
-  },
-  "click .chkDatatablePaymentMethod"(event) {
-    var columns = $("#paymentmethodList th");
-    let columnDataValue = $(event.target)
-      .closest("div")
-      .find(".divcolumnPaymentMethod")
-      .text();
-
-    $.each(columns, function (i, v) {
-      let className = v.classList;
-      let replaceClass = className[1];
-
-      if (v.innerText == columnDataValue) {
-        if ($(event.target).is(":checked")) {
-          $("." + replaceClass + "").css("display", "table-cell");
-          $("." + replaceClass + "").css("padding", ".75rem");
-          $("." + replaceClass + "").css("vertical-align", "top");
-        } else {
-          $("." + replaceClass + "").css("display", "none");
-        }
-      }
-    });
-  },
-  "click .resetPaymentMethodTable"() {
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: localStorage.getItem("mycloudLogonID"),
-      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "paymentmethodList",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.remove(
-            {
-              _id: checkPrefDetails._id,
-            },
-            function (err, idTag) {
-              if (err) {
-              } else {
-                Meteor._reload.reload();
-              }
-            }
-          );
-        }
-      }
-    }
-  },
-  "click .savePaymentMethodTable"() {
-    let lineItems = [];
-    $(".columnSettings").each(function (index) {
-      var $tblrow = $(this);
-      var colTitle = $tblrow.find(".divcolumnPaymentMethod").text() || "";
-      var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass =
-        $tblrow.find(".divcolumnPaymentMethod").attr("valueupdate") || "";
-      var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = false;
-      } else {
-        colHidden = true;
-      }
-      let lineItemObj = {
-        index: index,
-        label: colTitle,
-        hidden: colHidden,
-        width: colWidth,
-        thclass: colthClass,
-      };
-
-      lineItems.push(lineItemObj);
-    });
-
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: localStorage.getItem("mycloudLogonID"),
-      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "paymentmethodList",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.update(
-            {
-              _id: checkPrefDetails._id,
-            },
-            {
-              $set: {
-                userid: clientID,
-                username: clientUsername,
-                useremail: clientEmail,
-                PrefGroup: "salesform",
-                PrefName: "paymentmethodList",
-                published: true,
-                customFields: lineItems,
-                updatedAt: new Date(),
-              },
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#btnOpenSettingsPaymentMethod").modal("toggle");
-              } else {
-                $("#btnOpenSettingsPaymentMethod").modal("toggle");
-              }
-            }
-          );
-        } else {
-          CloudPreference.insert(
-            {
-              userid: clientID,
-              username: clientUsername,
-              useremail: clientEmail,
-              PrefGroup: "salesform",
-              PrefName: "paymentmethodList",
-              published: true,
-              customFields: lineItems,
-              createdAt: new Date(),
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#btnOpenSettingsPaymentMethod").modal("toggle");
-              } else {
-                $("#btnOpenSettingsPaymentMethod").modal("toggle");
-              }
-            }
-          );
-        }
-      }
-    }
-  },
-  "blur .divcolumnPaymentMethod"(event) {
-    let columData = $(event.target).text();
-
-    let columnDatanIndex = $(event.target)
-      .closest("div.columnSettings")
-      .attr("id");
-    var datable = $("#paymentmethodList").DataTable();
-    var title = datable.column(columnDatanIndex).header();
-    $(title).html(columData);
-  },
-  "change .rngRangePaymentMethod"(event) {
-    let range = $(event.target).val();
-    $(event.target)
-      .closest("div.divColWidth")
-      .find(".spWidth")
-      .html(range + "px");
-
-    let columData = $(event.target)
-      .closest("div.divColWidth")
-      .find(".spWidth")
-      .attr("value");
-    let columnDataValue = $(event.target)
-      .closest("div")
-      .prev()
-      .find(".divcolumnPaymentMethod")
-      .text();
-    var datable = $("#paymentmethodList th");
-    $.each(datable, function (i, v) {
-      if (v.innerText == columnDataValue) {
-        let className = v.className;
-        let replaceClass = className.replace(/ /g, ".");
-        $("." + replaceClass + "").css("width", range + "px");
-      }
-    });
-  },
-  "click .btnOpenSettingsPaymentMethod"() {
-    let templateObject = Template.instance();
-    var columns = $("#paymentmethodList th");
-
-    const tableHeaderList = [];
-    let sWidth = "";
-    let columVisible = false;
-    //should be updated with non_transactional_list
-    // $.each(columns, function (i, v) {
-    //   if (v.hidden == false) {
-    //     columVisible = true;
-    //   }
-    //   if (v.className.includes("hiddenColumn")) {
-    //     columVisible = false;
-    //   }
-    //   sWidth = v.style.width.replace("px", "");
-
-    //   let datatablerecordObj = {
-    //     sTitle: v.innerText || "",
-    //     sWidth: sWidth || "",
-    //     sIndex: v.cellIndex || "",
-    //     sVisible: columVisible || false,
-    //     sClass: v.className || "",
-    //   };
-    //   tableHeaderList.push(datatablerecordObj);
-    // });
-    // templateObject.tableheaderrecords.set(tableHeaderList);
   },
   "click .btnRefreshPaymentMethod" () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -413,13 +214,9 @@ Template.wizard_payment.events({
     playSaveAudio();
     setTimeout(function(){
     $(".fullScreenSpin").css("display", "inline-block");
-
     let paymentMethodID = $("#edtPaymentMethodID").val();
-    //let headerDept = $('#sltDepartment').val();
     let paymentName = $("#edtPaymentMethodName").val();
     let isCreditCard = false;
-    let siteCode = $("#edtSiteCode").val();
-
     if ($("#isformcreditcard").is(":checked")) {
       isCreditCard = true;
     } else {
@@ -446,7 +243,6 @@ Template.wizard_payment.events({
             fields: {
               ID: parseInt(paymentMethodID),
               Active: true,
-              //PaymentMethodName: paymentName,
               IsCreditCard: isCreditCard,
               PublishOnVS1: true,
             },
@@ -479,7 +275,7 @@ Template.wizard_payment.events({
                 confirmButtonText: "Try Again",
               }).then((result) => {
                 if (result.value) {
-                  Meteor._reload.reload();
+                  // Meteor._reload.reload();
                 } else if (result.dismiss === "cancel") {
                 }
               });
@@ -503,6 +299,7 @@ Template.wizard_payment.events({
               sideBarService
                 .getPaymentMethodDataVS1()
                 .then(function (dataReload) {
+
                   addVS1Data("TPaymentMethod", JSON.stringify(dataReload))
                     .then(function (datareturn) {
                       location.reload(true);
@@ -524,7 +321,7 @@ Template.wizard_payment.events({
                 confirmButtonText: "Try Again",
               }).then((result) => {
                 if (result.value) {
-                  Meteor._reload.reload();
+                  // Meteor._reload.reload();
                 } else if (result.dismiss === "cancel") {
                 }
               });
@@ -570,7 +367,7 @@ Template.wizard_payment.events({
             confirmButtonText: "Try Again",
           }).then((result) => {
             if (result.value) {
-              Meteor._reload.reload();
+              // Meteor._reload.reload();
             } else if (result.dismiss === "cancel") {
             }
           });
@@ -592,9 +389,8 @@ Template.wizard_payment.events({
     $("#selectDeleteLineID").val(targetID);
     $("#deletePaymentMethodLineModal").modal("toggle");
   },
-  "click #paymentmethodList tbody td.clickable"(event){
+  "click #tblPaymentMethodList tbody td:nth-child(2)"(event){
     let templateObject = Template.instance();
-
     const tr = $(event.currentTarget).parent();
     var listData = tr.attr("id");
     var isCreditcard = false;
