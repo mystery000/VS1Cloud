@@ -6806,9 +6806,10 @@ Template.payrolloverview.events({
     ui.newTimeSheet();
   } ,
 
-  "click .tblTimeSheet tbody tr": (e, ui) => {
-    const timesheetId = $(e.currentTarget).attr('timesheet-id');
-
+  "click #tblPayRuns tbody tr": (e, ui) => {
+  // "click .tblTimeSheet tbody tr": (e, ui) => {
+    const timesheetId = $(e.currentTarget).attr('id');
+    console.log('timesheetId:',timesheetId)
     window.location.href = `/timesheetdetail?tid=${timesheetId}`;
   },
 

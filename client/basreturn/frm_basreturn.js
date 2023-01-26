@@ -1660,6 +1660,7 @@ Template.basreturn.onRendered(function() {
                                 $("#basreturnCategory3").prop('checked', data.tbasreturn[0].fields.HasTab3);
                                 $("#basreturnCategory4").prop('checked', data.tbasreturn[0].fields.HasTab4);
                                 if (data.tbasreturn[0].fields.HasTab1 == true) {
+                                    $("#nav-item1").show();
                                     document.getElementById("gstG1").setAttribute("href", "#gstG1option");
                                     document.getElementById("gstG2").setAttribute("href", "#gstG2option");
                                     document.getElementById("gstG3").setAttribute("href", "#gstG3option");
@@ -1672,6 +1673,19 @@ Template.basreturn.onRendered(function() {
                                     document.getElementById("gstG15").setAttribute("href", "#gstG15option");
                                     document.getElementById("gstG18").setAttribute("href", "#gstG18option");
                                 } else {
+                                    $("#nav-item1").hide();
+                                    if($("#tab-1").hasClass("active")){
+                                        if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                                            $("#nav-item2 a").click();
+                                        }
+                                        else if($("#basreturnCategory4").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else{
+                                            $("#nav-item4 a").click();
+                                        }
+                                    }
+
                                     document.getElementById("gstG1").setAttribute("href", "#");
                                     document.getElementById("gstG2").setAttribute("href", "#");
                                     document.getElementById("gstG3").setAttribute("href", "#");
@@ -1685,17 +1699,35 @@ Template.basreturn.onRendered(function() {
                                     document.getElementById("gstG18").setAttribute("href", "#");
                                 }
                                 if (data.tbasreturn[0].fields.HasTab2 == true) {
+                                    $("#nav-item2").show();
+                                    $(".nav-contents2").show();
+
                                     document.getElementById("accountsW1").setAttribute("href", "#accountsW1option");
                                     document.getElementById("accountsW2").setAttribute("href", "#accountsW2option");
                                     document.getElementById("accountsW3_").setAttribute("href", "#accountsW3_option");
                                     document.getElementById("accountsW4").setAttribute("href", "#accountsW4option");
                                 } else {
+                                    $(".nav-contents2").hide();
+                                    if ($("#basreturnCategory3").prop('checked') == false) {
+                                        $("#nav-item2").hide();
+                                        if ($("#basreturnCategory1").prop('checked') == true) {
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if($("#basreturnCategory4").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else{
+                                            $("#nav-item4 a").click();
+                                        }
+                                    }
                                     document.getElementById("accountsW1").setAttribute("href", "#");
                                     document.getElementById("accountsW2").setAttribute("href", "#");
                                     document.getElementById("accountsW3_").setAttribute("href", "#");
                                     document.getElementById("accountsW4").setAttribute("href", "#");
                                 }
                                 if (data.tbasreturn[0].fields.HasTab3 == true) {
+                                    $("#nav-item2").show();
+                                    $(".nav-contents3").show();
                                     document.getElementById("accountsT1").setAttribute("href", "#accountsT1option");
                                     $("#accountsT2cost").removeAttr("disabled");
                                     $("#accountsT3cost").removeAttr("disabled");
@@ -1705,6 +1737,20 @@ Template.basreturn.onRendered(function() {
                                     $("#accountsF3cost").removeAttr("disabled");
                                     $("#reasonF4").removeAttr("disabled");
                                 } else {
+                                    $(".nav-contents3").hide();
+                                    if ($("#basreturnCategory2").prop('checked') == false) {
+                                        $("#nav-item2").hide();
+                                        if ($("#basreturnCategory1").prop('checked') == true) {
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if($("#basreturnCategory4").prop('checked') == true){
+                                            $("#nav-item3 a").click();
+                                        }
+                                        else{
+                                            $("#nav-item4 a").click();
+                                        }
+                                    }
+
                                     document.getElementById("accountsT1").setAttribute("href", "#");
                                     $("#accountsT2cost").attr("disabled", "disabled");
                                     $("#accountsT3cost").attr("disabled", "disabled");
@@ -1715,6 +1761,7 @@ Template.basreturn.onRendered(function() {
                                     $("#reasonF4").attr("disabled", "disabled");
                                 }
                                 if (data.tbasreturn[0].fields.HasTab4 == true) {
+                                    $("#nav-item3").show();
                                     document.getElementById("gst1C").setAttribute("href", "#gst1Coption");
                                     document.getElementById("gst1E").setAttribute("href", "#gst1Eoption");
                                     document.getElementById("gst1D").setAttribute("href", "#gst1Doption");
@@ -1722,6 +1769,19 @@ Template.basreturn.onRendered(function() {
                                     document.getElementById("gst1G").setAttribute("href", "#gst1Goption");
                                     document.getElementById("accounts7D").setAttribute("href", "#accounts7Doption");
                                 } else {
+                                    $("#nav-item3").hide();
+                                    if($("#tab-3").hasClass("active")){
+                                        if($("#basreturnCategory1").prop('checked') == true){
+                                            $("#nav-item1 a").click();
+                                        }
+                                        else if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                                            $("#nav-item2 a").click();
+                                        }
+                                        else{
+                                            $("#nav-item4 a").click();
+                                        }
+                                    }
+
                                     document.getElementById("gst1C").setAttribute("href", "#");
                                     document.getElementById("gst1E").setAttribute("href", "#");
                                     document.getElementById("gst1D").setAttribute("href", "#");
@@ -1976,6 +2036,7 @@ Template.basreturn.onRendered(function() {
                                     $("#basreturnCategory3").prop('checked', data.tbasreturn[i].fields.HasTab3);
                                     $("#basreturnCategory4").prop('checked', data.tbasreturn[i].fields.HasTab4);
                                     if (data.tbasreturn[i].fields.HasTab1 == true) {
+                                        $("#nav-item1").show();
                                         document.getElementById("gstG1").setAttribute("href", "#gstG1option");
                                         document.getElementById("gstG2").setAttribute("href", "#gstG2option");
                                         document.getElementById("gstG3").setAttribute("href", "#gstG3option");
@@ -1988,6 +2049,19 @@ Template.basreturn.onRendered(function() {
                                         document.getElementById("gstG15").setAttribute("href", "#gstG15option");
                                         document.getElementById("gstG18").setAttribute("href", "#gstG18option");
                                     } else {
+                                        $("#nav-item1").hide();
+                                        if($("#tab-1").hasClass("active")){
+                                            if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                                                $("#nav-item2 a").click();
+                                            }
+                                            else if($("#basreturnCategory4").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else{
+                                                $("#nav-item4 a").click();
+                                            }
+                                        }
+
                                         document.getElementById("gstG1").setAttribute("href", "#");
                                         document.getElementById("gstG2").setAttribute("href", "#");
                                         document.getElementById("gstG3").setAttribute("href", "#");
@@ -2001,17 +2075,35 @@ Template.basreturn.onRendered(function() {
                                         document.getElementById("gstG18").setAttribute("href", "#");
                                     }
                                     if (data.tbasreturn[i].fields.HasTab2 == true) {
+                                        $("#nav-item2").show();
+                                        $(".nav-contents2").show();
+
                                         document.getElementById("accountsW1").setAttribute("href", "#accountsW1option");
                                         document.getElementById("accountsW2").setAttribute("href", "#accountsW2option");
                                         document.getElementById("accountsW3_").setAttribute("href", "#accountsW3_option");
                                         document.getElementById("accountsW4").setAttribute("href", "#accountsW4option");
                                     } else {
+                                        $(".nav-contents2").hide();
+                                        if ($("#basreturnCategory3").prop('checked') == false) {
+                                            $("#nav-item2").hide();
+                                            if ($("#basreturnCategory1").prop('checked') == true) {
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if($("#basreturnCategory4").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else{
+                                                $("#nav-item4 a").click();
+                                            }
+                                        }
                                         document.getElementById("accountsW1").setAttribute("href", "#");
                                         document.getElementById("accountsW2").setAttribute("href", "#");
                                         document.getElementById("accountsW3_").setAttribute("href", "#");
                                         document.getElementById("accountsW4").setAttribute("href", "#");
                                     }
                                     if (data.tbasreturn[i].fields.HasTab3 == true) {
+                                        $("#nav-item2").show();
+                                        $(".nav-contents3").show();
                                         document.getElementById("accountsT1").setAttribute("href", "#accountsT1option");
                                         $("#accountsT2cost").removeAttr("disabled");
                                         $("#accountsT3cost").removeAttr("disabled");
@@ -2021,6 +2113,20 @@ Template.basreturn.onRendered(function() {
                                         $("#accountsF3cost").removeAttr("disabled");
                                         $("#reasonF4").removeAttr("disabled");
                                     } else {
+                                        $(".nav-contents3").hide();
+                                        if ($("#basreturnCategory2").prop('checked') == false) {
+                                            $("#nav-item2").hide();
+                                            if ($("#basreturnCategory1").prop('checked') == true) {
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if($("#basreturnCategory4").prop('checked') == true){
+                                                $("#nav-item3 a").click();
+                                            }
+                                            else{
+                                                $("#nav-item4 a").click();
+                                            }
+                                        }
+
                                         document.getElementById("accountsT1").setAttribute("href", "#");
                                         $("#accountsT2cost").attr("disabled", "disabled");
                                         $("#accountsT3cost").attr("disabled", "disabled");
@@ -2031,6 +2137,7 @@ Template.basreturn.onRendered(function() {
                                         $("#reasonF4").attr("disabled", "disabled");
                                     }
                                     if (data.tbasreturn[i].fields.HasTab4 == true) {
+                                        $("#nav-item3").show();
                                         document.getElementById("gst1C").setAttribute("href", "#gst1Coption");
                                         document.getElementById("gst1E").setAttribute("href", "#gst1Eoption");
                                         document.getElementById("gst1D").setAttribute("href", "#gst1Doption");
@@ -2038,6 +2145,19 @@ Template.basreturn.onRendered(function() {
                                         document.getElementById("gst1G").setAttribute("href", "#gst1Goption");
                                         document.getElementById("accounts7D").setAttribute("href", "#accounts7Doption");
                                     } else {
+                                        $("#nav-item3").hide();
+                                        if($("#tab-3").hasClass("active")){
+                                            if($("#basreturnCategory1").prop('checked') == true){
+                                                $("#nav-item1 a").click();
+                                            }
+                                            else if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                                                $("#nav-item2 a").click();
+                                            }
+                                            else{
+                                                $("#nav-item4 a").click();
+                                            }
+                                        }
+
                                         document.getElementById("gst1C").setAttribute("href", "#");
                                         document.getElementById("gst1E").setAttribute("href", "#");
                                         document.getElementById("gst1D").setAttribute("href", "#");
@@ -2295,6 +2415,7 @@ Template.basreturn.onRendered(function() {
                             $("#basreturnCategory3").prop('checked', data.tbasreturn[0].fields.HasTab3);
                             $("#basreturnCategory4").prop('checked', data.tbasreturn[0].fields.HasTab4);
                             if (data.tbasreturn[0].fields.HasTab1 == true) {
+                                $("#nav-item1").show();
                                 document.getElementById("gstG1").setAttribute("href", "#gstG1option");
                                 document.getElementById("gstG2").setAttribute("href", "#gstG2option");
                                 document.getElementById("gstG3").setAttribute("href", "#gstG3option");
@@ -2307,6 +2428,19 @@ Template.basreturn.onRendered(function() {
                                 document.getElementById("gstG15").setAttribute("href", "#gstG15option");
                                 document.getElementById("gstG18").setAttribute("href", "#gstG18option");
                             } else {
+                                $("#nav-item1").hide();
+                                if($("#tab-1").hasClass("active")){
+                                    if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                                        $("#nav-item2 a").click();
+                                    }
+                                    else if($("#basreturnCategory4").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else{
+                                        $("#nav-item4 a").click();
+                                    }
+                                }
+
                                 document.getElementById("gstG1").setAttribute("href", "#");
                                 document.getElementById("gstG2").setAttribute("href", "#");
                                 document.getElementById("gstG3").setAttribute("href", "#");
@@ -2320,17 +2454,35 @@ Template.basreturn.onRendered(function() {
                                 document.getElementById("gstG18").setAttribute("href", "#");
                             }
                             if (data.tbasreturn[0].fields.HasTab2 == true) {
+                                $("#nav-item2").show();
+                                $(".nav-contents2").show();
+
                                 document.getElementById("accountsW1").setAttribute("href", "#accountsW1option");
                                 document.getElementById("accountsW2").setAttribute("href", "#accountsW2option");
                                 document.getElementById("accountsW3_").setAttribute("href", "#accountsW3_option");
                                 document.getElementById("accountsW4").setAttribute("href", "#accountsW4option");
                             } else {
+                                $(".nav-contents2").hide();
+                                if ($("#basreturnCategory3").prop('checked') == false) {
+                                    $("#nav-item2").hide();
+                                    if ($("#basreturnCategory1").prop('checked') == true) {
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if($("#basreturnCategory4").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else{
+                                        $("#nav-item4 a").click();
+                                    }
+                                }
                                 document.getElementById("accountsW1").setAttribute("href", "#");
                                 document.getElementById("accountsW2").setAttribute("href", "#");
                                 document.getElementById("accountsW3_").setAttribute("href", "#");
                                 document.getElementById("accountsW4").setAttribute("href", "#");
                             }
                             if (data.tbasreturn[0].fields.HasTab3 == true) {
+                                $("#nav-item2").show();
+                                $(".nav-contents3").show();
                                 document.getElementById("accountsT1").setAttribute("href", "#accountsT1option");
                                 $("#accountsT2cost").removeAttr("disabled");
                                 $("#accountsT3cost").removeAttr("disabled");
@@ -2340,6 +2492,20 @@ Template.basreturn.onRendered(function() {
                                 $("#accountsF3cost").removeAttr("disabled");
                                 $("#reasonF4").removeAttr("disabled");
                             } else {
+                                $(".nav-contents3").hide();
+                                if ($("#basreturnCategory2").prop('checked') == false) {
+                                    $("#nav-item2").hide();
+                                    if ($("#basreturnCategory1").prop('checked') == true) {
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if($("#basreturnCategory4").prop('checked') == true){
+                                        $("#nav-item3 a").click();
+                                    }
+                                    else{
+                                        $("#nav-item4 a").click();
+                                    }
+                                }
+
                                 document.getElementById("accountsT1").setAttribute("href", "#");
                                 $("#accountsT2cost").attr("disabled", "disabled");
                                 $("#accountsT3cost").attr("disabled", "disabled");
@@ -2350,6 +2516,7 @@ Template.basreturn.onRendered(function() {
                                 $("#reasonF4").attr("disabled", "disabled");
                             }
                             if (data.tbasreturn[0].fields.HasTab4 == true) {
+                                $("#nav-item3").show();
                                 document.getElementById("gst1C").setAttribute("href", "#gst1Coption");
                                 document.getElementById("gst1E").setAttribute("href", "#gst1Eoption");
                                 document.getElementById("gst1D").setAttribute("href", "#gst1Doption");
@@ -2357,6 +2524,19 @@ Template.basreturn.onRendered(function() {
                                 document.getElementById("gst1G").setAttribute("href", "#gst1Goption");
                                 document.getElementById("accounts7D").setAttribute("href", "#accounts7Doption");
                             } else {
+                                $("#nav-item3").hide();
+                                if($("#tab-3").hasClass("active")){
+                                    if($("#basreturnCategory1").prop('checked') == true){
+                                        $("#nav-item1 a").click();
+                                    }
+                                    else if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                                        $("#nav-item2 a").click();
+                                    }
+                                    else{
+                                        $("#nav-item4 a").click();
+                                    }
+                                }
+                                
                                 document.getElementById("gst1C").setAttribute("href", "#");
                                 document.getElementById("gst1E").setAttribute("href", "#");
                                 document.getElementById("gst1D").setAttribute("href", "#");
@@ -2627,7 +2807,6 @@ Template.basreturn.onRendered(function() {
                     $("#nav-item1").hide();
                     if($("#tab-1").hasClass("active")){
                         if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
-                            alert($("#tab-1").hasClass("active"));
                             $("#nav-item2 a").click();
                         }
                         else if($("#basreturnCategory4").prop('checked') == true){
@@ -2654,11 +2833,27 @@ Template.basreturn.onRendered(function() {
 
             $(document).on("click", "#basreturnCategory2", function(e) {
                 if ($("#basreturnCategory2").prop('checked') == true) {
+                    $("#nav-item2").show();
+                    $(".nav-contents2").show();
                     document.getElementById("accountsW1").setAttribute("href", "#accountsW1option");
                     document.getElementById("accountsW2").setAttribute("href", "#accountsW2option");
                     document.getElementById("accountsW3_").setAttribute("href", "#accountsW3_option");
                     document.getElementById("accountsW4").setAttribute("href", "#accountsW4option");
                 } else {
+                    $(".nav-contents2").hide();
+                    if ($("#basreturnCategory3").prop('checked') == false) {
+                        $("#nav-item2").hide();
+                        if ($("#basreturnCategory1").prop('checked') == true) {
+                            $("#nav-item1 a").click();
+                        }
+                        else if($("#basreturnCategory4").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else{
+                            $("#nav-item4 a").click();
+                        }
+                    }
+
                     document.getElementById("accountsW1").setAttribute("href", "#");
                     document.getElementById("accountsW2").setAttribute("href", "#");
                     document.getElementById("accountsW3_").setAttribute("href", "#");
@@ -2668,6 +2863,8 @@ Template.basreturn.onRendered(function() {
 
             $(document).on("click", "#basreturnCategory3", function(e) {
                 if ($("#basreturnCategory3").prop('checked') == true) {
+                    $("#nav-item2").show();
+                    $(".nav-contents3").show();
                     document.getElementById("accountsT1").setAttribute("href", "#accountsT1option");
                     $("#accountsT2cost").removeAttr("disabled");
                     $("#accountsT3cost").removeAttr("disabled");
@@ -2677,6 +2874,20 @@ Template.basreturn.onRendered(function() {
                     $("#accountsF3cost").removeAttr("disabled");
                     $("#reasonF4").removeAttr("disabled");
                 } else {
+                    $(".nav-contents3").hide();
+                    if ($("#basreturnCategory2").prop('checked') == false) {
+                        $("#nav-item2").hide();
+                        if ($("#basreturnCategory1").prop('checked') == true) {
+                            $("#nav-item1 a").click();
+                        }
+                        else if($("#basreturnCategory4").prop('checked') == true){
+                            $("#nav-item3 a").click();
+                        }
+                        else{
+                            $("#nav-item4 a").click();
+                        }
+                    }
+                    
                     document.getElementById("accountsT1").setAttribute("href", "#");
                     $("#accountsT2cost").attr("disabled", "disabled");
                     $("#accountsT3cost").attr("disabled", "disabled");
@@ -2690,6 +2901,7 @@ Template.basreturn.onRendered(function() {
 
             $(document).on("click", "#basreturnCategory4", function(e) {
                 if ($("#basreturnCategory4").prop('checked') == true) {
+                    $("#nav-item3").show();
                     document.getElementById("gst1C").setAttribute("href", "#gst1Coption");
                     document.getElementById("gst1E").setAttribute("href", "#gst1Eoption");
                     document.getElementById("gst1D").setAttribute("href", "#gst1Doption");
@@ -2697,6 +2909,19 @@ Template.basreturn.onRendered(function() {
                     document.getElementById("gst1G").setAttribute("href", "#gst1Goption");
                     document.getElementById("accounts7D").setAttribute("href", "#accounts7Doption");
                 } else {
+                    $("#nav-item3").hide();
+                    if($("#tab-3").hasClass("active")){
+                        if($("#basreturnCategory1").prop('checked') == true){
+                            $("#nav-item1 a").click();
+                        }
+                        else if ($("#basreturnCategory2").prop('checked') == true || $("#basreturnCategory3").prop('checked') == true) {
+                            $("#nav-item2 a").click();
+                        }
+                        else{
+                            $("#nav-item4 a").click();
+                        }
+                    }
+
                     document.getElementById("gst1C").setAttribute("href", "#");
                     document.getElementById("gst1E").setAttribute("href", "#");
                     document.getElementById("gst1D").setAttribute("href", "#");

@@ -1062,6 +1062,16 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 6, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
                 { index: 7, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblAllSingleTouchPayroll"){
+            reset_data = [
+                { index: 0, label: 'ID', class: 'colID', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 2, label: 'Earnings', class: 'colEarnings', active: true, display: true, width: "100" },
+                { index: 3, label: 'PAYG', class: 'colPAYG', active: true, display: true, width: "100" },
+                { index: 4, label: 'Superannuation', class: 'colSuperannuation', active: true, display: true, width: "100" },
+                { index: 5, label: 'Net Pay', class: 'colNetPay', active: true, display: true, width: "100" },
+                { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+            ]
         }
 
         templateObject.reset_data.set(reset_data);
@@ -7589,7 +7599,7 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#myModalClientType' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                     if (deleteFilter) {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
@@ -11315,15 +11325,15 @@ Template.non_transactional_list.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getAllLeadDataList(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TSTPayrollList', JSON.stringify(data));
                 templateObject.displaySTPListData(data);
+                await addVS1Data('TSTPayrollList', JSON.stringify(data));
             }).catch(function(err) {
 
             });
         });
     }
     templateObject.displaySTPListData = async function(data) {
-        var splashArrayLeadList = new Array();
+        var splashArraySingleTouchPayrollList = new Array();
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
@@ -11333,26 +11343,26 @@ Template.non_transactional_list.onRendered(function() {
             deleteFilter = false;
         };
 
-        for (let i = 0; i < data.tstpayrolllist.length; i++) {
+        for (let i = 0; i < data.tprospectlist.length; i++) {
             let linestatus = '';
-            if (data.tstpayrolllist[i].Active == true) {
+            if (data.tprospectlist[i].Active == true) {
                 linestatus = "";
-            } else if (data.tstpayrolllist[i].Active == false) {
+            } else if (data.tprospectlist[i].Active == false) {
                 linestatus = "In-Active";
             };
 
             var dataList = [
-                data.tstpayrolllist[i].ClientID || '',
-                data.tstpayrolllist[i].Date || '',
-                data.tstpayrolllist[i].Earnings || '',
-                data.tstpayrolllist[i].Payg || '',
-                data.tstpayrolllist[i].Supperannuation || '',
-                data.tstpayrolllist[i].NetPay || '',
-                data.tstpayrolllist[i].Status || '',
-                linestatus,
+                data.tprospectlist[i].ClientID || '',
+                data.tprospectlist[i].Date || '',
+                data.tprospectlist[i].Earnings || '',
+                data.tprospectlist[i].Payg || '',
+                data.tprospectlist[i].Supperannuation || '',
+                data.tprospectlist[i].NetPay || '',
+                data.tprospectlist[i].Status || '',
+                // linestatus,
             ];
-            splashArrayLeadList.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+            splashArraySingleTouchPayrollList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArraySingleTouchPayrollList);
         }
 
         if (templateObject.transactiondatatablerecords.get()) {
@@ -11363,11 +11373,11 @@ Template.non_transactional_list.onRendered(function() {
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
-                data: splashArrayLeadList,
+                data: splashArraySingleTouchPayrollList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [{
                     targets: 0,
-                    className: "colLeadId colID hiddenColumn",
+                    className: "colTaskID hiddenColumn",
                     width: "10px",
                     createdCell: function(td, cellData, rowData, row, col) {
                         $(td).closest("tr").attr("id", rowData[0]);
@@ -11375,62 +11385,57 @@ Template.non_transactional_list.onRendered(function() {
                 },
                     {
                         targets: 1,
-                        className: "colTaskID",
-                        width: "200px",
-                    },
-                    {
-                        targets: 2,
                         className: "colDate",
                         width: "95px",
                     },
                     {
-                        targets: 3,
+                        targets: 2,
                         className: "colEarnings",
                         width: "90px",
                     },
                     {
-                        targets: 4,
+                        targets: 3,
                         className: "colPayg",
                         width: "110px",
                     },
                     {
-                        targets: 5,
+                        targets: 4,
                         className: "colSupperannuation",
                         width: "80px",
                     },
                     {
-                        targets: 6,
+                        targets: 5,
                         className: "colNetPay",
                         width: "90px",
                     },
                     {
-                        targets: 7,
+                        targets: 6,
                         className: "colStatus",
                         width: "90px",
                     },
                 ],
                 buttons: [{
-                    extend: 'csvHtml5',
-                    text: '',
-                    download: 'open',
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "STP List",
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                }, {
-                    extend: 'print',
-                    download: 'open',
-                    className: "btntabletopdf hiddenColumn",
-                    text: '',
-                    title: 'STP List',
-                    filename: "STP List",
-                    exportOptions: {
-                        columns: ':visible',
-                        stripHtml: false
-                    }
-                },
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
                     {
                         extend: 'excelHtml5',
                         title: '',
@@ -11441,7 +11446,6 @@ Template.non_transactional_list.onRendered(function() {
                         exportOptions: {
                             columns: ':visible'
                         }
-
                     }
                 ],
                 select: true,
@@ -11465,90 +11469,37 @@ Template.non_transactional_list.onRendered(function() {
                     $('#' + currenttablename + '_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
-
                         }
                     } else {
-
                     }
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        //var splashArrayCustomerListDupp = new Array();
-                        let dataLenght = oSettings._iDisplayLength;
-                        let customerSearch = $('#' + currenttablename + '_filter input').val();
-
-                        sideBarService.getAllLeadDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-
-                            for (let j = 0; j < dataObjectnew.tstpayrolllist.length; j++) {
-
-                                let linestatus = '';
-                                if (dataObjectnew.tstpayrolllist[j].Active == true) {
-                                    linestatus = "";
-                                } else if (dataObjectnew.tstpayrolllist[j].Active == false) {
-                                    linestatus = "In-Active";
-                                };
-
-                                var dataListDupp = [
-                                    data.tstpayrolllist[j].ClientID || '',
-                                    data.tstpayrolllist[j].Date || '',
-                                    data.tstpayrolllist[j].Earnings || '',
-                                    data.tstpayrolllist[j].Payg || '',
-                                    data.tstpayrolllist[j].Supperannuation || '',
-                                    data.tstpayrolllist[j].NetPay || '',
-                                    data.tstpayrolllist[j].Status || '',
-                                    linestatus,
-                                ];
-
-                                splashArrayLeadList.push(dataListDupp);
-
-                            }
-                            let uniqueChars = [...new Set(splashArrayLeadList)];
-                            templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
-                            datatable.clear();
-                            datatable.rows.add(uniqueChars);
-                            datatable.draw(false);
-                            setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
-                            }, 400);
-
-                            $('.fullScreenSpin').css('display', 'none');
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-
                     });
                     setTimeout(function() {
                         MakeNegative();
                     }, 100);
                 },
-                language: { search: "", searchPlaceholder: "Search ST Payroll..." },
-                // "fnInitComplete": function(oSettings) {
-                //     if (data.Params.Search.replace(/\s/g, "") == "") {
-                //         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                //     } else {
-                //         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                //     }
-                //     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-                // },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
-
+                    let countTableData = data.length || 0; //get count from API data
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
-
             }).on('page', function() {
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function() {
-
             }).on('length.dt', function(e, settings, len) {
-
                 $(".fullScreenSpin").css("display", "inline-block");
                 let dataLenght = settings._iDisplayLength;
                 if (dataLenght == -1) {
@@ -11566,8 +11517,7 @@ Template.non_transactional_list.onRendered(function() {
             });
             $(".fullScreenSpin").css("display", "none");
         }, 0);
-
-       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.getBasReturnData = function(deleteFilter = false, datefrom="", dateto="") {
@@ -15548,6 +15498,179 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.getAllSingleTouchPayroll = function(){
+        let refresh = false;
+        //API is not ready yet. so we call emplty data for now.
+        templateObject.displayAllSingleTouchPayroll([]);
+    }
+
+    templateObject.displayAllSingleTouchPayroll = function(data){
+        let splashArrayAllSingleTouchPayroll = new Array();
+        splashArrayAllSingleTouchPayroll = [[
+            "100",
+            "12/05/2022",
+            "$34,000.00",
+            "$3,400.00",
+            "$0.00",
+            "$30,000.00",
+            "Processed"
+        ]];
+        templateObject.transactiondatatablerecords.set(splashArrayAllSingleTouchPayroll);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayAllSingleTouchPayroll,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colID",
+                        targets:0,
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        className: "colDate",
+                        targets: 1,
+                        width:'100px'
+                    },
+                    {
+                        className: "colEarnings",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPAYG",
+                        targets: 3,
+                        width:'100px'
+                    },
+                    {
+                        className: "colSuperannuation",
+                        targets: 4,
+                        width:'100px'
+                    },
+                    {
+                        className: "colNetPay",
+                        targets: 5,
+                        width:'100px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 6,
+                        width:'100px'
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         templateObject.getContactOverviewData();
@@ -15704,6 +15827,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getHolidaysData();
     } else if(currenttablename === "tblDraftPayRun"){
         templateObject.getDraftPayRunData();
+    } else if(currenttablename === "tblAllSingleTouchPayroll"){
+        templateObject.getAllSingleTouchPayroll();
     }
 
     tableResize();
@@ -15879,6 +16004,8 @@ Template.non_transactional_list.events({
             templateObject.getSerialNumberList(true);
         } else if (currenttablename === "tblLotNumberList"){
             templateObject.getLotNumberList(true);
+        } else if(currenttablename === "tblAllSingleTouchPayroll"){
+            templateObject.getAllSingleTouchPayroll(true)
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -15983,6 +16110,8 @@ Template.non_transactional_list.events({
             templateObject.getSerialNumberList(false);
         } else if (currenttablename === "tblLotNumberList"){
             templateObject.getLotNumberList(false);
+        }else if(currenttablename === "tblAllSingleTouchPayroll"){
+            templateObject.getAllSingleTouchPayroll(false)
         }
     },
     'change .custom-range': async function(event) {

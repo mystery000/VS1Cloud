@@ -106,7 +106,6 @@
                                             </thead>
                                             <tbody>
                                                 {{#each itemrecord in value}}
-                                                    <!-- {{itemrecord.accessLevel}} -->
                                                     <tr id="{{itemrecord.lineID}}" name="{{itemrecord.accessID}}" class="tbl_access {{itemrecord.formClassHidden}}">
                                                         <td style="min-width: 332px;">
                                                             <input type="hidden" name="{{itemrecord.lineID}}" id="{{itemrecord.lineID}}_accessDesc" value="{{itemrecord.description}}" style="display:none;">
@@ -114,7 +113,7 @@
                                                                 <input
                                                                     class="custom-control-input chkSettings xxx-{{ itemrecord.accessLevel }} chkSetting{{name}} {{#if equals itemrecord.description 'Inventory'}}chkInventory{{/if}} {{#if equals itemrecord.description 'Inventory Tracking'}}chkInventory{{/if}} {{#if equals itemrecord.description 'Qty Only on Purchase Order'}}chkOnlyQtyPO{{/if}} {{#if equals itemrecord.description 'Qty Only on Sales'}} chkOnlyQtySales{{/if}} {{#if equals itemrecord.description 'Launch Allocation'}} chkLaunchAllocation{{/if}} {{#if equals itemrecord.description 'Launch Appointment'}} chkLaunchAppointment{{/if}}"
                                                                     type="checkbox" value="{{itemrecord.accessLevel}}" id="formCheck-{{itemrecord.lineID}}" name="{{itemrecord.lineID}}"
-                                                                    checked="{{#if equals itemrecord.formClass 'inactiveLicence'}}{{else}}{{#if equals itemrecord.accessLevel 1}}checked{{/if}}{{/if}}" style="cursor: pointer;" readonly>
+                                                                    checked="{{#if equals itemrecord.accessLevel 1}}checked{{/if}}" style="cursor: pointer;" readonly>
                                                                 <label class="custom-control-label" for="formCheck-{{itemrecord.lineID}}" style="cursor: pointer;">{{itemrecord.description}}</label>
                                                                 <div class="lblPricing" style="float: right; color:#1cc88a; display:none;"><b>$15</b></div>
                                                             </div>

@@ -168,6 +168,7 @@ Template.newsidenav.onRendered(function () {
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
+  let vS1FormAccessDetail = localStorage.getItem('VS1FormAccessDetail');
   let isDashboard = localStorage.getItem('CloudDashboardModule');
   let isMain = localStorage.getItem('CloudMainModule');
   let isInventory = localStorage.getItem('CloudInventoryModule');
@@ -937,85 +938,85 @@ Template.newsidenav.onRendered(function () {
   }
 
   if (LoggedDB !== null) {
-    if (isDashboard) {
+    if (JSON.parse(isDashboard)) {
       templateObject.includeDashboard.set(true);
     }
-    if (isMain) {
+    if (JSON.parse(isMain)) {
       templateObject.includeMain.set(true);
     }
-    if (isInventory) {
+    if (JSON.parse(isInventory)) {
       templateObject.includeInventory.set(true);
     }
-    if (isManufacturing) {
+    if (JSON.parse(isManufacturing)) {
       templateObject.includeManufacturing.set(true);
     }
-    if (isAccessLevels) {
+    if (JSON.parse(isAccessLevels)) {
       templateObject.includeAccessLevels.set(true);
     }
-    if (isShipping) {
+    if (JSON.parse(isShipping)) {
       templateObject.includeShipping.set(true);
     }
-    if (isStockTransfer) {
+    if (JSON.parse(isStockTransfer)) {
       templateObject.includeStockTransfer.set(true);
     }
 
-    if (isStockAdjustment) {
+    if (JSON.parse(isStockAdjustment)) {
       templateObject.includeStockAdjustment.set(true);
     }
-    if (isStockTake) {
+    if (JSON.parse(isStockTake)) {
       templateObject.includeStockTake.set(true);
     }
-    if (isSales) {
+    if (JSON.parse(isSales)) {
       templateObject.includeSales.set(true);
     }
-    if (isPurchases) {
+    if (JSON.parse(isPurchases)) {
       templateObject.includePurchases.set(true);
     }
 
-    if (isExpenseClaims) {
+    if (JSON.parse(isExpenseClaims)) {
       templateObject.includeExpenseClaims.set(true);
     }
 
-    if (isFixedAssets) {
+    if (JSON.parse(isFixedAssets)) {
       templateObject.includeFixedAssets.set(true);
     }
 
-    if (isPayments) {
+    if (JSON.parse(isPayments)) {
       templateObject.includePayments.set(true);
     }
 
-    if (isContacts) {
+    if (JSON.parse(isContacts)) {
       templateObject.includeContacts.set(true);
     }
 
-    if (isAccounts) {
+    if (JSON.parse(isAccounts)) {
       templateObject.includeAccounts.set(true);
     }
 
-    if (isReports) {
+    if (JSON.parse(isReports)) {
       templateObject.includeReports.set(true);
     }
 
-    if (isSettings) {
+    if (JSON.parse(isSettings)) {
       templateObject.includeSettings.set(true);
     }
 
-    if (isSeedToSale) {
+    if (JSON.parse(isSeedToSale)) {
       templateObject.includeSeedToSale.set(true);
     }
-    if (isBanking) {
+    if (JSON.parse(isBanking)) {
       templateObject.includeBanking.set(true);
     }
 
-    if (isPayroll) {
+    if (JSON.parse(isPayroll)) {
       templateObject.includePayroll.set(true);
     }
 
-    if (isTimesheetEntry) {
+    if (JSON.parse(isTimesheetEntry)) {
       templateObject.includeTimesheetEntry.set(true);
     }
 
-    if (isClockOnOff) {
+    if (JSON.parse(isClockOnOff)) {
       templateObject.includeClockOnOff.set(true);
     }
 
@@ -1028,43 +1029,43 @@ Template.newsidenav.onRendered(function () {
       templateObject.includePayroll.set(false);
     }
 
-    if (isAppointmentScheduling) {
+    if (JSON.parse(isAppointmentScheduling)) {
       templateObject.includeAppointmentScheduling.set(true);
     }
 
-    if (isSidePanel) {
+    if (JSON.parse(isSidePanel)) {
       templateObject.isCloudSidePanelMenu.set(true);
       $("html").addClass("hasSideBar");
     }
-    if (isTopPanel) {
+    if (JSON.parse(isTopPanel)) {
       templateObject.isCloudTopPanelMenu.set(true);
     }
 
-    if (isCRM) {
+    if (JSON.parse(isCRM)) {
       templateObject.isCRM.set(true);
     }
-    if (isProductList) {
+    if (JSON.parse(isProductList)) {
       templateObject.isProductList.set(true);
     }
-    if (isNewProduct) {
+    if (JSON.parse(isNewProduct)) {
       templateObject.isNewProduct.set(true);
     }
-    if (isNewStockTransfer) {
+    if (JSON.parse(isNewStockTransfer)) {
       templateObject.isNewStockTransfer.set(true);
     }
-    if (isExportProduct) {
+    if (JSON.parse(isExportProduct)) {
       templateObject.isExportProduct.set(true);
     }
-    if (isImportProduct) {
+    if (JSON.parse(isImportProduct)) {
       templateObject.isImportProduct.set(true);
     }
-    if (isStockonHandDemandChart) {
+    if (JSON.parse(isStockonHandDemandChart)) {
       templateObject.isStockonHandDemandChart.set(true);
     }
-    if (isAppointmentSMS) {
+    if (JSON.parse(isAppointmentSMS)) {
       templateObject.isAppointmentSMS.set(true);
     }
-    if (isSerialNumberList) {
+    if (JSON.parse(isSerialNumberList)) {
       templateObject.isSerialNumberList.set(true);
     }
   }
@@ -1207,7 +1208,6 @@ Template.newsidenav.onRendered(function () {
   if (isPrintStatement == true) {
     templateObject.isPrintStatement.set(true);
   }
-
 });
 Template.newsidenav.events({
   'click #sidebarToggleBtn': function (event) {
