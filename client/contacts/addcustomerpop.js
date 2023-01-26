@@ -1328,24 +1328,7 @@ Template.addcustomerpop.events({
         });
     },
     'click .addcustomerpop .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblTransactionlist' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-                }
-            }
-        }
+        Meteor._reload.reload();
     },
     'click .addcustomerpop .saveTable': function(event) {
         let lineItems = [];
@@ -1373,55 +1356,6 @@ Template.addcustomerpop.events({
         });
         //datatable.state.save();
 
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblTransactionlist' });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblTransactionlist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('.addcustomerpop #myModal2').modal('toggle');
-                        } else {
-                            $('.addcustomerpop #myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblTransactionlist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('.addcustomerpop #myModal2').modal('toggle');
-                        } else {
-                            $('.addcustomerpop #myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
-        }
         $('.addcustomerpop #myModal2').modal('toggle');
         //Meteor._reload.reload();
     },
@@ -1698,34 +1632,14 @@ Template.addcustomerpop.events({
         }, delayTimeAfterSound);
     },
     'click .addcustomerpop .btnResetSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'customerscard' });
-
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            let customerSaveID = FlowRouter.current().queryParams;
-                            if (!isNaN(customerSaveID.id)) {
-                                window.open('/customerscard?id=' + customerSaveID, '_self');
-                            } else if (!isNaN(customerSaveID.jobid)) {
-                                window.open('/customerscard?jobid=' + customerSaveID, '_self');
-                            } else {
-                                window.open('/customerscard', '_self');
-                            }
-                            //Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
+      let customerSaveID = FlowRouter.current().queryParams;
+      if (!isNaN(customerSaveID.id)) {
+          window.open('/customerscard?id=' + customerSaveID, '_self');
+      } else if (!isNaN(customerSaveID.jobid)) {
+          window.open('/customerscard?jobid=' + customerSaveID, '_self');
+      } else {
+          window.open('/customerscard', '_self');
+      }
     },
     'click .addcustomerpop .new_attachment_btn': function(event) {
         $('.addcustomerpop #attachment-upload').trigger('click');
