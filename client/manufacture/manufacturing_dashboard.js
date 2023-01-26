@@ -32,7 +32,13 @@ Template.manufacturingoverview.onRendered(function(){
 Template.manufacturingoverview.events({
     'click .productionplannercard': function(e) {
         FlowRouter.go('/productionplanner')
+    },
+
+    'click #tblWorkorderList tbody tr': function(event) {
+        let workorderid = $(event.target).closest('tr').find('.colID').text();
+        FlowRouter.go('/workordercard?id='+workorderid)
     }
+
 })
 
 Template.manufacturingoverview.helpers({})
