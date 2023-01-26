@@ -259,13 +259,13 @@
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Life (Years)</label>
-                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" min="1">
+                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" value="1" min="0">
                       </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
                         <label>Business Use (%)</label>
-                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" min="0" max="100">
+                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
                       </div>
                     </div>
                   </div>
@@ -311,10 +311,10 @@
                           <tbody>
                             {{#each history in deprecitationPlans}}
                               <tr>
-                                <td>{{history.Year}}</td>
-                                <td> - ${{history.Depreciation}}</td>
-                                <td> - ${{history.TotalDepreciation}}</td>
-                                <td>${{history.BookValue}}</td>
+                                <td>{{history.year}}</td>
+                                <td> - ${{history.depreciation}}</td>
+                                <td> - ${{history.accDepreciation}}</td>
+                                <td>${{history.bookValue}}</td>
                               </tr>
                             {{/each}}
                           </tbody>
@@ -323,7 +323,7 @@
                     </div>
                     
                     <div class="col-12">
-                      <button class="btn btn-success btnCalculate btnFooter" type="button" style="margin: 14px 0; width: 100px; float: right;">
+                      <button class="btn btn-success btnCalculate" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
                       </button>
                     </div>

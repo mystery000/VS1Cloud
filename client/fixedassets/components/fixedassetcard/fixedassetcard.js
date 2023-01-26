@@ -82,17 +82,7 @@ Template.fixedassetcard.onCreated(function () {
     // });
   }
 
-  template.getDateStr = function (dateVal) {
-    if (!dateVal)
-      return '';
-    const dateObj = new Date(dateVal);
-    var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
-    var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
-    var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
-    var month = dateObj.getMonth() < 9? "0" + (dateObj.getMonth()+1) : (dateObj.getMonth()+1);
-    var date = dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate();
-    return dateObj.getFullYear() + "-" + month + "-" + date + " " + hh + ":" + min + ":" + ss;
-  };
+
 });
 
 Template.fixedassetcard.onRendered(function () {
@@ -213,12 +203,23 @@ Template.fixedassetcard.onRendered(function () {
         accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID)['accountName'];
         $("#edtDepreciationExpenseAccount").val(accountName);
 
-        // templateObject.deprecitationPlans.set(assetInfo.fixedassetsdepreciationdetails1? assetInfo.fixedassetsdepreciationdetails1 : []);
-
         $('input#edtSalvageValue').val(assetInfo.Salvage);
         $('select#edtSalvageValueType').val(assetInfo.SalvageType);
-        $('input#edtAssetLife').val(assetInfo.life);
+        $('input#edtAssetLife').val(assetInfo.Life);
         $('input#edtBusinessUse').val(assetInfo.BusinessUsePercent);
+
+        const planList = assetInfo.fixedassetsdepreciationdetails1, depPlanList = [];
+        for (let i = 0; i < planList.length; i++) {
+          const info = planList[i].fields;
+          const plan = {
+            year: info.Year,
+            depreciation: info.Depreciation,
+            accDepreciation: info.TotalDepreciation,
+            bookValue: info.BookValue
+          };
+          depPlanList.push(plan);
+        }
+        template.deprecitationPlans.set(depPlanList);
       }
     });
   }
@@ -269,6 +270,20 @@ Template.fixedassetcard.onRendered(function () {
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
     const templateObject = Template.instance();
+    const depPlans = templateObject.deprecitationPlans.get(), planList = [];
+    for (let i = 0; i < depPlans.length; i++) {
+      const plan = {
+        type: 'TFixedAssetsDepreciationDetails1',
+        fields: {
+          "Year": depPlans[i].year.toString(),
+          "Depreciation": depPlans[i].depreciation,
+          "TotalDepreciation": depPlans[i].accDepreciation,
+          "BookValue": depPlans[i].bookValue
+        }
+      }
+      planList.push(plan);
+    }
+    console.log(planList);
     let newFixedAsset = {
       "type":"TFixedAssets",
       "fields":{
@@ -283,9 +298,9 @@ Template.fixedassetcard.events({
         CUSTFLD3: $('input#edtType').val(), // Type
         CUSTFLD4: $('input#edtCapacityWeight').val(), // CapacityWeight
         CUSTFLD5: $('input#edtCapacityVolume').val(), // CapacityVolumn
-        CUSTDATE1: templateObject.getDateStr($("#edtDateRegisterRenewal").datepicker("getDate")), // RegisterRenewal Date
-        DepreciationStartDate: templateObject.getDateStr($("#edtDepreciationStartDate").datepicker("getDate")), // DateRenewal Date
-        PurchDate: templateObject.getDateStr($("#edtDateofPurchase").datepicker("getDate")), //
+        CUSTDATE1: getDateStr($("#edtDateRegisterRenewal").datepicker("getDate")), // RegisterRenewal Date
+        DepreciationStartDate: getDateStr($("#edtDepreciationStartDate").datepicker("getDate")), // DateRenewal Date
+        PurchDate: getDateStr($("#edtDateofPurchase").datepicker("getDate")), //
         PurchCost: parseInt($('input#edtPurchCost').val()) || 0, //
         SupplierID: templateObject.edtSupplierId.get(), //
         SupplierName: $('input#edtSupplierName').val(), //
@@ -294,8 +309,7 @@ Template.fixedassetcard.events({
         // -----------------Depreciation Information
         DepreciationOption: templateObject.edtDepreciationType.get(), //Depreciation Type
         FixedAssetCostAccountID: templateObject.edtCostAssetAccount.get(),
-        fixedassetsdepreciationdetails1: templateObject.deprecitationPlans.get(),
-
+        fixedassetsdepreciationdetails1: planList,
         CUSTFLD6: templateObject.editBankAccount.get().toString(), // FixedAssetBankAccountID: , //ClearingAccountID
         FixedAssetDepreciationAccountID: templateObject.edtDepreciationAssetAccount.get(), //FixedAssetDepreciationExpenseAccountID
         FixedAssetDepreciationAssetAccountID: templateObject.edtDepreciationExpenseAccount.get(),
@@ -307,7 +321,17 @@ Template.fixedassetcard.events({
       }
     };
 
-
+    function getDateStr(dateVal) {
+      if (!dateVal)
+        return '';
+      const dateObj = new Date(dateVal);
+      var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
+      var min = dateObj.getMinutes() < 10 ? "0" + dateObj.getMinutes() : dateObj.getMinutes();
+      var ss = dateObj.getSeconds() < 10 ? "0" + dateObj.getSeconds() : dateObj.getSeconds();
+      var month = dateObj.getMonth() < 9? "0" + (dateObj.getMonth()+1) : (dateObj.getMonth()+1);
+      var date = dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate();
+      return dateObj.getFullYear() + "-" + month + "-" + date + " " + hh + ":" + min + ":" + ss;
+    };
 
     if (templateObject.currentAssetID.get() == 0) {
       fixedassetSercie.saveTFixedAsset(newFixedAsset).then((data) => {
@@ -346,38 +370,29 @@ Template.fixedassetcard.events({
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
     const startYear = startDate.getFullYear();
     const life = parseInt($('input#edtAssetLife').val()) || 1;
-    const businessPercent = parseInt($('input#edtBusinessUse').val()) || 0;
+    const businessPercent = parseInt($('input#edtBusinessUse').val()) || 100;
     if (salvage * businessPercent == 0) {
       Bert.alert( '<strong>WARNING:</strong>Salvage is zero ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans.set([]);
       return;
     }
-    console.log(salvage, depreciationType, life);
     switch (depreciationType) {
       case 0: //No Depreciation
         templateObject.deprecitationPlans.set([]);
         break;
       case 1: //Straight Line Depreciation
         const yearDepreciation = salvage * businessPercent / 100 / life;
-        console.log(yearDepreciation);
-        let accValue = 0, plan = new Array();
+        let accValue = 0, plan = [];
         for (let i = 0; i < life; i++) {
-          console.log(i);
           accValue += yearDepreciation;
           const yearPlan = {
-            // 'type':"TFixedAssetsDepreciationDetails1",
-            // 'fields': {
-              Year: startYear + i,
-              BookValue:accValue,
-              Date:templateObject.getDateStr($("#edtDepreciationStartDate").datepicker("getDate")),
-              Depreciation:yearDepreciation,
-              TotalDepreciation:accValue
-            // }
+            year: startYear + i,
+            depreciation: yearDepreciation,
+            accDepreciation: accValue,
+            bookValue: accValue
           };
-          console.log(yearPlan);
           plan.push(yearPlan);
         }
-        console.log(plan);
         templateObject.deprecitationPlans.set(plan);
         break;
       case 2: //Decling Balance
