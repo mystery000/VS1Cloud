@@ -80,27 +80,10 @@ export const isSetupFinished = async () => {
   return false;
 }
 
-function MakeNegative() {
-  $("td").each(function () {
-    if (
-      $(this)
-        .text()
-        .indexOf("-" + Currency) >= 0
-    )
-      $(this).addClass("text-danger");
-  });
-}
-
 const numberOfSteps = confirmStepCount + 1;
 
 function setAlreadyLoaded(step, bool = false) {
   return localStorage.setItem(`SETUP_STEP_ALREADY-${step}`, bool);
-}
-
-function isAlreadyLoaded(step) {
-  const string = localStorage.getItem(`SETUP_STEP_ALREADY-${step}`) || false;
-
-  return string == "true" || string == true ? true : false;
 }
 
 function getCurrentStep(onNaN = 1) {
@@ -305,9 +288,11 @@ Template.setup.onRendered(function () {
 
     FlowRouter.go("dashboard");
   };
+  
   $(function () {
     $(".resizablePopup").resizable();
   });
+  
   templateObject.loadInventory = async (refresh = false) => {
     LoadingOverlay.show();
     let _inventoryList = [];
@@ -1452,24 +1437,6 @@ Template.setup.helpers({
   },
   isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
 
-  // Step 7 helpers
-
-  customerList: () => {
-    return Template.instance().customerList.get().sort(function (a, b) {
-      if (a.company === "NA") {
-        return 1;
-      } else if (b.company === "NA") {
-        return -1;
-      }
-      return a.company.toUpperCase() > b.company.toUpperCase()
-        ? 1
-        : -1;
-    });
-  },
-  // Step 8 helpers
-  supplierList: () => {
-    return Template.instance().supplierList.get();
-  },
   // Step 9 helpers
   inventoryList: () => {
     return Template.instance().inventoryList.get();

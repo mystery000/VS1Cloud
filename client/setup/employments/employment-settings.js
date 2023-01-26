@@ -180,7 +180,9 @@ Template.wizard_employment.events({
   },
   "click .btnRefreshEmployee"(event) {
     let templateObject = Template.instance();
-    templateObject.loadEmployees(true);
+    $(".fullScreenSpin").css("display", "inline-block");
+    location.reload();
+    // templateObject.loadEmployees(true);
   },
   "click .resetEmployeeTable"(event) {
     var getcurrentCloudDetails = CloudUser.findOne({

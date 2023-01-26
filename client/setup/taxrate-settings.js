@@ -9,7 +9,6 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "../lib/global/indexdbstorage.js";
 
 let sideBarService = new SideBarService();
-let organisationService = new OrganisationService();
 let taxRateService = new TaxRateService();
 
 const numberInputValidate = (event) => {
@@ -36,8 +35,6 @@ const numberInputValidate = (event) => {
 
 
 Template.wizard_taxrate.onCreated(() => {
-  this.defaultpurchasetaxcode = new ReactiveVar()
-  this.defaultsaletaxcode = new ReactiveVar()
 })
 
 Template.wizard_taxrate.onRendered(() => {
@@ -285,7 +282,7 @@ Template.wizard_taxrate.events({
     jQuery("#taxRatesList_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": function () {
+  "click .btnRefreshTaxRate": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     sideBarService
       .getTaxRateVS1()
