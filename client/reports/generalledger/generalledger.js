@@ -733,8 +733,11 @@ Template.generalledger.onRendered(() => {
 
     templateObject.setDateAs(dateFrom);
     getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
+      console.log(dataObject);
       if (dataObject.length == 0) {
         reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          console.log(data);
+          alert();
           await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
           templateObject.displayGeneralLedgerData(data);
         }).catch(function (err) {
@@ -950,7 +953,7 @@ Template.generalledger.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        responsive: true,
+        // responsive: true,
         "order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
