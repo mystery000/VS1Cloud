@@ -2733,7 +2733,7 @@ Template.productview.onRendered(function() {
                     qtylineItemObj = {
                         department: data.tproductclassquantity[j].DepartmentName || '',
                         // quantity: data.tproductclassquantity[j].InStockQty || 0,
-                        availableqty: data.tproductclassquantity[j].AvailableQty || 0,
+                        availableqty: data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
                         onsoqty: data.tproductclassquantity[j].SOQty || 0,
                         onboqty: backordeQty || 0,
                         instockqty: data.tproductclassquantity[j].InStockQty || 0,

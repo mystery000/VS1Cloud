@@ -225,8 +225,12 @@
                 <div class="col-lg-6 col-md-12 col-sm-12 productCard" id="productCard">
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <div>
-                                <p class="text-primary m-0 font-weight-bold" id="productcardbodycode">{{#if notEquals productrecord.id ''}}PRO-{{productrecord.id}} - {{/if}}{{productrecord.lib}}</p>
+                            <div style="display: flex;
+                            justify-content: space-between;
+                            width: 100%;
+                            margin-right: 25px;">
+                                <div class="text-primary m-0 font-weight-bold" style="font-size: 28px;" id="productcardbodycode">{{productrecord.lib}}</div>
+                                <div class="text-primary m-0 font-weight-bold float-right" style="font-size: 28px;">{{#if notEquals productrecord.id ''}}PRO-{{productrecord.id}}{{/if}}</div>
                             </div>
                             <div class="float-right"></div><div>
                             <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="icon ion-android-more-horizontal"></i></a>
@@ -368,9 +372,9 @@
                                 </div>
                             </div>
                             <div id="UOMRows">
-                                
+
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-6 col-md-4 colSalesAccount" id="colSalesAccount" style="padding-left:0px!important;">
                                     <div class="form-group">
@@ -410,15 +414,15 @@
                                         <label class="lblPriceInc ">Price (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
                                         <div style="display: flex;">
                                             <input type="hidden" class="lblPriceCheckStatus" value="">
-    
+
                                             <input type="text" class="form-control highlightInput edtsellqty1priceCheck hiddenColumn" id="edtsellqty1price" name="edtsellqty1price" value="{{productrecord.sellqty1price}}">
                                             <input type="text" class="form-control highlightInput edtsellqty1priceIncCheck " id="edtsellqty1priceInc" name="edtsellqty1priceInc" value="{{productrecord.sellqty1priceinc}}">
                                             <span class="table-remove btnRemoveUOM" style="margin-left: 10px;"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
-                                
+
                             </div>
                             <div class="row">
                                 <div class="col-6 col-md-3 colBarcode" id="colBarcode">
@@ -524,15 +528,15 @@
                                         <label class="lblCostInc ">Cost (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
                                         <div style="display: flex;">
                                             <input type="hidden" class="lblCostCheckStatus" value="">
-    
+
                                             <input type="text" class="form-control highlightInput edtsellqty1CostCheck hiddenColumn" id="edtsellqty1Cost" name="edtsellqty1Cost" value="">
                                             <input type="text" class="form-control highlightInput edtsellqty1costIncCheck " id="edtsellqty1costInc" name="edtsellqty1costInc" value="">
                                             <span class="table-remove btnRemoveCOGS" style="margin-left: 10px;"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
-                                
+
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -618,7 +622,7 @@
                                             <div class="form-group" style="margin-bottom: 0px;"><label>On SO</label></div>
                                         </div>
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>On Bo</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px;"><label>On BO</label></div>
                                         </div>
                                         <div class="col-2">
                                             <div class="form-group" style="margin-bottom: 0px;"><label>In Stock</label></div>
@@ -952,7 +956,7 @@
         {{> taxratelistpop}}
     </div>
 
-   
+
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal" style="">
         {{> addaccountpop}}
@@ -969,7 +973,7 @@
         {{> newtaxratepop}}
     </div>
 
-    
+
 
 
 
@@ -1128,7 +1132,7 @@
                                 <input type="text" class="edtProcessNote form-control w-100"/>
                             </div>
                             <div class="colAttachment">
-                               
+
                                 <a class="btn btn-primary btnAddAttachment" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
                                     {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
                                 <div class="attachedFiles d-none"></div>
@@ -1183,7 +1187,7 @@
                 </div>
                 <div class="modal-body" style="padding: 0px;">
                     <div class="divTable file-display" >
-                 
+
                         <div class="col inboxcol1">
                             <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
                         </div>
@@ -1229,8 +1233,8 @@
         </div>
     </div>
 
-    
-  
+
+
     <script>
         modalDraggable();
     </script>
