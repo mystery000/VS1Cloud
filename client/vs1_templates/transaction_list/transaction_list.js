@@ -2658,7 +2658,7 @@ Template.transaction_list.events({
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
-            templateObject.getBankingOverviewData();
+            templateObject.getBankingOverviewData(true);
         }else if (currenttablename === "tblPayRunHistory"){
             await clearData('TPayRunHistory');
             templateObject.getPayRunHistoryData("");
