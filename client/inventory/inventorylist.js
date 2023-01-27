@@ -1011,7 +1011,7 @@ Template.inventorylist.onRendered(function() {
     //     var listData = $(this).closest("tr").find(".colProductID").text();
     //     var selectedProductName = $(this).closest("tr").find(".colProductName").text();
     //     if (listData) {
-    //        swal('', 'The product ' + selectedProductName + ' does not currently track Serial Numbers, Lot Numbers or Bin Locations, <br>Do You Wish To Add that Ability.', 'info');
+    //        swal('', 'The product ' + selectedProductName + ' does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.', 'info');
     //     }
     // });
 

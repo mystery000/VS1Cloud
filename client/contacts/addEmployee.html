@@ -1502,7 +1502,7 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Payroll Calendar</label>
-                                                                            <input type="search" class="form-control paste-selected-pay-period-js" name="edtPayPeriod" id="edtPayPeriod" />
+                                                                            <input type="search" class="form-control es-input" name="edtPayrollCalendar" id="edtPayrollCalendar" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
@@ -1521,11 +1521,7 @@
                                                                     <div class="col-12 col-md-3">
                                                                         <div class="form-group" style="margin: 4px;">
                                                                             <label>Holiday Group</label>
-                                                                            <select type="search" class="form-control customEditableSelect" id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
-                                                                                <option value="true">Australian Resident</option>
-                                                                                <option value="false">Foreign Resident</option>
-                                                                                <option value="Working Holiday Maker">Working Holiday Maker</option>
-                                                                            </select>
+                                                                            <input type="search" class="form-control es-input" name="edtHolidays" id="edtHolidays" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 col-md-3">
@@ -1557,34 +1553,13 @@
                                                                 </style>
                                                                 <div class="row">
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePaySetting.TaxFreeThreshold true}}
-                                                                            <input class="custom-control-input" type="checkbox" name="includeHolidaysInPayslips" id="includeHolidaysInPayslips" checked>
-                                                                            {{else}}
-                                                                            <input class="custom-control-input" type="checkbox" name="includeHolidaysInPayslips" id="includeHolidaysInPayslips">
-                                                                            {{/if}}
-                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="includeHolidaysInPayslips">Include holidays in Payslips</label>
-                                                                        </div>
+                                                                        {{> toggle_button className="chkGlobalSettings" id="employee_includeHolidaysInPayslips_toggle" width="131px" for="employee_includeHolidaysInPayslips_toggle" displayName="Include holidays in Payslips"}}
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;padding-left:12px;">
-                                                                            {{#if equals employeePaySetting.StudyTrainingSupportLoan true}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveLeave" id="authorisedToApproveLeave" checked>
-                                                                            {{else}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveLeave" id="authorisedToApproveLeave">
-                                                                            {{/if}}
-                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="authorisedToApproveLeave">Authorised to Approve Leave</label>
-                                                                        </div>
+                                                                        {{> toggle_button className="chkGlobalSettings" id="employee_authorisedToApproveLeave_toggle" width="131px" for="employee_authorisedToApproveLeave_toggle" displayName="Authorised to Approve Leave"}}
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                                                        <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePaySetting.EligibleToReceiveLeaveLoading true}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveTimesheets" id="authorisedToApproveTimesheets" checked>
-                                                                            {{else}}
-                                                                            <input class="custom-control-input" type="checkbox" name="authorisedToApproveTimesheets" id="authorisedToApproveTimesheets">
-                                                                            {{/if}}
-                                                                            <label class="custom-control-label mobileLabel" style="position: absolute; margin-top: 8px;" for="authorisedToApproveTimesheets">Authorised To Approve Timesheets</label>
-                                                                        </div>
+                                                                        {{> toggle_button className="chkGlobalSettings" id="employee_authorisedToApproveTimesheets_toggle" width="131px" for="employee_authorisedToApproveTimesheets_toggle" displayName="Authorised To Approve Timesheets"}}
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -1683,50 +1658,7 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-12">
-                                                                        <div class="table-responsive">
-                                                                            <style>
-                                                                                .hiddenColumn {
-                                                                                    display: none;
-                                                                                }
-
-                                                                                .showColumn {
-                                                                                    display: table-cell;
-                                                                                    padding: .75rem;
-                                                                                    vertical-align: top;
-                                                                                }
-                                                                                #tblLeaveRequests tr th {
-                                                                                    width: calc(100% / 4 - 30px) !important;
-                                                                                }
-                                                                                #tblLeaveRequests tr th.width30Px {
-                                                                                    max-width: 8px !important;
-                                                                                    width: 8px !important;
-                                                                                }
-                                                                                #tblPayslipHistory tr th {
-                                                                                    width: calc(100% / 3 - 30px) !important;
-                                                                                }
-                                                                                #tblPayslipHistory tr th.width30Px {
-                                                                                    max-width: 8px !important;
-                                                                                    width: 8px !important;
-                                                                                }
-
-                                                                            </style>
-                                                                            <table id="tblLeaveRequests" style="width:100%" class="table table-striped table-bordered">
-                                                                                <thead>
-                                                                                    <tr class="dnd-moved">
-                                                                                        <th class="th colLRID hiddenColumn">ID</th>
-                                                                                        <th class="th colLRDescription">Description</th>
-                                                                                        <th class="th colLRLeavePeriod">Leave Period</th>
-                                                                                        <th class="th colLRLeaveType">Leave Type</th>
-                                                                                        <th class="th colLRStatus">Status</th>
-                                                                                        <th class="th colLRAction width30Px"></th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-
-                                                                                </tbody>
-
-                                                                            </table>
-                                                                        </div>
+                                                                      
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -4139,6 +4071,34 @@
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="employeeTitlePopModal">
         {{> title_list_pop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="payrollCalendarPopModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblPayCalendars"}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="holidaysPopModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblHolidays"}}
+                </div>
+            </div>
+        </div>
     </div>
 
     {{> taskDetailModal}}

@@ -468,155 +468,155 @@ Template.timesheet.onRendered(function() {
             }, 100);
         }
 
-        setTimeout(function() {
-            $('#tblTimeSheet').DataTable({
-                ...TableHandler.getDefaultTableConfiguration("tblTimeSheet"),
-                data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [{
-                    className: "colFlag",
-                    "orderable": false,
-                    "targets": [0]
-                }, {
-                    className: "colID",
-                    contenteditable: "false",
-                    "targets": [1]
-                }, {
-                    className: "colName",
-                    contenteditable: "false",
-                    "targets": [2]
-                }, {
-                    className: "colDate",
-                    contenteditable: "false",
-                    "targets": [3]
-                }, {
-                    className: "colJob",
-                    contenteditable: "false",
-                    "targets": [4]
-                }, {
-                    className: "colProduct",
-                    "targets": [5]
-                }, {
-                    className: "hiddenColumn text-right",
-                    "targets": [6]
-                }, {
-                    className: "text-right",
-                    "targets": [7]
-                }, {
-                    className: " text-right",
-                    "targets": [8]
-                }, {
-                    className: " text-right",
-                    "targets": [9]
-                }, {
-                    className: " text-right",
-                    "targets": [10]
-                }, {
-                    className: " text-right",
-                    "targets": [11]
-                }, {
-                    className: "colNotes",
-                    "targets": [12]
-                }, {
-                    className: "colStatus",
-                    "targets": [13]
-                }, {
-                    className: "hiddenColumn colInvoiced",
-                    "targets": [14]
-                }, {
-                    className: "hiddenColumn hourlyrate",
-                    "targets": [15]
-                }, {
-                    className: "viewTimeLog",
-                    "targets": [16]
-                }, {
-                    targets: 'sorting_disabled',
-                    orderable: false
-                }],
-                select: true,
-                destroy: true,
-                colReorder: {
-                    fixedColumnsRight: 1,
-                    fixedColumnsLeft: 1
-                },
-                buttons: [{
-                    extend: 'excelHtml5',
-                    text: '',
-                    download: 'open',
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "Timesheet List - " + moment().format(),
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: "thead tr th:not(.noExport)",
-                        // columns: [':visible :not(:last-child)'],
-                        format: {
-                            body: function(data, row, column) {
-                                if (data.includes("</span>")) {
-                                    var res = data.split("</span>");
-                                    data = res[1];
-                                }
-                                return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-                            }
-                        }
-                    }
-                }, {
-                    extend: 'print',
-                    download: 'open',
-                    className: "btntabletopdf hiddenColumn",
-                    text: '',
-                    title: 'Time Sheet',
-                    filename: "Timesheet List - " + moment().format(),
-                    exportOptions: {
-                        columns: "thead tr th:not(.noExport)",
-                        stripHtml: false
-                    }
-                }],
-                // paging: false,
-                pageLength: initialReportDatatableLoad,
-                "bLengthChange": false,
-                lengthMenu: [
-                    [initialReportDatatableLoad, -1],
-                    [initialReportDatatableLoad, "All"]
-                ],
-                info: true,
-                responsive: true,
-                "order": [
-                    [1, "desc"]
-                ],
-                action: function() {
-                    $('#tblTimeSheet').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function(oSettings) {
-                    setTimeout(function() {
-                        checkStockColor();
-                        MakeNegative();
-                    }, 100);
-                },
-                language: { search: "", searchPlaceholder: "Search List..." },
-                "fnInitComplete": function() {
-                    let urlParametersPage = FlowRouter.current().queryParams.page;
-                    if (urlParametersPage) {
-                        this.fnPageChange('last');
-                    }
-                    $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+        // setTimeout(function() {
+        //     $('#tblTimeSheet').DataTable({
+        //         ...TableHandler.getDefaultTableConfiguration("tblTimeSheet"),
+        //         data: splashArrayTimeSheetList,
+        //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        //         columnDefs: [{
+        //             className: "colFlag",
+        //             "orderable": false,
+        //             "targets": [0]
+        //         }, {
+        //             className: "colID",
+        //             contenteditable: "false",
+        //             "targets": [1]
+        //         }, {
+        //             className: "colName",
+        //             contenteditable: "false",
+        //             "targets": [2]
+        //         }, {
+        //             className: "colDate",
+        //             contenteditable: "false",
+        //             "targets": [3]
+        //         }, {
+        //             className: "colJob",
+        //             contenteditable: "false",
+        //             "targets": [4]
+        //         }, {
+        //             className: "colProduct",
+        //             "targets": [5]
+        //         }, {
+        //             className: "hiddenColumn text-right",
+        //             "targets": [6]
+        //         }, {
+        //             className: "text-right",
+        //             "targets": [7]
+        //         }, {
+        //             className: " text-right",
+        //             "targets": [8]
+        //         }, {
+        //             className: " text-right",
+        //             "targets": [9]
+        //         }, {
+        //             className: " text-right",
+        //             "targets": [10]
+        //         }, {
+        //             className: " text-right",
+        //             "targets": [11]
+        //         }, {
+        //             className: "colNotes",
+        //             "targets": [12]
+        //         }, {
+        //             className: "colStatus",
+        //             "targets": [13]
+        //         }, {
+        //             className: "hiddenColumn colInvoiced",
+        //             "targets": [14]
+        //         }, {
+        //             className: "hiddenColumn hourlyrate",
+        //             "targets": [15]
+        //         }, {
+        //             className: "viewTimeLog",
+        //             "targets": [16]
+        //         }, {
+        //             targets: 'sorting_disabled',
+        //             orderable: false
+        //         }],
+        //         select: true,
+        //         destroy: true,
+        //         colReorder: {
+        //             fixedColumnsRight: 1,
+        //             fixedColumnsLeft: 1
+        //         },
+        //         buttons: [{
+        //             extend: 'excelHtml5',
+        //             text: '',
+        //             download: 'open',
+        //             className: "btntabletocsv hiddenColumn",
+        //             filename: "Timesheet List - " + moment().format(),
+        //             orientation: 'portrait',
+        //             exportOptions: {
+        //                 columns: "thead tr th:not(.noExport)",
+        //                 // columns: [':visible :not(:last-child)'],
+        //                 format: {
+        //                     body: function(data, row, column) {
+        //                         if (data.includes("</span>")) {
+        //                             var res = data.split("</span>");
+        //                             data = res[1];
+        //                         }
+        //                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+        //                     }
+        //                 }
+        //             }
+        //         }, {
+        //             extend: 'print',
+        //             download: 'open',
+        //             className: "btntabletopdf hiddenColumn",
+        //             text: '',
+        //             title: 'Time Sheet',
+        //             filename: "Timesheet List - " + moment().format(),
+        //             exportOptions: {
+        //                 columns: "thead tr th:not(.noExport)",
+        //                 stripHtml: false
+        //             }
+        //         }],
+        //         // paging: false,
+        //         pageLength: initialReportDatatableLoad,
+        //         "bLengthChange": false,
+        //         lengthMenu: [
+        //             [initialReportDatatableLoad, -1],
+        //             [initialReportDatatableLoad, "All"]
+        //         ],
+        //         info: true,
+        //         responsive: true,
+        //         "order": [
+        //             [1, "desc"]
+        //         ],
+        //         action: function() {
+        //             $('#tblTimeSheet').DataTable().ajax.reload();
+        //         },
+        //         "fnDrawCallback": function(oSettings) {
+        //             setTimeout(function() {
+        //                 checkStockColor();
+        //                 MakeNegative();
+        //             }, 100);
+        //         },
+        //         language: { search: "", searchPlaceholder: "Search List..." },
+        //         "fnInitComplete": function() {
+        //             let urlParametersPage = FlowRouter.current().queryParams.page;
+        //             if (urlParametersPage) {
+        //                 this.fnPageChange('last');
+        //             }
+        //             $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
 
-                    $('.myvarFilterForm').appendTo(".colDateFilter");
+        //             $('.myvarFilterForm').appendTo(".colDateFilter");
 
-                }
+        //         }
 
-            }).on('page', function() {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
-            });
+        //     }).on('page', function() {
+        //         setTimeout(function() {
+        //             MakeNegative();
+        //         }, 100);
+        //         let draftRecord = templateObject.datatablerecords.get();
+        //         templateObject.datatablerecords.set(draftRecord);
+        //     }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+        //         setTimeout(function() {
+        //             MakeNegative();
+        //         }, 100);
+        //     });
 
-        }, 0);
+        // }, 0);
 
         var columns = $('#tblTimeSheet th');
         let sTible = "";
@@ -844,154 +844,154 @@ Template.timesheet.onRendered(function() {
                         }, 100);
                     }
 
-                    setTimeout(function() {
-                        $('#tblTimeSheet').DataTable({
-                            data: splashArrayTimeSheetList,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            columnDefs: [{
-                                className: "colFlag",
-                                "orderable": false,
-                                "targets": [0]
-                            }, {
-                                className: "colID",
-                                contenteditable: "false",
-                                "targets": [1]
-                            }, {
-                                className: "colName",
-                                contenteditable: "false",
-                                "targets": [2]
-                            }, {
-                                className: "colDate",
-                                contenteditable: "false",
-                                "targets": [3]
-                            }, {
-                                className: "colJob",
-                                contenteditable: "false",
-                                "targets": [4]
-                            }, {
-                                className: "colProduct",
-                                "targets": [5]
-                            }, {
-                                className: "hiddenColumn text-right",
-                                "targets": [6]
-                            }, {
-                                className: "text-right",
-                                "targets": [7]
-                            }, {
-                                className: " text-right",
-                                "targets": [8]
-                            }, {
-                                className: " text-right",
-                                "targets": [9]
-                            }, {
-                                className: " text-right",
-                                "targets": [10]
-                            }, {
-                                className: " text-right",
-                                "targets": [11]
-                            }, {
-                                className: "colNotes",
-                                "targets": [12]
-                            }, {
-                                className: "colStatus",
-                                "targets": [13]
-                            }, {
-                                className: "hiddenColumn colInvoiced",
-                                "targets": [14]
-                            }, {
-                                className: "hiddenColumn hourlyrate",
-                                "targets": [15]
-                            }, {
-                                className: "viewTimeLog",
-                                "targets": [16]
-                            }, {
-                                targets: 'sorting_disabled',
-                                orderable: false
-                            }],
-                            select: true,
-                            destroy: true,
-                            colReorder: {
-                                fixedColumnsRight: 1,
-                                fixedColumnsLeft: 1
-                            },
-                            buttons: [{
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Timesheet List - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: "thead tr th:not(.noExport)",
-                                    // columns: [':visible :not(:last-child)'],
-                                    format: {
-                                        body: function(data, row, column) {
-                                            if (data.includes("</span>")) {
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
-                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-                                        }
-                                    }
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Time Sheet',
-                                filename: "Timesheet List - " + moment().format(),
-                                exportOptions: {
-                                    columns: "thead tr th:not(.noExport)",
-                                    stripHtml: false
-                                }
-                            }],
-                            // paging: false,
-                            pageLength: initialReportDatatableLoad,
-                            "bLengthChange": false,
-                            lengthMenu: [
-                                [initialReportDatatableLoad, -1],
-                                [initialReportDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [1, "desc"]
-                            ],
-                            action: function() {
-                                $('#tblTimeSheet').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function(oSettings) {
-                                setTimeout(function() {
-                                    checkStockColor();
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            language: { search: "", searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function() {
-                                let urlParametersPage = FlowRouter.current().queryParams.page;
-                                if (urlParametersPage) {
-                                    this.fnPageChange('last');
-                                }
-                                $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+                    // setTimeout(function() {
+                    //     $('#tblTimeSheet').DataTable({
+                    //         data: splashArrayTimeSheetList,
+                    //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    //         columnDefs: [{
+                    //             className: "colFlag",
+                    //             "orderable": false,
+                    //             "targets": [0]
+                    //         }, {
+                    //             className: "colID",
+                    //             contenteditable: "false",
+                    //             "targets": [1]
+                    //         }, {
+                    //             className: "colName",
+                    //             contenteditable: "false",
+                    //             "targets": [2]
+                    //         }, {
+                    //             className: "colDate",
+                    //             contenteditable: "false",
+                    //             "targets": [3]
+                    //         }, {
+                    //             className: "colJob",
+                    //             contenteditable: "false",
+                    //             "targets": [4]
+                    //         }, {
+                    //             className: "colProduct",
+                    //             "targets": [5]
+                    //         }, {
+                    //             className: "hiddenColumn text-right",
+                    //             "targets": [6]
+                    //         }, {
+                    //             className: "text-right",
+                    //             "targets": [7]
+                    //         }, {
+                    //             className: " text-right",
+                    //             "targets": [8]
+                    //         }, {
+                    //             className: " text-right",
+                    //             "targets": [9]
+                    //         }, {
+                    //             className: " text-right",
+                    //             "targets": [10]
+                    //         }, {
+                    //             className: " text-right",
+                    //             "targets": [11]
+                    //         }, {
+                    //             className: "colNotes",
+                    //             "targets": [12]
+                    //         }, {
+                    //             className: "colStatus",
+                    //             "targets": [13]
+                    //         }, {
+                    //             className: "hiddenColumn colInvoiced",
+                    //             "targets": [14]
+                    //         }, {
+                    //             className: "hiddenColumn hourlyrate",
+                    //             "targets": [15]
+                    //         }, {
+                    //             className: "viewTimeLog",
+                    //             "targets": [16]
+                    //         }, {
+                    //             targets: 'sorting_disabled',
+                    //             orderable: false
+                    //         }],
+                    //         select: true,
+                    //         destroy: true,
+                    //         colReorder: {
+                    //             fixedColumnsRight: 1,
+                    //             fixedColumnsLeft: 1
+                    //         },
+                    //         buttons: [{
+                    //             extend: 'excelHtml5',
+                    //             text: '',
+                    //             download: 'open',
+                    //             className: "btntabletocsv hiddenColumn",
+                    //             filename: "Timesheet List - " + moment().format(),
+                    //             orientation: 'portrait',
+                    //             exportOptions: {
+                    //                 columns: "thead tr th:not(.noExport)",
+                    //                 // columns: [':visible :not(:last-child)'],
+                    //                 format: {
+                    //                     body: function(data, row, column) {
+                    //                         if (data.includes("</span>")) {
+                    //                             var res = data.split("</span>");
+                    //                             data = res[1];
+                    //                         }
+                    //                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                    //                     }
+                    //                 }
+                    //             }
+                    //         }, {
+                    //             extend: 'print',
+                    //             download: 'open',
+                    //             className: "btntabletopdf hiddenColumn",
+                    //             text: '',
+                    //             title: 'Time Sheet',
+                    //             filename: "Timesheet List - " + moment().format(),
+                    //             exportOptions: {
+                    //                 columns: "thead tr th:not(.noExport)",
+                    //                 stripHtml: false
+                    //             }
+                    //         }],
+                    //         // paging: false,
+                    //         pageLength: initialReportDatatableLoad,
+                    //         "bLengthChange": false,
+                    //         lengthMenu: [
+                    //             [initialReportDatatableLoad, -1],
+                    //             [initialReportDatatableLoad, "All"]
+                    //         ],
+                    //         info: true,
+                    //         responsive: true,
+                    //         "order": [
+                    //             [1, "desc"]
+                    //         ],
+                    //         action: function() {
+                    //             $('#tblTimeSheet').DataTable().ajax.reload();
+                    //         },
+                    //         "fnDrawCallback": function(oSettings) {
+                    //             setTimeout(function() {
+                    //                 checkStockColor();
+                    //                 MakeNegative();
+                    //             }, 100);
+                    //         },
+                    //         language: { search: "", searchPlaceholder: "Search List..." },
+                    //         "fnInitComplete": function() {
+                    //             let urlParametersPage = FlowRouter.current().queryParams.page;
+                    //             if (urlParametersPage) {
+                    //                 this.fnPageChange('last');
+                    //             }
+                    //             $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
 
-                                $('.myvarFilterForm').appendTo(".colDateFilter");
+                    //             $('.myvarFilterForm').appendTo(".colDateFilter");
 
-                            }
+                    //         }
 
-                        }).on('page', function() {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 0);
+                    //     }).on('page', function() {
+                    //         setTimeout(function() {
+                    //             MakeNegative();
+                    //         }, 100);
+                    //         let draftRecord = templateObject.datatablerecords.get();
+                    //         templateObject.datatablerecords.set(draftRecord);
+                    //     }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                    //         setTimeout(function() {
+                    //             MakeNegative();
+                    //         }, 100);
+                    //     });
+                    //     $('.fullScreenSpin').css('display', 'none');
+                    // }, 0);
 
                     var columns = $('#tblTimeSheet th');
                     let sTible = "";
@@ -1310,157 +1310,157 @@ Template.timesheet.onRendered(function() {
                     }, 100);
                 }
 
-                setTimeout(function() {
-                    $('#tblTimeSheet').DataTable({
-                        data: splashArrayTimeSheetList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [{
-                            className: "colFlag",
-                            "orderable": false,
-                            "targets": [0]
-                        }, {
-                            className: "colID",
-                            contenteditable: "false",
-                            "targets": [1]
-                        }, {
-                            className: "colName",
-                            contenteditable: "false",
-                            "targets": [2]
-                        }, {
-                            className: "colDate",
-                            contenteditable: "false",
-                            "targets": [3]
-                        }, {
-                            className: "colJob",
-                            contenteditable: "false",
-                            "targets": [4]
-                        }, {
-                            className: "colProduct",
-                            "targets": [5]
-                        }, {
-                            className: "hiddenColumn text-right",
-                            "targets": [6]
-                        }, {
-                            className: "text-right",
-                            "targets": [7]
-                        }, {
-                            className: " text-right",
-                            "targets": [8]
-                        }, {
-                            className: " text-right",
-                            "targets": [9]
-                        }, {
-                            className: " text-right",
-                            "targets": [10]
-                        }, {
-                            className: " text-right",
-                            "targets": [11]
-                        }, {
-                            className: "colNotes",
-                            "targets": [12]
-                        }, {
-                            className: "colDescription",
-                            "targets": [13]
-                        }, {
-                            className: "colStatus",
-                            "targets": [14]
-                        }, {
-                            className: "hiddenColumn colInvoiced",
-                            "targets": [15]
-                        }, {
-                            className: "hiddenColumn hourlyrate",
-                            "targets": [16]
-                        }, {
-                            className: "viewTimeLog",
-                            "targets": [17]
-                        }, {
-                            targets: 'sorting_disabled',
-                            orderable: false
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: {
-                            fixedColumnsRight: 1,
-                            fixedColumnsLeft: 1
-                        },
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "Timesheet List - " + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: "thead tr th:not(.noExport)",
-                                // columns: [':visible :not(:last-child)'],
-                                format: {
-                                    body: function(data, row, column) {
-                                        if (data.includes("</span>")) {
-                                            var res = data.split("</span>");
-                                            data = res[1];
-                                        }
-                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-                                    }
-                                }
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Time Sheet',
-                            filename: "Timesheet List - " + moment().format(),
-                            exportOptions: {
-                                columns: "thead tr th:not(.noExport)",
-                                stripHtml: false
-                            }
-                        }],
-                        // paging: false,
-                        pageLength: initialReportDatatableLoad,
-                        "bLengthChange": false,
-                        lengthMenu: [
-                            [initialReportDatatableLoad, -1],
-                            [initialReportDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [1, "desc"]
-                        ],
-                        action: function() {
-                            $('#tblTimeSheet').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                checkStockColor();
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "", searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function() {
-                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage) {
-                                this.fnPageChange('last');
-                            }
-                            $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+                // setTimeout(function() {
+                //     $('#tblTimeSheet').DataTable({
+                //         data: splashArrayTimeSheetList,
+                //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                //         columnDefs: [{
+                //             className: "colFlag",
+                //             "orderable": false,
+                //             "targets": [0]
+                //         }, {
+                //             className: "colID",
+                //             contenteditable: "false",
+                //             "targets": [1]
+                //         }, {
+                //             className: "colName",
+                //             contenteditable: "false",
+                //             "targets": [2]
+                //         }, {
+                //             className: "colDate",
+                //             contenteditable: "false",
+                //             "targets": [3]
+                //         }, {
+                //             className: "colJob",
+                //             contenteditable: "false",
+                //             "targets": [4]
+                //         }, {
+                //             className: "colProduct",
+                //             "targets": [5]
+                //         }, {
+                //             className: "hiddenColumn text-right",
+                //             "targets": [6]
+                //         }, {
+                //             className: "text-right",
+                //             "targets": [7]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [8]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [9]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [10]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [11]
+                //         }, {
+                //             className: "colNotes",
+                //             "targets": [12]
+                //         }, {
+                //             className: "colDescription",
+                //             "targets": [13]
+                //         }, {
+                //             className: "colStatus",
+                //             "targets": [14]
+                //         }, {
+                //             className: "hiddenColumn colInvoiced",
+                //             "targets": [15]
+                //         }, {
+                //             className: "hiddenColumn hourlyrate",
+                //             "targets": [16]
+                //         }, {
+                //             className: "viewTimeLog",
+                //             "targets": [17]
+                //         }, {
+                //             targets: 'sorting_disabled',
+                //             orderable: false
+                //         }],
+                //         select: true,
+                //         destroy: true,
+                //         colReorder: {
+                //             fixedColumnsRight: 1,
+                //             fixedColumnsLeft: 1
+                //         },
+                //         buttons: [{
+                //             extend: 'excelHtml5',
+                //             text: '',
+                //             download: 'open',
+                //             className: "btntabletocsv hiddenColumn",
+                //             filename: "Timesheet List - " + moment().format(),
+                //             orientation: 'portrait',
+                //             exportOptions: {
+                //                 columns: "thead tr th:not(.noExport)",
+                //                 // columns: [':visible :not(:last-child)'],
+                //                 format: {
+                //                     body: function(data, row, column) {
+                //                         if (data.includes("</span>")) {
+                //                             var res = data.split("</span>");
+                //                             data = res[1];
+                //                         }
+                //                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                //                     }
+                //                 }
+                //             }
+                //         }, {
+                //             extend: 'print',
+                //             download: 'open',
+                //             className: "btntabletopdf hiddenColumn",
+                //             text: '',
+                //             title: 'Time Sheet',
+                //             filename: "Timesheet List - " + moment().format(),
+                //             exportOptions: {
+                //                 columns: "thead tr th:not(.noExport)",
+                //                 stripHtml: false
+                //             }
+                //         }],
+                //         // paging: false,
+                //         pageLength: initialReportDatatableLoad,
+                //         "bLengthChange": false,
+                //         lengthMenu: [
+                //             [initialReportDatatableLoad, -1],
+                //             [initialReportDatatableLoad, "All"]
+                //         ],
+                //         info: true,
+                //         responsive: true,
+                //         "order": [
+                //             [1, "desc"]
+                //         ],
+                //         action: function() {
+                //             $('#tblTimeSheet').DataTable().ajax.reload();
+                //         },
+                //         "fnDrawCallback": function(oSettings) {
+                //             setTimeout(function() {
+                //                 checkStockColor();
+                //                 MakeNegative();
+                //             }, 100);
+                //         },
+                //         language: { search: "", searchPlaceholder: "Search List..." },
+                //         "fnInitComplete": function() {
+                //             let urlParametersPage = FlowRouter.current().queryParams.page;
+                //             if (urlParametersPage) {
+                //                 this.fnPageChange('last');
+                //             }
+                //             $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
 
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
+                //             $('.myvarFilterForm').appendTo(".colDateFilter");
 
-                        }
+                //         }
 
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
+                //     }).on('page', function() {
+                //         setTimeout(function() {
+                //             MakeNegative();
+                //         }, 100);
+                //         let draftRecord = templateObject.datatablerecords.get();
+                //         templateObject.datatablerecords.set(draftRecord);
+                //     }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                //         setTimeout(function() {
+                //             MakeNegative();
+                //         }, 100);
+                //     });
+                //     $('.fullScreenSpin').css('display', 'none');
+                // }, 0);
 
 
                 var columns = $('#tblTimeSheet th');
@@ -1672,157 +1672,157 @@ Template.timesheet.onRendered(function() {
                     }, 100);
                 }
 
-                setTimeout(function() {
-                    $('#tblTimeSheet').DataTable({
-                        data: splashArrayTimeSheetList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [{
-                            className: "colFlag",
-                            "orderable": false,
-                            "targets": [0]
-                        }, {
-                            className: "colID",
-                            contenteditable: "false",
-                            "targets": [1]
-                        }, {
-                            className: "colName",
-                            contenteditable: "false",
-                            "targets": [2]
-                        }, {
-                            className: "colDate",
-                            contenteditable: "false",
-                            "targets": [3]
-                        }, {
-                            className: "colJob",
-                            contenteditable: "false",
-                            "targets": [4]
-                        }, {
-                            className: "colProduct",
-                            "targets": [5]
-                        }, {
-                            className: "hiddenColumn text-right",
-                            "targets": [6]
-                        }, {
-                            className: "text-right",
-                            "targets": [7]
-                        }, {
-                            className: " text-right",
-                            "targets": [8]
-                        }, {
-                            className: " text-right",
-                            "targets": [9]
-                        }, {
-                            className: " text-right",
-                            "targets": [10]
-                        }, {
-                            className: " text-right",
-                            "targets": [11]
-                        }, {
-                            className: "colNotes",
-                            "targets": [12]
-                        }, {
-                            className: "colDescription",
-                            "targets": [13]
-                        }, {
-                            className: "colStatus",
-                            "targets": [14]
-                        }, {
-                            className: "hiddenColumn colInvoiced",
-                            "targets": [15]
-                        }, {
-                            className: "hiddenColumn hourlyrate",
-                            "targets": [16]
-                        }, {
-                            className: "viewTimeLog",
-                            "targets": [17]
-                        }, {
-                            targets: 'sorting_disabled',
-                            orderable: false
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: {
-                            fixedColumnsRight: 1,
-                            fixedColumnsLeft: 1
-                        },
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "Timesheet List - " + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: "thead tr th:not(.noExport)",
-                                // columns: [':visible :not(:last-child)'],
-                                format: {
-                                    body: function(data, row, column) {
-                                        if (data.includes("</span>")) {
-                                            var res = data.split("</span>");
-                                            data = res[1];
-                                        }
-                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-                                    }
-                                }
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Time Sheet',
-                            filename: "Timesheet List - " + moment().format(),
-                            exportOptions: {
-                                columns: "thead tr th:not(.noExport)",
-                                stripHtml: false
-                            }
-                        }],
-                        // paging: false,
-                        pageLength: initialReportDatatableLoad,
-                        "bLengthChange": false,
-                        lengthMenu: [
-                            [initialReportDatatableLoad, -1],
-                            [initialReportDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [1, "desc"]
-                        ],
-                        action: function() {
-                            $('#tblTimeSheet').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                checkStockColor();
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "", searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function() {
-                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage) {
-                                this.fnPageChange('last');
-                            }
-                            $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+                // setTimeout(function() {
+                //     $('#tblTimeSheet').DataTable({
+                //         data: splashArrayTimeSheetList,
+                //         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                //         columnDefs: [{
+                //             className: "colFlag",
+                //             "orderable": false,
+                //             "targets": [0]
+                //         }, {
+                //             className: "colID",
+                //             contenteditable: "false",
+                //             "targets": [1]
+                //         }, {
+                //             className: "colName",
+                //             contenteditable: "false",
+                //             "targets": [2]
+                //         }, {
+                //             className: "colDate",
+                //             contenteditable: "false",
+                //             "targets": [3]
+                //         }, {
+                //             className: "colJob",
+                //             contenteditable: "false",
+                //             "targets": [4]
+                //         }, {
+                //             className: "colProduct",
+                //             "targets": [5]
+                //         }, {
+                //             className: "hiddenColumn text-right",
+                //             "targets": [6]
+                //         }, {
+                //             className: "text-right",
+                //             "targets": [7]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [8]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [9]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [10]
+                //         }, {
+                //             className: " text-right",
+                //             "targets": [11]
+                //         }, {
+                //             className: "colNotes",
+                //             "targets": [12]
+                //         }, {
+                //             className: "colDescription",
+                //             "targets": [13]
+                //         }, {
+                //             className: "colStatus",
+                //             "targets": [14]
+                //         }, {
+                //             className: "hiddenColumn colInvoiced",
+                //             "targets": [15]
+                //         }, {
+                //             className: "hiddenColumn hourlyrate",
+                //             "targets": [16]
+                //         }, {
+                //             className: "viewTimeLog",
+                //             "targets": [17]
+                //         }, {
+                //             targets: 'sorting_disabled',
+                //             orderable: false
+                //         }],
+                //         select: true,
+                //         destroy: true,
+                //         colReorder: {
+                //             fixedColumnsRight: 1,
+                //             fixedColumnsLeft: 1
+                //         },
+                //         buttons: [{
+                //             extend: 'excelHtml5',
+                //             text: '',
+                //             download: 'open',
+                //             className: "btntabletocsv hiddenColumn",
+                //             filename: "Timesheet List - " + moment().format(),
+                //             orientation: 'portrait',
+                //             exportOptions: {
+                //                 columns: "thead tr th:not(.noExport)",
+                //                 // columns: [':visible :not(:last-child)'],
+                //                 format: {
+                //                     body: function(data, row, column) {
+                //                         if (data.includes("</span>")) {
+                //                             var res = data.split("</span>");
+                //                             data = res[1];
+                //                         }
+                //                         return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                //                     }
+                //                 }
+                //             }
+                //         }, {
+                //             extend: 'print',
+                //             download: 'open',
+                //             className: "btntabletopdf hiddenColumn",
+                //             text: '',
+                //             title: 'Time Sheet',
+                //             filename: "Timesheet List - " + moment().format(),
+                //             exportOptions: {
+                //                 columns: "thead tr th:not(.noExport)",
+                //                 stripHtml: false
+                //             }
+                //         }],
+                //         // paging: false,
+                //         pageLength: initialReportDatatableLoad,
+                //         "bLengthChange": false,
+                //         lengthMenu: [
+                //             [initialReportDatatableLoad, -1],
+                //             [initialReportDatatableLoad, "All"]
+                //         ],
+                //         info: true,
+                //         responsive: true,
+                //         "order": [
+                //             [1, "desc"]
+                //         ],
+                //         action: function() {
+                //             $('#tblTimeSheet').DataTable().ajax.reload();
+                //         },
+                //         "fnDrawCallback": function(oSettings) {
+                //             setTimeout(function() {
+                //                 checkStockColor();
+                //                 MakeNegative();
+                //             }, 100);
+                //         },
+                //         language: { search: "", searchPlaceholder: "Search List..." },
+                //         "fnInitComplete": function() {
+                //             let urlParametersPage = FlowRouter.current().queryParams.page;
+                //             if (urlParametersPage) {
+                //                 this.fnPageChange('last');
+                //             }
+                //             $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
 
-                            $('.myvarFilterForm').appendTo(".colDateFilter");
+                //             $('.myvarFilterForm').appendTo(".colDateFilter");
 
-                        }
+                //         }
 
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
+                //     }).on('page', function() {
+                //         setTimeout(function() {
+                //             MakeNegative();
+                //         }, 100);
+                //         let draftRecord = templateObject.datatablerecords.get();
+                //         templateObject.datatablerecords.set(draftRecord);
+                //     }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                //         setTimeout(function() {
+                //             MakeNegative();
+                //         }, 100);
+                //     });
+                //     $('.fullScreenSpin').css('display', 'none');
+                // }, 0);
 
                 var columns = $('#tblTimeSheet th');
                 let sTible = "";

@@ -22,6 +22,8 @@ Template.assetcostreport.onRendered(function () {
   templateObject.init_reset_data = function () {
     fixedAssetService.getCostTypeList().then(function (data) {
       addVS1Data('TCostTypes', JSON.stringify(data.tcosttypes));
+      let reset_data = [];
+      let templateObject = Template.instance();
       for (let i = 0; i < data.tcosttypes.length; i ++) {
         const costType = data.tcosttypes[i];
         const typeFeild = {
@@ -34,8 +36,7 @@ Template.assetcostreport.onRendered(function () {
         };
         reset_data.push(typeFeild);
       }
-      let reset_data = [];
-      let templateObject = Template.instance();
+
       templateObject.reset_data.set(reset_data);
     });
 

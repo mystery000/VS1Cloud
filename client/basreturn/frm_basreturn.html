@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-8" style="padding-top: 40px;">
-                    <div class="custom-control" style="float:left">
+                    <div style="float:left">
                         <label>Enable: </label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 18px; width:65px">
@@ -118,10 +118,10 @@
                             <div class="card-body rounded" style="padding: 0px !important;">
                                 <div>
                                     <ul class="nav nav-tabs nav-fill">
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link active supplierTab" role="tab" data-toggle="tab" data-target="#tab-1">Supplies and Acquisitions</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-2">Taxes and Amounts Withheld</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-3">Wine And Luxury</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-4">BAS Debits and Credits</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item1" name="nav-item1"><a class="nav-link active supplierTab" role="tab" data-toggle="tab" data-target="#tab-1">Supplies and Acquisitions</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item2" name="nav-item2"><a class="nav-link transTab" role="tab" data-toggle="tab" data-target="#tab-2">Taxes and Amounts Withheld</a></li>
+                                        <li class="nav-item" style="cursor: pointer; display:none" id="nav-item3" name="nav-item3"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-3">Wine And Luxury</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item4" name="nav-item4"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-4">BAS Debits and Credits</a></li>
                                     </ul>
                                     <div class="tab-content">
                                         <style>
@@ -467,12 +467,12 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane border rounded-0 tab-1" role="tabpanel" id="tab-2" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                                            <div class="row no-gutters" style="padding: 8px;">
+                                            <div class="row no-gutters nav-contents2" style="padding: 8px;">
                                                 <div class="col-12" style="padding: 15px 8px;">
                                                     <h4 style="text-align:center;">Calculation Sheet - Taxes & Amounts Withheld</h4>
                                                 </div>                                                
                                             </div>
-                                            <div class="row no-gutters" style="padding: 8px;">
+                                            <div class="row no-gutters nav-contents2" style="padding: 8px;">
                                                 <div class="col-12 col-md-12" style="padding-right:50px">
                                                     <div class="form-group" style="float:right;">
                                                         <label>Previous Return</label>
@@ -484,7 +484,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row no-gutters" style="padding: 8px;">
+                                            <div class="row no-gutters nav-contents2" style="padding: 8px;">
                                                 <div class="col-12 col-md-3" style="text-align:right">
                                                     <div style="padding-left:25px; padding-top:38px">
                                                         <div class="custom-control custom-switch" style="width:120px; float:left">
@@ -542,7 +542,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row no-gutters" style="padding: 8px; border-bottom:1px solid #ccc">
+                                            <div class="row no-gutters nav-contents2" style="padding: 8px; border-bottom:1px solid #ccc">
                                                 <div class="col-12 col-md-6" style="padding: 15px 22px;">
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Total of salary, wages, and other payments</div>
@@ -589,7 +589,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row no-gutters" style="padding: 8px;">
+                                            <div class="row no-gutters nav-contents3" style="padding: 8px; display:none">
                                                 <div class="col-12 col-md-12" style="padding-right:50px">
                                                     <div class="form-group" style="float:right;">
                                                         <label>Previous Return</label>
@@ -601,7 +601,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row no-gutters" style="padding: 8px; margin-top:5px">
+                                            <div class="row no-gutters nav-contents3" style="padding: 8px; margin-top:5px; display:none">
                                                 <div class="col-12 col-md-3" style="text-align:right">
                                                     <div style="padding-left:25px; padding-top:38px">
                                                         <div class="custom-control custom-switch" style="width:120px; float:left">
@@ -659,7 +659,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row no-gutters" style="padding: 8px;">
+                                            <div class="row no-gutters nav-contents3" style="padding: 8px; display:none">
                                                 <div class="col-12 col-md-6" style="padding: 15px 22px;">
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Instalment income</div>
@@ -710,7 +710,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row no-gutters" style="padding: 8px;">
+                                            <div class="row no-gutters nav-contents3" style="padding: 8px; display:none">
                                                 <div class="col-12 col-md-6" style="padding: 15px 22px;">
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">ATO-calculated fringe benefits tax instalment</div>
@@ -1139,10 +1139,10 @@
 
             <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
-                    <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 16px;" autocomplete="off"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button class="btn btn-success btnSave btn-auto-save" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-danger btnDelete" type="button" style="margin: 16px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
                     <button class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                    <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 16px;" autocomplete="off"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>                    
+                    <button class="btn btn-danger btnDelete" type="button" style="margin: 16px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>                    
                     <button class="btn btn-secondary btnBack" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                 </div>
             </div>

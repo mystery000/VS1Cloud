@@ -9,7 +9,6 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "../lib/global/indexdbstorage.js";
 
 let sideBarService = new SideBarService();
-let organisationService = new OrganisationService();
 let taxRateService = new TaxRateService();
 
 const numberInputValidate = (event) => {
@@ -36,8 +35,14 @@ const numberInputValidate = (event) => {
 
 
 Template.wizard_taxrate.onCreated(() => {
-  this.defaultpurchasetaxcode = new ReactiveVar()
-  this.defaultsaletaxcode = new ReactiveVar()
+  const templateObject = Template.instance();
+  templateObject.defaultpurchasetaxcode = new ReactiveVar();
+  templateObject.defaultsaletaxcode = new ReactiveVar();
+
+  templateObject.isChkUSRegionTax = new ReactiveVar(false);
+
+  templateObject.subtaxcodes = new ReactiveVar([]);
+  templateObject.subtaxlines = new ReactiveVar([]);
 })
 
 Template.wizard_taxrate.onRendered(() => {
@@ -285,7 +290,7 @@ Template.wizard_taxrate.events({
     jQuery("#taxRatesList_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefresh": function () {
+  "click .btnRefreshTaxRate": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     sideBarService
       .getTaxRateVS1()
@@ -408,7 +413,7 @@ Template.wizard_taxrate.events({
     $('#subTaxPercentageOn').prop('readonly', false);
     $('#subTaxCapAmt').val('0');
     $('#subTaxThresholdAmt').val('0');
-    $('#add-subtax-title').text('Add Sub Tax');
+    $('#edtTaxName').text('Add Sub Tax');
   },
   'click .btnSaveTaxRate': function () {
     let templateObject = Template.instance();
@@ -453,9 +458,6 @@ Template.wizard_taxrate.events({
               PublishOnVS1: true,
             },
           };
-          if (templateObject.isChkUSRegionTax.get()) {
-            objDetails.fields.Lines = lines;
-          }
           taxRateService
             .saveTaxRate(objDetails)
             .then(function (objDetails) {
@@ -500,9 +502,6 @@ Template.wizard_taxrate.events({
                 PublishOnVS1: true,
               },
             };
-            if (templateObject.isChkUSRegionTax.get()) {
-              objDetails.fields.Lines = lines;
-            }
 
             taxRateService
               .saveTaxRate(objDetails)
@@ -549,10 +548,6 @@ Template.wizard_taxrate.events({
             PublishOnVS1: true,
           },
         };
-        if (templateObject.isChkUSRegionTax.get()) {
-          objDetails.fields.Lines = lines;
-        }
-
         taxRateService
           .saveTaxRate(objDetails)
           .then(function (objDetails) {
@@ -598,45 +593,7 @@ Template.wizard_taxrate.events({
     $('#edtTaxRate').val('4');
     $('#edtTaxDesc').val('Sales Tax Default');
     let templateObject = Template.instance();
-
-    if (templateObject.isChkUSRegionTax.get()) {
-      let newSubTaxLines = [{
-        RowId: `subtax_0`,
-        SubTaxCode: 'STRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }, {
-        RowId: `subtax_1`,
-        SubTaxCode: 'CTRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }, {
-        RowId: `subtax_2`,
-        SubTaxCode: 'SPRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }, {
-        RowId: `subtax_3`,
-        SubTaxCode: 'CONRT',
-        Percentage: 1,
-        PercentageOn: 'Selling Price',
-        CapAmount: 0,
-        ThresholdAmount: 0,
-        Description: ''
-      }];
-      templateObject.subtaxlines.set(newSubTaxLines);
-    } else {
-      templateObject.subtaxlines.set([]);
-    }
+    templateObject.subtaxlines.set([]);
 
   },
   "click #subTaxList td.clickable": (e) => SubTaxEditListener(e),
@@ -731,13 +688,6 @@ Template.wizard_taxrate.events({
           });
           $(".fullScreenSpin").css("display", "none");
         });
-    }, delayTimeAfterSound);
-  },
-  "click .btnBack": function (event) {
-    playCancelAudio();
-    event.preventDefault();
-    setTimeout(function () {
-      history.back(1);
     }, delayTimeAfterSound);
   },
   "click #taxRatesList td.clickable": (e) => TaxRatesEditListener(e),

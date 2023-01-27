@@ -1,0 +1,46 @@
+<template name="fixedassettypepopup">
+  <div class="modal fade" role="dialog" tabindex="-1" id="{{modalID}}">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Fixed Asset Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body" style="padding: 32px; padding-top: 0px;">
+          <div>
+            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; align-items: center;">
+              <div class="col float-left flex-grow-1 mb-1">
+                {{> vs1_button
+                  color='primary'
+                  classes='btnRefresh'
+                  type='button'
+                  id="btnRefresh"
+                  iconName=' la la-lightbulb-o'
+                  title='Refresh'
+                }}
+                {{> vs1_button
+                  color='primary'
+                  classes='btnNewAssetType'
+                  type='button'
+                  id="btnNewAssetType" 
+                  iconName='plus'
+                  title='New Asset Type'
+                }}
+              </div>
+              <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                {{> export_import_print_display_button tablename="tblFixedAssetType"}}
+              </div>
+            </div>
+            <div>
+              {{> non_transactional_list tablename = "tblFixedAssetType"}}
+            </div>
+          </div>
+        </div>
+        <!-- <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+</template>

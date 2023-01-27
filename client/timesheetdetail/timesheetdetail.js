@@ -48,46 +48,146 @@ Template.timesheetdetail.onRendered(function () {
   const id = FlowRouter.current().queryParams.tid;
 
   this.loadTimeSheet = async (refresh = false) => {
-    let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
-      return await contactService.getAllTimeSheetList();
-    }, {
-      useIndexDb: true,
-      useLocalStorage: false,
-      fallBackToLocal: true,
-      forceOverride: refresh,
-      validate: cachedResponse => {
-        return true;
+    getVS1Data("TTimeSheet").then(async function (dataObject) {
+      if (dataObject.length == 0) {
+        contactService.getAllTimeSheetList(initialBaseDataLoad, 0).then(async function (data) {
+            addVS1Data("TTimeSheet", JSON.stringify(data));
+            let timesheets = data.ttimesheet.map(t => t.fields);
+          timesheets.forEach((t, index) => {
+            if (t.Status == "") {
+              t.Status = "Draft";
+            }
+          });
+          await this.timeSheetList.set(timesheets);
+    
+        let timesheet = timesheets.find(o => o.ID == id);
+    
+        if (timesheet) {
+          this.timesheet.set(timesheet);
+          this.weeklyTotal.set(timesheet.Hours);
+        } else {
+          LoadingOverlay.hide(0);
+          const result = await swal({
+            title: `Timesheet ${id} is not found`,
+            //text: "Please log out to activate your changes.",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK"
+          });
+    
+          if (result.value) {
+            redirectToPayRollOverview();
+          } else if (result.dismiss === "cancel") {}
+        }
+          })
+          .catch(function (err) {
+          });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let timesheets = data.ttimesheet.map(t => t.fields);
+        timesheets.forEach((t, index) => {
+          if (t.Status == "") {
+            t.Status = "Draft";
+          }
+        });
+        await this.timeSheetList.set(timesheets);
+    
+        let timesheet = timesheets.find(o => o.ID == id);
+    
+        if (timesheet) {
+          this.timesheet.set(timesheet);
+          this.weeklyTotal.set(timesheet.Hours);
+        } else {
+          LoadingOverlay.hide(0);
+          const result = await swal({
+            title: `Timesheet ${id} is not found`,
+            //text: "Please log out to activate your changes.",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK"
+          });
+    
+          if (result.value) {
+            redirectToPayRollOverview();
+          } else if (result.dismiss === "cancel") {}
+        }
       }
+    })
+    .catch(function (err) {
+      contactService .getAllTimeSheetList(initialBaseDataLoad, 0)
+        .then(async function (data) {
+          addVS1Data("TTimeSheet", JSON.stringify(data));
+          let timesheets = data.ttimesheet.map(t => t.fields);
+          timesheets.forEach((t, index) => {
+            if (t.Status == "") {
+              t.Status = "Draft";
+            }
+          });
+          await this.timeSheetList.set(timesheets);
+      
+          let timesheet = timesheets.find(o => o.ID == id);
+      
+          if (timesheet) {
+            this.timesheet.set(timesheet);
+            this.weeklyTotal.set(timesheet.Hours);
+          } else {
+            LoadingOverlay.hide(0);
+            const result = await swal({
+              title: `Timesheet ${id} is not found`,
+              //text: "Please log out to activate your changes.",
+              type: "error",
+              showCancelButton: false,
+              confirmButtonText: "OK"
+            });
+      
+            if (result.value) {
+              redirectToPayRollOverview();
+            } else if (result.dismiss === "cancel") {}
+          }
+        })
+        .catch(function (err) {
+        });
     });
-    data = data.response;
+    // let data = await CachedHttp.get(erpObject.TTimeSheet, async () => {
+    //   return await contactService.getAllTimeSheetList();
+    // }, {
+    //   useIndexDb: true,
+    //   useLocalStorage: false,
+    //   fallBackToLocal: true,
+    //   forceOverride: refresh,
+    //   validate: cachedResponse => {
+    //     return true;
+    //   }
+    // });
+    // data = data.response;
+    // let timesheets = data.ttimesheet.map(t => t.fields);
+    // timesheets.forEach((t, index) => {
+    //   if (t.Status == "") {
+    //     t.Status = "Draft";
+    //   }
+    // });
+    // await this.timeSheetList.set(timesheets);
 
-    let timesheets = data.ttimesheet.map(t => t.fields);
-    timesheets.forEach((t, index) => {
-      if (t.Status == "") {
-        t.Status = "Draft";
-      }
-    });
-    await this.timeSheetList.set(timesheets);
+    // let timesheet = timesheets.find(o => o.ID == id);
 
-    let timesheet = timesheets.find(o => o.ID == id);
+    // if (timesheet) {
+    //   this.timesheet.set(timesheet);
+    //   this.weeklyTotal.set(timesheet.Hours);
+    // } else {
+    //   LoadingOverlay.hide(0);
+    //   const result = await swal({
+    //     title: `Timesheet ${id} is not found`,
+    //     //text: "Please log out to activate your changes.",
+    //     type: "error",
+    //     showCancelButton: false,
+    //     confirmButtonText: "OK"
+    //   });
 
-    if (timesheet) {
-      this.timesheet.set(timesheet);
-      this.weeklyTotal.set(timesheet.Hours);
-    } else {
-      LoadingOverlay.hide(0);
-      const result = await swal({
-        title: `Timesheet ${id} is not found`,
-        //text: "Please log out to activate your changes.",
-        type: "error",
-        showCancelButton: false,
-        confirmButtonText: "OK"
-      });
-
-      if (result.value) {
-        redirectToPayRollOverview();
-      } else if (result.dismiss === "cancel") {}
-    }
+    //   if (result.value) {
+    //     redirectToPayRollOverview();
+    //   } else if (result.dismiss === "cancel") {}
+    // }
+   
   };
 
   this.loadEmployee = async (refresh = false) => {

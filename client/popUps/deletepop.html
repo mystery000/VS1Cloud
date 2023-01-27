@@ -22,8 +22,8 @@
                         <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s
                     </p>
                     {{else}}
-                    <p>Please select "Delete Line" to remove row or "Delete {{itemName1}}" to delete the entire
-                        {{itemName2}}</p>
+                    <p>"Delete Line" Will Remove Row and "Delete {{itemName1}}" Will Delete
+                        Entire {{itemName1}}</p>
                     {{/if}}
                     <div align="center">
                         {{#if equals itemName1 "Appointment"}}
@@ -35,7 +35,8 @@
                         <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">
                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
                         </button>
-                        <button class="btn btn-danger {{button2}}" type="button" id="btn_follow2"
+                        <input type="hidden" id="following_cnt" />
+                        <button class="btn btn-danger {{button2}}" type="button" id="btn_follow1"
                             style="display: none;">
                             <i class="fa fa-close" style="display: none; margin-right: 5px;"></i>Delete {{itemName1}}
                             and Following {{itemName3}}
@@ -97,7 +98,7 @@
                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
                         </button>
                         <button class="btn btn-danger {{button2}}" type="button" id="btn_follow2"
-                            style="display: inline-block;">
+                            style="display: none;">
                             <i class="fa fa-close" style="display: none; margin-right: 5px;"></i>Delete {{itemName1}}
                             and Following {{itemName3}}
                         </button>

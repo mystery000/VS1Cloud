@@ -7935,11 +7935,12 @@ Template.billcard.events({
         setTimeout(async function(){
 
         swal({
-            title: 'Delete Bill',
+            title: 'You are deleting ' + $("#following_cnt").val() + ' Bill',
             text: "Do you wish to delete this transaction and all others associated with it moving forward?",
             type: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Yes'
+            confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
           }).then(async (result) => {
             if (result.value) {
                 var url = FlowRouter.current().path;

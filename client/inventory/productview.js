@@ -5532,6 +5532,7 @@ Template.productview.events({
             text: "Do you want to delete this Product?",
             type: 'question',
             showCancelButton: true,
+            cancelButtonText: "No",
             confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.value) {

@@ -3018,6 +3018,7 @@ Template.newproductpop.events({
       type: "question",
       showCancelButton: true,
       confirmButtonText: "Yes",
+      cancelButtonText: "No",
     }).then((result) => {
       if (result.value) {
         $(".fullScreenSpin").css("display", "inline-block");

@@ -336,13 +336,21 @@
         </div>
         <div class="setup-step setup-step-7 {{#if isActive currentStep '7'}} show {{/if}}">
           {{#if isActive currentStep '7'}}
-          {{> wizard_customers}}
+          {{> wizard_bankaccounts}}
           {{/if}}
         </div>
         <div class="setup-step setup-step-8 {{#if isActive currentStep '8'}} show {{/if}}">
-          
+          {{#if isActive currentStep '8'}}
+          {{> wizard_customers}}
+          {{/if}}
         </div>
         <div class="setup-step setup-step-9 {{#if isActive currentStep '9'}} show {{/if}}">
+          {{#if isActive currentStep '9'}}
+          {{> wizard_suppliers}}
+          {{/if}}
+        </div>
+        <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}">
+          {{#if isActive currentStep '10'}}
           <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
             <div class="row">
               <div class="col">
@@ -351,23 +359,6 @@
                     <h5 class="text-primary-- m-0 font-weight-bold d-inline-block">Inventory List </h5>
                     <a class="btn btn-success" style="margin-left: 12px;" role="button" data-toggle="modal"
                       href="#helpViewModalInventory">Help <i class="fa fa-question-circle-o"></i></a>
-
-                    <!-- Start Help View Modal -->
-                    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalInventory">
-                                            <div class="modal-dialog modal-sm" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header" style="padding-bottom: 8px;">
-                                                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                    <div class="modal-body">
-                                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalInventory" class="btn btn-primary helpModal visiblePopupDiv">View Help Video</a></p>
-                                                        <p class="text-center text-muted"><a href="javascript:void(0);" data-href="https://vs1forum.com/viewforum.php?f=6" class="btn btn-primary downloadHelpFile">Download Help File</a></p>
-                                                        <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ  Advisor</button></p>
-                                                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                                                    </div>
-                                                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
                     <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalInventory"
                       style="display: none;" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable"
@@ -479,8 +470,6 @@
                                 aria-hidden="true">×</span></button>
                           </div>
                           <div class="modal-body">
-                            <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                            <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
                             <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
                               style="border: solid 5px #999999f0; height: auto; outline: none;">
                               <source src="https://erphelpes.com/vs1videos/inventoryoverview.mp4" type="video/mp4">
@@ -614,206 +603,22 @@
                         </div>
                         <div class="col-sm-4 float-left text-right flex-grow-1 pl-0">
                           <button class="btn btn-success float-right confirmBtn" type="button"
-                            style="margin: 12px; margin-right: 0;" data-step-id="9">Confirm</button>
+                            style="margin: 12px; margin-right: 0;" data-step-id="10">Confirm</button>
                         </div>
                       </div>
                       <div class="table-responsive">
-                        <style>
-                          th {
-                            background-color: #ededed;
-                          }
-
-                          .table-striped tbody tr:nth-of-type(odd) {
-                            background-color: white !important;
-                          }
-
-                          .table-striped tbody tr:nth-of-type(even) {
-                            background-color: #0000000d !important;
-                          }
-
-                          .JColResizer>tbody>tr>td,
-                          .JColResizer>tbody>tr>th {
-                            padding: .75rem !important;
-                          }
-
-                          .hiddenColumn {
-                            display: none;
-                          }
-
-                          .showColumn {
-                            display: table-cell;
-                            padding: .75rem;
-                            vertical-align: top;
-                          }
-
-                          input[type=number]::-webkit-inner-spin-button,
-                          input[type=number]::-webkit-outer-spin-button {
-                            opacity: 1;
-                          }
-
-                          /* .searchInput {
-                                                    display: block;
-                                                    width: 100%;
-                                                    height: calc(1.5em + .75rem + 2px);
-                                                    padding: .375rem .75rem;
-                                                    font-size: 1rem;
-                                                    font-weight: 400;
-                                                    line-height: 1.5;
-                                                    color: rgb(110 112 126);
-                                                    background-color: rgb(255 255 255);
-                                                    background-clip: padding-box;
-                                                    border: 1px solid rgb(209 211 226);
-                                                    border-radius: .35rem;
-                                                    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-                                                    } */
-                          #tblInventory_filter .form-control,
-                          #tblInventory_filter label {
-                            /* display:none!important; */
-                          }
-                        </style>
-                        <!-- <div class="form-group" style="margin: 16px;margin-left: 8px;">
-                                                <label>Search:</label>
-                                                <input type="search" class="searchInput" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                                                </div> -->
-                        <!-- <div class="row">
-                                                    <div class="col-sm-12 col-md-6">
-                                                        <div class="dataTables_filter">
-                                                            <label style="display: flex;">Search:<input type="search" class="searchInput" placeholder="" aria-controls="tblInventory" autocomplete="off" id="myInputSearch" name="myInputSearch" style="margin-left: 0.5em;"></label>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
-
-                        <style>
-                          .lblPriceEx,
-                          .lblCostEx {
-                            color: #00a3d3;
-                          }
-
-                          .lblPriceInc,
-                          .lblCostInc {
-                            color: #17a673;
-                          }
-
-                          .fa-trans {
-                            -ms-transform: rotate(180deg);
-                            transform: rotate(180deg);
-                          }
-
-                          .lblPriceEx,
-                          .lblPriceInc,
-                          .lblCostEx,
-                          .lblCostInc {
-                            cursor: pointer;
-                            -webkit-touch-callout: none;
-                            -webkit-user-select: none;
-                            -khtml-user-select: none;
-                            -moz-user-select: none;
-                            -ms-user-select: none;
-                            user-select: none;
-                          }
-
-                          .showColumn {
-                            display: inline-block !important;
-                            padding: 0px !important;
-                          }
-
-                          input.showColumn {
-                            padding: 12px !important;
-                          }
-
-                          .colCostPrice {
-                            width: 130px !important;
-                          }
-
-                          .colCostPriceInc {
-                            width: 135px !important;
-                          }
-
-                          .colSalePrice {
-                            width: 130px !important;
-                          }
-
-                          .colSalePriceInc {
-                            width: 135px !important;
-                          }
-                        </style>
-
-
-                        <table id="InventoryTable" style="width:100%"
-                          class="dataTable table table-striped table-bordered InventoryTable">
-                          <thead>
-                            <tr class="dnd-moved">
-                              <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
-                              <th class="th colProductName" style="width:200px;">Product Name</th>
-                              <th class="th colSalesDescription">Sales Description</th>
-                              <th class="th colAvailable" style="width:70px;">Available</th>
-                              <th class="th colOnSO" style="width:60px;">On SO</th>
-                              <th class="th colOnBO" style="width:60px;">On BO</th>
-                              <th class="th colInStock" style="width:65px;">In Stock</th>
-                              <th class="th colOnOrder" style="width:72px;">On Order</th>
-
-                              <th class="th colCostPrice lblCostEx hiddenColumn" style="width:130px;">Cost Price (Ex)
-                                <i class="fas fa-random"></i>
-                              </th>
-                              <th class="th colCostPriceInc lblCostInc " style="width:135px;">Cost Price (Inc) <i
-                                  class="fas fa-random fa-trans"></i></th>
-                              <th class="th colSalePrice lblPriceEx hiddenColumn" style="width:130px;">Sale Price (Ex)
-                                <i class="fas fa-random"></i>
-                              </th>
-                              <th class="th colSalePriceInc lblPriceInc " style="width:135px;">Sale Price (Inc) <i
-                                  class="fas fa-random fa-trans"></i></th>
-
-
-
-                              <th class="th colBarcode hiddenColumn">Barcode</th>
-                              <th class="th colPurchaseDescription hiddenColumn">Purchase Description</th>
-                              <th class="th colProdCustField1 hiddenColumn">Custom Field 1</th>
-                              <th class="th colProdCustField2 hiddenColumn">Custom Field 2</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {{#if inventoryList}}
-                            {{#each item in inventoryList}}
-                            <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
-                              <td contenteditable="false" class="colProductID hiddenColumn">{{item.ID}}</td>
-                              <td contenteditable="false" class="colProductName">{{item.ProductName}}</td>
-                              <td contenteditable="false" class="colSalesDescription">{{item.SalesDescription}}</td>
-                              <td contenteditable="false" class="colAvailable">{{item.AvailableQuantity}}</td>
-                              <td contenteditable="false" class="colOnSO">{{item.onSOOrder}}</td>
-                              <td contenteditable="false" class="colOnBO">{{item.onBOOrder}}</td>
-                              <td contenteditable="false" class="colInStock">{{item.TotalQtyInStock}}</td>
-                              <td contenteditable="false" class="colOnOrder">{{item.TotalQtyOnOrder}}</td>
-
-                              <td contenteditable="false" class="colCostPrice hiddenColumn">{{item.CostPrice}}</td>
-                              <td contenteditable="false" class="colCostPriceInc">{{item.CostPriceInc}}</td>
-
-                              <td contenteditable="false" class="colSalePrice hiddenColumn">{{item.SellPrice}}</td>
-                              <td contenteditable="false" class="colSalePriceInc">{{item.SellPriceInc}}</td>
-
-
-                              <td contenteditable="false" class="colBarcode hiddenColumn">{{item.BARCODE}}</td>
-                              <td contenteditable="false" class="colPurchaseDescription hiddenColumn">
-                                {{item.PurchaseDescription}}</td>
-                              <td contenteditable="false" class="colProdCustField1 hiddenColumn">{{item.CUSTFLD1}}</td>
-                              <td contenteditable="false" class="colProdCustField2 hiddenColumn">{{item.CUSTFLD2}}</td>
-                            </tr>
-                            {{/each}}
-                            {{/if}}
-                          </tbody>
-                        </table>
+                        {{>non_transactional_list tablename="tblInventoryOverview"}}
                       </div>
                     </div>
                     <div class="row no-gutters">
                       <div class="col">
                         <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;"
-                          data-step-id="9">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
+                          data-step-id="10">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
                         <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;"
-                          data-step-id="9">Confirm</button>
+                          data-step-id="10">Confirm</button>
                       </div>
                     </div>
                   </div>
-
-
                 </div>
               </div>
             </div>
@@ -821,42 +626,20 @@
           <div class="modal fade" role="dialog" tabindex="-1" id="addProductModal">
             {{> newproductpop}}
           </div>
-        </div>
-        <div class="setup-step setup-step-10 {{#if isActive currentStep '10'}} show {{/if}}">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col">
-                <div class="card shadow" style="padding-top: 30px; padding-left: 20%; padding-bottom: 30px;">
-                  {{> dashboardoptionspopup}}
-                </div>
-              </div>
-            </div>
-            <div class="row no-gutters">
-              <div class="col">
-                <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;"
-                  data-step-id="10">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
-                <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;"
-                  data-step-id="10">Confirm</button>
-              </div>
-            </div>
-          </div>
+          {{/if}}
         </div>
         <div class="setup-step setup-step-11 {{#if isActive currentStep '11'}} show {{/if}}">
-          <!-- {{#if setupFinished }}
-                        <div class="first-page-container" style="margin: auto;">
-                            <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png"/></div>
-                            <h1 class="text-center">Welcome to VS1Cloud</h1>
-                            <h1 class="text-center">The Set Up Wizard will guide you through Steps to configure your database</h1>
-                            <button id="launchBtn">Start Wizard</button>
-                        </div>
-                   {{else}} -->
+          {{#if isActive currentStep '11'}}
+          {{> wizard_dashboard}}
+          {{/if}}
+        </div>
+        <div class="setup-step setup-step-12 {{#if isActive currentStep '12'}} show {{/if}}">
           <div class="first-page-container" style="margin: auto;">
             <div class="flex justify-content-center align-items-center"><img src="assets/img/VS1.png" /></div>
             <h1 class="text-center">Initial set up is completed</h1>
             <h1 class="text-center">If you skipped any steps you can finish these at any time.</h1>
             <button id="launchBtn">Launch VS1Cloud</button>
           </div>
-          <!-- {{/if}} -->
         </div>
       </div>
     </div>
@@ -1039,7 +822,7 @@
     }
 
     .setup-stepper li {
-      width: 110px;
+      width: 150px;
       flex: 1;
       height: 50px;
       margin-right: 5px;
@@ -1076,18 +859,18 @@
       border-left: 30px solid #c13050 !important;
     }
 
-    .setup-stepper li.completed {
+    /* .setup-stepper li.completed {
       color: white;
       background: #1CC88A;
-    }
+    } */
 
-    .setup-stepper li.completed::before {
+    /* .setup-stepper li.completed::before {
       background: #1CC88A;
     }
 
     .setup-stepper li.completed::after {
       border-left: 30px solid #1CC88A;
-    }
+    } */
 
     .setup-stepper li::before {
       content: "";

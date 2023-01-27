@@ -588,9 +588,9 @@ Template.bankingoverview.onRendered(function() {
                             "fnInitComplete": function () {
                               this.fnPageChange('last');
                               if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                               }else{
-                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                               }
                                 $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -923,9 +923,9 @@ Template.bankingoverview.onRendered(function() {
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
                           if(data.Params.Search.replace(/\s/g, "") == ""){
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                           }else{
-                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                           }
                             $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1245,9 +1245,9 @@ Template.bankingoverview.onRendered(function() {
                         "fnInitComplete": function () {
                           this.fnPageChange('last');
                           if(data.Params.Search.replace(/\s/g, "") == ""){
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                           }else{
-                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                           }
                             $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1664,25 +1664,25 @@ Template.bankingoverview.events({
     'click #btnNewCheck': function(event) {
         FlowRouter.go('/chequecard');
     },
-    'click .chkDatatable': function(event) {
-        var columns = $('#tblBankingOverview th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText === columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
+    // 'click .chkDatatable': function(event) {
+    //     var columns = $('#tblBankingOverview th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function(i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText === columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
 
 
   // custom field displaysettings
@@ -1789,16 +1789,16 @@ Template.bankingoverview.events({
       let colClassName = $(event.target).attr("valueclass");
       $('.col' + colClassName).css('width', range);
     },
-    'click .custom-control-input': function(event) {
-      let colClassName = $(event.target).attr("id");
-      if ($(event.target).is(':checked')) {
-        $('.col' + colClassName).addClass('showColumn');
-        $('.col' + colClassName).removeClass('hiddenColumn');
-      } else {
-        $('.col' + colClassName).addClass('hiddenColumn');
-        $('.col' + colClassName).removeClass('showColumn');
-      }
-    },
+    // 'click .custom-control-input': function(event) {
+    //   let colClassName = $(event.target).attr("id");
+    //   if ($(event.target).is(':checked')) {
+    //     $('.col' + colClassName).addClass('showColumn');
+    //     $('.col' + colClassName).removeClass('hiddenColumn');
+    //   } else {
+    //     $('.col' + colClassName).addClass('hiddenColumn');
+    //     $('.col' + colClassName).removeClass('showColumn');
+    //   }
+    // },
 
     // 'blur .divcolumn': function(event) {
     //     let columData = $(event.target).text();

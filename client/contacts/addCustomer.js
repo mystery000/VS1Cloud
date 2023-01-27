@@ -2986,16 +2986,7 @@ Template.customerscard.events({
     });
   },
   'click .resetTable': function (event) {
-    let checkPrefDetails = getCheckPrefDetails();
-    if (checkPrefDetails) {
-      CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
-        if (err) {
-
-        } else {
-          Meteor._reload.reload();
-        }
-      });
-    }
+    Meteor._reload.reload();
   },
   'click .saveTable': function (event) {
     let lineItems = [];
@@ -3015,57 +3006,6 @@ Template.customerscard.events({
       lineItems.push(lineItemObj);
     });
 
-    const getcurrentCloudDetails = CloudUser.findOne({
-      _id: localStorage.getItem('mycloudLogonID'),
-      clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblTransactionlist' });
-        if (checkPrefDetails) {
-          CloudPreference.update({ _id: checkPrefDetails._id }, {
-            $set: {
-              userid: clientID,
-              username: clientUsername,
-              useremail: clientEmail,
-              PrefGroup: 'salesform',
-              PrefName: 'tblTransactionlist',
-              published: true,
-              customFields: lineItems,
-              updatedAt: new Date()
-            }
-          }, function (err, idTag) {
-            if (err) {
-              $('#myModal2').modal('toggle');
-            } else {
-              $('#myModal2').modal('toggle');
-            }
-          });
-
-        } else {
-          CloudPreference.insert({
-            userid: clientID,
-            username: clientUsername,
-            useremail: clientEmail,
-            PrefGroup: 'salesform',
-            PrefName: 'tblTransactionlist',
-            published: true,
-            customFields: lineItems,
-            createdAt: new Date()
-          }, function (err, idTag) {
-            if (err) {
-              $('#myModal2').modal('toggle');
-            } else {
-              $('#myModal2').modal('toggle');
-            }
-          });
-
-        }
-      }
-    }
     $('#myModal2').modal('toggle');
   },
   'blur .divcolumn': function (event) {
@@ -3390,22 +3330,13 @@ Template.customerscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnResetSettings': function (event) {
-    let checkPrefDetails = getCheckPrefDetails();
-    if (checkPrefDetails) {
-      CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
-        if (err) {
-
-        } else {
-          let customerSaveID = FlowRouter.current().queryParams;
-          if (!isNaN(customerSaveID.id)) {
-            window.open('/customerscard?id=' + customerSaveID, '_self');
-          } else if (!isNaN(customerSaveID.jobid)) {
-            window.open('/customerscard?jobid=' + customerSaveID, '_self');
-          } else {
-            window.open('/customerscard', '_self');
-          }
-        }
-      });
+    let customerSaveID = FlowRouter.current().queryParams;
+    if (!isNaN(customerSaveID.id)) {
+      window.open('/customerscard?id=' + customerSaveID, '_self');
+    } else if (!isNaN(customerSaveID.jobid)) {
+      window.open('/customerscard?jobid=' + customerSaveID, '_self');
+    } else {
+      window.open('/customerscard', '_self');
     }
   },
   'change #attachment-upload': function (e) {
@@ -4084,6 +4015,42 @@ Template.customerscard.events({
     $(".btnJobTask").attr("disabled", false);
     event.preventDefault();
   },
+"click #customer_transctionList_invoices_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedInvoices.set(true)
+    }else{
+        templateObject.checkedInvoices.set(false)
+    }
+},
+"click #customer_transctionList_appointments_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedAppointments.set(true)
+    }else{
+        templateObject.checkedAppointments.set(false)
+    }
+},
+"click #customer_transctionList_quotes_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedQuotes.set(true)
+    }else{
+        templateObject.checkedQuotes.set(false)
+    }
+},
+"click #customer_transctionList_sales_orders_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedSalesOrders.set(true)
+    }else{
+        templateObject.checkedSalesOrders.set(false)
+    }
+},
 });
 
 Template.customerscard.helpers({
@@ -4301,20 +4268,6 @@ function getPreviewFile(uploadedFiles, attachmentID) {
   return previewFile;
 }
 
-function getCheckPrefDetails() {
-  const getcurrentCloudDetails = CloudUser.findOne({
-    _id: localStorage.getItem('mycloudLogonID'),
-    clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-  });
-  let checkPrefDetails = null;
-  if (getcurrentCloudDetails) {
-    if (getcurrentCloudDetails._id.length > 0) {
-      const clientID = getcurrentCloudDetails._id;
-      checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'customerscard' });
-    }
-  }
-  return checkPrefDetails;
-}
 
 function removeAttachment(suffix, event) {
   let tempObj = Template.instance();

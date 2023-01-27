@@ -14,7 +14,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './transaction_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import '../../lib/global/globalfunction';
+import '../../lib/global/globalfunction.js';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -27,7 +27,9 @@ let reportService = new ReportService();
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
 import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
-
+import PayRun from "../../js/Api/Model/PayRun";
+import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
+let payRunHandler = new PayRunHandler();
 
 Template.transaction_list.inheritsHooksFrom('export_import_print_display_button');
 
@@ -100,9 +102,80 @@ Template.transaction_list.onRendered(function() {
                 { index: 6, label: "Amount (Inc)", class: "DebitEx", width: "120", active: true, display: true },
                 { index: 7, label: "Department", class: "Department", width: "80", active: true, display: true },
                 { index: 8, label: "Chq Ref No", class: "chqrefno", width: "110", active: false, display: true },
-                { index: 9, label: "Comments", class: "Notes", width: "", active: true, display: true },
+                { index: 9, label: "Status", class: "Status", width: "100", active: true, display: true },
+                { index: 10, label: "Comments", class: "Notes", width: "", active: true, display: true },
+            ];
+        }else if(currenttablename === "tblPayRunHistory"){
+            reset_data = [
+                { index: 0, label: 'Calendar', class: 'PayRunCalendar', active: true, display: true, width: "100" },
+                { index: 1, label: 'Period', class: 'PayRunPeriod', active: true, display: true, width: "100" },
+                { index: 2, label: 'Payment Date', class: 'PayRunPaymentDate', active: true, display: true, width: "150" },
+                { index: 3, label: 'Wages', class: 'PayRunWages', active: true, display: true, width: "150" },
+                { index: 4, label: 'Tax', class: 'PayRunTax', active: true, display: true, width: "100" },
+                { index: 5, label: 'Super', class: 'PayRunSuper', active: true, display: true, width: "100" },
+                { index: 6, label: 'Net Pay', class: 'PayRunNetPay', active: true, display: true, width: "100" },
+            ]
+        }else if(currenttablename === "tblPayleaveToReview"){
+            reset_data = [
+                { index: 0, label: 'Name', class: 'Name', active: true, display: true, width: "100" },
+                { index: 1, label: 'Type', class: 'Type', active: true, display: true, width: "100" },
+                { index: 2, label: 'Date', class: 'Date', active: true, display: true, width: "150" },
+                { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+            ]
+        }else if(currenttablename === "tblTimeSheet"){
+           reset_data = [
+                { index: 0, label: 'Employee', class: 'Name', active: true, display: true, width: "100" },
+                { index: 1, label: 'Date', class: 'Date', active: true, display: true, width: "100" },
+                { index: 2, label: 'Job', class: 'Job', active: true, display: true, width: "150" },
+                { index: 3, label: 'Product', class: 'Product', active: true, display: true, width: "150" },
+                { index: 4, label: 'HiddenHours', class: 'RegHours', active: false, display: true, width: "100" },
+                { index: 5, label: 'Hours', class: 'RegHoursOne', active: true, display: true, width: "50" },
+                { index: 6, label: 'Overtime', class: 'Overtime', active: true, display: true, width: "80" },
+                { index: 7, label: 'Double', class: 'Double', active: true, display: true, width: "50" },
+                { index: 8, label: 'Additional', class: 'Additional', active: true, display: true, width: "100" },
+                { index: 9, label: 'Tips', class: 'PaycheckTips', active: true, display: true, width: "50" },
+                { index: 10, label: 'Technical Notes', class: 'Notes', active: true, display: true, width: "100" },
+                { index: 11, label: 'Break', class: 'Description', active: true, display: true, width: "100" },
+                { index: 12, label: 'Status', class: 'Status', active: true, display: true, width: "100" },
+                { index: 13, label: 'Invoiced', class: 'Invoiced', active: false, display: true, width: "100" },
+                { index: 14, label: 'Hourly Rate', class: 'Hourlyrate', active: false, display: true, width: "100" },
+                { index: 15, label: 'View', class: 'View', active: true, display: true, width: "100" },
+            ]
+        }else if(currenttablename === "tblTimeSheet"){
+           reset_data = [
+                { index: 0, label: 'ID', class: 'colID', active: true, display: true, width: "100" },
+                { index: 1, label: 'Employee', class: 'colName', active: true, display: true, width: "100" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 3, label: 'Job', class: 'colJob', active: true, display: true, width: "150" },
+                { index: 4, label: 'Product', class: 'colRate', active: true, display: true, width: "150" },
+                { index: 5, label: 'HiddenHours', class: 'colRegHours hiddenColumn', active: false, display: true, width: "100" },
+                { index: 6, label: 'Hours', class: 'colRegHoursOne', active: true, display: true, width: "100" },
+                { index: 7, label: 'Overtime', class: 'colOvertime', active: true, display: true, width: "100" },
+                { index: 8, label: 'Double', class: 'colDouble', active: true, display: true, width: "100" },
+                { index: 9, label: 'Additional', class: 'colAdditional', active: true, display: true, width: "100" },
+                { index: 10, label: 'Tips', class: 'colPaycheckTips', active: true, display: true, width: "100" },
+                { index: 11, label: 'Technical Notes', class: 'colNotes', active: true, display: true, width: "100" },
+                { index: 12, label: 'Break', class: 'colDescription', active: true, display: true, width: "100" },
+                { index: 13, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                { index: 14, label: 'Invoiced', class: 'colInvoiced hiddenColumn', active: false, display: true, width: "100" },
+                { index: 15, label: 'Hourly Rate', class: 'colHourlyrate hiddenColumn', active: false, display: true, width: "100" },
+                { index: 16, label: 'View', class: 'colView', active: true, display: true, width: "100" },
+            ]
+        } else if(currenttablename == 'tblWorkorderList') {
+            reset_data = [
+                { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
+                { index: 1, label: "SalesOrderID", class: "colOrderNumber", width: "80", active: true, display: true },
+                { index: 2, label: "Customer", class: "colCustomer", width: "80", active: true, display: true },
+                { index: 3, label: "PO Number", class: "colPONumber", width: "100", active: true, display: true },
+                { index: 4, label: "Sale Date", class: "colSaleDate", width: "200", active: true, display: true },
+                { index: 5, label: "Due Date", class: "colDueDate", width: "200", active: true, display: true },
+                { index: 6, label: "Product", class: "colProductName", width: "120", active: true, display: true },
+                { index: 7, label: "Amount", class: "colAmount", width: "80", active: true, display: true },
+                { index: 8, label: "Comments", class: "colComment", width: "", active: true, display: true },
             ];
         }
+
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -188,7 +261,7 @@ Template.transaction_list.onRendered(function() {
     };
 
     //Banking Overview Data
-    templateObject.getBankingOverviewData = async function(viewdeleted) {
+    templateObject.getBankingOverviewData = async function(deleteFilter = false) {
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -208,11 +281,14 @@ Template.transaction_list.onRendered(function() {
         getVS1Data('TBankAccountReport').then(function(dataObject) {
 
             if (dataObject.length == 0) {
-                sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+                sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
                     addVS1Data('TBankAccountReport', JSON.stringify(data));
                     let lineItems = [];
                     let lineItemObj = {};
                     let lineID = "";
+
+                    let useData = data.tbankaccountreport;
+
                     for (let i = 0; i < data.tbankaccountreport.length; i++) {
                         let amount = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amount) || 0.00;
                         let amountInc = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amountinc) || 0.00;
@@ -258,8 +334,6 @@ Template.transaction_list.onRendered(function() {
                             lineID = data.tbankaccountreport[i].TransID;
                         }
 
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tbankaccountreport;
 
                         var dataList = [
                             useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
@@ -272,6 +346,7 @@ Template.transaction_list.onRendered(function() {
                             amountInc || 0.00,
                             useData[i].ClassName || '',
                             useData[i].ChqRefNo || '',
+                            useData[i].Active == true ? '' : "In-Active",
                             useData[i].Notes || '',
                             // creditex: creditEx || 0.00,
                             // customername: useData[i].ClientName || '',
@@ -295,8 +370,6 @@ Template.transaction_list.onRendered(function() {
                     //awaitingpaymentCount
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
-
-
                         setTimeout(function() {
                             MakeNegative();
                         }, 100);
@@ -313,11 +386,12 @@ Template.transaction_list.onRendered(function() {
                                 {
                                     targets: 0,
                                     className: "colSortDate hiddenColumn",
-                                    type: "date"
+                                    width: "100px",
                                 },
                                 {
                                     targets: 1,
                                     className: trans_displayfields[1].active == true ? "colPaymentDate" : "colPaymentDate hiddenColumn",
+                                    width: "100px",
                                     createdCell: function(td, cellData, rowData, row, col) {
                                         $(td).closest("tr").attr("id", rowData[2]);
                                         $(td).closest("tr").addClass("dnd-moved");
@@ -326,36 +400,48 @@ Template.transaction_list.onRendered(function() {
                                 {
                                     targets: 2,
                                     className: trans_displayfields[2].active == true ? "colAccountId" : "colAccountId hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 3,
                                     className: trans_displayfields[3].active == true ? "colBankAccount" : "colBankAccount hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 4,
                                     className: trans_displayfields[4].active == true ? "colType" : "colType hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 5,
                                     className: trans_displayfields[5].active == true ? "colPaymentAmount" : "colPaymentAmount hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 6,
                                     className: trans_displayfields[6].active == true ? "colDebitEx" : "colDebitEx hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 7,
                                     className: trans_displayfields[7].active == true ? "colDepartment" : "colDepartment hiddenColumn",
+                                    width: "100px",
                                 },
                                 {
                                     targets: 8,
                                     className: trans_displayfields[8].active == true ? "colchqrefno" : "colchqrefno hiddenColumn",
+                                    width: "120px",
                                 },
                                 {
                                     targets: 9,
-                                    className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                    className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                    width: "100px",
                                 },
-
+                                {
+                                    targets: 10,
+                                    className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                    width: "100px",
+                                },
                             ],
                             "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                             buttons: [{
@@ -492,9 +578,9 @@ Template.transaction_list.onRendered(function() {
                             "fnInitComplete": function () {
                                 this.fnPageChange('last');
                                 if(data.Params.Search.replace(/\s/g, "") == ""){
-                                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                                 }else{
-                                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                                 }
                                 $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -648,7 +734,8 @@ Template.transaction_list.onRendered(function() {
                         lineID = useData[i].TransID;
                     }
 
-
+                    if(useData[i].Active == false)
+                        alert(useData[i]);
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         '<span style="display:none;">' + (useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date).toString() + '</span>' +
@@ -660,6 +747,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
+                        useData[i].Active == true ? '' : "In-Active",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -744,11 +832,16 @@ Template.transaction_list.onRendered(function() {
                             {
                                 targets: 8,
                                 className: trans_displayfields[8].active == true ? "colchqrefno" : "colchqrefno hiddenColumn",
-                                width: "100px",
+                                width: "120px",
                             },
                             {
                                 targets: 9,
-                                className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 10,
+                                className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                 width: "100px",
                             },
                         ],
@@ -887,9 +980,9 @@ Template.transaction_list.onRendered(function() {
                         "fnInitComplete": function () {
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }else{
-                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }
                             $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -980,11 +1073,13 @@ Template.transaction_list.onRendered(function() {
 
             }
         }).catch(function(err) {
-            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0,viewdeleted).then(function(data) {
+            sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0,deleteFilter).then(function(data) {
                 addVS1Data('TBankAccountReport', JSON.stringify(data));
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
+                let useData = data.tbankaccountreport;
+
                 for (let i = 0; i < data.tbankaccountreport.length; i++) {
                     let amount = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amount) || 0.00;
                     let amountInc = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amountinc) || 0.00;
@@ -1030,9 +1125,6 @@ Template.transaction_list.onRendered(function() {
                         lineID = data.tbankaccountreport[i].TransID;
                     }
 
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tbankaccountreport;
-
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         useData[i].Date != '' ? moment(useData[i].Date).format("DD/MM/YYYY") : useData[i].Date,
@@ -1043,6 +1135,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
+                        useData[i].Active == true ? '' : "In-Active",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -1083,11 +1176,12 @@ Template.transaction_list.onRendered(function() {
                             {
                                 targets: 0,
                                 className: "colSortDate hiddenColumn",
-                                type: "date"
+                                width: "100px",
                             },
                             {
                                 targets: 1,
                                 className: trans_displayfields[1].active == true ? "colPaymentDate" : "colPaymentDate hiddenColumn",
+                                width: "100px",
                                 createdCell: function(td, cellData, rowData, row, col) {
                                     $(td).closest("tr").attr("id", rowData[2]);
                                     $(td).closest("tr").addClass("dnd-moved");
@@ -1096,34 +1190,47 @@ Template.transaction_list.onRendered(function() {
                             {
                                 targets: 2,
                                 className: trans_displayfields[2].active == true ? "colAccountId" : "colAccountId hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 3,
                                 className: trans_displayfields[3].active == true ? "colBankAccount" : "colBankAccount hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 4,
                                 className: trans_displayfields[4].active == true ? "colType" : "colType hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 5,
                                 className: trans_displayfields[5].active == true ? "colPaymentAmount" : "colPaymentAmount hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 6,
                                 className: trans_displayfields[6].active == true ? "colDebitEx" : "colDebitEx hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 7,
                                 className: trans_displayfields[7].active == true ? "colDepartment" : "colDepartment hiddenColumn",
+                                width: "100px",
                             },
                             {
                                 targets: 8,
                                 className: trans_displayfields[8].active == true ? "colchqrefno" : "colchqrefno hiddenColumn",
+                                width: "120px",
                             },
                             {
                                 targets: 9,
-                                className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 10,
+                                className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                width: "100px",
                             },
                         ],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1261,9 +1368,9 @@ Template.transaction_list.onRendered(function() {
                         "fnInitComplete": function () {
                             this.fnPageChange('last');
                             if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }else{
-                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblBankingOverview_filter");
+                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblBankingOverview_filter");
                             }
                             $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshBankingOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankingOverview_filter");
 
@@ -1360,8 +1467,8 @@ Template.transaction_list.onRendered(function() {
         //$(".fullScreenSpin").css("display", "none");
     }
 
-    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate) {
-        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0).then(function(data) {
+    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate, deleteFilter = false) {
+        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(function(data) {
 
             addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
                 window.open('/bankingoverview?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate='+ignoreDate,'_self');
@@ -1375,6 +1482,1148 @@ Template.transaction_list.onRendered(function() {
             $('.fullScreenSpin').css('display','none');
             // Meteor._reload.reload();
         });
+    }
+
+    templateObject.getPayRunHistoryData = function(){
+        getVS1Data('TPayRunHistory').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
+                    return await payRunHandler.loadFromLocal();
+                  }, {
+                    forceOverride: false,
+                    validate: (cachedResponse) => {
+                      return true;
+                    }
+                  });
+
+                data = data.response;
+                const payRuns = PayRun.fromList(data);
+                await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
+                templateObject.displayPayRunHistory(payRuns);
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayPayRunHistory(data);
+            }
+        }).catch(async function (err) {
+            let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
+                return await payRunHandler.loadFromLocal();
+              }, {
+                forceOverride: false,
+                validate: (cachedResponse) => {
+                  return true;
+                }
+              });
+
+            data = data.response;
+            const payRuns = PayRun.fromList(data);
+            await addVS1Data('TPayRunHistory', JSON.stringify(payRuns));
+            templateObject.displayPayRunHistory(payRuns);
+        });
+    }
+
+    templateObject.displayPayRunHistory = function(payRunsHistory){
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineID = "";
+        let splashArrayPayRunHistory = new Array();
+        let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        for (let i = 0; i < data.length; i++) {
+            var dataPayRunHistory = [
+                data[i].calendar.ID || "",
+                data[i].calendar.PayrollCalendarName || "",
+                data[i].calendar.PayrollCalendarPayPeriod || "",
+                moment(data[i].calendar.PayrollCalendarFirstPaymentDate).format("Do MMM YYYY") || "",
+                data[i].wages || "",
+                data[i].taxes || "",
+                data[i].superAnnuation || "",
+                data[i].calendar.netPay || "",
+              ];
+            splashArrayPayRunHistory.push(dataPayRunHistory);
+        }
+        templateObject.datatablerecords.set(splashArrayPayRunHistory);
+        if (templateObject.datatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#tblPayRunHistory').DataTable({
+                data: splashArrayPayRunHistory,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        className: "colPayRunCalendar",
+                        targets: 1,
+                        width:'100px',
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
+                    },
+                    {
+                        className: "colPayRunPeriod",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunPaymentDate",
+                        targets: 3,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunWages",
+                        targets: 4,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunTax",
+                        targets: 5,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunSuper",
+                        targets: 6,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunNetPay",
+                        targets: 7,
+                        width:'100px'
+                    },
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Pay Run History - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Pay Run History',
+                    filename: "Pay Run History - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Pay Run History - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function() {
+                    $('#tblPayRunHistory').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblPayRunHistory_ellipsis').addClass('disabled');
+
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+                    } else {}
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+
+                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                            }else{
+                            }
+                        });
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblPayRunHistory_filter");
+                    }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblPayRunHistory_filter");
+                    }
+                    $("<button class='btn btn-primary btnRefreshBankingOverview' type='button' id='btnRefreshPayRunHistory' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayRunHistory_filter");
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+                },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+
+            }).on('column-reorder', function() {
+
+            });
+            $('.fullScreenSpin').css('display', 'none');
+
+        }, 0);
+
+        var columns = $('#tblPayRunHistory th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+    templateObject.getPayrollLeaveData = function(){
+        getVS1Data('TLeavRequest').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                let data = await CachedHttp.get(erpObject.TLeavRequest, async () => {
+                    return await payRunHandler.loadFromLocal();
+                  }, {
+                    forceOverride: false,
+                    validate: (cachedResponse) => {
+                      return true;
+                    }
+                  });
+
+                data = data.response;
+                const payRuns = PayRun.fromList(data);
+                await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
+                templateObject.displayPayrollLeaveData(payRuns);
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayPayrollLeaveData(data);
+            }
+        }).catch(async function (err) {
+            let data = await CachedHttp.get(erpObject.TLeavRequest, async () => {
+                return await payRunHandler.loadFromLocal();
+              }, {
+                forceOverride: false,
+                validate: (cachedResponse) => {
+                  return true;
+                }
+              });
+
+            data = data.response;
+            const payRuns = PayRun.fromList(data);
+            await addVS1Data('TLeavRequest', JSON.stringify(payRuns));
+            templateObject.displayPayrollLeaveData(payRuns);
+        });
+    }
+
+    templateObject.displayPayrollLeaveData = function(payRunsHistory){
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineID = "";
+        let splashArrayPayRunHistory = new Array();
+        // let data = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        let data = payRunsHistory.tleavrequest.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+        for (let i = 0; i < data.length; i++) {
+            var dataPayRunHistory = [
+                data[i].fields.ID || "",
+                data[i].fields.LeaveType || "",
+                data[i].fields.LeaveCalcMethod || "",
+                data[i].fields.HoursAccruedAnnually || "",
+                data[i].fields.HoursAccruedAnnuallyFullTimeEmp || "",
+              ];
+            splashArrayPayRunHistory.push(dataPayRunHistory);
+        }
+        templateObject.datatablerecords.set(splashArrayPayRunHistory);
+        if (templateObject.datatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#tblPayleaveToReview').DataTable({
+                data: splashArrayPayRunHistory,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        className: "colName",
+                        targets: 1,
+                        width:'100px',
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
+                    },
+                    {
+                        className: "colType",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colDate",
+                        targets: 3,
+                        width:'100px'
+                    },
+                    {
+                        className: "colDescription",
+                        targets: 4,
+                        width:'100px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 5,
+                        width:'100px'
+                    }
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Pay Leave To Review',
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Pay Leave To Review - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function() {
+                    $('#tblPayleaveToReview').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblPayleaveToReview_ellipsis').addClass('disabled');
+
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+                    } else {}
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+
+                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                            }else{
+                            }
+                        });
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblPayleaveToReview_filter");
+                    }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblPayleaveToReview_filter");
+                    }
+                    $("<button class='btn btn-primary btnRefreshPayLeaveToReview' type='button' id='btnRefreshPayLeaveToReview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblPayleaveToReview_filter");
+
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+                },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+
+            }).on('column-reorder', function() {
+
+            });
+            $('.fullScreenSpin').css('display', 'none');
+
+        }, 0);
+
+        var columns = $('#tblPayleaveToReview th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    templateObject.timeFormat = function(hours) {
+        var decimalTime = parseFloat(hours).toFixed(2);
+        decimalTime = decimalTime * 60 * 60;
+        var hours = Math.floor((decimalTime / (60 * 60)));
+        decimalTime = decimalTime - (hours * 60 * 60);
+        var minutes = Math.abs(decimalTime / 60);
+        decimalTime = decimalTime - (minutes * 60);
+        hours = ("0" + hours).slice(-2);
+        minutes = ("0" + Math.round(minutes)).slice(-2);
+        let time = hours + ":" + minutes;
+        return time;
+    }
+
+    templateObject.getTimeSheetListData = function(){
+        getVS1Data('TTimeSheet').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
+                    return await sideBarService.getAllTimeSheetList();
+                }, {
+                    useIndexDb: true,
+                    useLocalStorage: false,
+                    fallBackToLocal: true,
+                    forceOverride: refresh,
+                    validate: cachedResponse => {
+                        return true;
+                    }
+                });
+                await addVS1Data('TTimeSheet', JSON.stringify(data));
+                templateObject.displayTimeSheetListData(data);
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayTimeSheetListData(data);
+            }
+        }).catch(async function (err) {
+            let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
+                return await sideBarService.getAllTimeSheetList();
+            }, {
+                useIndexDb: true,
+                useLocalStorage: false,
+                fallBackToLocal: true,
+                forceOverride: refresh,
+                validate: cachedResponse => {
+                    return true;
+                }
+            });
+            await addVS1Data('TTimeSheet', JSON.stringify(data));
+            templateObject.displayTimeSheetListData(data);
+        });
+    }
+
+    templateObject.displayTimeSheetListData = function(data){
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        let lineItems = [];
+        let lineItemObj = {};
+        let lineID = "";
+        let splashArrayTimeSheetList = new Array();
+        for (let t = 0; t < data.ttimesheet.length; t++) {
+            let sortdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("YYYY/MM/DD") : data.ttimesheet[t].fields.TimeSheetDate;
+            let timesheetdate = data.ttimesheet[t].fields.TimeSheetDate != '' ? moment(data.ttimesheet[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data.ttimesheet[t].fields.TimeSheetDate;
+            let hoursFormatted = templateObject.timeFormat(data.ttimesheet[t].fields.Hours) || '';
+            let description = '';
+            let lineEmpID = '';
+            if (data.ttimesheet[t].fields.Logs) {
+                if (Array.isArray(data.ttimesheet[t].fields.Logs)) {
+                    // It is array
+                    lineEmpID = data.ttimesheet[t].fields.Logs[0].fields.EmployeeID || '';
+                    description = data.ttimesheet[t].fields.Logs[data.ttimesheet[t].fields.Logs.length - 1].fields.Description || '';
+                } else {
+                    lineEmpID = data.ttimesheet[t].fields.Logs.fields.EmployeeID || '';
+                    description = data.ttimesheet[t].fields.Logs.fields.Description || '';
+                }
+            }
+            let checkStatus = data.ttimesheet[t].fields.Status || 'Unprocessed';
+            var dataTimeSheet = [
+                data.ttimesheet[t].fields.ID || "",
+                data.ttimesheet[t].fields.EmployeeName || "",
+                '<span style="display:none;">' + sortdate + '</span> ' + timesheetdate || '',
+                data.ttimesheet[t].fields.Job || '',
+                data.ttimesheet[t].fields.ServiceName || '',
+                '<input class="colRegHours highlightInput" type="number" value="' + data.ttimesheet[t].fields.Hours + '"><span class="colRegHours" style="display: none;">' + data.ttimesheet[t].fields.Hours + '</span>' || '',
+                '<input class="colRegHoursOne highlightInput" type="text" value="' + hoursFormatted + '" autocomplete="off">' || '',
+                '<input class="colOvertime highlightInput" type="number" value="0"><span class="colOvertime" style="display: none;">0</span>' || '',
+                '<input class="colDouble highlightInput" type="number" value="0"><span class="colDouble" style="display: none;">0</span>' || '',
+                '<input class="colAdditional highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colAdditional" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                '<input class="colPaycheckTips highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colPaycheckTips" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+
+                data.ttimesheet[t].fields.Notes || '',
+                description || '',
+                checkStatus || '',
+                "",
+                data.ttimesheet[t].fields.HourlyRate || '',
+                '<a href="/timesheettimelog?id=' + data.ttimesheet[t].fields.ID + '" class="btn btn-sm btn-success btnTimesheetListOne" style="width: 36px;" id="" autocomplete="off"><i class="far fa-clock"></i></a>' || ''
+              ];
+            splashArrayTimeSheetList.push(dataTimeSheet);
+        }
+        templateObject.datatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.datatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#tblTimeSheet').DataTable({
+                data: splashArrayTimeSheetList,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        className: "colName",
+                        targets: 1,
+                        width:'100px',
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
+                    },
+                    {
+                        className: "colDate",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colJob",
+                        targets: 3,
+                        width:'100px'
+                    },
+                    {
+                        className: "colProduct",
+                        targets: 4,
+                        width:'100px'
+                    },
+                    {
+                        className: "colRegHours hiddenColumn",
+                        targets: 5,
+                        width:'100px'
+                    },
+                    {
+                        className: "colRegHoursOne",
+                        targets: 6,
+                        width:'50px'
+                    },
+                    {
+                        className: "colOvertime",
+                        targets: 7,
+                        width:'80px'
+                    },
+                    {
+                        className: "colDouble",
+                        targets: 8,
+                        width:'50px'
+                    },
+                    {
+                        className: "colAdditional",
+                        targets: 9,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPaycheckTips",
+                        targets: 10,
+                        width:'50px'
+                    },
+                    {
+                        className: "colNotes",
+                        targets: 11,
+                        width:'100px'
+                    },
+                    {
+                        className: "colDescription",
+                        targets: 12,
+                        width:'100px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 13,
+                        width:'100px'
+                    },
+                    {
+                        className: "colInvoiced hiddenColumn",
+                        targets: 14,
+                        width:'100px'
+                    },
+                    {
+                        className: "colHourlyrate hiddenColumn",
+                        targets: 15,
+                        width:'100px'
+                    },
+                    {
+                        className: "colView",
+                        targets: 16,
+                        width:'100px'
+                    },
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Pay Leave To Review',
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Pay Leave To Review - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function() {
+                    $('#tblTimeSheet').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblTimeSheet_ellipsis').addClass('disabled');
+
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+                    } else {}
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+
+                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                            }else{
+                            }
+                        });
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblTimeSheet_filter");
+                    }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblTimeSheet_filter");
+                    }
+                    $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+                },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+
+            }).on('column-reorder', function() {
+
+            });
+            $('.fullScreenSpin').css('display', 'none');
+
+        }, 0);
+
+        var columns = $('#tblTimeSheet th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    templateObject.getAllAppointmentListData = function(){
+        getVS1Data('TAppointmentList').then(async function(dataObject) {
+            if (dataObject.length == 0) {
+            }else{
+
+            }
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    }
+
+    templateObject.displayAppointmentListData = function(){
+    }
+    //workorders data
+    templateObject.getWorkorderData = async function(viewDeleted) {
+        getVS1Data('TVS1Workorder').then(function(dataObject) {
+            if(dataObject.length == 0) {$('.fullScreenSpin').css('display', 'none')}
+            else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tvs1workorder;
+                // if(data.Params.IgnoreDates == true){
+                //     $('#dateFrom').attr('readonly', true);
+                //     $('#dateTo').attr('readonly', true);
+                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
+                // }else{
+                //     $('#dateFrom').attr('readonly', false);
+                //     $('#dateTo').attr('readonly', false);
+                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+                // }
+                let lineItems = [];
+                let lineItemObj = {};
+                let lineID = "";
+                for (let i = 0; i < useData.length; i++) {
+                    var dataList = [
+                        useData[i].fields.ID ,
+                        useData[i].fields.SaleID || '',
+                        useData[i].fields.Customer || '',
+                        useData[i].fields.PONumber || '',
+                        useData[i].fields.SaleDate || '',
+                        useData[i].fields.DueDate || '',
+                        useData[i].fields.ProductName || '',
+                        useData[i].fields.Quantity || '',
+                        useData[i].fields.Comment || '',
+                    ];
+                        dataTableList.push(dataList);
+
+                }
+                //awaitingpaymentCount
+                templateObject.datatablerecords.set(dataTableList);
+                if (templateObject.datatablerecords.get()) {
+
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                }
+
+                let trans_displayfields = templateObject.trans_displayfields.get();
+
+                $('.fullScreenSpin').css('display', 'none');
+                setTimeout(function() {
+                    $('#tblWorkorderList').DataTable({
+                        // dom: 'lBfrtip',
+                        //data: dataTableList,
+                        data: dataTableList,
+                        columnDefs: [
+                            {
+                                targets: 0,
+                                className: "colID hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 1,
+                                className: trans_displayfields[1].active == true ? "colOrderNumber" : "colOrderNumber hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 2,
+                                className: trans_displayfields[2].active == true ? "colCustomer" : "colCustomer hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 3,
+                                className: trans_displayfields[3].active == true ? "colPONumber" : "colPONumber hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 4,
+                                className: trans_displayfields[4].active == true ? "colSaleDate" : "colSaleDate hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 5,
+                                className: trans_displayfields[5].active == true ? "colDueDate" : "colDueDate hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 6,
+                                className: trans_displayfields[6].active == true ? "colProductName" : "colProductName hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 7,
+                                className: trans_displayfields[7].active == true ? "colAmount" : "colAmount hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 8,
+                                className: trans_displayfields[8].active == true ? "colComment" : "colComment hiddenColumn",
+                                width: "100px",
+                            },
+                        ],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [{
+                            extend: 'csvHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Work Order List - " + moment().format(),
+                            orientation: 'portrait',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }, {
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Work Order List',
+                            filename: "Work Order List - " + moment().format(),
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                            {
+                                extend: 'excelHtml5',
+                                title: '',
+                                download: 'open',
+                                className: "btntabletoexcel hiddenColumn",
+                                filename: "Work Order List - " + moment().format(),
+                                orientation: 'portrait',
+                                exportOptions: {
+                                    columns: ':visible'
+                                }
+                            }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        // bStateSave: true,
+                        // rowId: 0,
+                        pageLength: initialReportDatatableLoad,
+                        "bLengthChange": false,
+                        lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                        // "aaSorting": [[1,'desc']],
+                        action: function() {
+                            $('#tblWorkorderList').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblWorkorderList_ellipsis').addClass('disabled');
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    let dataLenght = oSettings._iDisplayLength;
+
+                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                    if(data.Params.IgnoreDates == true){
+
+                                            $('.fullScreenSpin').css('display', 'none');
+                                    }else{
+                                            $('.fullScreenSpin').css('display', 'none');
+                                    }
+                                });
+
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        language: { search: "",searchPlaceholder: "Search List..." },
+                        "fnInitComplete": function () {
+                            this.fnPageChange('last');
+                                // $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblWorkorderList_filter");
+                            $("<button class='btn btn-primary btnRefreshWorkorderList' type='button' id='btnRefreshWorkorderList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblWorkorderList_filter");
+
+                            $('.myvarFilterForm').appendTo(".colDateFilter");
+                        },
+                        "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                            let countTableData = data.tvs1workorder.length || 0; //get count from API data
+
+                            return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                        }
+
+                    }).on('page', function() {
+                        setTimeout(function() {
+                            MakeNegative();
+                        }, 100);
+                        let draftRecord = templateObject.datatablerecords.get();
+                        templateObject.datatablerecords.set(draftRecord);
+
+                    }).on('column-reorder', function() {
+
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+
+                }, 0);
+
+                var columns = $('#tblWorkorderList th');
+                let sTible = "";
+                let sWidth = "";
+                let sIndex = "";
+                let sVisible = "";
+                let columVisible = false;
+                let sClass = "";
+                $.each(columns, function(i, v) {
+                    if (v.hidden == false) {
+                        columVisible = true;
+                    }
+                    if ((v.className.includes("hiddenColumn"))) {
+                        columVisible = false;
+                    }
+                    sWidth = v.style.width.replace('px', "");
+
+                    let datatablerecordObj = {
+                        sTitle: v.innerText || '',
+                        sWidth: sWidth || '',
+                        sIndex: v.cellIndex || 0,
+                        sVisible: columVisible || false,
+                        sClass: v.className || ''
+                    };
+                    tableHeaderList.push(datatablerecordObj);
+                });
+                templateObject.tableheaderrecords.set(tableHeaderList);
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                $('#tblWorkorderList tbody').on('click', 'tr', function() {
+                    var listData = $(this).closest('tr').attr('id');
+                    var orderId = $(event.target).closest("tr").find(".colID").text();
+                    if ((listData) && (orderId)) {
+                        FlowRouter.go('/workordercard?id='+ orderId)
+                    }
+                });
+
+
+            }
+        })
     }
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
@@ -1395,6 +2644,16 @@ Template.transaction_list.onRendered(function() {
     //Check URL to make right call.
     if (currenttablename == "tblBankingOverview") {
         templateObject.getBankingOverviewData("");
+    } else if (currenttablename === "tblPayRunHistory"){
+        templateObject.getPayRunHistoryData("");
+    }else if (currenttablename === "tblPayleaveToReview"){
+        templateObject.getPayrollLeaveData("");
+    }else if (currenttablename === "tblTimeSheet"){
+        templateObject.getTimeSheetListData()
+    }else if (currenttablename === "tblappointmentlist"){
+        templateObject.getAllAppointmentListData();
+    }else if (currenttablename == 'tblWorkorderList') {
+        templateObject.getWorkorderData("");
     }
     tableResize();
 
@@ -1412,12 +2671,24 @@ Template.transaction_list.events({
         e.stopImmediatePropagation();
         const templateObject = Template.instance();
         let currenttablename = await templateObject.tablename.get() || '';
-        $('.btnViewDeleted').css('display', 'none');
-        $('.btnHideDeleted').css('display', 'inline-block');
+        // $('.btnViewDeleted').css('display', 'none');
+        // $('.btnHideDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
-            templateObject.getBankingOverviewData();
+            templateObject.getBankingOverviewData(true);
+        }else if (currenttablename === "tblPayRunHistory"){
+            await clearData('TPayRunHistory');
+            templateObject.getPayRunHistoryData("");
+        }else if (currenttablename === "tblPayleaveToReview"){
+            await clearData('TLeavRequest');
+            templateObject.getPayrollLeaveData("");
+        }else if (currenttablename === "tblTimeSheet"){
+            await clearData('TTimeSheet');
+            templateObject.getTimeSheetListData()
+        }else if (currenttablename === "tblappointmentlist"){
+            templateObject.getAllAppointmentListData();
+            templateObject.getBankingOverviewData(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -1429,12 +2700,23 @@ Template.transaction_list.events({
         // var datatable = $(`#${currenttablename}`).DataTable();
         // datatable.clear();
         // datatable.draw(false);
-        $('.btnHideDeleted').css('display', 'none');
-        $('.btnViewDeleted').css('display', 'inline-block');
+        // $('.btnHideDeleted').css('display', 'none');
+        // $('.btnViewDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
             templateObject.getBankingOverviewData();
+        }else if (currenttablename === "tblPayRunHistory"){
+            await clearData('TPayRunHistory');
+            templateObject.getPayRunHistoryData("");
+        }else if (currenttablename === "tblPayleaveToReview"){
+            await clearData('TLeavRequest');
+            templateObject.getPayrollLeaveData("");
+        }else if (currenttablename === "tblTimeSheet"){
+            await clearData('TTimeSheet');
+            templateObject.getTimeSheetListData()
+        }else if (currenttablename === "tblappointmentlist"){
+            templateObject.getAllAppointmentListData();
         }
 
     },
@@ -1445,8 +2727,13 @@ Template.transaction_list.events({
         await $('.' + colClassName).css('width', range);
         $('.dataTable').resizable();
     },
-    'click .chkDatatable': function(event) {
+    'click .chkDatatable': async function(event) {
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+
+        let range = $('.rngRange' +  columnDataValue).val() || 0;
+        await $('.' + columnDataValue).css('width', range);
+        $('.dataTable').resizable();
+
         if ($(event.target).is(':checked')) {
             $('.' + columnDataValue).addClass('showColumn');
             $('.' + columnDataValue).removeClass('hiddenColumn');
