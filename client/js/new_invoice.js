@@ -11086,6 +11086,7 @@ Template.new_invoice.events({
                   Repeat_MonthOffset: 0,
                 },
               };
+              console.log(dayObj)
               var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
               var oPost = new XMLHttpRequest();
               oPost.open(
