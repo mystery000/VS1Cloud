@@ -102,7 +102,8 @@ Template.transaction_list.onRendered(function() {
                 { index: 6, label: "Amount (Inc)", class: "DebitEx", width: "120", active: true, display: true },
                 { index: 7, label: "Department", class: "Department", width: "80", active: true, display: true },
                 { index: 8, label: "Chq Ref No", class: "chqrefno", width: "110", active: false, display: true },
-                { index: 9, label: "Comments", class: "Notes", width: "", active: true, display: true },
+                { index: 9, label: "Status", class: "Status", width: "100", active: true, display: true },
+                { index: 10, label: "Comments", class: "Notes", width: "", active: true, display: true },
             ];
         }else if(currenttablename === "tblPayRunHistory"){
             reset_data = [
@@ -345,6 +346,7 @@ Template.transaction_list.onRendered(function() {
                             amountInc || 0.00,
                             useData[i].ClassName || '',
                             useData[i].ChqRefNo || '',
+                            useData[i].Active == true ? '' : "Deleted",
                             useData[i].Notes || '',
                             // creditex: creditEx || 0.00,
                             // customername: useData[i].ClientName || '',
@@ -368,8 +370,6 @@ Template.transaction_list.onRendered(function() {
                     //awaitingpaymentCount
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
-
-
                         setTimeout(function() {
                             MakeNegative();
                         }, 100);
@@ -434,7 +434,12 @@ Template.transaction_list.onRendered(function() {
                                 },
                                 {
                                     targets: 9,
-                                    className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                    className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                    width: "100px",
+                                },
+                                {
+                                    targets: 10,
+                                    className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                     width: "100px",
                                 },
                             ],
@@ -729,7 +734,8 @@ Template.transaction_list.onRendered(function() {
                         lineID = useData[i].TransID;
                     }
 
-
+                    if(useData[i].Active == false)
+                        alert(useData[i]);
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         '<span style="display:none;">' + (useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date).toString() + '</span>' +
@@ -741,6 +747,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
+                        useData[i].Active == true ? '' : "Deleted",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -829,7 +836,12 @@ Template.transaction_list.onRendered(function() {
                             },
                             {
                                 targets: 9,
-                                className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 10,
+                                className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                 width: "100px",
                             },
                         ],
@@ -1123,6 +1135,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
+                        useData[i].Active == true ? '' : "Deleted",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -1211,7 +1224,12 @@ Template.transaction_list.onRendered(function() {
                             },
                             {
                                 targets: 9,
-                                className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 10,
+                                className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                 width: "100px",
                             },
                         ],
@@ -2658,7 +2676,7 @@ Template.transaction_list.events({
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
-            templateObject.getBankingOverviewData();
+            templateObject.getBankingOverviewData(true);
         }else if (currenttablename === "tblPayRunHistory"){
             await clearData('TPayRunHistory');
             templateObject.getPayRunHistoryData("");
