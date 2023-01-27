@@ -27,6 +27,7 @@ import './accounts/accounts-settings.js'
 import './customers/customers-settings.js'
 import './suppliers/suppliers-settings.js'
 import './bankaccounts/bankaccounts-settings.js'
+import './dashboard/dashboard-settings.js'
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
@@ -287,8 +288,8 @@ Template.setup.onRendered(function () {
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    window.location.href = "/";
-    // FlowRouter.go("onloginsuccess");
+    // window.location.href = "/";
+    FlowRouter.go("onloginsuccess");
     LoadingOverlay.hide();
 
   };

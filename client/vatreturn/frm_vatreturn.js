@@ -1070,7 +1070,7 @@ Template.vatreturn.onRendered(function() {
     };
 
     $('#sltDepartment').editableSelect();
-
+    $('#sltDepartment').val("All");
     $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
@@ -1400,7 +1400,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#tax5cost").val(data.tvatreturn[0].fields.VAT5);
                                 $("#prt_tax5cost").html("R" + data.tvatreturn[0].fields.VAT5);
                                 $("#tax5rate").val(data.tvatreturn[0].fields.VAT5Per);
-                                $("#prt_tax5rate").html("R" + data.tvatreturn[0].fields.VAT5Per);
+                                $("#prt_tax5rate").html(data.tvatreturn[0].fields.VAT5Per);
                                 var tax6cost = parseFloat(data.tvatreturn[0].fields.VAT5) * parseFloat(data.tvatreturn[0].fields.VAT5Per) / 100;
                                 $("#tax6cost").val(tax6cost.toFixed(2));
                                 $("#prt_tax6cost").html("R" + tax6cost);
@@ -1556,6 +1556,36 @@ Template.vatreturn.onRendered(function() {
                                 var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
                                 $("#tax38cost").val(tax38cost.toFixed(2));
                                 $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
+
+                                $("#payment_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
+                                $("#prt_payment_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
+                                $("#payment_period").val(data.tvatreturn[0].fields.PaymentPeriod);
+                                $("#prt_payment_period").html(data.tvatreturn[0].fields.PaymentPeriod);
+                                $("#payment_penalty").val(data.tvatreturn[0].fields.PenaltyInterest);
+                                $("#prt_payment_penalty").html("R" + data.tvatreturn[0].fields.PenaltyInterest);
+                                var payment_vatcost = tax20cost;
+                                $("#payment_vat").val(payment_vatcost);
+                                $("#prt_payment_vat").html("R" + payment_vatcost);
+                                var payment_dieselcost = tax25cost + tax29cost + tax33cost;
+                                $("#payment_diesel").val(payment_dieselcost);
+                                $("#prt_payment_diesel").html("R" + payment_dieselcost);
+                                var payment_totalcost = payment_vatcost - payment_dieselcost + parseFloat(data.tvatreturn[0].fields.PenaltyInterest);
+                                $("#payment_total").val(payment_totalcost);
+                                $("#prt_payment_total").html("R" + payment_totalcost);
+
+                                $("#refund_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
+                                $("#prt_refund_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
+                                $("#refund_period").val(data.tvatreturn[0].fields.PaymentPeriod);
+                                $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);                                
+                                var refund_vatcost = tax20cost;
+                                $("#refund_vat").val(refund_vatcost);
+                                $("#prt_refund_vat").html("R" + refund_vatcost);
+                                var refund_dieselcost = tax25cost + tax29cost + tax33cost;
+                                $("#refund_diesel").val(refund_dieselcost);
+                                $("#prt_refund_diesel").html("R" + refund_dieselcost);
+                                var refund_totalcost = payment_vatcost - payment_dieselcost;
+                                $("#refund_total").val(refund_totalcost);
+                                $("#prt_refund_total").html("R" + refund_totalcost);
                             })
                         } else {
                             let data = JSON.parse(dataObject[0].data);
@@ -1796,8 +1826,19 @@ Template.vatreturn.onRendered(function() {
                                     $("#prt_tax4Acost").html("R" + data.tvatreturn[i].fields.VAT4A);
                                     $("#tax5cost").val(data.tvatreturn[i].fields.VAT5);
                                     $("#prt_tax5cost").html("R" + data.tvatreturn[i].fields.VAT5);
+                                    $("#tax5rate").val(data.tvatreturn[i].fields.VAT5Per);
+                                    $("#prt_tax5rate").html(data.tvatreturn[i].fields.VAT5Per);
+                                    var tax6cost = parseFloat(data.tvatreturn[i].fields.VAT5) * parseFloat(data.tvatreturn[i].fields.VAT5Per) / 100;
+                                    $("#tax6cost").val(tax6cost.toFixed(2));
+                                    $("#prt_tax6cost").html("R" + tax6cost);
                                     $("#tax7cost").val(data.tvatreturn[i].fields.VAT7);
                                     $("#prt_tax7cost").html("R" + data.tvatreturn[i].fields.VAT7);
+                                    var tax8cost = tax6cost + parseFloat(data.tvatreturn[i].fields.VAT7);
+                                    $("#tax8cost").val(tax8cost.toFixed(2));
+                                    $("#prt_tax8cost").html("R" + tax8cost.toFixed(2));
+                                    var tax9cost = tax8cost * 15 / 100;
+                                    $("#tax9cost").val(tax9cost.toFixed(2));
+                                    $("#prt_tax9cost").html("R" + tax9cost.toFixed(2));
                                     $("#tax10cost").val(data.tvatreturn[i].fields.VAT10);
                                     $("#prt_tax10cost").html("R" + data.tvatreturn[i].fields.VAT10);
                                     $("#tax11cost").val(data.tvatreturn[i].fields.VAT11);
@@ -1850,25 +1891,26 @@ Template.vatreturn.onRendered(function() {
                                     $("#endDate-t2").val(tab2endDate);
                                     // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
                                     $("#tax14cost").val(data.tvatreturn[i].fields.VAT14);
-                                    $("#prt_tax14cost").html("$" + data.tvatreturn[i].fields.VAT14);
+                                    $("#prt_tax14cost").html("R" + data.tvatreturn[i].fields.VAT14);
                                     $("#tax14acost").val(data.tvatreturn[i].fields.VAT14A);
-                                    $("#prt_tax14acost").html("$" + data.tvatreturn[i].fields.VAT14A);
+                                    $("#prt_tax14acost").html("R" + data.tvatreturn[i].fields.VAT14A);
                                     $("#tax15cost").val(data.tvatreturn[i].fields.VAT15);
-                                    $("#prt_tax15cost").html("$" + data.tvatreturn[i].fields.VAT15);
+                                    $("#prt_tax15cost").html("R" + data.tvatreturn[i].fields.VAT15);
                                     $("#tax15acost").val(data.tvatreturn[i].fields.VAT15A);
-                                    // $("#prt_tax15acost").html("$" + data.tvatreturn[i].fields.VAT15A);
+                                    $("#prt_tax15acost").html("R" + data.tvatreturn[i].fields.VAT15A);
                                     $("#tax16cost").val(data.tvatreturn[i].fields.VAT16);
-                                    // $("#prt_tax16cost").html("$" + data.tvatreturn[i].fields.VAT16);
+                                    $("#prt_tax16cost").html("R" + data.tvatreturn[i].fields.VAT16);
                                     $("#tax17cost").val(data.tvatreturn[i].fields.VAT17);
-                                    // $("#prt_tax17cost").html("$" + data.tvatreturn[i].fields.VAT17);
+                                    $("#prt_tax17cost").html("R" + data.tvatreturn[i].fields.VAT17);
                                     $("#tax18cost").val(data.tvatreturn[i].fields.VAT18);
-                                    // $("#prt_tax18cost").html("$" + data.tvatreturn[i].fields.VAT18);
+                                    $("#prt_tax18cost").html("R" + data.tvatreturn[i].fields.VAT18);
                                     let tax19cost = data.tvatreturn[i].fields.VAT14 + data.tvatreturn[i].fields.VAT14A + data.tvatreturn[i].fields.VAT15 + data.tvatreturn[i].fields.VAT15A + data.tvatreturn[i].fields.VAT16 + data.tvatreturn[i].fields.VAT17 + data.tvatreturn[i].fields.VAT18;
                                     $("#tax19cost").val(tax19cost);
-                                    $("#prt_tax19cost").html("$" + tax19cost);
+                                    $("#prt_tax19cost").html("R" + tax19cost);
                                     let tax20cost = tax13cost - tax19cost;
                                     $("#tax20cost").val(tax20cost);
-                                    $("#prt_tax20cost").html("$" + tax20cost);
+                                    $("#prt_tax20cost").html("R" + tax20cost);
+
                                     if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                         $("#datemethod1-t3").prop('checked', true);
                                         $("#datemethod2-t3").prop('checked', false);
@@ -1887,39 +1929,91 @@ Template.vatreturn.onRendered(function() {
                                     $("#endDate-t3").val(tab3endDate);
                                     // $("#prt_beginningDateT3").html(data.tvatreturn[i].fields.Tab4_Month + " " + data.tvatreturn[i].fields.Tab4_Year);
                                     $("#tax21cost").val(data.tvatreturn[i].fields.VAT21);
-                                    $("#prt_tax21cost").html("$" + data.tvatreturn[i].fields.VAT21);
+                                    $("#prt_tax21cost").html("R" + data.tvatreturn[i].fields.VAT21);
                                     $("#tax22cost").val(data.tvatreturn[i].fields.VAT22);
-                                    $("#prt_tax22cost").html("$" + data.tvatreturn[i].fields.VAT22);
+                                    $("#prt_tax22cost").html("R" + data.tvatreturn[i].fields.VAT22);
                                     var tax23cost = parseFloat(data.tvatreturn[i].fields.VAT21) - parseFloat(data.tvatreturn[i].fields.VAT22);
                                     $("#tax23cost").val(tax23cost.toFixed(2));
-                                    $("#prt_tax23cost").html("$" + data.tvatreturn[i].fields.VAT23);
-                                    var tax24cost = tax23cost * 80 / 100;
+                                    $("#prt_tax23cost").html("R" + data.tvatreturn[i].fields.VAT23);
+                                    $("#tax23rate").val(data.tvatreturn[i].fields.VAT23Per);
+                                    $("#prt_tax23rate").html(data.tvatreturn[i].fields.VAT23Per);
+                                    var tax24cost = tax23cost * parseFloat(data.tvatreturn[i].fields.VAT23Per) / 100;
                                     $("#tax24cost").val(tax24cost.toFixed(2));
-                                    $("#prt_tax24cost").val(tax24cost.toFixed(2));
-                                    var tax25cost = tax24cost * 332.8 / 100;
+                                    $("#prt_tax24cost").html("R" + tax24cost.toFixed(2));
+                                    $("#tax24rate").val(data.tvatreturn[i].fields.VAT24Per);
+                                    $("#prt_tax24rate").html(data.tvatreturn[i].fields.VAT24Per);
+                                    var tax25cost = tax24cost * parseFloat(data.tvatreturn[i].fields.VAT24Per) / 100;
                                     $("#tax25cost").val(tax25cost.toFixed(2));
-                                    $("#prt_tax25cost").val(tax25cost.toFixed(2));
+                                    $("#prt_tax25cost").html("R" + tax25cost.toFixed(2));
+                                    $("#tax26cost").val(data.tvatreturn[i].fields.VAT26);
+                                    $("#prt_tax26cost").html("R" + data.tvatreturn[i].fields.VAT26);
+                                    $("#tax27cost").val(data.tvatreturn[i].fields.VAT27);
+                                    $("#prt_tax27cost").html("R" + data.tvatreturn[i].fields.VAT27);
                                     var tax28cost = parseFloat(data.tvatreturn[i].fields.VAT26) - parseFloat(data.tvatreturn[i].fields.VAT27);
                                     $("#tax28cost").val(tax28cost.toFixed(2));
-                                    $("#prt_tax28cost").val(tax28cost.toFixed(2));
-                                    var tax29cost = tax28cost * 562 / 100;
+                                    $("#prt_tax28cost").html("R" + tax28cost.toFixed(2));
+                                    $("#tax28rate").val(data.tvatreturn[i].fields.VAT28Per);
+                                    $("#prt_tax28rate").html(data.tvatreturn[i].fields.VAT28Per);
+                                    var tax29cost = tax28cost * parseFloat(data.tvatreturn[i].fields.VAT28Per) / 100;
                                     $("#tax29cost").val(tax29cost.toFixed(2));
-                                    $("#prt_tax29cost").val(tax29cost.toFixed(2));
+                                    $("#prt_tax29cost").html("R" + tax29cost.toFixed(2));
+                                    $("#tax30cost").val(data.tvatreturn[i].fields.VAT30);
+                                    $("#prt_tax30cost").html("R" + data.tvatreturn[i].fields.VAT30);
+                                    $("#tax31cost").val(data.tvatreturn[i].fields.VAT31);
+                                    $("#prt_tax31cost").html("R" + data.tvatreturn[i].fields.VAT31);
                                     var tax32cost = parseFloat(data.tvatreturn[i].fields.VAT30) - parseFloat(data.tvatreturn[i].fields.VAT31);
                                     $("#tax32cost").val(tax32cost.toFixed(2));
-                                    $("#prt_tax32cost").val(tax32cost.toFixed(2));
-                                    var tax33cost = tax32cost * 207 / 100;
+                                    $("#prt_tax32cost").html("R" + tax32cost.toFixed(2));
+                                    $("#tax32rate").val(data.tvatreturn[i].fields.VAT32Per);
+                                    $("#prt_tax32rate").html(data.tvatreturn[i].fields.VAT32Per);
+                                    var tax33cost = tax32cost * parseFloat(data.tvatreturn[i].fields.VAT32Per) / 100;
                                     $("#tax33cost").val(tax33cost.toFixed(2));
-                                    $("#prt_tax33cost").val(tax33cost.toFixed(2));
+                                    $("#prt_tax33cost").html("R" + tax33cost.toFixed(2));
+                                    $("#tax34cost").val(data.tvatreturn[i].fields.VAT34);
+                                    $("#prt_tax34cost").html("R" + data.tvatreturn[i].fields.VAT34);
+                                    $("#tax35cost").val(data.tvatreturn[i].fields.VAT35);
+                                    $("#prt_tax35cost").html("R" + data.tvatreturn[i].fields.VAT35);
                                     var tax36cost = parseFloat(data.tvatreturn[i].fields.VAT34) - parseFloat(data.tvatreturn[i].fields.VAT35);
                                     $("#tax36cost").val(tax36cost.toFixed(2));
-                                    $("#prt_tax36cost").val(tax36cost.toFixed(2));
-                                    var tax37cost = tax36cost * 384.5 / 100;
+                                    $("#prt_tax36cost").html("R" + tax36cost.toFixed(2));
+                                    $("#tax36rate").val(data.tvatreturn[i].fields.VAT36Per);
+                                    $("#prt_tax36rate").html(data.tvatreturn[i].fields.VAT36Per);
+                                    var tax37cost = tax36cost * parseFloat(data.tvatreturn[i].fields.VAT36Per) / 100;
                                     $("#tax37cost").val(tax37cost.toFixed(2));
-                                    $("#prt_tax37cost").val(tax37cost.toFixed(2));
+                                    $("#prt_tax37cost").html("R" + tax37cost.toFixed(2));
                                     var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
                                     $("#tax38cost").val(tax38cost.toFixed(2));
-                                    $("#prt_tax38cost").val(tax38cost.toFixed(2));
+                                    $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
+                                    
+                                    $("#payment_refno").val(data.tvatreturn[i].fields.PaymentRefNo);
+                                    $("#prt_payment_refno").html(data.tvatreturn[i].fields.PaymentRefNo);
+                                    $("#payment_period").val(data.tvatreturn[i].fields.PaymentPeriod);
+                                    $("#prt_payment_period").html(data.tvatreturn[i].fields.PaymentPeriod);
+                                    $("#payment_penalty").val(data.tvatreturn[i].fields.PenaltyInterest);
+                                    $("#prt_payment_penalty").html("R" + data.tvatreturn[i].fields.PenaltyInterest);
+                                    var payment_vatcost = tax20cost;
+                                    $("#payment_vat").val(payment_vatcost);
+                                    $("#prt_payment_vat").html("R" + payment_vatcost);
+                                    var payment_dieselcost = tax25cost + tax29cost + tax33cost;
+                                    $("#payment_diesel").val(payment_dieselcost);
+                                    $("#prt_payment_diesel").html("R" + payment_dieselcost);
+                                    var payment_totalcost = payment_vatcost - payment_dieselcost + parseFloat(data.tvatreturn[i].fields.PenaltyInterest);
+                                    $("#payment_total").val(payment_totalcost);
+                                    $("#prt_payment_total").html("R" + payment_totalcost);
+
+                                    $("#refund_refno").val(data.tvatreturn[i].fields.PaymentRefNo);
+                                    $("#prt_refund_refno").html(data.tvatreturn[i].fields.PaymentRefNo);
+                                    $("#refund_period").val(data.tvatreturn[i].fields.PaymentPeriod);
+                                    $("#prt_refund_period").html(data.tvatreturn[i].fields.PaymentPeriod);                                
+                                    var refund_vatcost = tax20cost;
+                                    $("#refund_vat").val(refund_vatcost);
+                                    $("#prt_refund_vat").html("R" + refund_vatcost);
+                                    var refund_dieselcost = tax25cost + tax29cost + tax33cost;
+                                    $("#refund_diesel").val(refund_dieselcost);
+                                    $("#prt_refund_diesel").html("R" + refund_dieselcost);
+                                    var refund_totalcost = payment_vatcost - payment_dieselcost;
+                                    $("#refund_total").val(refund_totalcost);
+                                    $("#prt_refund_total").html("R" + refund_totalcost);
                                 }
                             }
                         }
@@ -2147,33 +2241,44 @@ Template.vatreturn.onRendered(function() {
                             $("#endDate").val(tab1endDate);
                             $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
                             $("#tax1cost").val(data.tvatreturn[0].fields.VAT1);
-                            $(".prt_tax1cost").html("$" + data.tvatreturn[0].fields.VAT1);
+                            $(".prt_tax1cost").html("R" + data.tvatreturn[0].fields.VAT1);
                             $("#tax1Acost").val(data.tvatreturn[0].fields.VAT1A);
-                            $("#prt_tax1Acost").html("$" + data.tvatreturn[0].fields.VAT1A);
+                            $("#prt_tax1Acost").html("R" + data.tvatreturn[0].fields.VAT1A);
                             $("#tax2cost").val(data.tvatreturn[0].fields.VAT2);
-                            $("#prt_tax2cost").html("$" + data.tvatreturn[0].fields.VAT2);
+                            $("#prt_tax2cost").html("R" + data.tvatreturn[0].fields.VAT2);
                             $("#tax2Acost").val(data.tvatreturn[0].fields.VAT2A);
-                            $("#prt_tax2Acost").html("$" + data.tvatreturn[0].fields.VAT2A);
+                            $("#prt_tax2Acost").html("R" + data.tvatreturn[0].fields.VAT2A);
                             $("#tax3cost").val(data.tvatreturn[0].fields.VAT3);
-                            $("#prt_tax3cost").html("$" + data.tvatreturn[0].fields.VAT3);
+                            $("#prt_tax3cost").html("R" + data.tvatreturn[0].fields.VAT3);
                             $("#tax4cost").val(data.tvatreturn[0].fields.VAT4);
-                            $("#prt_tax4cost").html("$" + data.tvatreturn[0].fields.VAT4);
+                            $("#prt_tax4cost").html("R" + data.tvatreturn[0].fields.VAT4);
                             $("#tax4Acost").val(data.tvatreturn[0].fields.VAT4A);
-                            $("#prt_tax4Acost").html("$" + data.tvatreturn[0].fields.VAT4A);
+                            $("#prt_tax4Acost").html("R" + data.tvatreturn[0].fields.VAT4A);
                             $("#tax5cost").val(data.tvatreturn[0].fields.VAT5);
-                            $("#prt_tax5cost").html("$" + data.tvatreturn[0].fields.VAT5);
+                            $("#prt_tax5cost").html("R" + data.tvatreturn[0].fields.VAT5);
+                            $("#tax5rate").val(data.tvatreturn[0].fields.VAT5Per);
+                            $("#prt_tax5rate").html(data.tvatreturn[0].fields.VAT5Per);
+                            var tax6cost = parseFloat(data.tvatreturn[0].fields.VAT5) * parseFloat(data.tvatreturn[0].fields.VAT5Per) / 100;
+                            $("#tax6cost").val(tax6cost.toFixed(2));
+                            $("#prt_tax6cost").html("R" + tax6cost);
                             $("#tax7cost").val(data.tvatreturn[0].fields.VAT7);
-                            $("#prt_tax7cost").html("$" + data.tvatreturn[0].fields.VAT7);
+                            $("#prt_tax7cost").html("R" + data.tvatreturn[0].fields.VAT7);
+                            var tax8cost = tax6cost + parseFloat(data.tvatreturn[0].fields.VAT7);
+                            $("#tax8cost").val(tax8cost.toFixed(2));
+                            $("#prt_tax8cost").html("R" + tax8cost.toFixed(2));
+                            var tax9cost = tax8cost * 15 / 100;
+                            $("#tax9cost").val(tax9cost.toFixed(2));
+                            $("#prt_tax9cost").html("R" + tax9cost.toFixed(2));
                             $("#tax10cost").val(data.tvatreturn[0].fields.VAT10);
-                            $("#prt_tax10cost").html("$" + data.tvatreturn[0].fields.VAT10);
+                            $("#prt_tax10cost").html("R" + data.tvatreturn[0].fields.VAT10);
                             $("#tax11cost").val(data.tvatreturn[0].fields.VAT11);
-                            $("#prt_tax11cost").html("$" + data.tvatreturn[0].fields.VAT11);
+                            $("#prt_tax11cost").html("R" + data.tvatreturn[0].fields.VAT11);
                             $("#tax12cost").val(data.tvatreturn[0].fields.VAT12);
-                            $("#prt_tax12cost").html("$" + data.tvatreturn[0].fields.VAT12);
+                            $("#prt_tax12cost").html("R" + data.tvatreturn[0].fields.VAT12);
                             let tax13cost = data.tvatreturn[0].fields.VAT4 + data.tvatreturn[0].fields.VAT4A + data.tvatreturn[0].fields.VAT9 + data.tvatreturn[0].fields.VAT11 + data.tvatreturn[0].fields.VAT12;
                             $("#tax13cost").val(tax13cost);
-                            $("#prt_tax13cost").html("$" + tax13cost);
-
+                            $("#prt_tax13cost").html("R" + tax13cost);                            
+                            
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
@@ -2216,25 +2321,25 @@ Template.vatreturn.onRendered(function() {
                             $("#endDate-t2").val(tab2endDate);
                             // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
                             $("#tax14cost").val(data.tvatreturn[0].fields.VAT14);
-                            $("#prt_tax14cost").html("$" + data.tvatreturn[0].fields.VAT14);
+                            $("#prt_tax14cost").html("R" + data.tvatreturn[0].fields.VAT14);
                             $("#tax14acost").val(data.tvatreturn[0].fields.VAT14A);
-                            $("#prt_tax14acost").html("$" + data.tvatreturn[0].fields.VAT14A);
+                            $("#prt_tax14acost").html("R" + data.tvatreturn[0].fields.VAT14A);
                             $("#tax15cost").val(data.tvatreturn[0].fields.VAT15);
-                            $("#prt_tax15cost").html("$" + data.tvatreturn[0].fields.VAT15);
+                            $("#prt_tax15cost").html("R" + data.tvatreturn[0].fields.VAT15);
                             $("#tax15acost").val(data.tvatreturn[0].fields.VAT15A);
-                            // $("#prt_tax15acost").html("$" + data.tvatreturn[0].fields.VAT15A);
+                            $("#prt_tax15acost").html("R" + data.tvatreturn[0].fields.VAT15A);
                             $("#tax16cost").val(data.tvatreturn[0].fields.VAT16);
-                            // $("#prt_tax16cost").html("$" + data.tvatreturn[0].fields.VAT16);
+                            $("#prt_tax16cost").html("R" + data.tvatreturn[0].fields.VAT16);
                             $("#tax17cost").val(data.tvatreturn[0].fields.VAT17);
-                            // $("#prt_tax17cost").html("$" + data.tvatreturn[0].fields.VAT17);
+                            $("#prt_tax17cost").html("R" + data.tvatreturn[0].fields.VAT17);
                             $("#tax18cost").val(data.tvatreturn[0].fields.VAT18);
-                            // $("#prt_tax18cost").html("$" + data.tvatreturn[0].fields.VAT18);
+                            $("#prt_tax18cost").html("R" + data.tvatreturn[0].fields.VAT18);
                             let tax19cost = data.tvatreturn[0].fields.VAT14 + data.tvatreturn[0].fields.VAT14A + data.tvatreturn[0].fields.VAT15 + data.tvatreturn[0].fields.VAT15A + data.tvatreturn[0].fields.VAT16 + data.tvatreturn[0].fields.VAT17 + data.tvatreturn[0].fields.VAT18;
                             $("#tax19cost").val(tax19cost);
-                            $("#prt_tax19cost").html("$" + tax19cost);
+                            $("#prt_tax19cost").html("R" + tax19cost);
                             let tax20cost = tax13cost - tax19cost;
                             $("#tax20cost").val(tax20cost);
-                            $("#prt_tax20cost").html("$" + tax20cost);
+                            $("#prt_tax20cost").html("R" + tax20cost);
                             if (data.tvatreturn[0].fields.Tab3_Type == "Quarterly") {
                                 $("#datemethod1-t3").prop('checked', true);
                                 $("#datemethod2-t3").prop('checked', false);
@@ -2253,39 +2358,91 @@ Template.vatreturn.onRendered(function() {
                             $("#endDate-t3").val(tab3endDate);
                             // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
                             $("#tax21cost").val(data.tvatreturn[0].fields.VAT21);
-                            $("#prt_tax21cost").html("$" + data.tvatreturn[0].fields.VAT21);
+                            $("#prt_tax21cost").html("R" + data.tvatreturn[0].fields.VAT21);
                             $("#tax22cost").val(data.tvatreturn[0].fields.VAT22);
-                            $("#prt_tax22cost").html("$" + data.tvatreturn[0].fields.VAT22);
+                            $("#prt_tax22cost").html("R" + data.tvatreturn[0].fields.VAT22);
                             var tax23cost = parseFloat(data.tvatreturn[0].fields.VAT21) - parseFloat(data.tvatreturn[0].fields.VAT22);
                             $("#tax23cost").val(tax23cost.toFixed(2));
-                            $("#prt_tax23cost").html("$" + data.tvatreturn[0].fields.VAT23);
-                            var tax24cost = tax23cost * 80 / 100;
+                            $("#prt_tax23cost").html("R" + data.tvatreturn[0].fields.VAT23);
+                            $("#tax23rate").val(data.tvatreturn[0].fields.VAT23Per);
+                            $("#prt_tax23rate").html(data.tvatreturn[0].fields.VAT23Per);
+                            var tax24cost = tax23cost * parseFloat(data.tvatreturn[0].fields.VAT23Per) / 100;
                             $("#tax24cost").val(tax24cost.toFixed(2));
-                            $("#prt_tax24cost").val(tax24cost.toFixed(2));
-                            var tax25cost = tax24cost * 332.8 / 100;
+                            $("#prt_tax24cost").html("R" + tax24cost.toFixed(2));
+                            $("#tax24rate").val(data.tvatreturn[0].fields.VAT24Per);
+                            $("#prt_tax24rate").html(data.tvatreturn[0].fields.VAT24Per);
+                            var tax25cost = tax24cost * parseFloat(data.tvatreturn[0].fields.VAT24Per) / 100;
                             $("#tax25cost").val(tax25cost.toFixed(2));
-                            $("#prt_tax25cost").val(tax25cost.toFixed(2));
+                            $("#prt_tax25cost").html("R" + tax25cost.toFixed(2));
+                            $("#tax26cost").val(data.tvatreturn[0].fields.VAT26);
+                            $("#prt_tax26cost").html("R" + data.tvatreturn[0].fields.VAT26);
+                            $("#tax27cost").val(data.tvatreturn[0].fields.VAT27);
+                            $("#prt_tax27cost").html("R" + data.tvatreturn[0].fields.VAT27);
                             var tax28cost = parseFloat(data.tvatreturn[0].fields.VAT26) - parseFloat(data.tvatreturn[0].fields.VAT27);
                             $("#tax28cost").val(tax28cost.toFixed(2));
-                            $("#prt_tax28cost").val(tax28cost.toFixed(2));
-                            var tax29cost = tax28cost * 562 / 100;
+                            $("#prt_tax28cost").html("R" + tax28cost.toFixed(2));
+                            $("#tax28rate").val(data.tvatreturn[0].fields.VAT28Per);
+                            $("#prt_tax28rate").html(data.tvatreturn[0].fields.VAT28Per);
+                            var tax29cost = tax28cost * parseFloat(data.tvatreturn[0].fields.VAT28Per) / 100;
                             $("#tax29cost").val(tax29cost.toFixed(2));
-                            $("#prt_tax29cost").val(tax29cost.toFixed(2));
+                            $("#prt_tax29cost").html("R" + tax29cost.toFixed(2));
+                            $("#tax30cost").val(data.tvatreturn[0].fields.VAT30);
+                            $("#prt_tax30cost").html("R" + data.tvatreturn[0].fields.VAT30);
+                            $("#tax31cost").val(data.tvatreturn[0].fields.VAT31);
+                            $("#prt_tax31cost").html("R" + data.tvatreturn[0].fields.VAT31);
                             var tax32cost = parseFloat(data.tvatreturn[0].fields.VAT30) - parseFloat(data.tvatreturn[0].fields.VAT31);
                             $("#tax32cost").val(tax32cost.toFixed(2));
-                            $("#prt_tax32cost").val(tax32cost.toFixed(2));
-                            var tax33cost = tax32cost * 207 / 100;
+                            $("#prt_tax32cost").html("R" + tax32cost.toFixed(2));
+                            $("#tax32rate").val(data.tvatreturn[0].fields.VAT32Per);
+                            $("#prt_tax32rate").html(data.tvatreturn[0].fields.VAT32Per);
+                            var tax33cost = tax32cost * parseFloat(data.tvatreturn[0].fields.VAT32Per) / 100;
                             $("#tax33cost").val(tax33cost.toFixed(2));
-                            $("#prt_tax33cost").val(tax33cost.toFixed(2));
+                            $("#prt_tax33cost").html("R" + tax33cost.toFixed(2));
+                            $("#tax34cost").val(data.tvatreturn[0].fields.VAT34);
+                            $("#prt_tax34cost").html("R" + data.tvatreturn[0].fields.VAT34);
+                            $("#tax35cost").val(data.tvatreturn[0].fields.VAT35);
+                            $("#prt_tax35cost").html("R" + data.tvatreturn[0].fields.VAT35);
                             var tax36cost = parseFloat(data.tvatreturn[0].fields.VAT34) - parseFloat(data.tvatreturn[0].fields.VAT35);
                             $("#tax36cost").val(tax36cost.toFixed(2));
-                            $("#prt_tax36cost").val(tax36cost.toFixed(2));
-                            var tax37cost = tax36cost * 384.5 / 100;
+                            $("#prt_tax36cost").html("R" + tax36cost.toFixed(2));
+                            $("#tax36rate").val(data.tvatreturn[0].fields.VAT36Per);
+                            $("#prt_tax36rate").html(data.tvatreturn[0].fields.VAT36Per);
+                            var tax37cost = tax36cost * parseFloat(data.tvatreturn[0].fields.VAT36Per) / 100;
                             $("#tax37cost").val(tax37cost.toFixed(2));
-                            $("#prt_tax37cost").val(tax37cost.toFixed(2));
+                            $("#prt_tax37cost").html("R" + tax37cost.toFixed(2));
                             var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
                             $("#tax38cost").val(tax38cost.toFixed(2));
-                            $("#prt_tax38cost").val(tax38cost.toFixed(2));
+                            $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
+
+                            $("#payment_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
+                            $("#prt_payment_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
+                            $("#payment_period").val(data.tvatreturn[0].fields.PaymentPeriod);
+                            $("#prt_payment_period").html(data.tvatreturn[0].fields.PaymentPeriod);
+                            $("#payment_penalty").val(data.tvatreturn[0].fields.PenaltyInterest);
+                            $("#prt_payment_penalty").html("R" + data.tvatreturn[0].fields.PenaltyInterest);
+                            var payment_vatcost = tax20cost;
+                            $("#payment_vat").val(payment_vatcost.toFixed(2));
+                            $("#prt_payment_vat").html("R" + payment_vatcost.toFixed(2));
+                            var payment_dieselcost = tax25cost + tax29cost + tax33cost;
+                            $("#payment_diesel").val(payment_dieselcost.toFixed(2));
+                            $("#prt_payment_diesel").html("R" + payment_dieselcost.toFixed(2));
+                            var payment_totalcost = payment_vatcost - payment_dieselcost + parseFloat(data.tvatreturn[0].fields.PenaltyInterest);
+                            $("#payment_total").val(payment_totalcost.toFixed(2));
+                            $("#prt_payment_total").html("R" + payment_totalcost.toFixed(2));
+
+                            $("#refund_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
+                            $("#prt_refund_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
+                            $("#refund_period").val(data.tvatreturn[0].fields.PaymentPeriod);
+                            $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);                                
+                            var refund_vatcost = tax20cost;
+                            $("#refund_vat").val(refund_vatcost.toFixed(2));
+                            $("#prt_refund_vat").html("R" + refund_vatcost.toFixed(2));
+                            var refund_dieselcost = tax25cost + tax29cost + tax33cost;
+                            $("#refund_diesel").val(refund_dieselcost.toFixed(2));
+                            $("#prt_refund_diesel").html("R" + refund_dieselcost.toFixed(2));
+                            var refund_totalcost = refund_vatcost - refund_dieselcost;
+                            $("#refund_total").val(refund_totalcost.toFixed(2));
+                            $("#prt_refund_total").html("R" + refund_totalcost.toFixed(2));
                         }).catch(function(err) {
                             $('.fullScreenSpin').css('display', 'none');
                         })
@@ -2528,8 +2685,6 @@ Template.vatreturn.helpers({
         return Template.instance().reasonF4.get();
     },
 
-
-
     record: () => {
         return Template.instance().record.get();
     },
@@ -2634,6 +2789,82 @@ Template.vatreturn.events({
             }
         }
     },
+    'change #tax4cost, change #tax4Acost, change #tax5rate, change #tax11cost, change #tax23rate, change #tax24rate, change #tax28rate, change #tax32rate, change #tax36rate, change #payment_penalty': function(event) {
+        const templateObject = Template.instance();
+
+        var tax4cost = parseFloat($("#tax4cost").val());
+        $("#prt_tax4cost").html("R" + tax4cost.toFixed(2));
+        var tax4Acost = parseFloat($("#tax4Acost").val());
+        $("#prt_tax4Acost").html("R" + tax4Acost.toFixed(2));
+        var tax6cost = parseFloat($("#tax5cost").val()) * parseFloat($("#tax5rate").val()) / 100;
+        $("#tax6cost").val(tax6cost.toFixed(2));
+        $("#prt_tax6cost").html("R" + tax6cost.toFixed(2));
+        var tax8cost = tax6cost + parseFloat($("#tax7cost").val());
+        $("#tax8cost").val(tax8cost.toFixed(2));
+        $("#prt_tax8cost").html("R" + tax8cost.toFixed(2));
+        var tax9cost = tax8cost * 15 / 100;
+        $("#tax9cost").val(tax9cost.toFixed(2));
+        $("#prt_tax9cost").html("R" + tax9cost.toFixed(2));
+        var tax11cost = parseFloat($("#tax11cost").val());
+        $("#prt_tax11cost").html("R" + tax11cost.toFixed(2));
+        var tax13cost = tax4cost + tax4Acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
+        $("#tax13cost").val(tax13cost.toFixed(2));
+        $("#prt_tax13cost").html("R" + tax13cost.toFixed(2));
+        var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14Acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15Acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
+        $("#tax19cost").val(tax19cost.toFixed(2));
+        $("#prt_tax19cost").html("R" + tax19cost.toFixed(2));
+        var tax20cost = tax13cost - tax19cost;
+        $("#tax20cost").val(tax20cost.toFixed(2));
+        $("#prt_tax20cost").html("R" + tax20cost.toFixed(2));
+        var tax23cost = parseFloat($("#tax21cost").val()) - parseFloat($("#tax22cost").val());
+        $("#tax23cost").val(tax23cost.toFixed(2));
+        $("#prt_tax23cost").html("R" + tax23cost.toFixed(2));
+        var tax24cost = tax23cost * parseFloat($("#tax23rate").val()) / 100;
+        $("#tax24cost").val(tax24cost.toFixed(2));
+        $("#prt_tax24cost").html("R" + tax24cost.toFixed(2));
+        var tax25cost = tax24cost * parseFloat($("#tax24rate").val()) / 100;
+        $("#tax25cost").val(tax25cost.toFixed(2));
+        $("#prt_tax25cost").html("R" + tax25cost.toFixed(2));
+        var tax28cost = parseFloat($("#tax26cost").val()) - parseFloat($("#tax27cost").val());
+        $("#tax28cost").val(tax28cost.toFixed(2));
+        $("#prt_tax28cost").html("R" + tax28cost.toFixed(2));
+        var tax29cost = tax28cost * parseFloat($("#tax28rate").val()) / 100;
+        $("#tax29cost").val(tax29cost.toFixed(2));
+        $("#prt_tax29cost").html("R" + tax29cost.toFixed(2));
+        var tax32cost = parseFloat($("#tax30cost").val()) - parseFloat($("#tax31cost").val());
+        $("#tax32cost").val(tax32cost.toFixed(2));
+        $("#prt_tax32cost").html("R" + tax32cost.toFixed(2));
+        var tax33cost = tax32cost * parseFloat($("#tax32rate").val()) / 100;
+        $("#tax33cost").val(tax33cost.toFixed(2));
+        $("#prt_tax33cost").html("R" + tax33cost.toFixed(2));
+        var tax36cost = parseFloat($("#tax34cost").val()) - parseFloat($("#tax35cost").val());
+        $("#tax36cost").val(tax36cost.toFixed(2));
+        $("#prt_tax36cost").html("R" + tax36cost.toFixed(2));
+        var tax37cost = tax36cost * parseFloat($("#tax36rate").val()) / 100;
+        $("#tax37cost").val(tax37cost.toFixed(2));
+        $("#prt_tax37cost").html("R" + tax37cost.toFixed(2));
+        var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
+        $("#tax38cost").val(tax38cost.toFixed(2));
+        $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
+        var payment_vatcost = tax20cost;
+        $("#payment_vat").val(payment_vatcost.toFixed(2));
+        $("#prt_payment_vat").html("R" + payment_vatcost.toFixed(2));
+        var payment_dieselcost = tax25cost + tax29cost + tax33cost;
+        $("#payment_diesel").val(payment_dieselcost.toFixed(2));
+        $("#prt_payment_diesel").html("R" + payment_dieselcost.toFixed(2));
+        var payment_totalcost = payment_vatcost - payment_dieselcost + parseFloat($("#payment_penalty").val());
+        $("#payment_total").val(payment_totalcost.toFixed(2));
+        $("#prt_payment_total").html("R" + payment_totalcost.toFixed(2));
+        var refund_vatcost = tax20cost;
+        $("#refund_vat").val(refund_vatcost.toFixed(2));
+        $("#prt_refund_vat").html("R" + refund_vatcost.toFixed(2));
+        var refund_dieselcost = tax25cost + tax29cost + tax33cost;
+        $("#refund_diesel").val(refund_dieselcost.toFixed(2));
+        $("#prt_refund_diesel").html("R" + refund_dieselcost.toFixed(2));
+        var refund_totalcost = refund_vatcost - refund_dieselcost;
+        $("#refund_total").val(refund_totalcost.toFixed(2));
+        $("#prt_refund_total").html("R" + refund_totalcost.toFixed(2));
+    },
     'click .btnselTaxList': function(event) {
         const templateObject = Template.instance();
 
@@ -2642,61 +2873,79 @@ Template.vatreturn.events({
 
         var tax4cost = parseFloat($("#tax1cost").val()) * 15 / (100 + 15);
         $("#tax4cost").val(tax4cost.toFixed(2));
-        $("#prt_tax4cost").html("$" + tax4cost.toFixed(2));
+        $("#prt_tax4cost").html("R" + tax4cost.toFixed(2));
         var tax4Acost = parseFloat($("#tax1Acost").val()) * 15 / (100 + 15);
         $("#tax4Acost").val(tax4Acost.toFixed(2));
-        $("#prt_tax4Acost").html("$" + tax4Acost.toFixed(2));
-        var tax6cost = parseFloat($("#tax5cost").val()) * 60 / 100;
+        $("#prt_tax4Acost").html("R" + tax4Acost.toFixed(2));
+        var tax6cost = parseFloat($("#tax5cost").val()) * parseFloat($("#tax5rate").val()) / 100;
         $("#tax6cost").val(tax6cost.toFixed(2));
-        $("#prt_tax6cost").html("$" + tax6cost.toFixed(2));
+        $("#prt_tax6cost").html("R" + tax6cost.toFixed(2));
         var tax8cost = tax6cost + parseFloat($("#tax7cost").val());
         $("#tax8cost").val(tax8cost.toFixed(2));
-        $("#prt_tax8cost").html("$" + tax8cost.toFixed(2));
+        $("#prt_tax8cost").html("R" + tax8cost.toFixed(2));
         var tax9cost = tax8cost * 15 / 100;
         $("#tax9cost").val(tax9cost.toFixed(2));
-        $("#prt_tax9cost").html("$" + tax9cost.toFixed(2));
+        $("#prt_tax9cost").html("R" + tax9cost.toFixed(2));
         var tax11cost = parseFloat($("#tax10cost").val()) * 15 / (100 + 15);
         $("#tax11cost").val(tax11cost.toFixed(2));
-        $("#prt_tax11cost").html("$" + tax11cost.toFixed(2));
+        $("#prt_tax11cost").html("R" + tax11cost.toFixed(2));
         var tax13cost = tax4cost + tax4Acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
         $("#tax13cost").val(tax13cost.toFixed(2));
-        $("#prt_tax13cost").html("$" + tax13cost.toFixed(2));
+        $("#prt_tax13cost").html("R" + tax13cost.toFixed(2));
         var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14Acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15Acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
         $("#tax19cost").val(tax19cost.toFixed(2));
-        $("#prt_tax19cost").html("$" + tax19cost.toFixed(2));
+        $("#prt_tax19cost").html("R" + tax19cost.toFixed(2));
         var tax20cost = tax13cost - tax19cost;
         $("#tax20cost").val(tax20cost.toFixed(2));
-        $("#prt_tax20cost").html("$" + tax20cost.toFixed(2));
+        $("#prt_tax20cost").html("R" + tax20cost.toFixed(2));
         var tax23cost = parseFloat($("#tax21cost").val()) - parseFloat($("#tax22cost").val());
         $("#tax23cost").val(tax23cost.toFixed(2));
-        $("#prt_tax23cost").html("$" + tax23cost.toFixed(2));
-        var tax24cost = tax23cost * 80 / 100;
+        $("#prt_tax23cost").html("R" + tax23cost.toFixed(2));
+        var tax24cost = tax23cost * parseFloat($("#tax23rate").val()) / 100;
         $("#tax24cost").val(tax24cost.toFixed(2));
-        $("#prt_tax24cost").html("$" + tax24cost.toFixed(2));
-        var tax25cost = tax24cost * 332.8 / 100;
+        $("#prt_tax24cost").html("R" + tax24cost.toFixed(2));
+        var tax25cost = tax24cost * parseFloat($("#tax24rate").val()) / 100;
         $("#tax25cost").val(tax25cost.toFixed(2));
-        $("#prt_tax25cost").html("$" + tax25cost.toFixed(2));
+        $("#prt_tax25cost").html("R" + tax25cost.toFixed(2));
         var tax28cost = parseFloat($("#tax26cost").val()) - parseFloat($("#tax27cost").val());
         $("#tax28cost").val(tax28cost.toFixed(2));
-        $("#prt_tax28cost").html("$" + tax28cost.toFixed(2));
-        var tax29cost = tax28cost * 562 / 100;
+        $("#prt_tax28cost").html("R" + tax28cost.toFixed(2));
+        var tax29cost = tax28cost * parseFloat($("#tax28rate").val()) / 100;
         $("#tax29cost").val(tax29cost.toFixed(2));
-        $("#prt_tax29cost").html("$" + tax29cost.toFixed(2));
+        $("#prt_tax29cost").html("R" + tax29cost.toFixed(2));
         var tax32cost = parseFloat($("#tax30cost").val()) - parseFloat($("#tax31cost").val());
         $("#tax32cost").val(tax32cost.toFixed(2));
-        $("#prt_tax32cost").html("$" + tax32cost.toFixed(2));
-        var tax33cost = tax32cost * 207 / 100;
+        $("#prt_tax32cost").html("R" + tax32cost.toFixed(2));
+        var tax33cost = tax32cost * parseFloat($("#tax32rate").val()) / 100;
         $("#tax33cost").val(tax33cost.toFixed(2));
-        $("#prt_tax33cost").html("$" + tax33cost.toFixed(2));
+        $("#prt_tax33cost").html("R" + tax33cost.toFixed(2));
         var tax36cost = parseFloat($("#tax34cost").val()) - parseFloat($("#tax35cost").val());
         $("#tax36cost").val(tax36cost.toFixed(2));
-        $("#prt_tax36cost").html("$" + tax36cost.toFixed(2));
-        var tax37cost = tax36cost * 384.5 / 100;
+        $("#prt_tax36cost").html("R" + tax36cost.toFixed(2));
+        var tax37cost = tax36cost * parseFloat($("#tax36rate").val()) / 100;
         $("#tax37cost").val(tax37cost.toFixed(2));
-        $("#prt_tax37cost").html("$" + tax37cost.toFixed(2));
+        $("#prt_tax37cost").html("R" + tax37cost.toFixed(2));
         var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
         $("#tax38cost").val(tax38cost.toFixed(2));
-        $("#prt_tax38cost").html("$" + tax38cost.toFixed(2));
+        $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
+        var payment_vatcost = tax20cost;
+        $("#payment_vat").val(payment_vatcost.toFixed(2));
+        $("#prt_payment_vat").html("R" + payment_vatcost.toFixed(2));
+        var payment_dieselcost = tax25cost + tax29cost + tax33cost;
+        $("#payment_diesel").val(payment_dieselcost.toFixed(2));
+        $("#prt_payment_diesel").html("R" + payment_dieselcost.toFixed(2));
+        var payment_totalcost = payment_vatcost - payment_dieselcost + parseFloat($("#payment_penalty").val());
+        $("#payment_total").val(payment_totalcost.toFixed(2));
+        $("#prt_payment_total").html("R" + payment_totalcost.toFixed(2));
+        var refund_vatcost = tax20cost;
+        $("#refund_vat").val(refund_vatcost.toFixed(2));
+        $("#prt_refund_vat").html("R" + refund_vatcost.toFixed(2));
+        var refund_dieselcost = tax25cost + tax29cost + tax33cost;
+        $("#refund_diesel").val(refund_dieselcost.toFixed(2));
+        $("#prt_refund_diesel").html("R" + refund_dieselcost.toFixed(2));
+        var refund_totalcost = refund_vatcost - refund_dieselcost;
+        $("#refund_total").val(refund_totalcost.toFixed(2));
+        $("#prt_refund_total").html("R" + refund_totalcost.toFixed(2));
 
         $("#taxCode" + taxCodePanID + "option").modal("toggle");
     },
@@ -2748,6 +2997,7 @@ Template.vatreturn.events({
                         let tax4cost = $('#tax4cost').val();
                         let tax4Acost = $('#tax4Acost').val();
                         let tax5cost = $('#tax5cost').val();
+                        let tax5rate = $('#tax5rate').val();
                         let tax6cost = $('#tax6cost').val();
                         let tax7cost = $('#tax7cost').val();
                         let tax8cost = $('#tax8cost').val();
@@ -2842,9 +3092,9 @@ Template.vatreturn.events({
                         let tab2_month = $("#beginmonthlydate-t2").val();
                         let tab2_year = $("#currentyear-t2").val() || 0;
                         let tax14cost = $('#tax14cost').val();
-                        let tax14acost = $('#tax14acost').val();
+                        let tax14Acost = $('#tax14Acost').val();
                         let tax15cost = $('#tax15cost').val();
-                        let tax15acost = $('#tax15acost').val();
+                        let tax15Acost = $('#tax15Acost').val();
                         let tax16cost = $('#tax16cost').val();
                         let tax17cost = $('#tax17cost').val();
                         let tax18cost = $('#tax18cost').val();
@@ -2864,18 +3114,28 @@ Template.vatreturn.events({
                         let tax21cost = $('#tax21cost').val();
                         let tax22cost = $('#tax22cost').val();
                         let tax23cost = $('#tax23cost').val();
+                        let tax23rate = $('#tax23rate').val();
                         let tax24cost = $('#tax24cost').val();
+                        let tax24rate = $('#tax24rate').val();
                         let tax25cost = $('#tax25cost').val();
                         let tax26cost = $('#tax26cost').val();
                         let tax27cost = $('#tax27cost').val();
                         let tax28cost = $('#tax28cost').val();
+                        let tax28rate = $('#tax28rate').val();
                         let tax29cost = $('#tax29cost').val();
                         let tax30cost = $('#tax30cost').val();
                         let tax31cost = $('#tax31cost').val();
                         let tax32cost = $('#tax32cost').val();
+                        let tax32rate = $('#tax32rate').val();
                         let tax33cost = $('#tax33cost').val();
                         let tax34cost = $('#tax34cost').val();
                         let tax35cost = $('#tax35cost').val();
+                        let tax36rate = $('#tax36rate').val();
+                        let hasTab4 = $("#basreturnCategory4").prop('checked');
+                        let payment_refno = $('#payment_refno').val();
+                        let payment_period = $('#payment_period').val();
+                        let payment_penalty = $('#payment_penalty').val();
+                        let hasTab5 = $("#basreturnCategory5").prop('checked');
 
                         if (description === '') {
                             // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
@@ -2910,6 +3170,7 @@ Template.vatreturn.events({
                                         VAT4A: parseFloat(tax4Acost),
                                         VAT5: parseFloat(tax5cost),
                                         VAT5Selected: taxcodes5,
+                                        VAT5Per: parseFloat(tax5rate),
                                         VAT7: parseFloat(tax7cost),
                                         VAT7Selected: taxcodes7,
                                         VAT10: parseFloat(tax10cost),
@@ -2942,18 +3203,28 @@ Template.vatreturn.events({
                                         VAT21Selected: taxcodes21,
                                         VAT22: parseFloat(tax22cost),
                                         VAT22Selected: taxcodes22,
+                                        VAT23Per: parseFloat(tax23rate),
+                                        VAT24Per: parseFloat(tax24rate),
                                         VAT26: parseFloat(tax26cost),
                                         VAT26Selected: taxcodes26,
                                         VAT27: parseFloat(tax27cost),
                                         VAT27Selected: taxcodes27,
+                                        VAT28Per: parseFloat(tax28rate),
                                         VAT30: parseFloat(tax30cost),
                                         VAT30Selected: taxcodes30,
                                         VAT31: parseFloat(tax31cost),
                                         VAT31Selected: taxcodes31,
+                                        VAT32Per: parseFloat(tax32rate),
                                         VAT34: parseFloat(tax34cost),
                                         VAT34Selected: taxcodes34,
                                         VAT35: parseFloat(tax35cost),
                                         VAT35Selected: taxcodes35,
+                                        VAT36Per: parseFloat(tax36rate),
+                                        HasTab4: hasTab4,
+                                        HasTab5: hasTab5,
+                                        PaymentRefNo: payment_refno,
+                                        PaymentPeriod: payment_period,
+                                        PenaltyInterest: payment_penalty,
                                     }
                                 }
 
@@ -3178,8 +3449,9 @@ Template.vatreturn.events({
             let tax2Acost = $('#tax2Acost').val();
             let tax3cost = $('#tax3cost').val();
             let tax4cost = $('#tax4cost').val();
-            let tax4acost = $('#tax4acost').val();
+            let tax4Acost = $('#tax4acost').val();
             let tax5cost = $('#tax5cost').val();
+            let tax5rate = $('#tax5rate').val();
             let tax6cost = $('#tax6cost').val();
             let tax7cost = $('#tax7cost').val();
             let tax8cost = $('#tax8cost').val();
@@ -3274,9 +3546,9 @@ Template.vatreturn.events({
             let tab2_month = $("#beginmonthlydate-t2").val();
             let tab2_year = $("#currentyear-t2").val() || 0;
             let tax14cost = $('#tax14cost').val();
-            let tax14acost = $('#tax14acost').val();
+            let tax14Acost = $('#tax14Acost').val();
             let tax15cost = $('#tax15cost').val();
-            let tax15acost = $('#tax15acost').val();
+            let tax15Acost = $('#tax15Acost').val();
             let tax16cost = $('#tax16cost').val();
             let tax17cost = $('#tax17cost').val();
             let tax18cost = $('#tax18cost').val();
@@ -3296,19 +3568,29 @@ Template.vatreturn.events({
             let tax21cost = $('#tax21cost').val();
             let tax22cost = $('#tax22cost').val();
             let tax23cost = $('#tax23cost').val();
+            let tax23rate = $('#tax23rate').val();
             let tax24cost = $('#tax24cost').val();
+            let tax24rate = $('#tax24rate').val();
             let tax25cost = $('#tax25cost').val();
             let tax26cost = $('#tax26cost').val();
             let tax27cost = $('#tax27cost').val();
             let tax28cost = $('#tax28cost').val();
+            let tax28rate = $('#tax28rate').val();
             let tax29cost = $('#tax29cost').val();
             let tax30cost = $('#tax30cost').val();
             let tax31cost = $('#tax31cost').val();
             let tax32cost = $('#tax32cost').val();
+            let tax32rate = $('#tax32rate').val();
             let tax33cost = $('#tax33cost').val();
             let tax34cost = $('#tax34cost').val();
             let tax35cost = $('#tax35cost').val();
-
+            let tax36rate = $('#tax36rate').val();
+            let hasTab4 = $("#basreturnCategory4").prop('checked');
+            let payment_refno = $('#payment_refno').val();
+            let payment_period = $('#payment_period').val();
+            let payment_penalty = $('#payment_penalty').val();
+            let hasTab5 = $("#basreturnCategory5").prop('checked');
+            
             if (description === '') {
                 // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
                 swal('VAT Return Description cannot be blank!', '', 'warning');
@@ -3330,7 +3612,7 @@ Template.vatreturn.events({
                             Tab1_Year: tab1_year,
                             VAT1: parseFloat(tax1cost),
                             VAT1Selected: taxcodes1,
-                            VAT1A: parseFloat(tax1Acost),
+                            VAT1A: parseFloat(tax1acost),
                             VAT1ASelected: taxcodes1A,
                             VAT2: parseFloat(tax2cost),
                             VAT2Selected: taxcodes2,
@@ -3342,6 +3624,7 @@ Template.vatreturn.events({
                             VAT4A: parseFloat(tax4Acost),
                             VAT5: parseFloat(tax5cost),
                             VAT5Selected: taxcodes5,
+                            VAT5Per: parseFloat(tax5rate),
                             VAT7: parseFloat(tax7cost),
                             VAT7Selected: taxcodes7,
                             VAT10: parseFloat(tax10cost),
@@ -3374,18 +3657,28 @@ Template.vatreturn.events({
                             VAT21Selected: taxcodes21,
                             VAT22: parseFloat(tax22cost),
                             VAT22Selected: taxcodes22,
+                            VAT23Per: parseFloat(tax23rate),
+                            VAT24Per: parseFloat(tax24rate),
                             VAT26: parseFloat(tax26cost),
                             VAT26Selected: taxcodes26,
                             VAT27: parseFloat(tax27cost),
                             VAT27Selected: taxcodes27,
+                            VAT28Per: parseFloat(tax28rate),
                             VAT30: parseFloat(tax30cost),
                             VAT30Selected: taxcodes30,
                             VAT31: parseFloat(tax31cost),
                             VAT31Selected: taxcodes31,
+                            VAT32Per: parseFloat(tax32rate),
                             VAT34: parseFloat(tax34cost),
                             VAT34Selected: taxcodes34,
                             VAT35: parseFloat(tax35cost),
                             VAT35Selected: taxcodes35,
+                            VAT36Per: parseFloat(tax36rate),
+                            HasTab4: hasTab4,
+                            HasTab5: hasTab5,
+                            PaymentRefNo: payment_refno,
+                            PaymentPeriod: payment_period,
+                            PenaltyInterest: payment_penalty,
                         }
                     }
 
@@ -3452,63 +3745,41 @@ Template.vatreturn.events({
         let columHeaderUpdate = $(event.target).attr("valueupdate");
         $("" + columHeaderUpdate + "").html(columData);
     },
-    'click .btnResetGridSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblJournalEntryLine'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {
+    'click .btnSaveGridSettings': function(event) {
+        playSaveAudio();
+        setTimeout(function() {
+            let lineItems = [];
 
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
+            $('.columnSettings').each(function(index) {
+                var $tblrow = $(this);
+                var colTitle = $tblrow.find(".divcolumn").text() || '';
+                var colWidth = $tblrow.find(".custom-range").val() || 0;
+                var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+                var colHidden = false;
+                if ($tblrow.find(".custom-control-input").is(':checked')) {
+                    colHidden = false;
+                } else {
+                    colHidden = true;
                 }
-            }
-        }
+                let lineItemObj = {
+                    index: index,
+                    label: colTitle,
+                    hidden: colHidden,
+                    width: colWidth,
+                    thclass: colthClass
+                }
+
+                lineItems.push(lineItemObj);
+            });
+
+            $('#myModal2').modal('toggle');
+        }, delayTimeAfterSound);
+    },
+    'click .btnResetGridSettings': function(event) {
+        Meteor._reload.reload();
     },
     'click .btnResetSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'journalentrycard'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
+        Meteor._reload.reload();
     },
     'click .btnBack': function(event) {
         playCancelAudio();

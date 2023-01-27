@@ -28,11 +28,12 @@ function MakeNegative() {
 }
 
 
-Template.wizard_accounts.inheritsEventsFrom('non_transactional_list');
-Template.wizard_accounts.inheritsHelpersFrom('non_transactional_list');
+
 
 Template.wizard_accounts.onCreated(() => {
   const templateObject = Template.instance();
+  Template.wizard_accounts.inheritsEventsFrom('non_transactional_list');
+  Template.wizard_accounts.inheritsHelpersFrom('non_transactional_list');
   templateObject.accountList = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
 

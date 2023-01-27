@@ -1551,7 +1551,7 @@ Template.basreturn.onRendered(function() {
     };
 
     $('#sltDepartment').editableSelect();
-
+    $('#sltDepartment').val("All");
     $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);

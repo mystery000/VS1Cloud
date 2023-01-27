@@ -1492,8 +1492,8 @@ Template.purchaseordercard.onRendered(() => {
     const statusList = [];
     const dataTableList = [];
 
-    let isBOnShippedQty = localStorage.getItem('CloudPurchaseQtyOnly');
-    if (isBOnShippedQty) {
+    let isBOnShippedQty = localStorage.getItem('CloudPurchaseQtyOnly')||false;
+    if (JSON.parse(isBOnShippedQty)) {
         templateObject.includeBOnShippedQty.set(false);
     }
 
@@ -2510,7 +2510,7 @@ Template.purchaseordercard.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
-                                       
+
                                     };
 
                                     lineItemsTable.push(dataListTable);
@@ -2859,7 +2859,7 @@ Template.purchaseordercard.onRendered(() => {
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
-        
+
         lineItemObj = {
             lineID: Random.id(),
             item: '',
@@ -2900,7 +2900,7 @@ Template.purchaseordercard.onRendered(() => {
                     curTotalAmt: 0,
                     TaxTotal: 0,
                     TaxRate: 0,
-        
+
                 };
             }
         }
@@ -2947,7 +2947,7 @@ Template.purchaseordercard.onRendered(() => {
             isPartialPaid: false,
             workorderid: FlowRouter.current().queryParams.workorderid || '',
         };
-        
+
         if (FlowRouter.current().queryParams.supplierid) {
             getSupplierData(FlowRouter.current().queryParams.supplierid);
         } else {
@@ -9297,7 +9297,7 @@ Template.purchaseordercard.events({
                         };
                     }
 
-                   
+
 
                 }).catch(function(err) {
                     swal({
@@ -12686,7 +12686,7 @@ Template.purchaseordercard.events({
                             cancelButtonText: 'No'
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
-                            if (result.value) {                        
+                            if (result.value) {
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
@@ -12798,7 +12798,7 @@ Template.purchaseordercard.events({
                             cancelButtonText: 'No'
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
-                            if (result.value) {                        
+                            if (result.value) {
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();

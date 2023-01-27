@@ -2756,8 +2756,8 @@ Template.new_invoice.onRendered(function () {
     $(".uploadedImage").attr("src", imageData);
   }
 
-  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
-  if (isBOnShippedQty) {
+  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly")||false;
+  if(JSON.parse(isBOnShippedQty)) {
     templateObject.includeBOnShippedQty.set(false);
   }
 
@@ -11086,6 +11086,7 @@ Template.new_invoice.events({
                   Repeat_MonthOffset: 0,
                 },
               };
+              console.log(dayObj)
               var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
               var oPost = new XMLHttpRequest();
               oPost.open(
