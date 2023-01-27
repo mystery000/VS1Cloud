@@ -32,13 +32,13 @@ Template.leaveaccruedreport.onRendered(() => {
   LoadingOverlay.show();
 
   let reset_data = [
-    { index: 1, label: 'Accrued Date', class: 'colAccruedDate', active: true, display: true, width: "100" },
-    { index: 2, label: 'Leave Type', class: 'colLeaveType', active: true, display: true, width: "100" },
-    { index: 3, label: 'Employee', class: 'colEmployee', active: true, display: true, width: "100" },
-    { index: 4, label: 'Pay No', class: 'colPayNo', active: true, display: true, width: "80" },
-    { index: 5, label: 'Accrued Type', class: 'colAccruedType', active: true, display: true, width: "110" },
-    { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "80" },
-    { index: 7, label: 'Value', class: 'colValue', active: true, display: true, width: "80" },
+    { index: 1, label: 'Accrued Date', class: 'colAccruedDate', active: true, display: true, width: "200" },
+    { index: 2, label: 'Leave Type', class: 'colLeaveType', active: true, display: true, width: "150" },
+    { index: 3, label: 'Employee', class: 'colEmployee', active: true, display: true, width: "150" },
+    { index: 4, label: 'Pay No', class: 'colPayNo', active: true, display: true, width: "100" },
+    { index: 5, label: 'Accrued Type', class: 'colAccruedType', active: true, display: true, width: "130" },
+    { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
+    { index: 7, label: 'Value', class: 'colValue', active: true, display: true, width: "100" },
   ]
   templateObject.leaveaccruedth.set(reset_data);
 

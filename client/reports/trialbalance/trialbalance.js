@@ -203,7 +203,7 @@ Template.trialbalance.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        responsive: true,
+        // responsive: true,
         "order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
