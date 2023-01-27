@@ -192,6 +192,7 @@ import './Template/AppTableModal.html';
 import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
 import './vs1charts/allCardsLists/allCardsLists.js';
 import './vs1charts/allChartLists/allChartLists.js';
+import './vs1charts/allCardCharts/allCardCharts.js';
 import './vs1charts/allCardsLists/bankingoverview/bankingoverviewcards.js';
 import './vs1charts/allCardsLists/paymentoverview/paymentoverviewcards.js';
 import './vs1charts/allCardsLists/crmoverviewcards/crmoverviewcards.js';
@@ -339,7 +340,6 @@ import './inventory/inventorypopups/onSalesOrderPopUp.js';
 
 /* Sasa */
 import './Dashboard/Dashboard.js';
-import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
 import './Dashboard/my-tasks-widget/my-tasks-widget.js';
 import './contacts/addcustomerpop.js';
 import './Dashboard/Dashboardexe.js';

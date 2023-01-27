@@ -11,7 +11,6 @@ import Tvs1ChartDashboardPreference from "../../js/Api/Model/Tvs1ChartDashboardP
 import Tvs1ChartDashboardPreferenceField from "../../js/Api/Model/Tvs1ChartDashboardPreferenceField";
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
-import { SideBarService } from "../../js/sidebar-service";
 
 import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
@@ -100,7 +99,6 @@ let chartsPlaceList = {
     ],
 };
 
-let sideBarService = new SideBarService();
 /**
  * Current User ID
  */
