@@ -2756,8 +2756,8 @@ Template.new_invoice.onRendered(function () {
     $(".uploadedImage").attr("src", imageData);
   }
 
-  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly");
-  if (isBOnShippedQty) {
+  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly")||false;
+  if(JSON.parse(isBOnShippedQty)) {
     templateObject.includeBOnShippedQty.set(false);
   }
 

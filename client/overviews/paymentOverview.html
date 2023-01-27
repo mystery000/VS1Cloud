@@ -3,11 +3,6 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <!-- <style>
-            .dataTables_filter {
-                display: none;
-            }
-        </style> -->
         <header class="row">
             <div class="col-12 col-md-4">
                 <h2 class="mr-1 pageHeader">Payment Overview {{> helpbutton}}</h2>
@@ -15,24 +10,6 @@
             <div class="col-12 col-md-4">
                 {{> loggedcompanyoverview}}
             </div>
-            <!-- Start Help View Modal -->
-            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding-bottom: 8px;">
-                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                            {{> helpadvisor}}
-                            {{> helpgotoforum}}
-                        </div>
-                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Help View Modal -->
             <div class="col-12 col-md-4">
                 <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3" style="margin-right: 0px;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
@@ -132,20 +109,6 @@
                     display: none;
                 }
             }
-        </style>
-
-        <div class="row headingRow" style="padding: 0px; padding-bottom: 0px;">
-            <div class="col-6">
-                <h4 style="color: rgb(90,92,105);">Customers</h4>
-            </div>
-            <div class="col-6">
-                <h4 style="color: rgb(90,92,105);">Suppliers</h4>
-            </div>
-        </div>
-        <!-- All Cards List -->
-        {{> allCardsLists tabGroupID="7" chartGroup="PaymentOverview"}}
-
-        <style>
             @media screen and (max-width: 450px) {
                 .btnNav {
                     width: 90% !important;
@@ -165,6 +128,17 @@
             }
         </style>
 
+        <div class="row headingRow" style="padding: 0px; padding-bottom: 0px;">
+            <div class="col-6">
+                <h4 style="color: rgb(90,92,105);">Customers</h4>
+            </div>
+            <div class="col-6">
+                <h4 style="color: rgb(90,92,105);">Suppliers</h4>
+            </div>
+        </div>
+        <!-- All Cards List -->
+        {{> allCardsLists tabGroupID="7" chartGroup="PaymentOverview"}}
+        <!-- END All Cards List -->
         <div class="row d-xl-flex flex-row justify-content-xl-center">
 
             <div class="col d-xl-flex flex-grow-1 align-items-xl-start" style="padding: 0px !important;">
@@ -180,8 +154,6 @@
                         <a class="dropdown-item" role="presentation" href="/supplierpayment">Payment List (Supplier)</a>
                         <a class="dropdown-item" role="presentation" href="/paymentcard" id="newCustomerPayment" name="newCustomerPayment">+ New Customer Payment</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpaymentcard" id="newSupplierPayment" name="newSupplierPayment">+ New Supplier Payment</a>
-                        <!-- <a class="dropdown-item" role="presentation" href="/supplierawaitingbills">Awaiting Bills (Supplier)</a>
-<a class="dropdown-item" role="presentation" href="/supplierpayment">Payments (Supplier)</a> -->
                     </div>
                 </div>
                 <div class="btn-group btnNav vs1ButtonMargin" style="min-width: 117.016px;">
@@ -201,7 +173,6 @@
                         <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">All Outstanding Expenses</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpayment">Payment List</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpaymentcard" id="newSupplierPayment" name="newSupplierPayment">+ New Supplier Payment</a>
-
                     </div>
                 </div>
                 <button class="btn btn-primary btnPrinStatment btnNav vs1ButtonMargin" type="button" style="min-width: 175px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Statements</button>
@@ -219,7 +190,6 @@
 
         <div class="row">
             <div class="card-body p-3 rounded" style="padding-top: 0px !important;">
-                <!-- Start {{> optionNavSalesOverview}} -->
                 <div class="d-xl-flex justify-content-xl-end">
                     <div>
                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
@@ -433,26 +403,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- {{#if datatablerecords}}
-                                {{#each item in datatablerecords}}
-                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                        <td contenteditable="false" class="colPaymentDate"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>
-                                        <td contenteditable="false" class="colCustomerName">{{item.customername}}</td>
-                                        <td contenteditable="false" class="colPaymentNo">{{item.id}}</td>
-                                        <td contenteditable="false" class="colRefNo">{{item.refno}}</td>
-                                        <td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">{{item.paymentamount}}</td>
-                                        <td contenteditable="false" class="colBankAccount">{{item.bankaccount}}</td>
-                                        <td contenteditable="false" class="colType">{{item.type}}</td>
-                                        <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                        <td contenteditable="false" class="colStatus">{{item.paystatus}}</td>
-                                        <td contenteditable="false" class="colReceiptNo hiddenColumn">{{item.receiptno}}</td>
-                                        <td contenteditable="false" class="colJobName hiddenColumn">{{item.jobname}}</td>
-                                        <td contenteditable="false" class="colPaymentMethod hiddenColumn">{{item.paymentmethod}}</td>
-                                        <td contenteditable="false" class="colNotes">{{item.notes}}</td>
-                                    </tr>
-                                {{/each}}
-                            {{/if}} -->
                         </tbody>
                     </table>
                 </div>
@@ -560,27 +510,6 @@
         </div>
     </div>
     <!-- END PDF -->
-    <!-- Start Help Video Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content">
-                <div class="modal-header">
-
-                    <h4 class="title-header">Payment Overview</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/paymentoverview.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- End Help Video Modal -->
     <script>
         modalDraggable();
     </script>

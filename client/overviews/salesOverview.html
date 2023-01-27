@@ -21,20 +21,132 @@
         .colUnitPriceEx, .colUnitPriceInc, .colAmountEx, .colAmountInc {
           cursor: pointer;
         }
+        @media screen and (max-width: 420px) {
+            .salesOverviewMobile {
+                margin-bottom: 50px;
+            }
+        }
+        @media screen and (max-width: 450px) {
+            .btnNav {
+                width: 90% !important;
+                margin: 12px 0px !important;
+            }
+
+            .QuoteList {
+                width: 120px;
+            }
+
+            .salesOrderList {
+                width: 120px;
+            }
+
+            .invoiceList {
+                width: 120px;
+            }
+
+            .btnOpenSettingsMobile {
+                display: block !important;
+                margin: 12px 0px !important;
+            }
+
+            .btnOpenSettings {
+                display: none;
+            }
+
+            .dateSelectMobile {
+                float: right !important;
+                margin-right: 0px !important;
+            }
+
+            .btn-daterange {
+                float: right !important;
+            }
+
+            .dropdownMobile {
+                margin: 0px !important;
+            }
+        }
+        .groove {
+            border-style: solid;
+            border-width: 1px;
+            width: 200px;
+            padding: 2px;
+            border-radius: .35rem;
+        }
+
+        .custom-control-label {
+            position: absolute;
+        }
+
+        .rngRange {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
+            background-color: rgb(255, 255, 255);
+            background-clip: padding-box;
+            border: 1px solid rgb(133, 135, 150);
+            border-radius: .3rem;
+            border-style: solid;
+            border-width: 1px;
+            padding: 2px;
+            border-radius: .35rem;
+            color: rgb(128, 128, 128);
+            height: inherit !important;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .modal.show .modal-dialog {
+                float: inherit !important;
+                left: inherit !important;
+                top: auto !important;
+
+            }
+        }
+
+        #page-top.active {
+            padding-right: 0px !important;
+        }
+        th {
+            background-color: #ededed;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white !important;
+        }
+
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #0000000d !important;
+        }
+
+        .JColResizer>tbody>tr>td,
+        .JColResizer>tbody>tr>th {
+            padding: .75rem !important;
+        }
+
+        .hiddenColumn {
+            display: none;
+        }
+
+        .showColumn {
+            display: table-cell;
+            padding: .75rem;
+            vertical-align: top;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+        .text-deleted{
+          background-color: #e74a3b !important; color:#fff;
+        }
     </style>
     <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-
-        <style>
-            @media screen and (max-width: 420px) {
-                .salesOverviewMobile {
-                    margin-bottom: 50px;
-                }
-            }
-        </style>
-
         <header class="row salesOverviewMobile">
             <div class="col-12 col-md-4">
                 <h2 class="mr-1 pageHeader" >Sales Overview {{> helpbutton}}</h2>
@@ -46,154 +158,11 @@
                 <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3"
                    style="margin-right: 4px;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
-            <!-- Start Help View Modal -->
-            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                <div class="modal-dialog modal-sm" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header" style="padding-bottom: 8px;">
-                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
-                                    class="btn btn-primary helpModal">View Help Video</a></p>
-                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=54"
-                                    target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                    {{> helpadvisor}}
-                                    {{> helpgotoforum}}
-                        </div>
-                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
-                                data-dismiss="modal" type="button">Close</button></div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Help View Modal -->
-            <div class="modal fade" role="dialog" tabindex="-1" id="myModal3">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>Sales Settings</h4><button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-12" style="margin-bottom: 8px;">
-                                    <div class="d-xl-flex justify-content-between align-items-xl-center">
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput"
-                                                id="feeOnTopInput" checked />
-                                            <label style="width: 275px;" class="custom-control-label"
-                                                for="feeOnTopInput">Apply online payment fee to total.</label>
-                                        </div>
-                                        <i data-toggle="tooltip" data-placement="left"
-                                            class="fa fa-question-circle-o float-right"
-                                            title="Include the payment link fee on top of the final price. This will be visible to your clients."></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12" style="margin-bottom: 8px;">
-                                    <div class="d-xl-flex justify-content-between align-items-xl-center">
-                                        <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input feeInPriceInput"
-                                                id="feeInPriceInput" />
-                                            <label style="width: 275px;" class="custom-control-label"
-                                                for="feeInPriceInput">Include online payment fee in total.</label>
-                                        </div>
-                                        <i data-toggle="tooltip" data-placement="left"
-                                            class="fa fa-question-circle-o float-right"
-                                            title="Include the payment link fee in the final price. This will be hidden from your clients."></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <button id="" class="btn btn-primary btnTaxRateSettings" type="button"
-                                        style="width: 100%; margin: 8px 0px;">
-                                        <i class="fas fa-cog" style="margin-right: 5px;"></i>Tax Rate Settings
-                                    </button>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <button id="" class="btn btn-primary btnTermsSettings" type="button"
-                                        style="width: 100%; margin: 8px 0px;">
-                                        <i class="fas fa-cog" style="margin-right: 5px;"></i>Terms Settings
-                                    </button>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <button id="" class="btn btn-primary btnCurrencySettings" type="button"
-                                        style="width: 100%; margin: 8px 0px;">
-                                        <i class="fas fa-cog" style="margin-right: 5px;"></i>Currency Settings
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
-                                    style="margin-right: 5px;"></i>Save</button>
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
-                                    style="margin-right: 5px;"></i>Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </header>
-
-        <!-- <div class="row">
-            <div class="col">
-                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin-right: 32px;"><i class="icon ion-android-more-horizontal"></i></a>
-            </div>
-        </div> -->
-
         <!-- All Cards List -->
         {{> allCardsLists tabGroupID="9" chartGroup="PaymentOverviewCustomer"}}
-
         <!-- All charts list -->
         {{> allChartLists  tabGroupID="8" chartGroup="Sales" currentTemplate="Sales_Overview"}}
-
-        <style>
-
-            @media screen and (max-width: 450px) {
-                .btnNav {
-                    width: 90% !important;
-                    margin: 12px 0px !important;
-                }
-
-                .QuoteList {
-                    width: 120px;
-                }
-
-                .salesOrderList {
-                    width: 120px;
-                }
-
-                .invoiceList {
-                    width: 120px;
-                }
-
-                .btnOpenSettingsMobile {
-                    display: block !important;
-                    margin: 12px 0px !important;
-                }
-
-                .btnOpenSettings {
-                    display: none;
-                }
-
-                .dateSelectMobile {
-                    float: right !important;
-                    margin-right: 0px !important;
-                }
-
-                .btn-daterange {
-                    float: right !important;
-                }
-
-                .dropdownMobile {
-                    margin: 0px !important;
-                }
-            }
-        </style>
-
         <div class="row">
             <div class="col-6 col-md-7 col-lg-8">
                 <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav" type="button" style="margin: 12px; margin-left:0;"><i
@@ -235,7 +204,6 @@
                             BO</a>
                         <a class="dropdown-item" role="presentation" href="/invoicecard" id="newInvoice"
                             name="newInvoice">+ New Invoice</a>
-                        <!-- <a class="dropdown-item" role="presentation" href="/refundcard" id="newRefund" name="newRefund">+ New Refund</a> -->
                     </div>
                 </div>
                 <div class="btn-group btnNav" style="margin: 12px;">
@@ -263,42 +231,7 @@
                         class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
-
-        <!-- <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 16px;">
-            <div class="col d-xl-flex flex-grow-1 align-items-xl-start">
-                <button id="btnRefresh" class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px;min-width: 117.016px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
-                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary QuoteList" role="button" href="/quoteslist" style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Quotes</a><button
-                        class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
-                    <div class="dropdown-menu" role="menu"><a class="dropdown-item QuoteList" role="presentation" href="/quoteslist">Quote List</a><a class="dropdown-item" role="presentation" href="/quotecard" id="newQuote" name="newQuote">+ New
-                            Quote</a></div>
-                </div>
-                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary salesOrderList" role="button" style="color: rgb(255,255,255);min-width: 125px; background-color: #00A3D3; border-color: #00A3D3;"
-                        href="/salesorderslist" id="salesOrderList" name="salesOrderList">Sales Orders</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"
-                        style="background-color: #00A3D3; border-color: #00A3D3;"></button>
-                    <div class="dropdown-menu" role="menu"><a class="dropdown-item salesOrderList" role="presentation" href="/salesorderslist">Sales Order List</a><a class="dropdown-item" role="presentation" href="/salesordercard" id="newSalesOrder"
-                            name="newSalesOrder">+ New Sales Order</a>
-                    </div>
-                </div>
-                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary invoiceList" role="button" href="/invoicelist" id="invoiceList" name="invoiceList"
-                        style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Invoices</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"
-                        style="background-color: #00A3D3; border-color: #00A3D3;"></button>
-                    <div class="dropdown-menu" role="menu"><a class="dropdown-item invoiceList" role="presentation" href="/invoicelist">Invoice List</a>
-                        <a class="dropdown-item invoiceListBO" role="presentation" href="/invoicelistBO">Invoice List - BO</a>
-                        <a class="dropdown-item" role="presentation" href="/invoicecard" id="newInvoice" name="newInvoice">+ New Invoice</a>
-                        <a class="dropdown-item" role="presentation" href="/refundcard" id="newRefund" name="newRefund">+ New Refund</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
-                <button class="btn btn-primary printConfirm float-right" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-
-            </div>
-        </div> -->
-
             <div class="card-body px-0 py-3 rounded">
-                <!-- Start {{> optionNavSalesOverview}} -->
                 <div class="d-xl-flex justify-content-xl-end">
                     <div>
                         <div class="modal fade" role="dialog" tabindex="-1" id="displaySettingsModal2">
@@ -311,54 +244,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            <!-- {{#if tableheaderrecords}} -->
                                             <form class="d-xl-flex align-items-xl-center">
                                                 <div class="flex-grow-1">
-                                                    <style>
-                                                        .groove {
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            width: 200px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
-                                                        }
-
-                                                        .custom-control-label {
-                                                            position: absolute;
-                                                        }
-
-                                                        .rngRange {
-                                                            position: relative;
-                                                            display: flex;
-                                                            flex-direction: column;
-                                                            width: 100%;
-                                                            pointer-events: auto;
-                                                            background-color: rgb(255, 255, 255);
-                                                            background-clip: padding-box;
-                                                            border: 1px solid rgb(133, 135, 150);
-                                                            border-radius: .3rem;
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
-                                                            color: rgb(128, 128, 128);
-                                                            height: inherit !important;
-                                                        }
-
-                                                        @media only screen and (max-width: 480px) {
-                                                            .modal.show .modal-dialog {
-                                                                float: inherit !important;
-                                                                left: inherit !important;
-                                                                top: auto !important;
-
-                                                            }
-                                                        }
-
-                                                        #page-top.active {
-                                                            padding-right: 0px !important;
-                                                        }
-                                                    </style>
-
                                                     {{#each displayfield in displayfields}}
                                                       {{#if displayfield.display}}
                                                       <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -376,7 +263,6 @@
                                                     {{/each}}
                                                 </div>
                                             </form>
-                                            <!-- {{/if}} -->
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -394,42 +280,6 @@
                 </div>
                 <!-- End -->
                 <div class="table-responsive">
-                    <style>
-                        th {
-                            background-color: #ededed;
-                        }
-
-                        .table-striped tbody tr:nth-of-type(odd) {
-                            background-color: white !important;
-                        }
-
-                        .table-striped tbody tr:nth-of-type(even) {
-                            background-color: #0000000d !important;
-                        }
-
-                        .JColResizer>tbody>tr>td,
-                        .JColResizer>tbody>tr>th {
-                            padding: .75rem !important;
-                        }
-
-                        .hiddenColumn {
-                            display: none;
-                        }
-
-                        .showColumn {
-                            display: table-cell;
-                            padding: .75rem;
-                            vertical-align: top;
-                        }
-
-                        input[type=number]::-webkit-inner-spin-button,
-                        input[type=number]::-webkit-outer-spin-button {
-                            opacity: 1;
-                        }
-                        .text-deleted{
-                          background-color: #e74a3b !important; color:#fff;
-                        }
-                    </style>
                     <div class="row no-gutters d-xl-flex align-items-xl-end">
                         <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
@@ -447,28 +297,6 @@
                                     {{> daterangedropdownoption}}
                             </div>
                             {{> daterangefromto_trans}}
-                            <!--
-                            <div class="form-group dateSelectMobile"
-                                style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                                <div class="input-group date" style="width: 160px;">
-                                    <input type="text" class="form-control" id="dateFrom" name="dateFrom">
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group dateSelectMobile"
-                                style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                                <div class="input-group date" style="width: 160px;">
-                                    <input type="text" class="form-control" id="dateTo" name="dateTo">
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            -->
                         </div>
                     </div>
                     <table id="tblSalesOverview" class="dataTable table table-striped table-bordered tblSalesOverview">
@@ -507,12 +335,6 @@
                                 <td contenteditable="false" class="colStatus {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">{{item.salestatus}}</td>
                                 <td contenteditable="false" class="colEmployee  {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
                                 <td contenteditable="false" class="colComments {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.comments}}</td>
-                                <!-- <td contenteditable="false" class="colSaleCustField1  {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}
-                                </td>
-                                <td contenteditable="false" class="colSaleCustField2  {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}
-                                </td>
-                                <td contenteditable="false" class="colSaleCustField3  {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}
-                                </td> -->
                             </tr>
                             {{/each}}
                             {{/if}}
@@ -574,16 +396,6 @@
                                 <table class="table table-sm">
                                     <thead class="text-secondary" style="color: rgb(251,251,251);">
                                         <tr>
-                                            <!-- <th class="text-nowrap">Sales No</th>
-<th class="text-nowrap">Employee</th>
-<th class="text-nowrap text-left">Sale Date</th>
-<th class="text-nowrap text-left">Customer</th>
-<th class="text-nowrap text-left">Amount</th>
-<th class="text-nowrap text-left">Status</th>
-<th class="text-nowrap text-left">SaleCustField1<br></th>
-<th class="text-nowrap text-left">SaleCustField2<br></th>
-<th class="text-nowrap text-left">Comment<br></th>
--->
                                             <th class="th colSaleDate text-nowrap text-left">Sale Date</th>
                                             <th class="th colSalesNo text-nowrap text-left">Sales No.</th>
                                             <th class="th colCustomer text-nowrap text-left">Customer</th>
@@ -631,35 +443,11 @@
                     </div>
                 </div>
                 <div class="flex-grow-0" style="width: 100%;">
-                    <!-- <span class="d-lg-flex d-xl-flex justify-content-lg-end justify-content-xl-end" style="font-size: 10px;margin-right: 8px;">Page 1 of 1</span> -->
                 </div>
             </div>
         </div>
     </div>
     <!-- END PDF -->
-    <!-- Start Help Video Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content">
-                <div class="modal-header">
-
-                    <h4 class="title-header">Sales Overview</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe class="videoContainer" width="640" height="360" src="https://erphelpes.com/vs1videos/salesoverview.mp4?autoplay=0" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
-                        style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/salesoverview.mp4" type="video/mp4">
-                    </video>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- End Help Video Modal -->
     <script>
         modalDraggable();
     </script>
