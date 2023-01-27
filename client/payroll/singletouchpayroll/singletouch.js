@@ -467,7 +467,7 @@ Template.singletouch.events({
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/singletouchpayroll');
     },
-    'click #payrun100': function(event) {
+    'click #100': function(event) {
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/singletouchpayroll');
     }

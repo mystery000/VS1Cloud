@@ -2397,7 +2397,7 @@ Template.appointments.onRendered(function() {
 
                         title.style.color = "#dddddd";
                     }
-                    
+
                 }
 
                 let arrayOfDomNodes = [title];
@@ -12003,32 +12003,7 @@ Template.appointments.events({
     },
 
     "click .btnResetSettings": function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem("mycloudLogonID"),
-            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: "new_invoice",
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                            _id: checkPrefDetails._id,
-                        },
-                        function(err, idTag) {
-                            if (err) {} else {
-                                Meteor._reload.reload();
-                            }
-                        }
-                    );
-                }
-            }
-        }
+      Meteor._reload.reload();
     },
     //  'click .holdPause': function (event) {
     //      swal({
