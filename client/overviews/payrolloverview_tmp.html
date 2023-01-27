@@ -17,34 +17,32 @@
         .showelement {
             display: block;
         }
+        .now-success {
+            background-color: #1cc88a;
+        }
+
+        @media screen and (max-width: 376px) {
+            .btnOpenSettings {
+                margin-right: 0px;
+            }
+        }
+
+        .colPayDate, .colPayInBatch, .colEarning, .colTax, .colSuper, .colGross, .colPaid, .colNetPay {
+            width: 80px !important;
+        }
     </style>
 
     <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <style>
-            .now-success {
-                background-color: #1cc88a;
-            }
-
-            @media screen and (max-width: 376px) {
-                .btnOpenSettings {
-                    margin-right: 0px;
-                }
-            }
-
-            .colPayDate, .colPayInBatch, .colEarning, .colTax, .colSuper, .colGross, .colPaid, .colNetPay {
-                width: 80px !important;
-            }
-        </style>
         <div>
-            {{> PayrollOverviewHeaderSection }} 
+            {{> PayrollOverviewHeaderSection }}
 
             {{> allChartLists  tabGroupID="6" chartGroup="Payroll" currentTemplate="Payroll_Overview"}}
 
             {{> employeeAbsentDays }}
-            
+
             {{> PayrollOverviewPayrunHistory}}
 
             {{> PayrollImportModal }}
@@ -53,19 +51,18 @@
 
             {{> PayrollOverviewPayrun}}
         </div>
-    </div> 
-
+    </div>
     {{> PayrollClickOffModal}}
     {{> PayrollFrmOnHoldModal}}
     {{> PayrollemployeeListModalModal}}
     {{> PayrollCustomerListModal}}
     {{> PayrollAddCustomerModal}}
-    {{> PayrollProductListModal}} 
-    {{> PayrollScanBarcodeClockOffModal}} 
-    {{> PayrollAddTimeSheetModal}} 
+    {{> PayrollProductListModal}}
+    {{> PayrollScanBarcodeClockOffModal}}
+    {{> PayrollAddTimeSheetModal}}
     {{> AddPayRunModal }}
     {{> PayrollSelectPayrunModal}}
-    {{> PayrollSelectPayperiodModal}}  
+    {{> PayrollSelectPayperiodModal}}
     <script>
         modalDraggable();
     </script>
