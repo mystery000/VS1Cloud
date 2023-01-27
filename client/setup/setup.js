@@ -288,8 +288,8 @@ Template.setup.onRendered(function () {
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    window.location.href = "/";
-    // FlowRouter.go("onloginsuccess");
+    // window.location.href = "/";
+    FlowRouter.go("onloginsuccess");
     LoadingOverlay.hide();
 
   };

@@ -1032,11 +1032,12 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === 'taxRatesList') {
             reset_data = [
-                { index: 0, label: 'Name', class: 'colFirstName', active: true, display: true },
-                { index: 1, label: 'Description', class: 'colSurname', active: true, display: true, },
-                { index: 2, label: 'Rate', class: 'colPeriod', active: true, display: true },
-                { index: 3, label: 'Purchase Default', class: 'colStatus', active: true, display: true, width: '20' },
-                { index: 4, label: 'Sales Default', class: 'colLastEdited', active: true, display: true, width: '20' },
+                { index: 0, label: 'Id', class: 'colTaxRateId', active: false, display: true },
+                { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true },
+                { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
+                { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true },
+                { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '20' },
+                { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '20' },
             ]
         } else if (currenttablename === "tblSerialNumberList"){
             reset_data = [
@@ -3320,7 +3321,7 @@ Template.non_transactional_list.onRendered(function() {
         getVS1Data('TSupplierVS1List').then(function(dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                    await addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                    addVS1Data('TSupplierVS1List', JSON.stringify(data));
                     templateObject.displaySuppliersListData(data);
                 }).catch(function(err) {
                 });
@@ -3330,7 +3331,7 @@ Template.non_transactional_list.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                addVS1Data('TSupplierVS1List', JSON.stringify(data));
                 templateObject.displaySuppliersListData(data);
             }).catch(function(err) {
 
@@ -3550,86 +3551,6 @@ Template.non_transactional_list.onRendered(function() {
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
-                "fnDrawCallback": function(oSettings) {
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
-
-                        }
-                    } else {
-
-                    }
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
-
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        //var splashArrayCustomerListDupp = new Array();
-                        sideBarService.getAllSuppliersDataVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-
-                            for (let j = 0; j < dataObjectnew.tsuppliervs1list.length; j++) {
-
-                                let linestatus = '';
-                                if (dataObjectnew.tsuppliervs1list[j].Active == true) {
-                                    linestatus = "";
-                                } else if (dataObjectnew.tsuppliervs1list[j].Active == false) {
-                                    linestatus = "In-Active";
-                                };
-
-                                let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].ARBalance) || 0.00;
-                                let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].ExcessAmount) || 0.00;
-                                let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].Balance) || 0.00;
-                                let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].SupplierCreditLimit) || 0.00;
-                                let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tsuppliervs1list[j].Balance) || 0.00;
-
-                                var dataListDupp = [
-                                    dataObjectnew.tsuppliervs1list[j].ClientID || '',
-                                    dataObjectnew.tsuppliervs1list[j].Company || '',
-                                    dataObjectnew.tsuppliervs1list[j].Phone || '',
-                                    arBalance || 0.00,
-                                    creditBalance || 0.00,
-                                    balance || 0.00,
-                                    creditLimit || 0.00,
-                                    salesOrderBalance || 0.00,
-                                    dataObjectnew.tsuppliervs1list[j].Email || '',
-                                    dataObjectnew.tsuppliervs1list[j].AccountNo || '',
-                                    dataObjectnew.tsuppliervs1list[j].ClientNo || '',
-                                    dataObjectnew.tsuppliervs1list[j].JobTitle || '',
-                                    dataObjectnew.tsuppliervs1list[j].CUSTFLD1 || '',
-                                    dataObjectnew.tsuppliervs1list[j].CUSTFLD2 || '',
-                                    dataObjectnew.tsuppliervs1list[j].Suburb || '',
-                                    dataObjectnew.tsuppliervs1list[j].POState || '',
-                                    dataObjectnew.tsuppliervs1list[j].Postcode || '',
-                                    dataObjectnew.tsuppliervs1list[j].Country || '',
-                                    linestatus,
-                                    dataObjectnew.tsuppliervs1list[j].Notes || '',
-                                ];
-
-                                splashArraySuppliersList.push(dataListDupp);
-                            }
-                            let uniqueChars = [...new Set(splashArraySuppliersList)];
-                            templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
-                            datatable.clear();
-                            datatable.rows.add(uniqueChars);
-                            datatable.draw(false);
-                            setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
-                            }, 400);
-
-                            $('.fullScreenSpin').css('display', 'none');
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-
-                    });
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
                     if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -3640,8 +3561,7 @@ Template.non_transactional_list.onRendered(function() {
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
-
+                    let countTableData = splashArraySuppliersList.length || 0; //get count from API data
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
 
@@ -14106,7 +14026,7 @@ Template.non_transactional_list.onRendered(function() {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(async function (data) {
-                    await addVS1Data('TCustomerVS1', JSON.stringify(data));
+                    addVS1Data('TCustomerVS1', JSON.stringify(data));
                     templateObject.displayCustomerList(data);
                 }).catch(function (err) {
 
@@ -14117,8 +14037,8 @@ Template.non_transactional_list.onRendered(function() {
             }
         }).catch(function (err) {
           sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(async function (data) {
-              await addVS1Data('TCustomerVS1', JSON.stringify(data));
-              templateObject.displayCustomerList(data);
+                addVS1Data('TCustomerVS1', JSON.stringify(data));
+                templateObject.displayCustomerList(data);
           }).catch(function (err) {
 
           });
@@ -14174,7 +14094,7 @@ Template.non_transactional_list.onRendered(function() {
         }
 
         $('#' + currenttablename).DataTable({
-            data: templateObject.transactiondatatablerecords.get(),
+            data: splashArrayCustomerList,
             "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             columnDefs: [
                 {
@@ -14366,7 +14286,7 @@ Template.non_transactional_list.onRendered(function() {
                 $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                let countTableData = data.length || 0; //get count from API data
+                let countTableData = splashArrayCustomerList.length || 0; //get count from API data
                 return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
             }
 
@@ -14374,25 +14294,7 @@ Template.non_transactional_list.onRendered(function() {
             setTimeout(function() {
                 MakeNegative();
             }, 100);
-        }).on('column-reorder', function() {
-
-        }).on('length.dt', function(e, settings, len) {
-
-            $(".fullScreenSpin").css("display", "inline-block");
-            let dataLenght = settings._iDisplayLength;
-            if (dataLenght == -1) {
-                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
-                    $(".fullScreenSpin").css("display", "none");
-                } else {
-                    $(".fullScreenSpin").css("display", "none");
-                }
-            } else {
-                $(".fullScreenSpin").css("display", "none");
-            }
-            setTimeout(function() {
-                MakeNegative();
-            }, 100);
-        });
+        })
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
         $('.fullScreenSpin').css('display', 'none');
@@ -14637,6 +14539,7 @@ Template.non_transactional_list.onRendered(function() {
             id="formCheckS-${id}" value="${codeName}"><label
             class="custom-control-label" for="formCheckS-${id}"></label></div>`
             const dataList = [
+                id,
                 codeName,
                 description,
                 rate,
@@ -14656,6 +14559,13 @@ Template.non_transactional_list.onRendered(function() {
         $("#taxRatesList").DataTable({
             data: templateObject.transactiondatatablerecords.get(),
             columnDefs: [
+                {
+                    className: "hiddenColumn",
+                    targets:0,
+                    createdCell: function (td, cellData, rowData, row, col) {
+                        $(td).closest("tr").attr("id", rowData[0]);
+                    }
+                },
                 { type: "date", targets: 0 },
                 { orderable: false, targets: -1 },
             ],
