@@ -522,27 +522,27 @@ Template.accessleveldup.onRendered(function(){
 
                     // if((n.description != "Fixed Assets") || (n.skingroup != "Fixed Assets")){
                     //     if((n.description != "TrueERP Mobile Data Export")){
-                            groupName = n.skingroup;
-                            if (!groups[groupName]) {
-                                groups[groupName] = [];
-                            }
+                    groupName = n.skingroup;
+                    if (!groups[groupName]) {
+                        groups[groupName] = [];
+                    }
 
-                            groups[groupName].sort(function(a, b){
-                                if (a.description == 'NA') {
-                                    return 1;
-                                }
-                                else if (b.description == 'NA') {
-                                    return -1;
-                                }
-                                return (a.description.toUpperCase() > b.description.toUpperCase()) ? 1 : -1;
-                            });
+                    groups[groupName].sort(function(a, b){
+                        if (a.description == 'NA') {
+                            return 1;
+                        }
+                        else if (b.description == 'NA') {
+                            return -1;
+                        }
+                        return (a.description.toUpperCase() > b.description.toUpperCase()) ? 1 : -1;
+                    });
 
 
-                            groups[groupName].push(lineItemObjlevel);
-                            splashArrayAccess.push(lineItemObjlevel);
-                            lineItemslevel.push(lineItemObjlevel);
-                            recordsaccess.push(lineItemObjlevel);
-                            templateObject.recordsaccess.set(lineItemObjlevel);
+                    groups[groupName].push(lineItemObjlevel);
+                    splashArrayAccess.push(lineItemObjlevel);
+                    lineItemslevel.push(lineItemObjlevel);
+                    recordsaccess.push(lineItemObjlevel);
+                    templateObject.recordsaccess.set(lineItemObjlevel);
                     //     }
                     // }
                 });
@@ -623,7 +623,6 @@ Template.accessleveldup.onRendered(function(){
 
 
                                     if(data.temployeeformaccessdetail[i].fields.FormId === n.lineID){
-
                                         if((data.temployeeformaccessdetail[i].fields.Description === "Accounts") && (!isAccountsLicence)){
                                             formClass = 'inactiveLicence';
                                         }else if((data.temployeeformaccessdetail[i].fields.Description === "Accounts") && (isAccountsLicence)){
@@ -1614,21 +1613,22 @@ Template.accessleveldup.onRendered(function(){
                                     $('#formCheck-' + data.temployeeformaccessdetail[i].fields.SkinsGroup + '').prop("checked", false);
                                     },500);
                                   }
-                                }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Fixed Assets") && (data.temployeeformaccessdetail[i].fields.Description === "Fixed Assets")){
+                                }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Fixed Assets")){
                                     formClassHidden = 'hiddenRow';
                                     if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
                                       setTimeout(function () {
-                                        $('#formCheck-Fixed Assets').prop("checked", false);
+                                        document.getElementById("formCheck-Fixed Assets").checked = false;
+                                        // $('#formCheck-Fixed').prop("checked", false);
                                       },500);
                                     }
-                                  }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "FixedAssets") && (data.temployeeformaccessdetail[i].fields.Description === "FixedAssets")){
+                                  }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "FixedAssets")){
                                     formClassHidden = 'hiddenRow';
                                     if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
                                       setTimeout(function () {
                                         $('#formCheck-FixedAssets').prop("checked", false);
                                       },500);
                                     }
-                                  }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Utilities") && (data.temployeeformaccessdetail[i].fields.Description === "Utilities")){
+                                  }else if((data.temployeeformaccessdetail[i].fields.SkinsGroup === "Utilities")){
                                     formClassHidden = 'hiddenRow';
                                     if(data.temployeeformaccessdetail[i].fields.AccessLevel == 6){
                                       setTimeout(function () {
@@ -2262,7 +2262,7 @@ Template.accessleveldup.onRendered(function(){
 
               templateObject.employeeformaccessrecord.set(lineItemslevel);
               $('.fullScreenSpin').css('display','none');
-          }).catch(function (err) {
+                }).catch(function (err) {
               $('.fullScreenSpin').css('display', 'none');
 
               });
@@ -2769,7 +2769,6 @@ Template.accessleveldup.onRendered(function(){
                                     formClass: formClass || '',
                                     formClassHidden: formClassHidden || ''
                                 };
-
 
 
                                 var groupName = data.temployeeformaccessdetail[i].fields.SkinsGroup;
