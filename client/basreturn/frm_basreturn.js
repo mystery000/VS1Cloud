@@ -1646,12 +1646,12 @@ Template.basreturn.onRendered(function() {
                 if (getid[1]) {
                     templateObject.getId.set(getid[1]);
                     templateObject.pageTitle.set("Edit VAT Return");
-                    
+
                     getVS1Data('TBASReturn').then(function(dataObject) {
                         let taxRateList = templateObject.taxRateList.get();
                         let accountsList = templateObject.accountsList.get();
                         let deptrecords = templateObject.deptrecords.get();
-                        
+
                         if (dataObject.length == 0) {
                             reportService.getOneBASReturn(getid[1]).then(function(data) {
                                 $("#description").val(data.tbasreturn[0].fields.BasSheetDesc);
@@ -2536,7 +2536,7 @@ Template.basreturn.onRendered(function() {
                                         $("#nav-item4 a").click();
                                     }
                                 }
-                                
+
                                 document.getElementById("gst1C").setAttribute("href", "#");
                                 document.getElementById("gst1E").setAttribute("href", "#");
                                 document.getElementById("gst1D").setAttribute("href", "#");
@@ -2816,7 +2816,7 @@ Template.basreturn.onRendered(function() {
                             $("#nav-item4 a").click();
                         }
                     }
-                    
+
                     document.getElementById("gstG1").setAttribute("href", "#");
                     document.getElementById("gstG2").setAttribute("href", "#");
                     document.getElementById("gstG3").setAttribute("href", "#");
@@ -2887,7 +2887,7 @@ Template.basreturn.onRendered(function() {
                             $("#nav-item4 a").click();
                         }
                     }
-                    
+
                     document.getElementById("accountsT1").setAttribute("href", "#");
                     $("#accountsT2cost").attr("disabled", "disabled");
                     $("#accountsT3cost").attr("disabled", "disabled");
@@ -4213,128 +4213,14 @@ Template.basreturn.events({
                 lineItems.push(lineItemObj);
             });
 
-            var getcurrentCloudDetails = CloudUser.findOne({
-                _id: localStorage.getItem('mycloudLogonID'),
-                clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-            });
-
-            if (getcurrentCloudDetails) {
-                if (getcurrentCloudDetails._id.length > 0) {
-                    var clientID = getcurrentCloudDetails._id;
-                    var clientUsername = getcurrentCloudDetails.cloudUsername;
-                    var clientEmail = getcurrentCloudDetails.cloudEmail;
-                    var checkPrefDetails = CloudPreference.findOne({
-                        userid: clientID,
-                        PrefName: 'tblJournalEntryLine'
-                    });
-                    if (checkPrefDetails) {
-                        CloudPreference.update({
-                            _id: checkPrefDetails._id
-                        }, {
-                            $set: {
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: 'purchaseform',
-                                PrefName: 'tblJournalEntryLine',
-                                published: true,
-                                customFields: lineItems,
-                                updatedAt: new Date()
-                            }
-                        }, function(err, idTag) {
-                            if (err) {
-                                $('#myModal2').modal('toggle');
-
-                            } else {
-                                $('#myModal2').modal('toggle');
-
-
-                            }
-                        });
-
-                    } else {
-                        CloudPreference.insert({
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'purchaseform',
-                            PrefName: 'tblJournalEntryLine',
-                            published: true,
-                            customFields: lineItems,
-                            createdAt: new Date()
-                        }, function(err, idTag) {
-                            if (err) {
-                                $('#myModal2').modal('toggle');
-
-                            } else {
-                                $('#myModal2').modal('toggle');
-
-
-                            }
-                        });
-
-                    }
-                }
-            }
             $('#myModal2').modal('toggle');
         }, delayTimeAfterSound);
     },
     'click .btnResetGridSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblJournalEntryLine'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
+        Meteor._reload.reload();
     },
     'click .btnResetSettings': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'journalentrycard'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-                }
-            }
-        }
+        Meteor._reload.reload();
     },
     'click .btnBack': function(event) {
         playCancelAudio();

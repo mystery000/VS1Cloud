@@ -697,28 +697,7 @@ Template.chequelist.events({
           }
         },
     'click .resetTable': function(event) {
-        const getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblchequelist' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
+      Meteor._reload.reload();
     },
     'click .saveTable': function(event) {
         let lineItems = [];
@@ -738,58 +717,7 @@ Template.chequelist.events({
             };
             lineItems.push(lineItemObj);
         });
-        const getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                const clientID = getcurrentCloudDetails._id;
-                const clientUsername = getcurrentCloudDetails.cloudUsername;
-                const clientEmail = getcurrentCloudDetails.cloudEmail;
-                const checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'tblchequelist'});
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblchequelist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblchequelist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
-        }
+    
         $('#myModal2').modal('toggle');
     },
     'blur .divcolumn': function(event) {
