@@ -50,11 +50,18 @@ var noHasTotals = [
   "Journal Entry",
   "Deposit",
 ];
+
+let displaySetttingHeader1 = {}
+let displaySetttingHeader2 = {}
+let displaySetttingHeader3 = {}
+
+
 var modal_data = [];
 
 Template.templatesettings.onCreated(() => {
   let templateObject = Template.instance();
   templateObject.invoice_data = new ReactiveVar([]);
+  templateObject.print_displayfields = new ReactiveVar();
 });
 
 Template.templatesettings.onRendered(function () {
@@ -1600,6 +1607,7 @@ Template.templatesettings.onRendered(function () {
     }
 
     const data = object_invoce[0]["data"];
+    let className = Object.entries(object_invoce[0]['fields'])
     let idx = 0;
     for (item of data) {
       idx = 0;
@@ -1609,9 +1617,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+          content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         else 
-          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+          content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1722,6 +1730,7 @@ Template.templatesettings.onRendered(function () {
         break;
     }
 
+    let className = Object.entries(object_invoce[0]['fields'])
     const data = object_invoce[0]["data"];
     let idx = 0;
     for (item of data) {
@@ -1732,9 +1741,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+          content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         else 
-          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+          content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1833,6 +1842,7 @@ Template.templatesettings.onRendered(function () {
         break;
     }
 
+    let className = Object.entries(object_invoce[0]['fields'])
     const data = object_invoce[0]["data"];
     let idx = 0;
     for (item of data) {
@@ -1843,9 +1853,9 @@ Template.templatesettings.onRendered(function () {
       var content = "";
       for (item_temp of item) {
         if (idx > left_idx)
-          content = content + "<td style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+          content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         else 
-          content = content + "<td style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+          content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
         idx++;
       }
       tbl_content.append(content);
@@ -1871,7 +1881,8 @@ Template.templatesettings.onRendered(function () {
   }
 
   //update template with invoice type
-  function updateTemplate1(object_invoce) {
+  async function updateTemplate1(object_invoce) {
+    
     initTemplateHeaderFooter1();
     $("#html-2-pdfwrapper").show();
     $("#html-2-pdfwrapper2").hide();
@@ -1879,9 +1890,33 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter1(object_invoce);
     loadTemplateBody1(object_invoce);
+
+    let abnString = "Company #"
+    let repString = "Rep"
+    let custOrderString = "Cust Order No"
+    let dateString = "Date"
+    let dueDateString = "Due Date"
+    if (LoggedCountry == "South Africa")
+        abnString = "VAT #";
+    if (LoggedCountry == "Australia")
+        abnString = "ABN";
+
+    for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+      value[value.length] = "false";
+    }
+
+    object_invoce[0]["fields"][abnString] = [15, 'left', true]
+    object_invoce[0]["fields"][repString] = [15, 'left', true]
+    object_invoce[0]["fields"][custOrderString] = [15, 'left', true]
+    object_invoce[0]["fields"][dateString] = [15, 'left', true]
+    object_invoce[0]["fields"][dueDateString] = [15, 'left', true]
+
+    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
   }
 
-  function updateTemplate2(object_invoce) {
+  async function updateTemplate2(object_invoce) {
+    console.log(object_invoce)
+    
     initTemplateHeaderFooter2();
     $("#html-2-pdfwrapper").hide();
     $("#html-2-pdfwrapper2").show();
@@ -1889,9 +1924,28 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter2(object_invoce);
     loadTemplateBody2(object_invoce);
+
+    for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+      value[value.length] = "true";
+    }
+
+    let invoiceDate = "InvoiceDate"
+    let invoiceNumber = "InvoiceNumber"
+    let reference = "Reference"
+    let dueDate = "Due Date"
+
+    object_invoce[0]["fields"][invoiceDate] = [15, 'left', true]
+    object_invoce[0]["fields"][invoiceNumber] = [15, 'left', true]
+    object_invoce[0]["fields"][reference] = [15, 'left', true]
+    object_invoce[0]["fields"][dueDate] = [15, 'left', true]
+
+    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
+
   }
 
-  function updateTemplate3(object_invoce) {
+  async function updateTemplate3(object_invoce) {
+    console.log(object_invoce)
+    
     initTemplateHeaderFooter3();
     $("#html-2-pdfwrapper").hide();
     $("#html-2-pdfwrapper2").hide();
@@ -1899,6 +1953,24 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter3(object_invoce);
     loadTemplateBody3(object_invoce);
+
+    for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+      value[value.length] = "true";
+    }
+
+    let invoiceNumber = "INVOICE NUMBER"
+    let proReference = "PO/REFERENCE"
+    let accountNumber = "ACCOUNT NUMBER"
+    let amountDue = "AMOUNT DUE"
+    let dueDate = "Due Date"
+
+    object_invoce[0]["fields"][invoiceNumber] = [15, 'left', true]
+    object_invoce[0]["fields"][proReference] = [15, 'left', true]
+    object_invoce[0]["fields"][accountNumber] = [15, 'left', true]
+    object_invoce[0]["fields"][amountDue] = [15, 'left', true]
+    object_invoce[0]["fields"][dueDate] = [15, 'left', true]
+
+    await templateObject.print_displayfields.set(object_invoce[0]['fields']);
   }
 
   // show bill data with dummy data
@@ -4789,6 +4861,10 @@ Template.templatesettings.helpers({
   getTemplateNumber: function () {
     let template_numbers = ["1", "2", "3"];
     return template_numbers;
+  },
+
+  print_displayfields: () => {
+    return Template.instance().print_displayfields.get();
   },
 });
 
@@ -8914,6 +8990,10 @@ Template.templatesettings.events({
           }
         });
       });
+  },
+
+  "click #print_display_setting_div input": function () {
+
   },
 });
 Template.registerHelper("equals", function (a, b) {
