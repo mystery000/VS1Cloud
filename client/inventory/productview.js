@@ -18,7 +18,367 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let accSelected = "";
+let uomSelected = "";
 let taxSelected = "";
+let defaultUOM = "Each";
+
+const getAccountsByCategory = function (accountType) {
+  getVS1Data("TAccountVS1")
+    .then(function (dataObject) {
+      if (dataObject.length == 0) {
+        sideBarService.getAccountListVS1().then(function (data) {
+          let records = [];
+          let inventoryData = [];
+          addVS1Data("TAccountVS1", JSON.stringify(data));
+          for (let i = 0; i < data.taccountvs1.length; i++) {
+            if (!isNaN(data.taccountvs1[i].fields.Balance)) {
+              accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.0;
+            } else {
+              accBalance = Currency + "0.00";
+            }
+            var dataList = [
+              data.taccountvs1[i].fields.AccountName || "-",
+              data.taccountvs1[i].fields.Description || "",
+              data.taccountvs1[i].fields.AccountNumber || "",
+              data.taccountvs1[i].fields.AccountTypeName || "",
+              accBalance,
+              data.taccountvs1[i].fields.TaxCode || "",
+              data.taccountvs1[i].fields.ID || "",
+            ];
+            if (accountType == "") {
+              splashArrayAccountList.push(dataList);
+            } else {
+              if (useData[i].fields.AccountTypeName == accountType) {
+                splashArrayAccountList.push(dataList);
+              }
+            }
+          }
+          //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
+
+          if (splashArrayAccountList) {
+            if (splashArrayAccountList) {
+              //here have one
+              // var datatable = $('#tblAccount').DataTable();
+              // datatable.clear();
+              // datatable.rows.add(splashArrayAccountList);
+              // datatable.draw(false);
+              $("#accountListModal").modal("toggle");
+            }
+          }
+        });
+      } else {
+        splashArrayAccountList = [];
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.taccountvs1;
+        let records = [];
+        let inventoryData = [];
+        for (let i = 0; i < useData.length; i++) {
+          if (!isNaN(useData[i].fields.Balance)) {
+            accBalance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance) || 0.0;
+          } else {
+            accBalance = Currency + "0.00";
+          }
+          var dataList = [
+            useData[i].fields.AccountName || "-",
+            useData[i].fields.Description || "",
+            useData[i].fields.AccountNumber || "",
+            useData[i].fields.AccountTypeName || "",
+            accBalance,
+            useData[i].fields.TaxCode || "",
+            useData[i].fields.ID || "",
+          ];
+          if (accountType == "") {
+            splashArrayAccountList.push(dataList);
+          } else {
+            if (useData[i].fields.AccountTypeName == accountType) {
+              splashArrayAccountList.push(dataList);
+            }
+          }
+        }
+        //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
+        if (splashArrayAccountList) {
+          //account datatable redraw
+          // var datatable = $('#tblAccount').DataTable();
+          // datatable.clear();
+          // datatable.rows.add(splashArrayAccountList);
+          // datatable.draw(false);
+          $("#accountListModal").modal("toggle");
+        }
+      }
+    })
+    .catch(function (err) {
+      sideBarService.getAccountListVS1().then(function (data) {
+        let records = [];
+        let inventoryData = [];
+        for (let i = 0; i < data.taccountvs1.length; i++) {
+          if (!isNaN(data.taccountvs1[i].fields.Balance)) {
+            accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1[i].fields.Balance) || 0.0;
+          } else {
+            accBalance = Currency + "0.00";
+          }
+          var dataList = [
+            data.taccountvs1[i].fields.AccountName || "-",
+            data.taccountvs1[i].fields.Description || "",
+            data.taccountvs1[i].fields.AccountNumber || "",
+            data.taccountvs1[i].fields.AccountTypeName || "",
+            accBalance,
+            data.taccountvs1[i].fields.TaxCode || "",
+            data.taccountvs1[i].fields.ID || "",
+          ];
+
+          if (accountType == "") {
+            splashArrayAccountList.push(dataList);
+          } else {
+            if (useData[i].fields.AccountTypeName == accountType) {
+              splashArrayAccountList.push(dataList);
+            }
+          }
+        }
+        //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
+
+        if (splashArrayAccountList) {
+          if (splashArrayAccountList) {
+            // var datatable = $('#tblAccount').DataTable();
+            // datatable.clear();
+            // datatable.rows.add(splashArrayAccountList);
+            // datatable.draw(false);
+            $("#accountListModal").modal("toggle");
+          }
+        }
+      });
+    });
+};
+
+const clickSalesAccount = (e) => {
+  accSelected = "sales";
+  $("#accSelected").val(accSelected);
+  var $earch = $(e.currentTarget);
+  var offset = $earch.offset();
+  var salesAccountDataName = e.target.value || "";
+  var accountType = "INC";
+  if (e.pageX > offset.left + $earch.width() - 8) {
+    // X button 16px wide?
+    getAccountsByCategory(accountType);
+  } else {
+    if (salesAccountDataName.replace(/\s/g, "") != "") {
+      if (salesAccountDataName.replace(/\s/g, "") != "") {
+        $("#add-account-title").text("Edit Account Details");
+        getVS1Data("TAccountVS1")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              productService
+                .getAccountName()
+                .then(function (data) {
+                  let lineItems = [];
+                  let lineItemObj = {};
+                  for (let i = 0; i < data.taccountvs1.length; i++) {
+                    if (data.taccountvs1[i].AccountName === salesAccountDataName) {
+                      $("#edtAccountName").attr("readonly", true);
+                      let taxCode = data.taccountvs1[i].TaxCode;
+                      var accountID = data.taccountvs1[i].ID || "";
+                      var acountName = data.taccountvs1[i].AccountName || "";
+                      var accountNo = data.taccountvs1[i].AccountNumber || "";
+                      var accountType = data.taccountvs1[i].AccountTypeName || "";
+                      var accountDesc = data.taccountvs1[i].Description || "";
+                      $("#edtAccountID").val(accountID);
+                      $("#sltAccountType").val(accountType);
+                      $("#edtAccountName").val(acountName);
+                      $("#edtAccountNo").val(accountNo);
+                      $("#sltTaxCode").val(taxCode);
+                      $("#txaAccountDescription").val(accountDesc);
+                      setTimeout(function () {
+                        $("#addAccountModal").modal("toggle");
+                      }, 100);
+                    }
+                  }
+                })
+                .catch(function (err) {
+                  // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                  $(".fullScreenSpin").css("display", "none");
+                  // Meteor._reload.reload();
+                });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.taccountvs1;
+              let lineItems = [];
+              let lineItemObj = {};
+              $("#add-account-title").text("Edit Account Details");
+              for (let i = 0; i < useData.length; i++) {
+                if (useData[i].fields.AccountName === salesAccountDataName) {
+                  $("#edtAccountName").attr("readonly", true);
+                  let taxCode = useData[i].fields.TaxCode;
+                  var accountID = useData[i].fields.ID || "";
+                  var acountName = useData[i].fields.AccountName || "";
+                  var accountNo = useData[i].fields.AccountNumber || "";
+                  var accountType = useData[i].fields.AccountTypeName || "";
+                  var accountDesc = useData[i].fields.Description || "";
+                  $("#edtAccountID").val(accountID);
+                  $("#sltAccountType").val(accountType);
+                  $("#edtAccountName").val(acountName);
+                  $("#edtAccountNo").val(accountNo);
+                  $("#sltTaxCode").val(taxCode);
+                  $("#txaAccountDescription").val(accountDesc);
+                  $("#addAccountModal").modal("toggle");
+                  //}, 500);
+                }
+              }
+            }
+          })
+          .catch(function (err) {
+            productService
+              .getAccountName()
+              .then(function (data) {
+                let lineItems = [];
+                let lineItemObj = {};
+                for (let i = 0; i < data.taccountvs1.length; i++) {
+                  if (data.taccountvs1[i].AccountName === salesAccountDataName) {
+                    $("#add-account-title").text("Edit Account Details");
+                    let taxCode = data.taccountvs1[i].TaxCode;
+                    var accountID = data.taccountvs1[i].ID || "";
+                    var acountName = data.taccountvs1[i].AccountName || "";
+                    var accountNo = data.taccountvs1[i].AccountNumber || "";
+                    var accountType = data.taccountvs1[i].AccountTypeName || "";
+                    var accountDesc = data.taccountvs1[i].Description || "";
+                    $("#edtAccountID").val(accountID);
+                    $("#sltAccountType").val(accountType);
+                    $("#edtAccountName").val(acountName);
+                    $("#edtAccountNo").val(accountNo);
+                    $("#sltTaxCode").val(taxCode);
+                    $("#txaAccountDescription").val(accountDesc);
+                    setTimeout(function () {
+                      $("#addAccountModal").modal("toggle");
+                    }, 100);
+                  }
+                }
+              })
+              .catch(function (err) {
+                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                $(".fullScreenSpin").css("display", "none");
+                // Meteor._reload.reload();
+              });
+          });
+      } else {
+        getAccountsByCategory(accountType);
+      }
+    } else {
+      getAccountsByCategory(accountType);
+    }
+  }
+};
+
+const clickUomSales = (e) => {
+  uomSelected = defaultUOM;
+  $("#uomSelected").val(uomSelected);
+  var $earch = $(e.currentTarget);
+  var offset = $earch.offset();
+  var uomDataName = e.target.value || "";
+  if (e.pageX > offset.left + $earch.width() - 8) {
+    // X button 16px wide?
+  } else {
+  }
+};
+
+const clickTaxCodeSales = (e) => {
+  var $earch = $(e.currentTarget);
+  taxSelected = "sales";
+  $("#taxSelected").val(taxSelected);
+  var offset = $earch.offset();
+  var taxRateDataName = e.target.value || "";
+  var taxCodePurchaseDataName = e.target.value || "";
+  if (e.pageX > offset.left + $earch.width() - 8) {
+    // X button 16px wide?
+    $("#taxRateListModal").modal("toggle");
+  } else {
+    if (taxRateDataName.replace(/\s/g, "") != "") {
+      $(".taxcodepopheader").text("Edit Tax Rate");
+      getVS1Data("TTaxcodeVS1")
+        .then(function (dataObject) {
+          if (dataObject.length == 0) {
+            purchaseService
+              .getTaxCodesVS1()
+              .then(function (data) {
+                let lineItems = [];
+                let lineItemObj = {};
+                for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                  if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+                    $("#edtTaxNamePop").attr("readonly", true);
+                    let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                    var taxRateID = data.ttaxcodevs1[i].Id || "";
+                    var taxRateName = data.ttaxcodevs1[i].CodeName || "";
+                    var taxRateDesc = data.ttaxcodevs1[i].Description || "";
+                    $("#edtTaxID").val(taxRateID);
+                    $("#edtTaxNamePop").val(taxRateName);
+                    $("#edtTaxRatePop").val(taxRate);
+                    $("#edtTaxDescPop").val(taxRateDesc);
+                    setTimeout(function () {
+                      $("#newTaxRateModal").modal("toggle");
+                    }, 100);
+                  }
+                }
+              })
+              .catch(function (err) {
+                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                $(".fullScreenSpin").css("display", "none");
+                // Meteor._reload.reload();
+              });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.ttaxcodevs1;
+            let lineItems = [];
+            let lineItemObj = {};
+            $(".taxcodepopheader").text("Edit Tax Rate");
+            for (let i = 0; i < useData.length; i++) {
+              if (useData[i].CodeName === taxRateDataName) {
+                $("#edtTaxNamePop").attr("readonly", true);
+                let taxRate = (useData[i].Rate * 100).toFixed(2);
+                var taxRateID = useData[i].Id || "";
+                var taxRateName = useData[i].CodeName || "";
+                var taxRateDesc = useData[i].Description || "";
+                $("#edtTaxID").val(taxRateID);
+                $("#edtTaxNamePop").val(taxRateName);
+                $("#edtTaxRatePop").val(taxRate);
+                $("#edtTaxDescPop").val(taxRateDesc);
+                //setTimeout(function() {
+                $("#newTaxRateModal").modal("toggle");
+                //}, 500);
+              }
+            }
+          }
+        })
+        .catch(function (err) {
+          purchaseService
+            .getTaxCodesVS1()
+            .then(function (data) {
+              let lineItems = [];
+              let lineItemObj = {};
+              for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+                  $("#edtTaxNamePop").attr("readonly", true);
+                  let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                  var taxRateID = data.ttaxcodevs1[i].Id || "";
+                  var taxRateName = data.ttaxcodevs1[i].CodeName || "";
+                  var taxRateDesc = data.ttaxcodevs1[i].Description || "";
+                  $("#edtTaxID").val(taxRateID);
+                  $("#edtTaxNamePop").val(taxRateName);
+                  $("#edtTaxRatePop").val(taxRate);
+                  $("#edtTaxDescPop").val(taxRateDesc);
+                  setTimeout(function () {
+                    $("#newTaxRateModal").modal("toggle");
+                  }, 100);
+                }
+              }
+            })
+            .catch(function (err) {
+              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+              $(".fullScreenSpin").css("display", "none");
+              // Meteor._reload.reload();
+            });
+        });
+    } else {
+      $("#taxRateListModal").modal("toggle");
+    }
+  }
+};
 
 Template.productview.onCreated(() => {
   const templateObject = Template.instance();
@@ -65,9 +425,7 @@ Template.productview.onCreated(() => {
 
 Template.productview.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
-  document
-    .getElementById("newProcessModal")
-    .removeChild(document.getElementById("newProcessModal").children[1]);
+  document.getElementById("newProcessModal").removeChild(document.getElementById("newProcessModal").children[1]);
   // $('.newProcessModal')[0].removeChild($('.newProcessModal')[0].children[1]);
   let templateObject = Template.instance();
 
@@ -108,7 +466,7 @@ Template.productview.onRendered(function () {
       $("#slttaxcodesales").editableSelect();
       $("#sltcogsaccount").editableSelect();
       $("#sltsalesacount").editableSelect();
-      $("#sltUOM").editableSelect();
+      $("#sltUomSales").editableSelect();
       $("#sltinventoryacount").editableSelect();
       $("#sltCustomerType").editableSelect();
       $("#newProcessModal #edtCOGS").editableSelect();
@@ -140,16 +498,12 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.tclienttype.length; i++) {
-                          if (
-                            data.tclienttype[i].TypeName === custTypeDataName
-                          ) {
+                          if (data.tclienttype[i].TypeName === custTypeDataName) {
                             $("#edtClientTypeName").attr("readonly", true);
                             let typeName = data.tclienttype[i].TypeName;
                             var clientTypeID = data.tclienttype[i].ID || "";
-                            var taxRateName =
-                              data.tclienttype[i].CodeName || "";
-                            var clientTypeDesc =
-                              data.tclienttype[i].TypeDescription || "";
+                            var taxRateName = data.tclienttype[i].CodeName || "";
+                            var clientTypeDesc = data.tclienttype[i].TypeDescription || "";
                             $("#edtClientTypeID").val(clientTypeID);
                             $("#edtClientTypeName").val(typeName);
                             $("#txaDescription").val(clientTypeDesc);
@@ -177,8 +531,7 @@ Template.productview.onRendered(function () {
                         let typeName = useData[i].fields.TypeName;
                         var clientTypeID = useData[i].fields.ID || "";
                         var taxRateName = useData[i].fields.CodeName || "";
-                        var clientTypeDesc =
-                          useData[i].fields.TypeDescription || "";
+                        var clientTypeDesc = useData[i].fields.TypeDescription || "";
                         $("#edtClientTypeID").val(clientTypeID);
                         $("#edtClientTypeName").val(typeName);
                         $("#txaDescription").val(clientTypeDesc);
@@ -201,8 +554,7 @@ Template.productview.onRendered(function () {
                           let typeName = data.tclienttype[i].TypeName;
                           var clientTypeID = data.tclienttype[i].ID || "";
                           var taxRateName = data.tclienttype[i].CodeName || "";
-                          var clientTypeDesc =
-                            data.tclienttype[i].TypeDescription || "";
+                          var clientTypeDesc = data.tclienttype[i].TypeDescription || "";
                           $("#edtClientTypeID").val(clientTypeID);
                           $("#edtClientTypeName").val(typeName);
                           $("#txaDescription").val(clientTypeDesc);
@@ -249,18 +601,12 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                          if (
-                            data.ttaxcodevs1[i].CodeName === taxRateDataName
-                          ) {
+                          if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
                             $("#edtTaxNamePop").attr("readonly", true);
-                            let taxRate = (
-                              data.ttaxcodevs1[i].Rate * 100
-                            ).toFixed(2);
+                            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                             var taxRateID = data.ttaxcodevs1[i].Id || "";
-                            var taxRateName =
-                              data.ttaxcodevs1[i].CodeName || "";
-                            var taxRateDesc =
-                              data.ttaxcodevs1[i].Description || "";
+                            var taxRateName = data.ttaxcodevs1[i].CodeName || "";
+                            var taxRateDesc = data.ttaxcodevs1[i].Description || "";
                             $("#edtTaxID").val(taxRateID);
                             $("#edtTaxNamePop").val(taxRateName);
                             $("#edtTaxRatePop").val(taxRate);
@@ -309,13 +655,10 @@ Template.productview.onRendered(function () {
                       for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
                           $("#edtTaxNamePop").attr("readonly", true);
-                          let taxRate = (
-                            data.ttaxcodevs1[i].Rate * 100
-                          ).toFixed(2);
+                          let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                           var taxRateID = data.ttaxcodevs1[i].Id || "";
                           var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                          var taxRateDesc =
-                            data.ttaxcodevs1[i].Description || "";
+                          var taxRateDesc = data.ttaxcodevs1[i].Description || "";
                           $("#edtTaxID").val(taxRateID);
                           $("#edtTaxNamePop").val(taxRateName);
                           $("#edtTaxRatePop").val(taxRate);
@@ -349,7 +692,7 @@ Template.productview.onRendered(function () {
           var accountType = "OCASSET";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (cogsAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -362,21 +705,14 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.ttaxcodevs1[i].AccountName ===
-                            cogsAccountDataName
-                          ) {
+                          if (data.ttaxcodevs1[i].AccountName === cogsAccountDataName) {
                             $("#edtAccountName").attr("readonly", true);
                             let taxCode = data.taccountvs1[i].TaxCode;
                             var accountID = data.taccountvs1[i].ID || "";
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            var accountNo =
-                              data.taccountvs1[i].AccountNumber || "";
-                            var accountType =
-                              data.taccountvs1[i].AccountTypeName || "";
-                            var accountDesc =
-                              data.taccountvs1[i].Description || "";
+                            var acountName = data.taccountvs1[i].AccountName || "";
+                            var accountNo = data.taccountvs1[i].AccountNumber || "";
+                            var accountType = data.taccountvs1[i].AccountTypeName || "";
+                            var accountDesc = data.taccountvs1[i].Description || "";
                             $("#edtAccountID").val(accountID);
                             $("#sltAccountType").val(accountType);
                             $("#edtAccountName").val(acountName);
@@ -400,16 +736,13 @@ Template.productview.onRendered(function () {
                     let lineItems = [];
                     let lineItemObj = {};
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === cogsAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === cogsAccountDataName) {
                         $("#edtAccountName").attr("readonly", true);
                         let taxCode = useData[i].fields.TaxCode;
                         var accountID = useData[i].fields.ID || "";
                         var acountName = useData[i].fields.AccountName || "";
                         var accountNo = useData[i].fields.AccountNumber || "";
-                        var accountType =
-                          useData[i].fields.AccountTypeName || "";
+                        var accountType = useData[i].fields.AccountTypeName || "";
                         var accountDesc = useData[i].fields.Description || "";
                         $("#edtAccountID").val(accountID);
                         $("#sltAccountType").val(accountType);
@@ -434,14 +767,10 @@ Template.productview.onRendered(function () {
                           $("#edtTaxNamePop").attr("readonly", true);
                           let taxCode = data.taccountvs1[i].TaxCode;
                           var accountID = data.taccountvs1[i].ID || "";
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
-                          var accountNo =
-                            data.taccountvs1[i].AccountNumber || "";
-                          var accountType =
-                            data.taccountvs1[i].AccountTypeName || "";
-                          var accountDesc =
-                            data.taccountvs1[i].Description || "";
+                          var acountName = data.taccountvs1[i].AccountName || "";
+                          var accountNo = data.taccountvs1[i].AccountNumber || "";
+                          var accountType = data.taccountvs1[i].AccountTypeName || "";
+                          var accountDesc = data.taccountvs1[i].Description || "";
                           $("#edtAccountID").val(accountID);
                           $("#sltAccountType").val(accountType);
                           $("#edtAccountName").val(acountName);
@@ -461,7 +790,7 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
@@ -477,7 +806,7 @@ Template.productview.onRendered(function () {
           var accountType = "COGS";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (cogsAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -490,21 +819,14 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            cogsAccountDataName
-                          ) {
+                          if (data.taccountvs1[i].AccountName === cogsAccountDataName) {
                             $("#edtAccountName").attr("readonly", true);
                             let taxCode = data.taccountvs1[i].TaxCode;
                             var accountID = data.taccountvs1[i].ID || "";
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            var accountNo =
-                              data.taccountvs1[i].AccountNumber || "";
-                            var accountType =
-                              data.taccountvs1[i].AccountTypeName || "";
-                            var accountDesc =
-                              data.taccountvs1[i].Description || "";
+                            var acountName = data.taccountvs1[i].AccountName || "";
+                            var accountNo = data.taccountvs1[i].AccountNumber || "";
+                            var accountType = data.taccountvs1[i].AccountTypeName || "";
+                            var accountDesc = data.taccountvs1[i].Description || "";
                             $("#edtAccountID").val(accountID);
                             $("#sltAccountType").val(accountType);
                             $("#edtAccountName").val(acountName);
@@ -529,16 +851,13 @@ Template.productview.onRendered(function () {
                     let lineItemObj = {};
                     $("#add-account-title").text("Edit Account Details");
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === cogsAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === cogsAccountDataName) {
                         $("#edtAccountName").attr("readonly", true);
                         let taxCode = useData[i].fields.TaxCode;
                         var accountID = useData[i].fields.ID || "";
                         var acountName = useData[i].fields.AccountName || "";
                         var accountNo = useData[i].fields.AccountNumber || "";
-                        var accountType =
-                          useData[i].fields.AccountTypeName || "";
+                        var accountType = useData[i].fields.AccountTypeName || "";
                         var accountDesc = useData[i].fields.Description || "";
                         $("#edtAccountID").val(accountID);
                         $("#sltAccountType").val(accountType);
@@ -563,14 +882,10 @@ Template.productview.onRendered(function () {
                           $("#edtAccountName").attr("readonly", true);
                           let taxCode = data.taccountvs1[i].TaxCode;
                           var accountID = data.taccountvs1[i].ID || "";
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
-                          var accountNo =
-                            data.taccountvs1[i].AccountNumber || "";
-                          var accountType =
-                            data.taccountvs1[i].AccountTypeName || "";
-                          var accountDesc =
-                            data.taccountvs1[i].Description || "";
+                          var acountName = data.taccountvs1[i].AccountName || "";
+                          var accountNo = data.taccountvs1[i].AccountNumber || "";
+                          var accountType = data.taccountvs1[i].AccountTypeName || "";
+                          var accountDesc = data.taccountvs1[i].Description || "";
                           $("#edtAccountID").val(accountID);
                           $("#sltAccountType").val(accountType);
                           $("#edtAccountName").val(acountName);
@@ -590,399 +905,16 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
 
-      $("#sltsalesacount")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          accSelected = "sales";
-          $("#accSelected").val(accSelected);
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var salesAccountDataName = e.target.value || "";
-          var accountType = "INC";
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
-          } else {
-            if (salesAccountDataName.replace(/\s/g, "") != "") {
-              if (salesAccountDataName.replace(/\s/g, "") != "") {
-                $("#add-account-title").text("Edit Account Details");
-                getVS1Data("TAccountVS1")
-                  .then(function (dataObject) {
-                    if (dataObject.length == 0) {
-                      productService
-                        .getAccountName()
-                        .then(function (data) {
-                          let lineItems = [];
-                          let lineItemObj = {};
-                          for (let i = 0; i < data.taccountvs1.length; i++) {
-                            if (
-                              data.taccountvs1[i].AccountName ===
-                              salesAccountDataName
-                            ) {
-                              $("#edtAccountName").attr("readonly", true);
-                              let taxCode = data.taccountvs1[i].TaxCode;
-                              var accountID = data.taccountvs1[i].ID || "";
-                              var acountName =
-                                data.taccountvs1[i].AccountName || "";
-                              var accountNo =
-                                data.taccountvs1[i].AccountNumber || "";
-                              var accountType =
-                                data.taccountvs1[i].AccountTypeName || "";
-                              var accountDesc =
-                                data.taccountvs1[i].Description || "";
-                              $("#edtAccountID").val(accountID);
-                              $("#sltAccountType").val(accountType);
-                              $("#edtAccountName").val(acountName);
-                              $("#edtAccountNo").val(accountNo);
-                              $("#sltTaxCode").val(taxCode);
-                              $("#txaAccountDescription").val(accountDesc);
-                              setTimeout(function () {
-                                $("#addAccountModal").modal("toggle");
-                              }, 100);
-                            }
-                          }
-                        })
-                        .catch(function (err) {
-                          // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                          $(".fullScreenSpin").css("display", "none");
-                          // Meteor._reload.reload();
-                        });
-                    } else {
-                      let data = JSON.parse(dataObject[0].data);
-                      let useData = data.taccountvs1;
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      $("#add-account-title").text("Edit Account Details");
-                      for (let i = 0; i < useData.length; i++) {
-                        if (
-                          useData[i].fields.AccountName === salesAccountDataName
-                        ) {
-                          $("#edtAccountName").attr("readonly", true);
-                          let taxCode = useData[i].fields.TaxCode;
-                          var accountID = useData[i].fields.ID || "";
-                          var acountName = useData[i].fields.AccountName || "";
-                          var accountNo = useData[i].fields.AccountNumber || "";
-                          var accountType =
-                            useData[i].fields.AccountTypeName || "";
-                          var accountDesc = useData[i].fields.Description || "";
-                          $("#edtAccountID").val(accountID);
-                          $("#sltAccountType").val(accountType);
-                          $("#edtAccountName").val(acountName);
-                          $("#edtAccountNo").val(accountNo);
-                          $("#sltTaxCode").val(taxCode);
-                          $("#txaAccountDescription").val(accountDesc);
-                          $("#addAccountModal").modal("toggle");
-                          //}, 500);
-                        }
-                      }
-                    }
-                  })
-                  .catch(function (err) {
-                    productService
-                      .getAccountName()
-                      .then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            salesAccountDataName
-                          ) {
-                            $("#add-account-title").text(
-                              "Edit Account Details"
-                            );
-                            let taxCode = data.taccountvs1[i].TaxCode;
-                            var accountID = data.taccountvs1[i].ID || "";
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            var accountNo =
-                              data.taccountvs1[i].AccountNumber || "";
-                            var accountType =
-                              data.taccountvs1[i].AccountTypeName || "";
-                            var accountDesc =
-                              data.taccountvs1[i].Description || "";
-                            $("#edtAccountID").val(accountID);
-                            $("#sltAccountType").val(accountType);
-                            $("#edtAccountName").val(acountName);
-                            $("#edtAccountNo").val(accountNo);
-                            $("#sltTaxCode").val(taxCode);
-                            $("#txaAccountDescription").val(accountDesc);
-                            setTimeout(function () {
-                              $("#addAccountModal").modal("toggle");
-                            }, 100);
-                          }
-                        }
-                      })
-                      .catch(function (err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                      });
-                  });
-              } else {
-                templateObject.getAccountsByCategory(accountType);
-              }
-            } else {
-              templateObject.getAccountsByCategory(accountType);
-            }
-          }
-        });
+      $("#sltsalesacount").editableSelect().on("click.editable-select", clickSalesAccount);
 
-      $("#sltsalesacount")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          accSelected = "sales";
-          $("#accSelected").val(accSelected);
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var salesAccountDataName = e.target.value || "";
-          var accountType = "INC";
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
-          } else {
-            if (salesAccountDataName.replace(/\s/g, "") != "") {
-              if (salesAccountDataName.replace(/\s/g, "") != "") {
-                $("#add-account-title").text("Edit Account Details");
-                getVS1Data("TAccountVS1")
-                  .then(function (dataObject) {
-                    if (dataObject.length == 0) {
-                      productService
-                        .getAccountName()
-                        .then(function (data) {
-                          let lineItems = [];
-                          let lineItemObj = {};
-                          for (let i = 0; i < data.taccountvs1.length; i++) {
-                            if (
-                              data.taccountvs1[i].AccountName ===
-                              salesAccountDataName
-                            ) {
-                              $("#edtAccountName").attr("readonly", true);
-                              let taxCode = data.taccountvs1[i].TaxCode;
-                              var accountID = data.taccountvs1[i].ID || "";
-                              var acountName =
-                                data.taccountvs1[i].AccountName || "";
-                              var accountNo =
-                                data.taccountvs1[i].AccountNumber || "";
-                              var accountType =
-                                data.taccountvs1[i].AccountTypeName || "";
-                              var accountDesc =
-                                data.taccountvs1[i].Description || "";
-                              $("#edtAccountID").val(accountID);
-                              $("#sltAccountType").val(accountType);
-                              $("#edtAccountName").val(acountName);
-                              $("#edtAccountNo").val(accountNo);
-                              $("#sltTaxCode").val(taxCode);
-                              $("#txaAccountDescription").val(accountDesc);
-                              setTimeout(function () {
-                                $("#addAccountModal").modal("toggle");
-                              }, 100);
-                            }
-                          }
-                        })
-                        .catch(function (err) {
-                          // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                          $(".fullScreenSpin").css("display", "none");
-                          // Meteor._reload.reload();
-                        });
-                    } else {
-                      let data = JSON.parse(dataObject[0].data);
-                      let useData = data.taccountvs1;
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      $("#add-account-title").text("Edit Account Details");
-                      for (let i = 0; i < useData.length; i++) {
-                        if (
-                          useData[i].fields.AccountName === salesAccountDataName
-                        ) {
-                          $("#edtAccountName").attr("readonly", true);
-                          let taxCode = useData[i].fields.TaxCode;
-                          var accountID = useData[i].fields.ID || "";
-                          var acountName = useData[i].fields.AccountName || "";
-                          var accountNo = useData[i].fields.AccountNumber || "";
-                          var accountType =
-                            useData[i].fields.AccountTypeName || "";
-                          var accountDesc = useData[i].fields.Description || "";
-                          $("#edtAccountID").val(accountID);
-                          $("#sltAccountType").val(accountType);
-                          $("#edtAccountName").val(acountName);
-                          $("#edtAccountNo").val(accountNo);
-                          $("#sltTaxCode").val(taxCode);
-                          $("#txaAccountDescription").val(accountDesc);
-                          $("#addAccountModal").modal("toggle");
-                          //}, 500);
-                        }
-                      }
-                    }
-                  })
-                  .catch(function (err) {
-                    productService
-                      .getAccountName()
-                      .then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            salesAccountDataName
-                          ) {
-                            $("#add-account-title").text(
-                              "Edit Account Details"
-                            );
-                            let taxCode = data.taccountvs1[i].TaxCode;
-                            var accountID = data.taccountvs1[i].ID || "";
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            var accountNo =
-                              data.taccountvs1[i].AccountNumber || "";
-                            var accountType =
-                              data.taccountvs1[i].AccountTypeName || "";
-                            var accountDesc =
-                              data.taccountvs1[i].Description || "";
-                            $("#edtAccountID").val(accountID);
-                            $("#sltAccountType").val(accountType);
-                            $("#edtAccountName").val(acountName);
-                            $("#edtAccountNo").val(accountNo);
-                            $("#sltTaxCode").val(taxCode);
-                            $("#txaAccountDescription").val(accountDesc);
-                            setTimeout(function () {
-                              $("#addAccountModal").modal("toggle");
-                            }, 100);
-                          }
-                        }
-                      })
-                      .catch(function (err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                      });
-                  });
-              } else {
-                templateObject.getAccountsByCategory(accountType);
-              }
-            } else {
-              templateObject.getAccountsByCategory(accountType);
-            }
-          }
-        });
+      $("#sltUomSales").editableSelect().on("click.editable-select", clickUomSales);
 
-      $("#slttaxcodesales")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          var $earch = $(this);
-          taxSelected = "sales";
-          $("#taxSelected").val(taxSelected);
-          var offset = $earch.offset();
-          var taxRateDataName = e.target.value || "";
-          var taxCodePurchaseDataName = e.target.value || "";
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            // X button 16px wide?
-            $("#taxRateListModal").modal("toggle");
-          } else {
-            if (taxRateDataName.replace(/\s/g, "") != "") {
-              $(".taxcodepopheader").text("Edit Tax Rate");
-              getVS1Data("TTaxcodeVS1")
-                .then(function (dataObject) {
-                  if (dataObject.length == 0) {
-                    purchaseService
-                      .getTaxCodesVS1()
-                      .then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                          if (
-                            data.ttaxcodevs1[i].CodeName === taxRateDataName
-                          ) {
-                            $("#edtTaxNamePop").attr("readonly", true);
-                            let taxRate = (
-                              data.ttaxcodevs1[i].Rate * 100
-                            ).toFixed(2);
-                            var taxRateID = data.ttaxcodevs1[i].Id || "";
-                            var taxRateName =
-                              data.ttaxcodevs1[i].CodeName || "";
-                            var taxRateDesc =
-                              data.ttaxcodevs1[i].Description || "";
-                            $("#edtTaxID").val(taxRateID);
-                            $("#edtTaxNamePop").val(taxRateName);
-                            $("#edtTaxRatePop").val(taxRate);
-                            $("#edtTaxDescPop").val(taxRateDesc);
-                            setTimeout(function () {
-                              $("#newTaxRateModal").modal("toggle");
-                            }, 100);
-                          }
-                        }
-                      })
-                      .catch(function (err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                      });
-                  } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.ttaxcodevs1;
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    $(".taxcodepopheader").text("Edit Tax Rate");
-                    for (let i = 0; i < useData.length; i++) {
-                      if (useData[i].CodeName === taxRateDataName) {
-                        $("#edtTaxNamePop").attr("readonly", true);
-                        let taxRate = (useData[i].Rate * 100).toFixed(2);
-                        var taxRateID = useData[i].Id || "";
-                        var taxRateName = useData[i].CodeName || "";
-                        var taxRateDesc = useData[i].Description || "";
-                        $("#edtTaxID").val(taxRateID);
-                        $("#edtTaxNamePop").val(taxRateName);
-                        $("#edtTaxRatePop").val(taxRate);
-                        $("#edtTaxDescPop").val(taxRateDesc);
-                        //setTimeout(function() {
-                        $("#newTaxRateModal").modal("toggle");
-                        //}, 500);
-                      }
-                    }
-                  }
-                })
-                .catch(function (err) {
-                  purchaseService
-                    .getTaxCodesVS1()
-                    .then(function (data) {
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                          $("#edtTaxNamePop").attr("readonly", true);
-                          let taxRate = (
-                            data.ttaxcodevs1[i].Rate * 100
-                          ).toFixed(2);
-                          var taxRateID = data.ttaxcodevs1[i].Id || "";
-                          var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                          var taxRateDesc =
-                            data.ttaxcodevs1[i].Description || "";
-                          $("#edtTaxID").val(taxRateID);
-                          $("#edtTaxNamePop").val(taxRateName);
-                          $("#edtTaxRatePop").val(taxRate);
-                          $("#edtTaxDescPop").val(taxRateDesc);
-                          setTimeout(function () {
-                            $("#newTaxRateModal").modal("toggle");
-                          }, 100);
-                        }
-                      }
-                    })
-                    .catch(function (err) {
-                      // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                      $(".fullScreenSpin").css("display", "none");
-                      // Meteor._reload.reload();
-                    });
-                });
-            } else {
-              $("#taxRateListModal").modal("toggle");
-            }
-          }
-        });
+      $("#slttaxcodesales").editableSelect().on("click.editable-select", clickTaxCodeSales);
 
       $("#newProcessModal #edtCOGS")
         .editableSelect()
@@ -995,7 +927,7 @@ Template.productview.onRendered(function () {
           var accountType = "";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (cogsAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -1008,12 +940,8 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            cogsAccountDataName
-                          ) {
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
+                          if (data.taccountvs1[i].AccountName === cogsAccountDataName) {
+                            var acountName = data.taccountvs1[i].AccountName || "";
                             $("#newProcessModal #edtCOGS").val(acountName);
                             setTimeout(function () {
                               $("#addAccountModal").modal("toggle");
@@ -1033,9 +961,7 @@ Template.productview.onRendered(function () {
                     let lineItemObj = {};
                     $("#add-account-title").text("Edit Account Details");
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === cogsAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === cogsAccountDataName) {
                         var acountName = useData[i].fields.AccountName || "";
                         $("#newProcessModal #edtCOGS").val(acountName);
                         $("#addAccountModal").modal("toggle");
@@ -1051,8 +977,7 @@ Template.productview.onRendered(function () {
                       let lineItemObj = {};
                       for (let i = 0; i < data.taccountvs1.length; i++) {
                         if (data.taccountvs1[i].CodeName === taxRateDataName) {
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
+                          var acountName = data.taccountvs1[i].AccountName || "";
                           $("#newProcessModal #edtCOGS").val(acountName);
                           setTimeout(function () {
                             $("#addAccountModal").modal("toggle");
@@ -1067,7 +992,7 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
@@ -1083,7 +1008,7 @@ Template.productview.onRendered(function () {
           var accountType = "EXP";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (expenseAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -1096,15 +1021,9 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            expenseAccountDataName
-                          ) {
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            $("#newProcessModal #edtExpenseAccount").val(
-                              acountName
-                            );
+                          if (data.taccountvs1[i].AccountName === expenseAccountDataName) {
+                            var acountName = data.taccountvs1[i].AccountName || "";
+                            $("#newProcessModal #edtExpenseAccount").val(acountName);
                             setTimeout(function () {
                               $("#addAccountModal").modal("toggle");
                             }, 100);
@@ -1123,13 +1042,9 @@ Template.productview.onRendered(function () {
                     let lineItemObj = {};
                     $("#add-account-title").text("Edit Account Details");
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === expenseAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === expenseAccountDataName) {
                         var acountName = useData[i].fields.AccountName || "";
-                        $("#newProcessModal #edtExpenseAccount").val(
-                          acountName
-                        );
+                        $("#newProcessModal #edtExpenseAccount").val(acountName);
                         $("#addAccountModal").modal("toggle");
                       }
                     }
@@ -1143,11 +1058,8 @@ Template.productview.onRendered(function () {
                       let lineItemObj = {};
                       for (let i = 0; i < data.taccountvs1.length; i++) {
                         if (data.taccountvs1[i].CodeName === taxRateDataName) {
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
-                          $("#newProcessModal #edtExpenseAccount").val(
-                            acountName
-                          );
+                          var acountName = data.taccountvs1[i].AccountName || "";
+                          $("#newProcessModal #edtExpenseAccount").val(acountName);
                           setTimeout(function () {
                             $("#addAccountModal").modal("toggle");
                           }, 100);
@@ -1161,7 +1073,7 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
@@ -1177,7 +1089,7 @@ Template.productview.onRendered(function () {
           var accountType = "";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (cogsAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -1190,15 +1102,9 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            cogsAccountDataName
-                          ) {
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            $("#newProcessModal #edtOverheadCOGS").val(
-                              acountName
-                            );
+                          if (data.taccountvs1[i].AccountName === cogsAccountDataName) {
+                            var acountName = data.taccountvs1[i].AccountName || "";
+                            $("#newProcessModal #edtOverheadCOGS").val(acountName);
                             setTimeout(function () {
                               $("#addAccountModal").modal("toggle");
                             }, 100);
@@ -1217,9 +1123,7 @@ Template.productview.onRendered(function () {
                     let lineItemObj = {};
                     $("#add-account-title").text("Edit Account Details");
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === cogsAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === cogsAccountDataName) {
                         var acountName = useData[i].fields.AccountName || "";
                         $("#newProcessModal #edtOverheadCOGS").val(acountName);
                         $("#addAccountModal").modal("toggle");
@@ -1235,11 +1139,8 @@ Template.productview.onRendered(function () {
                       let lineItemObj = {};
                       for (let i = 0; i < data.taccountvs1.length; i++) {
                         if (data.taccountvs1[i].CodeName === taxRateDataName) {
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
-                          $("#newProcessModal #edtOverheadCOGS").val(
-                            acountName
-                          );
+                          var acountName = data.taccountvs1[i].AccountName || "";
+                          $("#newProcessModal #edtOverheadCOGS").val(acountName);
                           setTimeout(function () {
                             $("#addAccountModal").modal("toggle");
                           }, 100);
@@ -1253,7 +1154,7 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
@@ -1269,7 +1170,7 @@ Template.productview.onRendered(function () {
           var accountType = "EXP";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (expenseAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -1282,15 +1183,9 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            expenseAccountDataName
-                          ) {
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            $(
-                              "#newProcessModal #edtOverheadExpenseAccount"
-                            ).val(acountName);
+                          if (data.taccountvs1[i].AccountName === expenseAccountDataName) {
+                            var acountName = data.taccountvs1[i].AccountName || "";
+                            $("#newProcessModal #edtOverheadExpenseAccount").val(acountName);
                             setTimeout(function () {
                               $("#addAccountModal").modal("toggle");
                             }, 100);
@@ -1309,13 +1204,9 @@ Template.productview.onRendered(function () {
                     let lineItemObj = {};
                     $("#add-account-title").text("Edit Account Details");
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === expenseAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === expenseAccountDataName) {
                         var acountName = useData[i].fields.AccountName || "";
-                        $("#newProcessModal #edtOverheadExpenseAccount").val(
-                          acountName
-                        );
+                        $("#newProcessModal #edtOverheadExpenseAccount").val(acountName);
                         $("#addAccountModal").modal("toggle");
                       }
                     }
@@ -1329,11 +1220,8 @@ Template.productview.onRendered(function () {
                       let lineItemObj = {};
                       for (let i = 0; i < data.taccountvs1.length; i++) {
                         if (data.taccountvs1[i].CodeName === taxRateDataName) {
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
-                          $("#newProcessModal #edtOverheadExpenseAccount").val(
-                            acountName
-                          );
+                          var acountName = data.taccountvs1[i].AccountName || "";
+                          $("#newProcessModal #edtOverheadExpenseAccount").val(acountName);
                           setTimeout(function () {
                             $("#addAccountModal").modal("toggle");
                           }, 100);
@@ -1347,7 +1235,7 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
@@ -1363,7 +1251,7 @@ Template.productview.onRendered(function () {
           var accountType = "OCASSET";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.getAccountsByCategory(accountType);
+            getAccountsByCategory(accountType);
           } else {
             if (expenseAccountDataName.replace(/\s/g, "") != "") {
               $("#add-account-title").text("Edit Account Details");
@@ -1376,12 +1264,8 @@ Template.productview.onRendered(function () {
                         let lineItems = [];
                         let lineItemObj = {};
                         for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            expenseAccountDataName
-                          ) {
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
+                          if (data.taccountvs1[i].AccountName === expenseAccountDataName) {
+                            var acountName = data.taccountvs1[i].AccountName || "";
                             $("#newProcessModal #edtWastage").val(acountName);
                             setTimeout(function () {
                               $("#addAccountModal").modal("toggle");
@@ -1401,9 +1285,7 @@ Template.productview.onRendered(function () {
                     let lineItemObj = {};
                     $("#add-account-title").text("Edit Account Details");
                     for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === expenseAccountDataName
-                      ) {
+                      if (useData[i].fields.AccountName === expenseAccountDataName) {
                         var acountName = useData[i].fields.AccountName || "";
                         $("#newProcessModal #edtWastage").val(acountName);
                         $("#addAccountModal").modal("toggle");
@@ -1419,8 +1301,7 @@ Template.productview.onRendered(function () {
                       let lineItemObj = {};
                       for (let i = 0; i < data.taccountvs1.length; i++) {
                         if (data.taccountvs1[i].CodeName === taxRateDataName) {
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
+                          var acountName = data.taccountvs1[i].AccountName || "";
                           $("#newProcessModal #edtWastage").val(acountName);
                           setTimeout(function () {
                             $("#addAccountModal").modal("toggle");
@@ -1435,7 +1316,7 @@ Template.productview.onRendered(function () {
                     });
                 });
             } else {
-              templateObject.getAccountsByCategory(accountType);
+              getAccountsByCategory(accountType);
             }
           }
         });
@@ -1454,8 +1335,7 @@ Template.productview.onRendered(function () {
           if (taxcodeList) {
             for (var i = 0; i < taxcodeList.length; i++) {
               if (taxcodeList[i].codename == taxRate) {
-                taxrateamount =
-                  taxcodeList[i].coderate.replace("%", "") / 100 || 0;
+                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100 || 0;
               }
             }
           }
@@ -1464,14 +1344,10 @@ Template.productview.onRendered(function () {
           let sellPriceInc = 0;
 
           if (!isNaN(sellPrice)) {
-            $("#edtsellqty1price").val(
-              utilityService.modifynegativeCurrencyFormat(sellPrice)
-            );
+            $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
           } else {
             sellPrice = parseFloat(sellPrice.replace(/[^0-9.-]+/g, ""));
-            $("#edtsellqty1price").val(
-              utilityService.modifynegativeCurrencyFormat(sellPrice)
-            );
+            $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
           }
 
           var taxTotal = parseFloat(sellPrice) * parseFloat(taxrateamount);
@@ -1481,9 +1357,7 @@ Template.productview.onRendered(function () {
             sellPriceInc = parseFloat(sellPrice);
           }
           if (!isNaN(sellPriceInc)) {
-            $("#edtsellqty1priceInc").val(
-              utilityService.modifynegativeCurrencyFormat(sellPriceInc)
-            );
+            $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
           }
 
           $(".itemExtraSellRow").each(function () {
@@ -1491,9 +1365,7 @@ Template.productview.onRendered(function () {
             let tdclientType = $("#" + lineID + " .customerTypeSelect").val();
             if (tdclientType == "Default") {
               $("#" + lineID + " .edtDiscount").val(0);
-              $("#" + lineID + " .edtPriceEx").val(
-                utilityService.modifynegativeCurrencyFormat(sellPrice)
-              );
+              $("#" + lineID + " .edtPriceEx").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
             }
           });
         } else if (taxSelected == "purchase") {
@@ -1514,9 +1386,7 @@ Template.productview.onRendered(function () {
           let costPriceInc = 0;
 
           if (!isNaN(costPrice)) {
-            $("#edtbuyqty1cost").val(
-              utilityService.modifynegativeCurrencyFormat(costPrice)
-            );
+            $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPrice));
           } else {
             costPrice =
               parseFloat(
@@ -1524,16 +1394,12 @@ Template.productview.onRendered(function () {
                   .val()
                   .replace(/[^0-9.-]+/g, "")
               ) || 0;
-            $("#edtbuyqty1cost").val(
-              utilityService.modifynegativeCurrencyFormat(costPrice)
-            );
+            $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPrice));
           }
           var taxTotal = parseFloat(costPrice) * parseFloat(taxrateamount);
           costPriceInc = parseFloat(costPrice) + taxTotal;
           if (!isNaN(costPriceInc)) {
-            $("#edtbuyqty1costInc").val(
-              utilityService.modifynegativeCurrencyFormat(costPriceInc)
-            );
+            $("#edtbuyqty1costInc").val(utilityService.modifynegativeCurrencyFormat(costPriceInc));
           }
         }
         $("#taxRateListModal").modal("toggle");
@@ -1576,26 +1442,20 @@ Template.productview.onRendered(function () {
     getVS1Data("TProcTree")
       .then(function (dataObject) {
         if (dataObject.length == 0) {
-          productService
-            .getAllBOMProducts(initialBaseDataLoad, 0)
-            .then(function (data) {
-              templateObject.bomProducts.set(data.tproctree);
-              addVS1Data("TProcTree", JSON.stringify(data)).then(
-                function () {}
-              );
-            });
+          productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function (data) {
+            templateObject.bomProducts.set(data.tproctree);
+            addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
+          });
         } else {
           let data = JSON.parse(dataObject[0].data);
           templateObject.bomProducts.set(data.tproctree);
         }
       })
       .catch(function (e) {
-        productService
-          .getAllBOMProducts(initialBaseDataLoad, 0)
-          .then(function (data) {
-            templateObject.bomProducts.set(data.tproctree);
-            addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
-          });
+        productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function (data) {
+          templateObject.bomProducts.set(data.tproctree);
+          addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
+        });
       });
   };
 
@@ -1621,141 +1481,6 @@ Template.productview.onRendered(function () {
       .catch(function (err) {});
   };
 
-  templateObject.getAccountsByCategory = function (accountType) {
-    getVS1Data("TAccountVS1")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getAccountListVS1().then(function (data) {
-            let records = [];
-            let inventoryData = [];
-            addVS1Data("TAccountVS1", JSON.stringify(data));
-            for (let i = 0; i < data.taccountvs1.length; i++) {
-              if (!isNaN(data.taccountvs1[i].fields.Balance)) {
-                accBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.taccountvs1[i].fields.Balance
-                  ) || 0.0;
-              } else {
-                accBalance = Currency + "0.00";
-              }
-              var dataList = [
-                data.taccountvs1[i].fields.AccountName || "-",
-                data.taccountvs1[i].fields.Description || "",
-                data.taccountvs1[i].fields.AccountNumber || "",
-                data.taccountvs1[i].fields.AccountTypeName || "",
-                accBalance,
-                data.taccountvs1[i].fields.TaxCode || "",
-                data.taccountvs1[i].fields.ID || "",
-              ];
-              if (accountType == "") {
-                splashArrayAccountList.push(dataList);
-              } else {
-                if (useData[i].fields.AccountTypeName == accountType) {
-                  splashArrayAccountList.push(dataList);
-                }
-              }
-            }
-            //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
-
-            if (splashArrayAccountList) {
-              if (splashArrayAccountList) {
-                //here have one
-                // var datatable = $('#tblAccount').DataTable();
-                // datatable.clear();
-                // datatable.rows.add(splashArrayAccountList);
-                // datatable.draw(false);
-                $("#accountListModal").modal("toggle");
-              }
-            }
-          });
-        } else {
-          splashArrayAccountList = [];
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.taccountvs1;
-          let records = [];
-          let inventoryData = [];
-          for (let i = 0; i < useData.length; i++) {
-            if (!isNaN(useData[i].fields.Balance)) {
-              accBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  useData[i].fields.Balance
-                ) || 0.0;
-            } else {
-              accBalance = Currency + "0.00";
-            }
-            var dataList = [
-              useData[i].fields.AccountName || "-",
-              useData[i].fields.Description || "",
-              useData[i].fields.AccountNumber || "",
-              useData[i].fields.AccountTypeName || "",
-              accBalance,
-              useData[i].fields.TaxCode || "",
-              useData[i].fields.ID || "",
-            ];
-            if (accountType == "") {
-              splashArrayAccountList.push(dataList);
-            } else {
-              if (useData[i].fields.AccountTypeName == accountType) {
-                splashArrayAccountList.push(dataList);
-              }
-            }
-          }
-          //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
-          if (splashArrayAccountList) {
-            //account datatable redraw
-            // var datatable = $('#tblAccount').DataTable();
-            // datatable.clear();
-            // datatable.rows.add(splashArrayAccountList);
-            // datatable.draw(false);
-            $("#accountListModal").modal("toggle");
-          }
-        }
-      })
-      .catch(function (err) {
-        sideBarService.getAccountListVS1().then(function (data) {
-          let records = [];
-          let inventoryData = [];
-          for (let i = 0; i < data.taccountvs1.length; i++) {
-            if (!isNaN(data.taccountvs1[i].fields.Balance)) {
-              accBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.taccountvs1[i].fields.Balance
-                ) || 0.0;
-            } else {
-              accBalance = Currency + "0.00";
-            }
-            var dataList = [
-              data.taccountvs1[i].fields.AccountName || "-",
-              data.taccountvs1[i].fields.Description || "",
-              data.taccountvs1[i].fields.AccountNumber || "",
-              data.taccountvs1[i].fields.AccountTypeName || "",
-              accBalance,
-              data.taccountvs1[i].fields.TaxCode || "",
-              data.taccountvs1[i].fields.ID || "",
-            ];
-
-            if (accountType == "") {
-              splashArrayAccountList.push(dataList);
-            } else {
-              if (useData[i].fields.AccountTypeName == accountType) {
-                splashArrayAccountList.push(dataList);
-              }
-            }
-          }
-          //localStorage.setItem('VS1PurchaseAccountList', JSON.stringify(splashArrayAccountList));
-
-          if (splashArrayAccountList) {
-            if (splashArrayAccountList) {
-              // var datatable = $('#tblAccount').DataTable();
-              // datatable.clear();
-              // datatable.rows.add(splashArrayAccountList);
-              // datatable.draw(false);
-              $("#accountListModal").modal("toggle");
-            }
-          }
-        });
-      });
-  };
   // tempObj.getAllAccountss();
 
   templateObject.getAccountNames = function () {
@@ -1780,9 +1505,7 @@ Template.productview.onRendered(function () {
 
               if (data.taccount[i].AccountTypeName == "OCASSET") {
                 inventoryaccountrecords.push(accountnamerecordObj);
-                templateObject.inventoryaccountrecords.set(
-                  inventoryaccountrecords
-                );
+                templateObject.inventoryaccountrecords.set(inventoryaccountrecords);
               }
             }
           });
@@ -1805,9 +1528,7 @@ Template.productview.onRendered(function () {
             }
             if (useData[i].fields.AccountTypeName == "OCASSET") {
               inventoryaccountrecords.push(accountnamerecordObj);
-              templateObject.inventoryaccountrecords.set(
-                inventoryaccountrecords
-              );
+              templateObject.inventoryaccountrecords.set(inventoryaccountrecords);
             }
           }
         }
@@ -1831,9 +1552,7 @@ Template.productview.onRendered(function () {
 
             if (data.taccount[i].AccountTypeName == "OCASSET") {
               inventoryaccountrecords.push(accountnamerecordObj);
-              templateObject.inventoryaccountrecords.set(
-                inventoryaccountrecords
-              );
+              templateObject.inventoryaccountrecords.set(inventoryaccountrecords);
             }
           }
         });
@@ -2233,13 +1952,11 @@ Template.productview.onRendered(function () {
                 if (bomIndex > -1) {
                   isBOMProduct = true;
                 } else {
-                  productService
-                    .getOneBOMProductByName(data.fields.ProductName)
-                    .then(function (data) {
-                      if (data.tproctree.length > -1) {
-                        isBOMProduct = true;
-                      }
-                    });
+                  productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
+                    if (data.tproctree.length > -1) {
+                      isBOMProduct = true;
+                    }
+                  });
                 }
 
                 let lineItems = [];
@@ -2253,21 +1970,13 @@ Template.productview.onRendered(function () {
                   productcode: data.fields.PRODUCTCODE,
                   productprintName: data.fields.ProductPrintName,
                   assetaccount: data.fields.AssetAccount,
-                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.BuyQty1Cost
-                  ),
-                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.BuyQty1CostInc
-                  ),
+                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1Cost),
+                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                   cogsaccount: data.fields.CogsAccount,
                   taxcodepurchase: data.fields.TaxCodePurchase,
                   purchasedescription: data.fields.PurchaseDescription,
-                  sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.SellQty1Price
-                  ),
-                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.SellQty1PriceInc
-                  ),
+                  sellqty1price: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1Price),
+                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                   incomeaccount: data.fields.IncomeAccount,
                   taxcodesales: data.fields.TaxCodeSales,
                   salesdescription: data.fields.SalesDescription,
@@ -2290,16 +1999,14 @@ Template.productview.onRendered(function () {
                   $("#sltsalesacount").val(data.fields.IncomeAccount);
                   $("#sltcogsaccount").val(data.fields.CogsAccount);
                   $("#sltinventoryacount").val(data.fields.AssetAccount);
+                  $("#sltUomSales").val(defaultUOM);
                   $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                   $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
 
                   // Feature/ser-lot-tracking: Initializing serial/lot number settings
-                  if (data.fields.SNTracking)
-                    $("#chkSNTrack").prop("checked", true);
-                  if (data.fields.Batch)
-                    $("#chkLotTrack").prop("checked", true);
-                  if (data.fields.CUSTFLD13 === "true")
-                    $("#chkAddSN").prop("checked", true);
+                  if (data.fields.SNTracking) $("#chkSNTrack").prop("checked", true);
+                  if (data.fields.Batch) $("#chkLotTrack").prop("checked", true);
+                  if (data.fields.CUSTFLD13 === "true") $("#chkAddSN").prop("checked", true);
 
                   if (data.fields.CUSTFLD14 == "true") {
                     $(".lblPriceEx").addClass("hiddenColumn");
@@ -2374,18 +2081,12 @@ Template.productview.onRendered(function () {
                   for (let e = 0; e < data.fields.ExtraSellPrice.length; e++) {
                     lineExtaSellObj = {
                       lineID: Random.id(),
-                      clienttype:
-                        data.fields.ExtraSellPrice[e].fields.ClientTypeName ||
-                        "",
-                      discount:
-                        data.fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
-                      datefrom:
-                        data.fields.ExtraSellPrice[e].fields.DateFrom || "",
+                      clienttype: data.fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                      discount: data.fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                      datefrom: data.fields.ExtraSellPrice[e].fields.DateFrom || "",
                       dateto: data.fields.ExtraSellPrice[e].fields.DateTo || "",
                       price:
-                        utilityService.modifynegativeCurrencyFormat(
-                          data.fields.ExtraSellPrice[e].fields.Price1
-                        ) || 0,
+                        utilityService.modifynegativeCurrencyFormat(data.fields.ExtraSellPrice[e].fields.Price1) || 0,
                     };
                     lineExtaSellItems.push(lineExtaSellObj);
                   }
@@ -2437,21 +2138,17 @@ Template.productview.onRendered(function () {
                 let isBOMProduct = false;
                 let bomProducts = templateObject.bomProducts.get();
                 let bomIndex = bomProducts.findIndex((product) => {
-                  return (
-                    useData[i].fields.ProductName == product.fields.Caption
-                  );
+                  return useData[i].fields.ProductName == product.fields.Caption;
                 });
 
                 if (bomIndex > -1) {
                   isBOMProduct = true;
                 } else {
-                  productService
-                    .getOneBOMProductByName(useData[i].fields.ProductName)
-                    .then(function (data) {
-                      if (data.tproctree.length > -1) {
-                        isBOMProduct = true;
-                      }
-                    });
+                  productService.getOneBOMProductByName(useData[i].fields.ProductName).then(function (data) {
+                    if (data.tproctree.length > -1) {
+                      isBOMProduct = true;
+                    }
+                  });
                 }
 
                 let productrecord = {
@@ -2461,21 +2158,13 @@ Template.productview.onRendered(function () {
                   productcode: useData[i].fields.PRODUCTCODE,
                   productprintName: useData[i].fields.ProductPrintName,
                   assetaccount: useData[i].fields.AssetAccount,
-                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                    useData[i].fields.BuyQty1Cost
-                  ),
-                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                    useData[i].fields.BuyQty1CostInc
-                  ),
+                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(useData[i].fields.BuyQty1Cost),
+                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(useData[i].fields.BuyQty1CostInc),
                   cogsaccount: useData[i].fields.CogsAccount,
                   taxcodepurchase: useData[i].fields.TaxCodePurchase,
                   purchasedescription: useData[i].fields.PurchaseDescription,
-                  sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                    useData[i].fields.SellQty1Price
-                  ),
-                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(
-                    useData[i].fields.SellQty1PriceInc
-                  ),
+                  sellqty1price: utilityService.modifynegativeCurrencyFormat(useData[i].fields.SellQty1Price),
+                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(useData[i].fields.SellQty1PriceInc),
                   incomeaccount: useData[i].fields.IncomeAccount,
                   taxcodesales: useData[i].fields.TaxCodeSales,
                   salesdescription: useData[i].fields.SalesDescription,
@@ -2498,18 +2187,14 @@ Template.productview.onRendered(function () {
                   $("#sltsalesacount").val(useData[i].fields.IncomeAccount);
                   $("#sltcogsaccount").val(useData[i].fields.CogsAccount);
                   $("#sltinventoryacount").val(useData[i].fields.AssetAccount);
+                  $("#sltUomSales").val(defaultUOM);
                   $("#slttaxcodesales").val(useData[i].fields.TaxCodeSales);
-                  $("#slttaxcodepurchase").val(
-                    useData[i].fields.TaxCodePurchase
-                  );
+                  $("#slttaxcodepurchase").val(useData[i].fields.TaxCodePurchase);
 
                   // Feature/ser-lot-tracking: Initializing serial/lot number settings
-                  if (useData[i].fields.SNTracking)
-                    $("#chkSNTrack").prop("checked", true);
-                  if (useData[i].fields.Batch)
-                    $("#chkLotTrack").prop("checked", true);
-                  if (useData[i].fields.CUSTFLD13 === "true")
-                    $("#chkAddSN").prop("checked", true);
+                  if (useData[i].fields.SNTracking) $("#chkSNTrack").prop("checked", true);
+                  if (useData[i].fields.Batch) $("#chkLotTrack").prop("checked", true);
+                  if (useData[i].fields.CUSTFLD13 === "true") $("#chkAddSN").prop("checked", true);
 
                   if (useData[i].fields.CUSTFLD14 == "true") {
                     $(".lblPriceEx").addClass("hiddenColumn");
@@ -2580,24 +2265,13 @@ Template.productview.onRendered(function () {
                   templateObject.productExtraSell.set(lineExtaSellItems);
                 } else {
                   templateObject.isExtraSellChecked.set(true);
-                  for (
-                    let e = 0;
-                    e < useData[i].fields.ExtraSellPrice.length;
-                    e++
-                  ) {
+                  for (let e = 0; e < useData[i].fields.ExtraSellPrice.length; e++) {
                     lineExtaSellObj = {
                       lineID: Random.id(),
-                      clienttype:
-                        useData[i].fields.ExtraSellPrice[e].fields
-                          .ClientTypeName || "",
-                      discount:
-                        useData[i].fields.ExtraSellPrice[e].fields
-                          .QtyPercent1 || 0,
-                      datefrom:
-                        useData[i].fields.ExtraSellPrice[e].fields.DateFrom ||
-                        "",
-                      dateto:
-                        useData[i].fields.ExtraSellPrice[e].fields.DateTo || "",
+                      clienttype: useData[i].fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                      discount: useData[i].fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                      datefrom: useData[i].fields.ExtraSellPrice[e].fields.DateFrom || "",
+                      dateto: useData[i].fields.ExtraSellPrice[e].fields.DateTo || "",
                       price:
                         utilityService.modifynegativeCurrencyFormat(
                           useData[i].fields.ExtraSellPrice[e].fields.Price1
@@ -2645,13 +2319,11 @@ Template.productview.onRendered(function () {
                   if (bomIndex > -1) {
                     isBOMProduct = true;
                   } else {
-                    productService
-                      .getOneBOMProductByName(data.fields.ProductName)
-                      .then(function (data) {
-                        if (data.tproctree.length > -1) {
-                          isBOMProduct = true;
-                        }
-                      });
+                    productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
+                      if (data.tproctree.length > -1) {
+                        isBOMProduct = true;
+                      }
+                    });
                   }
 
                   let productrecord = {
@@ -2661,22 +2333,13 @@ Template.productview.onRendered(function () {
                     productcode: data.fields.PRODUCTCODE,
                     productprintName: data.fields.ProductPrintName,
                     assetaccount: data.fields.AssetAccount,
-                    buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                      data.fields.BuyQty1Cost
-                    ),
-                    buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                      data.fields.BuyQty1CostInc
-                    ),
+                    buyqty1cost: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1Cost),
+                    buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                     cogsaccount: data.fields.CogsAccount,
                     taxcodepurchase: data.fields.TaxCodePurchase,
                     purchasedescription: data.fields.PurchaseDescription,
-                    sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                      data.fields.SellQty1Price
-                    ),
-                    sellqty1priceinc:
-                      utilityService.modifynegativeCurrencyFormat(
-                        data.fields.SellQty1PriceInc
-                      ),
+                    sellqty1price: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1Price),
+                    sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                     incomeaccount: data.fields.IncomeAccount,
                     taxcodesales: data.fields.TaxCodeSales,
                     salesdescription: data.fields.SalesDescription,
@@ -2692,25 +2355,21 @@ Template.productview.onRendered(function () {
                     //productclass :lineItems
                   };
 
-                  templateObject.isManufactured.set(
-                    productrecord.isManufactured
-                  );
+                  templateObject.isManufactured.set(productrecord.isManufactured);
 
                   setTimeout(async function () {
                     await templateObject.setEditableSelect();
                     $("#sltsalesacount").val(data.fields.IncomeAccount);
                     $("#sltcogsaccount").val(data.fields.CogsAccount);
                     $("#sltinventoryacount").val(data.fields.AssetAccount);
+                    $("#sltUomSales").val(defaultUOM);
                     $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                     $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
 
                     // Feature/ser-lot-tracking: Initializing serial/lot number settings
-                    if (data.fields.SNTracking)
-                      $("#chkSNTrack").prop("checked", true);
-                    if (data.fields.Batch)
-                      $("#chkLotTrack").prop("checked", true);
-                    if (data.fields.CUSTFLD13 === "true")
-                      $("#chkAddSN").prop("checked", true);
+                    if (data.fields.SNTracking) $("#chkSNTrack").prop("checked", true);
+                    if (data.fields.Batch) $("#chkLotTrack").prop("checked", true);
+                    if (data.fields.CUSTFLD13 === "true") $("#chkAddSN").prop("checked", true);
 
                     if (data.fields.CUSTFLD14 == "true") {
                       $(".lblPriceEx").addClass("hiddenColumn");
@@ -2782,26 +2441,15 @@ Template.productview.onRendered(function () {
                     templateObject.productExtraSell.set(lineExtaSellItems);
                   } else {
                     templateObject.isExtraSellChecked.set(true);
-                    for (
-                      let e = 0;
-                      e < data.fields.ExtraSellPrice.length;
-                      e++
-                    ) {
+                    for (let e = 0; e < data.fields.ExtraSellPrice.length; e++) {
                       lineExtaSellObj = {
                         lineID: Random.id(),
-                        clienttype:
-                          data.fields.ExtraSellPrice[e].fields.ClientTypeName ||
-                          "",
-                        discount:
-                          data.fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
-                        datefrom:
-                          data.fields.ExtraSellPrice[e].fields.DateFrom || "",
-                        dateto:
-                          data.fields.ExtraSellPrice[e].fields.DateTo || "",
+                        clienttype: data.fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                        discount: data.fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                        datefrom: data.fields.ExtraSellPrice[e].fields.DateFrom || "",
+                        dateto: data.fields.ExtraSellPrice[e].fields.DateTo || "",
                         price:
-                          utilityService.modifynegativeCurrencyFormat(
-                            data.fields.ExtraSellPrice[e].fields.Price1
-                          ) || 0,
+                          utilityService.modifynegativeCurrencyFormat(data.fields.ExtraSellPrice[e].fields.Price1) || 0,
                       };
                       lineExtaSellItems.push(lineExtaSellObj);
                     }
@@ -2849,13 +2497,11 @@ Template.productview.onRendered(function () {
               if (bomIndex > -1) {
                 isBOMProduct = true;
               } else {
-                productService
-                  .getOneBOMProductByName(data.fields.ProductName)
-                  .then(function (data) {
-                    if (data.tproctree.length > -1) {
-                      isBOMProduct = true;
-                    }
-                  });
+                productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
+                  if (data.tproctree.length > -1) {
+                    isBOMProduct = true;
+                  }
+                });
               }
 
               let productrecord = {
@@ -2865,21 +2511,13 @@ Template.productview.onRendered(function () {
                 productcode: data.fields.PRODUCTCODE,
                 productprintName: data.fields.ProductPrintName,
                 assetaccount: data.fields.AssetAccount,
-                buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                  data.fields.BuyQty1Cost
-                ),
-                buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                  data.fields.BuyQty1CostInc
-                ),
+                buyqty1cost: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1Cost),
+                buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                 cogsaccount: data.fields.CogsAccount,
                 taxcodepurchase: data.fields.TaxCodePurchase,
                 purchasedescription: data.fields.PurchaseDescription,
-                sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                  data.fields.SellQty1Price
-                ),
-                sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(
-                  data.fields.SellQty1PriceInc
-                ),
+                sellqty1price: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1Price),
+                sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                 incomeaccount: data.fields.IncomeAccount,
                 taxcodesales: data.fields.TaxCodeSales,
                 salesdescription: data.fields.SalesDescription,
@@ -2902,15 +2540,14 @@ Template.productview.onRendered(function () {
                 $("#sltsalesacount").val(data.fields.IncomeAccount);
                 $("#sltcogsaccount").val(data.fields.CogsAccount);
                 $("#sltinventoryacount").val(data.fields.AssetAccount);
+                $("#sltUomSales").val(defaultUOM);
                 $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                 $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
 
                 // Feature/ser-lot-tracking: Initializing serial/lot number settings
-                if (data.fields.SNTracking)
-                  $("#chkSNTrack").prop("checked", true);
+                if (data.fields.SNTracking) $("#chkSNTrack").prop("checked", true);
                 if (data.fields.Batch) $("#chkLotTrack").prop("checked", true);
-                if (data.fields.CUSTFLD13 === "true")
-                  $("#chkAddSN").prop("checked", true);
+                if (data.fields.CUSTFLD13 === "true") $("#chkAddSN").prop("checked", true);
 
                 if (data.fields.CUSTFLD14 == "true") {
                   $(".lblPriceEx").addClass("hiddenColumn");
@@ -2985,17 +2622,12 @@ Template.productview.onRendered(function () {
                 for (let e = 0; e < data.fields.ExtraSellPrice.length; e++) {
                   lineExtaSellObj = {
                     lineID: Random.id(),
-                    clienttype:
-                      data.fields.ExtraSellPrice[e].fields.ClientTypeName || "",
-                    discount:
-                      data.fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
-                    datefrom:
-                      data.fields.ExtraSellPrice[e].fields.DateFrom || "",
+                    clienttype: data.fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                    discount: data.fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                    datefrom: data.fields.ExtraSellPrice[e].fields.DateFrom || "",
                     dateto: data.fields.ExtraSellPrice[e].fields.DateTo || "",
                     price:
-                      utilityService.modifynegativeCurrencyFormat(
-                        data.fields.ExtraSellPrice[e].fields.Price1
-                      ) || 0,
+                      utilityService.modifynegativeCurrencyFormat(data.fields.ExtraSellPrice[e].fields.Price1) || 0,
                   };
                   lineExtaSellItems.push(lineExtaSellObj);
                 }
@@ -3126,9 +2758,7 @@ Template.productview.onRendered(function () {
             }
           });
 
-        $(".ui-datepicker .ui-state-hihglight").removeClass(
-          "ui-state-highlight"
-        );
+        $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
         // var usedNames = {};
         // $("select[name='sltCustomerType'] > option").each(function () {
         //     if(usedNames[this.text]) {
@@ -3155,16 +2785,12 @@ Template.productview.onRendered(function () {
           let totaldeptquantity = 0;
           let backordeQty = 0;
           for (let j in data.tproductclassquantity) {
-            backordeQty =
-              data.tproductclassquantity[j].POBOQty +
-              data.tproductclassquantity[j].SOBOQty;
+            backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
             qtylineItemObj = {
               department: data.tproductclassquantity[j].DepartmentName || "",
               // quantity: data.tproductclassquantity[j].InStockQty || 0,
               availableqty:
-                data.tproductclassquantity[j].InStockQty -
-                  backordeQty -
-                  data.tproductclassquantity[j].SOQty || 0,
+                data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
               onsoqty: data.tproductclassquantity[j].SOQty || 0,
               onboqty: backordeQty || 0,
               instockqty: data.tproductclassquantity[j].InStockQty || 0,
@@ -3186,412 +2812,332 @@ Template.productview.onRendered(function () {
     templateObject.getProductData();
 
     templateObject.getSerialNumberList = function () {
-      productService
-        .getSerialNumberList(currentProductID)
-        .then(function (data) {
-          serialnumberList = [];
-          for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-            let datet = new Date(
-              data.tserialnumberlistcurrentreport[i].TransDate
-            );
-            let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
-            if (data.tserialnumberlistcurrentreport[i].AllocType == "Sold") {
-              tclass = "text-sold";
-            } else if (
-              data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"
-            ) {
-              tclass = "text-instock";
-            } else if (
-              data.tserialnumberlistcurrentreport[i].AllocType ==
-              "Transferred (Not Available)"
-            ) {
-              tclass = "text-transfered";
-            } else {
-              tclass = "";
-            }
-            let serialnumberObject = {
-              Productid: currentProductID,
-              PP: data.ProductId,
-              SerialNumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
-              Status: data.tserialnumberlistcurrentreport[i].AllocType,
-              date: sdatet,
-              department: data.tserialnumberlistcurrentreport[i].DepartmentName,
-              cssclass: tclass,
-            };
-            serialnumberList.push(serialnumberObject);
+      productService.getSerialNumberList(currentProductID).then(function (data) {
+        serialnumberList = [];
+        for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+          let datet = new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+          let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+          if (data.tserialnumberlistcurrentreport[i].AllocType == "Sold") {
+            tclass = "text-sold";
+          } else if (data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock") {
+            tclass = "text-instock";
+          } else if (data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)") {
+            tclass = "text-transfered";
+          } else {
+            tclass = "";
           }
+          let serialnumberObject = {
+            Productid: currentProductID,
+            PP: data.ProductId,
+            SerialNumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
+            Status: data.tserialnumberlistcurrentreport[i].AllocType,
+            date: sdatet,
+            department: data.tserialnumberlistcurrentreport[i].DepartmentName,
+            cssclass: tclass,
+          };
+          serialnumberList.push(serialnumberObject);
+        }
 
-          templateObject.tserialnumberList.set(serialnumberList);
-          setTimeout(function () {
-            $("#serialnumberlist")
-              .DataTable({
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                order: [
-                  [0, "desc"],
-                  [3, "desc"],
-                ],
-                action: function () {
-                  $("#serialnumberlist").DataTable().ajax.reload();
-                },
-                fnDrawCallback: function (oSettings) {
-                  $(".paginate_button.page-item").removeClass("disabled");
-                  $("#tblPaymentOverview_ellipsis").addClass("disabled");
+        templateObject.tserialnumberList.set(serialnumberList);
+        setTimeout(function () {
+          $("#serialnumberlist")
+            .DataTable({
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"],
+              ],
+              info: true,
+              responsive: true,
+              order: [
+                [0, "desc"],
+                [3, "desc"],
+              ],
+              action: function () {
+                $("#serialnumberlist").DataTable().ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#tblPaymentOverview_ellipsis").addClass("disabled");
 
-                  if (oSettings._iDisplayLength == -1) {
-                    if (oSettings.fnRecordsDisplay() > 150) {
-                      $(".paginate_button.page-item.previous").addClass(
-                        "disabled"
-                      );
-                      $(".paginate_button.page-item.next").addClass("disabled");
-                    }
-                  } else {
-                  }
-                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+                    $(".paginate_button.page-item.previous").addClass("disabled");
                     $(".paginate_button.page-item.next").addClass("disabled");
                   }
-                  $(
-                    ".paginate_button.next:not(.disabled)",
-                    this.api().table().container()
-                  ).on("click", function () {
-                    $(".fullScreenSpin").css("display", "inline-block");
+                } else {
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+                $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                  $(".fullScreenSpin").css("display", "inline-block");
 
-                    var dateFrom = new Date(
-                      $("#dateFrom").datepicker("getDate")
-                    );
-                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                  var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                  var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                    let formatDateFrom =
-                      dateFrom.getFullYear() +
-                      "-" +
-                      (dateFrom.getMonth() + 1) +
-                      "-" +
-                      dateFrom.getDate();
-                    let formatDateTo =
-                      dateTo.getFullYear() +
-                      "-" +
-                      (dateTo.getMonth() + 1) +
-                      "-" +
-                      dateTo.getDate();
-                    if (data.Params.IgnoreDates == true) {
-                      sideBarService
-                        .getNewProductListVS1(
-                          formatDateFrom,
-                          formatDateTo,
-                          true,
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay(),
-                          viewdeleted
-                        )
-                        .then(function (dataObjectnew) {
-                          addVS1Data("TProductVS1", JSON.stringify(dataReload))
-                            .then(function (datareturn) {
-                              if (dataObjectold.length == 0) {
-                              } else {
-                                let dataOld = JSON.parse(dataObjectold[0].data);
-                                var thirdaryData = $.merge(
-                                  $.merge([], dataObjectnew.TProductVS1),
-                                  dataOld.TProductVS1
-                                );
-                                let objCombineData = {
-                                  Params: dataOld.Params,
-                                  TProductVS1: thirdaryData,
-                                };
+                  let formatDateFrom =
+                    dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                  let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                  if (data.Params.IgnoreDates == true) {
+                    sideBarService
+                      .getNewProductListVS1(
+                        formatDateFrom,
+                        formatDateTo,
+                        true,
+                        initialDatatableLoad,
+                        oSettings.fnRecordsDisplay(),
+                        viewdeleted
+                      )
+                      .then(function (dataObjectnew) {
+                        addVS1Data("TProductVS1", JSON.stringify(dataReload))
+                          .then(function (datareturn) {
+                            if (dataObjectold.length == 0) {
+                            } else {
+                              let dataOld = JSON.parse(dataObjectold[0].data);
+                              var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                              let objCombineData = {
+                                Params: dataOld.Params,
+                                TProductVS1: thirdaryData,
+                              };
 
-                                addVS1Data(
-                                  "TProductVS1",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
-                                    templateObject.resetData(objCombineData);
-                                    $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
-                                    $(".fullScreenSpin").css("display", "none");
-                                  });
-                              }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
-                          $(".fullScreenSpin").css("display", "none");
-                        });
-                    } else {
-                      sideBarService
-                        .getNewProductListVS1(
-                          formatDateFrom,
-                          formatDateTo,
-                          false,
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay(),
-                          viewdeleted
-                        )
-                        .then(function (dataObjectnew) {
-                          addVS1Data("TProductVS1", JSON.stringify(dataReload))
-                            .then(function (datareturn) {
-                              if (dataObjectold.length == 0) {
-                              } else {
-                                let dataOld = JSON.parse(dataObjectold[0].data);
-                                var thirdaryData = $.merge(
-                                  $.merge([], dataObjectnew.TProductVS1),
-                                  dataOld.TProductVS1
-                                );
-                                let objCombineData = {
-                                  Params: dataOld.Params,
-                                  TProductVS1: thirdaryData,
-                                };
+                              addVS1Data("TProductVS1", JSON.stringify(objCombineData))
+                                .then(function (datareturn) {
+                                  templateObject.resetData(objCombineData);
+                                  $(".fullScreenSpin").css("display", "none");
+                                })
+                                .catch(function (err) {
+                                  $(".fullScreenSpin").css("display", "none");
+                                });
+                            }
+                          })
+                          .catch(function (err) {});
+                      })
+                      .catch(function (err) {
+                        $(".fullScreenSpin").css("display", "none");
+                      });
+                  } else {
+                    sideBarService
+                      .getNewProductListVS1(
+                        formatDateFrom,
+                        formatDateTo,
+                        false,
+                        initialDatatableLoad,
+                        oSettings.fnRecordsDisplay(),
+                        viewdeleted
+                      )
+                      .then(function (dataObjectnew) {
+                        addVS1Data("TProductVS1", JSON.stringify(dataReload))
+                          .then(function (datareturn) {
+                            if (dataObjectold.length == 0) {
+                            } else {
+                              let dataOld = JSON.parse(dataObjectold[0].data);
+                              var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                              let objCombineData = {
+                                Params: dataOld.Params,
+                                TProductVS1: thirdaryData,
+                              };
 
-                                addVS1Data(
-                                  "TProductVS1",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
-                                    templateObject.resetData(objCombineData);
-                                    $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
-                                    $(".fullScreenSpin").css("display", "none");
-                                  });
-                              }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
-                          $(".fullScreenSpin").css("display", "none");
-                        });
-                    }
-                  });
+                              addVS1Data("TProductVS1", JSON.stringify(objCombineData))
+                                .then(function (datareturn) {
+                                  templateObject.resetData(objCombineData);
+                                  $(".fullScreenSpin").css("display", "none");
+                                })
+                                .catch(function (err) {
+                                  $(".fullScreenSpin").css("display", "none");
+                                });
+                            }
+                          })
+                          .catch(function (err) {});
+                      })
+                      .catch(function (err) {
+                        $(".fullScreenSpin").css("display", "none");
+                      });
+                  }
+                });
 
-                  //}
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                },
-              })
-              .on("page", function () {})
-              .on("column-reorder", function () {});
-            $("div.dataTables_filter input").addClass(
-              "form-control form-control-sm"
-            );
-            $(".fullScreenSpin").css("display", "none");
-            $("#SNTracklist").css({ display: "block" });
-          }, 0);
-        });
+                //}
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+            })
+            .on("page", function () {})
+            .on("column-reorder", function () {});
+          $("div.dataTables_filter input").addClass("form-control form-control-sm");
+          $(".fullScreenSpin").css("display", "none");
+          $("#SNTracklist").css({ display: "block" });
+        }, 0);
+      });
     };
 
     templateObject.getLotNumberList = function () {
-      productService
-        .getSerialNumberList(currentProductID)
-        .then(function (data) {
-          lotnumberList = [];
-          for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-            let datet = new Date(
-              data.tserialnumberlistcurrentreport[i].TransDate
-            );
-            let dateep = new Date(
-              data.tserialnumberlistcurrentreport[i].BatchExpiryDate
-            );
-            let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
-            let sdateep = `${dateep.getDate()}/${dateep.getMonth()}/${dateep.getFullYear()}`;
-            if (data.tserialnumberlistcurrentreport[i].AllocType == "Sold") {
-              tclass = "text-sold";
-            } else if (
-              data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"
-            ) {
-              tclass = "text-instock";
-            } else if (
-              data.tserialnumberlistcurrentreport[i].AllocType ==
-              "Transferred (Not Available)"
-            ) {
-              tclass = "text-transfered";
-            } else {
-              tclass = "";
-            }
-            let lotnumberObject = {
-              LotNumber: data.tserialnumberlistcurrentreport[i].BatchNumber,
-              Status: data.tserialnumberlistcurrentreport[i].AllocType,
-              date: sdatet,
-              expriydate: sdateep,
-              department: data.tserialnumberlistcurrentreport[i].DepartmentName,
-              cssclass: tclass,
-            };
-            lotnumberList.push(lotnumberObject);
+      productService.getSerialNumberList(currentProductID).then(function (data) {
+        lotnumberList = [];
+        for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+          let datet = new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+          let dateep = new Date(data.tserialnumberlistcurrentreport[i].BatchExpiryDate);
+          let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+          let sdateep = `${dateep.getDate()}/${dateep.getMonth()}/${dateep.getFullYear()}`;
+          if (data.tserialnumberlistcurrentreport[i].AllocType == "Sold") {
+            tclass = "text-sold";
+          } else if (data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock") {
+            tclass = "text-instock";
+          } else if (data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)") {
+            tclass = "text-transfered";
+          } else {
+            tclass = "";
           }
+          let lotnumberObject = {
+            LotNumber: data.tserialnumberlistcurrentreport[i].BatchNumber,
+            Status: data.tserialnumberlistcurrentreport[i].AllocType,
+            date: sdatet,
+            expriydate: sdateep,
+            department: data.tserialnumberlistcurrentreport[i].DepartmentName,
+            cssclass: tclass,
+          };
+          lotnumberList.push(lotnumberObject);
+        }
 
-          templateObject.tlotnumberList.set(lotnumberList);
-          setTimeout(function () {
-            $("#lotnumberlist")
-              .DataTable({
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                order: [
-                  [0, "desc"],
-                  [3, "desc"],
-                ],
-                action: function () {
-                  $("#lotnumberlist").DataTable().ajax.reload();
-                },
-                fnDrawCallback: function (oSettings) {
-                  $(".paginate_button.page-item").removeClass("disabled");
-                  $("#tblPaymentOverview_ellipsis").addClass("disabled");
+        templateObject.tlotnumberList.set(lotnumberList);
+        setTimeout(function () {
+          $("#lotnumberlist")
+            .DataTable({
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"],
+              ],
+              info: true,
+              responsive: true,
+              order: [
+                [0, "desc"],
+                [3, "desc"],
+              ],
+              action: function () {
+                $("#lotnumberlist").DataTable().ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#tblPaymentOverview_ellipsis").addClass("disabled");
 
-                  if (oSettings._iDisplayLength == -1) {
-                    if (oSettings.fnRecordsDisplay() > 150) {
-                      $(".paginate_button.page-item.previous").addClass(
-                        "disabled"
-                      );
-                      $(".paginate_button.page-item.next").addClass("disabled");
-                    }
-                  } else {
-                  }
-                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+                    $(".paginate_button.page-item.previous").addClass("disabled");
                     $(".paginate_button.page-item.next").addClass("disabled");
                   }
-                  $(
-                    ".paginate_button.next:not(.disabled)",
-                    this.api().table().container()
-                  ).on("click", function () {
-                    $(".fullScreenSpin").css("display", "inline-block");
+                } else {
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+                $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                  $(".fullScreenSpin").css("display", "inline-block");
 
-                    var dateFrom = new Date(
-                      $("#dateFrom").datepicker("getDate")
-                    );
-                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                  var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                  var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                    let formatDateFrom =
-                      dateFrom.getFullYear() +
-                      "-" +
-                      (dateFrom.getMonth() + 1) +
-                      "-" +
-                      dateFrom.getDate();
-                    let formatDateTo =
-                      dateTo.getFullYear() +
-                      "-" +
-                      (dateTo.getMonth() + 1) +
-                      "-" +
-                      dateTo.getDate();
-                    if (data.Params.IgnoreDates == true) {
-                      sideBarService
-                        .getNewProductListVS1(
-                          formatDateFrom,
-                          formatDateTo,
-                          true,
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay(),
-                          viewdeleted
-                        )
-                        .then(function (dataObjectnew) {
-                          addVS1Data("TProductVS1", JSON.stringify(dataReload))
-                            .then(function (datareturn) {
-                              if (dataObjectold.length == 0) {
-                              } else {
-                                let dataOld = JSON.parse(dataObjectold[0].data);
-                                var thirdaryData = $.merge(
-                                  $.merge([], dataObjectnew.TProductVS1),
-                                  dataOld.TProductVS1
-                                );
-                                let objCombineData = {
-                                  Params: dataOld.Params,
-                                  TProductVS1: thirdaryData,
-                                };
+                  let formatDateFrom =
+                    dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                  let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                  if (data.Params.IgnoreDates == true) {
+                    sideBarService
+                      .getNewProductListVS1(
+                        formatDateFrom,
+                        formatDateTo,
+                        true,
+                        initialDatatableLoad,
+                        oSettings.fnRecordsDisplay(),
+                        viewdeleted
+                      )
+                      .then(function (dataObjectnew) {
+                        addVS1Data("TProductVS1", JSON.stringify(dataReload))
+                          .then(function (datareturn) {
+                            if (dataObjectold.length == 0) {
+                            } else {
+                              let dataOld = JSON.parse(dataObjectold[0].data);
+                              var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                              let objCombineData = {
+                                Params: dataOld.Params,
+                                TProductVS1: thirdaryData,
+                              };
 
-                                addVS1Data(
-                                  "TProductVS1",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
-                                    templateObject.resetData(objCombineData);
-                                    $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
-                                    $(".fullScreenSpin").css("display", "none");
-                                  });
-                              }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
-                          $(".fullScreenSpin").css("display", "none");
-                        });
-                    } else {
-                      sideBarService
-                        .getNewProductListVS1(
-                          formatDateFrom,
-                          formatDateTo,
-                          false,
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay(),
-                          viewdeleted
-                        )
-                        .then(function (dataObjectnew) {
-                          addVS1Data("TProductVS1", JSON.stringify(dataReload))
-                            .then(function (datareturn) {
-                              if (dataObjectold.length == 0) {
-                              } else {
-                                let dataOld = JSON.parse(dataObjectold[0].data);
-                                var thirdaryData = $.merge(
-                                  $.merge([], dataObjectnew.TProductVS1),
-                                  dataOld.TProductVS1
-                                );
-                                let objCombineData = {
-                                  Params: dataOld.Params,
-                                  TProductVS1: thirdaryData,
-                                };
+                              addVS1Data("TProductVS1", JSON.stringify(objCombineData))
+                                .then(function (datareturn) {
+                                  templateObject.resetData(objCombineData);
+                                  $(".fullScreenSpin").css("display", "none");
+                                })
+                                .catch(function (err) {
+                                  $(".fullScreenSpin").css("display", "none");
+                                });
+                            }
+                          })
+                          .catch(function (err) {});
+                      })
+                      .catch(function (err) {
+                        $(".fullScreenSpin").css("display", "none");
+                      });
+                  } else {
+                    sideBarService
+                      .getNewProductListVS1(
+                        formatDateFrom,
+                        formatDateTo,
+                        false,
+                        initialDatatableLoad,
+                        oSettings.fnRecordsDisplay(),
+                        viewdeleted
+                      )
+                      .then(function (dataObjectnew) {
+                        addVS1Data("TProductVS1", JSON.stringify(dataReload))
+                          .then(function (datareturn) {
+                            if (dataObjectold.length == 0) {
+                            } else {
+                              let dataOld = JSON.parse(dataObjectold[0].data);
+                              var thirdaryData = $.merge($.merge([], dataObjectnew.TProductVS1), dataOld.TProductVS1);
+                              let objCombineData = {
+                                Params: dataOld.Params,
+                                TProductVS1: thirdaryData,
+                              };
 
-                                addVS1Data(
-                                  "TProductVS1",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
-                                    templateObject.resetData(objCombineData);
-                                    $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
-                                    $(".fullScreenSpin").css("display", "none");
-                                  });
-                              }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
-                          $(".fullScreenSpin").css("display", "none");
-                        });
-                    }
-                  });
+                              addVS1Data("TProductVS1", JSON.stringify(objCombineData))
+                                .then(function (datareturn) {
+                                  templateObject.resetData(objCombineData);
+                                  $(".fullScreenSpin").css("display", "none");
+                                })
+                                .catch(function (err) {
+                                  $(".fullScreenSpin").css("display", "none");
+                                });
+                            }
+                          })
+                          .catch(function (err) {});
+                      })
+                      .catch(function (err) {
+                        $(".fullScreenSpin").css("display", "none");
+                      });
+                  }
+                });
 
-                  //}
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                },
-              })
-              .on("page", function () {})
-              .on("column-reorder", function () {});
-            $("div.dataTables_filter input").addClass(
-              "form-control form-control-sm"
-            );
-            $(".fullScreenSpin").css("display", "none");
-            $("#LotTracklist").css({ display: "block" });
-          }, 0);
-        });
+                //}
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+            })
+            .on("page", function () {})
+            .on("column-reorder", function () {});
+          $("div.dataTables_filter input").addClass("form-control form-control-sm");
+          $(".fullScreenSpin").css("display", "none");
+          $("#LotTracklist").css({ display: "block" });
+        }, 0);
+      });
     };
 
     templateObject.getAllProductRecentTransactions = function () {
@@ -3762,22 +3308,13 @@ Template.productview.onRendered(function () {
                   productcode: data.tproduct[0].fields.PRODUCTCODE,
                   productprintName: data.tproduct[0].fields.ProductPrintName,
                   assetaccount: data.tproduct[0].fields.AssetAccount,
-                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                    data.tproduct[0].fields.BuyQty1Cost
-                  ),
-                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.BuyQty1CostInc
-                  ),
+                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost),
+                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                   cogsaccount: data.tproduct[0].fields.CogsAccount,
                   taxcodepurchase: data.tproduct[0].fields.TaxCodePurchase,
-                  purchasedescription:
-                    data.tproduct[0].fields.PurchaseDescription,
-                  sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                    data.tproduct[0].fields.SellQty1Price
-                  ),
-                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.SellQty1PriceInc
-                  ),
+                  purchasedescription: data.tproduct[0].fields.PurchaseDescription,
+                  sellqty1price: utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price),
+                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                   incomeaccount: data.tproduct[0].fields.IncomeAccount,
                   taxcodesales: data.tproduct[0].fields.TaxCodeSales,
                   salesdescription: data.tproduct[0].fields.SalesDescription,
@@ -3797,6 +3334,7 @@ Template.productview.onRendered(function () {
                   $("#sltsalesacount").val(data.fields.IncomeAccount);
                   $("#sltcogsaccount").val(data.fields.CogsAccount);
                   $("#sltinventoryacount").val(data.fields.AssetAccount);
+                  $("#sltUomSales").val(defaultUOM);
                   $("#slttaxcodesales").val(data.fields.TaxCodeSales);
                   $("#slttaxcodepurchase").val(data.fields.TaxCodePurchase);
                   if (data.fields.CUSTFLD14 == "true") {
@@ -3869,29 +3407,16 @@ Template.productview.onRendered(function () {
                   templateObject.productExtraSell.set(lineExtaSellItems);
                 } else {
                   templateObject.isExtraSellChecked.set(true);
-                  for (
-                    let e = 0;
-                    e < data.tproduct[0].fields.ExtraSellPrice.length;
-                    e++
-                  ) {
+                  for (let e = 0; e < data.tproduct[0].fields.ExtraSellPrice.length; e++) {
                     lineExtaSellObj = {
                       lineID: Random.id(),
-                      clienttype:
-                        data.tproduct[0].fields.ExtraSellPrice[e].fields
-                          .ClientTypeName || "",
-                      discount:
-                        data.tproduct[0].fields.ExtraSellPrice[e].fields
-                          .QtyPercent1 || 0,
-                      datefrom:
-                        data.tproduct[0].fields.ExtraSellPrice[e].fields
-                          .DateFrom || "",
-                      dateto:
-                        data.tproduct[0].fields.ExtraSellPrice[e].fields
-                          .DateTo || "",
+                      clienttype: data.tproduct[0].fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                      discount: data.tproduct[0].fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                      datefrom: data.tproduct[0].fields.ExtraSellPrice[e].fields.DateFrom || "",
+                      dateto: data.tproduct[0].fields.ExtraSellPrice[e].fields.DateTo || "",
                       price:
                         utilityService.modifynegativeCurrencyFormat(
-                          data.tproduct[0].fields.ExtraSellPrice[e].fields
-                            .Price1
+                          data.tproduct[0].fields.ExtraSellPrice[e].fields.Price1
                         ) || 0,
                     };
                     lineExtaSellItems.push(lineExtaSellObj);
@@ -3940,21 +3465,13 @@ Template.productview.onRendered(function () {
                   productcode: useData[i].fields.PRODUCTCODE,
                   productprintName: useData[i].fields.ProductPrintName,
                   assetaccount: useData[i].fields.AssetAccount,
-                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                    useData[i].fields.BuyQty1Cost
-                  ),
-                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.BuyQty1CostInc
-                  ),
+                  buyqty1cost: utilityService.modifynegativeCurrencyFormat(useData[i].fields.BuyQty1Cost),
+                  buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                   cogsaccount: useData[i].fields.CogsAccount,
                   taxcodepurchase: useData[i].fields.TaxCodePurchase,
                   purchasedescription: useData[i].fields.PurchaseDescription,
-                  sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                    useData[i].fields.SellQty1Price
-                  ),
-                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(
-                    data.fields.SellQty1PriceInc
-                  ),
+                  sellqty1price: utilityService.modifynegativeCurrencyFormat(useData[i].fields.SellQty1Price),
+                  sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                   incomeaccount: useData[i].fields.IncomeAccount,
                   taxcodesales: useData[i].fields.TaxCodeSales,
                   salesdescription: useData[i].fields.SalesDescription,
@@ -3975,10 +3492,9 @@ Template.productview.onRendered(function () {
                   $("#sltsalesacount").val(useData[i].fields.IncomeAccount);
                   $("#sltcogsaccount").val(useData[i].fields.CogsAccount);
                   $("#sltinventoryacount").val(useData[i].fields.AssetAccount);
+                  $("#sltUomSales").val(defaultUOM);
                   $("#slttaxcodesales").val(useData[i].fields.TaxCodeSales);
-                  $("#slttaxcodepurchase").val(
-                    useData[i].fields.TaxCodePurchase
-                  );
+                  $("#slttaxcodepurchase").val(useData[i].fields.TaxCodePurchase);
                   if (useData[i].fields.CUSTFLD14 == "true") {
                     $(".lblPriceEx").addClass("hiddenColumn");
                     $(".lblPriceEx").removeClass("showColumn");
@@ -4049,24 +3565,13 @@ Template.productview.onRendered(function () {
                   templateObject.productExtraSell.set(lineExtaSellItems);
                 } else {
                   templateObject.isExtraSellChecked.set(true);
-                  for (
-                    let e = 0;
-                    e < useData[i].fields.ExtraSellPrice.length;
-                    e++
-                  ) {
+                  for (let e = 0; e < useData[i].fields.ExtraSellPrice.length; e++) {
                     lineExtaSellObj = {
                       lineID: Random.id(),
-                      clienttype:
-                        useData[i].fields.ExtraSellPrice[e].fields
-                          .ClientTypeName || "",
-                      discount:
-                        useData[i].fields.ExtraSellPrice[e].fields
-                          .QtyPercent1 || 0,
-                      datefrom:
-                        useData[i].fields.ExtraSellPrice[e].fields.DateFrom ||
-                        "",
-                      dateto:
-                        useData[i].fields.ExtraSellPrice[e].fields.DateTo || "",
+                      clienttype: useData[i].fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                      discount: useData[i].fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                      datefrom: useData[i].fields.ExtraSellPrice[e].fields.DateFrom || "",
+                      dateto: useData[i].fields.ExtraSellPrice[e].fields.DateTo || "",
                       price:
                         utilityService.modifynegativeCurrencyFormat(
                           useData[i].fields.ExtraSellPrice[e].fields.Price1
@@ -4113,23 +3618,13 @@ Template.productview.onRendered(function () {
                     productcode: data.tproduct[0].fields.PRODUCTCODE,
                     productprintName: data.tproduct[0].fields.ProductPrintName,
                     assetaccount: data.tproduct[0].fields.AssetAccount,
-                    buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                      data.tproduct[0].fields.BuyQty1Cost
-                    ),
-                    buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                      data.fields.BuyQty1CostInc
-                    ),
+                    buyqty1cost: utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost),
+                    buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                     cogsaccount: data.tproduct[0].fields.CogsAccount,
                     taxcodepurchase: data.tproduct[0].fields.TaxCodePurchase,
-                    purchasedescription:
-                      data.tproduct[0].fields.PurchaseDescription,
-                    sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                      data.tproduct[0].fields.SellQty1Price
-                    ),
-                    sellqty1priceinc:
-                      utilityService.modifynegativeCurrencyFormat(
-                        data.fields.SellQty1PriceInc
-                      ),
+                    purchasedescription: data.tproduct[0].fields.PurchaseDescription,
+                    sellqty1price: utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price),
+                    sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                     incomeaccount: data.tproduct[0].fields.IncomeAccount,
                     taxcodesales: data.tproduct[0].fields.TaxCodeSales,
                     salesdescription: data.tproduct[0].fields.SalesDescription,
@@ -4147,21 +3642,12 @@ Template.productview.onRendered(function () {
 
                   setTimeout(async function () {
                     await templateObject.setEditableSelect();
-                    $("#sltsalesacount").val(
-                      data.tproduct[0].fields.IncomeAccount
-                    );
-                    $("#sltcogsaccount").val(
-                      data.tproduct[0].fields.CogsAccount
-                    );
-                    $("#sltinventoryacount").val(
-                      data.tproduct[0].fields.AssetAccount
-                    );
-                    $("#slttaxcodesales").val(
-                      data.tproduct[0].fields.TaxCodeSales
-                    );
-                    $("#slttaxcodepurchase").val(
-                      data.tproduct[0].fields.TaxCodePurchase
-                    );
+                    $("#sltsalesacount").val(data.tproduct[0].fields.IncomeAccount);
+                    $("#sltcogsaccount").val(data.tproduct[0].fields.CogsAccount);
+                    $("#sltinventoryacount").val(data.tproduct[0].fields.AssetAccount);
+                    $("#sltUomSales").val(defaultUOM);
+                    $("#slttaxcodesales").val(data.tproduct[0].fields.TaxCodeSales);
+                    $("#slttaxcodepurchase").val(data.tproduct[0].fields.TaxCodePurchase);
                     if (data.tproduct[0].fields.CUSTFLD14 == "true") {
                       $(".lblPriceEx").addClass("hiddenColumn");
                       $(".lblPriceEx").removeClass("showColumn");
@@ -4232,29 +3718,16 @@ Template.productview.onRendered(function () {
                     templateObject.productExtraSell.set(lineExtaSellItems);
                   } else {
                     templateObject.isExtraSellChecked.set(true);
-                    for (
-                      let e = 0;
-                      e < data.tproduct[0].fields.ExtraSellPrice.length;
-                      e++
-                    ) {
+                    for (let e = 0; e < data.tproduct[0].fields.ExtraSellPrice.length; e++) {
                       lineExtaSellObj = {
                         lineID: Random.id(),
-                        clienttype:
-                          data.tproduct[0].fields.ExtraSellPrice[e].fields
-                            .ClientTypeName || "",
-                        discount:
-                          data.tproduct[0].fields.ExtraSellPrice[e].fields
-                            .QtyPercent1 || 0,
-                        datefrom:
-                          data.tproduct[0].fields.ExtraSellPrice[e].fields
-                            .DateFrom || "",
-                        dateto:
-                          data.tproduct[0].fields.ExtraSellPrice[e].fields
-                            .DateTo || "",
+                        clienttype: data.tproduct[0].fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                        discount: data.tproduct[0].fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                        datefrom: data.tproduct[0].fields.ExtraSellPrice[e].fields.DateFrom || "",
+                        dateto: data.tproduct[0].fields.ExtraSellPrice[e].fields.DateTo || "",
                         price:
                           utilityService.modifynegativeCurrencyFormat(
-                            data.tproduct[0].fields.ExtraSellPrice[e].fields
-                              .Price1
+                            data.tproduct[0].fields.ExtraSellPrice[e].fields.Price1
                           ) || 0,
                       };
                       lineExtaSellItems.push(lineExtaSellObj);
@@ -4272,9 +3745,7 @@ Template.productview.onRendered(function () {
                   } else {
                     templateObject.isTrackChecked.set(false);
                   }
-                  $("#sltsalesacount").val(
-                    data.tproduct[0].fields.IncomeAccount
-                  );
+                  $("#sltsalesacount").val(data.tproduct[0].fields.IncomeAccount);
                   $("#sltcogsaccount").val(data.tproduct[0].fields.CogsAccount);
 
                   templateObject.records.set(productrecord);
@@ -4305,22 +3776,13 @@ Template.productview.onRendered(function () {
                 productcode: data.tproduct[0].fields.PRODUCTCODE,
                 productprintName: data.tproduct[0].fields.ProductPrintName,
                 assetaccount: data.tproduct[0].fields.AssetAccount,
-                buyqty1cost: utilityService.modifynegativeCurrencyFormat(
-                  data.tproduct[0].fields.BuyQty1Cost
-                ),
-                buyqty1costinc: utilityService.modifynegativeCurrencyFormat(
-                  data.fields.BuyQty1CostInc
-                ),
+                buyqty1cost: utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost),
+                buyqty1costinc: utilityService.modifynegativeCurrencyFormat(data.fields.BuyQty1CostInc),
                 cogsaccount: data.tproduct[0].fields.CogsAccount,
                 taxcodepurchase: data.tproduct[0].fields.TaxCodePurchase,
-                purchasedescription:
-                  data.tproduct[0].fields.PurchaseDescription,
-                sellqty1price: utilityService.modifynegativeCurrencyFormat(
-                  data.tproduct[0].fields.SellQty1Price
-                ),
-                sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(
-                  data.fields.SellQty1PriceInc
-                ),
+                purchasedescription: data.tproduct[0].fields.PurchaseDescription,
+                sellqty1price: utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price),
+                sellqty1priceinc: utilityService.modifynegativeCurrencyFormat(data.fields.SellQty1PriceInc),
                 incomeaccount: data.tproduct[0].fields.IncomeAccount,
                 taxcodesales: data.tproduct[0].fields.TaxCodeSales,
                 salesdescription: data.tproduct[0].fields.SalesDescription,
@@ -4339,13 +3801,10 @@ Template.productview.onRendered(function () {
                 await templateObject.setEditableSelect();
                 $("#sltsalesacount").val(data.tproduct[0].fields.IncomeAccount);
                 $("#sltcogsaccount").val(data.tproduct[0].fields.CogsAccount);
-                $("#sltinventoryacount").val(
-                  data.tproduct[0].fields.AssetAccount
-                );
+                $("#sltinventoryacount").val(data.tproduct[0].fields.AssetAccount);
+                $("#sltUomSales").val(defaultUOM);
                 $("#slttaxcodesales").val(data.tproduct[0].fields.TaxCodeSales);
-                $("#slttaxcodepurchase").val(
-                  data.tproduct[0].fields.TaxCodePurchase
-                );
+                $("#slttaxcodepurchase").val(data.tproduct[0].fields.TaxCodePurchase);
                 if (data.tproduct[0].fields.CUSTFLD14 == "true") {
                   $(".lblPriceEx").addClass("hiddenColumn");
                   $(".lblPriceEx").removeClass("showColumn");
@@ -4415,25 +3874,13 @@ Template.productview.onRendered(function () {
                 templateObject.productExtraSell.set(lineExtaSellItems);
               } else {
                 templateObject.isExtraSellChecked.set(true);
-                for (
-                  let e = 0;
-                  e < data.tproduct[0].fields.ExtraSellPrice.length;
-                  e++
-                ) {
+                for (let e = 0; e < data.tproduct[0].fields.ExtraSellPrice.length; e++) {
                   lineExtaSellObj = {
                     lineID: Random.id(),
-                    clienttype:
-                      data.tproduct[0].fields.ExtraSellPrice[e].fields
-                        .ClientTypeName || "",
-                    discount:
-                      data.tproduct[0].fields.ExtraSellPrice[e].fields
-                        .QtyPercent1 || 0,
-                    datefrom:
-                      data.tproduct[0].fields.ExtraSellPrice[e].fields
-                        .DateFrom || "",
-                    dateto:
-                      data.tproduct[0].fields.ExtraSellPrice[e].fields.DateTo ||
-                      "",
+                    clienttype: data.tproduct[0].fields.ExtraSellPrice[e].fields.ClientTypeName || "",
+                    discount: data.tproduct[0].fields.ExtraSellPrice[e].fields.QtyPercent1 || 0,
+                    datefrom: data.tproduct[0].fields.ExtraSellPrice[e].fields.DateFrom || "",
+                    dateto: data.tproduct[0].fields.ExtraSellPrice[e].fields.DateTo || "",
                     price:
                       utilityService.modifynegativeCurrencyFormat(
                         data.tproduct[0].fields.ExtraSellPrice[e].fields.Price1
@@ -4507,9 +3954,7 @@ Template.productview.onRendered(function () {
             }
           });
 
-        $(".ui-datepicker .ui-state-hihglight").removeClass(
-          "ui-state-highlight"
-        );
+        $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
         // var usedNames = {};
         // $("select[name='sltCustomerType'] > option").each(function () {
         //     if(usedNames[this.text]) {
@@ -4703,6 +4148,7 @@ Template.productview.onRendered(function () {
       $(".colCOGSaccount").find("#sltcogsaccount").val("Cost of Goods Sold");
       $("#trackdiv").find("#sltinventoryacount").val("Inventory Asset");
       $("#sltCustomerType").val("Default");
+      $("#sltUomSales").val(defaultUOM);
       $("#slttaxcodesales").val("GST");
       $("#slttaxcodepurchase").val("NCG");
     }, 1000);
@@ -4748,14 +4194,40 @@ Template.productview.onRendered(function () {
     lineExtaSellItems.push(lineExtaSellObj);
     templateObject.productExtraSell.set(lineExtaSellItems);
     //setTimeout(function () {
-    Meteor.call(
-      "readPrefMethod",
-      localStorage.getItem("mycloudLogonID"),
-      "defaulttax",
-      function (error, result) {
-        if (error) {
-          purchasetaxcode = loggedTaxCodePurchaseInc;
-          salestaxcode = loggedTaxCodeSalesInc;
+    Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "defaulttax", function (error, result) {
+      if (error) {
+        purchasetaxcode = loggedTaxCodePurchaseInc;
+        salestaxcode = loggedTaxCodeSalesInc;
+        productrecord = {
+          id: "",
+          productname: "",
+          lib: "New Product",
+          productcode: "",
+          productprintName: "",
+          assetaccount: "Inventory Asset" || "",
+          buyqty1cost: 0,
+          buyqty1costinc: 0,
+          cogsaccount: "Cost of Goods Sold" || "",
+          taxcodepurchase: purchasetaxcode || "",
+          purchasedescription: "",
+          sellqty1price: 0,
+          sellqty1priceinc: 0,
+          incomeaccount: "Sales" || "",
+          taxcodesales: salestaxcode || "",
+          salesdescription: "",
+          active: "",
+          lockextrasell: "",
+          barcode: "",
+          totalqtyonorder: 0,
+          totalqtyinstock: 0,
+        };
+
+        templateObject.records.set(productrecord);
+        templateObject.isShowBOMModal.set(true);
+      } else {
+        if (result) {
+          purchasetaxcode = result.customFields[0].taxvalue || loggedTaxCodePurchaseInc;
+          salestaxcode = result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
           productrecord = {
             id: "",
             productname: "",
@@ -4782,42 +4254,9 @@ Template.productview.onRendered(function () {
 
           templateObject.records.set(productrecord);
           templateObject.isShowBOMModal.set(true);
-        } else {
-          if (result) {
-            purchasetaxcode =
-              result.customFields[0].taxvalue || loggedTaxCodePurchaseInc;
-            salestaxcode =
-              result.customFields[1].taxvalue || loggedTaxCodeSalesInc;
-            productrecord = {
-              id: "",
-              productname: "",
-              lib: "New Product",
-              productcode: "",
-              productprintName: "",
-              assetaccount: "Inventory Asset" || "",
-              buyqty1cost: 0,
-              buyqty1costinc: 0,
-              cogsaccount: "Cost of Goods Sold" || "",
-              taxcodepurchase: purchasetaxcode || "",
-              purchasedescription: "",
-              sellqty1price: 0,
-              sellqty1priceinc: 0,
-              incomeaccount: "Sales" || "",
-              taxcodesales: salestaxcode || "",
-              salesdescription: "",
-              active: "",
-              lockextrasell: "",
-              barcode: "",
-              totalqtyonorder: 0,
-              totalqtyinstock: 0,
-            };
-
-            templateObject.records.set(productrecord);
-            templateObject.isShowBOMModal.set(true);
-          }
         }
       }
-    );
+    });
     //}, 500);
 
     $(".fullScreenSpin").css("display", "none");
@@ -4952,9 +4391,7 @@ Template.productview.helpers({
         } else if (b.accountname == "NA") {
           return -1;
         }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
       });
   },
   salesaccountrecords: () => {
@@ -4966,9 +4403,7 @@ Template.productview.helpers({
         } else if (b.accountname == "NA") {
           return -1;
         }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
       });
   },
   inventoryaccountrecords: () => {
@@ -4980,9 +4415,7 @@ Template.productview.helpers({
         } else if (b.accountname == "NA") {
           return -1;
         }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase()
-          ? 1
-          : -1;
+        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
       });
   },
   productqtyrecords: () => {
@@ -5137,11 +4570,7 @@ Template.productview.events({
   },
   "click .inventorytrackingTest": function (event) {
     if ($(event.target).is(":checked")) {
-      swal(
-        "Info",
-        "If Inventory tracking is turned on it cannot be disabled in the future.",
-        "info"
-      );
+      swal("Info", "If Inventory tracking is turned on it cannot be disabled in the future.", "info");
     }
   },
   "click #loadrecenttransaction": function (event) {
@@ -5158,8 +4587,7 @@ Template.productview.events({
   "click #btnSave": async function () {
     playSaveAudio();
     let templateObject = Template.instance();
-    let getIsManufactured =
-      (await templateObject.isManufactured.get()) || false;
+    let getIsManufactured = (await templateObject.isManufactured.get()) || false;
     setTimeout(async function () {
       let productCode = $("#edtproductcode").val();
       let productName = $("#edtproductname").val();
@@ -5216,13 +4644,9 @@ Template.productview.events({
       let customField3 = $("#edtSaleCustField3").val() || "";
 
       // Feature/ser-lot-tracking: Check if serial and lot number checkboxes and save them
-      let trackSerialNumber = $("#chkSNTrack").prop("checked")
-        ? "true"
-        : "false";
+      let trackSerialNumber = $("#chkSNTrack").prop("checked") ? "true" : "false";
       let trackLotNumber = $("#chkLotTrack").prop("checked") ? "true" : "false";
-      let allowAddSerialNumber = $("#chkAddSN").prop("checked")
-        ? "true"
-        : "false";
+      let allowAddSerialNumber = $("#chkAddSN").prop("checked") ? "true" : "false";
 
       var url = FlowRouter.current().path;
       var getso_id = url.split("?id=");
@@ -5383,9 +4807,7 @@ Template.productview.events({
                     ) || 0,
                 },
               };
-              productService
-                .saveProductService(objServiceDetails)
-                .then(function (objServiceDetails) {});
+              productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
             saveBOMStructure();
             sideBarService
@@ -5426,10 +4848,7 @@ Template.productview.events({
             if (data.tproduct[0].Id != "") {
               let productID = data.tproduct[0].Id;
               currentID = parseInt(productID);
-              if (
-                itrackThisItem == true &&
-                $("#sltinventoryacount").val() != ""
-              ) {
+              if (itrackThisItem == true && $("#sltinventoryacount").val() != "") {
                 objDetails = {
                   type: "TProductVS1",
                   fields: {
@@ -5564,9 +4983,7 @@ Template.productview.events({
                           ) || 0,
                       },
                     };
-                    productService
-                      .saveProductService(objServiceDetails)
-                      .then(function (objServiceDetails) {});
+                    productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
                   }
                   saveBOMStructure();
                   sideBarService
@@ -5601,10 +5018,7 @@ Template.productview.events({
                   $(".fullScreenSpin").css("display", "none");
                 });
             } else {
-              if (
-                itrackThisItem == true &&
-                $("#sltinventoryacount").val() != ""
-              ) {
+              if (itrackThisItem == true && $("#sltinventoryacount").val() != "") {
                 objDetails = {
                   type: "TProductVS1",
                   fields: {
@@ -5743,9 +5157,7 @@ Template.productview.events({
                           ) || 0,
                       },
                     };
-                    productService
-                      .saveProductService(objServiceDetails)
-                      .then(function (objServiceDetails) {});
+                    productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
                   }
                   saveBOMStructure();
                   sideBarService
@@ -5782,10 +5194,7 @@ Template.productview.events({
             }
           })
           .catch(function (err) {
-            if (
-              itrackThisItem == true &&
-              $("#sltinventoryacount").val() != ""
-            ) {
+            if (itrackThisItem == true && $("#sltinventoryacount").val() != "") {
               objDetails = {
                 type: "TProductVS1",
                 fields: {
@@ -5925,9 +5334,7 @@ Template.productview.events({
                         ) || 0,
                     },
                   };
-                  productService
-                    .saveProductService(objServiceDetails)
-                    .then(function (objServiceDetails) {});
+                  productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
                 }
 
                 saveBOMStructure();
@@ -5977,42 +5384,35 @@ Template.productview.events({
         });
 
         if (existIndex == -1) {
-          await productService
-            .getOneBOMProductByName(bomObject.fields.Caption)
-            .then(function (data) {
-              if (data.tproctree.length > 0) {
-                existID = data.tproctree[0].fields.ID;
-              }
-            });
+          await productService.getOneBOMProductByName(bomObject.fields.Caption).then(function (data) {
+            if (data.tproctree.length > 0) {
+              existID = data.tproctree[0].fields.ID;
+            }
+          });
         } else {
           existID = bomProducts[existIndex].fields.ID;
         }
 
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
-        temp.fields.TotalQtyOriginal =
-          templateObject.records.get().totalqtyinstock;
+        temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
             temp.fields.ID = existID;
           }
           productService.saveBOMProduct(temp).then(function () {
-            productService
-              .getAllBOMProducts(initialDatatableLoad, 0)
-              .then(function (data) {
-                addVS1Data("TProcTree", data.tproctree).then(function () {});
-              });
+            productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
+              addVS1Data("TProcTree", data.tproctree).then(function () {});
+            });
           });
         } else {
           if (existID != -1) {
             temp.fields.ID = existID;
             temp.fields.ProcStepItemRef = "deleted";
             productService.saveBOMProduct(temp).then(function () {
-              productService
-                .getAllBOMProducts(initialDatatableLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TProcTree", data.tproctree).then(function () {});
-                });
+              productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
+                addVS1Data("TProcTree", data.tproctree).then(function () {});
+              });
             });
           }
         }
@@ -6091,11 +5491,7 @@ Template.productview.events({
         templateObject.getSerialNumberList();
         $("#SerialNumberModal").modal("show");
       } else {
-        swal(
-          "You are not Tracking Serial numbers for this product.",
-          "",
-          "info"
-        );
+        swal("You are not Tracking Serial numbers for this product.", "", "info");
         event.preventDefault();
         return false;
       }
@@ -6186,8 +5582,7 @@ Template.productview.events({
       if (
         $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
         // Allow: Ctrl+A, Command+A
-        (event.keyCode === 65 &&
-          (event.ctrlKey === true || event.metaKey === true)) ||
+        (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
         // Allow: home, end, left, right, down, up
         (event.keyCode >= 35 && event.keyCode <= 40)
       ) {
@@ -6232,9 +5627,7 @@ Template.productview.events({
     let costPriceInc = 0;
 
     if (!isNaN(costPrice)) {
-      $("#edtbuyqty1cost").val(
-        utilityService.modifynegativeCurrencyFormat(costPrice)
-      );
+      $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPrice));
     } else {
       costPrice =
         parseFloat(
@@ -6242,19 +5635,12 @@ Template.productview.events({
             .val()
             .replace(/[^0-9.-]+/g, "")
         ) || 0;
-      $("#edtbuyqty1cost").val(
-        utilityService.modifynegativeCurrencyFormat(costPrice)
-      );
+      $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPrice));
     }
 
-    var taxTotal =
-      parseFloat(costPrice.replace(/[^0-9.-]+/g, "")) *
-      parseFloat(taxrateamount);
-    costPriceInc =
-      parseFloat(costPrice.replace(/[^0-9.-]+/g, "")) + taxTotal || 0;
-    $("#edtbuyqty1costInc").val(
-      utilityService.modifynegativeCurrencyFormat(costPriceInc)
-    );
+    var taxTotal = parseFloat(costPrice.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    costPriceInc = parseFloat(costPrice.replace(/[^0-9.-]+/g, "")) + taxTotal || 0;
+    $("#edtbuyqty1costInc").val(utilityService.modifynegativeCurrencyFormat(costPriceInc));
   },
   "blur #edtbuyqty1costInc": function () {
     let templateObject = Template.instance();
@@ -6275,9 +5661,7 @@ Template.productview.events({
     let costPrice = 0;
 
     if (!isNaN(costPriceInc)) {
-      $("#edtbuyqty1costInc").val(
-        utilityService.modifynegativeCurrencyFormat(costPriceInc)
-      );
+      $("#edtbuyqty1costInc").val(utilityService.modifynegativeCurrencyFormat(costPriceInc));
     } else {
       costPriceInc =
         parseFloat(
@@ -6285,9 +5669,7 @@ Template.productview.events({
             .val()
             .replace(/[^0-9.-]+/g, "")
         ) || 0;
-      $("#edtbuyqty1costInc").val(
-        utilityService.modifynegativeCurrencyFormat(costPriceInc)
-      );
+      $("#edtbuyqty1costInc").val(utilityService.modifynegativeCurrencyFormat(costPriceInc));
     }
     let costPriceTotal = 0;
     if (taxrateamount != 0) {
@@ -6297,9 +5679,7 @@ Template.productview.events({
     } else {
       costPriceTotal = costPriceInc;
     }
-    $("#edtbuyqty1cost").val(
-      utilityService.modifynegativeCurrencyFormat(costPriceTotal)
-    );
+    $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPriceTotal));
   },
   "change #slttaxcodepurchase": function () {
     let templateObject = Template.instance();
@@ -6319,9 +5699,7 @@ Template.productview.events({
     let costPriceInc = 0;
 
     if (!isNaN(costPrice)) {
-      $("#edtbuyqty1cost").val(
-        utilityService.modifynegativeCurrencyFormat(costPrice)
-      );
+      $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPrice));
     } else {
       costPrice =
         parseFloat(
@@ -6329,16 +5707,12 @@ Template.productview.events({
             .val()
             .replace(/[^0-9.-]+/g, "")
         ) || 0;
-      $("#edtbuyqty1cost").val(
-        utilityService.modifynegativeCurrencyFormat(costPrice)
-      );
+      $("#edtbuyqty1cost").val(utilityService.modifynegativeCurrencyFormat(costPrice));
     }
     var taxTotal = parseFloat(costPrice) * parseFloat(taxrateamount) || 0;
     costPriceInc = parseFloat(costPrice) + taxTotal || 0;
     if (!isNaN(costPriceInc)) {
-      $("#edtbuyqty1costInc").val(
-        utilityService.modifynegativeCurrencyFormat(costPriceInc)
-      );
+      $("#edtbuyqty1costInc").val(utilityService.modifynegativeCurrencyFormat(costPriceInc));
     }
   },
   "blur #edtsellqty1price": function () {
@@ -6359,9 +5733,7 @@ Template.productview.events({
     let sellPriceInc = 0;
 
     if (!isNaN(sellPrice)) {
-      $("#edtsellqty1price").val(
-        utilityService.modifynegativeCurrencyFormat(sellPrice)
-      );
+      $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
     } else {
       sellPrice =
         Number(
@@ -6369,16 +5741,12 @@ Template.productview.events({
             .val()
             .replace(/[^0-9.-]+/g, "")
         ) || 0;
-      $("#edtsellqty1price").val(
-        utilityService.modifynegativeCurrencyFormat(sellPrice)
-      );
+      $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
     }
 
     var taxTotal = Number(sellPrice) * parseFloat(taxrateamount) || 0;
     sellPriceInc = Number(sellPrice) + taxTotal || 0;
-    $("#edtsellqty1priceInc").val(
-      utilityService.modifynegativeCurrencyFormat(sellPriceInc)
-    );
+    $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
 
     $(".itemExtraSellRow").each(function () {
       var lineID = this.id;
@@ -6386,9 +5754,7 @@ Template.productview.events({
       //let tdDiscount = $('#' + lineID + " .edtDiscount").val();
       if (tdclientType == "Default") {
         $("#" + lineID + " .edtDiscount").val(0);
-        $("#" + lineID + " .edtPriceEx").val(
-          utilityService.modifynegativeCurrencyFormat(sellPrice)
-        );
+        $("#" + lineID + " .edtPriceEx").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
       }
     });
   },
@@ -6410,9 +5776,7 @@ Template.productview.events({
     let sellPrice = 0;
 
     if (!isNaN(sellPriceInc)) {
-      $("#edtsellqty1priceInc").val(
-        utilityService.modifynegativeCurrencyFormat(sellPriceInc)
-      );
+      $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
     } else {
       sellPriceInc =
         Number(
@@ -6420,9 +5784,7 @@ Template.productview.events({
             .val()
             .replace(/[^0-9.-]+/g, "")
         ) || 0;
-      $("#edtsellqty1priceInc").val(
-        utilityService.modifynegativeCurrencyFormat(sellPriceInc)
-      );
+      $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
     }
     let sellPriceTotal = 0;
     if (taxrateamount != 0) {
@@ -6432,9 +5794,7 @@ Template.productview.events({
     } else {
       sellPriceTotal = sellPriceInc;
     }
-    $("#edtsellqty1price").val(
-      utilityService.modifynegativeCurrencyFormat(sellPriceTotal)
-    );
+    $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPriceTotal));
 
     $(".itemExtraSellRow").each(function () {
       var lineID = this.id;
@@ -6442,9 +5802,7 @@ Template.productview.events({
       //let tdDiscount = $('#' + lineID + " .edtDiscount").val();
       if (tdclientType == "Default") {
         $("#" + lineID + " .edtDiscount").val(0);
-        $("#" + lineID + " .edtPriceEx").val(
-          utilityService.modifynegativeCurrencyFormat(sellPrice)
-        );
+        $("#" + lineID + " .edtPriceEx").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
       }
     });
   },
@@ -6466,22 +5824,16 @@ Template.productview.events({
     let sellPriceInc = 0;
 
     if (!isNaN(sellPrice)) {
-      $("#edtsellqty1price").val(
-        utilityService.modifynegativeCurrencyFormat(sellPrice)
-      );
+      $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
     } else {
       sellPrice = parseFloat(sellPrice.replace(/[^0-9.-]+/g, "")) || 0;
-      $("#edtsellqty1price").val(
-        utilityService.modifynegativeCurrencyFormat(sellPrice)
-      );
+      $("#edtsellqty1price").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
     }
 
     var taxTotal = parseFloat(sellPrice) * parseFloat(taxrateamount) || 0;
     sellPriceInc = parseFloat(sellPrice) + taxTotal || 0;
     if (!isNaN(sellPriceInc)) {
-      $("#edtsellqty1priceInc").val(
-        utilityService.modifynegativeCurrencyFormat(sellPriceInc)
-      );
+      $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
     }
 
     $(".itemExtraSellRow").each(function () {
@@ -6490,9 +5842,7 @@ Template.productview.events({
       //let tdDiscount = $('#' + lineID + " .edtDiscount").val();
       if (tdclientType == "Default") {
         $("#" + lineID + " .edtDiscount").val(0);
-        $("#" + lineID + " .edtPriceEx").val(
-          utilityService.modifynegativeCurrencyFormat(sellPrice)
-        );
+        $("#" + lineID + " .edtPriceEx").val(utilityService.modifynegativeCurrencyFormat(sellPrice));
       }
     });
   },
@@ -6646,11 +5996,8 @@ Template.productview.events({
       ) || 0;
     let discountPrice = parseFloat($(event.target).val()) || 0;
     $(event.target).val(discountPrice);
-    let getDiscountPrice =
-      itemSellPrice - (itemSellPrice * discountPrice) / 100;
-    $("#" + targetID + " .edtPriceEx").val(
-      utilityService.modifynegativeCurrencyFormat(getDiscountPrice) || 0
-    );
+    let getDiscountPrice = itemSellPrice - (itemSellPrice * discountPrice) / 100;
+    $("#" + targetID + " .edtPriceEx").val(utilityService.modifynegativeCurrencyFormat(getDiscountPrice) || 0);
   },
   "blur .edtDiscountModal": function (event) {
     let utilityService = new UtilityService();
@@ -6664,19 +6011,14 @@ Template.productview.events({
       ) || 0;
     let discountPrice = parseFloat($(event.target).val()) || 0;
     $(event.target).val(discountPrice);
-    let getDiscountPrice =
-      itemSellPrice - (itemSellPrice * discountPrice) / 100;
-    $(".edtPriceExModal").val(
-      utilityService.modifynegativeCurrencyFormat(getDiscountPrice) || 0
-    );
+    let getDiscountPrice = itemSellPrice - (itemSellPrice * discountPrice) / 100;
+    $(".edtPriceExModal").val(utilityService.modifynegativeCurrencyFormat(getDiscountPrice) || 0);
   },
   "blur .edtPriceEx": function (event) {
     let utilityService = new UtilityService();
     if (!isNaN($(event.target).val())) {
       let inputUnitPrice = parseFloat($(event.target).val()) || 0;
-      $(event.target).val(
-        utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
-      );
+      $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
     } else {
       let inputUnitPrice =
         Number(
@@ -6684,9 +6026,7 @@ Template.productview.events({
             .val()
             .replace(/[^0-9.-]+/g, "")
         ) || 0;
-      $(event.target).val(
-        utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
-      );
+      $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
     }
     let templateObject = Template.instance();
     var targetID = $(event.target).closest(".itemExtraSellRow").attr("id");
@@ -6820,18 +6160,11 @@ Template.productview.events({
       templateObject.isManufactured.set(true);
       $("#BOMSetupModal").modal("toggle");
       let record = templateObject.records.get();
-      if (
-        record == undefined ||
-        record.productname == undefined ||
-        record.productname == ""
-      ) {
+      if (record == undefined || record.productname == undefined || record.productname == "") {
         $("#edtMainProductName").val($("#edtproductname").val());
       }
       setTimeout(() => {
-        if (
-          !FlowRouter.current().queryParams.id ||
-          $("#edtProcess").val() == ""
-        ) {
+        if (!FlowRouter.current().queryParams.id || $("#edtProcess").val() == "") {
           $("#edtProcess").trigger("click");
         }
       }, 1000);
@@ -6932,11 +6265,7 @@ Template.productview.events({
           });
           if (bomProductIndex > -1) {
             let subProduct = bomProducts[bomProductIndex];
-            if (
-              subProduct &&
-              subProduct.fields.subs &&
-              subProduct.fields.subs.length > 0
-            ) {
+            if (subProduct && subProduct.fields.subs && subProduct.fields.subs.length > 0) {
               for (let j = 0; j < subProduct.fields.subs.length; j++) {
                 let sub = subProduct.fields.subs[j];
                 objectDetail.subs.push({
@@ -6996,17 +6325,15 @@ Template.productview.events({
       return product.fields.Caption == $("#edtMainProductName").val();
     });
     if (index == -1) {
-      productService
-        .getOneBOMProductByName($("#edtMainProductName").val())
-        .then(function (data) {
-          if (data.tproctree.length == 0) {
-            $("#chkBOM").attr("checked", false);
-            templateObject.isManufactured.set(false);
-          } else {
-            $("#chkBOM").attr("checked", true);
-            templateObject.isManufactured.set(true);
-          }
-        });
+      productService.getOneBOMProductByName($("#edtMainProductName").val()).then(function (data) {
+        if (data.tproctree.length == 0) {
+          $("#chkBOM").attr("checked", false);
+          templateObject.isManufactured.set(false);
+        } else {
+          $("#chkBOM").attr("checked", true);
+          templateObject.isManufactured.set(true);
+        }
+      });
     }
   },
 
@@ -7023,252 +6350,16 @@ Template.productview.events({
     NewUOMRow[0].style.display = "flex";
     NewUOMRow.find("#sltsalesacount").editableSelect();
     NewUOMRow.find("#sltsalesacount").val("Sales");
+    NewUOMRow.find("#sltsalesacount").editableSelect().on("click.editable-select", clickSalesAccount);
     NewUOMRow.find("#slttaxcodesales").editableSelect();
-    NewUOMRow.find("#sltsalesacount")
-      .editableSelect()
-      .on("click.editable-select", function (e, li) {
-        accSelected = "sales";
-        $("#accSelected").val(accSelected);
-        var $earch = $(this);
-        var offset = $earch.offset();
-        var salesAccountDataName = e.target.value || "";
-        var accountType = "INC";
-        if (e.pageX > offset.left + $earch.width() - 8) {
-          // X button 16px wide?
-          templateObject.getAccountsByCategory(accountType);
-        } else {
-          if (salesAccountDataName.replace(/\s/g, "") != "") {
-            if (salesAccountDataName.replace(/\s/g, "") != "") {
-              $("#add-account-title").text("Edit Account Details");
-              getVS1Data("TAccountVS1")
-                .then(function (dataObject) {
-                  if (dataObject.length == 0) {
-                    productService
-                      .getAccountName()
-                      .then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        for (let i = 0; i < data.taccountvs1.length; i++) {
-                          if (
-                            data.taccountvs1[i].AccountName ===
-                            salesAccountDataName
-                          ) {
-                            $("#edtAccountName").attr("readonly", true);
-                            let taxCode = data.taccountvs1[i].TaxCode;
-                            var accountID = data.taccountvs1[i].ID || "";
-                            var acountName =
-                              data.taccountvs1[i].AccountName || "";
-                            var accountNo =
-                              data.taccountvs1[i].AccountNumber || "";
-                            var accountType =
-                              data.taccountvs1[i].AccountTypeName || "";
-                            var accountDesc =
-                              data.taccountvs1[i].Description || "";
-                            $("#edtAccountID").val(accountID);
-                            $("#sltAccountType").val(accountType);
-                            $("#edtAccountName").val(acountName);
-                            $("#edtAccountNo").val(accountNo);
-                            $("#sltTaxCode").val(taxCode);
-                            $("#txaAccountDescription").val(accountDesc);
-                            setTimeout(function () {
-                              $("#addAccountModal").modal("toggle");
-                            }, 100);
-                          }
-                        }
-                      })
-                      .catch(function (err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                      });
-                  } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.taccountvs1;
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    $("#add-account-title").text("Edit Account Details");
-                    for (let i = 0; i < useData.length; i++) {
-                      if (
-                        useData[i].fields.AccountName === salesAccountDataName
-                      ) {
-                        $("#edtAccountName").attr("readonly", true);
-                        let taxCode = useData[i].fields.TaxCode;
-                        var accountID = useData[i].fields.ID || "";
-                        var acountName = useData[i].fields.AccountName || "";
-                        var accountNo = useData[i].fields.AccountNumber || "";
-                        var accountType =
-                          useData[i].fields.AccountTypeName || "";
-                        var accountDesc = useData[i].fields.Description || "";
-                        $("#edtAccountID").val(accountID);
-                        $("#sltAccountType").val(accountType);
-                        $("#edtAccountName").val(acountName);
-                        $("#edtAccountNo").val(accountNo);
-                        $("#sltTaxCode").val(taxCode);
-                        $("#txaAccountDescription").val(accountDesc);
-                        $("#addAccountModal").modal("toggle");
-                        //}, 500);
-                      }
-                    }
-                  }
-                })
-                .catch(function (err) {
-                  productService
-                    .getAccountName()
-                    .then(function (data) {
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      for (let i = 0; i < data.taccountvs1.length; i++) {
-                        if (
-                          data.taccountvs1[i].AccountName ===
-                          salesAccountDataName
-                        ) {
-                          $("#add-account-title").text("Edit Account Details");
-                          let taxCode = data.taccountvs1[i].TaxCode;
-                          var accountID = data.taccountvs1[i].ID || "";
-                          var acountName =
-                            data.taccountvs1[i].AccountName || "";
-                          var accountNo =
-                            data.taccountvs1[i].AccountNumber || "";
-                          var accountType =
-                            data.taccountvs1[i].AccountTypeName || "";
-                          var accountDesc =
-                            data.taccountvs1[i].Description || "";
-                          $("#edtAccountID").val(accountID);
-                          $("#sltAccountType").val(accountType);
-                          $("#edtAccountName").val(acountName);
-                          $("#edtAccountNo").val(accountNo);
-                          $("#sltTaxCode").val(taxCode);
-                          $("#txaAccountDescription").val(accountDesc);
-                          setTimeout(function () {
-                            $("#addAccountModal").modal("toggle");
-                          }, 100);
-                        }
-                      }
-                    })
-                    .catch(function (err) {
-                      // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                      $(".fullScreenSpin").css("display", "none");
-                      // Meteor._reload.reload();
-                    });
-                });
-            } else {
-              templateObject.getAccountsByCategory(accountType);
-            }
-          } else {
-            templateObject.getAccountsByCategory(accountType);
-          }
-        }
-      });
     NewUOMRow.find("#slttaxcodesales").val(loggedTaxCodeSalesInc);
-    NewUOMRow.find("#slttaxcodesales")
-      .editableSelect()
-      .on("click.editable-select", function (e, li) {
-        var $earch = $(this);
-        taxSelected = "sales";
-        $("#taxSelected").val(taxSelected);
-        var offset = $earch.offset();
-        var taxRateDataName = e.target.value || "";
-        var taxCodePurchaseDataName = e.target.value || "";
-        if (e.pageX > offset.left + $earch.width() - 8) {
-          // X button 16px wide?
-          $("#taxRateListModal").modal("toggle");
-        } else {
-          if (taxRateDataName.replace(/\s/g, "") != "") {
-            $(".taxcodepopheader").text("Edit Tax Rate");
-            getVS1Data("TTaxcodeVS1")
-              .then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  purchaseService
-                    .getTaxCodesVS1()
-                    .then(function (data) {
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                          $("#edtTaxNamePop").attr("readonly", true);
-                          let taxRate = (
-                            data.ttaxcodevs1[i].Rate * 100
-                          ).toFixed(2);
-                          var taxRateID = data.ttaxcodevs1[i].Id || "";
-                          var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                          var taxRateDesc =
-                            data.ttaxcodevs1[i].Description || "";
-                          $("#edtTaxID").val(taxRateID);
-                          $("#edtTaxNamePop").val(taxRateName);
-                          $("#edtTaxRatePop").val(taxRate);
-                          $("#edtTaxDescPop").val(taxRateDesc);
-                          setTimeout(function () {
-                            $("#newTaxRateModal").modal("toggle");
-                          }, 100);
-                        }
-                      }
-                    })
-                    .catch(function (err) {
-                      // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                      $(".fullScreenSpin").css("display", "none");
-                      // Meteor._reload.reload();
-                    });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  let useData = data.ttaxcodevs1;
-                  let lineItems = [];
-                  let lineItemObj = {};
-                  $(".taxcodepopheader").text("Edit Tax Rate");
-                  for (let i = 0; i < useData.length; i++) {
-                    if (useData[i].CodeName === taxRateDataName) {
-                      $("#edtTaxNamePop").attr("readonly", true);
-                      let taxRate = (useData[i].Rate * 100).toFixed(2);
-                      var taxRateID = useData[i].Id || "";
-                      var taxRateName = useData[i].CodeName || "";
-                      var taxRateDesc = useData[i].Description || "";
-                      $("#edtTaxID").val(taxRateID);
-                      $("#edtTaxNamePop").val(taxRateName);
-                      $("#edtTaxRatePop").val(taxRate);
-                      $("#edtTaxDescPop").val(taxRateDesc);
-                      //setTimeout(function() {
-                      $("#newTaxRateModal").modal("toggle");
-                      //}, 500);
-                    }
-                  }
-                }
-              })
-              .catch(function (err) {
-                purchaseService
-                  .getTaxCodesVS1()
-                  .then(function (data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                      if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                        $("#edtTaxNamePop").attr("readonly", true);
-                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(
-                          2
-                        );
-                        var taxRateID = data.ttaxcodevs1[i].Id || "";
-                        var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                        var taxRateDesc = data.ttaxcodevs1[i].Description || "";
-                        $("#edtTaxID").val(taxRateID);
-                        $("#edtTaxNamePop").val(taxRateName);
-                        $("#edtTaxRatePop").val(taxRate);
-                        $("#edtTaxDescPop").val(taxRateDesc);
-                        setTimeout(function () {
-                          $("#newTaxRateModal").modal("toggle");
-                        }, 100);
-                      }
-                    }
-                  })
-                  .catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $(".fullScreenSpin").css("display", "none");
-                    // Meteor._reload.reload();
-                  });
-              });
-          } else {
-            $("#taxRateListModal").modal("toggle");
-          }
-        }
-      });
+    NewUOMRow.find("#slttaxcodesales").editableSelect().on("click.editable-select", clickTaxCodeSales);
+
+    NewUOMRow.find("#sltUomSales").editableSelect();
+    NewUOMRow.find("#sltUomSales").val(defaultUOM);
+    NewUOMRow.find("#sltUomSales").editableSelect().on("click.editable-select", clickUomSales);
     NewUOMRow.insertAfter(".uomRow:last");
+
     var COGSRowClone = $(".COGSRow:first");
     var NewCOGSRow = COGSRowClone.clone().prop("id", "COGS" + tokenid);
     NewCOGSRow[0].style.display = "flex";
@@ -7299,13 +6390,10 @@ Template.productview.events({
                       for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                         if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
                           $("#edtTaxNamePop").attr("readonly", true);
-                          let taxRate = (
-                            data.ttaxcodevs1[i].Rate * 100
-                          ).toFixed(2);
+                          let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                           var taxRateID = data.ttaxcodevs1[i].Id || "";
                           var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                          var taxRateDesc =
-                            data.ttaxcodevs1[i].Description || "";
+                          var taxRateDesc = data.ttaxcodevs1[i].Description || "";
                           $("#edtTaxID").val(taxRateID);
                           $("#edtTaxNamePop").val(taxRateName);
                           $("#edtTaxRatePop").val(taxRate);
@@ -7354,9 +6442,7 @@ Template.productview.events({
                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
                       if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
                         $("#edtTaxNamePop").attr("readonly", true);
-                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(
-                          2
-                        );
+                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
                         var taxRateID = data.ttaxcodevs1[i].Id || "";
                         var taxRateName = data.ttaxcodevs1[i].CodeName || "";
                         var taxRateDesc = data.ttaxcodevs1[i].Description || "";
@@ -7381,6 +6467,11 @@ Template.productview.events({
           }
         }
       });
+
+    NewCOGSRow.find("#sltUomPurchases").editableSelect();
+    NewCOGSRow.find("#sltUomPurchases").val(defaultUOM);
+    NewCOGSRow.find("#sltUomPurchases").editableSelect().on("click.editable-select", clickUomSales);
+
     NewCOGSRow.find("#slttaxcodesales").val(loggedTaxCodeSalesInc);
     NewCOGSRow.insertAfter(".COGSRow:last");
     // itemClineID.find('input[type="text"]').val('');

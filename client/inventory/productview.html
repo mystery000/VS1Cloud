@@ -541,7 +541,6 @@
                       rows="3"
                       id="txasalesdescription"
                       name="txasalesdescription"
-                      style=""
                     >
 {{productrecord.salesdescription}}</textarea
                     >
@@ -596,8 +595,8 @@
                     <select
                       type="search"
                       class="form-control"
-                      id="sltUOM"
-                      name="sltUOM"
+                      id="sltUomSales"
+                      name="sltUomSales"
                       style="
                         background-color: rgb(255, 255, 255);
                         cursor: pointer;
@@ -644,16 +643,16 @@
                 <div class="col-6 col-md colUOM" id="colUOM">
                   <div class="form-group">
                     <label>Unit of Measure</label>
-                    <input
+                    <select
                       type="search"
                       class="form-control"
-                      id="sltUOM"
-                      name="sltUOM"
+                      id="sltUomSales"
+                      name="sltUomSales"
                       style="
                         background-color: rgb(255, 255, 255);
                         cursor: pointer;
                       "
-                    />
+                    ></select>
                   </div>
                 </div>
                 <div class="col-6 col-md colTaxCode" id="colTaxCode">
@@ -735,7 +734,7 @@
                 >
                   <!-- <div class="form-group">
                                         <label class="lblCustomField1">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</label>
-                                        <input type="text" class="form-control highlightInput" id="txtCustomField1" name="txtCustomField1" style="" value="{{productrecord.customfield1}}">
+                                        <input type="text" class="form-control highlightInput" id="txtCustomField1" name="txtCustomField1"  value="{{productrecord.customfield1}}">
                                     </div> -->
                   <div
                     class="one box checkbox1div"
@@ -763,7 +762,7 @@
                 >
                   <!-- <div class="form-group">
                                         <label class="lblCustomField2">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</label>
-                                        <input type="text" class="form-control highlightInput" id="txtCustomField2" name="txtCustomField2" value="{{productrecord.customfield2}}" style="">
+                                        <input type="text" class="form-control highlightInput" id="txtCustomField2" name="txtCustomField2" value="{{productrecord.customfield2}}" >
                                     </div> -->
                   <div
                     class="two box checkbox2div"
@@ -908,14 +907,16 @@
                 <div class="col-6 col-md-3 colUOM" id="colUOM">
                   <div class="form-group">
                     <label>Unit of Measure</label>
-                    <input
+                    <select
                       type="search"
                       class="form-control"
+                      id="sltUomPurchases"
+                      name="sltUomPurchases"
                       style="
                         background-color: rgb(255, 255, 255);
                         cursor: pointer;
                       "
-                    />
+                    ></select>
                   </div>
                 </div>
                 <div class="col-6 col-md-2 colTaxCode" id="colTaxCode">
@@ -1332,7 +1333,6 @@
                 {{#each itemExtraSell in productExtraSell}}
                 <div
                   class="col-12 itemExtraSellRow"
-                  style=""
                   id="{{itemExtraSell.lineID}}"
                 >
                   <div class="row">
@@ -1715,13 +1715,7 @@
     {{> taxratelistpop}}
   </div>
 
-  <div
-    class="modal fade"
-    role="dialog"
-    tabindex="-1"
-    id="addAccountModal"
-    style=""
-  >
+  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
     {{> addaccountpop}}
   </div>
 
@@ -1736,13 +1730,7 @@
 
   {{> clienttypemodal}}
 
-  <div
-    class="modal fade"
-    role="dialog"
-    tabindex="-1"
-    id="newTaxRateModal"
-    style=""
-  >
+  <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
     {{> newtaxratepop}}
   </div>
 
@@ -1751,7 +1739,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 style="">
+          <h4>
             <div id="add-dept-title" name="add-dept-title" style="float: left">
               Add New Customer Type
             </div>
