@@ -13,7 +13,6 @@ import './js/appPopRelogin.js';
 import './Navigation/newsidenav.html';
 import './Navigation/header.html';
 import './popUps/supportpopup.html';
-import './popUps/deleteprogresspopup.js';
 import './vs1_templates/global_search/vs1_global_search_modal.html';
 
 import './js/newsidenav.js';
