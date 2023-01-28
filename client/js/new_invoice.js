@@ -8435,7 +8435,9 @@ Template.new_invoice.events({
           var currentInvoice = getso_id[getso_id.length - 1];
           var objDetails = "";
           if (getso_id[1]) {
-            $(".fullScreenSpin").css("display", "inline-block");
+            $("#deleteLineModal").modal('hide');
+            $("#deleteprogressbar").css('display', 'block');
+            $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var invData = await salesService.getOneInvoicedataEx(currentInvoice);
             var saleDate = invData.fields.SaleDate;
@@ -8450,6 +8452,7 @@ Template.new_invoice.events({
             );
             var invList = followingInvoices.tinvoicelist;
             for (var i = 0; i < invList.length; i++) {
+              $('.loadingbar').css('width', (100 / (i + 1)) + '%').attr('aria-valuenow', (100 / (i + 1)));
               var objDetails = {
                 type: "TInvoiceEx",
                 fields: {
@@ -8457,20 +8460,21 @@ Template.new_invoice.events({
                   Deleted: true,
                 },
               };
-              var result = await salesService.saveInvoiceEx(objDetails);
+              console.log(objDetails)
+              // var result = await salesService.saveInvoiceEx(objDetails);
             }
           }
-          if (FlowRouter.current().queryParams.trans) {
-            FlowRouter.go(
-              "/customerscard?id=" +
-              FlowRouter.current().queryParams.trans +
-              "&transTab=active"
-            );
-          } else {
-            FlowRouter.go("/invoicelist?success=true");
-          }
-          $('.modal-backdrop').css('display', 'none');
-          $("#deleteLineModal").modal("toggle");
+          // if (FlowRouter.current().queryParams.trans) {
+          //   FlowRouter.go(
+          //     "/customerscard?id=" +
+          //     FlowRouter.current().queryParams.trans +
+          //     "&transTab=active"
+          //   );
+          // } else {
+          //   FlowRouter.go("/invoicelist?success=true");
+          // }
+          // $('.modal-backdrop').css('display', 'none');
+          // $("#deleteLineModal").modal("toggle");
         }
       });
     }, delayTimeAfterSound);
@@ -11185,6 +11189,7 @@ Template.new_invoice.events({
               'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
               true
             );
+            console.log(dayObj)
             oPost.setRequestHeader("database", erpGet.ERPDatabase);
             oPost.setRequestHeader("username", erpGet.ERPUsername);
             oPost.setRequestHeader("password", erpGet.ERPPassword);

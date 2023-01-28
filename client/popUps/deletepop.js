@@ -195,6 +195,7 @@ const hasFollowings = async function() {
         0
       );
       var invList = followingInvoices.tinvoicelist;
+      console.log(invList)
         $("#following_cnt").val(invList.length);
         if (invList.length > 0) {
           $("#btn_follow1").css("display", "inline-block");
