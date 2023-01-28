@@ -6704,6 +6704,10 @@ Template.new_salesorder.events({
           var currentInvoice = getso_id[getso_id.length - 1];
           var objDetails = '';
           if (getso_id[1]) {
+            $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+            $("#deleteLineModal").modal('hide');
+            $("#deleteprogressbar").css('display', 'block');
+            $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
             var saleDate = soData.fields.SaleDate;
@@ -6717,6 +6721,7 @@ Template.new_salesorder.events({
               0
             );
             var soList = followingSOs.tsalesorderlist;
+            var j = 0;
             for (var i = 0; i < soList.length; i++) {
               var objDetails = {
                 type: "TSalesOrderEx",
@@ -6725,12 +6730,16 @@ Template.new_salesorder.events({
                   Deleted: true
                 }
               };
+              j ++;
+              document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+              $('.deleteloadingbar').css('width', ((100/soList.length*j)) + '%').attr('aria-valuenow', ((100/soList.length*j)));
               var result = await salesService.saveSalesOrderEx(objDetails);
             }
           }
-          FlowRouter.go('/salesorderslist?success=true');
+          $("#deletecheckmarkwrapper").removeClass('hide');
           $('.modal-backdrop').css('display', 'none');
-          $('#deleteLineModal').modal('toggle');
+          $("#deleteprogressbar").modal('hide');
+          $("#btn_data").click();
         }
       });
     }, delayTimeAfterSound);

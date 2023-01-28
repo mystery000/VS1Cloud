@@ -8435,6 +8435,7 @@ Template.new_invoice.events({
           var currentInvoice = getso_id[getso_id.length - 1];
           var objDetails = "";
           if (getso_id[1]) {
+            $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
             $("#deleteLineModal").modal('hide');
             $("#deleteprogressbar").css('display', 'block');
             $("#deleteprogressbar").modal('show');
@@ -8451,8 +8452,8 @@ Template.new_invoice.events({
               0
             );
             var invList = followingInvoices.tinvoicelist;
+            var j = 0;
             for (var i = 0; i < invList.length; i++) {
-              $('.loadingbar').css('width', (100 / (i + 1)) + '%').attr('aria-valuenow', (100 / (i + 1)));
               var objDetails = {
                 type: "TInvoiceEx",
                 fields: {
@@ -8460,7 +8461,10 @@ Template.new_invoice.events({
                   Deleted: true,
                 },
               };
-              console.log(objDetails)
+              j ++;
+              document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+              $('.deleteloadingbar').css('width', ((100/invList.length*j)) + '%').attr('aria-valuenow', ((100/invList.length*j)));
+              var result = await salesService.saveInvoiceEx(objDetails);
               // var result = await salesService.saveInvoiceEx(objDetails);
             }
           }
@@ -8475,6 +8479,10 @@ Template.new_invoice.events({
           // }
           // $('.modal-backdrop').css('display', 'none');
           // $("#deleteLineModal").modal("toggle");
+          $("#deletecheckmarkwrapper").removeClass('hide');
+          $('.modal-backdrop').css('display', 'none');
+          $("#deleteprogressbar").modal('hide');
+          $("#btn_data").click();
         }
       });
     }, delayTimeAfterSound);

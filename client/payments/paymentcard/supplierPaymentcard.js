@@ -12622,8 +12622,11 @@ Template.supplierpaymentcard.events({
           var getso_id = url.split('?id=');
           var currentInvoice = getso_id[getso_id.length - 1];
           var objDetails = '';
-          $('.fullScreenSpin').css('display','inline-block');
           if (getso_id[1]) {
+            $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+            $("#deleteLineModal").modal('hide');
+            $("#deleteprogressbar").css('display', 'block');
+            $("#deleteprogressbar").modal('show');
               currentInvoice = parseInt(currentInvoice);
               var paymentData = await paymentService.getOneSupplierPayment(currentInvoice);
               var paymentDate = paymentData.fields.PaymentDate;
@@ -12637,6 +12640,7 @@ Template.supplierpaymentcard.events({
                   0
               );
               var paymentList = followingPayments.tsupplierpaymentlist;
+              var j = 0;
               for (var i=0; i < paymentList.length; i++) {
                   var objDetails = {
                       type: "TCustPayments",
@@ -12645,11 +12649,16 @@ Template.supplierpaymentcard.events({
                           Deleted: true
                       }
                   };
+                  j ++;
+                  document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                  $('.deleteloadingbar').css('width', ((100/paymentList.length*j)) + '%').attr('aria-valuenow', ((100/paymentList.length*j)));
                   var result = await paymentService.deleteSuppDepositData(objDetails)
               }
           }
+          $("#deletecheckmarkwrapper").removeClass('hide');
           $('.modal-backdrop').css('display', 'none');
-          FlowRouter.go('/paymentoverview?success=true');
+          $("#deleteprogressbar").modal('hide');
+          $("#btn_data").click();
         }
     });
   }, delayTimeAfterSound);

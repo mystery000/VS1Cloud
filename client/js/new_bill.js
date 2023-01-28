@@ -7949,7 +7949,10 @@ Template.billcard.events({
                 let billTotal = $('#grandTotal').text();
                 var objDetails = "";
                 if (getso_id[1]) {
-                    $(".fullScreenSpin").css("display", "inline-block");
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var billData = await purchaseService.getOneBilldataEx(currentInvoice);
                     var orderDate = billData.fields.OrderDate;
@@ -7963,6 +7966,7 @@ Template.billcard.events({
                         0
                     );
                     var billList = followingBills.tbilllist;
+                    var j = 0;
                     for (var i=0; i < billList.length; i++) {
                         var objDetails = {
                             type: "TBillEx",
@@ -7975,16 +7979,16 @@ Template.billcard.events({
                                 TotalAmountInc: Number(billTotal.replace(/[^0-9.-]+/g, "")) || 0
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/billList.length*j)) + '%').attr('aria-valuenow', ((100/billList.length*j)));
                         var result = await purchaseService.saveBillEx(objDetails);
                     }
                 }
-                if(FlowRouter.current().queryParams.trans){
-                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans);
-                }else{
-                    FlowRouter.go('/billlist?success=true');
-                };
-                $('.modal-backdrop').css('display','none');
-                $("#deleteLineModal").modal("toggle");
+                $("#deletecheckmarkwrapper").removeClass('hide');
+                $('.modal-backdrop').css('display', 'none');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
             }
         });
     }, delayTimeAfterSound);
