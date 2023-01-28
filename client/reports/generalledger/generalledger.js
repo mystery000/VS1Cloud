@@ -803,6 +803,7 @@ Template.generalledger.onRendered(() => {
 
       ];
       splashArrayBalanceSheetReport.push(dataList);
+      console.log(splashArrayBalanceSheetReport);
       templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
     }
 
