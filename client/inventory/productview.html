@@ -81,8 +81,7 @@
     .uploaded-element .confirm-action a.confirm-delete-attachment {
       padding: 6px 13px 5px;
       background-color: rgb(216, 68, 68) !important;
-      border-color: rgb(197, 112, 119) rgb(169, 29, 29) rgb(169, 29, 29)
-        rgb(197, 112, 119);
+      border-color: rgb(197, 112, 119) rgb(169, 29, 29) rgb(169, 29, 29) rgb(197, 112, 119);
       color: rgb(255, 255, 255) !important;
       text-shadow: 1px 1px 1px rgba(30, 30, 30, 0.15);
       line-height: initial;
@@ -95,8 +94,7 @@
       border-radius: 4px;
       background: linear-gradient(rgb(255, 255, 255), rgb(230, 234, 236));
       border: 1px solid rgb(230, 230, 230);
-      border-color: rgb(230, 230, 230) rgb(179, 179, 179) rgb(179, 179, 179)
-        rgb(230, 230, 230) !important;
+      border-color: rgb(230, 230, 230) rgb(179, 179, 179) rgb(179, 179, 179) rgb(230, 230, 230) !important;
       color: rgb(204, 0, 0) !important;
       font-weight: bold;
       margin-left: 10px !important;
@@ -192,57 +190,31 @@
       <div class="row">
         <div class="col-12 col-md-4">
           <h1 style="margin: 16px" id="productcardbodyname">
-            {{productrecord.lib}} {{#if notEquals productrecord.id ''}}
-            {{productrecord.id}}{{/if}} {{> helpbutton}}
+            {{productrecord.lib}} {{#if notEquals productrecord.id ''}} {{productrecord.id}}{{/if}} {{> helpbutton}}
 
             <!-- Start Help View Modal -->
-            <div
-              class="modal fade"
-              role="dialog"
-              tabindex="-1"
-              id="helpViewModal"
-            >
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
               <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="padding-bottom: 8px">
                     <h4>Help</h4>
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
                     </button>
                   </div>
                   <div class="modal-body">
                     <p class="text-center text-muted">
-                      <a
-                        role="button"
-                        data-toggle="modal"
-                        href="#helpModal"
-                        class="btn btn-primary helpModal"
+                      <a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal"
                         >View Help Video</a
                       >
                     </p>
                     <p class="text-center text-muted">
-                      <a
-                        href="https://vs1forum.com/"
-                        target="_blank"
-                        class="btn btn-primary"
-                        >Download Help File</a
-                      >
+                      <a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a>
                     </p>
                     {{> helpadvisor}} {{> helpgotoforum}}
                   </div>
                   <div class="modal-footer" style="padding: 6px">
-                    <button
-                      class="btn btn-light"
-                      data-dismiss="modal"
-                      type="button"
-                    >
-                      Close
-                    </button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                   </div>
                 </div>
               </div>
@@ -254,70 +226,33 @@
       </div>
     </header>
     <div style="padding: 0px 16px">
-      <div
-        class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
-        style="width: 100%"
-      >
+      <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%">
         <div class="col-lg-6 col-md-12 col-sm-12 productCard" id="productCard">
           <div class="card shadow mb-4">
-            <div
-              class="card-header d-flex justify-content-between align-items-center"
-            >
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  width: 100%;
-                  margin-right: 25px;
-                "
-              >
-                <div
-                  class="text-primary m-0 font-weight-bold"
-                  style="font-size: 28px"
-                  id="productcardbodycode"
-                >
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div style="display: flex; justify-content: space-between; width: 100%; margin-right: 25px">
+                <div class="text-primary m-0 font-weight-bold" style="font-size: 28px" id="productcardbodycode">
                   {{productrecord.lib}}
                 </div>
-                <div
-                  class="text-primary m-0 font-weight-bold float-right"
-                  style="font-size: 28px"
-                >
-                  {{#if notEquals productrecord.id
-                  ''}}PRO-{{productrecord.id}}{{/if}}
+                <div class="text-primary m-0 font-weight-bold float-right" style="font-size: 28px">
+                  {{#if notEquals productrecord.id ''}}PRO-{{productrecord.id}}{{/if}}
                 </div>
               </div>
               <div class="float-right"></div>
               <div>
-                <a
-                  class="btn btnOpenSettings"
-                  role="button"
-                  data-toggle="modal"
-                  href="#myModal4"
+                <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"
                   ><i class="icon ion-android-more-horizontal"></i
                 ></a>
                 <!-- Start {{> optionCustomFiled}} -->
 
                 {{> customfieldDroppop}} {{> customfieldpop}}
 
-                <div
-                  class="modal fade"
-                  role="dialog"
-                  tabindex="-1"
-                  id="myModal2"
-                >
-                  <div
-                    class="modal-dialog modal-sm modal-dialog-centered"
-                    role="document"
-                  >
+                <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h4>Field Settings</h4>
-                        <button
-                          type="button"
-                          class="close"
-                          data-dismiss="modal"
-                          aria-label="Close"
-                        >
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">×</span>
                         </button>
                       </div>
@@ -325,24 +260,12 @@
                         <div>
                           <form class="d-xl-flex align-items-xl-center">
                             <div class="flex-grow-1">
-                              <div
-                                class="custom-control custom-switch"
-                                style="margin: 8px"
-                              >
-                                <input
-                                  class="custom-control-input"
-                                  type="checkbox"
-                                  id="formCheck-one"
-                                  value="one"
-                                />
+                              <div class="custom-control custom-switch" style="margin: 8px">
+                                <input class="custom-control-input" type="checkbox" id="formCheck-one" value="one" />
                                 {{#if productsCloudPreferenceRec}} {{#if equals
-                                productsCloudPreferenceRec.customFields.[0].hidden
-                                false}}
+                                productsCloudPreferenceRec.customFields.[0].hidden false}}
                                 <script>
-                                  $("#formCheck-one").attr(
-                                    "checked",
-                                    "checked"
-                                  );
+                                  $("#formCheck-one").attr("checked", "checked");
                                 </script>
                                 {{else}}
                                 <script>
@@ -354,34 +277,19 @@
                                   style="position: absolute"
                                   for="formCheck-one"
                                 ></label>
-                                <div
-                                  contenteditable="true"
-                                  class="groove customField1Text"
-                                >
+                                <div contenteditable="true" class="groove customField1Text">
                                   {{#if
                                   productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[0].label}}{{else}}Custom
                                   Field 1{{/if}}
                                 </div>
                               </div>
 
-                              <div
-                                class="custom-control custom-switch"
-                                style="margin: 8px"
-                              >
-                                <input
-                                  class="custom-control-input"
-                                  type="checkbox"
-                                  id="formCheck-two"
-                                  value="two"
-                                />
+                              <div class="custom-control custom-switch" style="margin: 8px">
+                                <input class="custom-control-input" type="checkbox" id="formCheck-two" value="two" />
                                 {{#if productsCloudPreferenceRec}} {{#if equals
-                                productsCloudPreferenceRec.customFields.[1].hidden
-                                false}}
+                                productsCloudPreferenceRec.customFields.[1].hidden false}}
                                 <script>
-                                  $("#formCheck-two").attr(
-                                    "checked",
-                                    "checked"
-                                  );
+                                  $("#formCheck-two").attr("checked", "checked");
                                 </script>
                                 {{else}}
                                 <script>
@@ -393,10 +301,7 @@
                                   style="position: absolute"
                                   for="formCheck-two"
                                 ></label>
-                                <div
-                                  contenteditable="true"
-                                  class="groove customField2Text"
-                                >
+                                <div contenteditable="true" class="groove customField2Text">
                                   {{#if
                                   productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[1].label}}{{else}}Custom
                                   Field 2{{/if}}
@@ -407,28 +312,14 @@
                         </div>
                       </div>
                       <div class="modal-footer">
-                        <button
-                          class="btn btn-success btnSaveSettings"
-                          type="button"
-                        >
-                          <i class="fa fa-save" style="margin-right: 5px"></i
-                          >Save
+                        <button class="btn btn-success btnSaveSettings" type="button">
+                          <i class="fa fa-save" style="margin-right: 5px"></i>Save
                         </button>
-                        <button
-                          class="btn btn-warning btnResetSettings"
-                          data-dismiss="modal"
-                          type="reset"
-                        >
-                          <i class="fa fa-repeat" style="margin-right: 5px"></i
-                          >Reset
+                        <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset">
+                          <i class="fa fa-repeat" style="margin-right: 5px"></i>Reset
                         </button>
-                        <button
-                          class="btn btn-secondary"
-                          data-dismiss="modal"
-                          type="button"
-                        >
-                          <i class="fa fa-remove" style="margin-right: 5px"></i
-                          >Close
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                          <i class="fa fa-remove" style="margin-right: 5px"></i>Close
                         </button>
                       </div>
                     </div>
@@ -473,10 +364,7 @@
               }
             </style>
 
-            <div
-              class="card-body"
-              style="background-color: #ededed; padding: 2em"
-            >
+            <div class="card-body" style="background-color: #ededed; padding: 2em">
               <div class="row">
                 <div class="col-6 col-md-6 colProductName" id="colProductName">
                   <div class="form-group">
@@ -492,12 +380,8 @@
                 </div>
                 <div class="col-6 col-md-3 colPrice" id="colPrice">
                   <div class="form-group">
-                    <label class="lblPriceEx hiddenColumn"
-                      >Price (Ex Tax) <i class="fas fa-random"></i
-                    ></label>
-                    <label class="lblPriceInc"
-                      >Price (Inc Tax) <i class="fas fa-random fa-trans"></i
-                    ></label>
+                    <label class="lblPriceEx hiddenColumn">Price (Ex Tax) <i class="fas fa-random"></i></label>
+                    <label class="lblPriceInc">Price (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
 
                     <input type="hidden" class="lblPriceCheckStatus" value="" />
 
@@ -536,28 +420,15 @@
                 <div class="col-12">
                   <div class="form-group">
                     <label>Sales Description</label>
-                    <textarea
-                      class="form-control"
-                      rows="3"
-                      id="txasalesdescription"
-                      name="txasalesdescription"
-                    >
+                    <textarea class="form-control" rows="3" id="txasalesdescription" name="txasalesdescription">
 {{productrecord.salesdescription}}</textarea
                     >
                   </div>
                 </div>
               </div>
               <div class="row" style="float: right; margin: 30px 0 0 0">
-                <button
-                  class="btn btn-primary btnAddUOM btn-mg"
-                  type="button"
-                  id="addNewUOM"
-                >
-                  <i
-                    class="fas fa-plus"
-                    style="margin-right: 8px; font-size: 14px !important"
-                  ></i
-                  >Add UOM
+                <button class="btn btn-primary btnAddUOM btn-mg" type="button" id="addNewUOM">
+                  <i class="fas fa-plus" style="margin-right: 8px; font-size: 14px !important"></i>Add UOM
                 </button>
                 <!-- <div style="margin-left: 8px;">
                                     <span id="addNewUOM" class="btnSpinType"><i class="fas fa-plus" style="font-size: 11px !important;"></i></span>
@@ -566,11 +437,7 @@
               <div id="UOMRows"></div>
 
               <div class="row">
-                <div
-                  class="col-6 col-md colSalesAccount"
-                  id="colSalesAccount"
-                  style="padding-left: 0px !important"
-                >
+                <div class="col-6 col-md colSalesAccount" id="colSalesAccount" style="padding-left: 0px !important">
                   <div class="form-group">
                     <label>Sales Account</label>
                     <select
@@ -578,18 +445,11 @@
                       class="form-control"
                       id="sltsalesacount"
                       name="sltsalesacount"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
-                <div
-                  class="col-6 col-md colUOM"
-                  id="colUOM"
-                  style="padding-left: 0px !important"
-                >
+                <div class="col-6 col-md colUOM" id="colUOM" style="padding-left: 0px !important">
                   <div class="form-group">
                     <label>Unit of Measure</label>
                     <select
@@ -597,18 +457,11 @@
                       class="form-control"
                       id="sltUomSales"
                       name="sltUomSales"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
-                <div
-                  class="col-6 col-md colTaxCode"
-                  id="colTaxCode"
-                  style="padding-left: 0px !important"
-                >
+                <div class="col-6 col-md colTaxCode" id="colTaxCode" style="padding-left: 0px !important">
                   <div class="form-group">
                     <label>Tax Code</label>
                     <select
@@ -616,10 +469,7 @@
                       class="form-control"
                       id="slttaxcodesales"
                       name="slttaxcodesales"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
@@ -633,10 +483,7 @@
                       class="form-control"
                       id="sltsalesacount"
                       name="sltsalesacount"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
@@ -648,10 +495,7 @@
                       class="form-control"
                       id="sltUomSales"
                       name="sltUomSales"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
@@ -663,27 +507,16 @@
                       class="form-control"
                       id="slttaxcodesales"
                       name="slttaxcodesales"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
                 <div class="col-6 col-md colPrice" id="colPrice">
                   <div class="form-group">
-                    <label class="lblPriceEx hiddenColumn"
-                      >Price (Ex Tax) <i class="fas fa-random"></i
-                    ></label>
-                    <label class="lblPriceInc"
-                      >Price (Inc Tax) <i class="fas fa-random fa-trans"></i
-                    ></label>
+                    <label class="lblPriceEx hiddenColumn">Price (Ex Tax) <i class="fas fa-random"></i></label>
+                    <label class="lblPriceInc">Price (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
                     <div style="display: flex">
-                      <input
-                        type="hidden"
-                        class="lblPriceCheckStatus"
-                        value=""
-                      />
+                      <input type="hidden" class="lblPriceCheckStatus" value="" />
                       <input
                         type="text"
                         class="form-control highlightInput edtsellqty1priceCheck hiddenColumn"
@@ -712,14 +545,8 @@
                         name="edtbarcode"
                         value="{{productrecord.barcode}}"
                       />
-                      <span
-                        class="table-remove btnRemoveUOM"
-                        style="margin-left: 10px"
-                        ><button
-                          type="button"
-                          class="btn btn-danger btn-rounded btn-sm"
-                          autocomplete="off"
-                        >
+                      <span class="table-remove btnRemoveUOM" style="margin-left: 10px"
+                        ><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off">
                           <i class="fa fa-remove"></i></button
                       ></span>
                     </div>
@@ -741,9 +568,7 @@
                     style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
                   >
                     <div class="form-group" style="margin-bottom: 0">
-                      <label class="lblCustomField1"
-                        >{{custfields.[0].custfieldlabel}}</label
-                      >
+                      <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
                       <input
                         class="form-control form-control"
                         type="text"
@@ -769,9 +594,7 @@
                     style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
                   >
                     <div class="form-group" style="margin-bottom: 0">
-                      <label class="lblCustomField2"
-                        >{{custfields.[1].custfieldlabel}}<br
-                      /></label>
+                      <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br /></label>
                       <input
                         class="form-control form-control"
                         type="text"
@@ -794,9 +617,7 @@
                     style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
                   >
                     <div class="form-group" style="margin-bottom: 0">
-                      <label class="lblCustomField2"
-                        >{{custfields.[2].custfieldlabel}}<br
-                      /></label>
+                      <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br /></label>
                       <input
                         class="form-control form-control"
                         type="text"
@@ -818,12 +639,7 @@
                 <div class="col-12">
                   <div class="form-group">
                     <label>Purchase Description</label>
-                    <textarea
-                      class="form-control"
-                      rows="3"
-                      id="txapurchasedescription"
-                      name="txapurchasedescription"
-                    >
+                    <textarea class="form-control" rows="3" id="txapurchasedescription" name="txapurchasedescription">
 {{productrecord.purchasedescription}}</textarea
                     >
                   </div>
@@ -839,10 +655,7 @@
                       class="form-control"
                       id="sltcogsaccount"
                       name="sltcogsaccount"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
@@ -854,21 +667,14 @@
                       class="form-control"
                       id="slttaxcodepurchase"
                       name="slttaxcodepurchase"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
                 <div class="col-6 col-md-3 colCost" id="colCost">
                   <div class="form-group">
-                    <label class="lblCostEx hiddenColumn"
-                      >Cost (Ex Tax) <i class="fas fa-random"></i
-                    ></label>
-                    <label class="lblCostInc"
-                      >Cost (Inc Tax) <i class="fas fa-random fa-trans"></i
-                    ></label>
+                    <label class="lblCostEx hiddenColumn">Cost (Ex Tax) <i class="fas fa-random"></i></label>
+                    <label class="lblCostInc">Cost (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
 
                     <input type="hidden" class="lblCostCheckStatus" value="" />
 
@@ -897,10 +703,7 @@
                       class="form-control"
                       id="COGS"
                       name="sltsalesacount"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     />
                   </div>
                 </div>
@@ -912,10 +715,7 @@
                       class="form-control"
                       id="sltUomPurchases"
                       name="sltUomPurchases"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
@@ -927,27 +727,16 @@
                       class="form-control"
                       id="slttaxcodesales"
                       name="slttaxcodesales"
-                      style="
-                        background-color: rgb(255, 255, 255);
-                        cursor: pointer;
-                      "
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
                     ></select>
                   </div>
                 </div>
                 <div class="col-6 col-md-3 colCost" id="colCost">
                   <div class="form-group">
-                    <label class="lblCostEx hiddenColumn"
-                      >Cost (Ex Tax) <i class="fas fa-random"></i
-                    ></label>
-                    <label class="lblCostInc"
-                      >Cost (Inc Tax) <i class="fas fa-random fa-trans"></i
-                    ></label>
+                    <label class="lblCostEx hiddenColumn">Cost (Ex Tax) <i class="fas fa-random"></i></label>
+                    <label class="lblCostInc">Cost (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
                     <div style="display: flex">
-                      <input
-                        type="hidden"
-                        class="lblCostCheckStatus"
-                        value=""
-                      />
+                      <input type="hidden" class="lblCostCheckStatus" value="" />
 
                       <input
                         type="text"
@@ -963,14 +752,8 @@
                         name="edtsellqty1costInc"
                         value=""
                       />
-                      <span
-                        class="table-remove btnRemoveCOGS"
-                        style="margin-left: 10px"
-                        ><button
-                          type="button"
-                          class="btn btn-danger btn-rounded btn-sm"
-                          autocomplete="off"
-                        >
+                      <span class="table-remove btnRemoveCOGS" style="margin-left: 10px"
+                        ><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off">
                           <i class="fa fa-remove"></i></button
                       ></span>
                     </div>
@@ -1016,48 +799,27 @@
                       name="chkBOM"
                       checked="{{productrecord.isManufactured}}"
                     />
-                    <label
-                      class="custom-control-label position-relative"
-                      for="chkBOM"
-                      >Bill Of Materials</label
-                    >
+                    <label class="custom-control-label position-relative" for="chkBOM">Bill Of Materials</label>
                   </div>
                 </div>
                 {{#if equals isSNTrackChecked true}}
                 <div class="col-12 col-md-4">
                   <div class="">
                     <div class="custom-control custom-switch d-flex">
-                      <input
-                        class="custom-control-input"
-                        type="checkbox"
-                        id="chkSNTrack"
-                        name="chkSNTrack"
-                      />
-                      <label
-                        class="custom-control-label position-relative"
-                        for="chkSNTrack"
+                      <input class="custom-control-input" type="checkbox" id="chkSNTrack" name="chkSNTrack" />
+                      <label class="custom-control-label position-relative" for="chkSNTrack"
                         >I Track Serial Numbers</label
                       >
                       <div style="margin-left: 8px">
                         <span id="btnSNTrack" class="btnSpinType"
-                          ><i
-                            class="fas fa-search"
-                            style="font-size: 11px !important"
-                          ></i
+                          ><i class="fas fa-search" style="font-size: 11px !important"></i
                         ></span>
                       </div>
                     </div>
                     <div class="d-flex">
                       <div class="custom-control custom-switch d-flex">
-                        <input
-                          class="custom-control-input"
-                          type="checkbox"
-                          id="chkAddSN"
-                          name="chkAddSN"
-                        />
-                        <label
-                          class="custom-control-label position-relative"
-                          for="chkAddSN"
+                        <input class="custom-control-input" type="checkbox" id="chkAddSN" name="chkAddSN" />
+                        <label class="custom-control-label position-relative" for="chkAddSN"
                           >I Can Create Serial Numbers</label
                         >
                       </div>
@@ -1066,23 +828,11 @@
                 </div>
                 <div class="col-12 col-md-4">
                   <div class="custom-control custom-switch d-flex">
-                    <input
-                      class="custom-control-input"
-                      type="checkbox"
-                      id="chkLotTrack"
-                      name="chkLotTrack"
-                    />
-                    <label
-                      class="custom-control-label position-relative"
-                      for="chkLotTrack"
-                      >I Track Lot Numbers</label
-                    >
+                    <input class="custom-control-input" type="checkbox" id="chkLotTrack" name="chkLotTrack" />
+                    <label class="custom-control-label position-relative" for="chkLotTrack">I Track Lot Numbers</label>
                     <div style="margin-left: 8px">
                       <span id="btnLotTrack" class="btnSpinType"
-                        ><i
-                          class="fas fa-search"
-                          style="font-size: 11px !important"
-                        ></i
+                        ><i class="fas fa-search" style="font-size: 11px !important"></i
                       ></span>
                     </div>
                   </div>
@@ -1102,10 +852,7 @@
                         class="form-control"
                         id="sltinventoryacount"
                         name="sltinventoryacount"
-                        style="
-                          background-color: rgb(255, 255, 255);
-                          cursor: pointer;
-                        "
+                        style="background-color: rgb(255, 255, 255); cursor: pointer"
                       ></select>
                     </div>
                   </div>
@@ -1166,11 +913,7 @@
                     <div class="col-3">
                       <div class="form-group">
                         <label style="display: none">Deparment</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          value="{{item.department}}"
-                        />
+                        <input type="text" class="form-control" value="{{item.department}}" />
                       </div>
                     </div>
                     <div class="col-9">
@@ -1228,18 +971,13 @@
                         </div>
                         <div class="col-2">
                           <div class="form-group">
-                            <input
+                            <select
                               type="search"
-                              class="form-control es-input"
-                              id="slttaxcodesales"
+                              class="form-control es-input bin-number"
                               value="No Bin"
-                              name="slttaxcodesales"
-                              style="
-                                background-color: rgb(255, 255, 255);
-                                cursor: pointer;
-                                padding-right: 12px !important;
-                              "
-                            />
+                              name="binnumber"
+                              style="background-color: rgb(255, 255, 255); cursor: pointer"
+                            ></select>
                           </div>
                         </div>
                       </div>
@@ -1266,9 +1004,7 @@
                       name="chkSellPrice"
                       checked="{{#if isExtraSellChecked}}checked{{else}}{{/if}}"
                     />
-                    <label class="custom-control-label" for="chkSellPrice"
-                      >Customer Type Discount</label
-                    >
+                    <label class="custom-control-label" for="chkSellPrice">Customer Type Discount</label>
                   </div>
                 </div>
               </div>
@@ -1331,10 +1067,7 @@
                   </div>
                 </div>
                 {{#each itemExtraSell in productExtraSell}}
-                <div
-                  class="col-12 itemExtraSellRow"
-                  id="{{itemExtraSell.lineID}}"
-                >
+                <div class="col-12 itemExtraSellRow" id="{{itemExtraSell.lineID}}">
                   <div class="row">
                     <div class="col-4 colClientType2">
                       <div class="form-group">
@@ -1343,10 +1076,7 @@
                           class="form-control"
                           id="sltCustomerType"
                           name="sltCustomerType"
-                          style="
-                            background-color: rgb(255, 255, 255);
-                            cursor: pointer;
-                          "
+                          style="background-color: rgb(255, 255, 255); cursor: pointer"
                         ></select>
                       </div>
                     </div>
@@ -1375,11 +1105,7 @@
                     <div class="col-1 colDel2">
                       <div class="form-group">
                         <span class="table-remove btnRemove"
-                          ><button
-                            type="button"
-                            class="btn btn-danger btn-rounded btn-sm"
-                            autocomplete="off"
-                          >
+                          ><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off">
                             <i class="fa fa-remove"></i></button
                         ></span>
                       </div>
@@ -1422,57 +1148,29 @@
                     Recent Transactions
                   </button>
                 </div>
-                <div
-                  class="col-12 product_recent_trans"
-                  style="display: none; margin-top: 16px"
-                >
+                <div class="col-12 product_recent_trans" style="display: none; margin-top: 16px">
                   <h3>Recent Transactions</h3>
                   <!-- {{>recentTransactionTable productID=productID type="all"}} -->
-                  {{>non_transactional_list type="all"
-                  tablename="productrecentlist" productID=productID }}
+                  {{>non_transactional_list type="all" tablename="productrecentlist" productID=productID }}
                 </div>
               </div>
               <div class="row mt-3">
                 <div class="col-4">
                   {{#if isManufactured}}
-                  <button
-                    class="btn btn-primary showBOMBtn"
-                    type="button"
-                    id="showBOMBtn"
-                    name="showBOMBtn"
-                  >
+                  <button class="btn btn-primary showBOMBtn" type="button" id="showBOMBtn" name="showBOMBtn">
                     Show BOM
                   </button>
                   {{/if}}
                 </div>
-                <div
-                  class="col-8 justify-content-xl-end"
-                  style="padding-right: 0px; padding-left: 0px"
-                >
+                <div class="col-8 justify-content-xl-end" style="padding-right: 0px; padding-left: 0px">
                   <div class="d-xl-flex justify-content-xl-end">
-                    <button
-                      class="btn btn-success"
-                      type="button"
-                      style="margin: 12px"
-                      id="btnSave"
-                      name="btnSave"
-                    >
+                    <button class="btn btn-success" type="button" style="margin: 12px" id="btnSave" name="btnSave">
                       <i class="fa fa-save" style="margin-right: 5px"></i>Save
                     </button>
-                    <button
-                      class="btn btn-danger btnDeleteInv"
-                      type="button"
-                      style="margin: 12px"
-                    >
-                      <i class="fa fa-close" style="margin-right: 5px"></i
-                      >Delete
+                    <button class="btn btn-danger btnDeleteInv" type="button" style="margin: 12px">
+                      <i class="fa fa-close" style="margin-right: 5px"></i>Delete
                     </button>
-                    <button
-                      class="btn btn-secondary btnBack"
-                      data-dismiss="modal"
-                      type="button"
-                      style="margin: 12px"
-                    >
+                    <button class="btn btn-secondary btnBack" data-dismiss="modal" type="button" style="margin: 12px">
                       <i class="fa fa-close" style="margin-right: 5px"></i>Close
                     </button>
                   </div>
@@ -1488,20 +1186,11 @@
 
   <!-- Start Help Video Modal -->
   <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-    <div
-      class="modal-dialog"
-      role="document"
-      style="max-width: 670px !important"
-    >
+    <div class="modal-dialog" role="document" style="max-width: 670px !important">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">Product</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -1517,10 +1206,7 @@
             name="media"
             style="border: solid 5px #999999f0; height: auto; outline: none"
           >
-            <source
-              src="https://erphelpes.com/vs1videos/newproduct.mp4"
-              type="video/mp4"
-            />
+            <source src="https://erphelpes.com/vs1videos/newproduct.mp4" type="video/mp4" />
           </video>
         </div>
       </div>
@@ -1532,28 +1218,16 @@
   <!-- Start Serial Number Modal -->
 
   <div class="modal fade" role="dialog" tabindex="-1" id="SerialNumberModal">
-    <div
-      class="modal-dialog"
-      role="document"
-      style="max-width: 670px !important"
-    >
+    <div class="modal-dialog" role="document" style="max-width: 670px !important">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">Serial Number List</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
-          <div
-            id="SNTracklist"
-            style="display: none; padding-right: 0px; padding-left: 0px"
-          >
+          <div id="SNTracklist" style="display: none; padding-right: 0px; padding-left: 0px">
             <div class="table-responsive">
               <table
                 id="serialnumberlist"
@@ -1561,9 +1235,7 @@
               >
                 <thead>
                   <tr class="dnd-moved">
-                    <th class="text-center" style="width: 30%">
-                      Serial Numbers
-                    </th>
+                    <th class="text-center" style="width: 30%">Serial Numbers</th>
                     <th class="text-center" style="width: 20%">Status</th>
                     <th class="text-center" style="width: 25%">Date</th>
                     <th class="text-center" style="width: 25%">Department</th>
@@ -1573,9 +1245,7 @@
                   {{#each item in tserialnumberList}}
                   <tr id="{{item.SerialNumber}}">
                     <td class="text-center">{{item.SerialNumber}}</td>
-                    <td id="transactiontype" class="text-center">
-                      {{item.Status}}
-                    </td>
+                    <td id="transactiontype" class="text-center">{{item.Status}}</td>
                     <td class="text-center">{{item.date}}</td>
                     <td class="text-center">{{item.department}}</td>
                   </tr>
@@ -1593,33 +1263,18 @@
   <!-- Start Lot number Modal -->
 
   <div class="modal fade" role="dialog" tabindex="-1" id="LotNumberModal">
-    <div
-      class="modal-dialog"
-      role="document"
-      style="max-width: 670px !important"
-    >
+    <div class="modal-dialog" role="document" style="max-width: 670px !important">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">Lot Number List</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
-          <div
-            id="LotTracklist"
-            style="display: none; padding-right: 0px; padding-left: 0px"
-          >
+          <div id="LotTracklist" style="display: none; padding-right: 0px; padding-left: 0px">
             <div class="table-responsive">
-              <table
-                id="lotnumberlist"
-                class="dataTable table table-striped table-bordered lotnumberlist"
-              >
+              <table id="lotnumberlist" class="dataTable table table-striped table-bordered lotnumberlist">
                 <thead>
                   <tr class="dnd-moved">
                     <th class="text-center" style="width: 25%">Lot Numbers</th>
@@ -1634,9 +1289,7 @@
 
                   <tr id="{{item.transactionno}}">
                     <td class="text-center">{{item.LotNumber}}</td>
-                    <td id="transactiontype" class="text-center">
-                      {{item.Status}}
-                    </td>
+                    <td id="transactiontype" class="text-center">{{item.Status}}</td>
                     <td class="text-center">{{item.date}}</td>
                     <td class="text-center">{{item.expriydate}}</td>
                     <td class="text-center">{{item.department}}</td>
@@ -1662,40 +1315,20 @@
           <!-- <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div> -->
           <!-- </div> -->
           <h4 class="title-header" style="color: white">UNLOCK FEATURE</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
-          <div
-            class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start"
-          >
+          <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
             <p style="font-weight: bold">Upgrade to the Essentials Pack</p>
             <p style="margin-bottom: 15px; margin-top: 4px">
               Please upgrade to our Essentials plan to access this feature.
             </p>
-            <hr
-              class="reporthr"
-              style="width: 100%; margin: 4px; border-width: 1px"
-            />
-            <h5
-              style="
-                font-weight: bold;
-                text-align: center;
-                width: 100%;
-                color: rgb(89 89 89);
-              "
-            >
-              PLEASE NOTE
-            </h5>
+            <hr class="reporthr" style="width: 100%; margin: 4px; border-width: 1px" />
+            <h5 style="font-weight: bold; text-align: center; width: 100%; color: rgb(89 89 89)">PLEASE NOTE</h5>
             <p style="margin-bottom: 0px; margin-top: 4px">
-              If Inventory Tracking is turned on it cannot be turned off for
-              this product in the future.
+              If Inventory Tracking is turned on it cannot be turned off for this product in the future.
             </p>
           </div>
         </div>
@@ -1711,28 +1344,19 @@
     </div>
   </div>
   <!-- End Upgrade POP -->
-  <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-    {{> taxratelistpop}}
-  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">{{> taxratelistpop}}</div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-    {{> addaccountpop}}
-  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">{{> addaccountpop}}</div>
 
-  <div
-    class="modal fade"
-    role="dialog"
-    tabindex="-1"
-    id="customerTypeListModal"
-  >
-    {{> clienttypepopup}}
-  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="customerTypeListModal">{{> clienttypepopup}}</div>
 
   {{> clienttypemodal}}
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-    {{> newtaxratepop}}
-  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">{{> newtaxratepop}}</div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="binNumberListModal">{{> binNumberListPop}}</div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="addBinNumberModal">{{> addBinNumberPop}}</div>
 
   <!-- Product Customer Type Modal -->
   <div class="modal fade" role="dialog" tabindex="-1" id="myModalClientType">
@@ -1740,137 +1364,70 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4>
-            <div id="add-dept-title" name="add-dept-title" style="float: left">
-              Add New Customer Type
-            </div>
+            <div id="add-dept-title" name="add-dept-title" style="float: left">Add New Customer Type</div>
             <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
             {{> helpbutton}}
 
             <!-- Start Help View Modal -->
-            <div
-              class="modal fade"
-              role="dialog"
-              tabindex="-1"
-              id="helpViewModalAdd"
-            >
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
               <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="padding-bottom: 8px">
                     <h4>Help</h4>
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">×</span>
                     </button>
                   </div>
                   <div class="modal-body">
                     <p class="text-center text-muted">
-                      <a
-                        role="button"
-                        data-toggle="modal"
-                        href="#helpModalAdd"
-                        class="btn btn-primary helpModal"
+                      <a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal"
                         >View Help Video</a
                       >
                     </p>
                     <p class="text-center text-muted">
-                      <a
-                        href="https://vs1forum.com/viewtopic.php?f=6&t=186"
-                        target="_blank"
-                        class="btn btn-primary"
+                      <a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary"
                         >Download Help File</a
                       >
                     </p>
                     {{> helpadvisor}} {{> helpgotoforum}}
                   </div>
                   <div class="modal-footer" style="padding: 6px">
-                    <button
-                      class="btn btn-light"
-                      data-dismiss="modal"
-                      type="button"
-                    >
-                      Close
-                    </button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                   </div>
                 </div>
               </div>
             </div>
             <!-- End Help View Modal -->
           </h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body" style="background-color: #ededed">
-          <input
-            type="hidden"
-            class="form-control"
-            id="edtDepartmentID"
-            name="edtDepartmentID"
-            style="display: none"
-          />
+          <input type="hidden" class="form-control" id="edtDepartmentID" name="edtDepartmentID" style="display: none" />
           <div class="row no-gutters">
             <div class="col d-xl-flex align-items-xl-end">
               <div class="form-group flex-grow-1" style="margin: 8px">
-                <label
-                  data-toggle="tooltip"
-                  data-bs-tooltip=""
-                  data-placement="bottom"
-                  >Type Name</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="edtTypeName"
-                  name="edtTypeName"
-                />
-                <input
-                  type="hidden"
-                  class="form-control"
-                  id="typeID"
-                  name="typeID"
-                />
+                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Type Name</label>
+                <input type="text" class="form-control" id="edtTypeName" name="edtTypeName" />
+                <input type="hidden" class="form-control" id="typeID" name="typeID" />
               </div>
             </div>
           </div>
           <div class="row no-gutters">
             <div class="col d-xl-flex align-items-xl-end">
               <div class="form-group flex-grow-1" style="margin: 8px">
-                <label
-                  data-toggle="tooltip"
-                  data-bs-tooltip=""
-                  data-placement="bottom"
-                  >% Discount</label
-                >
-                <input
-                  type="text"
-                  class="form-control highlightInput edtDiscountModal"
-                />
+                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">% Discount</label>
+                <input type="text" class="form-control highlightInput edtDiscountModal" />
               </div>
-              <input
-                type="hidden"
-                class="form-control highlightInput edtPriceExModal"
-              />
+              <input type="hidden" class="form-control highlightInput edtPriceExModal" />
             </div>
           </div>
           <div class="row no-gutters">
             <div class="col d-xl-flex align-items-xl-end">
               <div class="form-group flex-grow-1" style="margin: 8px">
                 <label>Description</label>
-                <textarea
-                  class="form-control"
-                  rows="5"
-                  id="txaDescription"
-                  name="txaDescription"
-                ></textarea>
+                <textarea class="form-control" rows="5" id="txaDescription" name="txaDescription"></textarea>
               </div>
             </div>
           </div>
@@ -1901,9 +1458,7 @@
       }
     }
   </style>
-  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-    {{> accountlistpop}}
-  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">{{> accountlistpop}}</div>
 
   {{#if showBomModal}}
   <div class="modal fade" role="dialog" tabindex="-1" id="BOMSetupModal">
@@ -1911,13 +1466,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">BOM Set up</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-            id="closeBOMSetupModal"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeBOMSetupModal">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -2031,29 +1580,20 @@
   </div>
   {{/if}}
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-    {{> productlistpop}}
-  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">{{> productlistpop}}</div>
   <div class="modal fade" role="dialog" tabindex="-1" id="processListModal">
     {{> processlistpopup}}
     <!-- {{> statuspop}} -->
   </div>
 
-  <div class="modal fade" role="dialog" id="newProcessModal" tabindex="-1">
-    {{> new_processpop}}
-  </div>
+  <div class="modal fade" role="dialog" id="newProcessModal" tabindex="-1">{{> new_processpop}}</div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4>Upload Attachments</h4>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
@@ -2065,13 +1605,9 @@
             <div class="col inboxcol2" style="text-align: center">
               <div>Upload files or add files from the file library.</div>
               {{#if isMobileDevices}}
-              <div>
-                Capture copies of receipt's or take photo's of completed jobs.
-              </div>
+              <div>Capture copies of receipt's or take photo's of completed jobs.</div>
               {{/if}}
-              <p style="color: #ababab">
-                Only users with access to your company can view these files
-              </p>
+              <p style="color: #ababab">Only users with access to your company can view these files</p>
             </div>
           </div>
         </div>
@@ -2085,10 +1621,7 @@
             accept="image/*"
             capture="camera"
           />
-          <button
-            class="btn btn-primary btnUploadFile img_new_attachment_btn"
-            type="button"
-          >
+          <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button">
             <i class="fas fa-camera" style="margin-right: 5px"></i>Capture
           </button>
 
@@ -2123,10 +1656,7 @@
                                application/x-zip-compressed,application/x-zip,application/x-7z-compressed"
           />
           {{/if}}
-          <button
-            class="btn btn-primary btnUploadFile new_attachment_btn"
-            type="button"
-          >
+          <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button">
             <i class="fa fa-cloud-upload" style="margin-right: 5px"></i>Upload
           </button>
           <button

@@ -380,6 +380,17 @@ const clickTaxCodeSales = (e) => {
   }
 };
 
+const clickBinNumber = (e) => {
+  var $earch = $(e.currentTarget);
+  var offset = $earch.offset();
+  if (e.pageX > offset.left + $earch.width() - 8) {
+    // X button 16px wide?
+    $("#binNumberListModal").modal("toggle");
+  } else {
+    $("#addBinNumberModal").modal("toggle");
+  }
+};
+
 Template.productview.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.bomProducts = new ReactiveVar([]);
@@ -460,6 +471,13 @@ Template.productview.onRendered(function () {
     templateObject.isMobileDevices.set(true);
   }
 
+  const updateBinNumberSelect = () => {
+    setTimeout(() => {
+      $(".bin-number").editableSelect();
+      $(".bin-number").editableSelect().on("click.editable-select", clickBinNumber);
+    }, 1000);
+  };
+
   templateObject.setEditableSelect = async function (data) {
     $(document).ready(function () {
       $("#slttaxcodepurchase").editableSelect();
@@ -474,9 +492,7 @@ Template.productview.onRendered(function () {
       $("#newProcessModal #edtOverheadCOGS").editableSelect();
       $("#newProcessModal #edtOverheadExpenseAccount").editableSelect();
       $("#newProcessModal #edtWastage").editableSelect();
-    });
 
-    $(document).ready(function () {
       $("#sltCustomerType")
         .editableSelect()
         .on("click.editable-select", function (e, li) {
@@ -2801,6 +2817,7 @@ Template.productview.onRendered(function () {
           }
           // $('#edttotalqtyinstock').val(totaldeptquantity);
           templateObject.productqtyrecords.set(qtylineItems);
+          updateBinNumberSelect();
           templateObject.totaldeptquantity.set(totaldeptquantity);
         })
         .catch(function (err) {
@@ -3988,6 +4005,7 @@ Template.productview.onRendered(function () {
           }
           // $('#edttotalqtyinstock').val(totaldeptquantity);
           templateObject.productqtyrecords.set(qtylineItems);
+          updateBinNumberSelect();
           templateObject.totaldeptquantity.set(totaldeptquantity);
         })
         .catch(function (err) {

@@ -1080,7 +1080,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
                 { index: 3, label: 'Show On Trasactions', class: 'colShowontransactions', active: true, display: true, width: "100" },
             ];
-            
+
         } else if (currenttablename == 'tblSetupDashboardOptions') {
             reset_data = [
                 { index: 0, label: '#ID', class: 'colOptionsID', active: false, display: true, width: "10" },
@@ -1088,6 +1088,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Show Dashboards', class: 'colShowDef', active: true, display: true, width: "200" },
                 { index: 3, label: 'Dashboard load at login', class: 'colLogginDef', active: true, display: true, width: "200" },
             ]
+        } else if (currenttablename === "tblBinNumberOverview") {
+            reset_data = [
+                { index: 0, label: '#ID', class: '', active: false, display: true, width: "10" },
+                { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "150" },
+                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
+            ];
         }
 
         templateObject.reset_data.set(reset_data);
@@ -1236,7 +1242,7 @@ Template.non_transactional_list.onRendered(function() {
             },
         })
         $('.fullScreenSpin').css('display', 'none');
-  
+
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }
 
