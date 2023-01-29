@@ -33,10 +33,11 @@
             <div class="modal-body" style="padding: 8px 24px;">
                 <div class="row">
                     <div class="col-12 tblAvailableSNlist">
-                        <table id="tblAvailableSeriallist" class="table table-bordered">
+                        <!-- <table id="tblAvailableSeriallist" class="table table-bordered">
                             <tbody>
                             </tbody>
-                        </table>
+                        </table> -->
+                        {{> internal_transaction_list_with_switchbox tablename="tblAvailableSNCheckbox" }}
                     </div>
                 </div>
             </div>

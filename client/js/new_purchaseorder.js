@@ -8760,6 +8760,11 @@ Template.purchaseordercard.events({
                 };
 
                 await purchaseService.savePurchaseOrderEx(objDetails).then(async function(objDetails) {
+                    sideBarService.getAllSerialNumber().then(function(data) {
+                        addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    }).catch(function (err){
+                    });
+
                     if (localStorage.getItem("enteredURL") != null) {
                         FlowRouter.go(localStorage.getItem("enteredURL"));
                         localStorage.removeItem("enteredURL");
@@ -9296,9 +9301,6 @@ Template.purchaseordercard.events({
                             FlowRouter.go('/purchaseorderlist?success=true');
                         };
                     }
-
-
-
                 }).catch(function(err) {
                     swal({
                         title: 'Oooops...',

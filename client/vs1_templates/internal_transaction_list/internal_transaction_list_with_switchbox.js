@@ -208,6 +208,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
                 { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
+        } else if (currenttablename == "tblAvailableSNCheckbox") {
+            reset_data = [
+                { index: 0, label: '#ID', class: 'colID', active: false, display: true, width: "10" },
+                { index: 1, label: 'Serial number', class: 'colSN', active: true, display: true, width: "200" }
+            ];
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -630,8 +635,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             });
         });
     }
+
     templateObject.displayDepartmentsData = async function(data) {
-        var splashArrayProductList = new Array();
+        var splashArrayDepartmentsList = new Array();
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
@@ -671,8 +677,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 linestatus
             ];
             
-            splashArrayProductList.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArrayProductList);
+            splashArrayDepartmentsList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArrayDepartmentsList);
         }
 
         if (templateObject.transactiondatatablerecords.get()) {
@@ -834,9 +840,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                     linestatus
                                 ];
 
-                                splashArrayDepartmentList.push(dataListDupp);
+                                splashArrayDepartmentsList.push(dataListDupp);
                             }
-                            let uniqueChars = [...new Set(splashArrayDepartmentList)];
+                            let uniqueChars = [...new Set(splashArrayDepartmentsList)];
                             templateObject.transactiondatatablerecords.set(uniqueChars);
                             var datatable = $('#' + currenttablename).DataTable();
                             datatable.clear();
@@ -868,6 +874,206 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    checkBoxClickByName();
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    templateObject.getSerialNumbersData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        let dataTableList = [];
+        getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                sideBarService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
+                    addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                        if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                            dataTableList.push(data.tserialnumberlistcurrentreport[i]);
+                        }
+                    }
+                    templateObject.displaySerialNumbersData(dataTableList); //Call this function to display data on the table
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                    if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        dataTableList.push(data.tserialnumberlistcurrentreport[i]);
+                    }
+                }
+                templateObject.displaySerialNumbersData(dataTableList); //Call this function to display data on the table
+            }
+        }).catch(function(err) {
+            sideBarService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
+                addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                    if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        dataTableList.push(data.tserialnumberlistcurrentreport[i]);
+                    }
+                }
+                templateObject.displaySerialNumbersData(dataTableList); //Call this function to display data on the table
+            }).catch(function(err) {
+            });
+        });
+    }
+    templateObject.displaySerialNumbersData = async function(data) {
+        var splashArraySNList = new Array();
+        let deleteFilter = false;
+        let chkBox;
+        
+        console.log("===========", data);
+        
+        for (let i = 0; i < data.length; i++) {
+            let mobile = "";
+            let linestatus = '';
+            let deptFName = '';
+            if (data[i].Active == true) {
+                linestatus = "";
+            } else if (data[i].Active == false) {
+                linestatus = "In-Active";
+            };
+
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
+                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tdeptclasslist[i].ClassID +
+                '"></label></div>'; //switchbox
+
+            var dataList = [
+                chkBox,
+                data[i].SerialNumber || "",
+                data[i].SerialNumber || "",
+            ];
+            
+            splashArraySNList.push(dataList);
+            templateObject.transactiondatatablerecords.set(splashArraySNList);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+
+        setTimeout(async function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#' + currenttablename).DataTable({
+                data: templateObject.transactiondatatablerecords.get(),
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-7'f><'col-sm-12 col-md-5'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "colChkBox pointer",
+                        orderable: false,
+                        width: "15px",
+                    },
+                    {
+                        targets: 1,
+                        className: "colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[1]);
+                        }
+                    },
+                    {
+                        targets: 2,
+                        className: "colSN",
+                        width: "200px",
+                    },                    
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                // "order": [[1, "asc"]],
+                order: false,
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        
+                        let uniqueChars = [...new Set(splashArraySNList)];
+                        templateObject.transactiondatatablerecords.set(uniqueChars);
+                        var datatable = $('#' + currenttablename).DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                        setTimeout(function() {
+                            $('#' + currenttablename).dataTable().fnPageChange('last');
+                        }, 400);
+
+                        checkBoxClickByName();
+                        $('.fullScreenSpin').css('display', 'none');
+
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search List..."
+                },
+                "fnInitComplete": function(oSettings) {
+                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    // if (data.Params.Search.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     checkBoxClickByName();
                 },
@@ -1360,6 +1566,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         templateObject.getAccountsListVS1();
     } else if (currenttablename == "tblDepartmentCheckbox") {
         templateObject.getDepartmentsData();
+    } else if (currenttablename == "tblAvailableSNCheckbox") {
+        templateObject.getSerialNumbersData();
     }
     tableResize();
 });

@@ -9110,6 +9110,11 @@ Template.new_invoice.events({
 
         salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
 
+          sideBarService.getAllSerialNumber().then(function(data) {
+            addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+          }).catch(function (err){
+          });          
+          
           if (localStorage.getItem("enteredURL") != null) {
             FlowRouter.go(localStorage.getItem("enteredURL"));
             localStorage.removeItem("enteredURL");
@@ -11090,7 +11095,6 @@ Template.new_invoice.events({
                   Repeat_MonthOffset: 0,
                 },
               };
-              console.log(dayObj)
               var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
               var oPost = new XMLHttpRequest();
               oPost.open(
