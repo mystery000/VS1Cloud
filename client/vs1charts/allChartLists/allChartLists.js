@@ -52,16 +52,10 @@ const chartsEditor = new ChartsEditor(
         $(".btnchartdropdown").addClass("hideelement");
         $(".btnchartdropdown").removeClass("showelement");
 
-        // $("#resalecomparision").removeClass("hideelement");
-        // $("#quotedinvoicedamount").removeClass("hideelement");
-        // $("#expensechart").removeClass("hideelement");
-        // $("#monthlyprofitlossstatus").removeClass("hideelement");
-        // $("#resalecomparision").removeClass("hideelement");
-        // $("#showearningchat").removeClass("hideelement");
-
         $(".sortable-chart-widget-js").removeClass("hideelement"); // display every charts
-        $(".on-editor-change-mode").removeClass("hideelement");
-        $(".on-editor-change-mode").addClass("showelement");
+        $(".chkDatatable").removeClass("hideelement");
+        $(".chkDatatable").addClass("showelement");
+        $(".custom-control-label").removeClass("hideelement");
     },
     () => {
         $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
@@ -74,8 +68,10 @@ const chartsEditor = new ChartsEditor(
         $(".btnchartdropdown").removeClass("hideelement");
         $(".btnchartdropdown").addClass("showelement");
 
-        $(".on-editor-change-mode").removeClass("showelement");
-        $(".on-editor-change-mode").addClass("hideelement");
+        $(".chkDatatable").addClass("hideelement");
+        $(".chkDatatable").removeClass("showelement");
+        $(".custom-control-label").addClass("hideelement");
+        $(".custom-control-label").removeClass("showelement");
     }
 );
 
@@ -98,26 +94,12 @@ async function saveCharts() {
         dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
 
-    console.log("charts: ", charts);
-    console.log("dash: ", chartList);
-    // let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
-    // dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
-    // if (dashboardpreferences.length) {
-    //     dashboardpreferences.forEach((chart) => {
-    //         if (chart.fields != undefined && chart.fields.TabGroup != _tabGroup) {
-    //             chartList.push(chart);
-    //         }
-    //     });
-    // }
-
     Array.prototype.forEach.call(charts, (chart) => {
         chartList.push(
             new Tvs1ChartDashboardPreference({
                 type: "Tvs1dashboardpreferences",
                 fields: new Tvs1ChartDashboardPreferenceField({
-                    Active: $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
-                        $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true" ?
-                        false : true,
+                    Active: $(chart).find(".chkDatatable").is(':checked'),
                     ChartID: parseInt($(chart).attr("chart-id")),
                     ID: parseInt($(chart).attr("pref-id")),
                     EmployeeID: employeeId,
@@ -131,6 +113,7 @@ async function saveCharts() {
             })
         );
     });
+
     // for (const _chart of chartList) {
     let chartJSON = {
         type: "Tvs1dashboardpreferences",
@@ -163,18 +146,12 @@ Template.allChartLists.onRendered(function() {
     _chartGroup = $("#connectedSortable").data("chartgroup");
 
     templateObject.hideChartElements = () => {
-        // on edit mode false
-        // $(".on-editor-change-mode").removeClass("showelement");
-        // $(".on-editor-change-mode").addClass("hideelement");
         const dimmedElements = document.getElementsByClassName("dimmedChart");
         while (dimmedElements.length > 0) {
             dimmedElements[0].classList.remove("dimmedChart");
         }
     };
     templateObject.showChartElements = function() {
-        // on edit mode true
-        // $(".on-editor-change-mode").addClass("showelement");
-        // $(".on-editor-change-mode").removeClass("hideelement");
         $('.sortable-chart-widget-js').removeClass("col-md-12 col-md-8 col-md-6 col-md-4");
         $('.sortable-chart-widget-js').addClass("editCharts");
         $('.sortable-chart-widget-js').each(function() {
@@ -456,17 +433,9 @@ Template.allChartLists.onRendered(function() {
                         "height",
                         storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto"
                     );
-                    // console.log("sdddf: ",chart.fields.ChartGroup, _chartGroup, chart.fields._chartSlug, chart.fields.Active);
-                    // chart.fields.ChartGroup == _chartGroup && _tabGroup
                     if (chart.fields.Active == true) {
                         defaultChartList.push(chart.fields._chartSlug);
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
-                            "<i class='far fa-eye'></i>"
-                        );
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "false"
-                        );
+                        $(`[key='${chart.fields._chartSlug}'] .chkDatatable`).prop("checked",true);
                         $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
                         if (chart.fields._chartSlug == 'accounts__profit_and_loss') {
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
@@ -483,18 +452,8 @@ Template.allChartLists.onRendered(function() {
                             $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
                         }
                     } else {
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
-                            "<i class='far fa-eye-slash'></i>"
-                        );
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "true"
-                        );
+                        $(`[key='${chart.fields._chartSlug}'] .chkDatatable`).prop("checked",false);
                     }
-                    // $(`[key='${chart.fields._chartSlug}']`).attr(
-                    //   "pref-id",
-                    //   chart.fields.ID
-                    // );
                     $(`[key='${chart.fields._chartSlug}']`).attr(
                         "chart-slug",
                         chart.fields._chartSlug
@@ -517,19 +476,6 @@ Template.allChartLists.onRendered(function() {
                 });
             }, 0);
         }
-
-        $('.card-visibility').each(function() {
-            $(this).find('.cardShowBtn .far').removeClass('fa-eye');
-            // let position = $(this).data('default-position');
-            // $(this).attr('position', position);
-            $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
-            $(this).attr("card-active", 'false');
-        })
-        $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
-        $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
-        $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
-        $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
-        $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
 
         setTimeout(() => {
             let $chartWrappper = $(".connectedChartSortable");
@@ -554,17 +500,6 @@ Template.allChartLists.onRendered(function() {
 });
 
 Template.allChartLists.events({
-    "click .on-editor-change-mode": (e) => {
-        // this will toggle the visibility of the widget
-        if ($(e.currentTarget).attr("is-hidden") == "true") {
-            $(e.currentTarget).attr("is-hidden", "false");
-            $(e.currentTarget).html("<i class='far fa-eye'></i>");
-        } else {
-            $(e.currentTarget).attr("is-hidden", "true");
-            $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
-        }
-        // const templateObject = Template.instance();
-    },
     "mouseover .card-header": (e) => {
         $(e.currentTarget).parent(".card").addClass("hovered");
     },
@@ -628,10 +563,10 @@ Template.allChartLists.events({
     },
     "click #btnCancel": async() => {
         playCancelAudio();
+        let templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "block");
             chartsEditor.disable();
-            const templateObject = Template.instance();
             await templateObject.hideChartElements();
             await templateObject.checkChartToDisplay();
             $('.sortable-chart-widget-js').removeClass("editCharts");
