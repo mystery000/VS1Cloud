@@ -354,13 +354,51 @@ Template.newbankrecon.onRendered(function() {
     }
 
     templateObject.getBankTransactionData = function (accountId, statementDate, ignoreDate) {
+        let yodleeData = [];
+        // if (FlowRouter.current().queryParams.preview && FlowRouter.current().queryParams.bankaccountid === accountId) {
+        //     let tmp = localStorage.getItem('BankStatement')
+        //     if (!tmp) return
+        //     let statementData = JSON.parse(tmp)
+        //     getVS1Data("VS1_BankRule")
+        //       .then(function (dataObject) {
+        //         if (dataObject.length) {
+        //           let data = JSON.parse(dataObject[0].data);
+        //           if (!data[accountId]) return;
+        //           let importRule = data[accountId];
+        //           for (
+        //             let rowIndex = 1;
+        //             rowIndex < tmpImport.length;
+        //             rowIndex++
+        //           ) {
+        //             let tmpRow = [];
+        //             for (
+        //               let colIndex = 0;
+        //               colIndex < tmpCol.length;
+        //               colIndex++
+        //             ) {
+        //               let matchIndex = tmpCol.findIndex(
+        //                 (item) => item.order == colIndex + 1
+        //               );
+        //               tmpRow.push(
+        //                 matchIndex === -1
+        //                   ? null
+        //                   : tmpImport[rowIndex][matchIndex]
+        //               );
+        //             }
+        //             tmpData.push(tmpRow);
+        //           }
+        //         }
+        //       })
+        //       .catch(function (err) {
+        //         errorSaveCb(err);
+        //       });
+        // }
         let yodleeFromDate = null;
         if (ignoreDate) {
             yodleeFromDate = '2000-01-01';
         } else {
             yodleeFromDate = statementDate;
         }
-        let yodleeData = [];
         const client_id = "KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4";
         const secret = "TqDOhdMCOYHJq1se";
         const user_name = "sbMem5f85b3fb4145c1";
@@ -487,6 +525,8 @@ Template.newbankrecon.onRendered(function() {
         });
     };
     function setAllTReconciliation(data, yodleeData) {
+        console.log('here', data)
+        console.log('there', yodleeData)
         let reconList = [];
         for(let i=0; i<data.treconciliation.length; i++){
             if (bankaccountname == data.treconciliation[i].fields.AccountName ) {

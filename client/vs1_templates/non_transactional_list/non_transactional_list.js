@@ -16095,7 +16095,6 @@ Template.non_transactional_list.onRendered(function() {
     $(document).on("click", "#btnRefreshList", function(e) {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
-
         if (currenttablename === "tblLeadCrmListWithDate") {
             templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
         } else if (currenttablename === "tblCustomerCrmListWithDate") {
