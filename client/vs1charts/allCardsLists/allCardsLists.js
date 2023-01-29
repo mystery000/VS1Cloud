@@ -337,7 +337,7 @@ Template.allCardsLists.events({
         $(".fullScreenSpin").css("display", "block");
         $('.cardShowBtn').addClass('hideelement');
         $('.actionButtonCardsTop').addClass('hideelement');
-        $('.editCardBtn').find('i').removeClass('fa-save')
+        $('.editCardBtn').find('i').removeClass('fa-save');
         $('.editCardBtn').find('i').addClass('fa-cog');
         await templateObject.setCardPositions();
         $('.card-visibility').removeClass('dimmedChart');

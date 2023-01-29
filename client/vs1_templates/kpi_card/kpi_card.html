@@ -27,9 +27,10 @@
     card-key="{{cardKey}}">
         <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
-            <div class="hideShowDiv">
+            <div class="hideShowDiv custom-control custom-switch">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                {{!-- <input class="custom-control-input chkDatatable " type="checkbox"  checked="true"> --}}
+                {{!-- <input class="custom-control-input chkDatatable" type="checkbox" id="switch-" style="margin-top: 0px !important;"> --}}
+                {{!-- <label class="custom-control-label" for="switch-"></label> --}}
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body {{actionClass}}" style="cursor: pointer;">
@@ -39,6 +40,11 @@
     </div>
 
     <style>
+
+        .custom-control-input {
+            left: unset;
+            right: 40px;
+        }
         .card.hovered {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
             cursor: move;

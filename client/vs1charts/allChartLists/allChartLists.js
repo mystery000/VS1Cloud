@@ -32,72 +32,6 @@ import '../../Dashboard/appointments-widget/ds-appointments-widget.html';
 
 let _ = require("lodash");
 
-let chartsPlaceList = {
-    "Accounts_Overview": [
-        "accountrevenuestreams",
-        "profitandlosschart",
-    ],
-
-    "Contacts_Overview": [
-        "top10Customers",
-        "top10Suppliers",
-        "activeEmployees",
-    ],
-
-    "Dashboard_Overview": [
-        "bankaccountschart",
-        "monthlyprofitandloss",
-        "profitandlosschart",
-        "resalescomparision",
-        "expenseschart",
-        "accountslistchart",
-        "mytaskswidgetchart",
-    ],
-
-    "DSMCharts_Overview": [
-        "mytaskswidgetchart",
-        "dashboardManagerCharts",
-        "dsmTop10Customers",
-        "dsmAppointmentsWidget",
-        "resalescomparision",
-        "opportunitiesStatus",
-        "dsmleadlistchart",
-    ],
-
-    "DSCharts_Overview": [
-        "dashboardSalesCharts",
-        "dsAppointmentsWidget",
-        "dsleadlistchart",
-        "mytaskswidgetchart",
-    ],
-
-    "Inventory_Overview": [
-        "invstockonhandanddemand",
-        "top10Suppliers",
-    ],
-
-    "Payroll_Overview": [
-        "employeeDaysAbsent",
-        "clockedOnEmployees",
-        "employeesOnLeave"
-    ],
-
-    "Purchases_Overview": [
-        "monthllyexpenses",
-        "expensebreakdown",
-    ],
-
-    "Sales_Overview": [
-        "quotedsalesorderinvoicedamounts",
-        "top10Customers",
-        "resalescomparision",
-    ],
-
-    "CRM_Overview": [
-        "crmleadchart",
-        "resalescomparision"
-    ],
-};
 
 /**
  * Current User ID
@@ -164,15 +98,17 @@ async function saveCharts() {
         dashboardApis.collectionNames.Tvs1dashboardpreferences
     );
 
-    let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
-    dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
-    if (dashboardpreferences.length) {
-        dashboardpreferences.forEach((chart) => {
-            if (chart.fields != undefined && chart.fields.TabGroup != _tabGroup) {
-                chartList.push(chart);
-            }
-        });
-    }
+    console.log("charts: ", charts);
+    console.log("dash: ", chartList);
+    // let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
+    // dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
+    // if (dashboardpreferences.length) {
+    //     dashboardpreferences.forEach((chart) => {
+    //         if (chart.fields != undefined && chart.fields.TabGroup != _tabGroup) {
+    //             chartList.push(chart);
+    //         }
+    //     });
+    // }
 
     Array.prototype.forEach.call(charts, (chart) => {
         chartList.push(
@@ -512,7 +448,7 @@ Template.allChartLists.onRendered(function() {
                     $(`[key='${chart.fields._chartSlug}']`).attr('position', storeObj ? storeObj.position : defaultPosition);
                     $(`[key='${chart.fields._chartSlug}']`).attr('width', '100%');
                     $(`[key='${chart.fields._chartSlug}']`).css('height', storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto");
-                    $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
+                    $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(  
                         "width",
                         storeObj && storeObj.width && storeObj.width != 0 ? storeObj.width + "px" : "100%"
                     );
@@ -520,7 +456,9 @@ Template.allChartLists.onRendered(function() {
                         "height",
                         storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto"
                     );
-                    if (chart.fields.ChartGroup == _chartGroup && chart.fields.Active == true) {
+                    // console.log("sdddf: ",chart.fields.ChartGroup, _chartGroup, chart.fields._chartSlug, chart.fields.Active);
+                    // chart.fields.ChartGroup == _chartGroup && _tabGroup
+                    if (chart.fields.Active == true) {
                         defaultChartList.push(chart.fields._chartSlug);
                         $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
                             "<i class='far fa-eye'></i>"
@@ -580,88 +518,6 @@ Template.allChartLists.onRendered(function() {
             }, 0);
         }
 
-        // Now get user preferences
-        // let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-        // if (tvs1ChartDashboardPreference.length > 0) {
-        //     // if charts to be displayed are specified
-        //     tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
-        //         setTimeout(() => {
-        //             if (!tvs1chart.fields.Chartname || tvs1chart.fields.Chartname == "") {
-        //                 return;
-        //             }
-        //             // Now all of chart name is undefined. Why those are all undefined? so below code part is not useful.
-        //             const itemName =
-        //                 tvs1chart.fields.ChartGroup.toLowerCase() +
-        //                 "__" +
-        //                 tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
-        //             $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
-        //             $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
-        //             $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
-        //             $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
-        //             $(`[key='${itemName}']`).attr("chart-id", tvs1chart.fields.ChartID);
-        //             $(`[key='${itemName}']`).attr(
-        //                 "chart-group",
-        //                 tvs1chart.fields.chartGroup
-        //             );
-        //             $(`[key='${itemName}']`).addClass("chart-visibility");
-        //             //$(`[key='${itemName}']`).attr('chart-id', tvs1chart.fields.Id);
-        //             $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                 "chart-slug",
-        //                 itemName
-        //             );
-        //             if (tvs1chart.fields.Active == true) {
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                     "is-hidden",
-        //                     "false"
-        //                 );
-        //                 // If the item name exist
-        //                 if( tvs1chart.fields.ChartWidth ){
-        //                     $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
-        //                         "width",
-        //                         tvs1chart.fields.ChartWidth + '%'
-        //                     );
-        //                     $(`[key='${itemName}'] .ui-resizable`).css(
-        //                         "width", "100%"
-        //                     );
-        //                 }
-        //                 // This is the ChartHeight saved in the preferences
-        //                 if( tvs1chart.fields.ChartHeight ){
-        //                     $(`[key='${itemName}'] .ui-resizable`).css(
-        //                         "height",
-        //                         tvs1chart.fields.ChartHeight + 'vh'
-        //                     );
-        //                 }
-        //                 $(`[key='${itemName}']`).removeClass("hideelement");
-        //             } else {
-        //                 let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
-        //                 $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
-        //                 $(`[key='${itemName}']`).addClass("hideelement");
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye-slash'></i>");
-        //                 // $(`[key='${itemName}']`).attr("is-hidden", true);
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                     "is-hidden",
-        //                     "true"
-        //                 );
-        //             }
-        //         }, 500);
-        //     });
-        //     displayedCharts = document.querySelectorAll(
-        //       ".sortable-chart-widget-js:not(.hideelement)"
-        //     );
-        //     if (displayedCharts.length == 0) {
-        //         // show only the first one
-        //         let item = defaultChartList.length ? defaultChartList[0] : "";
-        //         if (item) {
-        //             $(`[key='${item}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-        //             $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
-        //             $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
-        //             $(`[key='${item}']`).removeClass("hideelement");
-        //             $(`[key='${item}']`).addClass("chart-visibility");
-        //         }
-        //     }
-        // } else {
-        // Set default chart list
         $('.card-visibility').each(function() {
             $(this).find('.cardShowBtn .far').removeClass('fa-eye');
             // let position = $(this).data('default-position');
@@ -674,11 +530,7 @@ Template.allChartLists.onRendered(function() {
         $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
         $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
         $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
-        //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
-        //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
-        // }
-        // await ChartHandler.buildPositions();
-        // Handle sorting
+
         setTimeout(() => {
             let $chartWrappper = $(".connectedChartSortable");
             $chartWrappper
@@ -798,6 +650,7 @@ Template.allChartLists.events({
             templateObject.checkChartToDisplay();
 
             $(".fullScreenSpin").css("display", "none");
+            
             Meteor._reload.reload();
         }, delayTimeAfterSound);
     },
@@ -811,11 +664,6 @@ Template.allChartLists.helpers({
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;
-    },
-
-    is_available_chart: (current, chart) => {
-        return chartsPlaceList[current].includes(chart);
-        // return 1;
     },
 
     is_dashboard_check: (currentTemplate) => {

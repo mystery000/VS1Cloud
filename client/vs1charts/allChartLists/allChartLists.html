@@ -144,12 +144,12 @@
                         md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
 
             {{!-- {{else if is_dashboard_check "dashboardsales"}} --}}
-                {{> mytaskswidgetchart
-                        md=4 defaultPosition=2 key="dscharts__my_tasks" }}
+                {{!-- {{> mytaskswidgetchart
+                        md=4 defaultPosition=2 key="dscharts__my_tasks" }} --}}
 
             {{!-- {{else}} --}}
-                {{> mytaskswidgetchart
-                        md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+                {{!-- {{> mytaskswidgetchart
+                        md=6 defaultPosition=1 key="dashboard__my_tasks" }} --}}
             {{!-- {{/if}} --}}
 
         {{!-- {{/if}} --}}
@@ -180,8 +180,7 @@
         {{!-- {{/if}} --}}
 
         {{!-- {{#if is_available_chart currentTemplate "top10Customers"}} --}}
-            {{> top10Customers
-                    md=4 defaultPosition=11 key="contacts__top_10_customers" }}
+            {{> top10Customers md=4 defaultPosition=11 key="contacts__top_10_customers" }}
         {{!-- {{/if}} --}}
 
         {{!-- {{#if is_available_chart currentTemplate "top10Suppliers"}} --}}
