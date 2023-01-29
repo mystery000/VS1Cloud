@@ -10,14 +10,13 @@
                     <h6 class="text-{{headerColor}} font-weight-bold m-0">{{headerTitle}}</h6>
                     <div class="dropdown no-arrow custom-control custom-switch" style="display: inline-flex;">
                         {{!-- <a id="hideearnings" class="on-editor-change-mode hideelement bankaccountschartedit btn btn-link" role="presentation" href="" ><i class="far fa-eye"></i></a> --}}
-                        <div class="custom-control custom-switch">
-                            <input class="custom-control-input chkDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{key}}">
-                            <label class="custom-control-label hideelement" for="switch1-{{key}}"></label>
-                        </div>
-                        <div class="custom-control custom-switch tooltip">
+                        <div class="custom-control custom-switch" data-bs-toggle="tooltip" title="Turn this on as a default chart when reset is selected">
                             <input class="custom-control-input defaultDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch2-{{key}}" >
                             <label class="custom-control-label hideelement" for="switch2-{{key}}"></label>
-                            <span class="tooltiptext">Turn this on as a default chart when reset is selected</span>
+                        </div>
+                        <div class="custom-control custom-switch" data-bs-toggle="tooltip" title="Display this chart">
+                            <input class="custom-control-input chkDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{key}}">
+                            <label class="custom-control-label hideelement" for="switch1-{{key}}"></label>
                         </div>
                         <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
                         <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
@@ -36,32 +35,4 @@
             </div>
         </div>
     </div>
-    <style>
-        /* Tooltip container */
-        .tooltip {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-        }
-
-        /* Tooltip text */
-        .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: black;
-        color: #fff;
-        text-align: center;
-        padding: 5px 0;
-        border-radius: 6px;
-        
-        /* Position the tooltip text - see examples below! */
-        position: absolute;
-        z-index: 1;
-        }
-
-        /* Show the tooltip text when you mouse over the tooltip container */
-        .tooltip:hover .tooltiptext {
-        visibility: visible;
-        }
-    </style>
 </template>
