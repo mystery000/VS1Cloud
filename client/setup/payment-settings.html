@@ -1,0 +1,342 @@
+<template name="wizard_payment">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header py-3">
+            <h5 class="text-primary-- m-0 font-weight-bold d-inline-block">Payment Method Settings </h5>
+            <a class="btn btn-success" style="margin-left: 12px;" role="button" data-toggle="modal"
+              href="#paymentMethodSettingHelp">Help <i class="fa fa-question-circle-o"></i></a>
+            <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodSettingHelp" style="display: none;"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable"
+                role="document">
+                <div class="modal-content">
+                  <div class="modal-header supportHelpModal ui-draggable-handle">
+                    <h4>Help</h4>
+                  </div>
+                  <div class="modal-body supportHelpModal">
+                    <div class="row">
+                      <div class="col-12 col-md-6 mobileSupportCol"
+                        style="padding-left: 24px; padding-right: 24px;">
+                        <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo"
+                          class="btn btn-primary helpModal visiblePopupDiv d-xl-flex flex-row justify-content-xl-center align-items-xl-center"
+                          style="float: left; width: 100%; height: 60px; margin: 16px 0px;"><i class="fa fa-play"
+                            style="margin-right: 5px;"></i> View Help Video</a>
+                      </div>
+                      <div class="col-12 col-md-6 mobileSupportCol"
+                        style="padding-left: 16px; padding-right: 16px;">
+                        <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71"
+                          class="btn btn-primary downloadHelpFile d-xl-flex flex-row justify-content-xl-center align-items-xl-center"
+                          style="float: left; width: 100%; height: 60px; margin: 16px 0px;"><i
+                            class="fa fa-download" style="margin-right: 5px;"></i> Download Help File</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-header ui-draggable-handle" style="border-top:1px solid #e3e6f0;">
+                    <h4>Get Support</h4>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"
+                      readonly="">
+                    <div class="card-body p-1 rounded" style="text-align: center;">
+                      <h4>How can we help?</h4>
+                      <p class="mb-4">
+                        Want to get in touch? We'd love to hear from you! Here's how you can reach us...
+                      </p>
+                      <div class="row">
+                        <div class="col-12 col-md-4 mobileSupportCol"
+                          style="padding-left: 24px; padding-right: 24px;">
+                          <a href="mailto:support@vs1cloud.com"><i class="fas fa-envelope-open-text"
+                              style="font-size: 65px; color: #00a3d3;"></i></a>
+                          <p class="mt-4">
+                            You can email us anytime, and we'll quickly get back to you with the best
+                            support available.
+                          </p>
+                          <a href="mailto:support@vs1cloud.com">support@vs1cloud.com</a>
+                          <!-- email support -->
+                        </div>
+                        <div class="col-12 col-md-4 mobileSupportCol"
+                          style="padding-left: 16px; padding-right: 16px;">
+                          <a href="tel+18433371599:" id="iconUSA" style="display: block;"><i
+                              class="fas fa-phone-alt" style="font-size: 65px; color: #00a3d3;"></i></a>
+                          <a href="tel:+61755331730" id="iconAUS"><i class="fas fa-phone-alt"
+                              style="font-size: 65px; color: #00a3d3;"></i></a>
+                          <a href="tel:+27612414123" id="iconSA"><i class="fas fa-phone-alt"
+                              style="font-size: 65px; color: #00a3d3;"></i></a>
+                          <p class="mt-4">
+                            Our phone lines are available during weekdays, from 8am-4pm.
+                          </p>
+                          <span id="phoneUSA" style="display: block;"><img src="images/icon_usa.png"
+                              style="height: 20px!important; margin-right: 5px; margin-top: -4px;"><a
+                              href="tel:+18433371599" id="phoneParentUSA" class="phoneClosed">+1 843 337
+                              1599</a><br></span>
+                          <span id="phoneAUS" style="display: block;"><img src="images/icon_australia.png"
+                              style="height: 20px!important; margin-right: 5px; margin-top: -4px;"><a
+                              href="tel:+61755331730" id="phoneParentAUS" class="phoneClosed">+61 7 5533
+                              1730</a><br></span>
+                          <span id="phoneSA" style="display: block;"><img src="images/icon_southafrica.png"
+                              style="height: 20px!important; margin-right: 5px; margin-top: -4px;"><a
+                              href="tel:+27612414123" id="phoneParentSA" class="phoneOpen">+27 61 241
+                              4123</a><br></span>
+
+                        </div>
+                        <div class="col-12 col-md-4 mobileSupportCol"
+                          style="padding-left: 24px; padding-right: 24px;">
+                          <a href="https://sos.splashtop.com" target="_blank"><img class="img-splashtop"
+                              src="images/splashtop.png" style="height: 75px!important;"></a>
+                          <p class="" style="margin-top: 0.8rem !important;">
+                            Splashtop allows us to provide you with remote access support.
+                          </p>
+                          <button onclick="window.open('https://sos.splashtop.com','_blank')" type="button"
+                            class="btn btn-primary mb-2" style="width: 100%;"><i class="fa fa-download"
+                              style="margin-right: 5px;"></i> Download Splashtop</button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer ui-draggable-handle">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" autocomplete="off"><i
+                        class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Start Help Video Modal -->
+            <div class="modal fade centerPopupDiv" role="dialog" tabindex="-1" id="paymentMethodSettingsVideo"
+              data-backdrop="static">
+              <div class="modal-dialog ui-widget-content resizablePopup" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="title-header">Payment Methods</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                  </div>
+                  <div class="modal-body">
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
+                      style="border: solid 5px #999999f0; height: auto; outline: none;">
+                      <source src="https://erphelpes.com/vs1videos/newpaymentmethod.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Help Video Modal -->
+          </div>
+          <div class="card-body">
+            <div class="card-body rounded">
+              <div class="row no-gutters">
+                <div class="col-sm-8 mb-3">
+                  <button class="btn btn-primary btnRefreshPaymentMethod" type="button" style="margin: 12px 0px 0; margin-right: 10px;">
+                    <i class="la la-lightbulb-o" style="padding-right: 5px;"></i>
+                    Refresh
+                  </button>
+                  <a class="btn btn-primary btnAddPaymentMethod alerts-border" role="button" data-toggle="modal" href="#btnAddPaymentMethod" style="margin-top: 12px;">
+                    <i class="fa fa-plus" style="margin-right: 8px;"></i>
+                    Add New Payment Method<br>
+                  </a>
+                  <div class="modal fade" role="dialog" tabindex="-1" id="btnAddPaymentMethod">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 id="add-paymentmethod-title" name="add-paymentmethod-title">Add New Payment
+                            Method</h4><button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body" style="background-color: #ededed;">
+                          <input type="hidden" class="form-control" id="edtPaymentMethodID"
+                            name="edtPaymentMethodID" style="display:none;">
+                          <div class="row no-gutters">
+                            <div class="col d-xl-flex align-items-xl-end">
+                              <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip"
+                                  data-bs-tooltip="" data-placement="bottom">Name</label>
+                                <input type="text" class="form-control" id="edtPaymentMethodName"
+                                  name="edtPaymentMethodName">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row no-gutters">
+                            <div class="col d-xl-flex align-items-xl-end">
+                              <div class="form-group flex-grow-1" style="margin: 8px;">
+                                {{#if equals includeCreditCard true}}
+                                <div class="custom-control custom-switch chkBox"><input
+                                    class="custom-control-input chkBox" type="radio" id="isformcreditcard"
+                                    name="isformcreditcard" checked><label class="custom-control-label chkBox"
+                                    for="isformcreditcard">Is Credit
+                                    card?</label></div>
+                                {{else}}
+                                <div class="custom-control custom-switch chkBox"><input
+                                    class="custom-control-input chkBox" type="radio" id="isformcreditcard"
+                                    name="isformcreditcard"><label class="custom-control-label chkBox"
+                                    for="isformcreditcard">Is Credit card?</label></div>
+                                {{/if}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer" style="background-color: #ededed;">
+                          <button class="btn btn-success btnSavePaymentMethod" type="button"><i class="fa fa-save"
+                              style="padding-right: 8px;"></i>Save</button>
+                          <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                              class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <a role="button" data-toggle="modal" href="#paymentMethodSettingsVideo" style="margin: 12px 12px 0 12px" class="btn btn-primary visiblePopupDiv alerts-border helpModal">
+                    View Help Video
+                  </a>
+                  <a href="javascript:void(0);" data-href="https://vs1forum.com/viewtopic.php?f=6&t=71" style="margin-top: 12px;" class="btn btn-primary alerts-border downloadHelpFile">Download Help
+                    File
+                  </a>
+                </div>
+                <div class="col-sm-4 text-right mb-3">
+                  <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button" style="margin: 12px 0 0 15px;" data-step-id="3">
+                    Confirm
+                  </button>
+                </div>
+              </div>
+              <div class="row no-gutters" style="display: none;">
+                <div class="col text-left">
+                  <button class="btn btn-primary btnAddNewPaymentMethod alerts-border" type="button" style="margin: 6px 0px;">
+                    <i class="fa fa-plus" style="margin-right: 5px;"></i>
+                    Add New Payment Method
+                  </button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <div class="modal fade" role="dialog" tabindex="-1" id="deletePaymentMethodLineModal">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID"
+                        name="selectDeleteLineID" readonly>
+                      <div class="modal-header">
+                        <h4>Delete</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Please click "Delete" to deactivate payment method</p>
+                        <button class="btn btn-danger float-right btnDeletePaymentMethod" type="button">
+                          <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{> non_transactional_list tablename='tblPaymentMethodList' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col">
+        <div class="card shadow mb-3">
+          <div class="card-header py-3">
+            <p class="text-primary m-0 font-weight-bold">Payment Link Fee Options</p>
+          </div>
+          <div class="card-body">
+            <div class="card-body p-3 rounded checkBoxModal">
+              {{#if includeAccountID}}
+
+              {{else}}
+              <div class="row">
+                <div class="col-12">
+                  <div class="d-xl-flex justify-content-between align-items-xl-center">
+                    <!-- Production -->
+                    <p>Don't have a Stripe account yet? <a
+                        href="https://connect.stripe.com/express/oauth/authorize?redirect_uri=https://vs1cloud.com/&client_id=ca_HZAaZcR1GYpjIC2EKBWBBy1cgRAjMzQ9"
+                        target="_blank">Click here to sign up with Stripe.</a> If you already have an
+                      existing Stripe Account, <a
+                        href="https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_HZAaZcR1GYpjIC2EKBWBBy1cgRAjMzQ9&scope=read_write&redirect_uri=https://signin.vs1cloud.com/paymentmethodSettings"
+                        target="_blank">click here to link to VS1 Cloud.</a></p>
+
+                    <!-- Sandbox -->
+                    <!-- <p>Don't have a Stripe account yet? <a href="https://connect.stripe.com/express/oauth/authorize?redirect_uri=https://vs1cloud.com/&client_id=ca_HZAaJkYgwiTtykfn80lqRpIoSvYdTWrL" target="_blank">Click here to sign up with Stripe.</a> If you already have an existing Stripe Account, <a href="https://connect.stripe.com/oauth/v2/authorize?response_type=code&client_id=ca_HZAaJkYgwiTtykfn80lqRpIoSvYdTWrL&scope=read_write&redirect_uri=https://sandbox.vs1cloud.com/paymentmethodSettings" target="_blank">click here to link to VS1 Cloud.</a></p> -->
+
+                  </div>
+                </div>
+              </div>
+              {{/if}}
+              <div class="row" style="margin-bottom: 16px;">
+                <div class="col">
+                  <div class="custom-control custom-switch" style="padding-left: 0px !important;">
+                    <a data-toggle="modal" href="#feeTip1"><i class="fa fa-question-circle-o"
+                        style="margin-right: 50px;"></i></a>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="feeTip1">
+                      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Apply Fee To Total</h4><button type="button" class="close" data-dismiss="modal"
+                              aria-label="Close"><span aria-hidden="true">×</span></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Apply online payment fee to total.</p>
+                            <p>If an Invoice is for $100 and the Payment fee is 2%. The invoice total would
+                              be $102. The Customer pays the $2 fee.</p>
+                          </div>
+                          <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                              data-dismiss="modal" type="button">Close</button></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <input type="radio" class="custom-control-input feeOnTopInput chargeCheckBox" id="feeOnTopInput"
+                      checked />
+                    <label style="width: 275px;" class="custom-control-label" for="feeOnTopInput">Apply
+                      online payment fee to total.</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="custom-control custom-switch" style="padding-left: 0px !important;">
+                    <a data-toggle="modal" href="#feeTip2"><i class="fa fa-question-circle-o"
+                        style="margin-right: 50px;"></i></a>
+
+                    <div class="modal fade" role="dialog" tabindex="-1" id="feeTip2">
+                      <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Include Fee In Total</h4><button type="button" class="close" data-dismiss="modal"
+                              aria-label="Close"><span aria-hidden="true">×</span></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Include online payment fee in total.</p>
+                            <p>If an Invoice is for $100 and the Payment fee is 2%. The Invoice total would
+                              be $100. Your Company receives $98 and pays the $2 transaction fee.</p>
+                          </div>
+                          <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light"
+                              data-dismiss="modal" type="button">Close</button></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <input type="radio" class="custom-control-input feeInPriceInput chargeCheckBox"
+                      id="feeInPriceInput" />
+                    <label style="width: 275px;" class="custom-control-label" for="feeInPriceInput">Include
+                      online payment fee in total.</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="row no-gutters">
+              <div class="col">
+                <button class="btn btn-primary float-left btnBack" type="button" style="margin: 12px;"
+                  data-step-id="3">Skip for Now<i class="fas fa-forward" style="margin-left: 5px;"></i></button>
+                <button class="btn btn-success float-right confirmBtn" id="saveStep3" type="button"
+                  style="margin: 12px;" data-step-id="3">Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

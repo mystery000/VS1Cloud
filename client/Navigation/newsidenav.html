@@ -554,6 +554,7 @@
                 </li>
             {{/if}}
 
+            {{#if includeFixedAssets}}
             <li class="fixedAssetsLi" id="sidenavfixedAssets">
                 <a href="#fixedAssetsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader fixedAssetsLiHeader"><i class="fas fa-home faHeader"></i> Fixed Asset</a>
                 <div class="submenuItem collapse" id="fixedAssetsSubmenu">
@@ -567,6 +568,7 @@
                     </ul>
                 </div>
             </li>
+            {{/if}}
 
             {{#if includeInventory}}
                 <li class="inventoryLi" id="sidenavinventory">
@@ -625,6 +627,7 @@
                 </li>
             {{/if}}
 
+            {{#if includeManufacturing}}
             <li class="manufacturingLi" id="sidenavmanufacturing">
                 <a href="#manufacturingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader manufacturingLiHeader">
                     <i class="fas fa-industry faHeader"></i>
@@ -662,6 +665,7 @@
                     </ul>
                 </div>
             </li>
+            {{/if}}
             <!-- {{/if}} -->
 
 

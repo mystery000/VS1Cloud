@@ -248,11 +248,13 @@
                 <!-- {{#if isAllStepsConfirmed }}
 
                 {{else}} -->
+                {{#unless isAllStepsConfirmed}}
                     <li class="nav-item no-arrow mx-1 trueERPConnection" id="" role="presentation" style="padding-right: 10px;">
                         <a class="nav-link" href="setup" style="color:#00a3d3; border-style: solid; border-radius: 25px;border: 2px solid;">
                             <i class="fas fa-link" style="margin-right: 5px;"></i> Setup Wizard
                         </a>
                     </li>
+                {{/unless}}
                 <!-- {{/if}} -->
 
                 {{#if equals isGreenTrack true}}
@@ -429,7 +431,7 @@
                 };
         </script>
     {{/if}}
-    <!-- {{> onsuccesswaterfall}} -->
+    {{> onsuccesswaterfall}}
    {{> vs1_global_search_modal}}
 
     <div class="modal fade" role="dialog" tabindex="-1" id="scanBarcodeModalHeader">

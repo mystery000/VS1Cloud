@@ -110,83 +110,81 @@ Template.payrolloverview.onRendered(function () {
 
     await templateObject.draftPayRunRecords.set(payRunsHistory);
 
-    setTimeout(() => {
-      $("#tblPayRunHistory").DataTable({
-        ...TableHandler.getDefaultTableConfiguration("tblPayRunHistory"),
-        columnDefs: [
-          {
-            orderable: false,
-            targets: -1
-          }
-        ],
-        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        buttons: [
-          {
-            extend: "excelHtml5",
-            text: "",
-            download: "open",
-            className: "btntabletocsv hiddenColumn",
-            filename: "taxratelist_" + moment().format(),
-            orientation: "portrait",
-            exportOptions: {
-              columns: ":visible"
-            }
-          }, {
-            extend: "print",
-            download: "open",
-            className: "btntabletopdf hiddenColumn",
-            text: "",
-            title: "Tax Rate List",
-            filename: "taxratelist_" + moment().format(),
-            exportOptions: {
-              columns: ":visible"
-            }
-          }
-        ],
-        select: true,
-        destroy: true,
-        // colReorder: true,
-        colReorder: {
-          fixedColumnsRight: 1
-        },
-        lengthMenu: [
-          [
-            25, -1
-          ],
-          [
-            25, "All"
-          ]
-        ],
-        // bStateSave: true,
-        // rowId: 0,
-        paging: true,
-        info: true,
-        responsive: true,
-        order: [
-          [0, "asc"]
-        ],
-        action: function () {
-          $("#tblPayRunHistory").DataTable().ajax.reload();
-        },
-        fnDrawCallback: function (oSettings) {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        }
-      }).on("page", function () {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
-        let draftRecord = templateObject.datatablerecords.get();
-        templateObject.datatablerecords.set(draftRecord);
-      }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
-      });
-    }, 500);
-
-
+    // setTimeout(() => {
+    //   $("#tblPayRunHistory").DataTable({
+    //     ...TableHandler.getDefaultTableConfiguration("tblPayRunHistory"),
+    //     columnDefs: [
+    //       {
+    //         orderable: false,
+    //         targets: -1
+    //       }
+    //     ],
+    //     sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //     buttons: [
+    //       {
+    //         extend: "excelHtml5",
+    //         text: "",
+    //         download: "open",
+    //         className: "btntabletocsv hiddenColumn",
+    //         filename: "taxratelist_" + moment().format(),
+    //         orientation: "portrait",
+    //         exportOptions: {
+    //           columns: ":visible"
+    //         }
+    //       }, {
+    //         extend: "print",
+    //         download: "open",
+    //         className: "btntabletopdf hiddenColumn",
+    //         text: "",
+    //         title: "Tax Rate List",
+    //         filename: "taxratelist_" + moment().format(),
+    //         exportOptions: {
+    //           columns: ":visible"
+    //         }
+    //       }
+    //     ],
+    //     select: true,
+    //     destroy: true,
+    //     // colReorder: true,
+    //     colReorder: {
+    //       fixedColumnsRight: 1
+    //     },
+    //     lengthMenu: [
+    //       [
+    //         25, -1
+    //       ],
+    //       [
+    //         25, "All"
+    //       ]
+    //     ],
+    //     // bStateSave: true,
+    //     // rowId: 0,
+    //     paging: true,
+    //     info: true,
+    //     responsive: true,
+    //     order: [
+    //       [0, "asc"]
+    //     ],
+    //     action: function () {
+    //       $("#tblPayRunHistory").DataTable().ajax.reload();
+    //     },
+    //     fnDrawCallback: function (oSettings) {
+    //       setTimeout(function () {
+    //         MakeNegative();
+    //       }, 100);
+    //     }
+    //   }).on("page", function () {
+    //     setTimeout(function () {
+    //       MakeNegative();
+    //     }, 100);
+    //     let draftRecord = templateObject.datatablerecords.get();
+    //     templateObject.datatablerecords.set(draftRecord);
+    //   }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
+    //     setTimeout(function () {
+    //       MakeNegative();
+    //     }, 100);
+    //   });
+    // }, 500);
   };
 
   templateObject.loadPayRunHistory = async () => {
@@ -296,7 +294,7 @@ Template.payrolloverview.onRendered(function () {
     });
     templateObject.timeSheetList.set(timesheets);
 
-    
+
 
     // TODO: Datable jquery to be added
 
@@ -5011,14 +5009,14 @@ Template.payrolloverview.events({
     let contactService = new ContactService();
     setTimeout(async function(){
     LoadingOverlay.show();
-    
+
     let showTimesheetStatus = localStorage.getItem("CloudShowTimesheet") || true;
     let checkStatus = "";
     let checkStartTime = "";
     let checkEndTime = "";
     let TimeSheetHours = 0;
     let updateID = $("#updateID").val() || "";
-    
+
     let clockList = templateObject.timesheetrecords.get();
 
     let getEmpIDFromLine = $(".employee_name").val() || "";
@@ -6781,7 +6779,7 @@ Template.payrolloverview.events({
     if($(e.currentTarget).attr('payrun-id')) {
       const id = $(e.currentTarget).attr('payrun-id');
       window.location.href = `/payrundetails?id=${id}`;
-    } 
+    }
     // else {
     //   const id = $(e.currentTarget).attr('calendar-id');
     //   window.location.href = `/payrundetails?cid=${id}`;
@@ -6808,9 +6806,9 @@ Template.payrolloverview.events({
     ui.newTimeSheet();
   } ,
 
-  "click .tblTimeSheet tbody tr": (e, ui) => {
-    const timesheetId = $(e.currentTarget).attr('timesheet-id');
-
+  "click #tblPayRuns tbody tr": (e, ui) => {
+  // "click .tblTimeSheet tbody tr": (e, ui) => {
+    const timesheetId = $(e.currentTarget).attr('id');
     window.location.href = `/timesheetdetail?tid=${timesheetId}`;
   },
 

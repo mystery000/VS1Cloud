@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-8" style="padding-top: 40px;">
-                    <div class="custom-control" style="float:left">
+                    <div style="float:left">
                         <label>Enable: </label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:138px;">
@@ -60,11 +60,11 @@
                         <label class="custom-control-label" for="vatreturnCategory2" style="cursor: pointer;">INPUT TAX</label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:160px;">
-                        <input class="custom-control-input" type="checkbox" name="vatreturnCategory3" id="vatreturnCategory3" style="cursor: pointer;">
+                        <input class="custom-control-input" type="checkbox" name="vatreturnCategory3" id="vatreturnCategory3" checked style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory3" style="cursor: pointer;">DIESEL REFUND</label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:180px">
-                        <input class="custom-control-input" type="checkbox" name="basreturnCategory4" id="basreturnCategory4" checked style="cursor: pointer;">
+                        <input class="custom-control-input" type="checkbox" name="vatreturnCategory4" id="vatreturnCategory4" checked style="cursor: pointer;">
                         <label class="custom-control-label" for="basreturnCategory4" style="cursor: pointer;">PAYMENT DETAILS</label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:170px;">
@@ -125,11 +125,11 @@
                             <div class="card-body rounded" style="padding: 0px !important;">
                                 <div>
                                     <ul class="nav nav-tabs nav-fill">
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link active categoryTab1" role="tab" data-toggle="tab" data-target="#tab-1">OUTPUT TAX</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab2" role="tab" data-toggle="tab" data-target="#tab-2">INPUT TAX</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab3" role="tab" data-toggle="tab" data-target="#tab-3">DIESEL REFUND</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab4" role="tab" data-toggle="tab" data-target="#tab-4">PAYMENT DETAILS</a></li>
-                                        <li class="nav-item" style="cursor: pointer;"><a class="nav-link categoryTab5" role="tab" data-toggle="tab" data-target="#tab-5">REFUND DETAILS</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item1" name="nav-item1"><a class="nav-link active categoryTab1" role="tab" data-toggle="tab" data-target="#tab-1">OUTPUT TAX</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item2" name="nav-item2"><a class="nav-link categoryTab2" role="tab" data-toggle="tab" data-target="#tab-2">INPUT TAX</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item3" name="nav-item3"><a class="nav-link categoryTab3" role="tab" data-toggle="tab" data-target="#tab-3">DIESEL REFUND</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item4" name="nav-item4"><a class="nav-link categoryTab4" role="tab" data-toggle="tab" data-target="#tab-4">PAYMENT DETAILS</a></li>
+                                        <li class="nav-item" style="cursor: pointer;" id="nav-item5" name="nav-item5"><a class="nav-link categoryTab5" role="tab" data-toggle="tab" data-target="#tab-5">REFUND DETAILS</a></li>
                                     </ul>
                                     <div class="tab-content">
                                         <style>
@@ -363,7 +363,7 @@
                                                                 <span style="float:left;">R&nbsp;</span>
                                                                 <input type="text" class="form-control transactionView" id="tax5cost" name="tax5cost" value="0" style="float:left; width:55%;" readonly="readonly">
                                                                 <span style="float:left;">&nbsp;×&nbsp;</span>
-                                                                <input type="text" class="form-control" id="tax5rate" name="tax5rate" value="60" style="float:left; width:30%;" readonly="readonly">
+                                                                <input type="text" class="form-control" id="tax5rate" name="tax5rate" value="60" style="float:left; width:30%;">
                                                                 <span style="float:left;">&nbsp;%&nbsp;</span>
                                                             </div>
                                                         </div>
@@ -776,7 +776,7 @@
                                                                 <span style="float:left;">R&nbsp;</span>
                                                                 <input type="text" class="form-control transactionView" id="tax23cost" name="tax23cost" value="0" style="float:left; width:55%;" readonly="readonly">
                                                                 <span style="float:left;">&nbsp;×&nbsp;</span>
-                                                                <input type="text" class="form-control" id="tax23rate" name="tax23rate" value="80" style="float:left; width:30%;" readonly="readonly">
+                                                                <input type="text" class="form-control" id="tax23rate" name="tax23rate" value="80" style="float:left; width:30%;">
                                                                 <span style="float:left;">&nbsp;%&nbsp;</span>
                                                             </div>
                                                         </div>
@@ -793,7 +793,7 @@
                                                                 <span style="float:left;">R&nbsp;</span>
                                                                 <input type="text" class="form-control transactionView" id="tax24cost" name="tax24cost" value="0" style="float:left; width:55%;" readonly="readonly">
                                                                 <span style="float:left;">&nbsp;×&nbsp;</span>
-                                                                <input type="text" class="form-control" id="tax24rate" name="tax24rate" value="332.80" style="float:left; width:30%;" readonly="readonly">
+                                                                <input type="text" class="form-control" id="tax24rate" name="tax24rate" value="332.80" style="float:left; width:30%;">
                                                                 <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                                             </div>
                                                         </div>
@@ -848,7 +848,7 @@
                                                                 <span style="float:left;">R&nbsp;</span>
                                                                 <input type="text" class="form-control transactionView" id="tax28cost" name="tax28cost" value="0" style="float:left; width:55%;" readonly="readonly">
                                                                 <span style="float:left;">&nbsp;×&nbsp;</span>
-                                                                <input type="text" class="form-control" id="tax28rate" name="tax28rate" value="562.00" style="float:left; width:30%;" readonly="readonly">
+                                                                <input type="text" class="form-control" id="tax28rate" name="tax28rate" value="562.00" style="float:left; width:30%;">
                                                                 <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                                             </div>
                                                         </div>
@@ -903,7 +903,7 @@
                                                                 <span style="float:left;">R&nbsp;</span>
                                                                 <input type="text" class="form-control transactionView" id="tax32cost" name="tax32cost" value="0" style="float:left; width:55%;" readonly="readonly">
                                                                 <span style="float:left;">&nbsp;×&nbsp;</span>
-                                                                <input type="text" class="form-control" id="tax32rate" name="tax32rate" value="207.00" style="float:left; width:30%;" readonly="readonly">
+                                                                <input type="text" class="form-control" id="tax32rate" name="tax32rate" value="207.00" style="float:left; width:30%;">
                                                                 <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                                             </div>
                                                         </div>
@@ -958,7 +958,7 @@
                                                                 <span style="float:left;">R&nbsp;</span>
                                                                 <input type="text" class="form-control transactionView" id="tax36cost" name="tax36cost" value="0" style="float:left; width:55%;" readonly="readonly">
                                                                 <span style="float:left;">&nbsp;×&nbsp;</span>
-                                                                <input type="text" class="form-control" id="tax36rate" name="tax36rate" value="384.50" style="float:left; width:30%;" readonly="readonly">
+                                                                <input type="text" class="form-control" id="tax36rate" name="tax36rate" value="384.50" style="float:left; width:30%;">
                                                                 <span style="float:left;">&nbsp;(cl)&nbsp;</span>
                                                             </div>
                                                         </div>
@@ -1108,10 +1108,10 @@
 
             <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
-                    <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 16px;" autocomplete="off"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button class="btn btn-success btnSave" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-danger btnDelete" type="button" style="margin: 16px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
                     <button class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                    <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 16px;" autocomplete="off"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button class="btn btn-danger btnDelete" type="button" style="margin: 16px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
                     <button class="btn btn-secondary btnBack" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                 </div>
             </div>

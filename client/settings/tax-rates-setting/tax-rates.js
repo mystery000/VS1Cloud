@@ -172,128 +172,6 @@ Template.taxRatesSettings.onRendered(function() {
                     }
 
                     $(".fullScreenSpin").css("display", "none");
-                    setTimeout(function() {
-                        $("#taxRatesList")
-                            .DataTable({
-                                columnDefs: [
-                                    { type: "date", targets: 0 },
-                                    { orderable: false, targets: -1 },
-                                ],
-                                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                                buttons: [{
-                                        extend: 'excelHtml5',
-                                        text: '',
-                                        download: 'open',
-                                        className: "btntabletocsv hiddenColumn",
-                                        filename: "taxratelist_" + moment().format(),
-                                        orientation: 'portrait',
-                                        exportOptions: {
-                                            columns: ":visible",
-                                        },
-                                    },
-                                    {
-                                        extend: "print",
-                                        download: "open",
-                                        className: "btntabletopdf hiddenColumn",
-                                        text: "",
-                                        title: "Tax Rate List",
-                                        filename: "taxratelist_" + moment().format(),
-                                        exportOptions: {
-                                            columns: ":visible",
-                                        },
-                                        // bStateSave: true,
-                                        // rowId: 0,
-                                        // pageLength: 25,
-                                        paging: false,
-                                        //                      "scrollY": "400px",
-                                        //                      "scrollCollapse": true,
-                                        info: true,
-                                        responsive: true,
-                                        "order": [
-                                            [0, "asc"]
-                                        ],
-                                        action: function() {
-                                            $('#taxRatesList').DataTable().ajax.reload();
-                                        },
-                                    },
-                                    {
-                                        extend: "print",
-                                        download: "open",
-                                        className: "btntabletopdf hiddenColumn",
-                                        text: "",
-                                        title: "Tax Rate List",
-                                        filename: "taxratelist_" + moment().format(),
-                                        exportOptions: {
-                                            columns: ":visible",
-                                        },
-                                    },
-                                ],
-                                select: true,
-                                destroy: true,
-                                // colReorder: true,
-                                colReorder: {
-                                    fixedColumnsRight: 1,
-                                },
-                                // bStateSave: true,
-                                // rowId: 0,
-                                // pageLength: 25,
-                                paging: false,
-                                //                    "scrollY": "400px",
-                                //                    "scrollCollapse": true,
-                                info: true,
-                                responsive: true,
-                                order: [
-                                    [0, "asc"]
-                                ],
-                                action: function() {
-                                    $("#taxRatesList").DataTable().ajax.reload();
-                                },
-                                fnDrawCallback: function(oSettings) {
-                                    setTimeout(function() {
-                                        MakeNegative();
-                                    }, 100);
-                                },
-                            })
-                            .on("page", function() {
-                                setTimeout(function() {
-                                    MakeNegative();
-                                }, 100);
-                                let draftRecord = templateObject.datatablerecords.get();
-                                templateObject.datatablerecords.set(draftRecord);
-                            })
-                            .on("column-reorder", function() {})
-                            .on("length.dt", function(e, settings, len) {
-                                setTimeout(function() {
-                                    MakeNegative();
-                                }, 100);
-                            });
-
-                        // $('#taxRatesList').DataTable().column( 0 ).visible( true );
-                        $(".fullScreenSpin").css("display", "none");
-                    }, 0);
-
-                    var columns = $("#taxRatesList th");
-                    let sWidth = "";
-                    let columVisible = false;
-                    $.each(columns, function(i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if (v.className.includes("hiddenColumn")) {
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace("px", "");
-
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || "",
-                            sWidth: sWidth || "",
-                            sIndex: v.cellIndex || "",
-                            sVisible: columVisible || false,
-                            sClass: v.className || "",
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
                 }).catch(function(err) {
@@ -358,100 +236,6 @@ Template.taxRatesSettings.onRendered(function() {
                 }
 
                 $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#taxRatesList').DataTable({
-                        columnDefs: [
-                            { type: 'date', targets: 0 },
-                            { "orderable": false, "targets": -1 }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "taxratelist_" + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Tax Rate List',
-                            filename: "taxratelist_" + moment().format(),
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }],
-                        select: true,
-                        destroy: true,
-                        // colReorder: true,
-                        colReorder: {
-                            fixedColumnsRight: 1
-                        },
-                        // bStateSave: true,
-                        // rowId: 0,
-                        // pageLength: 25,
-                        paging: false,
-                        //          "scrollY": "400px",
-                        //          "scrollCollapse": true,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        action: function() {
-                            $('#taxRatesList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-
-                    // $('#taxRatesList').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-
-                var columns = $('#taxRatesList th');
-                let sWidth = "";
-                let columVisible = false;
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
             }
@@ -512,104 +296,7 @@ Template.taxRatesSettings.onRendered(function() {
                 }
 
                 $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#taxRatesList').DataTable({
-                        columnDefs: [
-                            { type: 'date', targets: 0 },
-                            { "orderable": false, "targets": -1 }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "taxratelist_" + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Tax Rate List',
-                            filename: "taxratelist_" + moment().format(),
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        }],
-                        select: true,
-                        destroy: true,
-                        // colReorder: true,
-                        colReorder: {
-                            fixedColumnsRight: 1
-                        },
-                        // bStateSave: true,
-                        // rowId: 0,
-                        // pageLength: 25,
-                        paging: false,
-                        //                    "scrollY": "400px",
-                        //                    "scrollCollapse": true,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        action: function() {
-                            $('#taxRatesList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-
-                    // $('#taxRatesList').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-
-                var columns = $('#taxRatesList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
+               
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
 
@@ -645,7 +332,6 @@ Template.taxRatesSettings.onRendered(function() {
     templateObject.getSubTaxCodes = function() {
 
         let subTaxTableList = [];
-
         getVS1Data('TSubTaxVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
                 taxRateService.getSubTaxCode().then(function(data) {
@@ -706,23 +392,17 @@ Template.taxRatesSettings.onRendered(function() {
         $('#deleteLineModal').modal('toggle');
     });
 
-    $('#taxRatesList tbody').on('click', 'tr .colName, tr .colDescription, tr .colRate', function() {
+    $('#taxRatesList tbody').on('click', 'tr td.colTaxRateName , tr td.colTaxRateDesc, tr td.colTaxRate', function() {
         var listData = $(this).closest('tr').attr('id');
+        console.log(listData)
 
         if (listData) {
             $('#add-tax-title').text('Edit Tax Rate');
             $('#edtTaxName').prop('readonly', true);
             if (listData !== '') {
                 listData = Number(listData);
-                //taxRateService.getOneTaxRate(listData).then(function (data) {
-
                 var taxid = listData || '';
                 let tax = templateObject.datatablerecords.get().find((v) => String(v.id) === String(taxid));
-
-                // var taxname = tr.find(".colName").text() || "";
-                // var taxDesc = tr.find(".colDescription").text() || "";
-                // var taxRate = tr.find(".colRate").text().replace("%", "") || "0";
-                //data.fields.Rate || '';
 
                 $("#edtTaxID").val(tax.id);
                 $("#edtTaxName").val(tax.codename);
@@ -740,8 +420,6 @@ Template.taxRatesSettings.onRendered(function() {
                     Description: v.Description
                 }));
                 templateObject.subtaxlines.set(subTaxLines);
-
-                //});
 
                 $("#addNewTaxRate").modal("toggle");
             }
