@@ -15,7 +15,7 @@
                             <h3>Recent Transactions</h3>
                             <!-- {{>recentTransactionTable productID=productID type="Sales Order"}} -->
                             {{#if productID}}
-                            {{>non_transactional_list tablename="productrecentlist" type="Sales Order" productID = productID}}
+                            {{>transaction_list tablename="productrecentlist" type="Sales Order" productID = productID}}
                             {{/if}}
                         </div>
                     </div>

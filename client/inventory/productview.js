@@ -475,7 +475,7 @@ Template.productview.onRendered(function () {
     setTimeout(() => {
       $(".bin-number").editableSelect();
       $(".bin-number").editableSelect().on("click.editable-select", clickBinNumber);
-    }, 1000);
+    }, 100);
   };
 
   templateObject.setEditableSelect = async function (data) {

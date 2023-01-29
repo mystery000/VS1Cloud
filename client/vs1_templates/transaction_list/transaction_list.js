@@ -42,8 +42,6 @@ Template.transaction_list.onCreated(function() {
     templateObject.trans_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.tablename = new ReactiveVar();
-    templateObject.currentproductID = new ReactiveVar();
-    templateObject.currenttype = new ReactiveVar();
 });
 
 Template.transaction_list.onRendered(function() {
@@ -56,6 +54,13 @@ Template.transaction_list.onRendered(function() {
     const lineCustomerItems = [];
     const dataTableList = [];
     const tableHeaderList = [];
+    var url = FlowRouter.current().path;
+    let currenttablename = templateObject.data.tablename || "";
+    templateObject.tablename.set(currenttablename);
+    let currentProductID = templateObject.data.productID || "";
+    let currentType = templateObject.data.type || "";
+
+
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
@@ -75,19 +80,6 @@ Template.transaction_list.onRendered(function() {
 
         });
     };
-
-    var url = FlowRouter.current().path;
-    let currenttablename = templateObject.data.tablename || "";
-
-
-    templateObject.tablename.set(currenttablename);
-    let currentproductID = templateObject.data.productID || "";
-    templateObject.currentproductID.set(currentproductID);
-    let currenttype = templateObject.data.type || "";
-    templateObject.currenttype.set(currenttype);
-
-
-
     // set initial table rest_data
     templateObject.init_reset_data = function() {
         let reset_data = [];
@@ -195,6 +187,16 @@ Template.transaction_list.onRendered(function() {
                 { index: 6, label: "Product", class: "colProductName", width: "120", active: true, display: true },
                 { index: 7, label: "Amount", class: "colAmount", width: "80", active: true, display: true },
                 { index: 8, label: "Comments", class: "colComment", width: "", active: true, display: true },
+            ];
+        } else if(currenttablename == 'productrecentlist') {
+            reset_data = [
+                { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
+                { index: 0, label: "Date", class: "Date", active: true, display: true, width: "80" },
+                { index: 1, label: "Type", class: "Type", active: true, display: true, width: "130" },
+                { index: 2, label: "Ref", class: "Ref", active: true, display: true, width: "30" },
+                { index: 3, label: "Qty", class: "Qty", active: true, display: true, width: "30" },
+                { index: 4, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
+                { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
             ];
         }
 
@@ -3117,6 +3119,260 @@ Template.transaction_list.onRendered(function() {
         })
     }
 
+    templateObject.getAllProductRecentTransactions = async function (deptname) {
+      getVS1Data("T_VS1_Report_Productmovement").then(function (dataObject) {
+        let need_API = true;
+        if (dataObject.length > 0) {
+          let data = JSON.parse(dataObject[0].data);
+          for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+            let data_productID = data.t_vs1_report_productmovement[i].ProductID;
+            if (parseInt(currentProductID) == data_productID) {
+              need_API = false;
+              break;
+            }
+          }
+        }
+        if (currentProductID) {
+          if (need_API) {
+            productService.getProductRecentTransactionsAll(currentProductID).then(function (data) {
+              addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
+              templateObject.displayAllProductRecentTransactions(data, deptname);
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            templateObject.displayAllProductRecentTransactions(data, deptname);
+          }
+        }
+      });
+    };
+    templateObject.displayAllProductRecentTransactions = function (data, deptname) {
+      let recentTransList = new Array();
+      for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+        if (
+          parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID &&
+          (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)
+        ) {
+          let recentTranObject = [
+            data.t_vs1_report_productmovement[i].TransactionNo,
+            data.t_vs1_report_productmovement[i].TransactionDate != ""
+              ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY")
+              : data.t_vs1_report_productmovement[i].TransactionDate,
+            data.t_vs1_report_productmovement[i].TranstypeDesc,
+            data.t_vs1_report_productmovement[i].TransactionNo,
+            data.t_vs1_report_productmovement[i].Qty,
+            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
+          ];
+          recentTransList.push(recentTranObject);
+        }
+      }
+      let columnData = [];
+      let displayfields = templateObject.trans_displayfields.get();
+      if (displayfields.length > 0) {
+        displayfields.forEach(function (item, index) {
+          if (index === 0) {
+            columnData.push({
+              className: item.active ?  `col${item.class}` : `col${item.class} hiddenColumn`,
+              targets: [item.id],
+              createdCell: function (td, cellData, rowData, row, col) {
+                $(td).closest("tr").attr("id", rowData[3]);
+                $(td).closest("tr").addClass("dnd-moved");
+              },
+            });
+          } else {
+            columnData.push({
+              className: item.active ?  `col${item.class}` : `col${item.class} hiddenColumn`,
+              targets: [item.id],
+            });
+          }
+        });
+      }
+      templateObject.transactiondatatablerecords.set(recentTransList);
+      let currenttablename = templateObject.tablename.get();
+      setTimeout(function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        $("#" + currenttablename)
+          .DataTable({
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            data: recentTransList,
+            columnDefs: columnData,
+            select: true,
+            destroy: true,
+            colReorder: true,
+            // bStateSave: true,
+            // rowId: 0,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+              [initialDatatableLoad, -1],
+              [initialDatatableLoad, "All"],
+            ],
+            info: true,
+            responsive: true,
+            order: [
+              [0, "desc"],
+              [3, "desc"],
+            ],
+            action: function () {
+              $("#productrecentlist").DataTable().ajax.reload();
+            },
+            fnDrawCallback: function (oSettings) {
+              let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+              //if(checkurlIgnoreDate == 'true'){
+
+              //}else{
+              $(".paginate_button.page-item").removeClass("disabled");
+              $("#tblPaymentOverview_ellipsis").addClass("disabled");
+
+              if (oSettings._iDisplayLength == -1) {
+                if (oSettings.fnRecordsDisplay() > 150) {
+                  $(".paginate_button.page-item.previous").addClass("disabled");
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+              } else {
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                $(".paginate_button.page-item.next").addClass("disabled");
+              }
+              $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = oSettings._iDisplayLength;
+
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                let formatDateFrom =
+                  dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                if (data.Params.IgnoreDates == true) {
+                  sideBarService
+                    .getTPaymentList(
+                      formatDateFrom,
+                      formatDateTo,
+                      true,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay(),
+                      viewdeleted
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TPaymentList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(dataObjectold[0].data);
+                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tpaymentlist: thirdaryData,
+                            };
+
+                            addVS1Data("TPaymentList", JSON.stringify(objCombineData))
+                              .then(function (datareturn) {
+                                templateObject.resetData(objCombineData);
+                                $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                } else {
+                  sideBarService
+                    .getTPaymentList(
+                      formatDateFrom,
+                      formatDateTo,
+                      false,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay(),
+                      viewdeleted
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TPaymentList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(dataObjectold[0].data);
+                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tpaymentlist: thirdaryData,
+                            };
+
+                            addVS1Data("TPaymentList", JSON.stringify(objCombineData))
+                              .then(function (datareturn) {
+                                templateObject.resetData(objCombineData);
+                                $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              });
+
+              //}
+              setTimeout(function () {
+                // MakeNegative();
+              }, 100);
+            },
+          })
+          .on("page", function () {})
+          .on("column-reorder", function () {});
+        $("div.dataTables_filter input").addClass("form-control form-control-sm");
+        $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+      $("#productrecentlist tbody").on("click", "tr", function () {
+        var listData = $(this).closest("tr").attr("id");
+        var transactiontype = $(event.target).closest("tr").find(".colRef").text();
+
+        if (listData && transactiontype) {
+          if (transactiontype === "Quote") {
+            window.open("/quotecard?id=" + listData, "_self");
+          } else if (transactiontype === "Sales Order") {
+            window.open("/salesordercard?id=" + listData, "_self");
+          } else if (transactiontype === "Invoice") {
+            window.open("/invoicecard?id=" + listData, "_self");
+          } else if (transactiontype === "Purchase Order") {
+            window.open("/purchaseordercard?id=" + listData, "_self");
+          } else if (transactiontype === "Bill") {
+            //window.open('/billcard?id=' + listData,'_self');
+          } else if (transactiontype === "Credit") {
+            //window.open('/creditcard?id=' + listData,'_self');
+          }
+        }
+      });
+
+      // $('.product_recent_trans').css('display', 'block');
+      // $([document.documentElement, document.body]).animate({
+      //     scrollTop: $(".product_recent_trans").offset().top
+      // }, 2000);
+      $(".fullScreenSpin").css("display", "none");
+      // }).catch(function(err) {
+
+      //     $('.fullScreenSpin').css('display', 'none');
+      //     $('.product_recent_trans').css('display', 'block');
+      //     $([document.documentElement, document.body]).animate({
+      //         scrollTop: $(".product_recent_trans").offset().top
+      //     }, 2000);
+
+      //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
+      // });
+      // });
+      // Meteor.render(Template.non_transactional_list);
+      // templateObject.getAllProductRecentTransactions(currenttype);
+    };
+
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
     let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
@@ -3147,6 +3403,8 @@ Template.transaction_list.onRendered(function() {
         templateObject.getAllAppointmentListData();
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
+    } else if (currenttablename === 'productrecentlist') {
+        templateObject.getAllProductRecentTransactions(currentType);
     }
     tableResize();
 
