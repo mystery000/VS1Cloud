@@ -1905,11 +1905,11 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "false";
     }
 
-    object_invoce[0]["fields"][abnString] = [15, 'left', true]
-    object_invoce[0]["fields"][repString] = [15, 'left', true]
-    object_invoce[0]["fields"][custOrderString] = [15, 'left', true]
-    object_invoce[0]["fields"][dateString] = [15, 'left', true]
-    object_invoce[0]["fields"][dueDateString] = [15, 'left', true]
+    object_invoce[0]["fields"][abnString] = ['', 'left', true]
+    object_invoce[0]["fields"][repString] = ['', 'left', true]
+    object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
+    object_invoce[0]["fields"][dateString] = ['', 'left', true]
+    object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
 
     await templateObject.print_displayfields.set(object_invoce[0]['fields']);
   }
@@ -1934,10 +1934,10 @@ Template.templatesettings.onRendered(function () {
     let reference = "Reference"
     let dueDate = "Due Date"
 
-    object_invoce[0]["fields"][invoiceDate] = [15, 'left', true]
-    object_invoce[0]["fields"][invoiceNumber] = [15, 'left', true]
-    object_invoce[0]["fields"][reference] = [15, 'left', true]
-    object_invoce[0]["fields"][dueDate] = [15, 'left', true]
+    object_invoce[0]["fields"][invoiceDate] = ['', 'left', true]
+    object_invoce[0]["fields"][invoiceNumber] = ['', 'left', true]
+    object_invoce[0]["fields"][reference] = ['', 'left', true]
+    object_invoce[0]["fields"][dueDate] = ['', 'left', true]
 
     await templateObject.print_displayfields.set(object_invoce[0]['fields']);
 
@@ -1964,11 +1964,11 @@ Template.templatesettings.onRendered(function () {
     let amountDue = "AMOUNT DUE"
     let dueDate = "Due Date"
 
-    object_invoce[0]["fields"][invoiceNumber] = [15, 'left', true]
-    object_invoce[0]["fields"][proReference] = [15, 'left', true]
-    object_invoce[0]["fields"][accountNumber] = [15, 'left', true]
-    object_invoce[0]["fields"][amountDue] = [15, 'left', true]
-    object_invoce[0]["fields"][dueDate] = [15, 'left', true]
+    object_invoce[0]["fields"][invoiceNumber] = ['', 'left', true]
+    object_invoce[0]["fields"][proReference] = ['', 'left', true]
+    object_invoce[0]["fields"][accountNumber] = ['', 'left', true]
+    object_invoce[0]["fields"][amountDue] = ['', 'left', true]
+    object_invoce[0]["fields"][dueDate] = ['', 'left', true]
 
     await templateObject.print_displayfields.set(object_invoce[0]['fields']);
   }

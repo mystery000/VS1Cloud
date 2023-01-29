@@ -70,11 +70,20 @@
                                   {{#each arrayify print_displayfields}}
                                     <div class="columnSettings displaySettings">
                                         <div class="custom-control custom-switch" style="margin: 8px; ">
-                                            <input class="custom-control-input chkDatatable" type="checkbox" id="formCheck-{{name}}" onclick="myFunc(this)" checked="{{value.[2]}}">
+                                            <input class="custom-control-input chkDatatable" name="front" type="checkbox" id="formCheck-{{name}}" data-displaysetting-type="front{{value.[0]}}" onclick="showOrHidden(this)" checked="{{value.[2]}}">
                                             <label class="custom-control-label" for="formCheck-{{name}}">
                                                 {{name}}
                                             </label>
-                                            <div contenteditable="true" class="groove divcolumn" type="text"></div>
+
+                                            <input type="checkbox" name="end" id="{{value.[0]}}new" style="margin: 5px !important; float: right; display: none;" data-display-type="end{{value.[0]}}" onchange="grid_main(this)" checked="true">
+                                            <label style="float: right" for="{{value.[0]}}new">
+                                                {{#if equals value.[0] ''}}
+                                                    Main
+                                                {{else}}
+                                                    Grid
+                                                {{/if}}
+                                            </label>
+                                            <div contenteditable="false" class="groove divcolumn" type="text"></div>
                                         </div>
                                     </div>
                                   {{/each}}
@@ -132,7 +141,7 @@
             input.click();
         }
 
-        function myFunc(e) {
+        function showOrHidden(e) {
             let className = e.id
 
             if(className.includes(' ') != -1) {
@@ -147,6 +156,27 @@
             } else {
                 for(var i=0;i<all_col.length;i++) {
                     all_col[i].style.display="table-cell";
+                }
+            }
+        }
+
+        function grid_main(e) {
+            let all_chk_f = document.querySelectorAll('input[name="front"]')
+            if(e.id == 'new') {
+                for(var i=0;i<all_chk_f.length;i++) {
+                    if (all_chk_f[i].getAttribute("data-displaysetting-type") == 'front') {
+                        all_chk_f[i].disabled = false
+                    } else {
+                        all_chk_f[i].disabled = true
+                    }
+                }
+            } else {
+                for(var i=0;i<all_chk_f.length;i++) {
+                    if (all_chk_f[i].getAttribute("data-displaysetting-type") == 'front') {
+                        all_chk_f[i].disabled = true
+                    } else {
+                        all_chk_f[i].disabled = false
+                    }
                 }
             }
         }
