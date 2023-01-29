@@ -102,6 +102,10 @@ let chartsPlaceList = {
         "crmleadchart",
         "resalescomparision"
     ],
+
+    "All_Charts" :[
+        "",
+    ],
 };
 
 let sideBarService = new SideBarService();
@@ -820,6 +824,7 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
+        if(current == 'All_Charts') return 1;
         return chartsPlaceList[current].includes(chart);
         // return 1;
     },
