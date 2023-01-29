@@ -913,14 +913,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
-    templateObject.getSerialNumbersData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+    templateObject.getSerialNumbersData = async function(productname = "") { //GET Data here from Web API or IndexDB
         let dataTableList = [];
         getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
                     addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
                     for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-                        if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        if(productname == data.tserialnumberlistcurrentreport[i].ProductName && data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
                             dataTableList.push(data.tserialnumberlistcurrentreport[i]);
                         }
                     }
@@ -931,7 +931,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-                    if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                    if(productname == data.tserialnumberlistcurrentreport[i].ProductName && data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
                         dataTableList.push(data.tserialnumberlistcurrentreport[i]);
                     }
                 }
@@ -941,7 +941,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             sideBarService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
                 addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-                    if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                    if(productname == data.tserialnumberlistcurrentreport[i].ProductName && data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
                         dataTableList.push(data.tserialnumberlistcurrentreport[i]);
                     }
                 }
@@ -955,20 +955,18 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let deleteFilter = false;
         let chkBox;
         
-        console.log("===========", data);
-        
         for (let i = 0; i < data.length; i++) {
             let mobile = "";
             let linestatus = '';
             let deptFName = '';
-            if (data[i].Active == true) {
-                linestatus = "";
-            } else if (data[i].Active == false) {
-                linestatus = "In-Active";
-            };
+            // if (data[i].Active == true) {
+            //     linestatus = "";
+            // } else if (data[i].Active == false) {
+            //     linestatus = "In-Active";
+            // };
 
-            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
-                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tdeptclasslist[i].ClassID +
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data[i].SerialNumber +
+                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data[i].SerialNumber +
                 '"></label></div>'; //switchbox
 
             var dataList = [
@@ -996,12 +994,12 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         targets: 0,
                         className: "colChkBox pointer",
                         orderable: false,
-                        width: "15px",
+                        // width: "50px",
                     },
                     {
                         targets: 1,
                         className: "colID hiddenColumn",
-                        width: "10px",
+                        // width: "10px",
                         createdCell: function(td, cellData, rowData, row, col) {
                             $(td).closest("tr").attr("id", rowData[1]);
                         }
@@ -1009,7 +1007,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     {
                         targets: 2,
                         className: "colSN",
-                        width: "200px",
+                        // width: "200px",
                     },                    
                 ],
                 select: true,
@@ -1078,7 +1076,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     checkBoxClickByName();
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = data.length || 0; //get count from API data
 
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
@@ -1570,6 +1568,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         templateObject.getSerialNumbersData();
     }
     tableResize();
+
+    $(document).on("focusout", ".lineShipped", function(e) {
+        if (currenttablename === "tblAvailableSNCheckbox") {            
+            var target = e.target;
+            let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
+            templateObject.getSerialNumbersData(selectedProductName);
+        }
+    });
 });
 
 Template.internal_transaction_list_with_switchbox.events({

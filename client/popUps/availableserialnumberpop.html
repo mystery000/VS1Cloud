@@ -1,6 +1,6 @@
 <template name="availableserialnumberpop">
 
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <style>
                 .tblAvailableSNlist{
@@ -37,15 +37,21 @@
                             <tbody>
                             </tbody>
                         </table> -->
+                        <style>
+                            #tblAvailableSNCheckbox .colChkBox{
+                                width: 40px!important
+                            }
+                            #tblAvailableSNCheckbox .colSN{
+                                width: 85%!important
+                            }
+                        </style>                        
                         {{> internal_transaction_list_with_switchbox tablename="tblAvailableSNCheckbox" }}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex w-100 justify-content-between">
-                    <button class="btn btn-success btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
-                </div>
+                <button class="btn btn-success btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i>Save</button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
             </div>
         </div>
     </div>
