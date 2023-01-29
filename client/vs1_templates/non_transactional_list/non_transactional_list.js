@@ -5574,7 +5574,8 @@ Template.non_transactional_list.onRendered(function() {
       } else {
         deleteFilter = false;
       }
-
+      if (!data.tunitofmeasurelist && data.tunitofmeasure) data.tunitofmeasurelist = data.tunitofmeasure
+      if (!data.Params) data.Params = {Search: ""}
       for (let i = 0; i < data.tunitofmeasurelist.length; i++) {
         let mobile = "";
         let linestatus = "";

@@ -391,6 +391,8 @@ import './inventory/departmentModal/departmentModal.js';
 import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 
+import './settings/inventory-setting/inventorySettings.js';
+
 /* Martin */
 
 /* AlexV */

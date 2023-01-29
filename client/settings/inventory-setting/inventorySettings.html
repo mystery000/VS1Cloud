@@ -1,0 +1,172 @@
+<template name="inventorySettings">
+  <div class="container-fluid">
+    <div class="fullScreenSpin" style="display: none">
+      <div class="spinner"></div>
+    </div>
+    <div class="row">
+      <div class="col-12 col-md-4">
+        <h3 class="text-dark mb-4">Inventory Settings</h3>
+      </div>
+      <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+    </div>
+    <div class="row justify-content-center mb-3">
+      <div class="col-12 col-md-6">
+        <div class="card shadow mb-3">
+          <div class="card-header py-3" style="background-color: rgb(248, 249, 252)">
+            <div align="left">
+              <p class="text-primary m-0 font-weight-bold">Inventory Settings {{> helpbutton}}</p>
+              {{> help_modal}}
+            </div>
+          </div>
+          <div class="card-body">
+            <form class="form-inline">
+              <div class="row">
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default "Sales Account"</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="salesacount"
+                    name="salesacount"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="Sales"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “Sales Tax Code”</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="salestaxcode"
+                    name="salestaxcode"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="GST"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “COGS Account”</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="cogsaccount"
+                    name="cogsaccount"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="Cost of Goods Sold"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “Purchase Tax Code”</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="purchasetaxcode"
+                    name="purchasetaxcode"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="NCG"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “Inventory Account”</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="inventoryaccount"
+                    name="inventoryaccount"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="Inventory Asset"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “Department”</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="defaultdepartment"
+                    name="defaultdepartment"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="Default"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “Unit Of Measure”</label>
+                  <select
+                    type="search"
+                    class="form-control"
+                    id="defaultuom"
+                    name="defaultuom"
+                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                    value="Each"
+                  ></select>
+                </div>
+                <div class="form-group col p-3 justify-content-around">
+                  <label>Default “Markup”</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="defaultmarkup"
+                      name="defaultmarkup"
+                      style="background-color: rgb(255, 255, 255); cursor: pointer"
+                      value="40"
+                    />
+                    <div class="input-group-append">
+                      <span class="input-group-text">%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="justify-content-around my-2 row w-100">
+                <button
+                  class="btn btn-success float-left"
+                  type="button"
+                  id="saveInventorySettings"
+                  name="saveInventorySettings"
+                  style="margin-right: 8px"
+                >
+                  <i class="fa fa-save" style="margin-right: 8px"></i>Save
+                </button>
+                <button class="btn btn-secondary float-right btnBack" type="button">
+                  <i class="fa fa-close" style="margin-right: 8px"></i>Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start Help Video Modal -->
+  <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+    <div class="modal-dialog" role="document" style="max-width: 670px !important">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="title-header">Inventory Settings</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+          <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
+          <video
+            preload="none"
+            id="myVideo"
+            width="640"
+            height="360"
+            controls=""
+            name="media"
+            style="border: solid 5px #999999f0; height: auto; outline: none"
+          >
+            <source src="https://erphelpes.com/vs1videos/organizationdetails.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Help Video Modal -->
+  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">{{> addaccountpop}}</div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">{{> accountlistpop}}</div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">{{> taxratelistpop}}</div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">{{> newtaxratepop}}</div>
+</template>
