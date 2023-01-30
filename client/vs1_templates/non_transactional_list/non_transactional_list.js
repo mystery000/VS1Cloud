@@ -582,8 +582,8 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename == "tblUOMList") { //Do Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colUOMID', active: false, display: true, width: "10" },
-                { index: 1, label: 'Unit Name', class: 'colUOMName', active: true, display: true, width: "200" },
-                { index: 2, label: 'Description', class: 'colUOMDesc', active: true, display: true, width: "" },
+                { index: 1, label: 'Unit Name', class: 'colUOMName', active: true, display: true, width: "100" },
+                { index: 2, label: 'Description', class: 'colUOMDesc', active: true, display: true, width: "200" },
                 { index: 3, label: 'Product Name', class: 'colUOMProduct', active: false, display: true, width: "250" },
                 { index: 4, label: 'Base Unit Name', class: 'colUOMBaseUnitName', active: false, display: true, width: "150" },
                 { index: 5, label: 'Base Unit ID', class: 'colUOMBaseUnitID', active: false, display: true, width: "100" },
@@ -5582,88 +5582,86 @@ Template.non_transactional_list.onRendered(function() {
         let tdCustomerDef = ""; //isSalesdefault
         let tdSupplierDef = ""; //isPurchasedefault
         let tdUseforAutoSplitQtyinSales = ""; //UseforAutoSplitQtyinSales
-        if (data.tunitofmeasurelist[i].Active == true) {
+        let currentData = data.tunitofmeasurelist[i].fields
+        if (currentData.Active == true) {
           linestatus = "";
-        } else if (data.tunitofmeasurelist[i].Active == false) {
+        } else if (currentData.Active == false) {
           linestatus = "In-Active";
         }
 
         //Check if Sales defaultis checked
-        if (data.tunitofmeasurelist[i].SalesDefault == true) {
+        if (currentData.SalesDefault == true) {
           tdSupplierDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '" checked><label class="custom-control-label chkBox" for="swtSalesDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"></label></div>';
         } else {
           tdSupplierDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"><label class="custom-control-label chkBox" for="swtSalesDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"></label></div>';
         }
         //Check if Purchase default is checked
-        if (data.tunitofmeasurelist[i].PurchasesDefault == true) {
+        if (currentData.PurchasesDefault == true) {
           tdPurchaseDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"></label></div>';
         } else {
           tdPurchaseDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"></label></div>';
         }
 
         //Check if UseforAutoSplitQtyinSales is checked
-        if (data.tunitofmeasurelist[i].UseforAutoSplitQtyinSales == true) {
+        if (currentData.UseforAutoSplitQtyinSales == true) {
           tdUseforAutoSplitQtyinSales =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"></label></div>';
         } else {
           tdUseforAutoSplitQtyinSales =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            data.tunitofmeasurelist[i].ID +
+            currentData.ID +
             '"></label></div>';
         }
 
         var dataList = [
-          data.tunitofmeasurelist[i].ID || "",
-          data.tunitofmeasurelist[i].UnitName || "",
-          data.tunitofmeasurelist[i].UnitDescription || "",
-          data.tunitofmeasurelist[i].UnitProductKeyName || "",
-          data.tunitofmeasurelist[i].BaseUnitName || "",
-          data.tunitofmeasurelist[i].BaseUnitID || "",
-          data.tunitofmeasurelist[i].PartID || "",
-          data.tunitofmeasurelist[i].Multiplier || 0,
+          currentData.ID || "",
+          currentData.UOMName || "",
+          currentData.UnitDescription || "",
+          currentData.UnitProductKeyName || "",
+          currentData.BaseUnitName || "",
+          currentData.BaseUnitID || "",
+          currentData.PartID || "",
+          currentData.Multiplier || 0,
           tdSupplierDef,
           tdPurchaseDef,
-          data.tunitofmeasurelist[i].Weight || 0,
-          data.tunitofmeasurelist[i].NoOfBoxes || 0,
-          data.tunitofmeasurelist[i].Height || 0,
-          data.tunitofmeasurelist[i].Width || 0,
-          data.tunitofmeasurelist[i].Length || 0,
-          data.tunitofmeasurelist[i].Volume || 0,
+          currentData.Weight || 0,
+          currentData.NoOfBoxes || 0,
+          currentData.Height || 0,
+          currentData.Width || 0,
+          currentData.Length || 0,
+          currentData.Volume || 0,
           linestatus,
           tdUseforAutoSplitQtyinSales,
         ];
         splashArrayUOMList.push(dataList);
         templateObject.transactiondatatablerecords.set(splashArrayUOMList);
       }
-
-
-
       if (templateObject.transactiondatatablerecords.get()) {
         setTimeout(function () {
           MakeNegative();
@@ -5830,7 +5828,6 @@ Template.non_transactional_list.onRendered(function() {
                         linestatus,
                         tdUseforAutoSplitQtyinSales,
                       ];
-
                       splashArrayUOMList.push(dataListDupp);
                     }
 
