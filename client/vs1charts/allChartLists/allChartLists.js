@@ -144,6 +144,7 @@ Template.allChartLists.onRendered(function() {
     const templateObject = Template.instance();
     _tabGroup = $("#connectedSortable").data("tabgroup");
     _chartGroup = $("#connectedSortable").data("chartgroup");
+    templateObject.tooltip = new ReactiveVar();
 
     templateObject.hideChartElements = () => {
         const dimmedElements = document.getElementsByClassName("dimmedChart");
@@ -589,9 +590,19 @@ Template.allChartLists.events({
             Meteor._reload.reload();
         }, delayTimeAfterSound);
     },
+    "hover .defaultDatatable": (e) => {
+        let templateObject = Template.instance();
+        if($(e.target).is(":checked"))
+            templateObject.tooltip = "Hide";
+        else
+            templateObject.tooltip = "Show";
+    },
 });
 
 Template.allChartLists.helpers({
+    tooltip: () => {        
+        return Template.instance().tooltip.get();
+    },
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;

@@ -27,11 +27,19 @@
     card-key="{{cardKey}}">
         <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
-            <div class="hideShowDiv custom-control custom-switch">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+            <div class="hideShowDiv custom-control custom-switch " style="display: inline-flex; justify-content: right;">
+                {{!-- <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a> --}}
+                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Turn this on as a default chart when reset is selected" style="float: right">
+                        <input class="custom-control-input defaultDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch2-{{cardKey}}" >
+                        <label class="custom-control-label hideelement" for="switch2-{{cardKey}}"></label>
+                    </div>
+                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Display this chart" style="float: right">
+                        <input class="custom-control-input chkDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{cardKey}}">
+                        <label class="custom-control-label hideelement" for="switch1-{{cardKey}}"></label>
+                    </div>
                 {{!-- <input class="custom-control-input chkDatatable cardShowBtn hideelement" type="checkbox" id="switch-" style="margin-top: 0px !important;"> --}}
                 {{!-- <label class="custom-control-label cardShowBtn hideelement" for="switch-"></label> --}}
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn" style="float: right;"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body {{actionClass}}" style="cursor: pointer;">
                 {{> Template.contentBlock}}
@@ -40,11 +48,6 @@
     </div>
 
     <style>
-
-        .custom-control-input {
-            left: unset;
-            right: 40px;
-        }
         .card.hovered {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
             cursor: move;
