@@ -1413,6 +1413,12 @@ Template.generalledger.events({
       }, 100);
     }, delayTimeAfterSound);
   },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Generalledger report result" + ".xlsx";
+    utilityService.exportReportToXLSX("tableExport", filename, "xlsx");
+  },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let utilityService = new UtilityService();

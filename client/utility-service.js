@@ -159,6 +159,20 @@ const XLSX = require("xlsx");
 
 (function ($) {
     $.fn.extend({
+        download: async function(uri, name) {
+            const link = document.createElement("a");
+            link.download = name;
+            const data = await fetch(uri).then((res) => res.blob())
+            link.href = window.URL.createObjectURL(
+                new Blob([data], { type: 'application/xlsx' })
+            );
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(link.href);
+        },
+        tableToSpreadSheet: async function (options) {
+            this.download('downloads/Template FIles/' + options.filename, options.filename);
+        },
         tableToXlsx: async function (options) {
 
             var defaults = {
@@ -249,7 +263,13 @@ export class UtilityService {
         });
         $('.fullScreenSpin').css('display', 'none');
     }
-
+    exportReportToSpreadSheet = function (tableName, filename, type) {
+        $("#" + tableName).tableToSpreadSheet({
+            type: 'xlsx',
+            filename: filename,
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    }
     exportReportToXLSX = function (tableName, filename, type) {
         $("#" + tableName).tableToXlsx({
             type: 'xlsx',
