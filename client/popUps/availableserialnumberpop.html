@@ -44,6 +44,9 @@
                             #tblAvailableSNCheckbox .colSN{
                                 width: 85%!important
                             }
+                            #tblAvailableSNCheckbox .chkBox{
+                                margin: 0px!important
+                            }
                         </style>                        
                         {{> internal_transaction_list_with_switchbox tablename="tblAvailableSNCheckbox" }}
                     </div>
@@ -51,6 +54,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i>Save</button>
+                <button class="btn btn-primary btnSNCreate" type="button" style="display:none"><i class="fa fa-paperclip" style="margin-right: 3px;"></i>Create Serial number</button>
                 <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
             </div>
         </div>
