@@ -201,10 +201,16 @@
                 </div>
                 <div class="modal-body">
                     <style>
-                        input[type="checkbox"]{
+                        /* input[type="checkbox"]{
+                            margin: 40px!important
+                        } */
+                        #tblDepartmentCheckbox .colChkBox{
+                            width: 40px!important
+                        }
+                        #tblDepartmentCheckbox .chkBox{
                             margin: 0px!important
                         }
-                        #tblDepartmentCheckbox .colDeptName{
+                        /* #tblDepartmentCheckbox .colDeptClassName{
                             width: 25%!important
                         }
                         #tblDepartmentCheckbox .colDescription{
@@ -215,9 +221,10 @@
                         }
                         #tblDepartmentCheckbox .colStatus{
                             width: 20%!important
-                        }
+                        } */
                     </style>
                     <!-- {{> non_transactional_list tablename="tblDepartmentList"}} -->
+                    
                     {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
                 </div>
                 <div class="modal-footer">
