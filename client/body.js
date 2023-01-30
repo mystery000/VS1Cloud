@@ -480,6 +480,7 @@ import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
 import './reports/balancesheet/balancetransactionlist.js';
 import './inventory/serialnumberview.js';
+import './popUps/deleteprogresspopup.js';
 /* Roverto */
 
 /* Kelvin More */

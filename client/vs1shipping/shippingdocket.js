@@ -2848,12 +2848,15 @@ Template.shippingdocket.events({
         cancelButtonText: 'No'
         }).then(async (result) => {
             if (result.value) {
-                $('.fullScreenSpin').css('display', 'inline-block');
                 var url = FlowRouter.current().path;
                 var getso_id = url.split('?id=');
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
                 if (getso_id[1]) {
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var invData = await salesService.getOneInvoicedataEx(currentInvoice);
                     var saleDate = invData.fields.SaleDate;
@@ -2867,6 +2870,7 @@ Template.shippingdocket.events({
                         0
                       );
                     var invList = followingInvoices.tinvoicelist;
+                    var j = 0;
                     for (var i=0; i < invList.length; i++) {
                         var objDetails = {
                             type: "TInvoice",
@@ -2875,11 +2879,16 @@ Template.shippingdocket.events({
                                 Deleted: true
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/stockList.length*j)) + '%').attr('aria-valuenow', ((100/stockList.length*j)));
                         var result = await stockTransferService.saveShippingDocket(objDetails);
                     }
                 }
-                FlowRouter.go('/vs1shipping?success=true');
+                $("#deletecheckmarkwrapper").removeClass('hide');
                 $('.modal-backdrop').css('display', 'none');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
             }
         });
     }, delayTimeAfterSound);
