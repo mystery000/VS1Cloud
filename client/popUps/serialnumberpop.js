@@ -62,7 +62,7 @@ Template.serialnumberpop.events({
                         break;
                     }
                 }
-                if (false) {
+                if (existSameNumber) {
                     swal('', 'One or more than serial numbers already existed! Please try to change serial numbers.', 'error');
                 } else {
                     const rowNumber = $('#serialNumberModal').attr('data-row');
@@ -79,7 +79,7 @@ Template.serialnumberpop.events({
             } else {
                 let existDifferentNumber = false;
                 for (let i = 0; i < newNumberList.length; i++) {
-                    if (!serialNumberList.includes((newNumberList[i]).toString())) {
+                    if (serialNumberList.includes((newNumberList[i]).toString())) {
                         existDifferentNumber = true;
                         break;
                     }

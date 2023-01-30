@@ -386,6 +386,10 @@ import './reconciliation/newreconrule.js';
 import './reconciliation/reconciliation.js';
 import './reconciliation/reconciliationlist.js';
 import './reconciliation/reconrulelist.js';
+import './inventory/departmentModal/departmentModal.js';
+import './inventory/binNumberPopups/addBinNumberPop.js';
+import './inventory/binNumberPopups/binNumberListPop.js';
+import './settings/inventory-setting/inventorySettings.js';
 /* Martin */
 
 /* AlexV */
@@ -479,6 +483,7 @@ import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
 import './reports/balancesheet/balancetransactionlist.js';
 import './inventory/serialnumberview.js';
+import './popUps/deleteprogresspopup.js';
 /* Roverto */
 
 /* Kelvin More */

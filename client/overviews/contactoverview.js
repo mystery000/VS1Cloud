@@ -191,8 +191,33 @@ Template.contactoverview.events({
                             salesOrderBalance = Currency + "0.00";
                         }
 
+                        let linestatus = '';
+                        if (data.terpcombinedcontactsvs1[i].Active == true) {
+                            linestatus = "";
+                        } else if (data.terpcombinedcontactsvs1[i].Active == false) {
+                            linestatus = "In-Active";
+                        };
 
                         var dataList = [
+                            // data.terpcombinedcontactsvs1[i].ID || "",
+                            // data.terpcombinedcontactsvs1[i].name || "",
+                            // clienttype || "",
+                            // data.terpcombinedcontactsvs1[i].phone || "",
+                            // data.terpcombinedcontactsvs1[i].mobile || "",
+                            // arBalance || 0.0,
+                            // creditBalance || 0.0,
+                            // balance || 0.0,
+                            // creditLimit || 0.0,
+                            // salesOrderBalance || 0.0,
+                            // data.terpcombinedcontactsvs1[i].email || "",
+                            // data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
+                            // data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
+                            // data.terpcombinedcontactsvs1[i].street || "",
+                            // data.terpcombinedcontactsvs1[i].suburb || "",
+                            // data.terpcombinedcontactsvs1[i].state || "",
+                            // data.terpcombinedcontactsvs1[i].postcode || "",
+                            // "",
+                            '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.terpcombinedcontactsvs1[i].ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.terpcombinedcontactsvs1[i].ID + '-' + clienttype + '"></label></div>',
                             data.terpcombinedcontactsvs1[i].ID || "",
                             data.terpcombinedcontactsvs1[i].name || "",
                             clienttype || "",
@@ -211,6 +236,7 @@ Template.contactoverview.events({
                             data.terpcombinedcontactsvs1[i].state || "",
                             data.terpcombinedcontactsvs1[i].postcode || "",
                             "",
+                            linestatus,
                         ];
 
 

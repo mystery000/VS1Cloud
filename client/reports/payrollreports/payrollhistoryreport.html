@@ -72,12 +72,13 @@
                     {{#if records}}
                         {{#each arrayify records}}
                             <tr>
-                                <td colspan="7" style="font-weight: 800;">{{ value.EmpName }}</td>
+                                <td colspan="7" style="font-weight: 800;" class="colLastName">{{ value.EmpName }}</td>
                             </tr>
                             {{#each item in value.SubAccounts}}
                                 <tr>
-                                    <td></td>
-                                    <td><a href="{{redirectionType item}}">{{ formatDate item.fields.DatePaid }}</a></td>
+                                    <td class="colLastName"></td>
+                                    <td class="colFirstName"></td>
+                                    <td class=""><a href="{{redirectionType item}}">{{ formatDate item.fields.DatePaid }}</a></td>
                                     <!-- <td class="text-right">{{ formatPrice item.fields.Wages }}</td>
                                     <td class="text-right">{{ formatPrice item.fields.Tax }}</td>
                                     <td class="text-right">{{ formatPrice item.fields.Superannuation }}</td>
@@ -88,79 +89,79 @@
                                         {{#if currencyList}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Wages }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Wages c}}</a></td>
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colWages {{#if isNegativeAmount item.fields.Wages }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Wages c}}</a></td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Tax }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Tax c}}</a></td>
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colTax {{#if isNegativeAmount item.fields.Tax }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Tax c}}</a></td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.fields.Superannuation }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Superannuation c}}</a></td>
+                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colSuperannuation {{#if isNegativeAmount item.fields.Superannuation }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Superannuation c}}</a></td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount item.fields.Gross }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Gross c}}</a></td>
+                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colGross {{#if isNegativeAmount item.fields.Gross }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Gross c}}</a></td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount item.fields.Net }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Net c}}</a></td>
+                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colTax {{#if isNegativeAmount item.fields.Net }} text-danger {{else}} text-success {{/if}}"><a href="{{redirectionType item}}">{{ convertAmount item.fields.Net c}}</a></td>
                                                 {{/if}}
                                             {{/each}}
                                         {{/if}}
                                     {{else}}
-                                        <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Wages }}</a></td>
-                                        <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Tax }}</a></td>
-                                        <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Superannuation }}</a></td>
-                                        <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Gross }}</a></td>
-                                        <td class="text-right"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Net }}</a></td>
+                                        <td class="text-right colWages"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Wages }}</a></td>
+                                        <td class="text-right colTax"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Tax }}</a></td>
+                                        <td class="text-right colSuperannuation"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Superannuation }}</a></td>
+                                        <td class="text-right colGross"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Gross }}</a></td>
+                                        <td class="text-right colNetComb"><a href="{{redirectionType item}}">{{ formatPrice item.fields.Net }}</a></td>
 
                                     {{/if}}
                                 </tr>
                             {{/each}}
                             <tr>
-                                <td colspan="2" style="font-weight: 800;">{{ value.EmpName }} Totals</td>
+                                <td colspan="3" style="font-weight: 800;" class="colLastName">{{ value.EmpName }} Totals</td>
                                 
 
                                 {{#if isOnlyDefaultActive }}
                                         {{#if currencyList}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.TotalWages }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalWages c}}</td>
+                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colWages {{#if isNegativeAmount value.TotalWages }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalWages c}}</td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.TotalTax }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalTax c}}</td>
+                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colTax {{#if isNegativeAmount value.TotalTax }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalTax c}}</td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount value.TotalSuperannuation }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalSuperannuation c}}</td>
+                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colSuperannuation {{#if isNegativeAmount value.TotalSuperannuation }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalSuperannuation c}}</td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount value.TotalGross }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalGross c}}</td>
+                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colGross {{#if isNegativeAmount value.TotalGross }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalGross c}}</td>
                                                 {{/if}}
                                             {{/each}}
                                             {{#each c in currencyList }}
                                                 {{# if c.active}}
-                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right  {{#if isNegativeAmount value.TotalNet  }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalNet  c}}</td>
+                                                    <td style="font-weight: 800;" currency="{{c.code}}" currency-id="{{c.id}}" class="text-right colNetComb {{#if isNegativeAmount value.TotalNet  }} text-danger {{else}} text-success {{/if}}">{{ convertAmount value.TotalNet  c}}</td>
                                                 {{/if}}
                                             {{/each}}
                                         {{/if}}
                                     {{else}}
                                         
-                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalWages }}</td>
-                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
-                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalSuperannuation }}</td>
-                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalGross }}</td>
-                                        <td class="text-right" style="font-weight: 800;">{{ formatPrice value.TotalNet }}</td>
+                                        <td class="text-right colWages" style="font-weight: 800;">{{ formatPrice value.TotalWages }}</td>
+                                        <td class="text-right colTax" style="font-weight: 800;">{{ formatPrice value.TotalTax }}</td>
+                                        <td class="text-right colSuperannuation" style="font-weight: 800;">{{ formatPrice value.TotalSuperannuation }}</td>
+                                        <td class="text-right colGross" style="font-weight: 800;">{{ formatPrice value.TotalGross }}</td>
+                                        <td class="text-right colNetComb" style="font-weight: 800;">{{ formatPrice value.TotalNet }}</td>
 
                                     {{/if}}
                             </tr>    

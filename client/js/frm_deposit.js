@@ -3825,12 +3825,15 @@ Template.depositcard.events({
         cancelButtonText: 'No'
         }).then(async (result) => {
             if (result.value) {
-                $('.fullScreenSpin').css('display','inline-block');
                 var url = FlowRouter.current().path;
                 var getso_id = url.split('?id=');
                 var currentInvoice = getso_id[getso_id.length-1];
                 var objDetails = '';
                 if(getso_id[1]){
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var depositEntryData = await purchaseService.getOneDepositEnrtyData(currentInvoice);
                     var depositDate = depositEntryData.fields.DepositDate;
@@ -3844,6 +3847,7 @@ Template.depositcard.events({
                         0
                     );
                     var depositList = followingDeposits.tbankdepositlist;
+                    var j = 0;
                     for (var i=0; i < depositList.length; i++) {
                         var objDetails = {
                             type: "TVS1BankDeposit",
@@ -3852,11 +3856,16 @@ Template.depositcard.events({
                                 Deleted: true
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/depositList.length*j)) + '%').attr('aria-valuenow', ((100/depositList.length*j)));
                         var result = await purchaseService.saveBankDeposit(objDetails);
                     }
                 }
-                FlowRouter.go('/depositlist?success=true');
-                $('.modal-backdrop').css('display','none');
+                $("#deletecheckmarkwrapper").removeClass('hide');
+                $('.modal-backdrop').css('display', 'none');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
             }
         });
     }, delayTimeAfterSound);
