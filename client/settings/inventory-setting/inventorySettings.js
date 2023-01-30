@@ -89,7 +89,7 @@ Template.inventorySettings.onRendered(function () {
 
     $(document).on("click", "#tblAccount tbody tr", function (e) {
       var table = $(this);
-      let accountsName = table.find(".productName").text();
+      let accountsName = table.find(".colAccountName").text();
       accSelected = $("#accSelected").val();
       if (accSelected == "cogs") {
         $("#cogsaccount").val(accountsName);
