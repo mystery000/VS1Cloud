@@ -986,9 +986,7 @@
                 </div>
                 {{/each}}
               </div>
-              <div
-                class="row"
-                style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
+              <div class="row" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
               >
                 <div class="col-12">
                   <hr class="reporthr" style="border-width: 3px" />
@@ -1262,19 +1260,16 @@
         <div class="modal-body">
           <style>
               #tblLotNumberListByID .colSerialNumber{
-                width: 20%!important
+                width: 25%!important
+              }
+              #tblLotNumberListByID .colExpiryDate{
+                  width: 25%!important
               }
               #tblLotNumberListByID .colStatus{
                   width: 15%!important
               }
-              #tblLotNumberListByID .colDate{
-                  width: 20%!important
-              }
-              #tblLotNumberListByID .colExpiryDate{
-                  width: 20%!important
-              }
               #tblLotNumberListByID .colDepartment{
-                  width: 25%!important
+                  width: 30%!important
               }
           </style>
           {{> non_transactional_list tablename = "tblLotNumberListByID" prductID=productID}}
