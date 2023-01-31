@@ -12693,6 +12693,7 @@ Template.purchaseordercard.events({
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
                             if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
@@ -12805,6 +12806,7 @@ Template.purchaseordercard.events({
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
                             if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
