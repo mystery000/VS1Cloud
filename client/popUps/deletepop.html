@@ -1,4 +1,6 @@
 <template name="deletepop">
+    
+    {{>deleteprogresspopup}}
     <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
         <style>
             #modalview {
@@ -32,7 +34,7 @@
                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete Line
                         </button>
                         {{/if}}
-                        <button class="btn btn-danger {{button1}}" type="button" style="margin-right: 5px;">
+                        <button class="btn btn-danger {{button1}}" id="btn_data" type="button" style="margin-right: 5px;">
                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
                         </button>
                         <input type="hidden" id="following_cnt" />

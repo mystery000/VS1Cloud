@@ -2198,7 +2198,10 @@ Template.stockadjustmentcard.events({
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
                 if (getso_id[1]) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var stockData = await stockTransferService.getOneStockAdjustData(currentInvoice);
                     var adjustmentDate = stockData.fields.AdjustmentDate;
@@ -2206,6 +2209,7 @@ Template.stockadjustmentcard.events({
                     var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
                     var followingStocks = await sideBarService.getAllStockAdjustEntry("All", stockData.fields.Recno);//initialDataLoad
                     var stockList = followingStocks.tstockadjustentry;
+                    var j = 0;
                     for (var i=0; i < stockList.length; i++) {
                         var objDetails = {
                             type: "TStockadjustentry",
@@ -2214,12 +2218,19 @@ Template.stockadjustmentcard.events({
                                 Deleted: true
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/stockList.length*j)) + '%').attr('aria-valuenow', ((100/stockList.length*j)));
                         var result = await stockTransferService.saveStockAdjustment(objDetails);
                     }
                 }
-                FlowRouter.go('/stockadjustmentoverview?success=true');
+                $("#deletecheckmarkwrapper").removeClass('hide');
                 $('.modal-backdrop').css('display', 'none');
-                $('#deleteLineModal').modal('toggle');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
+                // FlowRouter.go('/stockadjustmentoverview?success=true');
+                // $('.modal-backdrop').css('display', 'none');
+                // $('#deleteLineModal').modal('toggle');
             }
         });
     }, delayTimeAfterSound);
@@ -3654,7 +3665,8 @@ Template.stockadjustmentcard.events({
                     cancelButtonText: 'No'
                     // cancelButtonClass: "btn-default"
                 }).then((result) => {
-                    if (result.value) {                        
+                    if (result.value) {
+                        FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                     } else if (result.dismiss === 'cancel') {
                         // $('.essentialsdiv .custom-control-input').prop("checked", false);
                         event.preventDefault();
@@ -3738,7 +3750,8 @@ Template.stockadjustmentcard.events({
                         cancelButtonText: 'No'
                         // cancelButtonClass: "btn-default"
                     }).then((result) => {
-                        if (result.value) {                        
+                        if (result.value) {       
+                            FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);                 
                         } else if (result.dismiss === 'cancel') {
                             // $('.essentialsdiv .custom-control-input').prop("checked", false);
                             event.preventDefault();

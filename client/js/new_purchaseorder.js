@@ -8123,12 +8123,15 @@ Template.purchaseordercard.events({
         cancelButtonText: 'No'
             }).then(async (result) => {
                 if (result.value) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
                     var url = FlowRouter.current().path;
                     var getso_id = url.split('?id=');
                     var currentInvoice = getso_id[getso_id.length - 1];
                     var objDetails = '';
                     if (getso_id[1]) {
+                        $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                        $("#deleteLineModal").modal('hide');
+                        $("#deleteprogressbar").css('display', 'block');
+                        $("#deleteprogressbar").modal('show');
                         currentInvoice = parseInt(currentInvoice);
                         var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
                         var orderDate = poData.fields.OrderDate;
@@ -8142,6 +8145,7 @@ Template.purchaseordercard.events({
                             0
                         );
                         var poList = followingPOs.tpurchaseorderlist;
+                        var j = 0;
                         for (var i=0; i < poList.length; i++) {
                             var objDetails = {
                                 type: "TPurchaseOrderEx",
@@ -8150,16 +8154,16 @@ Template.purchaseordercard.events({
                                     Deleted: true
                                 }
                             };
+                            j ++;
+                            document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                            $('.deleteloadingbar').css('width', ((100/poList.length*j)) + '%').attr('aria-valuenow', ((100/poList.length*j)));
                             var result = await purchaseService.savePurchaseOrderEx(objDetails);
                         }
                     }
-                    if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                    }else{
-                        FlowRouter.go('/purchaseorderlist?success=true');
-                    };
-                    $('.modal-backdrop').css('display','none');
-                    $("#deleteLineModal").modal("toggle");
+                    $("#deletecheckmarkwrapper").removeClass('hide');
+                    $('.modal-backdrop').css('display', 'none');
+                    $("#deleteprogressbar").modal('hide');
+                    $("#btn_data").click();
                 }
             });
         }, delayTimeAfterSound);
@@ -8760,6 +8764,11 @@ Template.purchaseordercard.events({
                 };
 
                 await purchaseService.savePurchaseOrderEx(objDetails).then(async function(objDetails) {
+                    sideBarService.getAllSerialNumber().then(function(data) {
+                        addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    }).catch(function (err){
+                    });
+
                     if (localStorage.getItem("enteredURL") != null) {
                         FlowRouter.go(localStorage.getItem("enteredURL"));
                         localStorage.removeItem("enteredURL");
@@ -9296,9 +9305,6 @@ Template.purchaseordercard.events({
                             FlowRouter.go('/purchaseorderlist?success=true');
                         };
                     }
-
-
-
                 }).catch(function(err) {
                     swal({
                         title: 'Oooops...',
@@ -12687,6 +12693,7 @@ Template.purchaseordercard.events({
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
                             if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
@@ -12799,6 +12806,7 @@ Template.purchaseordercard.events({
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
                             if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
