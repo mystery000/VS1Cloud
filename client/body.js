@@ -192,7 +192,6 @@ import './Template/AppTableModal.html';
 import './vs1_templates/internal_transaction_list/internal_transaction_list_with_switchbox.js';
 import './vs1charts/allCardsLists/allCardsLists.js';
 import './vs1charts/allChartLists/allChartLists.js';
-import './vs1charts/allCardCharts/allCardCharts.js';
 import './vs1charts/allCardsLists/bankingoverview/bankingoverviewcards.js';
 import './vs1charts/allCardsLists/paymentoverview/paymentoverviewcards.js';
 import './vs1charts/allCardsLists/crmoverviewcards/crmoverviewcards.js';

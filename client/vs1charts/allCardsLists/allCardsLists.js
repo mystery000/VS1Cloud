@@ -15,10 +15,10 @@ const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let _chartGroup = "";
 let _tabGroup = 0;
 
-Template.allChartLists.onCreated(function() {
-    const templateObject = Template.instance();
-    templateObject.tooltip = new ReactiveVar();
-});
+// Template.allChartLists.onCreated(function() {
+//     const templateObject = Template.instance();
+//     templateObject.tooltip = new ReactiveVar();
+// });
 
 Template.allCardsLists.onRendered(function () {
     _tabGroup = $(".connectedCardSortable").data("tabgroup");
@@ -352,18 +352,18 @@ Template.allCardsLists.events({
         }, delayTimeAfterSound);
         $('.cardSettingBtn').addClass('hideelement');
     },
-    "mouseenter .chkDatatable": (e) => {
-        console.log(e.target)
-        let templateObject = Template.instance();
-        if($(e.target).is(":checked"))
-            templateObject.tooltip = "Hide";
-        else
-            templateObject.tooltip = "Show";
-    },
+    // "mouseenter .chkDatatable": (e) => {
+    //     console.log(e.target)
+    //     let templateObject = Template.instance();
+    //     if($(e.target).is(":checked"))
+    //         templateObject.tooltip = "Hide";
+    //     else
+    //         templateObject.tooltip = "Show";
+    // },
 });
 
-Template.allChartLists.helpers({
-    tooltip: () => {        
-        return Template.instance().tooltip.get();
-    },
-})
+// Template.allChartLists.helpers({
+//     tooltip: () => {        
+//         return Template.instance().tooltip.get();
+//     },
+// })
