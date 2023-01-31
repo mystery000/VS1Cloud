@@ -2858,7 +2858,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     });
   }
   templateObject.getClientTypeListData = function() {
-    sideBarService.getClientTypeDataList("", "", "").then(async function(data) {
+    sideBarService.getClientTypeDataList(initialBaseDataLoad, 0, false).then(async function(data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);

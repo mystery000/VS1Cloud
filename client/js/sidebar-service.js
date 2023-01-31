@@ -604,11 +604,22 @@ export class SideBarService extends BaseService {
     return this.GET(this.erpGet.ERPTExpenseEx);
   }
 
-  getAllExpenseClaimExData() {
-    let options = {
+  getAllExpenseClaimExData(limitcount, limitfrom) {
+    let options = "";
+    if (limitcount == "All") {
+      options = {
         ListType: "Detail",
         select: "[Active]=true",
-    };
+      };
+    } else {
+      options = {
+        // orderby: '"ClientID desc"',
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    }
     return this.getList(this.ERPObjects.TExpenseClaimEx, options);
   }
 
@@ -1118,7 +1129,7 @@ export class SideBarService extends BaseService {
           };
         }
       }
-      
+
     }else{
       if (limitcount == "All") {
         options = {
