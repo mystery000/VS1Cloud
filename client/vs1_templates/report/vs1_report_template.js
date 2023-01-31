@@ -71,21 +71,21 @@ Template.vs1_report_template.onRendered(function () {
     switch (currenttablename) {
       case "tblgeneralledger":
         reset_data = [
-          { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
+          { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "155" },
           { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "110" },
-          { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "140" },
+          { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "85" },
           { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
-          { index: 5, label: 'Amount (Ex)', class: 'colAmountEx', active: false, display: true, width: "120" },
-          { index: 6, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
-          { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
-          { index: 8, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
-          { index: 9, label: 'Class ID', class: 'colClassID', active: true, display: true, width: "85" },
-          { index: 10, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
-          { index: 11, label: 'Credits (Ex)', class: 'colCreditEx', active: false, display: true, width: "120" },
-          { index: 12, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "120" },
-          { index: 13, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
-          { index: 14, label: 'Debits (Ex)', class: 'colDebitsEx', active: false, display: true, width: "120" },
-          { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "120" },
+          { index: 5, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
+          { index: 6, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
+          { index: 7, label: 'Department', class: 'colDepartment', active: false, display: true, width: "100" },
+          { index: 8, label: 'Class ID', class: 'colClassID', active: false, display: true, width: "85" },
+          { index: 9, label: 'Client Name', class: 'colProductDescription', active: false, display: true, width: "120" },
+          { index: 12, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
+          { index: 10, label: 'Credits (Ex)', class: 'colCreditEx', active: true, display: true, width: "85" },
+          { index: 11, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "85" },
+          { index: 13, label: 'Debits (Ex)', class: 'colDebitsEx', active: true, display: true, width: "85" },
+          { index: 14, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "85" },
+          { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "85" },
           { index: 16, label: 'Details', class: 'colDetails', active: false, display: true, width: "85" },
           { index: 17, label: 'FixedAsset ID', class: 'colFixedAssetID', active: false, display: true, width: "85" },
           { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: true, display: true, width: "85" },
@@ -130,7 +130,7 @@ Template.vs1_report_template.onRendered(function () {
           { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
           { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
           { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
-      ]
+        ]
         break;
       case "transactionjournallist":
         reset_data = [

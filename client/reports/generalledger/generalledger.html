@@ -1,30 +1,42 @@
 <template name="generalledger">
     {{# vs1_report_template tabledisplayname="General Ledger" tablename="tblgeneralledger" dateAsAt=dateAsAt
-    currencyList = currencyList}}
-    <div class="table-responsive">
-        <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tblgeneralledger"
-            name="tblgeneralledger">
-            <thead>
+                            currencyList = currencyList}}
+        <style>
+            td{
+                color: #00a3d3;
+            }
+            tr td:nth-child(2){
+                color: #858796!important;
+                font-weight: bold;
+            }
+            .fw-bold{
+                font-weight: bold;
+            }
+        </style>
+        <div class="table-responsive">
+            <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tblgeneralledger"
+                   name="tblgeneralledger">
+                <thead>
                 <tr class="table-active customDoubleTableHeading">
                     {{#each c in generalledgerth}}
-                    {{#if c.display}}
-                    <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
-                        data-col-active="{{ c.active}}"
-                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                        style="text-align: left!important; width:{{c.width}}px">
-                        {{c.label}}
-                    </th>
-                    {{/if}}
+                        {{#if c.display}}
+                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
+                                data-col-active="{{ c.active}}"
+                                class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: left!important; width:{{c.width}}px">
+                                {{c.label}}
+                            </th>
+                        {{/if}}
                     {{/each}}
                 </tr>
-            </thead>
-            <!-- ====================== tbody start ========================= -->
-            <tbody>
+                </thead>
+                <!-- ====================== tbody start ========================= -->
+                <tbody>
 
-            </tbody>
-            <!-- ====================== tbody end ========================= -->
-        </table>
-    </div>
+                </tbody>
+                <!-- ====================== tbody end ========================= -->
+            </table>
+        </div>
     {{/vs1_report_template}}
 
 </template>
