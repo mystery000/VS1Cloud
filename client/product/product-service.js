@@ -412,7 +412,7 @@ export class ProductService extends BaseService {
 
     getProductStatus(productName) {
         let options = {
-            PropertyList: "ID, ProductName, Batch, SNTracking, SellQty1Price",
+            PropertyList: "ID, ProductName, Batch, SNTracking, SellQty1Price, CUSTFLD13",
             select: "[ProductName]='" + productName + "'",
         };
         return this.getList(this.ERPObjects.TProductVS1, options);

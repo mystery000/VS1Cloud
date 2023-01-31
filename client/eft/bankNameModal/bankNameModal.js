@@ -22,12 +22,14 @@ Template.bankNameModal.onRendered(function () {
       { className: "bankDescription", "targets": [1] },
     ],
     select: true,
+    search: true,
     destroy: true,
     colReorder: true,
     pageLength: initialDatatableLoad,
     lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
     info: true,
     responsive: true,
+    language: { search: "",searchPlaceholder: "Search List..." },
     "fnInitComplete": function () {
       $("<button class='btn btn-primary btnAddNewBankName' data-dismiss='modal' data-toggle='modal' data-target='#addBankNameModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblBankName_filter");
       $("<button class='btn btn-primary btnRefreshBankName' type='button' id='btnRefreshBankName' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBankName_filter");

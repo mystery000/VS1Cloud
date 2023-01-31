@@ -8247,7 +8247,10 @@ Template.creditcard.events({
           var currentInvoice = getso_id[getso_id.length - 1];
           var objDetails = "";
           if (getso_id[1]) {
-            $(".fullScreenSpin").css("display", "inline-block");
+            $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+            $("#deleteLineModal").modal('hide');
+            $("#deleteprogressbar").css('display', 'block');
+            $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var creditData = await purchaseService.getOneCreditData(
               currentInvoice
@@ -8268,6 +8271,7 @@ Template.creditcard.events({
               0
             );
             var creditList = followingCredits.tcreditlist;
+            var j = 0;
             for (var i = 0; i < creditList.length; i++) {
               var objDetails = {
                 type: "TCredit",
@@ -8277,20 +8281,16 @@ Template.creditcard.events({
                   OrderStatus: "Deleted",
                 },
               };
+              j ++;
+              document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+              $('.deleteloadingbar').css('width', ((100/creditList.length*j)) + '%').attr('aria-valuenow', ((100/creditList.length*j)));
               var result = await purchaseService.saveCredit(objDetails);
             }
           }
-          if (FlowRouter.current().queryParams.trans) {
-            FlowRouter.go(
-              "/customerscard?id=" +
-                FlowRouter.current().queryParams.trans +
-                "&transTab=active"
-            );
-          } else {
-            FlowRouter.go("/creditlist?success=true");
-          }
-          $(".modal-backdrop").css("display", "none");
-          $("#deleteLineModal").modal("toggle");
+          $("#deletecheckmarkwrapper").removeClass('hide');
+          $('.modal-backdrop').css('display', 'none');
+          $("#deleteprogressbar").modal('hide');
+          $("#btn_data").click();
         }
       });
     }, delayTimeAfterSound);

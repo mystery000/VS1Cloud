@@ -2205,6 +2205,15 @@ authenticatedRoutes.route('/uomSettings', {
     }
 });
 
+authenticatedRoutes.route('/inventorySettings', {
+    name: 'inventorySettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'inventorySettings'
+        });
+    }
+});
+
 authenticatedRoutes.route('/mailchimpsettings', {
   name: 'mailchimpSettings',
   action() {

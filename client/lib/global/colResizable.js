@@ -38,7 +38,7 @@
 
 
 	//append required CSS rules
-    h.append("<style type='text/css'>  .JColResizer{table-layout:fixed;} .JCLRgrips{ height:0px; position:relative;margin-left: -12px} .JCLRgrip{margin-left:2px; position:absolute; z-index:5; } .JCLRgrip .JColResizer{position:absolute;background-color:red;filter:alpha(opacity=1);opacity:0;width:40px;left:-15px !important;height:100%;cursor: col-resize;top:0px} .JCLRLastGrip{position:absolute; width:1px; } .JCLRgripDrag{ border-left:1px dotted black;	} .JCLRFlex{width:100%!important;} </style>");
+    h.append("<style type='text/css'>  .JColResizer{table-layout:fixed;} .JCLRgrips{ height:0px; position:relative;margin-left: -12px} .JCLRgrip{margin-left:2px; position:absolute; z-index:5; } .JCLRgrip .JColResizer{position:absolute;background-color:red;filter:alpha(opacity=1);opacity:0;width:45px !important;left:-15px !important;height:100%;cursor: col-resize;top:0px} .JCLRLastGrip{position:absolute; width:1px; } .JCLRgripDrag{ border-left:1px dotted black;	} div.dataTables_wrapper .JCLRFlex{width:100%!important;} </style>");
 
 
 	/**
@@ -383,11 +383,11 @@
 
 				//attributes:
 
-                resizeMode: 'fit',                    //mode can be 'fit', 'flex' or 'overflow'
+                resizeMode: 'overflow',                    //mode can be 'fit', 'flex' or 'overflow'
                 draggingClass: 'JCLRgripDrag',	//css-class used when a grip is being dragged (for visual feedback purposes)
 				gripInnerHtml: '',				//if it is required to use a custom grip it can be done using some custom HTML
 				liveDrag: false,				//enables table-layout updating while dragging
-				minWidth: 15, 					//minimum width value in pixels allowed for a column
+				minWidth: 100, 					//minimum width value in pixels allowed for a column
 				headerOnly: false,				//specifies that the size of the the column resizing anchors will be bounded to the size of the first row
 				hoverCursor: "col-resize",  		//cursor to be used on grip hover
 				dragCursor: "col-resize",  		//cursor to be used while dragging
@@ -410,8 +410,8 @@
 
             //since now there are 3 different ways of resizing columns, I changed the external interface to make it clear
             //calling it 'resizeMode' but also to remove the "fixed" attribute which was confusing for many people
-            options.fixed = true;
-            options.overflow = false;
+            options.fixed = false;
+            options.overflow = true;
             switch(options.resizeMode){
                 case 'flex': options.fixed = false; break;
                 case 'overflow': options.fixed = false; options.overflow = true; break;

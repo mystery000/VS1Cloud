@@ -341,7 +341,7 @@
             </style>
             {{#if displayfields}}
             <table id="{{tablename}}" name="{{tablename}}" style="width:100%"
-                class="dataTable table table-striped table-bordered {{tablename}}">
+                class="dataTable transactionLines table table-striped table-bordered {{tablename}}">
                 <thead>
                     <tr class="dnd-moved">
                         {{#each displayfield in displayfields}}
@@ -422,9 +422,19 @@
                                 class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtybo}}"
                                 readonly></td>
 
+                        {{#if item.serialnumbers}}
+                        <td class="th colSerialNo {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" data-serialnumbers="{{item.serialnumbers}}"><i
+                            class="fas fa-plus-square text-success btnSnLotmodal"
+                            style="margin-left: 40px; font-size: 22px;"></i></td>
+                        {{else if item.lotnumbers}}
+                        <td class="th colSerialNo {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" data-lotnumbers="{{item.lotnumbers}}"><i
+                            class="fas fa-plus-square text-success btnSnLotmodal"
+                            style="margin-left: 40px; font-size: 22px;"></i></td>
+                        {{else}}
                         <td class="th colSerialNo {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"><i
-                                class="fas fa-plus-square text-success btnSnLotmodal"
-                                style="margin-left: 40px; font-size: 22px;"></i></td>
+                            class="fas fa-plus-square text-success btnSnLotmodal"
+                            style="margin-left: 40px; font-size: 22px;"></i></td>
+                        {{/if}}
 
                         <td class="th colFixedAsset {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"><i
                                 class="fas fa-plus-square text-success btnFixedAsset"

@@ -1,6 +1,6 @@
 <template name="availablelotnumberpop">
 
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <style>
                 .tblAvailableSNlist{
@@ -33,18 +33,31 @@
             <div class="modal-body" style="padding: 8px 24px;">
                 <div class="row">
                     <div class="col-12 tblAvailableLotlist">
-                        <table id="tblAvailableLotlist" class="table table-bordered">
+                        <!-- <table id="tblAvailableLotlist" class="table table-bordered">
                             <tbody>
                             </tbody>
-                        </table>
+                        </table> -->
+                        <style>
+                            #tblAvailableLotCheckbox .colChkBox{
+                                width: 40px!important
+                            }
+                            #tblAvailableLotCheckbox .colLot{
+                                width: 45%!important
+                            }
+                            #tblAvailableLotCheckbox .colExpiryDate{
+                                width: 40%!important
+                            }
+                            #tblAvailableLotCheckbox .chkBox{
+                                margin: 0px!important
+                            }
+                        </style>                        
+                        {{> internal_transaction_list_with_switchbox tablename="tblAvailableLotCheckbox" }}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex w-100 justify-content-between">
-                    <button class="btn btn-success btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
-                </div>
+                <button class="btn btn-success btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i>Save</button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
             </div>
         </div>
     </div>
