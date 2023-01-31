@@ -6,6 +6,7 @@ import { ProductService } from "../product/product-service.js";
 import { UtilityService } from "../utility-service.js";
 import { SideBarService } from '../js/sidebar-service.js';
 import { OrganisationService } from "../js/organisation-service";
+import { ReportService } from "../reports/report-service";
 
 import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -14,6 +15,7 @@ import './onsuccesswaterfall.html';
 const productService = new ProductService();
 const sideBarService = new SideBarService();
 const organisationService = new OrganisationService();
+const reportService = new ReportService();
 
 Template.onsuccesswaterfall.onCreated(function () {
   const templateObject = Template.instance();
@@ -2691,6 +2693,887 @@ Template.onsuccesswaterfall.onRendered(function () {
     });
   }
 
+  /**
+   * @XiaoJang added since 23 January 2023
+   */
+  templateObject.getBalanceSheetData = function() {
+    reportService.getBalanceSheetReport(GlobalFunctions.convertYearMonthDay(toDate)).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('BalanceSheetReport', JSON.stringify(data));
+      $("<span class='process'>Balance Sheet Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getProfitandLossCompare = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let periodMonths = 0;
+    reportService.getProfitandLossCompare(dateFrom,dateTo,false,periodMonths).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('VS1ProfitandLossCompare', JSON.stringify(data));
+      $("<span class='process'>Receipt Claim Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getCustomerDetailData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let periodMonths = 0;
+    reportService.getCustomerDetails(dateFrom,dateTo,false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TCustomerDetailsReport', JSON.stringify(data));
+      $("<span class='process'>Customer Detail Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getCustomerSummaryData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let periodMonths = 0;
+    reportService.getCustomerDetailReport(dateFrom,dateTo,false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TCustomerSummaryReport', JSON.stringify(data));
+      $("<span class='process'>Customer Summary Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getClientTypeListData = function() {
+    sideBarService.getClientTypeDataList(initialBaseDataLoad, 0, false).then(async function(data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TClientTypeList', JSON.stringify(data));
+      $("<span class='process'>Client Type List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getSupplierDetailData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getSupplierProductReport(dateFrom, dateTo, false).then(async function(data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+      $("<span class='process'>General Ledger Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getSupplierSummaryReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getSupplierProductReport(dateFrom, dateTo, false).then(async function(data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('VS1SupplierSummary_Report', JSON.stringify(data));
+      $("<span class='process'>Supplier Summary Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getSupplierProductReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getSupplierProductReport(dateFrom, dateTo, false).then(async function(data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TSupplierProduct', JSON.stringify(data));
+      $("<span class='process'>Supplier Product Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getJobSalesSummaryReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getJobSalesSummaryReport(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function() {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TJobSalesSummary', JSON.stringify(data));
+      $("<span class='process'>Job Sales Summary Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function(err) {
+
+    });
+  }
+  templateObject.getJobProfitabilityReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getJobProfitabilityReport(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TJobProfitability', JSON.stringify(data));
+      $("<span class='process'>General ledger Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getGeneralLedgerData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+      $("<span class='process'>General ledger Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getBinLocationReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getBinLocationReport(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TProductBin', JSON.stringify(data));
+      $("<span class='process'>Bin Location List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getStockMovementReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getStockMovementReport(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TProductMovementList', JSON.stringify(data));
+      $("<span class='process'>Stock Movement List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getStockQuantityLocationReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getStockQuantityLocationReport(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('VS1StockQuantityLocation_Report', JSON.stringify(data));
+      $("<span class='process'>Stock Quantity Location Data Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getStockValueReportData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getStockValueReport(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('VS1StockValue_Report', JSON.stringify(data));
+      $("<span class='process'>Stock Quantity Location Data Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getAgedReceivableDetailsData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getAgedReceivableDetailsData(dateFrom, dateTo, false, '').then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('VS1AgedReceivables_Report', JSON.stringify(data));
+      $("<span class='process'>Aged Receivables Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getAgedReceivableDetailsSummaryData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getAgedReceivableDetailsSummaryData(dateFrom, dateTo, false, '').then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('VS1AgedReceivableSummary_Report', JSON.stringify(data));
+      $("<span class='process'>Aged Receivable Summary Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getAllProductSalesDetailsData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getAllProductSalesDetails(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TProductSalesDetailsReport', JSON.stringify(data));
+      $("<span class='process'>Product Sales Details Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getTrialBalanceDetailsData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getTrialBalanceDetailsData(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TTrialBalanceReport', JSON.stringify(data));
+      $("<span class='process'>Trial Balance Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getTaxSummaryData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getTaxSummaryData(dateFrom, dateTo, false).then(async function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        setTimeout(function () {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').removeClass('headerprogressbarShow');
+            $('.headerprogressbar').addClass('headerprogressbarHidden');
+          }
+
+        }, 1000);
+      }
+      addVS1Data('TTaxSummaryReport', JSON.stringify(data));
+      $("<span class='process'>Tax Summary Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getProfitandLossData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getProfitandLoss(dateFrom, dateTo, false).then(function(data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      //localStorage.setItem('VS1TJobVS1List', JSON.stringify(data) || '');
+      addVS1Data('VS1ProfitandLoss_Report', JSON.stringify(data));
+      $("<span class='process'>Profit and Loss Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getProfitandLossCompareData = function() {
+    let dateFrom =
+        moment(prevMonth11Date).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    let dateTo =
+        moment(toDate).format("YYYY-MM-DD") ||
+        moment().format("YYYY-MM-DD");
+    reportService.getProfitandLossCompare(dateFrom, dateTo, false, '3 Month').then(function(data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Receipt Claim ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      //localStorage.setItem('VS1TJobVS1List', JSON.stringify(data) || '');
+      addVS1Data('TProfitAndLossPeriodCompareReport', JSON.stringify(data));
+      $("<span class='process'>Profit and Loss Compared Report Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+
   /* Start Here */
   if (JSON.parse(loggedUserEventFired)) {
     templateObject.getFollowedAllObjectPull = function () {
@@ -2911,21 +3794,380 @@ Template.onsuccesswaterfall.onRendered(function () {
         }
 
         if (isReports) {
-          getVS1Data('TARReport').then(function (dataObject) {
+          getVS1Data('BalanceSheetReport').then(function (dataObject) {
             if (dataObject.length == 0) {
-              templateObject.getTARReportData();
+              templateObject.getBalanceSheetData();
             } else {
               let getTimeStamp = dataObject[0].timestamp.split(' ');
               if (getTimeStamp) {
                 if (JSON.parse(loggedUserEventFired)) {
                   if (getTimeStamp[0] != currenctTodayDate) {
-                    templateObject.getTARReportData();
+                    templateObject.getBalanceSheetData();
                   }
                 }
               }
             }
           }).catch(function (err) {
-            templateObject.getTARReportData();
+            templateObject.getBalanceSheetData();
+          });
+
+          getVS1Data('VS1ProfitandLossCompare').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getProfitandLossCompare();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getProfitandLossCompare();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getProfitandLossCompare();
+          });
+
+          getVS1Data('TCustomerDetailsReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getCustomerDetailData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getCustomerDetailData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getCustomerDetailData();
+          });
+
+          getVS1Data('TCustomerSummaryReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getCustomerSummaryData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getCustomerSummaryData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getCustomerSummaryData();
+          });
+
+
+
+          getVS1Data('TClientTypeList').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getClientTypeListData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getClientTypeListData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getClientTypeListData();
+          });
+
+          getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getSupplierDetailData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getSupplierDetailData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getSupplierDetailData();
+          });
+
+          getVS1Data('VS1SupplierSummary_Report').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getSupplierSummaryReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getSupplierSummaryReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getSupplierSummaryReportData();
+          });
+
+          getVS1Data('TSupplierProduct').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getSupplierProductReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getSupplierProductReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getSupplierProductReportData();
+          });
+
+          getVS1Data('TJobSalesSummary').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getJobSalesSummaryReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getJobSalesSummaryReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getJobSalesSummaryReportData();
+          });
+
+          getVS1Data('TJobProfitability').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getJobProfitabilityReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getJobProfitabilityReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getJobProfitabilityReportData();
+          });
+
+          getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getGeneralLedgerData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getGeneralLedgerData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getGeneralLedgerData();
+          });
+
+          getVS1Data('TProductBin').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getBinLocationReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getBinLocationReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getBinLocationReportData();
+          });
+
+          getVS1Data('TProductMovementList').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getStockMovementReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getStockMovementReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getStockMovementReportData();
+          });
+
+          getVS1Data('VS1StockQuantityLocation_Report').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getStockQuantityLocationReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getStockQuantityLocationReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getStockQuantityLocationReportData();
+          });
+
+          getVS1Data('VS1StockValue_Report').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getStockValueReportData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getStockValueReportData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getStockValueReportData();
+          });
+
+          getVS1Data('VS1AgedReceivables_Report').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getAgedReceivableDetailsData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getAgedReceivableDetailsData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getAgedReceivableDetailsData();
+          });
+
+          getVS1Data('VS1AgedReceivableSummary_Report').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getAgedReceivableDetailsSummaryData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getAgedReceivableDetailsSummaryData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getAgedReceivableDetailsSummaryData();
+          });
+
+          getVS1Data('TProductSalesDetailsReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getAllProductSalesDetailsData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getAllProductSalesDetailsData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getAllProductSalesDetailsData();
+          });
+
+          getVS1Data('TTrialBalanceReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getTrialBalanceDetailsData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getTrialBalanceDetailsData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getTrialBalanceDetailsData();
+          });
+
+          getVS1Data('TTaxSummaryReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getTaxSummaryData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getTaxSummaryData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getTaxSummaryData();
+          });
+
+          getVS1Data('VS1ProfitandLoss_Report').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getProfitandLossData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getProfitandLossData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getProfitandLossData();
+          });
+
+          getVS1Data('TProfitAndLossPeriodCompareReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+              templateObject.getProfitandLossCompareData();
+            } else {
+              let getTimeStamp = dataObject[0].timestamp.split(' ');
+              if (getTimeStamp) {
+                if (loggedUserEventFired) {
+                  if (getTimeStamp[0] != currenctTodayDate) {
+                    templateObject.getProfitandLossCompareData();
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            templateObject.getProfitandLossCompareData();
           });
 
           getVS1Data('TAPReport').then(function (dataObject) {
@@ -4762,7 +6004,7 @@ Template.onsuccesswaterfall.helpers({
     return chequeSpelling;
   },
   loggedFirstName: () => {
-      const loggedEmployeedName1 = localStorage.getItem('vs1LoggedEmployeeName').split(" ");
-      return loggedEmployeedName1[0]||'';
+      const loggedEmployeedName1 = localStorage.getItem('vs1LoggedEmployeeName').split(" ") || '';
+      return loggedEmployeedName1[0] || '';
   }
 });

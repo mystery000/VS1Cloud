@@ -6,6 +6,8 @@ import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './addaccountpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { SideBarService } from "../js/sidebar-service";
+let sideBarService = new SideBarService();
 
 Template.addaccountpop.onCreated(function () {
     const templateObject = Template.instance();
@@ -20,7 +22,7 @@ Template.addaccountpop.onCreated(function () {
 });
 
 Template.addaccountpop.onRendered(function () {
-    
+
     // $('#sltAccountType').editableSelect('add', function(item){
     //     $(this).val(item.id);
     //     $(this).text(item.name);
@@ -85,11 +87,11 @@ Template.addaccountpop.onRendered(function () {
         var $earch = $(this);
         var offset = $earch.offset();
         var bankName = e.target.value || "";
-  
+
         if (e.pageX > offset.left + $earch.width() - 8) {
           $("#bankNameModal").modal();
           $(".fullScreenSpin").css("display", "none");
-  
+
         } else {
           if (bankName.replace(/\s/g, "") != "") {
             $("#bankNameModal").modal("toggle");
@@ -501,7 +503,7 @@ Template.addaccountpop.events({
                                      $('#addAccountModal').modal('toggle');
                                      $('.fullScreenSpin').css('display', 'none');
                                     return false;
-                                }    
+                                }
                                 window.open('/accountsoverview', '_self');
                             }).catch(function (err) {
                                 if( url.includes("/employeescard") ){
@@ -939,7 +941,7 @@ Template.addaccountpop.events({
         }).then((result) => {
             if (result.value) {
                 $('.fullScreenSpin').css('display', 'inline-block');
-                
+
                 let accountID = $('#edtAccountID').val();
 
                 if (accountID == "") {

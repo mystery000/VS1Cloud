@@ -105,6 +105,9 @@ Template.settings.events({
   "click .btnMailchimp": function (event) {
     FlowRouter.go("/mailchimpSettings");
   },
+  "click .btnInventorySettings": function (event) {
+    FlowRouter.go("/inventorySettings");
+  },
 });
 
 Template.settings.helpers({

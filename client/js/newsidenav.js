@@ -2912,6 +2912,9 @@ Template.newsidenav.events({
   'click #uomSettings': function (event) {
     window.open('/uomSettings', '_self');
   },
+  'click #sidenavInventorySettings': function (event) {
+    window.open('/inventorySettings', '_self');
+  },
   'click #sidenavcurrenciesSettings': function (event) {
     event.preventDefault();
     FlowRouter.go('/currenciessettings');

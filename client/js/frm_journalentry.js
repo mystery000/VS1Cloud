@@ -3797,12 +3797,15 @@ Template.journalentrycard.events({
         cancelButtonText: 'No'
         }).then(async (result) => {
             if (result.value) {
-                $('.fullScreenSpin').css('display', 'inline-block');
                 var url = FlowRouter.current().path;
                 var getso_id = url.split('?id=');
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
                 if (getso_id[1]) {
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var journalData = await purchaseService.getOneJournalEnrtyData(currentInvoice);
                     var transactionDate = journalData.fields.TransactionDate;
@@ -3816,6 +3819,7 @@ Template.journalentrycard.events({
                         0
                     );
                     var journalList = followingJournals.tjournalentrylist;
+                    var j = 0;
                     for (var i=0; i < journalList.length; i++) {
                         var objDetails = {
                             type: "TJournalEntry",
@@ -3824,12 +3828,16 @@ Template.journalentrycard.events({
                                 Deleted: true
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/journalList.length*j)) + '%').attr('aria-valuenow', ((100/journalList.length*j)));
                         var result = await purchaseService.saveJournalEnrtry(objDetails);
                     }
                 }
-                FlowRouter.go('/journalentrylist?success=true');
+                $("#deletecheckmarkwrapper").removeClass('hide');
                 $('.modal-backdrop').css('display', 'none');
-                $('#deleteLineModal').modal('toggle');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
             }
         });
     }, delayTimeAfterSound);

@@ -11,6 +11,7 @@ import { PurchaseBoardService } from "../js/purchase-service";
 
 let invoiceService = new InvoiceService();
 const sideBarService = new SideBarService();
+let isRendered = false;
 
 const TransactionTypeTemplates = {
   sales: 
@@ -124,6 +125,10 @@ const TransactionTypeTemplates = {
   }
 };
 
+Template.deletepop.onCreated(() => {
+
+})
+
 Template.deletepop.onRendered(function () {
   hasFollowings();
 })
@@ -161,6 +166,10 @@ Template.deletepop.helpers({
 })
 
 const hasFollowings = async function() {
+  if (isRendered) {
+    return;
+  }
+  isRendered = true;
   const templateInstance = Template.instance();
   let salesService = new SalesBoardService();
   let paymentService = new PaymentsService();
@@ -187,9 +196,11 @@ const hasFollowings = async function() {
       var invList = followingInvoices.tinvoicelist;
         $("#following_cnt").val(invList.length);
         if (invList.length > 0) {
-            $("#btn_follow2").css("display", "inline-block");
+          $("#btn_follow1").css("display", "inline-block");
+          $("#btn_follow2").css("display", "inline-block");
         } else {
-            $("#btn_follow2").css("display", "none");
+          $("#btn_follow1").css("display", "none");
+          $("#btn_follow2").css("display", "none");
         }
     }
   }
@@ -210,9 +221,11 @@ const hasFollowings = async function() {
       var paymentList = followingPayments.tcustomerpaymentlist;
       $("#following_cnt").val(paymentList.length);
       if (paymentList.length > 0) {
-          $("#btn_follow2").css("display", "inline-block");
+        $("#btn_follow1").css("display", "inline-block");
+        $("#btn_follow2").css("display", "inline-block");
       } else {
-          $("#btn_follow2").css("display", "none");
+        $("#btn_follow1").css("display", "none");
+        $("#btn_follow2").css("display", "none");
       }
     }
   }
@@ -227,9 +240,11 @@ const hasFollowings = async function() {
       var stockList = followingStocks.tstockadjustentry;
       $("#following_cnt").val(stockList.length);
       if (stockList.length > 0) {
-          $("#btn_follow2").css("display", "inline-block");
+        $("#btn_follow1").css("display", "inline-block");
+        $("#btn_follow2").css("display", "inline-block");
       } else {
-          $("#btn_follow2").css("display", "none");
+        $("#btn_follow1").css("display", "none");
+        $("#btn_follow2").css("display", "none");
       }
     }
   }
@@ -250,9 +265,11 @@ const hasFollowings = async function() {
       var chequeList = followingCheques.tchequelist;
       $("#following_cnt").val(chequeList.length);
       if (chequeList.length > 0) {
-          $("#btn_follow2").css("display", "inline-block");
+        $("#btn_follow1").css("display", "inline-block");
+        $("#btn_follow2").css("display", "inline-block");
       } else {
-          $("#btn_follow2").css("display", "none");
+        $("#btn_follow1").css("display", "none");
+        $("#btn_follow2").css("display", "none");
       }
     }
   }
@@ -273,10 +290,12 @@ const hasFollowings = async function() {
       var depositList = followingDeposits.tbankdepositlist;
       $("#following_cnt").val(depositList.length);
       if (depositList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('bills' == templateInstance.data.formType) {
@@ -296,10 +315,12 @@ const hasFollowings = async function() {
       var billList = followingBills.tbilllist;
       $("#following_cnt").val(billList.length);
       if (billList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('credits' == templateInstance.data.formType) {
@@ -326,10 +347,12 @@ const hasFollowings = async function() {
       var creditList = followingCredits.tcreditlist;
       $("#following_cnt").val(creditList.length);
       if (creditList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('purchaseorders' == templateInstance.data.formType) {
@@ -349,10 +372,12 @@ const hasFollowings = async function() {
       var poList = followingPOs.tpurchaseorderlist;
       $("#following_cnt").val(poList.length);
       if (poList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('quotes' == templateInstance.data.formType) {
@@ -372,10 +397,12 @@ const hasFollowings = async function() {
       var quoteList = followingQuotes.tquotelist;
       $("#following_cnt").val(quoteList.length);
       if (quoteList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('sales' == templateInstance.data.formType) {
@@ -395,10 +422,12 @@ const hasFollowings = async function() {
       var soList = followingSOs.tsalesorderlist;
       $("#following_cnt").val(soList.length);
       if (soList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('refunds' == templateInstance.data.formType) {
@@ -424,10 +453,12 @@ const hasFollowings = async function() {
       var refundList = followingRefunds.trefundsalelist;
       $("#following_cnt").val(refundList.length);
       if (refundList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('supplierpayments' == templateInstance.data.formType) {
@@ -447,10 +478,12 @@ const hasFollowings = async function() {
       var paymentList = followingPayments.tsupplierpaymentlist;
       $("#following_cnt").val(paymentList.length);
       if (paymentList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('stocktransfer' == templateInstance.data.formType) {
@@ -464,10 +497,12 @@ const hasFollowings = async function() {
       var stockList = followingStocks.tstocktransferentry;
       $("#following_cnt").val(stockList.length);
       if (stockList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
   if('shippingdocket' == templateInstance.data.formType) {
@@ -487,10 +522,13 @@ const hasFollowings = async function() {
       var invList = followingInvoices.tinvoicelist;
       $("#following_cnt").val(invList.length);
       if (invList.length > 0) {
+          $("#btn_follow1").css("display", "inline-block");
           $("#btn_follow2").css("display", "inline-block");
-      } else {
+        } else {
+          $("#btn_follow1").css("display", "none");
           $("#btn_follow2").css("display", "none");
-      }
+        }
     }
   }
+
 }
