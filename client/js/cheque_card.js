@@ -7480,7 +7480,10 @@ Template.chequecard.events({
         var currentInvoice = getso_id[getso_id.length - 1];
         var objDetails = "";
         if (getso_id[1]) {
-          $(".fullScreenSpin").css("display", "inline-block");
+          $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+          $("#deleteLineModal").modal('hide');
+          $("#deleteprogressbar").css('display', 'block');
+          $("#deleteprogressbar").modal('show');
           currentInvoice = parseInt(currentInvoice);
           var chequeData = await purchaseService.getOneChequeDataEx(currentInvoice);
           var orderDate = chequeData.fields.OrderDate;
@@ -7494,6 +7497,7 @@ Template.chequecard.events({
             0
           );
           var chequeList = followingCheques.tchequelist;
+          var j = 0;
           for (var i=0; i < chequeList.length; i++) {
             var objDetails = {
               type: "TChequeEx",
@@ -7502,16 +7506,24 @@ Template.chequecard.events({
                 Deleted: true,
               },
             };
+            j ++;
+            document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+            $('.deleteloadingbar').css('width', ((100/chequeList.length*j)) + '%').attr('aria-valuenow', ((100/chequeList.length*j)));
             var result = await purchaseService.saveChequeEx(objDetails);
           }
         }
-        if(FlowRouter.current().queryParams.trans){
-          FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-        }else{
-          FlowRouter.go("/chequelist?success=true");
-        };
-        $('.modal-backdrop').css('display','none');
-        $("#deleteLineModal").modal("toggle");
+        
+        $("#deletecheckmarkwrapper").removeClass('hide');
+        $('.modal-backdrop').css('display', 'none');
+        $("#deleteprogressbar").modal('hide');
+        $("#btn_data").click();
+        // if(FlowRouter.current().queryParams.trans){
+        //   FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+        // }else{
+        //   FlowRouter.go("/chequelist?success=true");
+        // };
+        // $('.modal-backdrop').css('display','none');
+        // $("#deleteLineModal").modal("toggle");
       }
     });
   }, delayTimeAfterSound);

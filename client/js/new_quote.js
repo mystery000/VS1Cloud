@@ -7164,6 +7164,10 @@ Template.new_quote.events({
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
                 if (getso_id[1]) {
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
                     var saleDate = quoteData.fields.SaleDate;
@@ -7177,6 +7181,7 @@ Template.new_quote.events({
                         0
                     );
                     var quoteList = followingQuotes.tquotelist;
+                    var j = 0;
                     for (var i=0; i < quoteList.length; i++) {
                         var objDetails = {
                             type: "TQuoteEx",
@@ -7185,16 +7190,16 @@ Template.new_quote.events({
                                 Deleted: true
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/quoteList.length*j)) + '%').attr('aria-valuenow', ((100/quoteList.length*j)));
                         var result = await salesService.saveQuoteEx(objDetails);
                     }
                 }
-                if(FlowRouter.current().queryParams.trans){
-                    FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                }else{
-                    FlowRouter.go('/quoteslist?success=true');
-                }
-                $('.modal-backdrop').css('display','none');
-                $('#deleteLineModal').modal('toggle');
+                $("#deletecheckmarkwrapper").removeClass('hide');
+                $('.modal-backdrop').css('display', 'none');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
             }
         });
     }, delayTimeAfterSound);
