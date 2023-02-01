@@ -675,8 +675,8 @@ Template.generalledger.onRendered(() => {
     let reset_data = [];
     reset_data = [
       { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "155" },
-      { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "110" },
-      { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "85" },
+      { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "190" },
+      { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "85" },
       { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
       { index: 5, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
       { index: 6, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
@@ -704,7 +704,7 @@ Template.generalledger.onRendered(() => {
       { index: 28, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "85" },
       { index: 29, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "150" },
       { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" },
-      { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+      { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
     ];
     templateObject.generalledgerth.set(reset_data);
   }

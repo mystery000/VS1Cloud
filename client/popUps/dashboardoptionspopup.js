@@ -124,6 +124,10 @@ Template.dashboardoptionspopup.onRendered(function() {
     $('#tblDashboardOptions tbody').on('change', 'tr input[type=checkbox]', function() {
         // $(this).closest('tr').find(".colOptionsName ").click();
         let dashboardStatus = $(this).closest('tr').find(".colOptionsName").text();
+        if (dashboardStatus !== 'All') {
+            $(this).closest("tbody").find("input[value='All']").prop('checked', false);
+            $(this).closest('tbody').find('td.colLogginDef input[type=radio]').disabled = true;
+        }
         showDashboard = showDashboard.includes(dashboardStatus) ? showDashboard.filter(el => el !== dashboardStatus) : [...showDashboard, dashboardStatus];
         addVS1Data('TVS1DashboardStatus', JSON.stringify(showDashboard));
     });
