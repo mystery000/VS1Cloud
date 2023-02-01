@@ -1485,11 +1485,16 @@ Template.invoicelistBO.events({
         });
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Invoices Backed Ordered report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     'click #exportbtn': function () {
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblInvoicelistBO_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display','none');
-
     },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');

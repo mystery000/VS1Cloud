@@ -1417,7 +1417,7 @@ Template.generalledger.events({
     $(".fullScreenSpin").css("display", "inline-block");
     let utilityService = new UtilityService();
     const filename = "Generalledger report result" + ".xlsx";
-    utilityService.exportReportToXLSX("tableExport", filename, "xlsx");
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");

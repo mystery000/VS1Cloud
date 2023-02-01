@@ -159,6 +159,7 @@ const XLSX = require("xlsx");
 
 (function ($) {
     $.fn.extend({
+        //NormanScott added for spreadsheet
         download: async function(uri, name) {
             const link = document.createElement("a");
             link.download = name;
@@ -171,8 +172,38 @@ const XLSX = require("xlsx");
             window.URL.revokeObjectURL(link.href);
         },
         tableToSpreadSheet: async function (options) {
-            this.download('downloads/Template FIles/' + options.filename, options.filename);
+            const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
+                try {
+                    return window.self === window.top;
+                } catch {
+                    return false;
+                }
+            })();
+
+            if (supportsFileSystemAccess) {
+                try {
+                    const handle = await showSaveFilePicker({
+                        suggestedName: options.filename,
+                        type: [{
+                            description: 'XLSX file',
+                            accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
+                        }]
+                    });
+                    const writable = await handle.createWritable();
+                    const Excel = await fetch('downloads/Template FIles/' + options.filename).then((res) => res.blob())
+                    const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
+                    await writable.write(data);
+                    await writable.close();
+                    return;
+                } catch (err) {
+                    if (err.name == 'AbortError') {
+                        return;
+                    }
+                }
+            }
+            // this.download('downloads/Template FIles/' + options.filename, options.filename);
         },
+        //Insertion point end
         tableToXlsx: async function (options) {
 
             var defaults = {
