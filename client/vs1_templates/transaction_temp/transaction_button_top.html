@@ -96,5 +96,20 @@
       <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnVendorService" name="btnVendorService">Vendor Service</button>  
     </div>
     {{/if}}
+    {{#if showTimerStart}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnStartTimer" name="btnStartTimer">Start Timer</button>  
+    </div>
+    {{/if}}
+    {{#if showTimerPause}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnPauseTimer" name="btnPauseTimer">Pause Timer</button>  
+    </div>
+    {{/if}}
+    {{#if showTimerStop}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnStopTimer" name="btnStopTimer">Stop Timer</button>  
+    </div>
+    {{/if}}
   {{/if}}
 </template>
