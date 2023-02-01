@@ -1849,8 +1849,7 @@
                             class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                         <button id="btnNewJob" name="btnNewJob" class="btn btn-primary" type="button"
                           style="margin: 14px;" role="button" data-toggle="modal" href="#addNewJobModal"><i
-                            class="icon ion-plus" style="padding-right: 5px;"></i>New
-                          Job</button>
+                            class="icon ion-plus" style="padding-right: 5px;"></i>New Job</button>
                       </div>
                       <div class="col">
                         <button id="printConfirmJob" class="btn btn-primary float-right jobprintConfirm printConfirmJob"
@@ -1976,42 +1975,7 @@
                           </div>
                         </div>
                         <!-- End -->
-                        <div class="table-responsive">
-                          <style>
-                            th {
-                              background-color: #ededed;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(odd) {
-                              background-color: white !important;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(even) {
-                              background-color: #0000000d !important;
-                            }
-
-                            .JColResizer>tbody>tr>td,
-                            .JColResizer>tbody>tr>th {
-                              padding: .75rem !important;
-                            }
-
-                            .hiddenColumn {
-                              display: none;
-                            }
-
-                            .showColumn {
-                              display: table-cell;
-                              padding: .75rem;
-                              vertical-align: top;
-                            }
-
-                            input[type=number]::-webkit-inner-spin-button,
-                            input[type=number]::-webkit-outer-spin-button {
-                              opacity: 1;
-                            }
-                          </style>
-                          {{> non_transactional_list tablename="tblCustomerJobDetailsList"}}
-                        </div>
+                        {{> non_transactional_list tablename="tblCustomerJobDetailsList"}}
                       </div>
                     </div>
                     <!-- New Job Pop Up Start Here  -->

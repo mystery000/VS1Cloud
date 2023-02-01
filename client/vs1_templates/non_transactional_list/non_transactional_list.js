@@ -7936,9 +7936,12 @@ Template.non_transactional_list.onRendered(function() {
         getVS1Data('TJobVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
                 contactService.getAllJobListByCustomer(customerName).then(function(data) {
+                    console.log("DATA HERE:", data)
+
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
                     addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
+                    console.log(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -7949,6 +7952,7 @@ Template.non_transactional_list.onRendered(function() {
             contactService.getAllJobListByCustomer(customerName).then(function(data) {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
             }).catch(function(err) {
+                console.log(err);
                 $('.fullScreenSpin').css('display', 'none');
             });
         });
@@ -7956,6 +7960,7 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayCustomerJobDetailsListData = function(data, customerName) {
         let dataTableListJob = [];
+        console.log("Data", data)
         for (let i = 0; i < data.tjobvs1.length; i++) {
             let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.ARBalance) || 0.00;
             let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.CreditBalance) || 0.00;
@@ -8011,7 +8016,6 @@ Template.non_transactional_list.onRendered(function() {
                 MakeNegative();
             }, 100);
         }
-        // splashArrayClientTypeList =[[1,'company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1',]]
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayClientTypeList,

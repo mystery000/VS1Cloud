@@ -256,7 +256,7 @@ Template.uomlistpop.onRendered(function() {
       });
 
   };
-  templateObject.getAllUOMs();
+//   templateObject.getAllUOMs();
 
 });
 
