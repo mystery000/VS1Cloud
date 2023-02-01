@@ -163,9 +163,9 @@ Template.newsidenav.onCreated(function () {
   });
 });
 Template.newsidenav.onRendered(function () {
-  var countObjectTimes = 0;
-  let allDataToLoad = 79;
-  let progressPercentage = 0;
+  // var countObjectTimes = 0;
+  // let allDataToLoad = 93;
+  // let progressPercentage = 0;
   let templateObject = Template.instance();
 
   let vS1FormAccessDetail = localStorage.getItem('VS1FormAccessDetail');
