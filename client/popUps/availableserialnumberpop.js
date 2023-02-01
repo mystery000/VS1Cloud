@@ -39,8 +39,7 @@ Template.availableserialnumberpop.events({
         activeNumber.each((key, serialchk) => {
             if($(serialchk).is(':checked')){
                 newNumberList.push($(serialchk).closest("tr").find(".colSN").html());
-            }
-            
+            }            
         });
         if (newNumberList.length === 0) {
             swal('', 'You didn\'t select any serial numbers', 'warning');

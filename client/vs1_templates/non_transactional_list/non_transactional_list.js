@@ -14826,7 +14826,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colSerialNumber",
@@ -15210,8 +15210,22 @@ Template.non_transactional_list.onRendered(function() {
                 }
             }
         }).catch(function (err) {
+            // let data = {
+            //     "tproductbatches": [
+            //         {
+            //             Batchno: "234234",
+            //             ExpiryDate: "02/02/2023",
+            //             PARTNAME: "productname",
+            //             QtyDescription: "salsedes",
+            //             Alloctype: "IN",
+            //             Qty: 3,                
+            //             classname: "Default",
+            //             ClassId: 1,
+            //         }
+            //     ]
+            // }
             productService.getProductBatches().then(async function (data) {
-                // await addVS1Data('TProductBatches', JSON.stringify(data));
+                await addVS1Data('TProductBatches', JSON.stringify(data));
                 if(productID){
                     templateObject.displayLotNumberListByID(data, deleteFilter, productID);
                 }
@@ -15225,6 +15239,7 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.displayLotNumberList = function(data, deleteFilter=false){
+        console.log("==========", data);
         let splashArrayTimeSheetList = new Array();
         for (let i = 0; i < data.tproductbatches.length; i++) {
 
@@ -15245,8 +15260,10 @@ Template.non_transactional_list.onRendered(function() {
             let barcode = "";
             let binnumber = "";
             let lotnumber = data.tproductbatches[i].Batchno;
-            let status = data.tproductbatches[i].Alloctype;
+            let status = data.tproductbatches[i].Alloctype === "" ? "Draft" : data.tproductbatches[i].Alloctype === "IN" ? "In-Stock" : "Sold";
+            status = "<span>" + status + "</span><br/><span>" + status + "</span>";
             let qty = data.tproductbatches[i].Qty;
+            qty = "<span>" + qty + "</span><br/><span>" + qty + "</span><br/><span>" + qty + "</span>";
             let transaction = data.tproductbatches[i].QtyDescription;
             let expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
             let cssclass = tclass;
@@ -15256,7 +15273,7 @@ Template.non_transactional_list.onRendered(function() {
                 expirydate,
                 productname,
                 salsedes,
-                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",
+                status,
                 qty,                
                 transaction,
                 department,
@@ -15290,6 +15307,7 @@ Template.non_transactional_list.onRendered(function() {
                 }
             }
         }
+        
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -15300,7 +15318,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colSerialNumber",
