@@ -76,7 +76,7 @@
                 
             </div>
             <div class="col-4 col-md-4 col-sm-12">
-                <div style="width: 100%; text-align: right;"><svg id="lbl_barcode3"></svg></div>
+                <div style="width: 100%; text-align: right; z-index: 100;" class="draggable"><svg id="lbl_barcode3"></svg></div>
                 <script>
                     JsBarcode(
                         "#lbl_barcode3", 
@@ -94,32 +94,32 @@
         <div class="d-flex flex-row d-sm-flex d-md-flex">
             <div class="col-6 col-md-6 col-sm-12 d-flex companyLogo">
                 <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 43%; margin-bottom: 0px;">
-                    <p class="label-p" style="padding-left: 10px; margin-top: 10px;">
-                        <span class="o_abn_label3"></span>&nbsp;
-                        <span class="o_abn3"></span>
+                    <img src="assets/img/VS1.png" class="uploadedImage draggable" style="width: 43%; margin-bottom: 0px; top: 25px;">
+                    <p class="label-p" style="padding-left: 15px; margin-top: 55px;">
+                        <span class="o_abn_label3 draggable"></span>&nbsp;
+                        <span class="o_abn3 draggable" style="left: 60px; top: 110px;"></span>
                     </p>
                 </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex headerTitle3">
-                <div class="titleBack3"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <p class="label-p print-header3" style="font-size: 36px !important;">INVOICE</p>
+                <div class="titleBack3 draggable" style="top: 65px;"><!-- max-width: 60mm; max-height: 30mm; -->
+                    <p class="label-p print-header3 draggable" style="font-size: 36px !important;">INVOICE</p>
                 </div>
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
             <div class="col-6 col-md-6 col-sm-12 d-flex">
                 <div style="width: 100%;">
-                    <p class="label-p3 toLabel3" style="color: #71c6a5;">INVOICE TO: </p>
+                    <p class="label-p3 toLabel3 draggable" style="color: #71c6a5; top: -30px;">INVOICE TO: </p>
                     <div style="width: 100%; min-height: 100px;">
-                        <p class="label-p pdfCustomerAddress3"></p>
+                        <p class="label-p pdfCustomerAddress3 draggable"></p>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12 d-flex">
                 <div style="width: 100%;">
-                    <p class="label-p3 dateLabel3" style="color: #71c6a5; text-align: right;">INVOICE DATE: </p>
-                    <p class="label-p date3" style="font-weight: bold; text-align: right;"></p>
+                    <p class="label-p3 dateLabel3 draggable" style="color: #71c6a5; text-align: right; left: 340px;">INVOICE DATE: </p>
+                    <p class="label-p date3 draggable" style="font-weight: bold; text-align: right; left: 330px; top: 25px;"></p>
                 </div>
             </div>
         </div>
