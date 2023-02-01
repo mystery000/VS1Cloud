@@ -1396,6 +1396,12 @@ Template.bankingoverview.events({
     "click .btnRefreshBankingOverview": function () {
         $(".btnRefresh").trigger("click");
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Balancesheet report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     'click .btnRefresh': function() {
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
