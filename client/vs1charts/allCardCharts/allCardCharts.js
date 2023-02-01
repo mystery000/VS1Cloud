@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
-import './dashboardCardCharts.html';
+import './allCardCharts.html';
 
-Template.dashboardCardCharts.helpers({
+Template.allCardCharts.helpers({
     create: function() {
 
     },
@@ -13,6 +13,6 @@ Template.dashboardCardCharts.helpers({
     },
 });
 
-Template.dashboardCardCharts.events({
+Template.allCardCharts.events({
 
 });

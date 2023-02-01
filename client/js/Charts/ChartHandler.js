@@ -139,11 +139,7 @@ export default class ChartHandler {
     let pref = new Tvs1ChartDashboardPreference({
       type: "Tvs1dashboardpreferences",
       fields: new Tvs1ChartDashboardPreferenceField({
-        Active:
-          $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
-          $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true"
-            ? false
-            : true,
+        Active:$(chart).find(".chkDatatable").is(':checked'),
         ChartID: $(chart).attr("chart-id"),
         ID: $(chart).attr("pref-id"), // This is empty when it is the first time, but the next times it is filled
         EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
