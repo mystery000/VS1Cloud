@@ -145,7 +145,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 78;
+  let allDataToLoad = 93;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -2666,7 +2666,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
     templateObject.getAllTExpenseClaimExData = function() {
-        sideBarService.getAllExpenseCliamExDataVS1().then(function(data) {
+        sideBarService.getAllExpenseClaimExData(initialDataLoad, 0).then(function(data) {
             countObjectTimes++;
             progressPercentage = (countObjectTimes * 100) / allDataToLoad;
             $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2858,7 +2858,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     });
   }
   templateObject.getClientTypeListData = function() {
-    sideBarService.getClientTypeDataList("", "", "").then(async function(data) {
+    sideBarService.getClientTypeDataList(initialBaseDataLoad, 0, false).then(async function(data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);

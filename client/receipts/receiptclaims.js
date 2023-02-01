@@ -148,7 +148,7 @@ Template.receiptsoverview.onRendered(function () {
                         $('.fullScreenSpin').css('display', 'none');
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
-                    });   
+                    });
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
                 }
@@ -1671,8 +1671,8 @@ Template.receiptsoverview.onRendered(function () {
                     }
                 });
                 let pf5 =(supplier_name != "" || supplier_name != undefined || supplier_name != null) ? supplier_name.slice(0, 5) : "";
-                
-                
+
+
                 if (!isExistSupplier) {
                     contactService.getOneSupplierDataExByName(supplier_name).then(function (data) {
                         if (data.tsupplier.length == 0) {
@@ -1788,7 +1788,7 @@ Template.receiptsoverview.onRendered(function () {
     };
 
     templateObject.getOCRResultFromImageForMultiple = function(imageData, fileName, index) {
-        
+
         $('.fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
             $('.fullScreenSpin').css('display', 'none');
@@ -2147,7 +2147,7 @@ Template.receiptsoverview.events({
             $('#nav-time .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
-    },    
+    },
     'change #dateFrom, change #dateTo': function(event) {
         const receiptTable = $('#tblReceiptList').DataTable();
         receiptTable.draw();
@@ -3563,7 +3563,7 @@ Template.receiptsoverview.events({
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         // sideBarService.getAllExpenseCliamExDataVS1().then(function(expenseData) {
-        sideBarService.getAllExpenseClaimExData().then(function (expenseData) {
+        sideBarService.getAllExpenseClaimExData(initialDataLoad, 0).then(function (expenseData) {
             addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function (datareturn) {
                 sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
                     addVS1Data('TSupplierVS1', JSON.stringify(dataReload)).then(function (datareturn) {
