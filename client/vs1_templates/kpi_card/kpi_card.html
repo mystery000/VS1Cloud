@@ -27,19 +27,17 @@
     card-key="{{cardKey}}">
         <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
-            <div class="hideShowDiv custom-control custom-switch " style="display: inline-flex; justify-content: right;">
-                {{!-- <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a> --}}
-                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Turn this on as a default chart when reset is selected" style="float: right">
+            <div class="hideShowDiv" style="display: inline-flex; justify-content: right;">
+                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Default">
                         <input class="custom-control-input defaultDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch2-{{cardKey}}" >
                         <label class="custom-control-label hideelement" for="switch2-{{cardKey}}"></label>
                     </div>
-                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Display this chart" style="float: right">
+                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="{{tooltip_text}}">
                         <input class="custom-control-input chkDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{cardKey}}">
-                        <label class="custom-control-label hideelement" for="switch1-{{cardKey}}"></label>
+                        <label class="custom-control-label hideelement" for="switch1-{{cardKey}}"></label>                        
                     </div>
-                {{!-- <input class="custom-control-input chkDatatable cardShowBtn hideelement" type="checkbox" id="switch-" style="margin-top: 0px !important;"> --}}
-                {{!-- <label class="custom-control-label cardShowBtn hideelement" for="switch-"></label> --}}
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn" style="float: right;"><i class="fas fa-cog"></i></a>
+                    <p class="hideelement simplestart" >Simple Start</p>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body {{actionClass}}" style="cursor: pointer;">
                 {{> Template.contentBlock}}
@@ -57,7 +55,7 @@
             position: relative;
             padding-top: 15px !important;
         }
-        a.cardSettingBtn {
+        .cardSettingBtn {
             display: inline-flex;
             width: 22px;
             height: 22px;
@@ -71,16 +69,15 @@
             margin-left: 3px;
         }
 
-        a.editCardBtn :hover {
+        .editCardBtn :hover {
             background: #dddfeb;
             color: #6e6e6e;
             padding: 4px;
             border-radius: 3px;
         }
 
-        a.cardHideBtn,
-        a.cardShowBtn {
-            display: inline-flex;
+        .cardShowBtn {
+            display: inline-block;
             width: 22px;
             height: 22px;
             font-size: 10px;
@@ -93,27 +90,22 @@
             color: #dddfeb;
         }
 
-        a.cardHideBtn:hover,
-        a.cardShowBtn:hover,
-        a.cardHideBtn.active,
-        a.cardShowBtn.active {
+        .cardShowBtn.active {
             background: #00a3d3;
             color: #fff;
         }
 
-        a.cardHideBtn i,
-        a.cardShowBtn i {
+        .cardShowBtn i {
             pointer-events: none;
         }
 
-        .dimmedChart a.cardHideBtn,
-        .dimmedChart a.cardShowBtn,
-        .dimmedChart a.cardSettingBtn {
+        .dimmedChart,
+        .dimmedChart cardSettingBtn {
             background: #f1f1f1 !important;
             color: #6e6e6e;
         }
 
-        .dimmedChart a.editCardBtn :hover {
+        .dimmedChart editCardBtn :hover {
             background: rgba(0, 0, 0, 0) !important;
         }
 
@@ -131,7 +123,7 @@
             cursor: pointer;
         }
         .dimmedChart .cardShowBtn{
-            display: inline-flex !important;
+            display: inline-block !important;
         }
     </style>
 </template>

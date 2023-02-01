@@ -32,7 +32,6 @@ import '../../Dashboard/appointments-widget/ds-appointments-widget.html';
 
 let _ = require("lodash");
 
-
 /**
  * Current User ID
  */
@@ -56,6 +55,7 @@ const chartsEditor = new ChartsEditor(
         $(".chkDatatable").removeClass("hideelement");
         $(".chkDatatable").addClass("showelement");
         $(".custom-control-label").removeClass("hideelement");
+        $(".simplestart").removeClass("hideelement");
     },
     () => {
         $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
@@ -72,6 +72,8 @@ const chartsEditor = new ChartsEditor(
         $(".chkDatatable").removeClass("showelement");
         $(".custom-control-label").addClass("hideelement");
         $(".custom-control-label").removeClass("showelement");
+        $(".simplestart").addClass("hideelement");
+        $(".simplestart").removeClass("showelement");
     }
 );
 
@@ -134,6 +136,10 @@ async function saveCharts() {
     }
     // }
 }
+Template.draggablePanel.onCreated(function() {
+    const templateObject = Template.instance();
+    templateObject.tooltip_text = new ReactiveVar("");
+});
 
 Template.allChartLists.onCreated(function() {
     const templateObject = Template.instance();
@@ -144,7 +150,7 @@ Template.allChartLists.onRendered(function() {
     const templateObject = Template.instance();
     _tabGroup = $("#connectedSortable").data("tabgroup");
     _chartGroup = $("#connectedSortable").data("chartgroup");
-    templateObject.tooltip = new ReactiveVar();
+    
 
     templateObject.hideChartElements = () => {
         const dimmedElements = document.getElementsByClassName("dimmedChart");
@@ -501,6 +507,20 @@ Template.allChartLists.onRendered(function() {
 });
 
 Template.allChartLists.events({
+    // "mouseenter .chkDatatable": (e) => {
+    //     if($(e.currentTarget).is(":checked")){
+    //         Template.instance().tooltip_text.set("Hide");
+    //     }
+    //     else
+    //         Template.instance().tooltip_text.set("Show");
+    // },
+    // "mouseleave .custom-switch": (e) => {
+    //     console.log("===========================");
+    //     if($(e.currentTarget).is(":checked"))
+    //         Template.instance().tooltip_text.set("true");
+    //     else
+    //         Template.instance().tooltip_text.set("False");
+    // },
     "mouseover .card-header": (e) => {
         $(e.currentTarget).parent(".card").addClass("hovered");
     },
@@ -590,19 +610,10 @@ Template.allChartLists.events({
             Meteor._reload.reload();
         }, delayTimeAfterSound);
     },
-    "hover .defaultDatatable": (e) => {
-        let templateObject = Template.instance();
-        if($(e.target).is(":checked"))
-            templateObject.tooltip = "Hide";
-        else
-            templateObject.tooltip = "Show";
-    },
 });
 
 Template.allChartLists.helpers({
-    tooltip: () => {        
-        return Template.instance().tooltip.get();
-    },
+
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;
@@ -616,6 +627,21 @@ Template.allChartLists.helpers({
         return FlowRouter.current().path.includes(currentTemplate);
     },
 });
+
+Template.draggablePanel.events({
+    "mouseenter .chkDatatable": (e) => {
+        if($(e.currentTarget).is(":checked")){
+            Template.instance().tooltip_text.set("Hide");
+        }
+        else
+            Template.instance().tooltip_text.set("Show");
+    },
+})
+Template.draggablePanel.helpers({
+    tooltip_text: () => {        
+        return Template.instance().tooltip_text.get();
+    },
+})
 
 Template.registerHelper('equals', function(a, b) {
     return a === b;
