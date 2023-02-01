@@ -1076,16 +1076,33 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 8, label: 'Bin', class: 'colBin', active: true, display: true, width: "" },
                 { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblSerialNumberListByID"){
+            reset_data = [
+                { index: 0, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
+                { index: 1, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },                
+            ]
         } else if (currenttablename === "tblLotNumberList"){
             reset_data = [
-                { index: 0, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
-                { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
-                { index: 2, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
-                { index: 3, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },
-                { index: 4, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
-                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
-                { index: 6, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
-                { index: 7, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
+                { index: 0, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
+                { index: 1, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
+                { index: 2, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
+                { index: 3, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
+                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 5, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },                
+                { index: 6, label: 'Transaction', class: 'colTransaction', active: true, display: true, width: "" },
+                { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
+                { index: 8, label: 'Bin', class: 'colBin', active: true, display: true, width: "" },
+                { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },                
+                
+            ]
+        } else if (currenttablename === "tblLotNumberListByID"){
+            reset_data = [
+                { index: 0, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
+                { index: 1, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
+                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },                
+                { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
             ]
         } else if (currenttablename === "tblAllSingleTouchPayroll"){
             reset_data = [
@@ -14697,23 +14714,38 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.tableheaderrecords.set(tableHeaderList);
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
-    templateObject.getSerialNumberList = function(deleteFilter=false){
+    templateObject.getSerialNumberList = function(deleteFilter=false, productID=""){
         getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
             if (dataObject.length == 0) {
                 stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
                     await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-                    templateObject.displaySerialNumberList(data, deleteFilter);
+                    if(productID){
+                        templateObject.displaySerialNumberListByID(data, deleteFilter, productID);
+                    }
+                    else{
+                        templateObject.displaySerialNumberList(data, deleteFilter);
+                    }
                 }).catch(function (err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displaySerialNumberList(data, deleteFilter);
+                if(productID){
+                    templateObject.displaySerialNumberListByID(data, deleteFilter, productID);
+                }
+                else{
+                    templateObject.displaySerialNumberList(data, deleteFilter);
+                }
             }
         }).catch(function (err) {
             stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
-              await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-              templateObject.displaySerialNumberList(data, deleteFilter);
+                await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                if(productID){
+                    templateObject.displaySerialNumberListByID(data, deleteFilter, productID);
+                }
+                else{
+                    templateObject.displaySerialNumberList(data, deleteFilter);
+                }
           }).catch(function (err) {
 
           });
@@ -14959,30 +14991,7 @@ Template.non_transactional_list.onRendered(function() {
     setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getLotNumberList = function(deleteFilter=false){
-        getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
-                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-                    templateObject.displayLotNumberList(data, deleteFilter);
-                }).catch(function (err) {
-
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                templateObject.displayLotNumberList(data, deleteFilter);
-            }
-        }).catch(function (err) {
-            stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
-              await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-              templateObject.displayLotNumberList(data, deleteFilter);
-          }).catch(function (err) {
-
-          });
-        });
-    }
-
-    templateObject.displayLotNumberList = function(data, deleteFilter=false){
+    templateObject.displaySerialNumberListByID = function(data, deleteFilter=false, productID){
         let splashArrayTimeSheetList = new Array();
         for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
 
@@ -15000,38 +15009,30 @@ Template.non_transactional_list.onRendered(function() {
             let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
             let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
             let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
+            let qty = data.tserialnumberlistcurrentreport[i].Quantity;
+            let transaction = data.tserialnumberlistcurrentreport[i].Quantity;
+            let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
             let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
-            let lotnumber = data.tserialnumberlistcurrentreport[i].BatchNumber;
+            let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
             let status = data.tserialnumberlistcurrentreport[i].AllocType;
             let date = data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate;
-            let expirydate = data.tserialnumberlistcurrentreport[i].BatchExpiryDate !=''? moment(data.tserialnumberlistcurrentreport[i].BatchExpiryDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].BatchExpiryDate;
             let cssclass = tclass;
 
             var dataTimeSheetList = [
-                productname,
-                department,
-                salsedes,
-                barcode,
-                lotnumber,
+                serialnumber,
+                // productname,
+                // salsedes,
                 status === ""?"Draft":status,
+                // qty,
                 date,
-                expirydate,
+                // transaction,
+                department,
+                // bin,
+                // barcode,
                 cssclass,
             ];
 
-            if($("#tblDepartmentCheckbox") != undefined){
-                if($("#tblDepartmentCheckbox #formCheck-"+data.tserialnumberlistcurrentreport[i].DepartmentID).prop("checked") == true){
-                    if(!deleteFilter){
-                        if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
-                            splashArrayTimeSheetList.push(dataTimeSheetList);
-                        }
-                    }
-                    else{
-                        splashArrayTimeSheetList.push(dataTimeSheetList);
-                    }
-                }
-            }
-            else{
+            if(data.tserialnumberlistcurrentreport[i].PartsID == productID){
                 if(!deleteFilter){
                     if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
                         splashArrayTimeSheetList.push(dataTimeSheetList);
@@ -15052,53 +15053,310 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colProductName",
-                        targets:0,
-                        width:'14%',
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("data-serialnumber", rowData[4]);
-                        }
-                    },
-                    {
-                        className: "colDepartment",
-                        targets: 1,
-                        width:'15%'
-                    },
-                    {
-                        className: "colDescription",
-                        targets: 2,
-                        width:'15%'
-                    },
-                    {
-                        className: "colBarcode",
-                        targets: 3,
-                        width:'10%'
-                    },
-                    {
                         className: "colSerialNumber",
-                        targets: 4,
-                        width:'10%'
+                        targets: 0,
+                        width:'20%'
                     },
                     {
                         className: "colStatus",
-                        targets: 5,
-                        width:'15%',
+                        targets: 1,
+                        width:'20%',
                         createdCell: function (td, cellData, rowData, row, col) {
-                        $(td).addClass(rowData[8]);
-                    }
+                            $(td).addClass(rowData[4]);
+                        }
                     },
                     {
                         className: "colDate",
-                        targets: 6,
-                        width:'10%'
+                        targets: 2,
+                        width:'20%'
+                    },
+                    {
+                        className: "colDepartment",
+                        targets: 3,
+                        width:'40%'
+                    },                    
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter == true) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    templateObject.getLotNumberList = function(deleteFilter=false, productID=""){
+        let dataJSON = [];
+        getVS1Data('TProductBatches').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getProductBatches().then(async function (data) {
+                    await addVS1Data('TProductBatches', JSON.stringify(data));
+                    if(productID){
+                        templateObject.displayLotNumberListByID(data, deleteFilter, productID);
+                    }
+                    else{
+                        templateObject.displayLotNumberList(data, deleteFilter);
+                    }
+                }).catch(function (err) {
+        
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                if(productID){
+                    templateObject.displayLotNumberListByID(data, deleteFilter, productID);
+                }
+                else{
+                    templateObject.displayLotNumberList(data, deleteFilter);
+                }
+            }
+        }).catch(function (err) {
+            productService.getProductBatches().then(async function (data) {
+                // await addVS1Data('TProductBatches', JSON.stringify(data));
+                if(productID){
+                    templateObject.displayLotNumberListByID(data, deleteFilter, productID);
+                }
+                else{
+                    templateObject.displayLotNumberList(data, deleteFilter);
+                }
+            }).catch(function (err) {
+    
+            });
+        });
+    }
+
+    templateObject.displayLotNumberList = function(data, deleteFilter=false){
+        let splashArrayTimeSheetList = new Array();
+        for (let i = 0; i < data.tproductbatches.length; i++) {
+
+            let tclass = '';
+            if(data.tproductbatches[i].Alloctype == "OUT"){
+                tclass="text-sold";
+            }else if(data.tproductbatches[i].Alloctype == "IN"){
+                tclass="text-instock";
+            }else if(data.tproductbatches[i].Alloctype == "Transferred (Not Available)"){
+                tclass="text-transfered";
+            }else{
+                tclass='';
+            }
+
+            let productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
+            let department = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+            let salsedes = data.tproductbatches[i].QtyDescription;
+            let barcode = "";
+            let binnumber = "";
+            let lotnumber = data.tproductbatches[i].Batchno;
+            let status = data.tproductbatches[i].Alloctype;
+            let qty = data.tproductbatches[i].Qty;
+            let transaction = data.tproductbatches[i].QtyDescription;
+            let expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
+            let cssclass = tclass;
+
+            var dataTimeSheetList = [
+                lotnumber,
+                expirydate,
+                productname,
+                salsedes,
+                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",
+                qty,                
+                transaction,
+                department,
+                binnumber,
+                barcode,
+                cssclass,
+            ];
+
+            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype != ""){
+                if($("#tblDepartmentCheckbox") != undefined){
+                    if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
+                        if(!deleteFilter){
+                            if(data.tproductbatches[i].Alloctype != "OUT"){
+                                splashArrayTimeSheetList.push(dataTimeSheetList);
+                            }
+                        }
+                        else{
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                }
+                else{
+                    if(!deleteFilter){
+                        if(data.tproductbatches[i].Alloctype != "OUT"){
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                    else{
+                        splashArrayTimeSheetList.push(dataTimeSheetList);
+                    }
+                }
+            }
+        }
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colSerialNumber",
+                        targets: 0,
+                        width:'8%'
                     },
                     {
                         className: "colExpiryDate",
+                        targets: 1,
+                        width:'8%'
+                    },
+                    {
+                        className: "colProductName",
+                        targets: 2,
+                        width:'14%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("data-lotnumber", rowData[0]);
+                        }
+                    },
+                    {
+                        className: "colDescription",
+                        targets: 3,
+                        width:'14%'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 4,
+                        width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass(rowData[10]);
+                        }
+                    },
+                    {
+                        className: "colQty",
+                        targets: 5,
+                        width:'8%'
+                    },                    
+                    {
+                        className: "colTransaction",
+                        targets: 6,
+                        width:'8%'
+                    },
+                    {
+                        className: "colDepartment",
                         targets: 7,
-                        width:'10%'
+                        width:'14%'
+                    },
+                    {
+                        className: "colBin",
+                        targets: 8,
+                        width:'8%'
+                    },
+                    {
+                        className: "colBarcode",
+                        targets: 9,
+                        width:'8%'
                     }
                 ],
                 buttons: [{
@@ -15207,6 +15465,195 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.displayLotNumberListByID = function(data, deleteFilter=false, productID){
+        let splashArrayTimeSheetList = new Array();
+        for (let i = 0; i < data.tproductbatches.length; i++) {
+
+            let tclass = '';
+            if(data.tproductbatches[i].Alloctype == "OUT"){
+                tclass="text-sold";
+            }else if(data.tproductbatches[i].Alloctype == "IN"){
+                tclass="text-instock";
+            }else if(data.tproductbatches[i].Alloctype == "Transferred (Not Available)"){
+                tclass="text-transfered";
+            }else{
+                tclass='';
+            }
+
+            let productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
+            let department = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+            let salsedes = data.tproductbatches[i].QtyDescription;
+            let barcode = "";
+            let binnumber = "";
+            let lotnumber = data.tproductbatches[i].Batchno;
+            let status = data.tproductbatches[i].Alloctype;
+            let qty = data.tproductbatches[i].Qty;
+            let transaction = data.tproductbatches[i].QtyDescription;
+            let expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
+            let cssclass = tclass;
+
+            var dataTimeSheetList = [
+                lotnumber,
+                expirydate,
+                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",                
+                department,
+                cssclass,
+            ];
+            
+            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype != ""){
+                if(data.tproductbatches[i].PartsID == productID){
+                    if(!deleteFilter){
+                        if(data.tproductbatches[i].Alloctype != "OUT"){
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                    else{
+                        splashArrayTimeSheetList.push(dataTimeSheetList);
+                    }
+                }
+            }
+        }
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colSerialNumber",
+                        targets: 0,
+                        width:'20%'
+                    },
+                    {
+                        className: "colExpiryDate",
+                        targets: 1,
+                        width:'20%'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 2,
+                        width:'15%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass(rowData[4]);
+                        }
+                    },
+                    {
+                        className: "colDepartment",
+                        targets: 3,
+                        width:'25%'
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter == true) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
 
     templateObject.getPayCalendarsData = function(){
         getVS1Data('TPayrollCalendars').then(function (dataObject) {
@@ -16103,9 +16550,19 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             templateObject.getSerialNumberList(false);
         }, 100);
+    } else if (currenttablename === "tblSerialNumberListByID"){
+        setTimeout(function() {
+            let prductID = templateObject.data.prductID || ""
+            templateObject.getSerialNumberList(false, prductID);
+        }, 100);
     } else if (currenttablename === "tblLotNumberList"){
         setTimeout(function() {
             templateObject.getLotNumberList(false);
+        }, 100);
+    } else if (currenttablename === "tblLotNumberListByID"){
+        setTimeout(function() {
+            let prductID = templateObject.data.prductID || ""
+            templateObject.getLotNumberList(false, prductID);
         }, 100);
     }else if (currenttablename === "tblPayCalendars"){
         templateObject.getPayCalendarsData();
@@ -16287,8 +16744,14 @@ Template.non_transactional_list.events({
             templateObject.getSubtaskData(true);
         } else if (currenttablename === "tblSerialNumberList"){
             templateObject.getSerialNumberList(true);
+        } else if (currenttablename === "tblSerialNumberListByID"){
+            let prductID = templateObject.data.prductID || ""
+            templateObject.getSerialNumberList(true, prductID);
         } else if (currenttablename === "tblLotNumberList"){
             templateObject.getLotNumberList(true);
+        } else if (currenttablename === "tblLotNumberListByID"){
+            let prductID = templateObject.data.prductID || ""
+            templateObject.getLotNumberList(true, prductID);
         } else if(currenttablename === "tblAllSingleTouchPayroll"){
             templateObject.getAllSingleTouchPayroll(true)
         }
@@ -16393,8 +16856,14 @@ Template.non_transactional_list.events({
             templateObject.getSubtaskData(false);
         } else if (currenttablename === "tblSerialNumberList"){
             templateObject.getSerialNumberList(false);
+        } else if (currenttablename === "tblSerialNumberListByID"){
+            let prductID = templateObject.data.prductID || ""
+            templateObject.getSerialNumberList(false, prductID);
         } else if (currenttablename === "tblLotNumberList"){
             templateObject.getLotNumberList(false);
+        } else if (currenttablename === "tblLotNumberListByID"){
+            let prductID = templateObject.data.prductID || ""
+            templateObject.getLotNumberList(false, prductID);
         }else if(currenttablename === "tblAllSingleTouchPayroll"){
             templateObject.getAllSingleTouchPayroll(false)
         }

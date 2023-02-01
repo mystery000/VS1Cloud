@@ -10831,7 +10831,8 @@ Template.new_quote.events({
                         cancelButtonText: 'No'
                         // cancelButtonClass: "btn-default"
                     }).then((result) => {
-                        if (result.value) {                        
+                        if (result.value) {
+                            FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                         } else if (result.dismiss === 'cancel') {
                             // $('.essentialsdiv .custom-control-input').prop("checked", false);
                             event.preventDefault();

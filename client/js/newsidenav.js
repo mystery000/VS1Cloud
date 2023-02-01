@@ -585,9 +585,10 @@ Template.newsidenav.onRendered(function () {
         $('#sidenavfixedAssets').removeClass('active');
         $('.collapse').collapse('hide');
       } else if ((currentLoc == "/inventorylist") || (currentLoc == '/productview') ||
-        (currentLoc == "/stockadjustmentcard") ||
-        (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
-        (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist")) {
+      (currentLoc == "/stockadjustmentcard") ||
+      (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
+      (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');

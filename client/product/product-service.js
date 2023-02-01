@@ -466,4 +466,12 @@ export class ProductService extends BaseService {
     saveBOMProduct(data) {
         return this.POST(this.ERPObjects.TProcTree, data)
     }
+
+    getProductBatches() {
+        let options = {
+            ListType: 'Detail',
+            // select: "[ID]="+id+" and [ProcStepItemRef]='vs1BOM'"
+        }
+        return this.getList(this.ERPObjects.TProductBatches, options)
+    }
 }
