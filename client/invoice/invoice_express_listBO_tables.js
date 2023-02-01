@@ -1488,7 +1488,7 @@ Template.invoicelistBO.events({
     "click .btnSpreadSheetLink": function () {
         $(".fullScreenSpin").css("display", "inline-block");
         let utilityService = new UtilityService();
-        const filename = "Invoices Backed Ordered report result" + ".xlsx";
+        const filename = "Invoices Back Ordered report result" + ".xlsx";
         utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
     },
     'click #exportbtn': function () {

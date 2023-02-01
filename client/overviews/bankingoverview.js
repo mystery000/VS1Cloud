@@ -1399,7 +1399,7 @@ Template.bankingoverview.events({
     "click .btnSpreadSheetLink": function () {
         $(".fullScreenSpin").css("display", "inline-block");
         let utilityService = new UtilityService();
-        const filename = "Balancesheet report result" + ".xlsx";
+        const filename = "Banking Overview report result" + ".xlsx";
         utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
     },
     'click .btnRefresh': function() {

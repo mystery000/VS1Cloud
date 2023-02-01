@@ -1164,6 +1164,12 @@ Template.customerawaitingpayments.events({
             }
         });
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "All Outstanding Invoices report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     'keyup #tblcustomerAwaitingPayment_filter input': function (event) {
           if($(event.target).val() != ''){
             $(".btnRefreshCustomerAwaiting").addClass('btnSearchAlert');
