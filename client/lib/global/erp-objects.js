@@ -314,6 +314,7 @@ const erpObject = {
     TProjectTasksList: "TProjectTasksList",
     TVS1Workorder: "TVS1Workorder",
     TCostTypes: "TCostTypes",
+    TProductBatches: "TProductBatches",
 };
 
 export default erpObject;

@@ -986,9 +986,7 @@
                 </div>
                 {{/each}}
               </div>
-              <div
-                class="row"
-                style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
+              <div class="row" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
               >
                 <div class="col-12">
                   <hr class="reporthr" style="border-width: 3px" />
@@ -1218,7 +1216,7 @@
   <!-- Start Serial Number Modal -->
 
   <div class="modal fade" role="dialog" tabindex="-1" id="SerialNumberModal">
-    <div class="modal-dialog" role="document" style="max-width: 670px !important">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">Serial Number List</h4>
@@ -1227,33 +1225,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <div id="SNTracklist" style="display: none; padding-right: 0px; padding-left: 0px">
-            <div class="table-responsive">
-              <table
-                id="serialnumberlist"
-                class="dataTable table table-striped table-bordered table-centered serialnumberlist"
-              >
-                <thead>
-                  <tr class="dnd-moved">
-                    <th class="text-center" style="width: 30%">Serial Numbers</th>
-                    <th class="text-center" style="width: 20%">Status</th>
-                    <th class="text-center" style="width: 25%">Date</th>
-                    <th class="text-center" style="width: 25%">Department</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#each item in tserialnumberList}}
-                  <tr id="{{item.SerialNumber}}">
-                    <td class="text-center">{{item.SerialNumber}}</td>
-                    <td id="transactiontype" class="text-center">{{item.Status}}</td>
-                    <td class="text-center">{{item.date}}</td>
-                    <td class="text-center">{{item.department}}</td>
-                  </tr>
-                  {{/each}}
-                </tbody>
-              </table>
-            </div>
-          </div>
+            <style>
+                #tblSerialNumberListByID .colSerialNumber{
+                  width: 25%!important
+                }
+                #tblSerialNumberListByID .colStatus{
+                    width: 15%!important
+                }
+                #tblSerialNumberListByID .colDate{
+                    width: 25%!important
+                }
+                #tblSerialNumberListByID .colDepartment{
+                    width: 30%!important
+                }
+            </style>
+            {{> non_transactional_list tablename = "tblSerialNumberListByID" prductID=productID}}
         </div>
       </div>
     </div>
@@ -1263,7 +1249,7 @@
   <!-- Start Lot number Modal -->
 
   <div class="modal fade" role="dialog" tabindex="-1" id="LotNumberModal">
-    <div class="modal-dialog" role="document" style="max-width: 670px !important">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="title-header">Lot Number List</h4>
@@ -1272,33 +1258,21 @@
           </button>
         </div>
         <div class="modal-body">
-          <div id="LotTracklist" style="display: none; padding-right: 0px; padding-left: 0px">
-            <div class="table-responsive">
-              <table id="lotnumberlist" class="dataTable table table-striped table-bordered lotnumberlist">
-                <thead>
-                  <tr class="dnd-moved">
-                    <th class="text-center" style="width: 25%">Lot Numbers</th>
-                    <th class="text-center" style="width: 15%">Status</th>
-                    <th class="text-center" style="width: 20%">Date</th>
-                    <th class="text-center" style="width: 20%">Expiry Date</th>
-                    <th class="text-center" style="width: 20%">Department</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {{#each item in tlotnumberList}}
-
-                  <tr id="{{item.transactionno}}">
-                    <td class="text-center">{{item.LotNumber}}</td>
-                    <td id="transactiontype" class="text-center">{{item.Status}}</td>
-                    <td class="text-center">{{item.date}}</td>
-                    <td class="text-center">{{item.expriydate}}</td>
-                    <td class="text-center">{{item.department}}</td>
-                  </tr>
-                  {{/each}}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <style>
+              #tblLotNumberListByID .colSerialNumber{
+                width: 25%!important
+              }
+              #tblLotNumberListByID .colExpiryDate{
+                  width: 25%!important
+              }
+              #tblLotNumberListByID .colStatus{
+                  width: 15%!important
+              }
+              #tblLotNumberListByID .colDepartment{
+                  width: 30%!important
+              }
+          </style>
+          {{> non_transactional_list tablename = "tblLotNumberListByID" prductID=productID}}
         </div>
       </div>
     </div>
