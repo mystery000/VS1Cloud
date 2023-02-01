@@ -552,6 +552,12 @@ Template.customerdetailsreport.events({
     localStorage.setItem("VS1CustomerDetails_Report", "");
     Meteor._reload.reload();
   },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Customer Details report result" + ".xlsx";
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+  },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let utilityService = new UtilityService();

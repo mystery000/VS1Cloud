@@ -1080,6 +1080,12 @@ Template.purchaseorderlistBO.events({
     'click #btnPurchaseOrderList': function(event) {
         FlowRouter.go('/purchaseorderlist');
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Purchase Orders Back Orders report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     'click .chkDatatable': function(event) {
         var columns = $('#tblpurchaseorderlistBO th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();

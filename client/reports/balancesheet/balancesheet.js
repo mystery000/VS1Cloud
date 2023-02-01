@@ -727,6 +727,12 @@ Template.balancesheetreport.events({
             }, 100);
         }, delayTimeAfterSound);
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Balancesheet report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     "click .btnExportReport": function () {
         LoadingOverlay.show();
         let utilityService = new UtilityService();
