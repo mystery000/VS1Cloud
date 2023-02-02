@@ -15,19 +15,30 @@
     <div class="eventInfo">
         <style>
             .eventInfo {
-                display: flex;
+                display: none;
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: stretch;
                 justify-content: space-around;
+                margin-left: 30px;
+                width: 500px;
             }
             .eventInfo ul {
                 list-style: none;
                 margin-left: 0;
+                padding: 0;
             }
 
             .eventInfo ul li {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
                 margin-bottom: 20px;
+                text-transform: capitalize;
             }
+
+            /* .eventInfo button i {
+                padding-right: 0 !important;
+            } */
 
             .unable-process {
                 position: relative;
@@ -128,16 +139,18 @@
             <ul class="eventDetail">
                 <li>
                     <span class="itemLabel">JOB/SO Number: </span>
-                    <span class="eventDetailItem">{{viewInfoData.SONumber}}</span>
+                    <span class="eventDetailItem">{{viewInfoData.JOBNumber}}</span>
                 </li>
                 <li>
                     <span class="itemLabel">Customer: </span>
                     <span class="eventDetailItem">{{viewInfoData.Customer}}</span>
                 </li>
+                {{#unless equals viewInfoData.Status 'unscheduled'}}
                 <li>
                     <span class="itemLabel">Overall Job % completed: </span>
                     <span class="eventDetailItem">{{viewInfoData.Percentage}}</span>
                 </li>
+                {{/unless}}
                 <li>
                     <span class="itemLabel">Order Date: </span>
                     <span class="eventDetailItem">{{viewInfoData.OrderDate}}</span>
@@ -150,10 +163,100 @@
                     <span class="itemLabel">Job Notes: </span>
                     <span class="eventDetailItem">{{viewInfoData.JobNotes}}</span>
                 </li>
+                <li>
+                    <span class="itemLabel">Status: </span>
+                    <span class="eventDetailItem">{{viewInfoData.Status}}</span>
+                </li>
             </ul>
             <div class="d-flex align-items-center justify-content-center p-3" style="gap: 20px">
-                <button class="btn btn-primary btn-round">Attachments</button>
-                <button class="btn btn-primary btn-round btn-print-event">Print</button>
+                {{#if equals viewInfoData.Status 'unscheduled'}}
+                    {{> vs1_button
+                        type='button'
+                        classes='btnMarkAsScheduled'
+                        id='btnMarkAsScheduled'
+                        iconName=' fas fa-calendar-plus'
+                        tooltip = 'mark as scheduled'
+                        title="Mark as scheduled"
+                    }}
+                {{/if}}
+
+                {{#if equals viewInfoData.Status 'scheduled'}}
+                    {{> vs1_button
+                        type='button'
+                        classes='btnMarkAsUnscheduled'
+                        id='btnMarkAsUnscheduled'
+                        iconName=' fas fa-calendar-times'
+                        tooltip = 'mark as unscheduled'
+                        title="Mark as unscheduled"
+                    }}
+                    {{ > vs1_button
+                        type="button"
+                        classes="btnStartTimer"
+                        id="btnStartTimer"
+                        iconName=' fas fa-play'
+                        tooltip= 'start timer'
+                        title='Start timer'     
+                    }}
+                {{/if}}
+
+                {{#if equals viewInfoData.Status 'started'}}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnPauseTimer'
+                        id='btnPauseTimer'
+                        iconName= ' fas fa-pause'
+                        tooltip='pause timer'
+                        title='Pause timer'
+                    }}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnStopTimer'
+                        id='btnStopTimer'
+                        iconName= ' fas fa-stop'
+                        tooltip='stop timer'
+                        title='Stop timer'
+                    }}
+                {{/if}}
+
+                {{#if equals viewInfoData.Status 'paused'}}
+                    {{>vs1_button
+                        type="button"
+                        classes="btnResumeTimer"
+                        id="btnResumeTimer"
+                        iconName=' fas fa-play'
+                        tooltip='resume timer'
+                        title='Resume timer'
+                    }}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnStopTimer'
+                        id='btnStopTimer'
+                        iconName= ' fas fa-stop'
+                        tooltip='stop timer'
+                        title='Stop timer'
+                    }}
+                {{/if}}
+                </div>
+                <div class="d-flex align-items-center justify-content-center p-3" style="gap: 20px">
+
+                <!-- <button class="btn btn-primary btn-round">Attachments</button> -->
+                {{>vs1_button
+                    type='button'
+                    classes='btn-show-attachment'
+                    id='btn-show-attachment'
+                    iconName= ' fas fa-paperclip'
+                    tooltip='attachments'
+                    title='Attachments'
+                }}
+                {{>vs1_button
+                    type='button'
+                    classes='btn-print-event'
+                    id='btn-print-event'
+                    iconName= ' fas fa-print'
+                    tooltip='print'
+                    title='Print'
+                }}
+                <!-- <button class="btn btn-primary btn-round btn-print-event">Print</button> -->
             </div>
         {{/if}}
     </div>

@@ -1224,76 +1224,9 @@ Template.newprofitandloss.events({
       "-" +
       dateTo.getDate();
 
-    const filename = "SpreadSheet" + ".xlsx";
+    const filename = "Profit and Loss report result" + ".xlsx";
 
     utilityService.exportReportToXLSX("tableExport", filename, "xlsx");
-
-    // var table = $("#tableExport").filter("table");
-    // var rows = table.find('tr').not(options.ignoreRows);
-
-    // var numCols = rows.first().find("td,th").not(options.ignoreColumns).length;
-    // var tables = [];
-    // var wsnames = [];
-
-    // var maintab = {
-    //   rows: []
-    // };
-
-    // rows.each(function() {
-    //   var cells = [];
-    //   $(this).find("td,th").not(options.ignoreColumns)
-    //     .each(function(i, col) {
-    //       var column = $(col);
-
-    //       // Strip whitespaces
-    //       var content = options.trimContent ? $.trim(column.text()) : column.text();
-    //       cells.push({
-    //         "data-type": "String",
-    //         "data-style": "",
-    //         "data-value": content,
-    //         "innerHTML": "",
-    //         "data-formula": null,
-    //         getAttribute: function (attr_val) {
-    //           if (attr_val) {
-    //             return this[attr_val];
-    //           }
-    //         }
-    //       });
-    //     });
-    //   maintab.rows.push({cells: cells});
-    // });
-
-    // tables.push(maintab);
-
-    //raw data tab content
-
-    // tables.push([]);
-    
-    //----------------
-    
-    // wsnames.push(loggedCompany + "-Profit and Loss");
-    // wsnames.push("Raw data");
-
-
-    // utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Profit and Loss", "");
-    // reportService.getProfitandLoss(formatDateFrom,formatDateTo,false).then(function (data) {
-    //     if(data.profitandlossreport){
-    //         rows[0] = ['Account Type','Account Name', 'Account Number', 'Total Amount(EX)'];
-    //         data.profitandlossreport.forEach(function (e, i) {
-    //             rows.push([
-    //               data.profitandlossreport[i]['AccountTypeDesc'],
-    //               data.profitandlossreport[i].AccountName,
-    //               data.profitandlossreport[i].AccountNo,
-    //               // utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i]['Sub Account Total']),
-    //               utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i].TotalAmount)]);
-    //         });
-    //         setTimeout(function () {
-    //             utilityService.exportReportToCsv(rows, filename, 'xls');
-    //             $('.fullScreenSpin').css('display','none');
-    //         }, 1000);
-    //     }
-    //
-    // });
   },
   "click .selPeriod": async function (e) {
     let periods = $(e.target).data("period");
