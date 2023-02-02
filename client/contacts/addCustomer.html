@@ -2884,9 +2884,9 @@
                             }
                           </style>
                           {{#if checkedAppointments}}
-                            {{> non_transactional_list tablename="tblCustomerTransactionList"}}
+                            {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}}
                           {{else}}
-                            {{> non_transactional_list tablename="tblCustomerTransactionList"}}
+                            {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}}
                           {{/if}}
                         </div>
                       </div>
