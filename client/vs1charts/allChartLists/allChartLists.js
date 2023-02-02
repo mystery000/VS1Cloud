@@ -32,6 +32,77 @@ import '../../Dashboard/appointments-widget/ds-appointments-widget.html';
 
 let _ = require("lodash");
 
+let chartsPlaceList = {
+    "Accounts_Overview": [
+        "accountrevenuestreams",
+        "profitandlosschart",
+    ],
+
+    "Contacts_Overview": [
+        "top10Customers",
+        "top10Suppliers",
+        "activeEmployees",
+    ],
+
+    "Dashboard_Overview": [
+        "bankaccountschart",
+        "monthlyprofitandloss",
+        "profitandlosschart",
+        "resalescomparision",
+        "expenseschart",
+        "accountslistchart",
+        "mytaskswidgetchart",
+    ],
+
+    "DSMCharts_Overview": [
+        "mytaskswidgetchart",
+        "dashboardManagerCharts",
+        "dsmTop10Customers",
+        "dsmAppointmentsWidget",
+        "resalescomparision",
+        "opportunitiesStatus",
+        "dsmleadlistchart",
+    ],
+
+    "DSCharts_Overview": [
+        "dashboardSalesCharts",
+        "dsAppointmentsWidget",
+        "dsleadlistchart",
+        "mytaskswidgetchart",
+    ],
+
+    "Inventory_Overview": [
+        "invstockonhandanddemand",
+        "top10Suppliers",
+    ],
+
+    "Manufacturing_Overview": [
+        "productionplannerChart"
+    ],
+
+    "Payroll_Overview": [
+        "employeeDaysAbsent",
+        "clockedOnEmployees",
+        "employeesOnLeave"
+    ],
+
+    "Purchases_Overview": [
+        "monthllyexpenses",
+        "expensebreakdown",
+    ],
+
+    "Sales_Overview": [
+        "quotedsalesorderinvoicedamounts",
+        "top10Customers",
+        "resalescomparision",
+    ],
+
+    "CRM_Overview": [
+        "crmleadchart",
+        "resalescomparision"
+    ],
+};
+
 /**
  * Current User ID
  */
@@ -44,8 +115,8 @@ const chartsEditor = new ChartsEditor(
 
         $("#btnDone").addClass("showelement");
         $("#btnDone").removeClass("hideelement");
-        $("#btnCancel").addClass("showelement");
-        $("#btnCancel").removeClass("hideelement");
+        $("#chart-btnCancel").addClass("showelement");
+        $("#chart-btnCancel").removeClass("hideelement");
         $("#editcharts").addClass("hideelement");
         $("#editcharts").removeClass("showelement");
         $(".btnchartdropdown").addClass("hideelement");
@@ -61,8 +132,8 @@ const chartsEditor = new ChartsEditor(
         $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
         $("#btnDone").addClass("hideelement");
         $("#btnDone").removeClass("showelement");
-        $("#btnCancel").addClass("hideelement");
-        $("#btnCancel").removeClass("showelement");
+        $("#chart-btnCancel").addClass("hideelement");
+        $("#chart-btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
@@ -169,8 +240,8 @@ Template.allChartLists.onRendered(function() {
         if ($('.fc-dayGridMonth-button').length > 0) {
             $('.fc-dayGridMonth-button').trigger('click');
         }
-        $(".card").addClass("dimmedChart");
-        $(".py-2").removeClass("dimmedChart");
+        // $(".card").addClass("dimmedChart");
+        // $(".py-2").removeClass("dimmedChart");
     };
     templateObject.checkChartToDisplay = async() => {
         let defaultChartList = [];
@@ -440,7 +511,7 @@ Template.allChartLists.onRendered(function() {
                         "height",
                         storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto"
                     );
-                    if (chart.fields.Active == true) {
+                    if (chart.fields.ChartGroup == _chartGroup && chart.fields.Active == true) {
                         defaultChartList.push(chart.fields._chartSlug);
                         $(`[key='${chart.fields._chartSlug}'] .chkDatatable`).prop("checked",true);
                         $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
@@ -544,8 +615,8 @@ Template.allChartLists.events({
         const templateObject = Template.instance();
         $("#btnDone").addClass("hideelement");
         $("#btnDone").removeClass("showelement");
-        $("#btnCancel").addClass("hideelement");
-        $("#btnCancel").removeClass("showelement");
+        $("#chart-btnCancel").addClass("hideelement");
+        $("#chart-btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
@@ -582,12 +653,12 @@ Template.allChartLists.events({
         }
         // templateObject.deactivateDraggable();
     },
-    "click #btnCancel": async() => {
+    "click #chart-btnCancel": async() => {
         playCancelAudio();
         let templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "block");
-            chartsEditor.disable();
+            chartsEditor.disable(); 
             await templateObject.hideChartElements();
             await templateObject.checkChartToDisplay();
             $('.sortable-chart-widget-js').removeClass("editCharts");
@@ -621,6 +692,10 @@ Template.allChartLists.helpers({
             isAccountOverviewPage = true;
         }
         return isAccountOverviewPage;
+    },
+    is_available_chart: (current, chart) => {
+        return chartsPlaceList[current].includes(chart);
+        // return 1;
     },
 
     is_dashboard_check: (currentTemplate) => {
