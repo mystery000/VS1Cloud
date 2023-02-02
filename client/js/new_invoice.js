@@ -11831,6 +11831,9 @@ Template.new_invoice.events({
       $(".lineTaxCode", rowData).val("");
       $(".lineTaxAmount", rowData).text("");
       $(".lineDiscount", rowData).val("");
+      $(".colSerialNo", rowData).removeAttr("data-lotnumbers");
+      $(".colSerialNo", rowData).removeAttr("data-expirydates");
+      $(".colSerialNo", rowData).removeAttr("data-serialnumbers");
       // $(".lineProductName", rowData).attr("prodid", '');
 
       rowData.attr("id", tokenid);
