@@ -4334,9 +4334,9 @@ Template.productview.events({
     const isCheckedSNTrack = $("#chkSNTrack").prop("checked");
     if (FlowRouter.current().queryParams.id) {
       if (isCheckedSNTrack) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let templateObject = Template.instance();
-        templateObject.getSerialNumberList();
+        // $(".fullScreenSpin").css("display", "inline-block");
+        // let templateObject = Template.instance();
+        // templateObject.getSerialNumberList();
         $("#SerialNumberModal").modal("show");
       } else {
         swal("You are not Tracking Serial numbers for this product.", "", "info");
@@ -4349,9 +4349,9 @@ Template.productview.events({
     const isCheckedLotTrack = $("#chkLotTrack").prop("checked");
     if (FlowRouter.current().queryParams.id) {
       if (isCheckedLotTrack) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let templateObject = Template.instance();
-        templateObject.getLotNumberList();
+        // $(".fullScreenSpin").css("display", "inline-block");
+        // let templateObject = Template.instance();
+        // templateObject.getLotNumberList();
         $("#LotNumberModal").modal("show");
       } else {
         swal("You are not Tracking Lot Numbers for this product.", "", "info");

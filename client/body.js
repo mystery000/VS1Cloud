@@ -343,7 +343,6 @@ import './inventory/inventorypopups/onSalesOrderPopUp.js';
 
 /* Sasa */
 import './Dashboard/Dashboard.js';
-import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
 import './Dashboard/my-tasks-widget/my-tasks-widget.js';
 import './contacts/addcustomerpop.js';
 import './Dashboard/Dashboardexe.js';

@@ -163,9 +163,9 @@ Template.newsidenav.onCreated(function () {
   });
 });
 Template.newsidenav.onRendered(function () {
-  var countObjectTimes = 0;
-  let allDataToLoad = 79;
-  let progressPercentage = 0;
+  // var countObjectTimes = 0;
+  // let allDataToLoad = 93;
+  // let progressPercentage = 0;
   let templateObject = Template.instance();
 
   let vS1FormAccessDetail = localStorage.getItem('VS1FormAccessDetail');
@@ -585,9 +585,10 @@ Template.newsidenav.onRendered(function () {
         $('#sidenavfixedAssets').removeClass('active');
         $('.collapse').collapse('hide');
       } else if ((currentLoc == "/inventorylist") || (currentLoc == '/productview') ||
-        (currentLoc == "/stockadjustmentcard") ||
-        (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
-        (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist")) {
+      (currentLoc == "/stockadjustmentcard") ||
+      (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
+      (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
