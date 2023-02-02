@@ -13254,24 +13254,24 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
     // Get ServiceLogList
-    templateObject.getServiceLogData = function () {
+    templateObject.getServiceLogData = function (activeFlag = 'all') {
       getVS1Data("TServiceLogList").then(function (dataObject) {
         if (dataObject.length == 0) {
           fixedAssetService.getServiceLogList().then(function (data) {
-            templateObject.setServiceLogList(data);
+            templateObject.setServiceLogList(data, activeFlag);
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          templateObject.setServiceLogList(data);
+          templateObject.setServiceLogList(data, activeFlag);
         }
       }).catch(function (err) {
         fixedAssetService.getServiceLogList().then(function (data) {
-            templateObject.setServiceLogList(data);
+            templateObject.setServiceLogList(data, activeFlag);
           });
       });
     };
 
-    templateObject.setServiceLogList = function (data) {
+    templateObject.setServiceLogList = function (data, activeFlag = false) {
       addVS1Data('TServiceLogList', JSON.stringify(data));
       const dataTableList = new Array();
 
@@ -13286,7 +13286,11 @@ Template.non_transactional_list.onRendered(function() {
           log.NextServiceDate || "",
           log.Done ? 'Completed' : 'Pending',
         ];
-        dataTableList.push(dataList);
+        if (activeFlag === 'all')
+            dataTableList.push(dataList);
+        else if (log.Done === activeFlag) {
+            dataTableList.push(dataList);
+        }
       }
       templateObject.transactiondatatablerecords.set(dataTableList);
 
@@ -13464,12 +13468,12 @@ Template.non_transactional_list.onRendered(function() {
             },
             language: { search: "", searchPlaceholder: "Search List..." },
             "fnInitComplete": function(oSettings) {
-                // if (deleteFilter) {
-                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // } else {
-                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // }
-                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                if (activeFlag) {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>View Pending</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Complete</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 // let countTableData = data.Params.Count || 0; //get count from API data
@@ -16793,6 +16797,8 @@ Template.non_transactional_list.events({
             templateObject.getFixedAssetData(true);
         } else if (currenttablename == "tblAssetRegisterList") {
             templateObject.getAssetRegisterData(true);
+        } else if (currenttablename == "tblServiceLogList") {
+            templateObject.getServiceLogData(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -16909,6 +16915,8 @@ Template.non_transactional_list.events({
             templateObject.getFixedAssetData(false);
         } else if (currenttablename == "tblAssetRegisterList") {
             templateObject.getAssetRegisterData(false);
+        } else if (currenttablename == "tblServiceLogList") {
+            templateObject.getServiceLogData(false);
         }
     },
     'change .custom-range': async function(event) {

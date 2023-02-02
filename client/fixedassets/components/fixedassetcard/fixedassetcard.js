@@ -389,13 +389,14 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans.set([]);
       return;
     }
+
+    let accValue = 0, plan = [];
     switch (depreciationType) {
       case 0: //No Depreciation
         templateObject.deprecitationPlans.set([]);
         break;
       case 1: //Straight Line Depreciation
         const yearDepreciation = salvage * businessPercent / 100 / life;
-        let accValue = 0, plan = [];
         for (let i = 0; i < life; i++) {
           accValue += yearDepreciation;
           const yearPlan = {
@@ -409,6 +410,21 @@ Template.fixedassetcard.events({
         templateObject.deprecitationPlans.set(plan);
         break;
       case 2: //Decling Balance
+        let initalAmount = parseInt($('input#edtPurchCost').val() || 0);
+        if (initalAmount !== 0) {
+          for (let i = 0; i < life; i++) {
+            accValue += initalAmount / salvage * 100;
+            const yearPlan = {
+              year: startYear + i,
+              depreciation: initalAmount / salvage * 100,
+              accDepreciation: accValue,
+              bookValue: accValue
+            };
+            plan.push(yearPlan);
+            initalAmount = initalAmount / salvage * 100;
+          }
+        }
+        templateObject.deprecitationPlans.set(plan);
         break;
     }
   },
