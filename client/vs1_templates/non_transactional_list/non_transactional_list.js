@@ -1136,8 +1136,19 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "150" },
                 { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
             ];
+        } else if (currenttablename === "tblEftExport") {
+            reset_data = [
+                { index: 0, label: '#ID', class: '', active: false, display: true, width: "10" },
+                { index: 1, label: 'Apply?', class: 'colApply', active: true, display: true, width: "150" },
+                { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
+                { index: 3, label: 'BSB', class: 'colBSB', active: true, display: true, width: "100" },
+                { index: 4, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
+                { index: 5, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "100" },
+                { index: 6, label: 'Lodgement References', class: 'colLodgementReferences', active: true, display: true, width: "100" },
+                { index: 7, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
+                { index: 8, label: 'From BSB', class: 'colFromBSB', active: true, display: true, width: "100" },
+            ];
         }
-
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
