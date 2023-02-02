@@ -81,15 +81,17 @@
     {{#if showQuantityBuild}}
     <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
       <button class="btn btn-secondary btnBuildQty" id="btnBuildQty" type="button" style="margin: 12px 24px; width: 140px;"
-         name="btnBuildQty">Quantity Built</button>
-      <input type="text" class="form-control mt-3 text-center edtTotalQuantity" id="edtTotalQuantity" value="{{data.quantity}}"  style="margin: 12px 24px; width: 140px;"/>
+         name="btnBuildQty" >Quantity Built</button>
+      <input type="text" class="form-control mt-3 text-center edtTotalQuantity" id="edtTotalQuantity" value="{{data.quantity}}" disabled="{{isCompleted}}"  style="margin: 12px 24px; width: 140px;"/>
     </div>
     {{/if}}
     {{#if showCompleteProcess}}
-    <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
-      <button class="btn btn-success" type="button" style="margin: 12px 24px; width: 140px;"
-        id="btnCompleteProcess" name="btnCompleteProcess">Complete Process</button>
-    </div>
+      {{#unless isCompleted}}
+      <div class="col-6 col-md-3 col-xl-12 colBtn  justify-content-center">
+        <button class="btn btn-success" type="button" style="margin: 12px 24px; width: 140px;"
+          id="btnCompleteProcess" name="btnCompleteProcess">Complete Process</button>
+      </div>
+      {{/unless}}
     {{/if}}
     {{#if showVendorService}}
     <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
@@ -101,6 +103,11 @@
       <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnStartTimer" name="btnStartTimer">Start Timer</button>  
     </div>
     {{/if}}
+    {{#if showTimerResume}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnResumeTimer" name="btnResumeTimer">Resume Timer</button>  
+    </div>
+    {{/if}}
     {{#if showTimerPause}}
     <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
       <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnPauseTimer" name="btnPauseTimer">Pause Timer</button>  
@@ -109,6 +116,26 @@
     {{#if showTimerStop}}
     <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
       <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnStopTimer" name="btnStopTimer">Stop Timer</button>  
+    </div>
+    {{/if}}
+    {{#if showQAStart}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnStartQA" name="btnStartQA">Start QA</button>  
+    </div>
+    {{/if}}
+    {{#if showQAResume}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnResumeQA" name="btnResumeQA">Resume QA</button>  
+    </div>
+    {{/if}}
+    {{#if showQAPause}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnPauseQA" name="btnPauseQA">Pause QA</button>  
+    </div>
+    {{/if}}
+    {{#if showQAStop}}
+    <div class="col-6 col-md-3 col-xl-12 colBtn justify-content-center">
+      <button class="btn btn-primary" type="button" style="margin: 12px 24px; width: 140px;" id="btnStopQA" name="btnStopQA">Stop QA</button>  
     </div>
     {{/if}}
   {{/if}}
