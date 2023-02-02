@@ -5599,7 +5599,7 @@ Template.non_transactional_list.onRendered(function() {
         let tdCustomerDef = ""; //isSalesdefault
         let tdSupplierDef = ""; //isPurchasedefault
         let tdUseforAutoSplitQtyinSales = ""; //UseforAutoSplitQtyinSales
-        let currentData = data.tunitofmeasurelist[i].fields
+        let currentData = data.tunitofmeasurelist[i].fields == undefined ? data.tunitofmeasurelist[i] : data.tunitofmeasurelist[i].fields
         if (currentData.Active == true) {
           linestatus = "";
         } else if (currentData.Active == false) {
@@ -7953,8 +7953,6 @@ Template.non_transactional_list.onRendered(function() {
         getVS1Data('TJobVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
                 contactService.getAllJobListByCustomer(customerName).then(function(data) {
-                    console.log("DATA HERE:", data)
-
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
                     addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
@@ -7966,18 +7964,19 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
             }
         }).catch(function(err) {
-            contactService.getAllJobListByCustomer(customerName).then(function(data) {
-                templateObject.displayCustomerJobDetailsListData(data, customerName);
-            }).catch(function(err) {
-                console.log(err);
-                $('.fullScreenSpin').css('display', 'none');
-            });
+            console.log("Strange error:", err)
+            // contactService.getAllJobListByCustomer(customerName).then(function(data) {
+            //     console.log("Job DATA HERE:", data)
+            //     templateObject.displayCustomerJobDetailsListData(data, customerName);
+            // }).catch(function(err) {
+            //     console.log(err);
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
         });
     }
 
     templateObject.displayCustomerJobDetailsListData = function(data, customerName) {
         let dataTableListJob = [];
-        console.log("Data", data)
         for (let i = 0; i < data.tjobvs1.length; i++) {
             let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.ARBalance) || 0.00;
             let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjobvs1[i].fields.CreditBalance) || 0.00;
@@ -8009,20 +8008,20 @@ Template.non_transactional_list.onRendered(function() {
         let deleteFilter = false;
         for (let i = 0; i < dataTableListJob.length; i++) {
             var dataList = [
-                data[i].id,
-                data[i].company,
-                data[i].phone,
-                data[i].arbalance,
-                data[i].creditbalance,
-                data[i].balance,
-                data[i].creditlimit,
-                data[i].salesorderbalance,
-                data[i].country,
-                data[i].email,
-                data[i].accountno,
-                data[i].clientno,
-                data[i].jobtitle,
-                data[i].notes,
+                dataTableListJob[i].id,
+                dataTableListJob[i].company,
+                dataTableListJob[i].phone,
+                dataTableListJob[i].arbalance,
+                dataTableListJob[i].creditbalance,
+                dataTableListJob[i].balance,
+                dataTableListJob[i].creditlimit,
+                dataTableListJob[i].salesorderbalance,
+                dataTableListJob[i].country,
+                dataTableListJob[i].email,
+                dataTableListJob[i].accountno,
+                dataTableListJob[i].clientno,
+                dataTableListJob[i].jobtitle,
+                dataTableListJob[i].notes,
             ];
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
