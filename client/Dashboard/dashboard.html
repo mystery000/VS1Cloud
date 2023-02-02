@@ -129,8 +129,33 @@
             </style>
 
             <!-- Fix 2022/12/21 -->
-            {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
-            
+
+            {{> dashboardCardCharts tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
+
+            <!-- All Cards List -->
+            <!-- {{> allCardsLists tabGroupID="1" chartGroup="Dashboard"}} -->
+
+            <!-- All charts list -->
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
+            <!-- <div class="row">
+                <ul class="col-area col-sm-6" id="col1">
+                    <li>{{> monthlyprofitandloss}}</li>
+
+                    <li>
+                        {{> resalescomparision}}
+                    </li>
+
+                    <li>{{> monthlyearnings}}</li>
+                </ul>
+                <ul class="col-area col-sm-6" id="col2">
+                    <li>{{> profitandlosschart}}</li>
+
+                    <li> {{> quotedinvoicedamounts}} </li>
+                    <li>{{> expenseschart}} </li>
+                </ul>
+            </div> -->
+
             <div class="row" style="Display:none!important;">
 
                 <div class="col-lg-5 col-xl-4" x="">

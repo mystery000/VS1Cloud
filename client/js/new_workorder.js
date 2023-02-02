@@ -116,8 +116,12 @@ Template.new_workorder.onRendered(async function(){
                 return order.fields.ID == orderid
             })
             let workorder = templateObject.workOrderRecords.get()[workorderIndex]
-            if(workorder.fields.EndTime && new Date(workorder.fields.EndTime).getTime() < new Date().getTime()) {
-                templateObject.isCompleted = true;
+            // if(workorder.fields.StoppedTime && new Date(workorder.fields.StoppedTime).getTime() < new Date().getTime()) {
+            //     templateObject.isCompleted = true;
+            // }
+            let isCompleted = false
+            if(workorder.fields.IsCompleted == true) {
+                isCompleted = true;
             }
             templateObject.salesOrderId.set(workorder.fields.SaleID)
             let record = {
@@ -137,14 +141,21 @@ Template.new_workorder.onRendered(async function(){
                 isStarted: workorder.fields.InProgress,
                 poStatus: workorder.fields.POStatus,
                 status: workorder.fields.Status,
-                showTimerStart: workorder.fields.Status == 'scheduled' ? true : false,
-                showTimerPause: workorder.fields.Status == 'started' ? true: false,
-                showTimerStop: workorder.fields.Status == 'started' ? true: false,
+                showTimerStart: isCompleted == false &&  workorder.fields.Status == 'scheduled' ? true : false,
+                showTimerPause: isCompleted == false &&  (workorder.fields.Status == 'started' || workorder.fields.Status == 'resumed') ? true: false,
+                showTimerStop: isCompleted == false &&  (workorder.fields.Status == 'started' || workorder.fields.Status == 'resumed' || workorder.fields.Status =='paused') ? true: false,
+                showTimerResume: isCompleted == false &&  workorder.fields.Status == 'paused'? true: false,
+                showQAStart: isCompleted == false &&  workorder.fields.Status == 'stopped'? true: false,
+                showQAPause: isCompleted == false &&  (workorder.fields.Status == 'QAStarted' || workorder.fields.Status == 'QAResumed')? true: false,
+                showQAResume: isCompleted == false &&  workorder.fields.Status == 'QAPaused'? true : false,
+                showQAStop: isCompleted == false &&  (workorder.fields.Status == 'QAStarted' || workorder.fields.Status == 'QAResumed' || workorder.fields.Status == 'QAPaused')? true: false,
                 trackedTime: workorder.fields.TrackedTime || 0,
                 startedTimes: JSON.parse(workorder.fields.StartedTimes),
                 pausedTimes: JSON.parse(workorder.fields.PausedTimes),
                 stoppedTime: workorder.fields.StoppedTime,
-                startTime: workorder.fields.StartTime
+                startTime: workorder.fields.StartTime,
+                showCompleteProcess: isCompleted == false &&  workorder.fields.Status == 'QAStopped'  ? true: false,
+                isCompleted: isCompleted
             }
             templateObject.updateFromPO.set(workorder.fields.UpdateFromPO)
             templateObject.workorderrecord.set(record);
@@ -191,11 +202,18 @@ Template.new_workorder.onRendered(async function(){
                                 showTimerStart: false,
                                 showTimerPause: false,
                                 showTimerStop: false,
+                                showTimerResume: false,
                                 trackedTime: 0,
                                 startedTimes: [],
                                 pausedTimes: [],
                                 stoppedTime: '',
-                                startTime: ''
+                                startTime: '',
+                                showQAStart: false,
+                                showQAStop: false,
+                                showQAResume: false,
+                                showQAPause: false,
+                                showCompleteProcess: false,
+                                isCompleted: false
                             }
                             // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
@@ -242,11 +260,18 @@ Template.new_workorder.onRendered(async function(){
                                     showTimerStart: false,
                                     showTimerStop: false,
                                     showTimerPause: false,
+                                    showTimerResume: false,
                                     trackedTime: 0,
                                     startedTimes: [],
                                     pausedTimes: [],
                                     stoppedTime: '',
-                                    startTime: ''
+                                    startTime: '',
+                                    showQAStart: false,
+                                    showQAStop: false,
+                                    showQAResume: false,
+                                    showQAPause: false,
+                                    showCompleteProcess: false,
+                                    isCompleted: false
                                 }
                                 // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                                 templateObject.workorderrecord.set(record);
@@ -295,11 +320,18 @@ Template.new_workorder.onRendered(async function(){
                                 showTimerStart: false,
                                 showTimerStop: false,
                                 showTimerPause: false,
+                                showTimerResume: false,
                                 trackedTime: 0,
                                 startedTimes: [],
                                 pausedTimes: [],
                                 stoppedTime: '',
-                                startTime: ''
+                                startTime: '',
+                                showQAStart: false,
+                                showQAStop: false,
+                                showQAResume: false,
+                                showQAPause: false,
+                                showCompleteProcess: false,
+                                isCompleted: false
                         }
                         // record.shipDate = record.shipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
@@ -353,6 +385,18 @@ Template.new_workorder.onRendered(async function(){
     //end getting work orders
 
     templateObject.changeWorkorderStatus = function(status) {
+
+        const formatTime = milliseconds => {
+            const seconds = Math.floor((milliseconds / 1000) % 60);
+            const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
+            const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
+
+            return [
+                hours.toString().padStart(2, "0"),
+                minutes.toString().padStart(2, "0"),
+                seconds.toString().padStart(2, "0")
+            ].join(":");
+        }
         let workorders = templateObject.workOrderRecords.get();
         let tempOrders  = cloneDeep(workorders);
         let id = FlowRouter.current().queryParams.id;
@@ -366,37 +410,68 @@ Template.new_workorder.onRendered(async function(){
             let pausedTimes = tempOrder.fields.PausedTimes!= ''? JSON.parse(tempOrder.fields.PausedTimes): [];
             let record = templateObject.workorderrecord.get();
             tempOrder.fields.Status = status;
-            if(status == 'started') {
-                tempOrder.fields.StartTime = new Date();
+            if(status == 'started' || status == 'resumed' || status == 'QAStarted' || status == 'QAResumed') {
+                if(status == 'started') {
+                    tempOrder.fields.StartTime = new Date();
+                    record.isStarted = true
+                }
                 startedTimes.push(new Date());
                 tempOrder.fields.StartedTimes = JSON.stringify(startedTimes)
                 record.startedTimes = startedTimes;
-                record.showTimerPause = true;
-                record.showTimerStop = true;
-                record.showTimerStart = false;
+                if(status == 'started' ||  status == 'resumed') {
+                    record.showTimerPause = true;
+                    record.showTimerStop = true;
+                    record.showTimerStart = false;
+                    record.showTimerResume = false;
+                }
+                if(status == 'QAStarted' || status == 'QAResumed') {
+                    record.showQAStart = false;
+                    record.showQAResume = false;
+                    record.showQAPause = true;
+                    record.showQAStop = true;
+                }
             }
-            if(status == 'paused' || status == 'stopped') {
+            if(status == 'paused' || status == 'stopped' || status == 'QAPaused' || status == 'QAStopped') {
                 let trackedTime = tempOrder.fields.TrackedTime;
-                if(status == 'paused') {
+                // if(status == 'paused') {
                     pausedTimes.push(new Date());
-                } else {
+                 if(status == 'QAStopped') {
                     let stoppedTime = new Date();
                     tempOrder.fields.StoppedTime = stoppedTime;
                     record.stoppedTime = stoppedTime
                 }
-                trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
+                if(status == 'paused' || status == 'QAPaused' || ((status == 'stopped' || status == 'QAStopped') && new Date(startedTimes[startedTimes.length - 1]).getTime() > new Date(pausedTimes[pausedTimes.length -2]).getTime())) {
+                    trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
+                }
+                
                 tempOrder.fields.PausedTimes = JSON.stringify(pausedTimes);
                 tempOrder.fields.TrackedTime = trackedTime;
                 record.trackedTime = trackedTime;
                 record.pausedTimes = pausedTimes;
                 if(status == 'paused') {
                     record.showTimerPause = false
-                    record.showTimerStart = true;
+                    record.showTimerResume = true;
                 } else if (status == 'stopped') {
                     record.showTimerStart = false;
                     record.showTimerPause = false;
                     record.showTimerStop = false;
+                    record.showTimerResume = false;
+                    record.showQAStart = true;
+                } else if (status == 'QAPaused') {
+                    record.showQAPause = false;
+                    record.showQAResume = true
+                } else if (status == 'QAStopped') {
+                    record.showQAStart = false;
+                    record.showQAPause = false;
+                    record.showQAResume = false;
+                    record.showQAStop = false;
+                    record.showCompleteProcess = true;
+                    console.log('start and resumed times', startedTimes, 'paused and stopped times', pausedTimes, 'finally tracked time', formatTime(trackedTime))
                 }
+            }
+
+            if(status == 'QAStarted' || status == 'QAResumed') {
+
             }
             
             record.status = status;
@@ -405,6 +480,8 @@ Template.new_workorder.onRendered(async function(){
             templateObject.workOrderRecords.set(tempOrders);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
         } 
+
+        
     }
 
 })
@@ -1364,6 +1441,26 @@ Template.new_workorder.events({
     'click #btnStopTimer': async function(event) {
         let templateObject = Template.instance();
         templateObject.changeWorkorderStatus('stopped')
+    },
+
+    'click #btnStartQA': function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAStarted')
+    },
+
+    'click #btnPauseQA': function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAPaused')
+    },
+
+    'click #btnResumeQA': function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAResumed')
+    },
+
+    'click #btnStopQA': function(event){
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAStopped')
     }
 
 
@@ -1750,7 +1847,8 @@ Template.new_workorder.events({
             //     // })
             // }
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), IsCompleted: true}
+            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
+            // tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), IsCompleted: true}
             workorders.splice(workorderindex, 1, tempworkorder)
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
                 // async function getSalesOrders() {
@@ -1790,6 +1888,10 @@ Template.new_workorder.events({
         }else {
             $('.fullScreenSpin').css('display', 'none')
         }
+        let record = templateObject.workorderrecord.get();
+        record.isCompleted = true;
+        record.status = 'Completed';
+        templateObject.workorderrecord.set(record);
     },
 
     'click .btnBack': function(event) {

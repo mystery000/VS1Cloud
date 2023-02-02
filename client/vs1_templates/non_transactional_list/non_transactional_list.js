@@ -5611,6 +5611,7 @@ Template.non_transactional_list.onRendered(function() {
         let tdSupplierDef = ""; //isPurchasedefault
         let tdUseforAutoSplitQtyinSales = ""; //UseforAutoSplitQtyinSales
         let currentData = data.tunitofmeasurelist[i].fields
+        if (!currentData) continue;
         if (currentData.Active == true) {
           linestatus = "";
         } else if (currentData.Active == false) {
