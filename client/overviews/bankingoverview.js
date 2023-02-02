@@ -1397,6 +1397,7 @@ Template.bankingoverview.events({
         $(".btnRefresh").trigger("click");
     },
     'click .btnRefresh': function() {
+        console.log("btnRefresh");
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
       let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -1426,50 +1427,7 @@ Template.bankingoverview.events({
         });
         //templateObject.getAllBankAccountData();
     },
-    'change #dateTo': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        setTimeout(function(){
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-
-        } else {
-          templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
-        }
-        },500);
-    },
-    'change #dateFrom': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        setTimeout(function(){
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-
-        } else {
-            templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
-        }
-        },500);
-    },
     'click #today': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1630,13 +1588,13 @@ Template.bankingoverview.events({
         templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
 
     },
-    'click #ignoreDate': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', true);
-        $('#dateTo').attr('readonly', true);
-        templateObject.getAllFilterbankingData('', '', true);
-    },
+    // 'click #ignoreDate': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', true);
+    //     $('#dateTo').attr('readonly', true);
+    //     templateObject.getAllFilterbankingData('', '', true);
+    // },
     'click #newSalesOrder': function(event) {
         FlowRouter.go('/salesordercard');
     },
