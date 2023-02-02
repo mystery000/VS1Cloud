@@ -120,6 +120,19 @@ Template.fixedassetcard.onRendered(function () {
     .on('select.editable-select', function (e, li) {
       if (li) {
         templateObject.edtDepreciationType.set(parseInt(li.val() || 0));
+        const val = parseInt(li.val() || 0);
+        switch(val) {
+          case 0:
+            $('select#edtSalvageValueType').val(1);
+            $('input#edtSalvageValue').val(0);
+            break;
+          case 1:
+            $('select#edtSalvageValueType').val(1);
+            break;
+          case 2:
+            $('select#edtSalvageValueType').val(2);
+            break;
+        }
         templateObject.deprecitationPlans.set([]);
       }
     });

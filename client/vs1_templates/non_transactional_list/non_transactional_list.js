@@ -939,7 +939,7 @@ Template.non_transactional_list.onRendered(function() {
               ];
         } else if(currenttablename === "tblServiceLogList"){
           reset_data = [
-            { index: 0, label: 'ID', class: 'LogId', active: true, display: true, width: "0" },
+            { index: 0, label: '#ID', class: 'LogId', active: true, display: true, width: "0" },
             { index: 1, label: 'Asset Code', class: 'AssetCode', active: true, display: true, width: "" },
             { index: 2, label: 'Asset Name', class: 'AssetName', active: true, display: true, width: "" },
             { index: 3, label: 'Service Type', class: 'ServiceType', active: true, display: true, width: "" },
@@ -1015,9 +1015,9 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === "tblFixedAssetType") {
             reset_data = [
                 { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
-                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "30%" },
-                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "30%" },
-                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "30%" },
+                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "300" },
+                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "300" },
+                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "300" },
             ];
         } else if (currenttablename === "tblPayRuns"){
             reset_data = [
@@ -13309,7 +13309,7 @@ Template.non_transactional_list.onRendered(function() {
             columnData.push({
               className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
               targets: item.id,
-              width: "10px",
+              width: item.width,
               createdCell: function(td, cellData, rowData, row, col) {
                 $(td).closest("tr").attr("id", rowData[0]);
               }
@@ -13319,6 +13319,7 @@ Template.non_transactional_list.onRendered(function() {
             columnData.push({
                 className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
                 targets: item.id,
+                width: item.width,
             })
           }
         });
@@ -13982,6 +13983,7 @@ Template.non_transactional_list.onRendered(function() {
               columnData.push({
                 className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
                 targets: item.id,
+                width: "10px",
                 createdCell: function(td, cellData, rowData, row, col) {
                   $(td).closest("tr").attr("id", rowData[0]);
                 }
@@ -13991,6 +13993,7 @@ Template.non_transactional_list.onRendered(function() {
               columnData.push({
                   className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
                   targets: item.id,
+                  width: item.width,
               })
             }
           });
