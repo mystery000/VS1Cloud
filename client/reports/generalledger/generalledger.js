@@ -806,13 +806,6 @@ Template.generalledger.onRendered(() => {
       templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
     }
 
-
-    if (templateObject.transactiondatatablerecords.get()) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    }
-
     setTimeout(function () {
       $('#tblgeneralledger').DataTable({
         data: splashArrayBalanceSheetReport,

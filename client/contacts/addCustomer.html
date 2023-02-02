@@ -192,24 +192,24 @@
                 <ul class="nav nav-tabs nav-fill">
                   {{# if isJob}}
                   <li class="nav-item" style="cursor: pointer;">
-                    <a class="nav-link jobTab active" role="tab" data-toggle="tab" data-target="#tab-Job">
+                    <a class="nav-link mainTab jobTab active" role="tab" data-toggle="tab" data-target="#tab-Job" data-id="tab-job">
                       Job Details
                     </a>
                   </li>
                   {{else}}
                   <li class="nav-item" style="cursor: pointer;">
-                    <a class="nav-link customerTab active" role="tab" data-toggle="tab" data-target="#tab-2">
+                    <a class="nav-link mainTab customerTab active" role="tab" data-toggle="tab" data-target="#tab-2" data-id="tab-2">
                       Customer Details
                     </a>
                   </li>
                   <li class="nav-item" style="cursor: pointer;">
-                    <a class="nav-link jobTab" role="tab" data-toggle="tab" data-target="#tab-3">
+                    <a class="nav-link mainTab jobTab" role="tab" data-toggle="tab" data-target="#tab-3" data-id="tab-3">
                       Job Details
                     </a>
                   </li>
                   {{/if}}
                   <li class="nav-item" style="cursor: pointer;">
-                    <a class="nav-link transactionTab" role="tab" data-toggle="tab" data-target="#tab-1">
+                    <a class="nav-link mainTab transactionTab" role="tab" data-toggle="tab" data-target="#tab-1" data-id="tab-1">
                       Transaction List
                     </a>
                   </li>
@@ -271,6 +271,7 @@
                   {{# if isJob}}
                   <div class="tab-pane active border rounded-0 tab-Job jobTabEdit" role="tabpanel" id="tab-Job"
                     style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                    {{#if equals currentTab 'tab-job'}}
                     <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                       <div class="col">
                         <div class="row">
@@ -938,11 +939,13 @@
                             style="margin-right: 5px;"></i>Cancel</button>
                       </div>
                     </div>
+                    {{/if}}
                   </div>
                   {{else}}
                   <!-- end job -->
                   <div class="tab-pane active border rounded-0 tab-2" role="tabpanel" id="tab-2"
                     style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                    {{#if equals currentTab 'tab-2'}}
                     <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                       <div class="col">
                         <div class="row">
@@ -1840,17 +1843,18 @@
                         </div>
                       </div>
                     </div>
+                    {{/if}}
                   </div>
                   <div class="tab-pane border rounded-0 tab-3" role="tabpanel" id="tab-3"
                     style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                    {{#if equals currentTab 'tab-3'}}
                     <div class="row d-xl-flex flex-row justify-content-xl-center">
                       <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
                         <button class="btn btn-primary btnRefreshJobDetails" type="button" style="margin: 14px;"><i
                             class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                         <button id="btnNewJob" name="btnNewJob" class="btn btn-primary" type="button"
                           style="margin: 14px;" role="button" data-toggle="modal" href="#addNewJobModal"><i
-                            class="icon ion-plus" style="padding-right: 5px;"></i>New
-                          Job</button>
+                            class="icon ion-plus" style="padding-right: 5px;"></i>New Job</button>
                       </div>
                       <div class="col">
                         <button id="printConfirmJob" class="btn btn-primary float-right jobprintConfirm printConfirmJob"
@@ -1976,42 +1980,7 @@
                           </div>
                         </div>
                         <!-- End -->
-                        <div class="table-responsive">
-                          <style>
-                            th {
-                              background-color: #ededed;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(odd) {
-                              background-color: white !important;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(even) {
-                              background-color: #0000000d !important;
-                            }
-
-                            .JColResizer>tbody>tr>td,
-                            .JColResizer>tbody>tr>th {
-                              padding: .75rem !important;
-                            }
-
-                            .hiddenColumn {
-                              display: none;
-                            }
-
-                            .showColumn {
-                              display: table-cell;
-                              padding: .75rem;
-                              vertical-align: top;
-                            }
-
-                            input[type=number]::-webkit-inner-spin-button,
-                            input[type=number]::-webkit-outer-spin-button {
-                              opacity: 1;
-                            }
-                          </style>
-                          {{> non_transactional_list tablename="tblCustomerJobDetailsList"}}
-                        </div>
+                        {{> non_transactional_list tablename="tblCustomerJobDetailsList"}}
                       </div>
                     </div>
                     <!-- New Job Pop Up Start Here  -->
@@ -2734,10 +2703,12 @@
 
                     </div>
                     <!-- New Job Pop Up Ends Here  -->
+                    {{/if}}
                   </div>
                   {{/if}}
                   <div class="tab-pane border rounded-0 tab-1" role="tabpanel" id="tab-1"
                     style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                    {{#if equals currentTab 'tab-1'}}
                     <div class="row d-xl-flex flex-row justify-content-xl-center">
                       <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0! important;">
                         <div class="btn-group float-left" style="margin: 14px; margin-bottom: 0;">
@@ -2761,172 +2732,25 @@
                         {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_appointments_toggle"
                         width="131px" for="customer_transctionList_appointments_toggle" displayName="Appointments" isChecked=checkedAppointments}}
                       </div>
-                      <div style="width: 114px;">
-                        {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_quotes_toggle"
-                        width="131px" for="customer_transctionList_quotes_toggle" displayName="Quotes" isChecked=checkedQuotes}}
-                      </div>
                       <div style="width: 154px;">
                         {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle"
                         width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders" isChecked=checkedSalesOrders}}
                       </div>
-                      <div style="width: 163px;">
-                        {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_invoices_toggle"
-                        width="131px" for="customer_transctionList_invoices_toggle" displayName="Invoices" isChecked=checkedInvoices}}
-                      </div>
                     </div>
-                    <div class="row rowB" style="margin: 14px; margin-top: 0">
+                    <div class="row rowB mt-2" style="margin: 14px; margin-top: 0">
                       <div class="card-body rounded" style="padding: 0;">
-                        <div class="d-xl-flex justify-content-xl-end">
-                          <div>
-                            <a class="btn btnOpenSettingsTransaction" role="button" data-toggle="modal"
-                              href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                              <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
-                                      aria-label="Close"><span aria-hidden="true">�</span></button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <div>
-                                      <style>
-                                        .groove {
-                                          border-style: solid;
-                                          border-width: 1px;
-                                          width: 200px;
-                                          padding: 2px;
-                                          border-radius: .35rem;
-                                        }
-
-                                        .custom-control-label {
-                                          position: absolute;
-                                        }
-
-                                        .rngRange {
-                                          position: relative;
-                                          display: flex;
-                                          flex-direction: column;
-                                          width: 100%;
-                                          pointer-events: auto;
-                                          background-color: rgb(255, 255, 255);
-                                          background-clip: padding-box;
-                                          border: 1px solid rgb(133, 135, 150);
-                                          border-radius: .3rem;
-                                          border-style: solid;
-                                          border-width: 1px;
-                                          padding: 2px;
-                                          border-radius: .35rem;
-                                          color: rgb(128, 128, 128);
-                                          height: inherit !important;
-                                        }
-
-                                        @media only screen and (max-width: 480px) {
-                                          .modal.show .modal-dialog {
-                                            float: inherit !important;
-                                            left: inherit !important;
-                                            top: auto !important;
-
-                                          }
-                                        }
-                                      </style>
-                                      {{#if tableheaderrecords}}
-                                      <form class="d-xl-flex align-items-xl-center">
-                                        <div class="flex-grow-1">
-
-                                          {{#each item in tableheaderrecords}}
-                                          {{#if equals item.sTitle "id"}}
-                                          {{else}}
-
-                                          <div id="{{item.sIndex}}" class="columnSettings">
-                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                              <input class="custom-control-input chkDatatable" type="checkbox"
-                                                id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}"
-                                                checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
-                                                value="{{item.sTitle}}">
-                                              <label class="custom-control-label"
-                                                for="chkSalesNo-{{item.sIndex}}"></label>
-                                              <div contenteditable="true" class="groove divcolumn" type="text"
-                                                value="{{item.sTitle}}" valueupdate="{{item.sClass}}">
-                                                {{item.sTitle}}
-                                              </div>
-                                            </div>
-                                            <div class="d-xl-flex align-items-xl-center divColWidth"
-                                              style="margin: 8px;">
-                                              <label class="text-nowrap"
-                                                style="padding-left: 0px;margin-top: 8px;">Width:
-                                              </label>
-                                              <input class="custom-range rngRange" type="number" style="margin: 8px;"
-                                                value="{{item.sWidth}}" min="0" max="1000">
-                                            </div>
-                                          </div>
-
-                                          {{#if equals item.sVisible true}}
-                                          <script>
-                                            $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
-                                          </script>
-                                          {{else}}
-                                          <script>
-                                            $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
-                                          </script>
-                                          {{/if}}
-
-                                          {{/if}}
-                                          {{/each}}
-                                        </div>
-                                      </form>
-                                      {{/if}}
-                                    </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
-                                        style="margin-right: 5px;"></i>Save</button>
-                                    <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
-                                        class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
-                                        class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         <!-- End -->
-                        <div class="table-responsive">
-                          <style>
-                            th {
-                              background-color: #ededed;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(odd) {
-                              background-color: white !important;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(even) {
-                              background-color: #0000000d !important;
-                            }
-
-                            .JColResizer>tbody>tr>td,
-                            .JColResizer>tbody>tr>th {
-                              padding: .75rem !important;
-                            }
-
-                            .hiddenColumn {
-                              display: none;
-                            }
-
-                            input[type=number]::-webkit-inner-spin-button,
-                            input[type=number]::-webkit-outer-spin-button {
-                              opacity: 1;
-                            }
-                          </style>
-                          {{#if checkedAppointments}}
-                            {{> non_transactional_list tablename="tblCustomerTransactionList"}}
-                          {{else}}
-                            {{> non_transactional_list tablename="tblCustomerTransactionList"}}
-                          {{/if}}
+                        {{#if checkedAppointments}}
+                          {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}}
+                        {{/if}}
+                        {{#if checkedSales}}
+                        <div class="mt-4">
+                          {{> non_transactional_list tablename="tblSalesListByCustomer" customerName=record.company}}
                         </div>
+                        {{/if}}
                       </div>
                     </div>
+                    {{/if}}
                   </div>
                 </div>
               </div>

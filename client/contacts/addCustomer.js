@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ContactService } from "./contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../utility-service";
@@ -19,6 +20,13 @@ const utilityService = new UtilityService();
 const crmService = new CRMService();
 const contactService = new ContactService();
 const countryService = new CountryService();
+
+
+function MakeNegative() {
+  $('td').each(function () {
+    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+  });
+}
 
 
 Template.customerscard.onCreated(function () {
@@ -70,17 +78,19 @@ Template.customerscard.onCreated(function () {
   templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.taskrecords = new ReactiveVar([]);
 
-  templateObject.checkedAppointments = new ReactiveVar();
-  templateObject.checkedAppointments.set(false);
+  templateObject.checkedAppointments = new ReactiveVar(true);
   templateObject.checkedQuotes = new ReactiveVar();
   templateObject.checkedQuotes.set(false);
   templateObject.checkedSalesOrders = new ReactiveVar();
   templateObject.checkedSalesOrders.set(false);
   templateObject.checkedInvoices = new ReactiveVar();
   templateObject.checkedInvoices.set(true);
+  templateObject.checkedSales = new ReactiveVar(false);
+
+  templateObject.currentTab = new ReactiveVar("")
 
   // Methods
-  this.updateTaskSchedule = function (id, date) {
+  templateObject.updateTaskSchedule = function (id, date) {
     let due_date = "";
     let due_date_display = "No Date";
     if (date) {
@@ -105,68 +115,7 @@ Template.customerscard.onCreated(function () {
     }
   };
 
-  this.getInitTProjectList = function () {
-    getVS1Data("TCRMProjectList").then(function (dataObject) {
-      if (dataObject.length == 0) {
-        templateObject.getTProjectList();
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        if (data.tprojectlist && data.tprojectlist.length > 0) {
-          let tprojectlist = data.tprojectlist;
-          let all_projects = data.tprojectlist;
-          let employeeID = '';
-          if (employeeID) {
-            all_projects = all_projects.filter((proj) => proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
-            tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11 && proj.fields.EnteredBy == employeeID);
-          } else {
-            all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
-            tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-          }
-          templateObject.all_projects.set(all_projects);
-
-          let active_projects = all_projects.filter((project) => project.fields.Active == true);
-          let deleted_projects = all_projects.filter((project) => project.fields.Active == false);
-          let favorite_projects = active_projects.filter((project) => project.fields.AddToFavourite == true);
-
-          templateObject.active_projects.set(active_projects);
-          templateObject.deleted_projects.set(deleted_projects);
-          templateObject.favorite_projects.set(favorite_projects);
-        } else {
-          templateObject.tprojectlist.set([]);
-        }
-      }
-    }).catch(function (err) {
-      templateObject.getTProjectList();
-    });
-  };
-
-  this.getTProjectList = function () {
-    let employeeID = '';
-
-    crmService.getTProjectList(employeeID).then(function (data) {
-      if (data.tprojectlist && data.tprojectlist.length > 0) {
-        let tprojectlist = data.tprojectlist;
-        let all_projects = data.tprojectlist;
-
-        tprojectlist = tprojectlist.filter((proj) => proj.fields.Active == true && proj.fields.ID != 11);
-        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
-        templateObject.all_projects.set(all_projects);
-
-        let active_projects = all_projects.filter((project) => project.fields.Active == true);
-        let deleted_projects = all_projects.filter((project) => project.fields.Active == false);
-        let favorite_projects = active_projects.filter((project) => project.fields.AddToFavourite == true);
-
-        templateObject.active_projects.set(active_projects);
-        templateObject.deleted_projects.set(deleted_projects);
-        templateObject.favorite_projects.set(favorite_projects);
-      } else {
-        templateObject.tprojectlist.set([]);
-      }
-      addVS1Data("TCRMProjectList", JSON.stringify(data));
-    }).catch(function (err) { });
-  };
-
-  this.makeTaskTableRows = function (task_array) {
+  templateObject.makeTaskTableRows = function (task_array) {
     let taskRows = new Array();
     let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
       tcontact = "";
@@ -282,7 +231,7 @@ Template.customerscard.onCreated(function () {
             </a>
             <a class="dropdown-item no-modal setScheduleWeekend" href="#"
               data-id="${item.fields.ID}">
-              <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+              <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>templateObject Weekend
               <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
                 Sat</div>
             </a>
@@ -399,8 +348,8 @@ Template.customerscard.onCreated(function () {
     return taskRows;
   };
 
-  this.initSubtaskDatatable = function () {
-    let splashArrayTaskList = this.makeTaskTableRows(this.subTasks.get());
+  templateObject.initSubtaskDatatable = function () {
+    let splashArrayTaskList = templateObject.makeTaskTableRows(templateObject.subTasks.get());
     try {
       $("#tblSubtaskDatatable").DataTable({
         data: splashArrayTaskList,
@@ -493,7 +442,7 @@ Template.customerscard.onCreated(function () {
     } catch (error) { }
   }
 
-  this.getReferenceLetters = () => {
+  templateObject.getReferenceLetters = () => {
     getVS1Data('TCorrespondence').then(data => {
       if (data.length == 0) {
         sideBarService.getCorrespondences().then(dataObject => {
@@ -568,7 +517,7 @@ Template.customerscard.onCreated(function () {
     })
   }
 
-  this.getAllJobsIds = function () {
+  templateObject.getAllJobsIds = function () {
     getVS1Data("TJobVS1")
     .then(res => {
       const jobData = JSON.parse(res[0].data)
@@ -597,414 +546,7 @@ Template.customerscard.onCreated(function () {
     })
   };
 
-  function MakeNegative() {
-    $('td').each(function () {
-      if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-    });
-  }
-
-  function setAllProductRecentTransactions(data, customerName) {
-    let transID = "";
-    const dataTableList = [];
-    const tableHeaderList = [];
-    const columns = $('#tblTransactionlist th');
-    let sWidth = "";
-    let columVisible = false;
-
-    for (let i = 0; i < data.ttransactionlistreport.length; i++) {
-      let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].DEBITSEX) || 0.00;
-      let totalAmount = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].DEBITSINC) || 0.00;
-      let totalPaid = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].CREDITSEX) || 0.00;
-      let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].EXDiff) || 0.00;
-      if (data.ttransactionlistreport[i].TYPE == "Bill") {
-        transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Credit") {
-        transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-      } else if (data.ttransactionlistreport[i].TYPE == "PO") {
-        transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Supplier Payment") {
-        transID = data.ttransactionlistreport[i].PAYMENTID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Cheque") {
-        transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Journal Entry") {
-        transID = data.ttransactionlistreport[i].SALEID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Customer Payment") {
-        transID = data.ttransactionlistreport[i].PAYMENTID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Refund") {
-        transID = data.ttransactionlistreport[i].SALEID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Invoice") {
-        transID = data.ttransactionlistreport[i].SALEID;
-      } else if (data.ttransactionlistreport[i].TYPE == "UnInvoiced SO") {
-        transID = data.ttransactionlistreport[i].SALEID;
-      } else if (data.ttransactionlistreport[i].TYPE == "Quote") {
-        transID = data.ttransactionlistreport[i].SALEID;
-      }
-      const dataList = {
-        id: transID || '',
-        transid: data.ttransactionlistreport[i].transID || '',
-        employee: data.ttransactionlistreport[i].EmployeeName || '',
-        sortdate: data.ttransactionlistreport[i].DATE !== '' ? moment(data.ttransactionlistreport[i].DATE).format("YYYY/MM/DD") : data.ttransactionlistreport[i].DATE,
-        saledate: data.ttransactionlistreport[i].DATE !== '' ? moment(data.ttransactionlistreport[i].DATE).format("DD/MM/YYYY") : data.ttransactionlistreport[i].DATE,
-        customername: data.ttransactionlistreport[i].CLIENTNAME || '',
-        totalamountex: totalAmountEx || 0.00,
-        totalamount: totalAmount || 0.00,
-        totalpaid: totalPaid || 0.00,
-        totaloustanding: totalOutstanding || 0.00,
-        type: data.ttransactionlistreport[i].TYPE || '',
-        custfield1: '',
-        custfield2: '',
-        comments: data.ttransactionlistreport[i].Memo || '',
-      };
-      if (data.ttransactionlistreport[i].CLIENTNAME == customerName) {
-        dataTableList.push(dataList);
-      }
-    }
-
-    templateObject.datatablerecords.set(dataTableList);
-
-    if (templateObject.datatablerecords.get()) {
-      Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblTransactionlist', function (error, result) {
-        if (error) {
-
-        } else {
-          if (result) {
-            for (let i = 0; i < result.customFields.length; i++) {
-              let customcolumn = result.customFields;
-              let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-              let hiddenColumn = customcolumn[i].hidden;
-              let columnClass = columHeaderUpdate.split('.')[1];
-              if (hiddenColumn == true) {
-                $("." + columnClass + "").addClass('hiddenColumn');
-                $("." + columnClass + "").removeClass('showColumn');
-              } else if (hiddenColumn == false) {
-                $("." + columnClass + "").removeClass('hiddenColumn');
-                $("." + columnClass + "").addClass('showColumn');
-              }
-            }
-          }
-        }
-      });
-      setTimeout(function () {
-        MakeNegative();
-        $("#dtAsOf").datepicker({
-          showOn: 'button',
-          buttonText: 'Show Date',
-          buttonImageOnly: true,
-          buttonImage: '/img/imgCal2.png',
-          dateFormat: 'dd/mm/yy',
-          showOtherMonths: true,
-          selectOtherMonths: true,
-          changeMonth: true,
-          changeYear: true,
-          yearRange: "-90:+10",
-        });
-      }, 100);
-    }
-    $('#tblTransactionlist').DataTable({
-      columnDefs: [
-        { type: 'date', targets: 0 }
-      ],
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Sales Transaction List - " + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible'
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Sales Transaction',
-        filename: "Sales Transaction List - " + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      pageLength: initialDatatableLoad,
-      lengthMenu: [
-        [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
-      ],
-      info: true,
-      responsive: true,
-      "order": [
-        [0, "desc"],
-        [2, "desc"]
-      ],
-      action: function () {
-        $('#tblTransactionlist').DataTable().ajax.reload();
-      },
-      "fnDrawCallback": function (oSettings) {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
-      },
-      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-        let countTableData = data.Params.Count || 0; //get count from API data
-        return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-      }
-    }).on('page', function () {
-      MakeNegative();
-    })
-    $('.fullScreenSpin').css('display', 'none');
-
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if ((v.className.includes("hiddenColumn"))) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace('px', "");
-      let datatablerecordObj = {
-        sTitle: v.innerText || '',
-        sWidth: sWidth || '',
-        sIndex: v.cellIndex || 0,
-        sVisible: columVisible || false,
-        sClass: v.className || ''
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecords.set(tableHeaderList);
-    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-    $('.tblTransactionlist tbody').on('click', 'tr', function () {
-      const listData = $(this).closest('tr').attr('id');
-      const transactiontype = $(event.target).closest("tr").find(".colType").text();
-      if ((listData) && (transactiontype)) {
-        if (transactiontype == 'Bill') {
-          FlowRouter.go('/billcard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Credit') {
-          FlowRouter.go('/creditcard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'PO') {
-          FlowRouter.go('/purchaseordercard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Supplier Payment') {
-          FlowRouter.go('/supplierpaymentcard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Customer Payment') {
-          FlowRouter.go('/paymentcard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Cheque') {
-          FlowRouter.go('/chequecard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Journal Entry') {
-          FlowRouter.go('/journalentrycard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Refund') {
-          FlowRouter.go('/invoicecard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Invoice') {
-          FlowRouter.go('/invoicecard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Sales Order' || transactiontype == 'SO') {
-          FlowRouter.go('/salesordercard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'Quote') {
-          FlowRouter.go('/quotecard?id=' + listData + '&trans=' + data.Params.ClientID);
-        } else if (transactiontype == 'UnInvoiced SO') {
-          FlowRouter.go('/salesordercard?id=' + listData + '&trans=' + data.Params.ClientID);
-        }
-      }
-    });
-  }
-
-  this.getAllProductRecentTransactions = function (customerName, customerID) {
-    getVS1Data('TTransactionListReport1').then(function (dataObject) {
-      if (dataObject.length == 0) {
-        sideBarService.getTTransactionListReport(customerID).then(function (data) {
-          setAllProductRecentTransactions(data, customerName);
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        setAllProductRecentTransactions(data, customerName);
-      }
-    }).catch(function (err) {
-      sideBarService.getTTransactionListReport(customerID).then(function (data) {
-        setAllProductRecentTransactions(data, customerName);
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-      });
-    });
-  };
-
-  function setAllJobListByCustomer(data, customerName) {
-    const dataTableListJob = [];
-    const tableHeaderListJob = [];
-    for (let i = 0; i < data.tjob.length; i++) {
-      let arBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].ARBalance) || 0.00;
-      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditBalance) || 0.00;
-      let balance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].Balance) || 0.00;
-      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.tjob[i].CreditLimit) || 0.00;
-      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tjob[i].SalesOrderBalance) || 0.00;
-      const dataListJob = {
-        id: data.tjob[i].Id || '',
-        company: data.tjob[i].ClientName || '',
-        contactname: data.tjob[i].ContactName || '',
-        phone: data.tjob[i].Phone || '',
-        arbalance: arBalance || 0.00,
-        creditbalance: creditBalance || 0.00,
-        balance: balance || 0.00,
-        creditlimit: creditLimit || 0.00,
-        salesorderbalance: salesOrderBalance || 0.00,
-        email: data.tjob[i].Email || '',
-        accountno: data.tjob[i].AccountNo || '',
-        clientno: data.tjob[i].ClientNo || '',
-        jobtitle: data.tjob[i].JobTitle || '',
-        notes: data.tjob[i].Notes || '',
-        country: data.tjob[i].Country || LoggedCountry
-      };
-      if (customerName == data.tjob[i].ParentCustomerName) {
-        dataTableListJob.push(dataListJob);
-      }
-    }
-    templateObject.datatablerecordsjob.set(dataTableListJob);
-
-    if (templateObject.datatablerecordsjob.get()) {
-      Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
-        if (error) {
-
-        } else {
-          if (result) {
-            for (let i = 0; i < result.customFields.length; i++) {
-              let customcolumn = result.customFields;
-              let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-              let hiddenColumn = customcolumn[i].hidden;
-              let columnClass = columHeaderUpdate.split('.')[1];
-              if (hiddenColumn == true) {
-                $("." + columnClass + "").addClass('hiddenColumn');
-                $("." + columnClass + "").removeClass('showColumn');
-              } else if (hiddenColumn == false) {
-                $("." + columnClass + "").removeClass('hiddenColumn');
-                $("." + columnClass + "").addClass('showColumn');
-              }
-            }
-          }
-        }
-      });
-      $("#dtAsOf").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        dateFormat: 'dd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-      });
-      MakeNegative();
-    }
-
-    $('#tblJoblist').DataTable({
-      columnDefs: [
-        { type: 'date', targets: 0 }
-      ],
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Job Transaction List - " + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible'
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Job Transaction',
-        filename: "Job Transaction List - " + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      pageLength: initialDatatableLoad,
-      lengthMenu: [
-        [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
-      ],
-      info: true,
-      responsive: true,
-      "order": [
-        [0, "asc"]
-      ],
-      action: function () {
-        $('#tblJoblist').DataTable().ajax.reload();
-      },
-      "fnDrawCallback": function (oSettings) {
-        MakeNegative();
-      },
-
-    }).on('page', function () {
-      MakeNegative();
-    })
-    $('.fullScreenSpin').css('display', 'none');
-
-    const columns = $('#tblJoblist th');
-    let sWidth = "";
-    let columVisible = false;
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if ((v.className.includes("hiddenColumn"))) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace('px', "");
-
-      let datatablerecordObj = {
-        sTitle: v.innerText || '',
-        sWidth: sWidth || '',
-        sIndex: v.cellIndex || 0,
-        sVisible: columVisible || false,
-        sClass: v.className || ''
-      };
-      tableHeaderListJob.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecordsjob.set(tableHeaderListJob);
-    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-    $('#tblJoblist tbody').on('click', 'tr', function () {
-      const listData = $(this).closest('tr').attr('id');
-      if (listData) {
-        //window.open('/invoicecard?id=' + listData,'_self');
-      }
-    });
-  }
-  this.getAllCustomerJobs = function (customerName) {
-    getVS1Data('TJobVS1').then(function (dataObject) {
-      if (dataObject.length == 0) {
-        contactService.getAllJobListByCustomer(customerName).then(function (data) {
-          setAllJobListByCustomer(data, customerName);
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        setAllJobListByCustomer(data, customerName);
-      }
-    }).catch(function (err) {
-      contactService.getAllJobListByCustomer(customerName).then(function (data) {
-        setAllJobListByCustomer(data, customerName);
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-      });
-    });
-
-  };
-
-  this.getAllTask = function (customerName = "") {
+  templateObject.getAllTask = function (customerName = "") {
     getVS1Data("TCRMTaskList").then(async function (dataObject) {
       if (dataObject.length == 0) {
         crmService.getAllTasksByContactName(customerName).then(async function (data) {
@@ -1030,7 +572,7 @@ Template.customerscard.onCreated(function () {
     });
   };
 
-  this.getCountryData = function () {
+  templateObject.getCountryData = function () {
     let countries = [];
     getVS1Data('TCountries').then(function (dataObject) {
       if (dataObject.length == 0) {
@@ -1049,7 +591,6 @@ Template.customerscard.onCreated(function () {
         }
         countries.sort((a, b) => a.localeCompare(b));
         templateObject.countryData.set(countries);
-
       }
     }).catch(function (err) {
       sideBarService.getCountry().then((data) => {
@@ -1072,7 +613,7 @@ Template.customerscard.onCreated(function () {
     templateObject.preferredPaymentList.set(preferredPayments);
   }
 
-  this.getPreferredPaymentList = function () {
+  templateObject.getPreferredPaymentList = function () {
     getVS1Data('TPaymentMethod').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getPaymentMethodDataVS1().then((data) => {
@@ -1108,7 +649,7 @@ Template.customerscard.onCreated(function () {
     templateObject.termsList.set(terms);
   }
 
-  this.getTermsList = function () {
+  templateObject.getTermsList = function () {
     getVS1Data('TTermsVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getTermDataVS1().then((data) => {
@@ -1133,7 +674,7 @@ Template.customerscard.onCreated(function () {
     templateObject.deliveryMethodList.set(deliveryMethods);
   }
 
-  this.getDeliveryMethodList = function () {
+  templateObject.getDeliveryMethodList = function () {
     getVS1Data('TShippingMethod').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getShippingMethodData().then((data) => {
@@ -1158,7 +699,7 @@ Template.customerscard.onCreated(function () {
     templateObject.clienttypeList.set(clientType);
   }
 
-  this.getClientTypeData = function () {
+  templateObject.getClientTypeData = function () {
     getVS1Data('TClientType').then(function (dataObject) {
       if (dataObject.length == 0) {
         sideBarService.getClientTypeData().then((data) => {
@@ -1234,7 +775,7 @@ Template.customerscard.onCreated(function () {
     }
   }
 
-  this.getTaxCodesList = function () {
+  templateObject.getTaxCodesList = function () {
     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getTaxCodesVS1().then(function (data) {
@@ -1339,7 +880,7 @@ Template.customerscard.onCreated(function () {
       ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
 
     };
-
+    templateObject.records.set(lineItemObj);
     $('#sltCurrency').val(data.fields.ForeignExchangeCode || CountryAbbr);
 
     if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
@@ -1348,7 +889,6 @@ Template.customerscard.onCreated(function () {
       templateObject.isSameAddress.set(true);
       templateObject.isJobSameAddress.set(true);
     }
-    templateObject.records.set(lineItemObj);
 
     /* START attachment */
     templateObject.attachmentCount.set(0);
@@ -1360,8 +900,6 @@ Template.customerscard.onCreated(function () {
     }
     /* END  attachment */
     templateObject.isJob.set(data.fields.IsJob);
-    templateObject.getAllProductRecentTransactions(data.fields.ClientName, data.fields.ID);
-    templateObject.getAllCustomerJobs(data.fields.ClientName);
     templateObject.getAllTask(data.fields.ClientName);
     $('#edtCustomerCompany').attr('readonly', true);
     $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
@@ -1398,7 +936,7 @@ Template.customerscard.onCreated(function () {
     }
   }
 
-  this.getEmployeeData = async (customerID) => {
+  templateObject.getEmployeeData = async (customerID) => {
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getOneCustomerDataEx(customerID).then(function (data) {
@@ -1406,19 +944,14 @@ Template.customerscard.onCreated(function () {
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
-        let useData = data.tcustomervs1;
-        let added = false;
-        for (let i = 0; i < useData.length; i++) {
-          if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
-            added = true;
-            setOneCustomerDataEx(useData[i]);
-            const rowCount = $('.results tbody tr').length;
-            $('.counter').text(rowCount + ' items');
-          }
-        }
-        if (!added) {
-          contactService.getOneCustomerDataEx(customerID).then(function (data) {
-            setOneCustomerDataEx(data);
+        const customerData = data.tcustomervs1.find((udata) => udata.fields.ID == parseInt(customerID));
+        if(customerData){
+          setOneCustomerDataEx(customerData);
+        } else {
+          contactService.getOneCustomerDataEx(customerID).then(function (_data) {
+            data.tcustomervs1.push(_data);
+            addVS1Data('TCustomerVS1', JSON.stringify(data))
+            setOneCustomerDataEx(_data);
           });
         }
       }
@@ -1430,7 +963,7 @@ Template.customerscard.onCreated(function () {
     });
   };
 
-  this.setInitialForEmptyCurrentID = async () => {
+  templateObject.setInitialForEmptyCurrentID = async () => {
     let lineItemObj = {
       id: '',
       lid: 'Add Customer',
@@ -1471,7 +1004,8 @@ Template.customerscard.onCreated(function () {
       jobscountry: LoggedCountry || '',
       discount: 0
     };
-    await templateObject.getTermsList();
+    templateObject.records.set(lineItemObj);
+    templateObject.getTermsList();
     $('#edtCustomerCompany').attr('readonly', false);
     $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
     $('#sltTerms').val(lineItemObj.terms);
@@ -1484,12 +1018,11 @@ Template.customerscard.onCreated(function () {
     $('#sltJobTaxCode').val(lineItemObj.jobtaxcode);
     $('.customerTypeSelect').append('<option value="newCust">Add Customer Type</option>');
     templateObject.isSameAddress.set(true);
-    templateObject.records.set(lineItemObj);
     setTab();
     $('.fullScreenSpin').css('display', 'none');
   }
 
-  this.getEmployeeDataByName = function (customerID) {
+  templateObject.getEmployeeDataByName = function (customerID) {
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getOneCustomerDataExByName(customerID).then(function (data) {
@@ -1521,7 +1054,7 @@ Template.customerscard.onCreated(function () {
     });
   };
 
-  this.getCustomersList = function () {
+  templateObject.getCustomersList = function () {
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length == 0) {
         contactService.getAllCustomerSideDataVS1().then(function (data) {
@@ -1540,7 +1073,7 @@ Template.customerscard.onCreated(function () {
     });
   };
 
-  this.setAllCustomerSideDataVS1 = function (data) {
+  templateObject.setAllCustomerSideDataVS1 = function (data) {
     const _lineItems = [];
     let currentId = FlowRouter.current().queryParams;
     for (let i = 0; i < data.tcustomervs1.length; i++) {
@@ -1576,6 +1109,7 @@ Template.customerscard.onCreated(function () {
 Template.customerscard.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
+
   let currentId = FlowRouter.current().queryParams;
   if (FlowRouter.current().route.name != "customerscard") {
     currentId = "";
@@ -1607,15 +1141,11 @@ Template.customerscard.onRendered(function () {
     yearRange: "-90:+10",
   });
 
-  templateObject.getInitTProjectList();
-  //templateObject.getAllProductRecentTransactions();
   templateObject.getCountryData();
   templateObject.getPreferredPaymentList();
   templateObject.getTermsList();
   templateObject.getDeliveryMethodList();
-  // templateObject.getClientTypeData();
   templateObject.getTaxCodesList();
-
   templateObject.getCustomersList();
 
   if (JSON.stringify(currentId) != '{}') {
@@ -4015,60 +3545,56 @@ Template.customerscard.events({
     $(".btnJobTask").attr("disabled", false);
     event.preventDefault();
   },
-"click #customer_transctionList_invoices_toggle":function(event){
-    let templateObject = Template.instance();
-    let isChecked = $(event.target).is(':checked');
-    if(isChecked){
-        templateObject.checkedInvoices.set(true)
-    }else{
-        templateObject.checkedInvoices.set(false)
-    }
-},
-"click #customer_transctionList_appointments_toggle":function(event){
-    let templateObject = Template.instance();
-    let isChecked = $(event.target).is(':checked');
-    if(isChecked){
-        templateObject.checkedAppointments.set(true)
-    }else{
-        templateObject.checkedAppointments.set(false)
-    }
-},
-"click #customer_transctionList_quotes_toggle":function(event){
-    let templateObject = Template.instance();
-    let isChecked = $(event.target).is(':checked');
-    if(isChecked){
-        templateObject.checkedQuotes.set(true)
-    }else{
-        templateObject.checkedQuotes.set(false)
-    }
-},
-"click #customer_transctionList_sales_orders_toggle":function(event){
-    let templateObject = Template.instance();
-    let isChecked = $(event.target).is(':checked');
-    if(isChecked){
-        templateObject.checkedSalesOrders.set(true)
-    }else{
-        templateObject.checkedSalesOrders.set(false)
-    }
-},
+  "click #customer_transctionList_invoices_toggle":function(event){
+      let templateObject = Template.instance();
+      let isChecked = $(event.target).is(':checked');
+      if(isChecked){
+          templateObject.checkedInvoices.set(true)
+      }else{
+          templateObject.checkedInvoices.set(false)
+      }
+  },
+  "click #customer_transctionList_appointments_toggle":function(event){
+      let templateObject = Template.instance();
+      let isChecked = $(event.target).is(':checked');
+      if(isChecked){
+          templateObject.checkedAppointments.set(true)
+      }else{
+          templateObject.checkedAppointments.set(false)
+      }
+  },
+  "click #customer_transctionList_quotes_toggle":function(event){
+      let templateObject = Template.instance();
+      let isChecked = $(event.target).is(':checked');
+      if(isChecked){
+          templateObject.checkedQuotes.set(true)
+      }else{
+          templateObject.checkedQuotes.set(false)
+      }
+  },
+  "click #customer_transctionList_sales_orders_toggle":function(event){
+      let templateObject = Template.instance();
+      let isChecked = $(event.target).is(':checked');
+      if(isChecked){
+          templateObject.checkedSalesOrders.set(true)
+      }else{
+          templateObject.checkedSalesOrders.set(false)
+      }
+  },
+  "change #customer_transctionList_sales_orders_toggle": function(event) {
+    const templateObject = Template.instance();
+    templateObject.checkedSales.set(event.target.checked)
+  },
+  "click .mainTab" : function(event) {
+    const tabID = $(event.target).data('id');
+    Template.instance().currentTab.set(tabID);
+  }
 });
 
 Template.customerscard.helpers({
     record: () => {
-        let parentRecord = Template.parentData(0).record;
-        if (parentRecord) {
-            return parentRecord;
-        } else {
-            let temp = Template.instance().records.get();
-            let phoneCodes = Template.instance().phoneCodeData.get();
-            if (temp && temp.mobile && temp.country) {
-                let thisCountry = phoneCodes.find(item => {
-                    return item.name == temp.country
-                })
-                temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
-            }
-            return temp;
-        }
+      let temp = Template.instance().records.get();
+      return temp;
     },
     phoneCodeList: () => {
         return Template.instance().phoneCodeData.get();
@@ -4234,6 +3760,14 @@ Template.customerscard.helpers({
     checkedInvoices: () => {
         return Template.instance().checkedInvoices.get();
     },
+    checkedSales: () => {
+      return Template.instance().checkedSales.get();
+    },
+    currentTab: () => {
+      const tab = Template.instance().currentTab.get();
+      if (tab == "") return "tab-2";
+      return tab;
+    }
 });
 
 Template.registerHelper('equals', function (a, b) {
