@@ -1403,7 +1403,6 @@ Template.bankingoverview.events({
         utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
     },
     'click .btnRefresh': function() {
-        console.log("btnRefresh");
       var currentBeginDate = new Date();
       var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
       let fromDateMonth = (currentBeginDate.getMonth() + 1);

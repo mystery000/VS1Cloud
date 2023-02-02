@@ -3800,6 +3800,32 @@ Template.transaction_list.events({
             templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
         }
     },
+    'click .thisfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
     'click .previousweek': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.tablename.get() || '';
