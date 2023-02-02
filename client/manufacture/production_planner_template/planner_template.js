@@ -674,6 +674,18 @@ Template.production_planner_template.onRendered(async function() {
     // }
 
     templateObject.changeStatus = async function(status) {
+
+        const formatTime = milliseconds => {
+            const seconds = Math.floor((milliseconds / 1000) % 60);
+            const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
+            const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
+
+            return [
+                hours.toString().padStart(2, "0"),
+                minutes.toString().padStart(2, "0"),
+                seconds.toString().padStart(2, "0")
+            ].join(":");
+        }
         // let templateObject = Template.instance();
         let orderData = templateObject.viewInfoData.get();
         let workorderid = orderData.JOBNumber;
@@ -703,22 +715,33 @@ Template.production_planner_template.onRendered(async function() {
         if(status == 'unscheduled') {
             tempOrder.fields.StartTime = '';
         }
-        if(status == 'started') {
-            tempOrder.fields.StartTime = new Date();
+        if(status == 'started' || status == 'resumed' || status == 'QAStarted' || status == 'QAResumed') {
+            if(status == 'started') {
+                tempOrder.fields.StartTime = new Date();
+                tempOrder.fields.InProgress = true;
+            }
             startedTimes.push(new Date());
             tempOrder.fields.StartedTimes = JSON.stringify(startedTimes)
         }
-        if(status == 'paused' || status == 'stopped') {
+        if(status == 'paused' || status == 'stopped' || status == 'QAPaused' || status == 'QAStopped') {
             let trackedTime = tempOrder.fields.TrackedTime;
-            if(status == 'paused') {
-                pausedTimes.push(new Date());
-            } else {
+            pausedTimes.push(new Date());
+            if(status == 'paused' || status == 'QAPaused' || ((status == 'stopped' || status == 'QAStopped')&&new Date(startedTimes[startedTimes.length-1]).getTime() > new Date(pausedTimes[pausedTimes.length -2]).getTime() )) {
+                trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
+            } 
+            if(status =='QAStopped') {
                 let stoppedTime = new Date();
                 tempOrder.fields.StoppedTime = stoppedTime;
             }
             tempOrder.fields.PausedTimes = JSON.stringify(pausedTimes);
-            trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
             tempOrder.fields.TrackedTime = trackedTime;
+            if(status == 'QAStopped') {
+                console.log('Started and Resumed times:', startedTimes, 'Paused and Stopped Times', pausedTimes, 'Total tracked time', formatTime(trackedTime))
+            }
+        }
+
+        if(status == 'Completed') {
+            tempOrder.fields.IsCompleted = true;
         }
         
         tempOrders.splice(workorderIndex, 1, tempOrder);
@@ -730,6 +753,52 @@ Template.production_planner_template.onRendered(async function() {
 Template.production_planner_template.helpers({
     viewInfoData: () => {
         return Template.instance().viewInfoData.get();
+    },
+
+    showStartTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'scheduled'
+    },
+    showPauseTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'started' || info.Status == 'resumed'
+    },
+    showStopTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'started' || info.Status == 'resumed' || info.Status == 'paused'
+    },
+    showResumeTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'paused'
+    },
+    showStartQA: ()=>{
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'stopped'
+    },
+    showPauseQA: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAStarted' || info.Status == 'QAResumed'
+    },
+    showStopQA: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAStarted' || info.Status == 'QAResumed' || info.Status == 'QAPaused'
+    },
+    showResumeQA: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAPaused'
+    },
+    showMarkAsCompleted:() => {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAStopped'
     }
 })
 
@@ -829,5 +898,32 @@ Template.production_planner_template.events({
     'click #btnStopTimer': function(e) {
         let templateObject = Template.instance();
         templateObject.changeStatus('stopped')
+    },
+
+    'click #btnResumeTimer': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('resumed')
+    },
+
+    'click #btnStartQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus ('QAStarted')
+    },
+
+    'click #btnResumeQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('QAResumed')
+    },
+    'click #btnPauseQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('QAPaused')
+    },
+    'click #btnStopQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('QAStopped');
+    },
+    'click #btnMarkAsComplete': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('Completed')
     }
 })

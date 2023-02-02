@@ -595,6 +595,9 @@ import './eft/addNewEftModal/addNewEftModal.js';
 import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
 
+
+import './accounts/addApcaModal/addApcaModal.html'
+
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
