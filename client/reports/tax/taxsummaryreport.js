@@ -1410,6 +1410,12 @@ Template.taxsummaryreport.events({
             });
         }, delayTimeAfterSound);
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Tax Summary report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     'click .btnExportReport': function() {
         LoadingOverlay.show();
         let utilityService = new UtilityService();

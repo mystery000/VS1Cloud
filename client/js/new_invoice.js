@@ -579,6 +579,7 @@ Template.new_invoice.onCreated(function () {
 
           let serialno = "";
           let lotno = "";
+          let expirydate = "";
           if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
             for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
               serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -587,6 +588,8 @@ Template.new_invoice.onCreated(function () {
           if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
             for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
               lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+              let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+              expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
             }
           }
           
@@ -644,7 +647,8 @@ Template.new_invoice.onCreated(function () {
             UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
             SalesLinesCustField1: SalesLinesCustField1Val,
             serialnumbers: serialno,
-            lotnumbers: lotno
+            lotnumbers: lotno,
+            expirydates: expirydate
           };
           var dataListTable = [
             data.fields.Lines[i].fields.ProductName || "",
@@ -8905,10 +8909,10 @@ Template.new_invoice.events({
             "data-serialnumbers"
           );
           let tdLotNumber = $("#" + lineID + " .colSerialNo").attr(
-            "data-lotnumber"
+            "data-lotnumbers"
           );
           let tdLotExpiryDate = $("#" + lineID + " .colSerialNo").attr(
-            "data-lotexpirydate"
+            "data-expirydates"
           );
           let tdSalesLineCustField1 = $("#" + lineID + " .colSalesLinesCustField1").text();
 
@@ -8984,7 +8988,7 @@ Template.new_invoice.events({
             }
 
             // Feature/ser-lot number tracking: Save Lot Number
-            if (tdLotNumber) {
+            if (tdLotNumber != undefined && tdLotNumber != "") {
               const lotNumbers = tdLotNumber.split(",");
               const expiryDates = tdLotExpiryDate.split(",");
               let tpqaList = [];
@@ -8995,9 +8999,9 @@ Template.new_invoice.events({
                   fields: {
                     Active: true,
                     BatchExpiryDate: new Date(
-                      parseInt(dates[2]),
+                      parseInt(dates[0]),
                       parseInt(dates[1]) - 1,
-                      parseInt(dates[0])
+                      parseInt(dates[2])
                     ).toISOString(),
                     Qty: 1,
                     BatchNo: lotNumbers[i],
@@ -9133,10 +9137,15 @@ Template.new_invoice.events({
 
         salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
 
-          sideBarService.getAllSerialNumber().then(function(data) {
-            addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+          sideBarService.getAllSerialNumber().then(async function(data) {
+              await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
           }).catch(function (err){
-          });          
+          });
+
+          productService.getProductBatches().then(async function (data) {
+              await addVS1Data('TProductBatches', JSON.stringify(data));
+          }).catch(function (err) {
+          });
           
           if (localStorage.getItem("enteredURL") != null) {
             FlowRouter.go(localStorage.getItem("enteredURL"));
@@ -11278,13 +11287,6 @@ Template.new_invoice.events({
     localStorage.setItem("productItem", selectedunit);
     let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
     localStorage.setItem("selectedProductName", selectedProductName);
-    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-    if(selectedSN != undefined && selectedSN != ""){
-      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-    }
-    else{
-      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-    }
     
     let productService = new ProductService();
     const templateObject = Template.instance();
@@ -11302,18 +11304,126 @@ Template.new_invoice.events({
           event.preventDefault();
           return false;
         } else {
-          productService.getProductStatus(selectedProductName).then(async function (data) {
-            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-              return false;
-            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-              $("#availableLotNumberModal").attr("data-row", row + 1);
-              $("#availableLotNumberModal").modal("show");
-            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-              $("#availableSerialNumberModal").attr("data-row", row + 1);
-              $('#availableSerialNumberModal').modal('show');
+          getVS1Data("TProductList").then(function (dataObject) {
+            if (dataObject.length == 0) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              });
             }
+            else{
+              let data = JSON.parse(dataObject[0].data);
+              for (let i = 0; i < data.tproductlist.length; i++) {
+                if(data.tproductlist[i].PARTNAME == selectedProductName){
+                  if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+                    return false;
+                  } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductlist[i].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                }
+              }
+            }
+          }).catch(function (err) {
+            productService.getProductStatus(selectedProductName).then(async function (data) {
+              if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                return false;
+              } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                if(selectedLot != undefined && selectedLot != ""){
+                  shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableLotNumberModal").attr("data-row", row + 1);
+                  $("#availableLotNumberModal").modal("show");
+                }, 200);
+              } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                if(selectedSN != undefined && selectedSN != ""){
+                  shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableSerialNumberModal").attr("data-row", row + 1);
+                  $('#availableSerialNumberModal').modal('show');
+                  if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                    $("#availableSerialNumberModal .btnSNCreate").show();
+                  }
+                  else{
+                    $("#availableSerialNumberModal .btnSNCreate").hide();
+                  }
+                }, 200);
+              }
+            });
           });
         }
       }
@@ -11470,13 +11580,6 @@ Template.new_invoice.events({
     localStorage.setItem("productItem", selectedunit);
     let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
     localStorage.setItem("selectedProductName", selectedProductName);
-    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-    if(selectedSN != undefined && selectedSN != ""){
-      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-    }
-    else{
-      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-    }
     
     let productService = new ProductService();
     const templateObject = Template.instance();
@@ -11494,40 +11597,174 @@ Template.new_invoice.events({
           event.preventDefault();
           return false;
         } else {
-          productService.getProductStatus(selectedProductName).then(async function (data) {
-            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-              swal({
-                  title: '',
-                  text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                  type: 'info',
-                  showCancelButton: true,
-                  confirmButtonText: 'Yes',
-                  cancelButtonText: 'No'
-                  // cancelButtonClass: "btn-default"
-              }).then((result) => {
-                  if (result.value) {
-                      FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
-                  } else if (result.dismiss === 'cancel') {
-                      // $('.essentialsdiv .custom-control-input').prop("checked", false);
-                      event.preventDefault();
-                      return false;
+          getVS1Data("TProductList").then(function (dataObject) {
+            if (dataObject.length == 0) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  swal({
+                      title: '',
+                      text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                      type: 'info',
+                      showCancelButton: true,
+                      confirmButtonText: 'Yes',
+                      cancelButtonText: 'No'
+                      // cancelButtonClass: "btn-default"
+                  }).then((result) => {
+                      if (result.value) {
+                          FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
+                      } else if (result.dismiss === 'cancel') {
+                          // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                          event.preventDefault();
+                          return false;
+                      }
+                  });
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
                   }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
               });
-            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-              $("#availableLotNumberModal").attr("data-row", row + 1);
-              $("#availableLotNumberModal").modal("show");
-            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-              $("#availableSerialNumberModal").attr("data-row", row + 1);
-              $('#availableSerialNumberModal').modal('show');
-              if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                $("#availableSerialNumberModal .btnSNCreate").show();
-              }
-              else{
-                $("#availableSerialNumberModal .btnSNCreate").hide();
+            }
+            else{
+              let data = JSON.parse(dataObject[0].data);
+              for (let i = 0; i < data.tproductlist.length; i++) {
+                if(data.tproductlist[i].PARTNAME == selectedProductName){
+                  if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+                    swal({
+                        title: '',
+                        text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                        type: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                        // cancelButtonClass: "btn-default"
+                    }).then((result) => {
+                        if (result.value) {
+                            FlowRouter.go("/productview?id=" + data.tproductlist[i].PARTSID);
+                        } else if (result.dismiss === 'cancel') {
+                            // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                            event.preventDefault();
+                            return false;
+                        }
+                    });
+                  } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductlist[i].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                }
               }
             }
+          }).catch(function (err) {
+            productService.getProductStatus(selectedProductName).then(async function (data) {
+              if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                swal({
+                    title: '',
+                    text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No'
+                    // cancelButtonClass: "btn-default"
+                }).then((result) => {
+                    if (result.value) {
+                        FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
+                    } else if (result.dismiss === 'cancel') {
+                        // $('.essentialsdiv .custom-control-input').prop("checked", false);
+                        event.preventDefault();
+                        return false;
+                    }
+                });
+              } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                if(selectedLot != undefined && selectedLot != ""){
+                  shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableLotNumberModal").attr("data-row", row + 1);
+                  $("#availableLotNumberModal").modal("show");
+                }, 200);
+              } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                if(selectedSN != undefined && selectedSN != ""){
+                  shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableSerialNumberModal").attr("data-row", row + 1);
+                  $('#availableSerialNumberModal').modal('show');
+                  if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                    $("#availableSerialNumberModal .btnSNCreate").show();
+                  }
+                  else{
+                    $("#availableSerialNumberModal .btnSNCreate").hide();
+                  }
+                }, 200);
+              }
+            });
           });
         }
       }
