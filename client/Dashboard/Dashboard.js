@@ -5,6 +5,7 @@ import { UtilityService } from "../utility-service";
 import { VS1ChartService } from "../vs1charts/vs1charts-service";
 import { Template } from 'meteor/templating';
 import { Session } from 'meteor/session';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './dashboard.html';
 import "gauge-chart";
 
@@ -95,7 +96,7 @@ Template.dashboard.onRendered(function () {
           $("#dateTo").val(null);
       }
       $('[data-toggle="tooltip"]').tooltip({html: true});
-  },500);
+  },50);
 });
 
 Template.dashboard.helpers({
