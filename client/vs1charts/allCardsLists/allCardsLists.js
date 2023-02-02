@@ -73,14 +73,13 @@ Template.allCardsLists.onRendered(function () {
                     }
                 });
             }
-            console.log(cardList);
+            
             if( cardList.length > 0 ){
                 cardList.forEach((card) => {
                     $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-id", card.fields.ID);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
                     if( card.fields.Active == false ){
-                        console.log("hey");
                         $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
                         $(`[card-key='${card.fields.CardKey}'] .chkDatatable`).prop('checked', false);
                     }else{
@@ -150,7 +149,6 @@ Template.allCardsLists.onRendered(function () {
         const cards = $(".card-visibility");
         const cardList = [];
         for (let i = 0; i < cards.length; i++) {
-            console.log($(cards[i]).find(".custom-control-input").is(":checked"));
             cardList.push(
                 new Tvs1CardPreference({
                     type: "Tvs1CardPreference",
@@ -257,16 +255,15 @@ Template.allCardsLists.events({
         setTimeout(async function(){
         $(".card-visibility").removeClass('hideelement');
          if( !$('.cardSettingBtn').hasClass('hideelement') ){
-            console.log("false");
             $('.cardShowBtn .custom-control-label').removeClass('hideelement');
-            $('.simplestart').removeClass('hideelement');
+            $('.card_simplestart').removeClass('hideelement');
             // $('.editCardBtn').find('i').removeClass('fa-cog')
             $('.cardSettingBtn').addClass('hideelement');
             $('.actionButtonCardsTop').removeClass('hideelement');
         }else{
             $(".fullScreenSpin").css("display", "block");
             $('.cardShowBtn .custom-control-label').addClass('hideelement');
-            $('.simplestart').addClass('hideelement');
+            $('.card_simplestart').addClass('hideelement');
             $('.actionButtonCardsTop').addClass('hideelement');
             $('.cardSettingBtn').removeClass('hideelement');
             // Save cards
@@ -325,7 +322,7 @@ Template.allCardsLists.events({
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 $('.cardShowBtn').addClass('hideelement');
-                $('.simplestart').addClass("hideelement");
+                $('.card_simplestart').addClass("hideelement");
                 $('.actionButtonCardsTop').addClass('hideelement');
                 await templateObject.saveCardsLocalDB();
                 await templateObject.setCardPositions();
@@ -345,7 +342,7 @@ Template.allCardsLists.events({
         setTimeout(async function(){
         $(".fullScreenSpin").css("display", "block");
         $('.cardShowBtn').addClass('hideelement');
-        $('.simplestart').addClass('hideelement');
+        $('.card_simplestart').addClass('hideelement');
         $('.actionButtonCardsTop').addClass('hideelement');
         await templateObject.setCardPositions();
         $('.card-visibility').removeClass('dimmedChart');
@@ -354,24 +351,24 @@ Template.allCardsLists.events({
         }, delayTimeAfterSound);
         $('.cardSettingBtn').removeClass('hideelement');
     },
-    // "mouseenter .chkDatatable": (e) => {
-    //     console.log(e.target)
-    //     let templateObject = Template.instance();
-    //     if($(e.target).is(":checked"))
-    //         templateObject.tooltip = "Hide";
-    //     else
-    //         templateObject.tooltip = "Show";
-    // },
+
 });
 
 Template.kpiCard.events({
     "mouseenter .chkDatatable": (e) => {
+        console.log("hi");
         if($(e.currentTarget).is(":checked")){
+            console.log("hey");
             Template.instance().tooltip_text.set("Hide");
+            
         }
         else
-            Template.instance().tooltip_text.set("Show");
+            {Template.instance().tooltip_text.set("Show");
+            console.log("oh, no")}
     },
+    "click .chkDatatable": (e) => {
+        console.log("why not work!");
+    }
 })
 Template.kpiCard.helpers({
     tooltip_text: () => {        
