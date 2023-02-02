@@ -17,7 +17,7 @@
       <div class="spinner"></div>
     </div>
 
-    <form>
+ 
       <header
         style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;" class="row">
           <div class="col-12 col-md-4">
@@ -53,7 +53,7 @@
       </header>
 
       <div class="row" style="background-color: #ededed;">
-        <div class="col-12 col-xl-10">
+        <div class="col-12 col-xl-10" id="fixedAssetCardContainer">
           <div class="row" style="margin: 8px 16px 0px 16px;">
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
               <div class="form-group"><label>Asset Code</label>
@@ -83,17 +83,23 @@
 
           <div style="margin: 8px 16px 0px 16px;">
             <ul class="nav nav-tabs nav-justified">
-              <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab"
-                  data-target="#tab-asset-info">Asset Info</a></li>
-              <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab"
-                  data-target="#tab-deprec">Depreciation</a>
+              <li class="nav-item">
+                <a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-asset-info">Asset Info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-purchase-info">Purchase Info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-deprec">Depreciation</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-insurance-info">Insurance Info</a>
               </li>
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane active border rounded-0 tab-asset-info" role="tabpanel" id="tab-asset-info"
                 style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
-
                 <div class="row" style="margin: 4px 12px;">
                   
                   <div class="col-3" style="padding: 0;">
@@ -140,22 +146,6 @@
                       </div>
                   </div>
                   <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Purchased Date</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Cost</label>
-                      <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
                     <div class="form-group" style="margin: 4px;">
                       <label>Supplier</label>
                       <input type="text" class="form-control" id="edtSupplierName" name="edtSupplierName">
@@ -170,27 +160,43 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Insurance Info</label>
-                      <input type="text" class="form-control" id="edtInsuranceInfo" name="edtInsuranceInfo">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Depreciation Start Date</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtDepreciationStartDate" name="edtDepreciationStartDate">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                  </div>             
+                </div>
+              </div>
+              <div class="tab-pane border rounded-0 tab-purchase-info" role="tabpanel" id="tab-purchase-info"
+                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                <div class="row" style="margin: 4px 12px; padding: 10px;">
+                  <div class="col-4 purchase-info">
+                    <div style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;"><label>Purchased Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
                         </div>
                       </div>
                     </div>
+
+                    <div style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;"><label>Depreciation Start Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtDepreciationStartDate" name="edtDepreciationStartDate">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Pruchased Cost</label>
+                        <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
+                        </div>
+                    </div>
                   </div>
-                  
                 </div>
               </div>
-
               <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec"
                 style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                   <input type="hidden" id="edtAccountType" />
@@ -330,6 +336,38 @@
                   </div>
 
               </div>
+              <div class="tab-pane border rounded-0 tab-insurance-info" role="tabpanel" id="tab-insurance-info"
+                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                <div class="row" style="margin: 4px 12px; padding: 10px;">
+                  <div class="col-4 insuranceInfo">
+                    <div style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Insuranced By</label>
+                        <input type="text" class="form-control" id="edtInsuranceByName" name="edtInsuranceBy">
+                      </div>
+                    </div>
+                    <div style="padding: 0;">
+                      {{> default_input 
+                        label = 'Insurance Policy'
+                        classes = ''
+                        type = 'text'
+                        id = 'edtInsurancePolicy'
+                        name = 'edtInsurancePolicy'
+                      }}
+                    </div>
+                    <div style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;"><label>Insurance Until</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -342,20 +380,31 @@
       <div class="row" style="margin-top: 24px;">
         <div class="col-12 col-md-11">
           <div class="row justify-content-center desktopButtons">
-            <button class="btn btn-success btnSave btnFooter btn-auto-save" type="button"
-              style="margin: 14px;margin-top: 0px;width: 100px;">
-              <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-            </button>
-
-            <button class="btn btn-secondary btnBack btnFooter" type="button"
-              style="margin: 14px;margin-top: 0px;width: 100px;">
-              <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-            </button>
+            <div style="margin:10px">
+              {{> vs1_button
+                color='success'
+                classes='btnSave btnFooter btn-auto-save'
+                type='button'
+                id="btnSave"
+                iconName='save'
+                title='Save'
+              }}
+            </div>
+            <div style="margin:10px">
+            {{> vs1_button
+              color=''
+              classes='btnBack btnFooter'
+              type='button'
+              id="btnBack"
+              iconName='remove'
+              title='Cancel'
+            }}
+          </div>
           </div>
         </div>
       </div>
 
-    </form>
+
   </div>
 
   {{> fixedassettypepopup modalID='fixedAssetTypeListModal'}}
@@ -368,6 +417,7 @@
               aria-hidden="true">×</span></button>
         </div>
         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
+          <input type="hidden" id="edtSupplierType" />
           {{> non_transactional_list tablename="tblSupplierlist"}}
         </div>
         <!-- <div class="modal-footer">
