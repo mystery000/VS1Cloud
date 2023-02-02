@@ -98,6 +98,7 @@ import './settings/payroll-settings/fundtypelist.js';
 
 
 import './vs1_templates/template_buttons/export_import_print_display_button.js';
+import './vs1_templates/template_buttons/spreadsheet_link.js';
 import './vs1_templates/non_transactional_list/non_transactional_list.js';
 import './vs1_templates/import_template/import_template.html';
 import './vs1_templates/report/vs1_report_template.js';
