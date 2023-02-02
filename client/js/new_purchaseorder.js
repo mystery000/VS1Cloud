@@ -2890,7 +2890,7 @@ Template.purchaseordercard.onRendered(() => {
                     quantity: detail.UOMQtySold,
                     qtyordered: detail.UOMQtySold,
                     qtyshipped: detail.UOMQtyShipped,
-                    qtybo: '',
+                    qtybo: detail.UOMQtyBackOrder,
                     unitPrice: detail.LineCost,
                     unitPriceInc:0,
                     TotalAmt: 0,
@@ -8802,19 +8802,32 @@ Template.purchaseordercard.events({
                             let index = workorders.findIndex((order, index)=>{
                                 return order.fields.ID == workorderid
                             })
-                            let workorderrecord = cloneDeep(workorders[index].fields);
-                            workorderrecord.POStatus = $('#sltStatus').val();
-                            let object = {
-                                type:"TVS1Workorder",
-                                fields: workorderrecord
+                            
+                            if(index > -1) {
+                                let workorderrecord = cloneDeep(workorders[index].fields);
+                                if(workorderrecord.POStatus == 'not created') {
+                                    workorderrecord.POStatus = 'ordered';
+                                }  
+                                if (getso_id[1]) {
+                                    workorderrecord.PONumber = getso_id[1];
+                                }
+                                if (workorderrecord.POStatus == 'ordered') {
+                                    if (splashLineArray[0].fields.UOMQtySold == splashLineArray[0].fields.UOMQtyShipped) {
+                                        workorderrecord.POStatus = 'received'; 
+                                    }
+                                }
+                                let object = {
+                                    type:"TVS1Workorder",
+                                    fields: workorderrecord
+                                }
+                                let tempWorkorders = cloneDeep(workorders);
+                                tempWorkorders.splice(index, 1, object);
+                                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
+                                    function() {getVS1Data('TVS1Workorder').then(function(dataObject){
+                                        let data = JSON.parse(dataObject[0].data);
+                                    })}
+                                )
                             }
-                            let tempWorkorders = cloneDeep(workorders);
-                            tempWorkorders.splice(index, 1, object);
-                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
-                                function() {getVS1Data('TVS1Workorder').then(function(dataObject){
-                                    let data = JSON.parse(dataObject[0].data);
-                                })}
-                            )
                         }
                     }
                     await updateWO()
@@ -12693,6 +12706,7 @@ Template.purchaseordercard.events({
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
                             if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
@@ -12805,6 +12819,7 @@ Template.purchaseordercard.events({
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
                             if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();

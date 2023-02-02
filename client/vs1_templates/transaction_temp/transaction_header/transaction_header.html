@@ -355,7 +355,6 @@
             }}
             {{/if}}
             {{#if poStatus}}
-              {{#unless equals poStatus ''}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
                 {{> default_input
                   label="POStatus"
@@ -365,7 +364,17 @@
                   defaultValue=data.poStatus
                 }}
               </div>
-              {{/unless}}
+            {{/if}}
+            {{#if woStatus}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> default_input
+                  label="WOStatus"
+                  id="sltWOStatus"
+                  name="sltWOStatus"
+                  readonly=true
+                  defaultValue=woStatus
+                }}
+              </div>
             {{/if}}
           </div>
         </div>
@@ -407,6 +416,10 @@
           data=data
           showCompleteProcess=showCompleteProcess
           showVendorService=showVendorService
+          showTimerStart = showTimerStart
+          showTimerPause = showTimerPause
+          showTimerResume = showTimerResume
+          showTimerStop = showTimerStop
         }}
       </div>
     </div>

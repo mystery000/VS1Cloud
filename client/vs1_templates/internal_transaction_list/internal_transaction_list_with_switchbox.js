@@ -231,29 +231,29 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
 
-        try {
-            getVS1Data("VS1_Customize").then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
-                        reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                        templateObject.showCustomFieldDisplaySettings(reset_data);
-                    }).catch(function(err) {});
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
-                        for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-                            if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
-                                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                                templateObject.showCustomFieldDisplaySettings(reset_data);
-                            }
-                        }
-                    };
-                }
-            });
+        // try {
+        //     getVS1Data("VS1_Customize").then(function(dataObject) {
+        //         if (dataObject.length == 0) {
+        //             sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
+        //                 reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+        //                 templateObject.showCustomFieldDisplaySettings(reset_data);
+        //             }).catch(function(err) {});
+        //         } else {
+        //             let data = JSON.parse(dataObject[0].data);
+        //             if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
+        //                 for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+        //                     if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+        //                         reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+        //                         templateObject.showCustomFieldDisplaySettings(reset_data);
+        //                     }
+        //                 }
+        //             };
+        //         }
+        //     });
 
-        } catch (error) {
+        // } catch (error) {
 
-        }
+        // }
         return;
     }
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
@@ -648,9 +648,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItemObj = {};
         let deleteFilter = false;
         let chkBox;
-        let costprice = 0.00;
-        let sellrate = 0.00;
-        let linestatus = '';
         if (data.Params.Search.replace(/\s/g, "") == "") {
             deleteFilter = true;
         } else {
@@ -682,10 +679,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 data.tdeptclasslist[i].SiteCode || "",
                 linestatus
             ];
-            
             splashArrayDepartmentsList.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArrayDepartmentsList);
         }
+        templateObject.transactiondatatablerecords.set(splashArrayDepartmentsList);
 
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -1121,34 +1117,34 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     templateObject.getLotNumbersData = async function(productname = "") { //GET Data here from Web API or IndexDB
         let dataTableList = [];
         templateObject.transactiondatatablerecords.set([]);
-        getVS1Data('TSerialNumberListCurrentReport').then(function(dataObject) {
-            // if (dataObject.length === 0) {
-                sideBarService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
-                    addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-                    for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-                        if(productname == data.tserialnumberlistcurrentreport[i].ProductName && data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
-                            dataTableList.push(data.tserialnumberlistcurrentreport[i]);
+        getVS1Data('TProductBatches').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                productService.getProductBatches().then(function(data) {
+                    addVS1Data('TProductBatches', JSON.stringify(data));
+                    for (let i = 0; i < data.tproductbatches.length; i++) {
+                        if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "" && data.tproductbatches[i].Qty > 0){
+                            dataTableList.push(data.tproductbatches[i]);
                         }
                     }
                     templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-            // } else {
-            //     let data = JSON.parse(dataObject[0].data);
-            //     for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-            //         if(productname == data.tserialnumberlistcurrentreport[i].ProductName && data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
-            //             dataTableList.push(data.tserialnumberlistcurrentreport[i]);
-            //         }
-            //     }
-            //     templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
-            // }
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tproductbatches.length; i++) {
+                    if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "" && data.tproductbatches[i].Qty > 0){
+                        dataTableList.push(data.tproductbatches[i]);
+                    }
+                }
+                templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
+            }
         }).catch(function(err) {
-            sideBarService.getAllSerialNumber( initialReportLoad, 0 ).then(function(data) {
-                addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
-                for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-                    if(productname == data.tserialnumberlistcurrentreport[i].ProductName && data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
-                        dataTableList.push(data.tserialnumberlistcurrentreport[i]);
+            productService.getProductBatches().then(function(data) {
+                addVS1Data('TProductBatches', JSON.stringify(data));
+                for (let i = 0; i < data.tproductbatches.length; i++) {
+                    if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "" && data.tproductbatches[i].Qty > 0){
+                        dataTableList.push(data.tproductbatches[i]);
                     }
                 }
                 templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
@@ -1157,14 +1153,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         });
     }
     templateObject.displayLotNumbersData = async function(data) {
-        var splashArraySNList = new Array();
+        var splashArrayLotList = new Array();
         let deleteFilter = false;
         let chkBox;
         
         for (let i = 0; i < data.length; i++) {
-            let mobile = "";
-            let linestatus = '';
-            let deptFName = '';
             // if (data[i].Active == true) {
             //     linestatus = "";
             // } else if (data[i].Active == false) {
@@ -1177,14 +1170,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
             var dataList = [
                 chkBox,
-                data[i].SerialNumber || "",
-                data[i].SerialNumber || "",
-                data[i].SerialNumber || "",
+                data[i].Batchno || "",
+                data[i].Batchno || "",
+                data[i].ExpiryDate != ''? moment(data[i].ExpiryDate).format("YYYY/MM/DD"): data[i].ExpiryDate
             ];
             
-            splashArraySNList.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArraySNList);
+            splashArrayLotList.push(dataList);
         }
+        templateObject.transactiondatatablerecords.set(splashArrayLotList);
 
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -1255,7 +1248,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         
-                        let uniqueChars = [...new Set(splashArraySNList)];
+                        let uniqueChars = [...new Set(splashArrayLotList)];
                         templateObject.transactiondatatablerecords.set(uniqueChars);
                         var datatable = $('#' + currenttablename).DataTable();
                         datatable.clear();
@@ -1793,22 +1786,48 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         // if (currenttablename === "tblAvailableSNCheckbox") {            
             var target = e.target;
             let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
-            productService.getProductStatus(selectedProductName).then(async function (data) {
-                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    return false;
-                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                    currenttablename = "tblAvailableLotCheckbox";
-                    templateObject.getLotNumbersData(selectedProductName);
-                    // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    // $("#availableLotNumberModal").attr("data-row", row + 1);
-                    // $("#availableLotNumberModal").modal("show");
-                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                    currenttablename = "tblAvailableSNCheckbox";
-                    templateObject.getSerialNumbersData(selectedProductName);
-                    // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    // $("#availableSerialNumberModal").attr("data-row", row + 1);
-                    // $('#availableSerialNumberModal').modal('show');
+            getVS1Data("TProductList").then(function (dataObject) {
+                if (dataObject.length == 0) {
+                    productService.getProductStatus(selectedProductName).then(async function (data) {
+                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                            return false;
+                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                            currenttablename = "tblAvailableLotCheckbox";
+                            templateObject.getLotNumbersData(selectedProductName);
+                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                            currenttablename = "tblAvailableSNCheckbox";
+                            templateObject.getSerialNumbersData(selectedProductName);
+                        }
+                    });
                 }
+                else{
+                    let data = JSON.parse(dataObject[0].data);
+                    for (let i = 0; i < data.tproductlist.length; i++) {
+                        if(data.tproductlist[i].PARTNAME == selectedProductName){
+                            if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+                                return false;
+                            } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                                currenttablename = "tblAvailableLotCheckbox";
+                                templateObject.getLotNumbersData(selectedProductName);
+                            } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                                currenttablename = "tblAvailableSNCheckbox";
+                                templateObject.getSerialNumbersData(selectedProductName);
+                            }
+                        }
+                    }
+                }
+            }).catch(function (err) {
+                productService.getProductStatus(selectedProductName).then(async function (data) {
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        currenttablename = "tblAvailableLotCheckbox";
+                        templateObject.getLotNumbersData(selectedProductName);
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        currenttablename = "tblAvailableSNCheckbox";
+                        templateObject.getSerialNumbersData(selectedProductName);
+                    }
+                });
             });
         // }
         // else if (currenttablename === "tblAvailableLotCheckbox") {            

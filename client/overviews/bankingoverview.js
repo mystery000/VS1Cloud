@@ -1396,6 +1396,12 @@ Template.bankingoverview.events({
     "click .btnRefreshBankingOverview": function () {
         $(".btnRefresh").trigger("click");
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Banking Overview report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     'click .btnRefresh': function() {
         console.log("btnRefresh");
       var currentBeginDate = new Date();

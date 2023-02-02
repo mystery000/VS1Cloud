@@ -388,499 +388,542 @@ Template.addaccountpop.onRendered(function () {
 
 });
 
-Template.addaccountpop.events({
 
-    'click .btnSaveAccountPOP': function () {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        let accountService = new AccountService();
-        let organisationService = new OrganisationService();
+Template.onClickSaveBtn = () => {
+    playSaveAudio();
+    let templateObject = Template.instance();
+    let accountService = new AccountService();
+    let organisationService = new OrganisationService();
 
-        setTimeout(function(){
+    setTimeout(function () {
         var url = FlowRouter.current().path;
-        $('.fullScreenSpin').css('display', 'inline-block');
+        $(".fullScreenSpin").css("display", "inline-block");
         let forTransaction = false;
-        let accSelected = $('#accSelected').val();
-        if ($('#showOnTransactions').is(':checked')) {
+        let accSelected = $("#accSelected").val();
+        if ($("#showOnTransactions").is(":checked")) {
             forTransaction = true;
         }
-        let accountID = $('#edtAccountID').val();
-        var accounttype = $('#sltAccountType').val();
-        var accountname = $('#edtAccountName').val();
-        var accountno = $('#edtAccountNo').val();
-        var taxcode = $('#sltTaxCode').val();
-        var accountdesc = $('#txaAccountDescription').val();
-        var swiftCode = $('#swiftCode').val();
-        var routingNo = $('#routingNo').val();
+        let accountID = $("#edtAccountID").val();
+        var accounttype = $("#sltAccountType").val();
+        var accountname = $("#edtAccountName").val();
+        var accountno = $("#edtAccountNo").val();
+        var taxcode = $("#sltTaxCode").val();
+        var accountdesc = $("#txaAccountDescription").val();
+        var swiftCode = $("#swiftCode").val();
+        var routingNo = $("#routingNo").val();
         // var comments = $('#txaAccountComments').val();
-        var bankname = $('#edtBankName').val();
-        var bankaccountname = $('#edtBankAccountName').val();
-        var bankbsb = $('#edtBSB').val();
-        var bankacountno = $('#edtBankAccountNo').val();
+        var bankname = $("#edtBankName").val();
+        var bankaccountname = $("#edtBankAccountName").val();
+        var bankbsb = $("#edtBSB").val();
+        var bankacountno = $("#edtBankAccountNo").val();
         let isBankAccount = templateObject.isBankAccount.get();
 
         var expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
-        let cardnumber = $('#edtCardNumber').val();
-        let cardcvc = $('#edtCvc').val();
-        let expiryDate = expirydateTime.getFullYear() + "-" + (expirydateTime.getMonth() + 1) + "-" + expirydateTime.getDate();
+        let cardnumber = $("#edtCardNumber").val();
+        let cardcvc = $("#edtCvc").val();
+        let expiryDate =
+            expirydateTime.getFullYear() + "-" + (expirydateTime.getMonth() + 1) + "-" + expirydateTime.getDate();
 
         let companyID = 1;
-        let data = '';
+        let data = "";
 
-            accountService.getCheckAccountData(accountname).then(function (data) {
+        accountService
+            .getCheckAccountData(accountname)
+            .then(function (data) {
                 accountID = parseInt(data.taccount[0].Id) || 0;
                 data = {
                     type: "TAccount",
                     fields: {
                         ID: accountID,
                         // AccountName: accountname|| '',
-                        AccountNumber: accountno || '',
+                        AccountNumber: accountno || "",
                         // AccountTypeName: accounttype|| '',
                         Active: true,
-                        BankAccountName: bankaccountname || '',
-                        BankAccountNumber: bankacountno || '',
-                        BSB: bankbsb || '',
-                        Description: accountdesc || '',
-                        TaxCode: taxcode || '',
+                        BankAccountName: bankaccountname || "",
+                        BankAccountNumber: bankacountno || "",
+                        BSB: bankbsb || "",
+                        Description: accountdesc || "",
+                        TaxCode: taxcode || "",
                         PublishOnVS1: true,
                         Extra: swiftCode,
                         BankNumber: routingNo,
                         Required: forTransaction,
-                        CarNumber:cardnumber||'',
-                        CVC:cardcvc||'',
-                        ExpiryDate:expiryDate||''
-
-
-                    }
+                        CarNumber: cardnumber || "",
+                        CVC: cardcvc || "",
+                        ExpiryDate: expiryDate || "",
+                    },
                 };
 
-                accountService.saveAccount(data).then(function (data) {
-                    if ($('#showOnTransactions').is(':checked')) {
-                      var objDetails = {
-                        type: "TCompanyInfo",
-                        fields: {
-                            Id: companyID,
-                            AccountNo: bankacountno,
-                            BankBranch: swiftCode,
-                            BankAccountName: bankaccountname,
-                            BankName: bankname,
-                            Bsb: bankbsb,
-                            SiteCode: routingNo,
-                            FileReference: accountname
+                accountService
+                    .saveAccount(data)
+                    .then(function (data) {
+                        if ($("#showOnTransactions").is(":checked")) {
+                            var objDetails = {
+                                type: "TCompanyInfo",
+                                fields: {
+                                    Id: companyID,
+                                    AccountNo: bankacountno,
+                                    BankBranch: swiftCode,
+                                    BankAccountName: bankaccountname,
+                                    BankName: bankname,
+                                    Bsb: bankbsb,
+                                    SiteCode: routingNo,
+                                    FileReference: accountname,
+                                },
+                            };
+                            organisationService
+                                .saveOrganisationSetting(objDetails)
+                                .then(function (data) {
+                                    var accNo = bankacountno || "";
+                                    var swiftCode1 = swiftCode || "";
+                                    var bankAccName = bankaccountname || "";
+                                    var accountName = accountname || "";
+                                    var bsb = bankbsb || "";
+                                    var routingNo = routingNo || "";
+
+                                    localStorage.setItem("vs1companyBankName", bankname);
+                                    localStorage.setItem("vs1companyBankAccountName", bankAccName);
+                                    localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                    localStorage.setItem("vs1companyBankBSB", bsb);
+                                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function (dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function (datareturn) {
+                                                    if (url.includes("/employeescard")) {
+                                                        // Meteor._reload.reload();
+                                                        let drpDownID = $("#accSelected").val();
+                                                        $("#" + drpDownID).val(accountname);
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    if (url.includes("/productview")) {
+                                                        if (accSelected == "cogs") {
+                                                            $("#sltcogsaccount").val(accountname);
+                                                        } else if (accSelected == "sales") {
+                                                            $("#sltsalesacount").val(accountname);
+                                                        } else if (accSelected == "inventory") {
+                                                            $("#sltinventoryacount").val(accountname);
+                                                        }
+                                                        $("#addAccountModal").modal("toggle");
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    window.open("/accountsoverview", "_self");
+                                                })
+                                                .catch(function (err) {
+                                                    if (url.includes("/employeescard")) {
+                                                        let drpDownID = $("#accSelected").val();
+                                                        $("#" + drpDownID).val(accountname);
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        // Meteor._reload.reload();
+                                                        return false;
+                                                    }
+                                                    if (url.includes("/productview")) {
+                                                        if (accSelected == "cogs") {
+                                                            $("#sltcogsaccount").val(accountname);
+                                                        } else if (accSelected == "sales") {
+                                                            $("#sltsalesacount").val(accountname);
+                                                        } else if (accSelected == "inventory") {
+                                                            $("#sltinventoryacount").val(accountname);
+                                                        }
+                                                        $("#addAccountModal").modal("toggle");
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    window.open("/accountsoverview", "_self");
+                                                });
+                                        })
+                                        .catch(function (err) {
+                                            if (url.includes("/employeescard")) {
+                                                // Meteor._reload.reload();
+                                                let drpDownID = $("#accSelected").val();
+                                                $("#" + drpDownID).val(accountname);
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            if (url.includes("/productview")) {
+                                                if (accSelected == "cogs") {
+                                                    $("#sltcogsaccount").val(accountname);
+                                                } else if (accSelected == "sales") {
+                                                    $("#sltsalesacount").val(accountname);
+                                                } else if (accSelected == "inventory") {
+                                                    $("#sltinventoryacount").val(accountname);
+                                                }
+                                                $("#addAccountModal").modal("toggle");
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            window.open("/accountsoverview", "_self");
+                                        });
+                                })
+                                .catch(function (err) {
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function (dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function (datareturn) {
+                                                    if (url.includes("/employeescard")) {
+                                                        // Meteor._reload.reload();
+                                                        let drpDownID = $("#accSelected").val();
+                                                        $("#" + drpDownID).val(accountname);
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    if (url.includes("/productview")) {
+                                                        if (accSelected == "cogs") {
+                                                            $("#sltcogsaccount").val(accountname);
+                                                        } else if (accSelected == "sales") {
+                                                            $("#sltsalesacount").val(accountname);
+                                                        } else if (accSelected == "inventory") {
+                                                            $("#sltinventoryacount").val(accountname);
+                                                        }
+                                                        $("#addAccountModal").modal("toggle");
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    window.open("/accountsoverview", "_self");
+                                                })
+                                                .catch(function (err) {
+                                                    if (url.includes("/employeescard")) {
+                                                        // Meteor._reload.reload();
+                                                        let drpDownID = $("#accSelected").val();
+                                                        $("#" + drpDownID).val(accountname);
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    if (url.includes("/productview")) {
+                                                        if (accSelected == "cogs") {
+                                                            $("#sltcogsaccount").val(accountname);
+                                                        } else if (accSelected == "sales") {
+                                                            $("#sltsalesacount").val(accountname);
+                                                        } else if (accSelected == "inventory") {
+                                                            $("#sltinventoryacount").val(accountname);
+                                                        }
+                                                        $("#addAccountModal").modal("toggle");
+                                                        $(".fullScreenSpin").css("display", "none");
+                                                        return false;
+                                                    }
+                                                    window.open("/accountsoverview", "_self");
+                                                });
+                                        })
+                                        .catch(function (err) {
+                                            if (url.includes("/employeescard")) {
+                                                // Meteor._reload.reload();
+                                                let drpDownID = $("#accSelected").val();
+                                                $("#" + drpDownID).val(accountname);
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            if (url.includes("/productview")) {
+                                                if (accSelected == "cogs") {
+                                                    $("#sltcogsaccount").val(accountname);
+                                                } else if (accSelected == "sales") {
+                                                    $("#sltsalesacount").val(accountname);
+                                                } else if (accSelected == "inventory") {
+                                                    $("#sltinventoryacount").val(accountname);
+                                                }
+                                                $("#addAccountModal").modal("toggle");
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+
+                                            window.open("/accountsoverview", "_self");
+                                        });
+                                });
+                        } else {
+                            sideBarService
+                                .getAccountListVS1()
+                                .then(function (dataReload) {
+                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                        .then(function (datareturn) {
+                                            if (url.includes("/employeescard")) {
+                                                // Meteor._reload.reload();
+                                                let drpDownID = $("#accSelected").val();
+                                                $("#" + drpDownID).val(accountname);
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            if (url.includes("/productview")) {
+                                                if (accSelected == "cogs") {
+                                                    $("#sltcogsaccount").val(accountname);
+                                                } else if (accSelected == "sales") {
+                                                    $("#sltsalesacount").val(accountname);
+                                                } else if (accSelected == "inventory") {
+                                                    $("#sltinventoryacount").val(accountname);
+                                                }
+                                                $("#addAccountModal").modal("toggle");
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            window.open("/accountsoverview", "_self");
+                                        })
+                                        .catch(function (err) {
+                                            if (url.includes("/employeescard")) {
+                                                // Meteor._reload.reload();
+                                                let drpDownID = $("#accSelected").val();
+                                                $("#" + drpDownID).val(accountname);
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            if (url.includes("/productview")) {
+                                                if (accSelected == "cogs") {
+                                                    $("#sltcogsaccount").val(accountname);
+                                                } else if (accSelected == "sales") {
+                                                    $("#sltsalesacount").val(accountname);
+                                                } else if (accSelected == "inventory") {
+                                                    $("#sltinventoryacount").val(accountname);
+                                                }
+                                                $("#addAccountModal").modal("toggle");
+                                                $(".fullScreenSpin").css("display", "none");
+                                                return false;
+                                            }
+                                            window.open("/accountsoverview", "_self");
+                                        });
+                                })
+                                .catch(function (err) {
+                                    if (url.includes("/employeescard")) {
+                                        // Meteor._reload.reload();
+                                        let drpDownID = $("#accSelected").val();
+                                        $("#" + drpDownID).val(accountname);
+                                        $(".fullScreenSpin").css("display", "none");
+                                        return false;
+                                    }
+                                    if (url.includes("/productview")) {
+                                        if (accSelected == "cogs") {
+                                            $("#sltcogsaccount").val(accountname);
+                                        } else if (accSelected == "sales") {
+                                            $("#sltsalesacount").val(accountname);
+                                        } else if (accSelected == "inventory") {
+                                            $("#sltinventoryacount").val(accountname);
+                                        }
+                                        $("#addAccountModal").modal("toggle");
+                                        $(".fullScreenSpin").css("display", "none");
+                                        return false;
+                                    }
+                                    window.open("/accountsoverview", "_self");
+                                });
                         }
-                    }
-                    organisationService.saveOrganisationSetting(objDetails).then(function (data) {
-                           var accNo =  bankacountno || '';
-                           var swiftCode1 = swiftCode || '';
-                           var bankAccName = bankaccountname || '';
-                           var accountName = accountname || '';
-                           var bsb = bankbsb || '';
-                           var routingNo = routingNo || '';
-
-                           localStorage.setItem('vs1companyBankName', bankname);
-                           localStorage.setItem('vs1companyBankAccountName', bankAccName);
-                           localStorage.setItem('vs1companyBankAccountNo', accNo);
-                           localStorage.setItem('vs1companyBankBSB', bsb);
-                           localStorage.setItem('vs1companyBankSwiftCode', swiftCode1);
-                           localStorage.setItem('vs1companyBankRoutingNo', routingNo);
-                        sideBarService.getAccountListVS1().then(function (dataReload) {
-                            addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-                                if( url.includes("/employeescard") ){
-                                    // Meteor._reload.reload();
-                                    let drpDownID = $('#accSelected').val();
-                                    $('#' + drpDownID).val(accountname);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                                if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                                window.open('/accountsoverview', '_self');
-                            }).catch(function (err) {
-                                if( url.includes("/employeescard") ){
-                                    let drpDownID = $('#accSelected').val();
-                                    $('#' + drpDownID).val(accountname);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    // Meteor._reload.reload();
-                                    return false;
-                                }
-                              if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                                window.open('/accountsoverview', '_self');
-                            });
-                        }).catch(function (err) {
-                            if( url.includes("/employeescard") ){
+                    })
+                    .catch(function (err) {
+                        swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                        }).then((result) => {
+                            if (result.value) {
                                 // Meteor._reload.reload();
-                                let drpDownID = $('#accSelected').val();
-                                $('#' + drpDownID).val(accountname);
-                                $('.fullScreenSpin').css('display', 'none');
-                                return false;
+                            } else if (result.dismiss === "cancel") {
                             }
-                            if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                            window.open('/accountsoverview', '_self');
                         });
-                    }).catch(function (err) {
-                      sideBarService.getAccountListVS1().then(function (dataReload) {
-                          addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-                            if( url.includes("/employeescard") ){
-                                // Meteor._reload.reload();
-                                let drpDownID = $('#accSelected').val();
-                                $('#' + drpDownID).val(accountname);
-                                $('.fullScreenSpin').css('display', 'none');
-                                return false;
-                            }
-                          if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                              window.open('/accountsoverview', '_self');
-                          }).catch(function (err) {
-                            if( url.includes("/employeescard") ){
-                                // Meteor._reload.reload();
-                                let drpDownID = $('#accSelected').val();
-                                $('#' + drpDownID).val(accountname);
-                                $('.fullScreenSpin').css('display', 'none');
-                                return false;
-                            }
-                            if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                              window.open('/accountsoverview', '_self');
-                          });
-                      }).catch(function (err) {
-                            if( url.includes("/employeescard") ){
-                                // Meteor._reload.reload();
-                                let drpDownID = $('#accSelected').val();
-                                $('#' + drpDownID).val(accountname);
-                                $('.fullScreenSpin').css('display', 'none');
-                                return false;
-                            }
-                                if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-
-                          window.open('/accountsoverview', '_self');
-                      });
+                        $(".fullScreenSpin").css("display", "none");
                     });
-                    } else {
-                        sideBarService.getAccountListVS1().then(function (dataReload) {
-                            addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-                                if( url.includes("/employeescard") ){
-                                    // Meteor._reload.reload();
-                                    let drpDownID = $('#accSelected').val();
-                                    $('#' + drpDownID).val(accountname);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                               if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                                window.open('/accountsoverview', '_self');
-                            }).catch(function (err) {
-                                if( url.includes("/employeescard") ){
-                                    // Meteor._reload.reload();
-                                    let drpDownID = $('#accSelected').val();
-                                    $('#' + drpDownID).val(accountname);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                               if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                                window.open('/accountsoverview', '_self');
-                            });
-                        }).catch(function (err) {
-                            if( url.includes("/employeescard") ){
-                                // Meteor._reload.reload();
-                                let drpDownID = $('#accSelected').val();
-                                $('#' + drpDownID).val(accountname);
-                                $('.fullScreenSpin').css('display', 'none');
-                                return false;
-                            }
-                           if(url.includes("/productview")) {
-                                    if (accSelected == "cogs") {
-                                        $('#sltcogsaccount').val(accountname);
-                                    } else if (accSelected == "sales") {
-                                        $('#sltsalesacount').val(accountname);
-                                    } else if (accSelected == "inventory") {
-                                        $('#sltinventoryacount').val(accountname);
-                                    }
-                                     $('#addAccountModal').modal('toggle');
-                                     $('.fullScreenSpin').css('display', 'none');
-                                    return false;
-                                }
-                            window.open('/accountsoverview', '_self');
-                        });
-                    }
-                }).catch(function (err) {
-
-                    swal({
-                        title: 'Oooops...',
-                        text: err,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {
-                            // Meteor._reload.reload();
-                        } else if (result.dismiss === 'cancel') {}
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-
-            }).catch(function (err) {
+            })
+            .catch(function (err) {
                 data = {
                     type: "TAccount",
                     fields: {
-                        AccountName: accountname || '',
-                        AccountNumber: accountno || '',
-                        AccountTypeName: accounttype || '',
+                        AccountName: accountname || "",
+                        AccountNumber: accountno || "",
+                        AccountTypeName: accounttype || "",
                         Active: true,
-                        BankAccountName: bankaccountname || '',
-                        BankAccountNumber: bankacountno || '',
-                        BSB: bankbsb || '',
-                        Description: accountdesc || '',
-                        TaxCode: taxcode || '',
+                        BankAccountName: bankaccountname || "",
+                        BankAccountNumber: bankacountno || "",
+                        BSB: bankbsb || "",
+                        Description: accountdesc || "",
+                        TaxCode: taxcode || "",
                         Extra: swiftCode,
                         BankNumber: routingNo,
                         PublishOnVS1: true,
                         Required: forTransaction,
-                        CarNumber:cardnumber||'',
-                        CVC:cardcvc||'',
-                        ExpiryDate:expiryDate||''
-                    }
+                        CarNumber: cardnumber || "",
+                        CVC: cardcvc || "",
+                        ExpiryDate: expiryDate || "",
+                    },
                 };
 
-                accountService.saveAccount(data).then(function (objDetailsReturn) {
-                    if ($('#showOnTransactions').is(':checked')) {
-                        var objDetails = {
-                            type: "TCompanyInfo",
-                            fields: {
-                            Id: companyID,
-                            AccountNo: bankacountno,
-                            BankBranch: swiftCode,
-                            // Firstname: bankaccountname,
-                            BankAccountName: bankaccountname,
-                            BankName: bankname,
-                            Bsb: bankbsb,
-                            SiteCode: routingNo,
-                            FileReference: accountname
-                            }
-                        }
-                        organisationService.saveOrganisationSetting(objDetails).then(function (data) {
-                           var accNo =  bankacountno || '';
-                           var swiftCode1 = swiftCode || '';
-                           var bankName = bankaccountname || '';
-                           var accountName = accountname || '';
-                           var bsb = bankbsb || '';
-                           var routingNo = routingNo || '';
-                           localStorage.setItem('vs1companyBankName', bankname);
-                           localStorage.setItem('vs1companyBankAccountName', bankAccName);
-                           localStorage.setItem('vs1companyBankAccountNo', accNo);
-                           localStorage.setItem('vs1companyBankBSB', bsb);
-                           localStorage.setItem('vs1companyBankSwiftCode', swiftCode1);
-                           localStorage.setItem('vs1companyBankRoutingNo', routingNo);
-                            sideBarService.getAccountListVS1().then(function (dataReload) {
-                                addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-
-                                }).catch(function (err) {
-
+                accountService
+                    .saveAccount(data)
+                    .then(function (objDetailsReturn) {
+                        if ($("#showOnTransactions").is(":checked")) {
+                            var objDetails = {
+                                type: "TCompanyInfo",
+                                fields: {
+                                    Id: companyID,
+                                    AccountNo: bankacountno,
+                                    BankBranch: swiftCode,
+                                    // Firstname: bankaccountname,
+                                    BankAccountName: bankaccountname,
+                                    BankName: bankname,
+                                    Bsb: bankbsb,
+                                    SiteCode: routingNo,
+                                    FileReference: accountname,
+                                },
+                            };
+                            organisationService
+                                .saveOrganisationSetting(objDetails)
+                                .then(function (data) {
+                                    var accNo = bankacountno || "";
+                                    var swiftCode1 = swiftCode || "";
+                                    var bankName = bankaccountname || "";
+                                    var accountName = accountname || "";
+                                    var bsb = bankbsb || "";
+                                    var routingNo = routingNo || "";
+                                    localStorage.setItem("vs1companyBankName", bankname);
+                                    localStorage.setItem("vs1companyBankAccountName", bankAccName);
+                                    localStorage.setItem("vs1companyBankAccountNo", accNo);
+                                    localStorage.setItem("vs1companyBankBSB", bsb);
+                                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
+                                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function (dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function (datareturn) {})
+                                                .catch(function (err) {});
+                                        })
+                                        .catch(function (err) {});
+                                })
+                                .catch(function (err) {
+                                    sideBarService
+                                        .getAccountListVS1()
+                                        .then(function (dataReload) {
+                                            addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                                .then(function (datareturn) {})
+                                                .catch(function (err) {});
+                                        })
+                                        .catch(function (err) {});
                                 });
-                            }).catch(function (err) {
-
-                            });
-                        }).catch(function (err) {
-                          sideBarService.getAccountListVS1().then(function (dataReload) {
-                              addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-
-                              }).catch(function (err) {
-
-                              });
-                          }).catch(function (err) {
-
-                          });
-                        });
-                    } else {
-                        sideBarService.getAccountListVS1().then(function (dataReload) {
-                            addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-
-                            }).catch(function (err) {
-
-                            });
-                        }).catch(function (err) {
-
-                        });
-                    }
-                    let accountSaveID = objDetailsReturn.fields.ID;
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (accountSaveID) {
-                        var currentLoc = FlowRouter.current().route.path;
-                        if (currentLoc == "/billcard" || currentLoc == "/chequecard" || currentLoc == "/creditcard"|| currentLoc == "/journalentrycard") {
-                          var selectLineID = $('#selectLineID').val();
-                          if (selectLineID) {
-                              let lineProductName = accountname || '';
-                              let lineProductDesc = accountdesc || '';
-
-                              let lineUnitPrice = "0.00";
-                              let lineTaxRate = taxcode || '';
-                              let lineAmount = 0;
-                              let subGrandTotal = 0;
-                              let taxGrandTotal = 0;
-                              let taxGrandTotalPrint = 0;
-                              $('#' + selectLineID + " .lineTaxRate").text(0);
-
-                              $('#' + selectLineID + " .lineAccountName").val(lineProductName);
-                              $('#' + selectLineID + " .colAccountName").removeClass('boldtablealertsborder');
-                              $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
-                              $('#' + selectLineID + " .colAmount").val(lineUnitPrice);
-                              $('#' + selectLineID + " .lineTaxCode").text(lineTaxRate);
-
-                              //$('#' + selectLineID + " .colAmount").trigger("change");
-                              $('#addAccountModal').modal('toggle');
-
-                          }else{
-                              $('#edtBankAccountName').val(accountname);
-                          }
-                          // setTimeout(function () {
-                          //     $('.btnRefreshAccount').trigger('click');
-                          // }, 500);
-                        }else if (currentLoc == "/depositcard") {
-                          var selectLineID = $('#selectLineID').val();
-                          if (selectLineID) {
-                              let lineProductName = accountname || '';
-                              let lineProductDesc = accountdesc || '';
-
-                              let lineUnitPrice = "0.00";
-                              let lineTaxRate = taxcode || '';
-                              let lineAmount = 0;
-                              let subGrandTotal = 0;
-                              let taxGrandTotal = 0;
-                              let taxGrandTotalPrint = 0;
-                              $('#' + selectLineID + " .lineTaxRate").text(0);
-
-                              $('#' + selectLineID + " .lineAccountName").val(lineProductName);
-                              $('#' + selectLineID + " .colAccountName").removeClass('boldtablealertsborder');
-                              // $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
-                              $('#' + selectLineID + " .colAmount").val(lineUnitPrice);
-                              // $('#' + selectLineID + " .lineTaxCode").text(lineTaxRate);
-
-                              //$('#' + selectLineID + " .colAmount").trigger("change");
-                              $('#addAccountModal').modal('toggle');
-
-                          }else{
-                              $('#sltAccountName').val(accountname);
-                          }
-                          // setTimeout(function () {
-                          //     $('.btnRefreshAccount').trigger('click');
-                          // }, 500);
                         } else {
-                          location.reload();
+                            sideBarService
+                                .getAccountListVS1()
+                                .then(function (dataReload) {
+                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                        .then(function (datareturn) {})
+                                        .catch(function (err) {});
+                                })
+                                .catch(function (err) {});
                         }
+                        let accountSaveID = objDetailsReturn.fields.ID;
+                        $(".fullScreenSpin").css("display", "none");
+                        if (accountSaveID) {
+                            var currentLoc = FlowRouter.current().route.path;
+                            if (
+                                currentLoc == "/billcard" ||
+                                currentLoc == "/chequecard" ||
+                                currentLoc == "/creditcard" ||
+                                currentLoc == "/journalentrycard"
+                            ) {
+                                var selectLineID = $("#selectLineID").val();
+                                if (selectLineID) {
+                                    let lineProductName = accountname || "";
+                                    let lineProductDesc = accountdesc || "";
 
-                        sideBarService.getAccountListVS1().then(function (dataReload) {
-                            addVS1Data('TAccountVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                                    let lineUnitPrice = "0.00";
+                                    let lineTaxRate = taxcode || "";
+                                    let lineAmount = 0;
+                                    let subGrandTotal = 0;
+                                    let taxGrandTotal = 0;
+                                    let taxGrandTotalPrint = 0;
+                                    $("#" + selectLineID + " .lineTaxRate").text(0);
 
-                            }).catch(function (err) {
+                                    $("#" + selectLineID + " .lineAccountName").val(lineProductName);
+                                    $("#" + selectLineID + " .colAccountName").removeClass("boldtablealertsborder");
+                                    $("#" + selectLineID + " .lineMemo").text(lineProductDesc);
+                                    $("#" + selectLineID + " .colAmount").val(lineUnitPrice);
+                                    $("#" + selectLineID + " .lineTaxCode").text(lineTaxRate);
 
-                            });
-                        }).catch(function (err) {
+                                    //$('#' + selectLineID + " .colAmount").trigger("change");
+                                    $("#addAccountModal").modal("toggle");
+                                } else {
+                                    $("#edtBankAccountName").val(accountname);
+                                }
+                                // setTimeout(function () {
+                                //     $('.btnRefreshAccount').trigger('click');
+                                // }, 500);
+                            } else if (currentLoc == "/depositcard") {
+                                var selectLineID = $("#selectLineID").val();
+                                if (selectLineID) {
+                                    let lineProductName = accountname || "";
+                                    let lineProductDesc = accountdesc || "";
 
+                                    let lineUnitPrice = "0.00";
+                                    let lineTaxRate = taxcode || "";
+                                    let lineAmount = 0;
+                                    let subGrandTotal = 0;
+                                    let taxGrandTotal = 0;
+                                    let taxGrandTotalPrint = 0;
+                                    $("#" + selectLineID + " .lineTaxRate").text(0);
+
+                                    $("#" + selectLineID + " .lineAccountName").val(lineProductName);
+                                    $("#" + selectLineID + " .colAccountName").removeClass("boldtablealertsborder");
+                                    // $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
+                                    $("#" + selectLineID + " .colAmount").val(lineUnitPrice);
+                                    // $('#' + selectLineID + " .lineTaxCode").text(lineTaxRate);
+
+                                    //$('#' + selectLineID + " .colAmount").trigger("change");
+                                    $("#addAccountModal").modal("toggle");
+                                } else {
+                                    $("#sltAccountName").val(accountname);
+                                }
+                                // setTimeout(function () {
+                                //     $('.btnRefreshAccount').trigger('click');
+                                // }, 500);
+                            } else {
+                                location.reload();
+                            }
+
+                            sideBarService
+                                .getAccountListVS1()
+                                .then(function (dataReload) {
+                                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                                        .then(function (datareturn) {})
+                                        .catch(function (err) {});
+                                })
+                                .catch(function (err) {});
+                            $("#addAccountModal").modal("toggle");
+                        }
+                    })
+                    .catch(function (err) {
+                        swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                        }).then((result) => {
+                            if (result.value) {
+                                Meteor._reload.reload();
+                            } else if (result.dismiss === "cancel") {
+                            }
                         });
-                        $('#addAccountModal').modal('toggle');
-                      }
-
-                }).catch(function (err) {
-
-                    swal({
-                        title: 'Oooops...',
-                        text: err,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {
-                            Meteor._reload.reload();
-                        } else if (result.dismiss === 'cancel') {}
+                        $(".fullScreenSpin").css("display", "none");
                     });
-                    $('.fullScreenSpin').css('display', 'none');
-                });
             });
-        }, delayTimeAfterSound);
-        },
+    }, delayTimeAfterSound);
+};
+
+Template.addaccountpop.events({
+    'click .btnAddSupplier': function () {
+        Template.onClickSaveBtn()
+    },
+    'click .btnAddEmployee': function () {
+        Template.onClickSaveBtn()
+    },
+    'click .btnApcaClose': function () {
+        $('#addApcaModal').modal('hide')
+    },
+    'click .btnSaveAccountPOP': function () {
+        if ($('#apcaNo').val()) {
+            $('#addApcaModal').modal('show')
+        } else {
+            Template.onClickSaveBtn()
+        }
+    },
     'click .btnAddNewAccounts': function () {
 
         $('#add-account-title').text('Add New Account');
