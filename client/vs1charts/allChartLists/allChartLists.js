@@ -123,8 +123,8 @@ const chartsEditor = new ChartsEditor(
         $(".btnchartdropdown").removeClass("showelement");
 
         $(".sortable-chart-widget-js").removeClass("hideelement"); // display every charts
-        $(".chkDatatable").removeClass("hideelement");
-        $(".chkDatatable").addClass("showelement");
+        $(".chkShowState").removeClass("hideelement");
+        $(".chkShowState").addClass("showelement");
         $(".custom-control-label").removeClass("hideelement");
         $(".simplestart").removeClass("hideelement");
     },
@@ -139,8 +139,8 @@ const chartsEditor = new ChartsEditor(
         $(".btnchartdropdown").removeClass("hideelement");
         $(".btnchartdropdown").addClass("showelement");
 
-        $(".chkDatatable").addClass("hideelement");
-        $(".chkDatatable").removeClass("showelement");
+        $(".chkShowState").addClass("hideelement");
+        $(".chkShowState").removeClass("showelement");
         $(".custom-control-label").addClass("hideelement");
         $(".custom-control-label").removeClass("showelement");
         $(".simplestart").addClass("hideelement");
@@ -172,7 +172,7 @@ async function saveCharts() {
             new Tvs1ChartDashboardPreference({
                 type: "Tvs1dashboardpreferences",
                 fields: new Tvs1ChartDashboardPreferenceField({
-                    Active: $(chart).find(".chkDatatable").is(':checked'),
+                    Active: $(chart).find(".chkShowState").is(':checked'),
                     ChartID: parseInt($(chart).attr("chart-id")),
                     ID: parseInt($(chart).attr("pref-id")),
                     EmployeeID: employeeId,
@@ -186,7 +186,7 @@ async function saveCharts() {
             })
         );
     });
-
+    console.log("chartList: ", chartList);
     // for (const _chart of chartList) {
     let chartJSON = {
         type: "Tvs1dashboardpreferences",
@@ -261,7 +261,7 @@ Template.allChartLists.onRendered(function() {
                 }
             });
         }
-
+        console.log(chartList);
         if (chartList.length == 0) {
             chartList = await ChartHandler.getTvs1charts();
             if (chartList.length == 0) {
@@ -512,8 +512,9 @@ Template.allChartLists.onRendered(function() {
                         storeObj && storeObj.height && storeObj.height != 0 ? storeObj.height + "px" : "auto"
                     );
                     if (chart.fields.ChartGroup == _chartGroup && chart.fields.Active == true) {
+                        console.log(chart.fields);
                         defaultChartList.push(chart.fields._chartSlug);
-                        $(`[key='${chart.fields._chartSlug}'] .chkDatatable`).prop("checked",true);
+                        $(`[key='${chart.fields._chartSlug}'] .chkShowState`).prop("checked",true);
                         $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
                         if (chart.fields._chartSlug == 'accounts__profit_and_loss') {
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
@@ -530,7 +531,7 @@ Template.allChartLists.onRendered(function() {
                             $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
                         }
                     } else {
-                        $(`[key='${chart.fields._chartSlug}'] .chkDatatable`).prop("checked",false);
+                        $(`[key='${chart.fields._chartSlug}'] .chkShowState`).prop("checked",false);
                     }
                     $(`[key='${chart.fields._chartSlug}']`).attr(
                         "chart-slug",
@@ -578,7 +579,7 @@ Template.allChartLists.onRendered(function() {
 });
 
 Template.allChartLists.events({
-    // "mouseenter .chkDatatable": (e) => {
+    // "mouseenter .chkShowState": (e) => {
     //     if($(e.currentTarget).is(":checked")){
     //         Template.instance().tooltip_text.set("Hide");
     //     }
@@ -704,7 +705,7 @@ Template.allChartLists.helpers({
 });
 
 Template.draggablePanel.events({
-    "mouseenter .chkDatatable": (e) => {
+    "mouseenter .chkShowState": (e) => {
         if($(e.currentTarget).is(":checked")){
             Template.instance().tooltip_text.set("Hide");
         }
