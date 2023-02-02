@@ -27,16 +27,8 @@
     card-key="{{cardKey}}">
         <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
-            <div class="hideShowDiv" style="display: inline-flex; justify-content: right;">
-                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Default">
-                        <input class="custom-control-input defaultDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch2-{{cardKey}}" >
-                        <label class="custom-control-label hideelement" for="switch2-{{cardKey}}"></label>
-                    </div>
-                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="{{tooltip_text}}">
-                        <input class="custom-control-input chkDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{cardKey}}">
-                        <label class="custom-control-label hideelement" for="switch1-{{cardKey}}"></label>                        
-                    </div>
-                    <p class="hideelement simplestart" >Simple Start</p>
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body {{actionClass}}" style="cursor: pointer;">
@@ -55,7 +47,7 @@
             position: relative;
             padding-top: 15px !important;
         }
-        .cardSettingBtn {
+        a.cardSettingBtn {
             display: inline-flex;
             width: 22px;
             height: 22px;
@@ -69,15 +61,16 @@
             margin-left: 3px;
         }
 
-        .editCardBtn :hover {
+        a.editCardBtn :hover {
             background: #dddfeb;
             color: #6e6e6e;
             padding: 4px;
             border-radius: 3px;
         }
 
-        .cardShowBtn {
-            display: inline-block;
+        a.cardHideBtn,
+        a.cardShowBtn {
+            display: inline-flex;
             width: 22px;
             height: 22px;
             font-size: 10px;
@@ -90,22 +83,27 @@
             color: #dddfeb;
         }
 
-        .cardShowBtn.active {
+        a.cardHideBtn:hover,
+        a.cardShowBtn:hover,
+        a.cardHideBtn.active,
+        a.cardShowBtn.active {
             background: #00a3d3;
             color: #fff;
         }
 
-        .cardShowBtn i {
+        a.cardHideBtn i,
+        a.cardShowBtn i {
             pointer-events: none;
         }
 
-        .dimmedChart,
-        .dimmedChart cardSettingBtn {
+        .dimmedChart a.cardHideBtn,
+        .dimmedChart a.cardShowBtn,
+        .dimmedChart a.cardSettingBtn {
             background: #f1f1f1 !important;
             color: #6e6e6e;
         }
 
-        .dimmedChart editCardBtn :hover {
+        .dimmedChart a.editCardBtn :hover {
             background: rgba(0, 0, 0, 0) !important;
         }
 
@@ -123,7 +121,7 @@
             cursor: pointer;
         }
         .dimmedChart .cardShowBtn{
-            display: inline-block !important;
+            display: inline-flex !important;
         }
     </style>
 </template>
