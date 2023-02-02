@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { ContactService } from "./contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../utility-service";
@@ -78,16 +77,15 @@ Template.customerscard.onCreated(function () {
   templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.taskrecords = new ReactiveVar([]);
 
-  templateObject.checkedAppointments = new ReactiveVar(true);
+  templateObject.checkedAppointments = new ReactiveVar();
+  templateObject.checkedAppointments.set(false);
   templateObject.checkedQuotes = new ReactiveVar();
   templateObject.checkedQuotes.set(false);
   templateObject.checkedSalesOrders = new ReactiveVar();
   templateObject.checkedSalesOrders.set(false);
   templateObject.checkedInvoices = new ReactiveVar();
   templateObject.checkedInvoices.set(true);
-  templateObject.checkedSales = new ReactiveVar(false);
-
-  templateObject.currentTab = new ReactiveVar("")
+  templateObject.countryData
 
   // Methods
   templateObject.updateTaskSchedule = function (id, date) {
@@ -1109,7 +1107,6 @@ Template.customerscard.onCreated(function () {
 Template.customerscard.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
-
   let currentId = FlowRouter.current().queryParams;
   if (FlowRouter.current().route.name != "customerscard") {
     currentId = "";
@@ -3545,55 +3542,54 @@ Template.customerscard.events({
     $(".btnJobTask").attr("disabled", false);
     event.preventDefault();
   },
-  "click #customer_transctionList_invoices_toggle":function(event){
-      let templateObject = Template.instance();
-      let isChecked = $(event.target).is(':checked');
-      if(isChecked){
-          templateObject.checkedInvoices.set(true)
-      }else{
-          templateObject.checkedInvoices.set(false)
-      }
-  },
-  "click #customer_transctionList_appointments_toggle":function(event){
-      let templateObject = Template.instance();
-      let isChecked = $(event.target).is(':checked');
-      if(isChecked){
-          templateObject.checkedAppointments.set(true)
-      }else{
-          templateObject.checkedAppointments.set(false)
-      }
-  },
-  "click #customer_transctionList_quotes_toggle":function(event){
-      let templateObject = Template.instance();
-      let isChecked = $(event.target).is(':checked');
-      if(isChecked){
-          templateObject.checkedQuotes.set(true)
-      }else{
-          templateObject.checkedQuotes.set(false)
-      }
-  },
-  "click #customer_transctionList_sales_orders_toggle":function(event){
-      let templateObject = Template.instance();
-      let isChecked = $(event.target).is(':checked');
-      if(isChecked){
-          templateObject.checkedSalesOrders.set(true)
-      }else{
-          templateObject.checkedSalesOrders.set(false)
-      }
-  },
-  "change #customer_transctionList_sales_orders_toggle": function(event) {
-    const templateObject = Template.instance();
-    templateObject.checkedSales.set(event.target.checked)
-  },
-  "click .mainTab" : function(event) {
-    const tabID = $(event.target).data('id');
-    Template.instance().currentTab.set(tabID);
-  }
+"click #customer_transctionList_invoices_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedInvoices.set(true)
+    }else{
+        templateObject.checkedInvoices.set(false)
+    }
+},
+"click #customer_transctionList_appointments_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedAppointments.set(true)
+    }else{
+        templateObject.checkedAppointments.set(false)
+    }
+},
+"click #customer_transctionList_quotes_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedQuotes.set(true)
+    }else{
+        templateObject.checkedQuotes.set(false)
+    }
+},
+"click #customer_transctionList_sales_orders_toggle":function(event){
+    let templateObject = Template.instance();
+    let isChecked = $(event.target).is(':checked');
+    if(isChecked){
+        templateObject.checkedSalesOrders.set(true)
+    }else{
+        templateObject.checkedSalesOrders.set(false)
+    }
+},
 });
 
 Template.customerscard.helpers({
     record: () => {
       let temp = Template.instance().records.get();
+      // let phoneCodes = Template.instance().phoneCodeData.get();
+      // if (temp && temp.mobile && temp.country) {
+      //     let thisCountry = phoneCodes.find(item => {
+      //         return item.name == temp.country
+      //     })
+      //     temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
+      // }
       return temp;
     },
     phoneCodeList: () => {
@@ -3760,14 +3756,6 @@ Template.customerscard.helpers({
     checkedInvoices: () => {
         return Template.instance().checkedInvoices.get();
     },
-    checkedSales: () => {
-      return Template.instance().checkedSales.get();
-    },
-    currentTab: () => {
-      const tab = Template.instance().currentTab.get();
-      if (tab == "") return "tab-2";
-      return tab;
-    }
 });
 
 Template.registerHelper('equals', function (a, b) {
