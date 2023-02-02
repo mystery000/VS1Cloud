@@ -29,6 +29,7 @@ import erpObject from "../../lib/global/erp-objects";
 import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
 import PayRun from "../../js/Api/Model/PayRun";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
+import moment from "moment";
 let payRunHandler = new PayRunHandler();
 
 Template.transaction_list.inheritsHooksFrom('export_import_print_display_button');
@@ -42,6 +43,7 @@ Template.transaction_list.onCreated(function() {
     templateObject.trans_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.tablename = new ReactiveVar();
+
 });
 
 Template.transaction_list.onRendered(function() {
@@ -59,8 +61,6 @@ Template.transaction_list.onRendered(function() {
     templateObject.tablename.set(currenttablename);
     let currentProductID = templateObject.data.productID || "";
     let currentType = templateObject.data.type || "";
-
-
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
@@ -345,6 +345,8 @@ Template.transaction_list.onRendered(function() {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TBankAccountReport').then(function(dataObject) {
+            $('#dateFrom').attr('readonly', false);
+            $('#dateTo').attr('readonly', false);
 
             if (dataObject.length == 0) {
                 sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
@@ -742,16 +744,35 @@ Template.transaction_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbankaccountreport;
-                if(data.Params.IgnoreDates == true){
-                    $('#dateFrom').attr('readonly', true);
-                    $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/bankingoverview?ignoredate=true');
-                }else{
-                    $('#dateFrom').attr('readonly', false);
-                    $('#dateTo').attr('readonly', false);
-                    $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-                    $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+
+                let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
+                let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
+                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                if(urlParametersDateFrom){
+                    if(urlParametersIgnoreDate == true){
+                        $('#dateFrom').attr('readonly', true);
+                        $('#dateTo').attr('readonly', true);
+                    }else
+                    {
+                        if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
+                        else
+                            $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
+                        if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
+                        else
+                            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+                    }
                 }
+
+                // if(data.Params.IgnoreDates == true){
+                //     $('#dateFrom').attr('readonly', true);
+                //     $('#dateTo').attr('readonly', true);
+                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
+                // }else{
+                //     $('#dateFrom').attr('readonly', false);
+                //     $('#dateTo').attr('readonly', false);
+                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+                // }
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
@@ -1533,10 +1554,11 @@ Template.transaction_list.onRendered(function() {
         //$(".fullScreenSpin").css("display", "none");
     }
 
-    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate, deleteFilter = false) {
-        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(function(data) {
+    templateObject.getAllFilterbankingData = async function (fromDate,toDate, ignoreDate, deleteFilter = false) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        await sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(async function(data) {
 
-            addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
+            await addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
                 window.open('/bankingoverview?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate='+ignoreDate,'_self');
             }).catch(function (err) {
                 location.reload();
@@ -3380,10 +3402,14 @@ Template.transaction_list.onRendered(function() {
         if(urlParametersIgnoreDate == true){
             $('#dateFrom').attr('readonly', true);
             $('#dateTo').attr('readonly', true);
-        }else{
-
-            $("#dateFrom").val(urlParametersDateFrom !=''? moment(urlParametersDateFrom).format("DD/MM/YYYY"): urlParametersDateFrom);
-            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+        }else
+        {
+            if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
+            else
+                $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
+            if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
+            else
+                $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
         }
     }
     //tableResize();
@@ -3412,6 +3438,58 @@ Template.transaction_list.onRendered(function() {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
 
+    });
+
+    $("#dateFrom").on('change', function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', false);
+        $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
+//            let templateObject = Template.instance();
+            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            //console.log("changed datefrom", dateFrom, dateTo);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+
+            } else {
+                if (currenttablename == "tblBankingOverview") {
+                    templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+                }
+            }
+        },500);
+    });
+
+    $("#dateTo").on('change', function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', false);
+        $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
+//            let templateObject = Template.instance();
+            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            //console.log("changed datefrom", dateFrom, dateTo);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+
+            } else {
+                if (currenttablename == "tblBankingOverview") {
+                    templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+                }
+            }
+        },500);
     });
 
 });
@@ -3598,9 +3676,326 @@ Template.transaction_list.events({
         jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
         $(".fullScreenSpin").css("display", "none");
     },
+    'click #ignoreDate': async function () {
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', true);
+        $('#dateTo').attr('readonly', true);
+        let currenttablename = await templateObject.tablename.get() || '';
+        if(currenttablename == "tblBankingOverview")
+            templateObject.getAllFilterbankingData('', '', true);
+    },
+    'click .thisweek': function () {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentBeginDate = new Date();
+        let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
+        let thisWeekFirstDay = new Date(utc - currentBeginDate.getDay() * 1000 * 3600 * 24);
+
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+
+        let thisWeekFromDate = thisWeekFirstDay.getDate();
+        let thisWeekFromMonth;
+
+        if((thisWeekFirstDay.getMonth()+1) < 10){
+            thisWeekFromMonth = "0" + (thisWeekFirstDay.getMonth()+1);
+        }else{
+            thisWeekFromMonth = (thisWeekFirstDay.getMonth()+1);
+        }
+        if(thisWeekFirstDay.getDate() < 10){
+            thisWeekFromDate = "0" + thisWeekFirstDay.getDate();
+        }
+
+        var toDateERPFrom = thisWeekFirstDay.getFullYear()+ "-" + thisWeekFromMonth + "-"+ thisWeekFromDate;
+        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+
+        var toDateDisplayFrom = thisWeekFromDate+ "/" + thisWeekFromMonth + "/" + thisWeekFirstDay.getFullYear();
+        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+
+        $("#dateFrom").val(toDateDisplayFrom);
+        $("#dateTo").val(toDateDisplayTo);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(toDateDisplayFrom,toDateDisplayTo, false);
+        }
+    },
+    'click .thisMonth': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+
+        var fromDate = formatDate(prevMonthFirstDate);
+        var toDate = formatDate(prevMonthLastDate);
+
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(toDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,toDate, false);
+        }
+    },
+    'click .thisQuarter': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        function getQuarter(d) {
+            d = d || new Date();
+            var m = Math.floor(d.getMonth() / 3) + 2;
+            return m > 4 ? m - 4 : m;
+        }
+
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment().subtract({
+            months: quarterAdjustment
+        }).endOf('month');
+        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+            months: 2
+        }).startOf('month');
+
+        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+        $("#dateFrom").val(lastQuarterStartDateFormat);
+        $("#dateTo").val(lastQuarterEndDateFormat);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
+        }
+    },
+    'click .thisfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
+    'click .previousweek': function () {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentBeginDate = new Date();
+        let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
+        let previousWeekFirstDay = new Date(utc - (currentBeginDate.getDay() + 7) * 1000 * 3600 * 24);
+        let previousWeekLastDay = new Date(utc - (currentBeginDate.getDay() + 1) * 1000 * 3600 * 24);
+
+        var begunDate = moment(previousWeekFirstDay).format("DD/MM/YYYY");
+        let previousWeekFromMonth = (previousWeekFirstDay.getMonth() + 1);
+        let previousWeekFromDay = previousWeekFirstDay.getDate();
+
+        if((previousWeekFirstDay.getMonth()+1) < 10){
+            previousWeekFromMonth = "0" + (previousWeekFirstDay.getMonth()+1);
+        }else{
+            previousWeekFromMonth = (previousWeekFirstDay.getMonth()+1);
+        }
+        if(previousWeekFirstDay.getDate() < 10){
+            previousWeekFromDay = "0" + previousWeekFirstDay.getDate();
+        }
+
+        let previousWeekToDate = previousWeekLastDay.getDate();
+        let previousWeekToMonth;
+
+        if((previousWeekLastDay.getMonth()+1) < 10){
+            previousWeekToMonth = "0" + (previousWeekLastDay.getMonth()+1);
+        }else{
+            previousWeekToMonth = (previousWeekLastDay.getMonth()+1);
+        }
+        if(previousWeekToDate < 10){
+            previousWeekToDate = "0" + previousWeekLastDay.getDate();
+        }
+
+        var toDateERPFrom = previousWeekFirstDay.getFullYear()+ "-" + previousWeekFromMonth + "-"+ previousWeekFromDay;
+        var toDateERPTo = previousWeekLastDay.getFullYear()+ "-" +(previousWeekToMonth) + "-"+(previousWeekToDate);
+
+        var toDateDisplayFrom = previousWeekFromDay+ "/" + previousWeekFromMonth + "/" + previousWeekFirstDay.getFullYear();
+        var toDateDisplayTo = (previousWeekToDate)+ "/" +(previousWeekToMonth) + "/"+previousWeekLastDay.getFullYear();
+
+        $("#dateFrom").val(toDateDisplayFrom);
+        $("#dateTo").val(toDateDisplayTo);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(toDateDisplayFrom,toDateDisplayTo, false);
+        }
+    },
+    'click .previousmonth': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+
+        var fromDate = formatDate(prevMonthFirstDate);
+        var toDate = formatDate(prevMonthLastDate);
+
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(toDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,toDate, false);
+        }
+
+    },
+    'click .previousquarter': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        function getQuarter(d) {
+            d = d || new Date();
+            var m = Math.floor(d.getMonth() / 3) + 2;
+            return m > 4 ? m - 4 : m;
+        }
+
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment().subtract({
+            months: quarterAdjustment
+        }).endOf('month');
+        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+            months: 2
+        }).startOf('month');
+
+        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+        $("#dateFrom").val(lastQuarterStartDateFormat);
+        $("#dateTo").val(lastQuarterEndDateFormat);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
+        }
+    },
+    'click .previousfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
     // "change #dateFrom, change #dateTo": function() {
     //     let templateObject = Template.instance();
 
+    // },
+
+    // 'change #dateFrom': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     setTimeout(function(){
+    //         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //         var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    //
+    //         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //
+    //         //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+    //         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+    //         //templateObject.dateAsAt.set(formatDate);
+    //         console.log("changed datefrom", dateFrom, dateTo);
+    //         if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+    //
+    //         } else {
+    //             templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+    //         }
+    //     },500);
     // },
 });
 

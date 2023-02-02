@@ -263,6 +263,10 @@ import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
 
+/* Riley*/
+import './accounts/addApcaModal/addApcaModal.html';
+/* Riley*/
+
 /* Tinyiko */
 import './settings/subscription-settings/subscription.js';
 import './contacts/popemployeelist.js';
@@ -342,6 +346,7 @@ import './inventory/inventorypopups/onSalesOrderPopUp.js';
 
 /* Sasa */
 import './Dashboard/Dashboard.js';
+import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
 import './Dashboard/my-tasks-widget/my-tasks-widget.js';
 import './contacts/addcustomerpop.js';
 import './Dashboard/Dashboardexe.js';
@@ -397,8 +402,8 @@ import './reports/customerreports/customerdetailsreport.js';
 import './reports/customerreports/customersummaryreport.js';
 import './reports/supplierreports/supplierdetail.js';
 import './reports/supplierreports/supplierproductreport.js';
-import './reports/supplierreports/supplierreport';
-import './reports/supplierreports/suppliersummary';
+import './reports/supplierreports/supplierreport.js';
+import './reports/supplierreports/suppliersummary.js';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
@@ -594,6 +599,10 @@ import './eft/addNewEftModal/addNewEftModal.js';
 
 import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
+
+/* Scott */
+import './vs1_templates/template_buttons/spreadsheet_link.js';
+/* Scott */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

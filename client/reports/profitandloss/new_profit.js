@@ -1204,43 +1204,6 @@ Template.newprofitandloss.events({
     //
     // });
   },
-  "click .btnSpreadSheetLink": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let utilityService = new UtilityService();
-    let templateObject = Template.instance();
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-    let formatDateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      (dateFrom.getMonth() + 1) +
-      "-" +
-      dateFrom.getDate();
-    let formatDateTo =
-      dateTo.getFullYear() +
-      "-" +
-      (dateTo.getMonth() + 1) +
-      "-" +
-      dateTo.getDate();
-
-    const filename = "Profit and Loss report result" + ".xlsx";
-
-    utilityService.exportReportToXLSX("tableExport", filename, "xlsx");
-  },
-  "click .selPeriod": async function (e) {
-    let periods = $(e.target).data("period");
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let defaultOptions = await templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.compPeriod = periods;
-      defaultOptions.departments = [];
-    }
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getProfitandLossReports();
-  },
-
   //custom selection period number
   "click .btnSaveComparisonPeriods": async function (event) {
     playSaveAudio();
