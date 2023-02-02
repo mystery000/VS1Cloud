@@ -14773,8 +14773,8 @@ Template.non_transactional_list.onRendered(function() {
             let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
             let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
             let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
-            let qty = data.tserialnumberlistcurrentreport[i].Quantity;
-            let transaction = data.tserialnumberlistcurrentreport[i].Quantity;
+            let qty = data.tserialnumberlistcurrentreport[i].Quantity || 1;
+            let transaction = data.tserialnumberlistcurrentreport[i].Description;
             let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
             let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
             let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
@@ -14829,7 +14829,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colSerialNumber",
@@ -15012,8 +15012,8 @@ Template.non_transactional_list.onRendered(function() {
             let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
             let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
             let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
-            let qty = data.tserialnumberlistcurrentreport[i].Quantity;
-            let transaction = data.tserialnumberlistcurrentreport[i].Quantity;
+            let qty = data.tserialnumberlistcurrentreport[i].Quantity || 1;
+            let transaction = data.tserialnumberlistcurrentreport[i].Description;
             let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
             let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
             let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
@@ -15214,7 +15214,7 @@ Template.non_transactional_list.onRendered(function() {
             }
         }).catch(function (err) {
             productService.getProductBatches().then(async function (data) {
-                // await addVS1Data('TProductBatches', JSON.stringify(data));
+                await addVS1Data('TProductBatches', JSON.stringify(data));
                 if(productID){
                     templateObject.displayLotNumberListByID(data, deleteFilter, productID);
                 }
@@ -15229,70 +15229,95 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displayLotNumberList = function(data, deleteFilter=false){
         let splashArrayTimeSheetList = new Array();
+        let productname = "";
+        let department = "";
+        let salsedes = "";
+        let barcode = "";
+        let binnumber = "";
+        let lotnumber = "";
+        let status = "";
+        let qty = "";
+        let transaction = "";
+        let expirydate = "";
+        let cssclass = "";
         for (let i = 0; i < data.tproductbatches.length; i++) {
 
             let tclass = '';
             if(data.tproductbatches[i].Alloctype == "OUT"){
                 tclass="text-sold";
-            }else if(data.tproductbatches[i].Alloctype == "IN"){
+            }else if(data.tproductbatches[i].Alloctype == ""){
                 tclass="text-instock";
-            }else if(data.tproductbatches[i].Alloctype == "Transferred (Not Available)"){
-                tclass="text-transfered";
             }else{
                 tclass='';
             }
+            let alloctype = data.tproductbatches[i].Alloctype === "" ? "In-Stock" : data.tproductbatches[i].Alloctype === "IN" ? "In-Stock" : "Sold";
 
-            let productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
-            let department = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
-            let salsedes = data.tproductbatches[i].QtyDescription;
-            let barcode = "";
-            let binnumber = "";
-            let lotnumber = data.tproductbatches[i].Batchno;
-            let status = data.tproductbatches[i].Alloctype;
-            let qty = data.tproductbatches[i].Qty;
-            let transaction = data.tproductbatches[i].QtyDescription;
-            let expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
-            let cssclass = tclass;
-
-            var dataTimeSheetList = [
-                lotnumber,
-                expirydate,
-                productname,
-                salsedes,
-                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",
-                qty,                
-                transaction,
-                department,
-                binnumber,
-                barcode,
-                cssclass,
-            ];
-
-            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype != ""){
-                if($("#tblDepartmentCheckbox") != undefined){
-                    if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
-                        if(!deleteFilter){
-                            if(data.tproductbatches[i].Alloctype != "OUT"){
-                                splashArrayTimeSheetList.push(dataTimeSheetList);
-                            }
-                        }
-                        else{
-                            splashArrayTimeSheetList.push(dataTimeSheetList);
-                        }
-                    }
+            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == ""){
+                productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
+                let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                department = "<label style='width:100%;'>"+classname+"</label>";
+                salsedes = data.tproductbatches[i].QtyDescription;
+                barcode = "";
+                binnumber = "";
+                lotnumber = data.tproductbatches[i].Batchno;
+                status = "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";                
+                transaction = "";
+                expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
+                cssclass = tclass;
+            }
+            else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "OUT" && deleteFilter){
+                status += "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                qty += "<label style='width:100%; text-align:right'>" + Math.abs(data.tproductbatches[i].Qty) + "</label>";
+                let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                department += "<label style='width:100%;'>"+classname+"</label>";
+                if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                    transaction += "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>";
+                }
+                else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                    transaction += "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>";
                 }
                 else{
-                    if(!deleteFilter){
-                        if(data.tproductbatches[i].Alloctype != "OUT"){
-                            splashArrayTimeSheetList.push(dataTimeSheetList);
-                        }
-                    }
-                    else{
+                    transaction += "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>";
+                }
+            }
+            else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
+                qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                    transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                }
+                else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                    transaction = "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                }
+                else{
+                    transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                }
+
+                var dataTimeSheetList = [
+                    lotnumber,
+                    expirydate,
+                    productname,
+                    salsedes,
+                    status,
+                    qty,                
+                    transaction,
+                    department,
+                    binnumber,
+                    barcode,
+                    cssclass,
+                ];
+
+                if($("#tblDepartmentCheckbox") != undefined){
+                    if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
                         splashArrayTimeSheetList.push(dataTimeSheetList);
                     }
                 }
+                else{
+                    splashArrayTimeSheetList.push(dataTimeSheetList);
+                }
             }
         }
+        
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -15303,7 +15328,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colSerialNumber",
@@ -15332,9 +15357,9 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colStatus",
                         targets: 4,
                         width:'8%',
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).addClass(rowData[10]);
-                        }
+                        // createdCell: function (td, cellData, rowData, row, col) {
+                        //     $(td).addClass(rowData[10]);
+                        // }
                     },
                     {
                         className: "colQty",
@@ -16560,7 +16585,7 @@ Template.non_transactional_list.onRendered(function() {
         }, 100);
     } else if (currenttablename === "tblLotNumberList"){
         setTimeout(function() {
-            templateObject.getLotNumberList(false);
+            templateObject.getLotNumberList(true);
         }, 100);
     } else if (currenttablename === "tblLotNumberListByID"){
         setTimeout(function() {

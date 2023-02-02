@@ -1241,8 +1241,15 @@ Template.trialbalance.events({
 
     utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Trial Balance", "");
   },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Balancesheet report result" + ".xlsx";
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+  },
   "click .btnExportReport": function () {
     LoadingOverlay.show();
+    debugger
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
