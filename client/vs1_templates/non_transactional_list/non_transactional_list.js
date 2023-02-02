@@ -1081,7 +1081,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 0, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
                 { index: 1, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
                 { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
-                { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },                
+                { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
             ]
         } else if (currenttablename === "tblLotNumberList"){
             reset_data = [
@@ -1090,18 +1090,18 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
                 { index: 3, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
                 { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
-                { index: 5, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },                
+                { index: 5, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
                 { index: 6, label: 'Transaction', class: 'colTransaction', active: true, display: true, width: "" },
                 { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
                 { index: 8, label: 'Bin', class: 'colBin', active: true, display: true, width: "" },
-                { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },                
-                
+                { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },
+
             ]
         } else if (currenttablename === "tblLotNumberListByID"){
             reset_data = [
                 { index: 0, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
                 { index: 1, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
-                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },                
+                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
                 { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
             ]
         } else if (currenttablename === "tblAllSingleTouchPayroll"){
@@ -15080,7 +15080,7 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colDepartment",
                         targets: 3,
                         width:'40%'
-                    },                    
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -15201,7 +15201,7 @@ Template.non_transactional_list.onRendered(function() {
                         templateObject.displayLotNumberList(data, deleteFilter);
                     }
                 }).catch(function (err) {
-        
+
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -15222,7 +15222,7 @@ Template.non_transactional_list.onRendered(function() {
                     templateObject.displayLotNumberList(data, deleteFilter);
                 }
             }).catch(function (err) {
-    
+
             });
         });
     }
@@ -15261,7 +15261,7 @@ Template.non_transactional_list.onRendered(function() {
                 binnumber = "";
                 lotnumber = data.tproductbatches[i].Batchno;
                 status = "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
-                qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";                
+                qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
                 transaction = "";
                 expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
                 cssclass = tclass;
@@ -15299,7 +15299,7 @@ Template.non_transactional_list.onRendered(function() {
                     productname,
                     salsedes,
                     status,
-                    qty,                
+                    qty,
                     transaction,
                     department,
                     binnumber,
@@ -15317,7 +15317,7 @@ Template.non_transactional_list.onRendered(function() {
                 }
             }
         }
-        
+
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -15365,7 +15365,7 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colQty",
                         targets: 5,
                         width:'8%'
-                    },                    
+                    },
                     {
                         className: "colTransaction",
                         targets: 6,
@@ -15523,11 +15523,11 @@ Template.non_transactional_list.onRendered(function() {
             var dataTimeSheetList = [
                 lotnumber,
                 expirydate,
-                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",                
+                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",
                 department,
                 cssclass,
             ];
-            
+
             if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype != ""){
                 if(data.tproductbatches[i].PartsID == productID){
                     if(!deleteFilter){
