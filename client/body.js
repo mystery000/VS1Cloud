@@ -346,7 +346,7 @@ import './inventory/inventorypopups/onSalesOrderPopUp.js';
 
 /* Sasa */
 import './Dashboard/Dashboard.js';
-// import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
+import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
 import './Dashboard/my-tasks-widget/my-tasks-widget.js';
 import './contacts/addcustomerpop.js';
 import './Dashboard/Dashboardexe.js';
@@ -599,6 +599,10 @@ import './eft/addNewEftModal/addNewEftModal.js';
 
 import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
+
+/* Scott */
+import './vs1_templates/template_buttons/spreadsheet_link.js';
+/* Scott */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
