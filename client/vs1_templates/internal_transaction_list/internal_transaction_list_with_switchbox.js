@@ -1117,12 +1117,12 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     templateObject.getLotNumbersData = async function(productname = "") { //GET Data here from Web API or IndexDB
         let dataTableList = [];
         templateObject.transactiondatatablerecords.set([]);
-        // getVS1Data('TProductBatches').then(function(dataObject) {
-        //     if (dataObject.length === 0) {
+        getVS1Data('TProductBatches').then(function(dataObject) {
+            if (dataObject.length === 0) {
                 productService.getProductBatches().then(function(data) {
-                    // addVS1Data('TProductBatches', JSON.stringify(data));
+                    addVS1Data('TProductBatches', JSON.stringify(data));
                     for (let i = 0; i < data.tproductbatches.length; i++) {
-                        if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
+                        if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "" && data.tproductbatches[i].Qty > 0){
                             dataTableList.push(data.tproductbatches[i]);
                         }
                     }
@@ -1130,27 +1130,27 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
-        //     } else {
-        //         let data = JSON.parse(dataObject[0].data);
-        //         for (let i = 0; i < data.tproductbatches.length; i++) {
-        //             if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
-        //                 dataTableList.push(data.tproductbatches[i]);
-        //             }
-        //         }
-        //         templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
-        //     }
-        // }).catch(function(err) {
-        //     productService.getProductBatches().then(function(data) {
-        //         addVS1Data('TProductBatches', JSON.stringify(data));
-        //         for (let i = 0; i < data.tproductbatches.length; i++) {
-        //             if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
-        //                 dataTableList.push(data.tproductbatches[i]);
-        //             }
-        //         }
-        //         templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
-        //     }).catch(function(err) {
-        //     });
-        // });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.tproductbatches.length; i++) {
+                    if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "" && data.tproductbatches[i].Qty > 0){
+                        dataTableList.push(data.tproductbatches[i]);
+                    }
+                }
+                templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
+            }
+        }).catch(function(err) {
+            productService.getProductBatches().then(function(data) {
+                addVS1Data('TProductBatches', JSON.stringify(data));
+                for (let i = 0; i < data.tproductbatches.length; i++) {
+                    if(productname == data.tproductbatches[i].PARTNAME && data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "" && data.tproductbatches[i].Qty > 0){
+                        dataTableList.push(data.tproductbatches[i]);
+                    }
+                }
+                templateObject.displayLotNumbersData(dataTableList); //Call this function to display data on the table
+            }).catch(function(err) {
+            });
+        });
     }
     templateObject.displayLotNumbersData = async function(data) {
         var splashArrayLotList = new Array();
@@ -1794,15 +1794,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                             currenttablename = "tblAvailableLotCheckbox";
                             templateObject.getLotNumbersData(selectedProductName);
-                            // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                            // $("#availableLotNumberModal").attr("data-row", row + 1);
-                            // $("#availableLotNumberModal").modal("show");
                         } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                             currenttablename = "tblAvailableSNCheckbox";
                             templateObject.getSerialNumbersData(selectedProductName);
-                            // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                            // $("#availableSerialNumberModal").attr("data-row", row + 1);
-                            // $('#availableSerialNumberModal').modal('show');
                         }
                     });
                 }
@@ -1815,15 +1809,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                             } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
                                 currenttablename = "tblAvailableLotCheckbox";
                                 templateObject.getLotNumbersData(selectedProductName);
-                                // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                                // $("#availableLotNumberModal").attr("data-row", row + 1);
-                                // $("#availableLotNumberModal").modal("show");
                             } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
                                 currenttablename = "tblAvailableSNCheckbox";
                                 templateObject.getSerialNumbersData(selectedProductName);
-                                // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                                // $("#availableSerialNumberModal").attr("data-row", row + 1);
-                                // $('#availableSerialNumberModal').modal('show');
                             }
                         }
                     }
@@ -1835,15 +1823,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                         currenttablename = "tblAvailableLotCheckbox";
                         templateObject.getLotNumbersData(selectedProductName);
-                        // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        // $("#availableLotNumberModal").attr("data-row", row + 1);
-                        // $("#availableLotNumberModal").modal("show");
                     } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                         currenttablename = "tblAvailableSNCheckbox";
                         templateObject.getSerialNumbersData(selectedProductName);
-                        // var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        // $("#availableSerialNumberModal").attr("data-row", row + 1);
-                        // $('#availableSerialNumberModal').modal('show');
                     }
                 });
             });

@@ -9137,10 +9137,15 @@ Template.new_invoice.events({
 
         salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
 
-          sideBarService.getAllSerialNumber().then(function(data) {
-            addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+          sideBarService.getAllSerialNumber().then(async function(data) {
+              await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
           }).catch(function (err){
-          });          
+          });
+
+          productService.getProductBatches().then(async function (data) {
+              await addVS1Data('TProductBatches', JSON.stringify(data));
+          }).catch(function (err) {
+          });
           
           if (localStorage.getItem("enteredURL") != null) {
             FlowRouter.go(localStorage.getItem("enteredURL"));
