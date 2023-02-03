@@ -11,7 +11,7 @@ import GlobalFunctions from '../GlobalFunctions';
 import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
-import GlobalFunctions from "../GlobalFunctions.js";
+
 const productService = new ProductService();
 const sideBarService = new SideBarService();
 const organisationService = new OrganisationService();
