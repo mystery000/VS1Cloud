@@ -1067,7 +1067,6 @@ Template.vs1_report_template.events({
       var colthClass = $tblrow.attr('data-class') || "";
       $('.rngRange' + colthClass).val(colWidth);
     });
-    console.log("mytablename:" + templateObject.data.tablename)
     $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
   },
   "blur .divcolumn": async function (event) {

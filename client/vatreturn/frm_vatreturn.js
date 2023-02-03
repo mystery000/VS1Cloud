@@ -1182,7 +1182,7 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                     document.getElementById("tax10").setAttribute("href", "#taxCode10option");
                                     document.getElementById("tax12").setAttribute("href", "#taxCode12option");
-                
+
                                     $("#tax4cost").removeAttr("disabled");
                                     $("#tax4Acost").removeAttr("disabled");
                                     $("#tax11cost").removeAttr("disabled");
@@ -1211,12 +1211,12 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax7").setAttribute("href", "#");
                                     document.getElementById("tax10").setAttribute("href", "#");
                                     document.getElementById("tax12").setAttribute("href", "#");
-                
+
                                     $("#tax4cost").attr("disabled", "disabled");
                                     $("#tax4Acost").attr("disabled", "disabled");
                                     $("#tax11cost").attr("disabled", "disabled");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab2 == true) {
                                     $("#nav-item2").show();
                                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -1250,7 +1250,7 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax17").setAttribute("href", "#");
                                     document.getElementById("tax18").setAttribute("href", "#");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab3 == true) {
                                     $("#nav-item3").show();
                                     document.getElementById("tax21").setAttribute("href", "#taxCode21option");
@@ -1294,7 +1294,7 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax35").setAttribute("href", "#");
                                     document.getElementById("tax36").setAttribute("href", "#");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab4 == true) {
                                     $("#nav-item4").show();
                                     $("#payment_refno").removeAttr("disabled");
@@ -1320,7 +1320,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#payment_period").attr("disabled", "disabled");
                                     $("#payment_penalty").attr("disabled", "disabled");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab5 == true) {
                                     $("#nav-item5").show();
                                     $("#refund_refno").removeAttr("disabled");
@@ -1576,7 +1576,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#refund_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
                                 $("#prt_refund_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
                                 $("#refund_period").val(data.tvatreturn[0].fields.PaymentPeriod);
-                                $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);                                
+                                $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);
                                 var refund_vatcost = tax20cost;
                                 $("#refund_vat").val(refund_vatcost);
                                 $("#prt_refund_vat").html("R" + refund_vatcost);
@@ -1597,7 +1597,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#vatreturnCategory3").prop('checked', data.tvatreturn[i].fields.HasTab3);
                                     $("#vatreturnCategory4").prop('checked', data.tvatreturn[i].fields.HasTab4);
                                     $("#vatreturnCategory5").prop('checked', data.tvatreturn[i].fields.HasTab5);
-                                    
+
                                     if (data.tvatreturn[i].fields.HasTab1 == true) {
                                         $("#nav-item1").show();
                                         document.getElementById("tax1").setAttribute("href", "#taxCode1option");
@@ -1609,7 +1609,7 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                         document.getElementById("tax10").setAttribute("href", "#taxCode10option");
                                         document.getElementById("tax12").setAttribute("href", "#taxCode12option");
-                    
+
                                         $("#tax4cost").removeAttr("disabled");
                                         $("#tax4Acost").removeAttr("disabled");
                                         $("#tax11cost").removeAttr("disabled");
@@ -1638,12 +1638,12 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax7").setAttribute("href", "#");
                                         document.getElementById("tax10").setAttribute("href", "#");
                                         document.getElementById("tax12").setAttribute("href", "#");
-                    
+
                                         $("#tax4cost").attr("disabled", "disabled");
                                         $("#tax4Acost").attr("disabled", "disabled");
                                         $("#tax11cost").attr("disabled", "disabled");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab2 == true) {
                                         $("#nav-item2").show();
                                         document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -1677,7 +1677,7 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax17").setAttribute("href", "#");
                                         document.getElementById("tax18").setAttribute("href", "#");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab3 == true) {
                                         $("#nav-item3").show();
                                         document.getElementById("tax21").setAttribute("href", "#taxCode21option");
@@ -1721,7 +1721,7 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax35").setAttribute("href", "#");
                                         document.getElementById("tax36").setAttribute("href", "#");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab4 == true) {
                                         $("#nav-item4").show();
                                         $("#payment_refno").removeAttr("disabled");
@@ -1747,7 +1747,7 @@ Template.vatreturn.onRendered(function() {
                                         $("#payment_period").attr("disabled", "disabled");
                                         $("#payment_penalty").attr("disabled", "disabled");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab5 == true) {
                                         $("#nav-item5").show();
                                         $("#refund_refno").removeAttr("disabled");
@@ -1984,7 +1984,7 @@ Template.vatreturn.onRendered(function() {
                                     var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
                                     $("#tax38cost").val(tax38cost.toFixed(2));
                                     $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
-                                    
+
                                     $("#payment_refno").val(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#prt_payment_refno").html(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#payment_period").val(data.tvatreturn[i].fields.PaymentPeriod);
@@ -2004,7 +2004,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#refund_refno").val(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#prt_refund_refno").html(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#refund_period").val(data.tvatreturn[i].fields.PaymentPeriod);
-                                    $("#prt_refund_period").html(data.tvatreturn[i].fields.PaymentPeriod);                                
+                                    $("#prt_refund_period").html(data.tvatreturn[i].fields.PaymentPeriod);
                                     var refund_vatcost = tax20cost;
                                     $("#refund_vat").val(refund_vatcost);
                                     $("#prt_refund_vat").html("R" + refund_vatcost);
@@ -2027,7 +2027,7 @@ Template.vatreturn.onRendered(function() {
                             $("#vatreturnCategory3").prop('checked', data.tvatreturn[0].fields.HasTab3);
                             $("#vatreturnCategory4").prop('checked', data.tvatreturn[0].fields.HasTab4);
                             $("#vatreturnCategory5").prop('checked', data.tvatreturn[0].fields.HasTab5);
-                            
+
                             if (data.tvatreturn[0].fields.HasTab1 == true) {
                                 $("#nav-item1").show();
                                 document.getElementById("tax1").setAttribute("href", "#taxCode1option");
@@ -2039,7 +2039,7 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                 document.getElementById("tax10").setAttribute("href", "#taxCode10option");
                                 document.getElementById("tax12").setAttribute("href", "#taxCode12option");
-            
+
                                 $("#tax4cost").removeAttr("disabled");
                                 $("#tax4Acost").removeAttr("disabled");
                                 $("#tax11cost").removeAttr("disabled");
@@ -2068,12 +2068,12 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax7").setAttribute("href", "#");
                                 document.getElementById("tax10").setAttribute("href", "#");
                                 document.getElementById("tax12").setAttribute("href", "#");
-            
+
                                 $("#tax4cost").attr("disabled", "disabled");
                                 $("#tax4Acost").attr("disabled", "disabled");
                                 $("#tax11cost").attr("disabled", "disabled");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab2 == true) {
                                 $("#nav-item2").show();
                                 document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -2107,7 +2107,7 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax17").setAttribute("href", "#");
                                 document.getElementById("tax18").setAttribute("href", "#");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab3 == true) {
                                 $("#nav-item3").show();
                                 document.getElementById("tax21").setAttribute("href", "#taxCode21option");
@@ -2151,7 +2151,7 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax35").setAttribute("href", "#");
                                 document.getElementById("tax36").setAttribute("href", "#");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab4 == true) {
                                 $("#nav-item4").show();
                                 $("#payment_refno").removeAttr("disabled");
@@ -2177,7 +2177,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#payment_period").attr("disabled", "disabled");
                                 $("#payment_penalty").attr("disabled", "disabled");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab5 == true) {
                                 $("#nav-item5").show();
                                 $("#refund_refno").removeAttr("disabled");
@@ -2201,7 +2201,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#refund_refno").attr("disabled", "disabled");
                                 $("#refund_period").attr("disabled", "disabled");
                             }
-                            
+
                             if (data.tvatreturn[0].fields.ClassID > 0) {
                                 for (var i = 0; i < deptrecords.length; i++) {
                                     if (deptrecords[i].id == data.tvatreturn[0].fields.ClassID) {
@@ -2277,8 +2277,8 @@ Template.vatreturn.onRendered(function() {
                             $("#prt_tax12cost").html("R" + data.tvatreturn[0].fields.VAT12);
                             let tax13cost = data.tvatreturn[0].fields.VAT4 + data.tvatreturn[0].fields.VAT4A + data.tvatreturn[0].fields.VAT9 + data.tvatreturn[0].fields.VAT11 + data.tvatreturn[0].fields.VAT12;
                             $("#tax13cost").val(tax13cost);
-                            $("#prt_tax13cost").html("R" + tax13cost);                            
-                            
+                            $("#prt_tax13cost").html("R" + tax13cost);
+
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
@@ -2433,7 +2433,7 @@ Template.vatreturn.onRendered(function() {
                             $("#refund_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
                             $("#prt_refund_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
                             $("#refund_period").val(data.tvatreturn[0].fields.PaymentPeriod);
-                            $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);                                
+                            $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);
                             var refund_vatcost = tax20cost;
                             $("#refund_vat").val(refund_vatcost.toFixed(2));
                             $("#prt_refund_vat").html("R" + refund_vatcost.toFixed(2));
@@ -3641,7 +3641,7 @@ Template.vatreturn.events({
             let payment_period = $('#payment_period').val();
             let payment_penalty = $('#payment_penalty').val();
             let hasTab5 = $("#vatreturnCategory5").prop('checked');
-            
+
             if (description === '') {
                 // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
                 swal('VAT Return Description cannot be blank!', '', 'warning');
@@ -3737,7 +3737,6 @@ Template.vatreturn.events({
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
 
-                    console.log("========", jsonObj);
                     reportService.saveVATReturn(jsonObj).then(function(res) {
                         reportService.getAllVATReturn().then(function(data) {
                             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {

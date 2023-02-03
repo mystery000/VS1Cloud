@@ -2568,7 +2568,6 @@ Template.non_transactional_list.onRendered(function() {
                     }
                     templateObject.displayBankAccountsOverviewListData(data);
                 }).catch(function(err) {
-                    console.log("error:", err)
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -7989,7 +7988,6 @@ Template.non_transactional_list.onRendered(function() {
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
                     addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
-                    console.log(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -7997,12 +7995,9 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
             }
         }).catch(function(err) {
-            console.log("Strange error:", err)
             // contactService.getAllJobListByCustomer(customerName).then(function(data) {
-            //     console.log("Job DATA HERE:", data)
             //     templateObject.displayCustomerJobDetailsListData(data, customerName);
             // }).catch(function(err) {
-            //     console.log(err);
             //     $('.fullScreenSpin').css('display', 'none');
             // });
         });
@@ -14135,7 +14130,6 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log("Customer Data:", data)
 
                 templateObject.displayCustomerList(data);
             }
@@ -15373,7 +15367,7 @@ Template.non_transactional_list.onRendered(function() {
                     else{
                         transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
                     }
-    
+
                     var dataTimeSheetList = [
                         lotnumber,
                         expirydate,
@@ -15387,7 +15381,7 @@ Template.non_transactional_list.onRendered(function() {
                         barcode,
                         cssclass,
                     ];
-    
+
                     if($("#tblDepartmentCheckbox") != undefined){
                         if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
                             splashArrayTimeSheetList.push(dataTimeSheetList);
@@ -15439,7 +15433,7 @@ Template.non_transactional_list.onRendered(function() {
                     else{
                         transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
                     }
-    
+
                     var dataTimeSheetList = [
                         lotnumber,
                         expirydate,
@@ -15453,7 +15447,7 @@ Template.non_transactional_list.onRendered(function() {
                         barcode,
                         cssclass,
                     ];
-    
+
                     if($("#tblDepartmentCheckbox") != undefined){
                         if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
                             splashArrayTimeSheetList.push(dataTimeSheetList);

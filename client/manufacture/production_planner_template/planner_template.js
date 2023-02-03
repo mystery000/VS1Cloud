@@ -96,7 +96,7 @@ Template.production_planner_template.onRendered(async function() {
             })
         })
     }
-    
+
     let workorders = await templateObject.getWorkorders();
         // templateObject.workorders.set(workorders);
     async function getPlanData() {
@@ -130,7 +130,7 @@ Template.production_planner_template.onRendered(async function() {
         return new Promise(async function(resolve, reject) {
             // let events = [];
             let planData = await getPlanData();
-            
+
             let eventsData = planData;
             // if (eventsData.length == 0) {
 
@@ -200,7 +200,7 @@ Template.production_planner_template.onRendered(async function() {
     }
 
     let events = await getEvents();
-  
+
     let dayIndex = new Date().getDay();
     templateObject.startDate.set(dayIndex);
     let calendarEl = document.getElementById('calendar');
@@ -263,9 +263,9 @@ Template.production_planner_template.onRendered(async function() {
                 for(let i = 0; i < buildSubs.length ;  i++) {
                     let subEvents = events.filter(e=>e.title == buildSubs[i] && new Date(e.start).getTime() <= new Date(event.start).getTime());
                     // let subEvents = events.filter(e=>e.title == buildSubs[i] && e.start <= event.start && new Date(e.end).getTime() > new Date().getTime());
-                    let subQuantity = 0; 
+                    let subQuantity = 0;
                     let needQty = 0;
-                 
+
                     function getSeconds(time) {
                         let mSeconds = new Date(time).getTime();
                         let seconds = Math.floor(mSeconds / 1000);
@@ -291,7 +291,7 @@ Template.production_planner_template.onRendered(async function() {
                         if(getSeconds(subEvents[j].end) <= getSeconds(event.start)) {
                             subQuantity += subEvents[j].extendedProps.quantity
                         }
-                       
+
                     }
 
                     if(needQty > subQuantity) {
@@ -304,7 +304,7 @@ Template.production_planner_template.onRendered(async function() {
 
             let available = checkQtyAvailable();
             var customHtml = '';
-            
+
             if(available == true) {
                 customHtml += "<div class='w-100 h-100 d-flex align-items-start justify-content-center process-event' style='color: black'>" + event.title + "</div>"
             }else {
@@ -326,9 +326,9 @@ Template.production_planner_template.onRendered(async function() {
                     } else {
                         customHtml = "<div class='w-100 h-100 current-progress process-event' style='color: black'>" + event.title + "<div class='progress-percentage' style='width:100%'>Completed</div></div>"
                     }
-                } 
+                }
             }
-            
+
             // customHtml += "<span class='r10 highlighted-badge font-xxs font-bold'>" + event.extendedProps.age + text + "</span>";
 
             return { html: customHtml }
@@ -354,8 +354,8 @@ Template.production_planner_template.onRendered(async function() {
                     // arg.el.classList.remove('fc-event-draggable');
                 }
             }
-            
-            
+
+
         },
         businessHours: [{
             daysOfWeek: [1, 2, 3, 4],
@@ -366,7 +366,7 @@ Template.production_planner_template.onRendered(async function() {
             startTime: '10:00',
             endTime: '14:00'
         }],
-       
+
         eventResizeStop: function(info) {
             let totalEvents = templateObject.events.get();
             let cloneEvents = JSON.parse(JSON.stringify(totalEvents));
@@ -513,7 +513,7 @@ Template.production_planner_template.onRendered(async function() {
                 temp.fields.StartTime = events[i].start
                 tempOrders.splice(index, 1, temp);
             }
-    
+
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder:tempOrders})).then(function(){
                 $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -525,18 +525,18 @@ Template.production_planner_template.onRendered(async function() {
                     }).then((result) => {
                         window.location.reload();
                     });
-                
+
             })
-            
+
         })
-    
+
         $('.productionplannermodule .btn-print-event').on('click', function(event) {
             document.title = 'Work order detail';
-            
+
             $(".eventInfo .eventDetail").print({
             });
         })
-    
+
         $('.productionplannermodule .btn-optimize').on('click',  function(event) {
             let resources = templateObject.resources.get();
             let events = templateObject.events.get();
@@ -548,14 +548,14 @@ Template.production_planner_template.onRendered(async function() {
                 )
                 filteredEvents.sort((a, b) => {
                     return new Date(a.start) - new Date(b.start);
-                }); 
-                
+                });
+
                 if(filteredEvents.length > 0) {
-    
+
                     if(new Date(filteredEvents[0].start).getTime() > new Date().getTime()) {
                         let firstDuration = new Date(filteredEvents[0].end).getTime() - new Date(filteredEvents[0].start).getTime()
                         filteredEvents[0].start = new Date();
-                        filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration); 
+                        filteredEvents[0].end  = new Date(new Date().getTime() + firstDuration);
                     }
                     let firstIndex = cloneEvents.findIndex(event => {
                         return event.resourceId == filteredEvents[0].resourceId && event.extendedProps.orderId == filteredEvents[0].extendedProps.orderId
@@ -581,9 +581,9 @@ Template.production_planner_template.onRendered(async function() {
                             updateEvent()
                         }
                     }
-    
+
                 }else {
-    
+
                 }
             }
             templateObject.events.set(cloneEvents);
@@ -597,10 +597,10 @@ Template.production_planner_template.onRendered(async function() {
                 newCalendar.render();
                 templateObject.calendar.set(newCalendar)
             }
-    
+
         })
-    
-    
+
+
         $('.productionplannermodule .btn-raw-material').on('click', function(eve) {
             let events = templateObject.events.get();
             for(let i = 0; i< events.length; i++) {
@@ -614,7 +614,7 @@ Template.production_planner_template.onRendered(async function() {
                         // let index = events.findIndex(e=>{
                         //     return e.title == buildSubNames[k]
                         // })
-    
+
                         for(let n = 0; n < events.length; n++) {
                             if(events[n].title == buildSubNames[k] && events[n].extendedProps.orderId.toString().split('_')[0] == event.extendedProps.orderId.toString().split('_')[0]) {
                                 buildSubs.push(events[n])
@@ -630,7 +630,7 @@ Template.production_planner_template.onRendered(async function() {
                     let eventIndex = events.findIndex(e=>{
                         return e.extendedProps.orderId == event.extendedProps.orderId
                     })
-                    let tempEvent = (JSON.parse(JSON.stringify(events)) )[eventIndex] 
+                    let tempEvent = (JSON.parse(JSON.stringify(events)) )[eventIndex]
                     tempEvent.start = newStart;
                     tempEvent.end = newEnd;
                     events[eventIndex] = tempEvent;
@@ -647,12 +647,12 @@ Template.production_planner_template.onRendered(async function() {
                 newCalendar.render();
                 templateObject.calendar.set(newCalendar)
             }
-    
+
         })
-    
+
         $('.productionplannermodule .btnPrintWorkSheet').on('click', function(event) {
             document.title = 'production planner worksheet';
-            
+
             $(".productionPlannerTable").print({
                 // title   :  document.title +" | Product Sales Report | "+loggedCompany,
                 // noPrintSelector : ".btnAddProduct",
@@ -728,7 +728,7 @@ Template.production_planner_template.onRendered(async function() {
             pausedTimes.push(new Date());
             if(status == 'paused' || status == 'QAPaused' || ((status == 'stopped' || status == 'QAStopped')&&new Date(startedTimes[startedTimes.length-1]).getTime() > new Date(pausedTimes[pausedTimes.length -2]).getTime() )) {
                 trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
-            } 
+            }
             if(status =='QAStopped') {
                 let stoppedTime = new Date();
                 tempOrder.fields.StoppedTime = stoppedTime;
@@ -736,18 +736,17 @@ Template.production_planner_template.onRendered(async function() {
             tempOrder.fields.PausedTimes = JSON.stringify(pausedTimes);
             tempOrder.fields.TrackedTime = trackedTime;
             if(status == 'QAStopped') {
-                console.log('Started and Resumed times:', startedTimes, 'Paused and Stopped Times', pausedTimes, 'Total tracked time', formatTime(trackedTime))
             }
         }
 
         if(status == 'Completed') {
             tempOrder.fields.IsCompleted = true;
         }
-        
+
         tempOrders.splice(workorderIndex, 1, tempOrder);
         addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
     }
-   
+
 })
 
 Template.production_planner_template.helpers({
