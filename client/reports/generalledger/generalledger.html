@@ -7,24 +7,24 @@
             <thead>
                 <tr class="table-active customDoubleTableHeading">
                     {{#each c in generalledgerth}}
-                    {{#if c.display}}
-                    <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
-                        data-col-active="{{ c.active}}"
-                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                        style="text-align: left!important; width:{{c.width}}px">
-                        {{c.label}}
-                    </th>
-                    {{/if}}
+                        {{#if c.display}}
+                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
+                                data-col-active="{{ c.active}}"
+                                class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: left!important; width:{{c.width}}px">
+                                {{c.label}}
+                            </th>
+                        {{/if}}
                     {{/each}}
                 </tr>
-            </thead>
-            <!-- ====================== tbody start ========================= -->
-            <tbody>
+                </thead>
+                <!-- ====================== tbody start ========================= -->
+                <tbody>
 
-            </tbody>
-            <!-- ====================== tbody end ========================= -->
-        </table>
-    </div>
+                </tbody>
+                <!-- ====================== tbody end ========================= -->
+            </table>
+        </div>
     {{/vs1_report_template}}
 
 </template>

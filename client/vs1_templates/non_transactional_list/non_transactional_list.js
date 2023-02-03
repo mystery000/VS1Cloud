@@ -2568,7 +2568,6 @@ Template.non_transactional_list.onRendered(function() {
                     }
                     templateObject.displayBankAccountsOverviewListData(data);
                 }).catch(function(err) {
-                    console.log("error:", err)
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -7989,7 +7988,6 @@ Template.non_transactional_list.onRendered(function() {
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
                     addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
-                    console.log(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -7997,12 +7995,9 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
             }
         }).catch(function(err) {
-            console.log("Strange error:", err)
             // contactService.getAllJobListByCustomer(customerName).then(function(data) {
-            //     console.log("Job DATA HERE:", data)
             //     templateObject.displayCustomerJobDetailsListData(data, customerName);
             // }).catch(function(err) {
-            //     console.log(err);
             //     $('.fullScreenSpin').css('display', 'none');
             // });
         });
@@ -14135,7 +14130,6 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log("Customer Data:", data)
 
                 templateObject.displayCustomerList(data);
             }
@@ -14803,6 +14797,9 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.displaySerialNumberList = function(data, deleteFilter=false){
         let splashArrayTimeSheetList = new Array();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?sn=");
+        var currentSN = parseInt(getso_id[getso_id.length - 1]) || 0;
         for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
 
             let tclass = '';
@@ -14842,8 +14839,46 @@ Template.non_transactional_list.onRendered(function() {
                 cssclass,
             ];
 
-            if($("#tblDepartmentCheckbox") != undefined){
-                if($("#tblDepartmentCheckbox #formCheck-"+data.tserialnumberlistcurrentreport[i].DepartmentID).prop("checked") == true){
+            if(currentSN > 0){
+                if(data.tserialnumberlistcurrentreport[i].SerialNumber == currentSN){
+                    if($("#tblDepartmentCheckbox") != undefined){
+                        if($("#tblDepartmentCheckbox #formCheck-"+data.tserialnumberlistcurrentreport[i].DepartmentID).prop("checked") == true){
+                            if(!deleteFilter){
+                                if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
+                                    splashArrayTimeSheetList.push(dataTimeSheetList);
+                                }
+                            }
+                            else{
+                                splashArrayTimeSheetList.push(dataTimeSheetList);
+                            }
+                        }
+                    }
+                    else{
+                        if(!deleteFilter){
+                            if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
+                                splashArrayTimeSheetList.push(dataTimeSheetList);
+                            }
+                        }
+                        else{
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                }
+            }
+            else{
+                if($("#tblDepartmentCheckbox") != undefined){
+                    if($("#tblDepartmentCheckbox #formCheck-"+data.tserialnumberlistcurrentreport[i].DepartmentID).prop("checked") == true){
+                        if(!deleteFilter){
+                            if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
+                                splashArrayTimeSheetList.push(dataTimeSheetList);
+                            }
+                        }
+                        else{
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                }
+                else{
                     if(!deleteFilter){
                         if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
                             splashArrayTimeSheetList.push(dataTimeSheetList);
@@ -14852,16 +14887,6 @@ Template.non_transactional_list.onRendered(function() {
                     else{
                         splashArrayTimeSheetList.push(dataTimeSheetList);
                     }
-                }
-            }
-            else{
-                if(!deleteFilter){
-                    if(data.tserialnumberlistcurrentreport[i].AllocType != "Sold"){
-                        splashArrayTimeSheetList.push(dataTimeSheetList);
-                    }
-                }
-                else{
-                    splashArrayTimeSheetList.push(dataTimeSheetList);
                 }
             }
         }
@@ -15037,7 +15062,7 @@ Template.non_transactional_list.onRendered(function() {
             });
             $(".fullScreenSpin").css("display", "none");
         }, 0);
-    setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
     templateObject.displaySerialNumberListByID = function(data, deleteFilter=false, productID){
@@ -15286,6 +15311,9 @@ Template.non_transactional_list.onRendered(function() {
         let transaction = "";
         let expirydate = "";
         let cssclass = "";
+        var url = FlowRouter.current().path;
+        var getso_id = url.split("?ln=");
+        var currentLN = parseInt(getso_id[getso_id.length - 1]) || 0;
         for (let i = 0; i < data.tproductbatches.length; i++) {
 
             let tclass = '';
@@ -15298,68 +15326,136 @@ Template.non_transactional_list.onRendered(function() {
             }
             let alloctype = data.tproductbatches[i].Alloctype === "" ? "In-Stock" : data.tproductbatches[i].Alloctype === "IN" ? "In-Stock" : "Sold";
 
-            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == ""){
-                productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
-                let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
-                department = "<label style='width:100%;'>"+classname+"</label>";
-                salsedes = data.tproductbatches[i].QtyDescription;
-                barcode = "";
-                binnumber = "";
-                lotnumber = data.tproductbatches[i].Batchno;
-                status = "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
-                qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
-                transaction = "";
-                expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
-                cssclass = tclass;
-            }
-            else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "OUT" && deleteFilter){
-                status += "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
-                qty += "<label style='width:100%; text-align:right'>" + Math.abs(data.tproductbatches[i].Qty) + "</label>";
-                let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
-                department += "<label style='width:100%;'>"+classname+"</label>";
-                if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
-                    transaction += "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>";
+            if(currentLN > 0){
+                if(data.tproductbatches[i].Batchno == currentLN && data.tproductbatches[i].Alloctype == ""){
+                    productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
+                    let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                    department = "<label style='width:100%;'>"+classname+"</label>";
+                    salsedes = data.tproductbatches[i].QtyDescription;
+                    barcode = "";
+                    binnumber = "";
+                    lotnumber = data.tproductbatches[i].Batchno;
+                    status = "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                    qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    transaction = "";
+                    expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
+                    cssclass = tclass;
                 }
-                else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
-                    transaction += "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>";
+                else if(data.tproductbatches[i].Batchno == currentLN && data.tproductbatches[i].Alloctype == "OUT" && deleteFilter){
+                    status += "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                    qty += "<label style='width:100%; text-align:right'>" + Math.abs(data.tproductbatches[i].Qty) + "</label>";
+                    let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                    department += "<label style='width:100%;'>"+classname+"</label>";
+                    if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                        transaction += "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>";
+                    }
+                    else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                        transaction += "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>";
+                    }
+                    else{
+                        transaction += "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>";
+                    }
                 }
-                else{
-                    transaction += "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>";
-                }
-            }
-            else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
-                qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
-                if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
-                    transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
-                }
-                else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
-                    transaction = "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>" + transaction;
-                }
-                else{
-                    transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
-                }
+                else if(data.tproductbatches[i].Batchno == currentLN && data.tproductbatches[i].Alloctype == "IN"){
+                    qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                        transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                    }
+                    else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                        transaction = "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                    }
+                    else{
+                        transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                    }
 
-                var dataTimeSheetList = [
-                    lotnumber,
-                    expirydate,
-                    productname,
-                    salsedes,
-                    status,
-                    qty,
-                    transaction,
-                    department,
-                    binnumber,
-                    barcode,
-                    cssclass,
-                ];
+                    var dataTimeSheetList = [
+                        lotnumber,
+                        expirydate,
+                        productname,
+                        salsedes,
+                        status,
+                        qty,
+                        transaction,
+                        department,
+                        binnumber,
+                        barcode,
+                        cssclass,
+                    ];
 
-                if($("#tblDepartmentCheckbox") != undefined){
-                    if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
+                    if($("#tblDepartmentCheckbox") != undefined){
+                        if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                    else{
                         splashArrayTimeSheetList.push(dataTimeSheetList);
                     }
                 }
-                else{
-                    splashArrayTimeSheetList.push(dataTimeSheetList);
+            }
+            else{
+                if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == ""){
+                    productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
+                    let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                    department = "<label style='width:100%;'>"+classname+"</label>";
+                    salsedes = data.tproductbatches[i].QtyDescription;
+                    barcode = "";
+                    binnumber = "";
+                    lotnumber = data.tproductbatches[i].Batchno;
+                    status = "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                    qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    transaction = "";
+                    expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
+                    cssclass = tclass;
+                }
+                else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "OUT" && deleteFilter){
+                    status += "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                    qty += "<label style='width:100%; text-align:right'>" + Math.abs(data.tproductbatches[i].Qty) + "</label>";
+                    let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                    department += "<label style='width:100%;'>"+classname+"</label>";
+                    if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                        transaction += "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>";
+                    }
+                    else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                        transaction += "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>";
+                    }
+                    else{
+                        transaction += "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>";
+                    }
+                }
+                else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
+                    qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                        transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                    }
+                    else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                        transaction = "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                    }
+                    else{
+                        transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                    }
+
+                    var dataTimeSheetList = [
+                        lotnumber,
+                        expirydate,
+                        productname,
+                        salsedes,
+                        status,
+                        qty,
+                        transaction,
+                        department,
+                        binnumber,
+                        barcode,
+                        cssclass,
+                    ];
+
+                    if($("#tblDepartmentCheckbox") != undefined){
+                        if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
+                            splashArrayTimeSheetList.push(dataTimeSheetList);
+                        }
+                    }
+                    else{
+                        splashArrayTimeSheetList.push(dataTimeSheetList);
+                    }
                 }
             }
         }

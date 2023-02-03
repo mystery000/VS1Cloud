@@ -3455,7 +3455,6 @@ Template.transaction_list.onRendered(function() {
             //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
             var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
             //templateObject.dateAsAt.set(formatDate);
-            //console.log("changed datefrom", dateFrom, dateTo);
             if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
             } else {
@@ -3481,7 +3480,6 @@ Template.transaction_list.onRendered(function() {
             //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
             var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
             //templateObject.dateAsAt.set(formatDate);
-            //console.log("changed datefrom", dateFrom, dateTo);
             if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
             } else {
@@ -3989,7 +3987,6 @@ Template.transaction_list.events({
     //         //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
     //         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
     //         //templateObject.dateAsAt.set(formatDate);
-    //         console.log("changed datefrom", dateFrom, dateTo);
     //         if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
     //
     //         } else {

@@ -89,6 +89,7 @@ Template.newprofitandloss.onRendered(function () {
   LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];
+  localStorage.setItem("colnames_", "");
   templateObject.setReportOptions = async function (compPeriod = 0, formatDateFrom = new Date(), formatDateTo = new Date() ) {
     // New Code Start here
     let fromYear = moment(formatDateFrom).format("YYYY");

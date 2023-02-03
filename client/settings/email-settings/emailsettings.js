@@ -168,7 +168,6 @@ Template.emailsettings.onRendered(function () {
       if (error) {
       } else {
         if (result) {
-          console.log("ReadPrefMethod:", result)
           for (let i = 0; i < result.customFields.length; i++) {
             let customcolumn = result.customFields;
             let columData = customcolumn[i].label;

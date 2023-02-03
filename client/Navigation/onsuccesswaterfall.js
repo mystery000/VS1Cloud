@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Template } from 'meteor/templating';
 
 import { AccessLevelService } from '../js/accesslevel-service.js';
@@ -7,10 +8,10 @@ import { UtilityService } from "../utility-service.js";
 import { SideBarService } from '../js/sidebar-service.js';
 import { OrganisationService } from "../js/organisation-service";
 import { ReportService } from "../reports/report-service";
-import GlobalFunctions from '../GlobalFunctions';
 import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
+import GlobalFunctions from "../GlobalFunctions.js";
 
 const productService = new ProductService();
 const sideBarService = new SideBarService();
@@ -3812,7 +3813,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getClientTypeListData();
           });
 
-          getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
+          getVS1Data('SupplierDetailsReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getSupplierDetailData();
             } else {
