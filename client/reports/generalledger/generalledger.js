@@ -674,37 +674,37 @@ Template.generalledger.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "155" },
-      { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "190" },
+      { index: 1, label: 'Account ID', class: 'colAccountID', active: false, display: true, width: "155" },
+      { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "110" },
       { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "85" },
       { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
       { index: 5, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
       { index: 6, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
       { index: 7, label: 'Department', class: 'colDepartment', active: false, display: true, width: "100" },
       { index: 8, label: 'Class ID', class: 'colClassID', active: false, display: true, width: "85" },
-      { index: 9, label: 'Client Name', class: 'colProductDescription', active: false, display: true, width: "120" },
       { index: 12, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
-      { index: 10, label: 'Credits (Ex)', class: 'colCreditEx', active: true, display: true, width: "85" },
+      { index: 9, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
+      { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+      { index: 10, label: 'Credits ', class: 'colCreditEx', active: true, display: true, width: "85" },
       { index: 11, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "85" },
-      { index: 13, label: 'Debits (Ex)', class: 'colDebitsEx', active: true, display: true, width: "85" },
-      { index: 14, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "85" },
+      { index: 13, label: 'Debits ', class: 'colDebitsEx', active: true, display: true, width: "85" },
+      { index: 14, label: 'Amount ', class: 'colAmountEx', active: true, display: true, width: "85" },
       { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "85" },
       { index: 16, label: 'Details', class: 'colDetails', active: false, display: true, width: "85" },
       { index: 17, label: 'FixedAsset ID', class: 'colFixedAssetID', active: false, display: true, width: "85" },
-      { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: true, display: true, width: "85" },
+      { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "85" },
       { index: 19, label: 'ID', class: 'colID', active: false, display: true, width: "50" },
       { index: 20, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
       { index: 21, label: 'Payment ID', class: 'colPaymentID', active: false, display: true, width: "85" },
       { index: 22, label: 'PrepaymentID', class: 'colPrepaymentID', active: false, display: true, width: "85" },
-      { index: 23, label: 'Product Description', class: 'colCredit', active: true, display: true, width: "150" },
+      { index: 23, label: 'Product Description', class: 'colCredit', active: false, display: true, width: "150" },
       { index: 24, label: 'Product ID', class: 'colProductID', active: false, display: true, width: "120" },
-      { index: 25, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: true, display: true, width: "150" },
+      { index: 25, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: false, display: true, width: "150" },
       { index: 26, label: 'Ref No', class: 'colRefNo', active: false, display: true, width: "85" },
-      { index: 27, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "85" },
+      { index: 27, label: 'Rep Name', class: 'colRepName', active: false, display: true, width: "85" },
       { index: 28, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "85" },
       { index: 29, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "150" },
-      { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" },
-      { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
+      { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" }
     ];
     templateObject.generalledgerth.set(reset_data);
   }
@@ -734,7 +734,7 @@ Template.generalledger.onRendered(() => {
     templateObject.setDateAs(dateFrom);
     getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
       if (dataObject.length == 0) {
-        reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, false).then(async function (data) {
           await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
           templateObject.displayGeneralLedgerData(data);
         }).catch(function (err) {
@@ -744,7 +744,7 @@ Template.generalledger.onRendered(() => {
         templateObject.displayGeneralLedgerData(data);
       }
     }).catch(function (err) {
-      reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {
+      reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, false).then(async function (data) {
         await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
         templateObject.displayGeneralLedgerData(data);
       }).catch(function (err) {
@@ -768,6 +768,10 @@ Template.generalledger.onRendered(() => {
     };
 
     for (let i = 0; i < data.tgeneralledgerreport.length; i++) {
+      let formatDate = new Date(data.tgeneralledgerreport[i].DATE || '');
+      formatDate = (formatDate.getDate() < 10 ? '0' + formatDate.getDate() : formatDate.getDate()) + '/'
+          + ((formatDate.getMonth() + 1) < 10 ? '0' + (formatDate.getMonth() + 1) : (formatDate.getMonth() + 1)) + '/'
+          + formatDate.getFullYear();
       var dataList = [
         data.tgeneralledgerreport[i].ACCOUNTID || "",
         data.tgeneralledgerreport[i].ACCOUNTNAME || "",
@@ -777,8 +781,9 @@ Template.generalledger.onRendered(() => {
         data.tgeneralledgerreport[i].CHEQUENUMBER || "",
         data.tgeneralledgerreport[i].CLASS || "",
         data.tgeneralledgerreport[i].CLASSID || "",
+        formatDate || "",
         data.tgeneralledgerreport[i]["CLIENT NAME"] || "",
-        data.tgeneralledgerreport[i].DATE || "",
+        data.tgeneralledgerreport[i].TYPE || "",
         data.tgeneralledgerreport[i].CREDITSEX || "",
         data.tgeneralledgerreport[i].CREDITSINC || "",
         data.tgeneralledgerreport[i].DEBITSEX || "",
@@ -799,8 +804,6 @@ Template.generalledger.onRendered(() => {
         data.tgeneralledgerreport[i].SALEID || "",
         data.tgeneralledgerreport[i].TAXCODE || "",
         data.tgeneralledgerreport[i].TAXRATE || "",
-        data.tgeneralledgerreport[i].TYPE || "",
-
       ];
       splashArrayBalanceSheetReport.push(dataList);
     }
@@ -870,6 +873,7 @@ Template.generalledger.onRendered(() => {
           "",
           "",
           "",
+          "",
           credit,
           "",
           debit,
@@ -890,7 +894,6 @@ Template.generalledger.onRendered(() => {
           "",
           "",
           "",
-          ""
         ]);
         balanceSheetReport.push([
           splashArrayBalanceSheetReport[i][0],
@@ -929,20 +932,20 @@ Template.generalledger.onRendered(() => {
       }
       T_AccountName = splashArrayBalanceSheetReport[i][1];
       splashArrayBalanceSheetReport[i][1] = "";
-      if(splashArrayBalanceSheetReport[i][10] != "" || splashArrayBalanceSheetReport[i][12] != "") {
+      if(splashArrayBalanceSheetReport[i][11] != "" || splashArrayBalanceSheetReport[i][13] != "") {
         balanceSheetReport.push(splashArrayBalanceSheetReport[i]);
         let tmp;
-        tmp = splashArrayBalanceSheetReport[i][10] - 0;
+        tmp = splashArrayBalanceSheetReport[i][11] - 0;
         credit += tmp; //credit
-        splashArrayBalanceSheetReport[i][10] = (tmp >= 0) ? `<span class="text-primary">${tmp}</span>` : `<span class="text-danger">${tmp}</span>`;
-
-        tmp = splashArrayBalanceSheetReport[i][12] - 0;
-        debit += tmp; //debit
-        splashArrayBalanceSheetReport[i][12] = (tmp >= 0) ? `<span class="text-primary">${tmp}</span>` : `<span class="text-danger">${tmp}</span>`;
+        splashArrayBalanceSheetReport[i][11] = (tmp >= 0) ? `<span class="text-primary">${tmp}</span>` : `<span class="text-danger">${tmp}</span>`;
 
         tmp = splashArrayBalanceSheetReport[i][13] - 0;
-        total += tmp; //total
+        debit += tmp; //debit
         splashArrayBalanceSheetReport[i][13] = (tmp >= 0) ? `<span class="text-primary">${tmp}</span>` : `<span class="text-danger">${tmp}</span>`;
+
+        tmp = splashArrayBalanceSheetReport[i][14] - 0;
+        total += tmp; //total
+        splashArrayBalanceSheetReport[i][14] = (tmp >= 0) ? `<span class="text-primary">${tmp}</span>` : `<span class="text-danger">${tmp}</span>`;
       }
     }
     // templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
@@ -995,7 +998,7 @@ Template.generalledger.onRendered(() => {
           },
           {
             targets: 8,
-            className: "colProductDescription hiddenColumn",
+            className: "colProductDescription",
           },
           {
             targets: 9,
@@ -1003,87 +1006,87 @@ Template.generalledger.onRendered(() => {
           },
           {
             targets: 10,
-            className: "colCreditEx",
+            className: "colType",
           },
           {
             targets: 11,
-            className: "colCreditInc hiddenColumn",
+            className: "colCreditEx",
           },
           {
             targets: 12,
-            className: "colDebitsEx",
+            className: "colCreditInc hiddenColumn",
           },
           {
             targets: 13,
-            className: "colAmountEx",
+            className: "colDebitsEx",
           },
           {
             targets: 14,
-            className: "colDebitsInc hiddenColumn",
+            className: "colAmountEx",
           },
           {
             targets: 15,
-            className: "colDetails hiddenColumn",
+            className: "colDebitsInc hiddenColumn",
           },
           {
             targets: 16,
-            className: "colFixedAssetID hiddenColumn",
+            className: "colDetails hiddenColumn",
           },
           {
             targets: 17,
-            className: "colGlobalRef hiddenColumn",
+            className: "colFixedAssetID hiddenColumn",
           },
           {
             targets: 18,
-            className: "colID hiddenColumn",
+            className: "colGlobalRef hiddenColumn",
           },
           {
             targets: 19,
-            className: "colMemo hiddenColumn",
+            className: "colID hiddenColumn",
           },
           {
             targets: 20,
-            className: "colPaymentID hiddenColumn",
+            className: "colMemo hiddenColumn",
           },
           {
             targets: 21,
-            className: "colPrepaymentID hiddenColumn",
+            className: "colPaymentID hiddenColumn",
           },
           {
             targets: 22,
-            className: "colCredit hiddenColumn",
+            className: "colPrepaymentID hiddenColumn",
           },
           {
             targets: 23,
-            className: "colProductID hiddenColumn",
+            className: "colCredit hiddenColumn",
           },
           {
             targets: 24,
-            className: "colPurchaseOrderID hiddenColumn",
+            className: "colProductID hiddenColumn",
           },
           {
             targets: 25,
-            className: "colRefNo hiddenColumn",
+            className: "colPurchaseOrderID hiddenColumn",
           },
           {
             targets: 26,
-            className: "colRepName hiddenColumn",
+            className: "colRefNo hiddenColumn",
           },
           {
             targets: 27,
-            className: "colSaleID hiddenColumn",
+            className: "colRepName hiddenColumn",
           },
           {
             targets: 28,
-            className: "colTaxCode hiddenColumn",
+            className: "colSaleID hiddenColumn",
           },
           {
             targets: 29,
-            className: "colTaxRate hiddenColumn",
+            className: "colTaxCode hiddenColumn",
           },
           {
             targets: 30,
-            className: "colType hiddenColumn",
+            className: "colTaxRate hiddenColumn",
           },
         ],
         select: true,
@@ -1092,7 +1095,7 @@ Template.generalledger.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        // responsive: true,
+        //responsive: true,
         //"order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
@@ -1554,12 +1557,6 @@ Template.generalledger.events({
         $("a").attr("href", "#");
       }, 100);
     }, delayTimeAfterSound);
-  },
-  "click .btnSpreadSheetLink": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let utilityService = new UtilityService();
-    const filename = "Generalledger report result" + ".xlsx";
-    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");

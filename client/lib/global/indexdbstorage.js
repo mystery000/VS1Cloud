@@ -529,6 +529,14 @@ openDb = function (dbName) {
       db.createObjectStore("PositionReport", {keyPath: "EmployeeEmail"});
       db.createObjectStore("TInventorySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProductBatches", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1ProfitandLossCompare", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TCustomerDetailsReport", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1SupplierSummary_Report", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1StockQuantityLocation_Report", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1StockValue_Report", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1AgedReceivables_Report", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1AgedReceivableSummary_Report", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1ProfitandLoss_Report", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
