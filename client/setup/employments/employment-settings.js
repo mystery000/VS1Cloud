@@ -29,6 +29,7 @@ Template.wizard_employment.onCreated(() => {
             "data:image/jpeg;base64," + employeeProfile
           );
           $(".cloudEmpImgID").val(data.temployeepicture[i].Id);
+          break;
         }
       }
     });
