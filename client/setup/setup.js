@@ -60,7 +60,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
           let data = result.data.tcompanyinfo[0];
           let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
           let bSetupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
-          localStorage.setItem("IS_SETUP_FINISHED", bSetuped); //data.IsSetUpWizard
+          localStorage.setItem("IS_SETUP_FINISHED", bSetupFinished); //data.IsSetUpWizard
           if (bSetupFinished == true) { // data.IsSetUpWizard
             window.open(onSetupFinished, '_self');
           } else {
