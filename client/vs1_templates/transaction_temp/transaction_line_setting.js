@@ -9,7 +9,7 @@ export default class TransactionFields {
         { index: 3,  label: "Price (Ex)",          class: "UnitPriceEx",   width: "122",       active: true,   display: true },
         { index: 4,  label: "Price (Inc)",         class: "UnitPriceInc",  width: "122",       active: false,  display: true },
         { index: 5,  label: "Customer/Job",        class: "CustomerJob",   width: "110",       active: true,   display: true },
-        { index: 6,  label: "CustField1",          class: "SalesLinesCustField1", width: "110",active: true,   display: true },
+        { index: 6,  label: "CustField1",          class: "SalesLinesCustField1", width: "110",active: false,  display: true },
         { index: 7,  label: "Tax Code",            class: "TaxCode",       width: "95",        active: true,   display: true },
         { index: 8,  label: "Tax Amt",             class: "TaxAmount",     width: "75",        active: true,   display: true },
         { index: 9,  label: "Amount (Ex)",         class: "AmountEx",      width: "152",       active: true,   display: true },

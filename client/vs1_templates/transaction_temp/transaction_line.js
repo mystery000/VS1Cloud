@@ -26,6 +26,7 @@ Template.transaction_line.onRendered(function() {
     let canShowUOM = templateObject.data.canShowUOM.toString() === "true";
     let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
     let allowedExRateTables = ['tblPurchaseOrderLine', 'tblInvoiceLine'];
+    let isFixedAssets = localStorage.getItem('CloudFixedAssetsModule');
     templateObject.init_reset_data = function() {
         let reset_data = [
             { index: 0,  label: "Product Name",       class: "ProductName",   width: "300",       active: true,   display: true },
@@ -92,6 +93,9 @@ Template.transaction_line.onRendered(function() {
         // isBatchSerialNoTracking
         findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
         
+        //Fixed Asset
+        findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
+
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -117,6 +121,8 @@ Template.transaction_line.onRendered(function() {
                     findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
                     // isBatchSerialNoTracking
                     findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
+                    //Fixed Asset
+                    findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
                     templateObject.showCustomFieldDisplaySettings(reset_data);
                 }).catch( function(err) {});
             } else {
@@ -139,7 +145,8 @@ Template.transaction_line.onRendered(function() {
                             findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
                             // isBatchSerialNoTracking
                             findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
-
+                            //Fixed Asset
+                            findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
                             templateObject.showCustomFieldDisplaySettings(reset_data);
                         }
                     }
