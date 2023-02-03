@@ -27,56 +27,6 @@ Template.manufacturingoverview.onCreated(function(){
 
 Template.manufacturingoverview.onRendered(function(){
     $('.production_planner_chart .charts .draggable-panel').css('display', 'block !important')
-    const currentDate = new Date();
-    let fromDate = moment().subtract(2, 'month').format('DD/MM/YYYY');
-    let toDate = moment(currentDate).format("DD/MM/YYYY");
-
-    setTimeout(function() {
-        $("#date-input,#dateTo,#dateFrom").datepicker({
-            showOn: "button",
-            buttonText: "Show Date",
-            buttonImageOnly: true,
-            buttonImage: "/img/imgCal2.png",
-            dateFormat: "dd/mm/yy",
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-90:+10",
-            onChangeMonthYear: function(year, month, inst) {
-                // Set date to picker
-                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-                // Hide (close) the picker
-                // $(this).datepicker('hide');
-                // // Change ttrigger the on change function
-                // $(this).trigger('change');
-            }
-        });
-        let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
-        let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-        let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-        if (urlParametersDateFrom) {
-            if (urlParametersIgnoreDate == true) {
-                $("#dateFrom").attr("readonly", true);
-                $("#dateTo").attr("readonly", true);
-            } else {
-                let paramFromDate = urlParametersDateFrom != "" ? new Date(urlParametersDateFrom) : urlParametersDateFrom;
-                paramFromDate = moment(paramFromDate).format("DD/MM/YYYY");
-                $("#dateFrom").val(paramFromDate);
-                let paramToDate = urlParametersDateTo != "" ? new Date(urlParametersDateTo) : urlParametersDateTo;
-                paramToDate = moment(paramToDate).format("DD/MM/YYYY");
-                $("#dateTo").val(paramToDate);
-            }
-        } else {
-            $("#dateFrom").val(fromDate);
-            $("#dateTo").val(toDate);
-        }
-        if (urlParametersIgnoreDate == "true") {
-            $("#dateFrom").val(null);
-            $("#dateTo").val(null);
-        }
-        $('[data-toggle="tooltip"]').tooltip({ html: true });
-    }, 500);
 })
 
 Template.manufacturingoverview.events({

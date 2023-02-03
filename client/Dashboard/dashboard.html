@@ -21,22 +21,6 @@
                 .col-area li {
                     list-style-type: none;
                 }
-                .fs-18 {
-                    font-size: 18px !important;
-                }
-                .fs-24 {
-                    font-size: 24px !important;
-                }
-                .btn-daterange::after {
-                    display: none;
-                }
-                .dateSelectMobile {
-                    float: right !important;
-                    margin-right: 0 !important;
-                }
-                .btn-daterange {
-                    float: right !important;
-                }
 
                 @media screen and (max-width: 450px) {
                     .btnBatchUpdate {
@@ -96,33 +80,6 @@
                       <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
                       <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
                    </div>
-                     <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                        <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
-                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </button>
-                            {{> daterangedropdownoption}}
-                        </div>
-                        <div class="form-group dateSelectMobile" style="margin: 0 8px 8px;display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" value="">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group dateSelectMobile" style="margin: 0px 0px 8px 8px;display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateTo" name="dateTo" value="">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        
                 </div>
 
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -172,9 +129,33 @@
             </style>
 
             <!-- Fix 2022/12/21 -->
-            {{> allCardsLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
-            {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
-            
+
+            {{> dashboardCardCharts tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}}
+
+            <!-- All Cards List -->
+            <!-- {{> allCardsLists tabGroupID="1" chartGroup="Dashboard"}} -->
+
+            <!-- All charts list -->
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
+            <!-- {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview"}} -->
+            <!-- <div class="row">
+                <ul class="col-area col-sm-6" id="col1">
+                    <li>{{> monthlyprofitandloss}}</li>
+
+                    <li>
+                        {{> resalescomparision}}
+                    </li>
+
+                    <li>{{> monthlyearnings}}</li>
+                </ul>
+                <ul class="col-area col-sm-6" id="col2">
+                    <li>{{> profitandlosschart}}</li>
+
+                    <li> {{> quotedinvoicedamounts}} </li>
+                    <li>{{> expenseschart}} </li>
+                </ul>
+            </div> -->
+
             <div class="row" style="Display:none!important;">
 
                 <div class="col-lg-5 col-xl-4" x="">

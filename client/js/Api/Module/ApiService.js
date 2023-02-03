@@ -38,7 +38,7 @@ export default class ApiService {
    * @returns {HeadersInit}
    */
   static getPostHeaders() {
-    let postHeaders = {
+    postHeaders = {
       database: erpDb().ERPDatabase,
       username: erpDb().ERPUsername,
       password: erpDb().ERPPassword,
