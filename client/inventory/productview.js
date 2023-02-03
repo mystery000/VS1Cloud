@@ -126,6 +126,7 @@ Template.productview.onRendered(function () {
       $("#sltcogsaccount").editableSelect();
       $("#sltsalesacount").editableSelect();
       $("#sltUomSales").editableSelect();
+      $("#sltUomPurchases").editableSelect();
       $("#sltinventoryacount").editableSelect();
       $("#sltCustomerType").editableSelect();
       $("#newProcessModal #edtCOGS").editableSelect();

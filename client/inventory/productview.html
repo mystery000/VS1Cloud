@@ -482,7 +482,7 @@
                                     </div>
                                 </div>
                             </div>
-                        <!-- </div>
+                            <!-- </div>
                     </div>
                     <div class="card shadow mb-4">
                         <div class="card-body" style="background-color: #ededed; padding: 2em"> -->
@@ -596,7 +596,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row uomRow m-0 w-100" style="display: none;" id="uomRow_0">
+                            <div class="row uomRow m-0 w-100" style="display: none" id="uomRow_0">
                                 <div class="pr-4 colSalesAccount" id="colSalesAccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>Sales Account</label>
@@ -609,7 +609,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="pr-4 colUOM" id="colUOM"  style="width: 13%">
+                                <div class="pr-4 colUOM" id="colUOM" style="width: 13%">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
@@ -812,7 +812,20 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colTaxCode2" id="colTaxCode2">
+                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                    <div class="form-group">
+                                        <label>Unit of Measure</label>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltUomPurchases"
+                                            name="sltUomPurchases"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                            value="Each"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-2 colTaxCode2" id="colTaxCode2">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -832,23 +845,32 @@
                                         <label class="lblCostInc"
                                             >Cost (Inc Tax) <i class="fas fa-random fa-trans"></i
                                         ></label>
+                                        <div class="d-flex">
+                                            <input type="hidden" class="lblCostCheckStatus" value="" />
 
-                                        <input type="hidden" class="lblCostCheckStatus" value="" />
-
-                                        <input
-                                            type="text"
-                                            class="form-control highlightInput edtbuyqty1cost hiddenColumn"
-                                            id="edtbuyqty1cost"
-                                            name="edtbuyqty1cost"
-                                            value="{{productrecord.buyqty1cost}}"
-                                        />
-                                        <input
-                                            type="text"
-                                            class="form-control highlightInput edtbuyqty1costInc"
-                                            id="edtbuyqty1costInc"
-                                            name="edtbuyqty1costInc"
-                                            value="{{productrecord.buyqty1costinc}}"
-                                        />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtbuyqty1cost hiddenColumn"
+                                                id="edtbuyqty1cost"
+                                                name="edtbuyqty1cost"
+                                                value="{{productrecord.buyqty1cost}}"
+                                            />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtbuyqty1costInc"
+                                                id="edtbuyqty1costInc"
+                                                name="edtbuyqty1costInc"
+                                                value="{{productrecord.buyqty1costinc}}"
+                                            />
+                                            <span class="table-remove btnRemoveCOGS invisible" style="margin-left: 10px"
+                                                ><button
+                                                    type="button"
+                                                    class="btn btn-danger btn-rounded btn-sm"
+                                                    autocomplete="off"
+                                                >
+                                                    <i class="fa fa-remove"></i></button
+                                            ></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
