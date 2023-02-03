@@ -7,7 +7,7 @@ import { UtilityService } from "../utility-service.js";
 import { SideBarService } from '../js/sidebar-service.js';
 import { OrganisationService } from "../js/organisation-service";
 import { ReportService } from "../reports/report-service";
-
+import GlobalFunctions from '../GlobalFunctions';
 import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
