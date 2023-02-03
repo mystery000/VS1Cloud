@@ -1551,7 +1551,7 @@ Template.basreturn.onRendered(function() {
     };
 
     $('#sltDepartment').editableSelect();
-
+    $('#sltDepartment').val("All");
     $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
@@ -2787,6 +2787,73 @@ Template.basreturn.onRendered(function() {
                 }
             } else {
                 templateObject.pageTitle.set("New BAS Return");
+                let currentDate = new Date();
+                let toDate = moment(currentDate).format("YYYY-MM-DD");
+                $("#currentyear, #currentyear-t2, #currentyear-t2-2, #currentyear-t3").val(currentDate.getFullYear());
+                $("#beginmonthlydate, #beginmonthlydate-t2, #beginmonthlydate-t2-2, #beginmonthlydate-t3").val("January");
+                if ($("#datemethod1").prop('checked') == true) {
+                    if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
+                        toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate").val(toDate);
+                    }
+                }
+
+                if ($("#datemethod1-t2").prop('checked') == true) {
+                    if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate-t2").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
+                        toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate-t2").val(toDate);
+                    }
+                }
+
+                if ($("#datemethod1-t2-2").prop('checked') == true) {
+                    if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2-2").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear-t2-2").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate-t2-2").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate-t2-2").val() != "" && $("#currentyear-t2-2").val() != "" && $("#beginmonthlydate-t2-2").val() != null && $("#currentyear-t2-2").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate-t2-2").val()]);
+                        toDate = new Date($("#currentyear-t2-2").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate-t2-2").val(toDate);
+                    }
+                }
+
+                if ($("#datemethod1-t3").prop('checked') == true) {
+                    if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate-t3").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate-t2-2").val()]);
+                        toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        $("#endDate-t3").val(toDate);
+                    }
+                }
             }
 
             $(document).on("click", "#basreturnCategory1", function(e) {

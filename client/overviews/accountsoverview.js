@@ -1433,6 +1433,12 @@ Template.accountsoverview.events({
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletoexcel").click();
         $(".fullScreenSpin").css("display", "none");
     },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Accountslist report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    },
     "keyup #tblAccountOverview_filter input": function (event) {
       if ($(event.target).val() != "") {
         $(".btnRefreshList").addClass("btnSearchAlert");

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Meteor } from "meteor/meteor";
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
@@ -27,6 +28,7 @@ import './accounts/accounts-settings.js'
 import './customers/customers-settings.js'
 import './suppliers/suppliers-settings.js'
 import './bankaccounts/bankaccounts-settings.js'
+import './dashboard/dashboard-settings.js'
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
@@ -280,14 +282,14 @@ Template.setup.onRendered(function () {
       allStepsConfirmed = true;
     companyInfo.Address3 = cntConfirmedSteps.toString();
 
-    await organisationService.saveOrganisationSetting({
+    organisationService.saveOrganisationSetting({
       type: "TCompanyInfo",
       fields: companyInfo,
     });
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    window.location.href = "/";
+    window.location.href = "/onloginsuccess";
     // FlowRouter.go("onloginsuccess");
     LoadingOverlay.hide();
 

@@ -8006,6 +8006,10 @@ Template.refundcard.events({
           var currentInvoice = getso_id[getso_id.length - 1];
           var objDetails = "";
           if (getso_id[1]) {
+            $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+            $("#deleteLineModal").modal('hide');
+            $("#deleteprogressbar").css('display', 'block');
+            $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var refundData = await salesService.getRefundSales(currentInvoice);
             var saleDate = refundData.fields.SaleDate;
@@ -8025,6 +8029,7 @@ Template.refundcard.events({
                     0
                 );
             var refundList = followingRefunds.trefundsalelist;
+            var j = 0;
             for (var i = 0; i < refundList.length; i++) {
               var objDetails = {
                 type: "TRefundSale",
@@ -8033,12 +8038,16 @@ Template.refundcard.events({
                   Deleted: true,
                 },
               };
+              j ++;
+              document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+              $('.deleteloadingbar').css('width', ((100/refundList.length*j)) + '%').attr('aria-valuenow', ((100/refundList.length*j)));
               var result = await salesService.saveRefundSale(objDetails);
             }
           }
-          window.open("/refundlist", "_self");
-          LoadingOverlay.hide();
-          $("#deleteLineModal").modal("toggle");
+          $("#deletecheckmarkwrapper").removeClass('hide');
+          $('.modal-backdrop').css('display', 'none');
+          $("#deleteprogressbar").modal('hide');
+          $("#btn_data").click();
         }
       });
     }, delayTimeAfterSound);
@@ -9788,7 +9797,8 @@ Template.refundcard.events({
                     cancelButtonText: 'No'
                     // cancelButtonClass: "btn-default"
                 }).then((result) => {
-                    if (result.value) {                        
+                    if (result.value) {
+                        FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                     } else if (result.dismiss === 'cancel') {
                         // $('.essentialsdiv .custom-control-input').prop("checked", false);
                         event.preventDefault();
@@ -9949,7 +9959,8 @@ Template.refundcard.events({
                     cancelButtonText: 'No'
                     // cancelButtonClass: "btn-default"
                 }).then((result) => {
-                    if (result.value) {                        
+                    if (result.value) {
+                        FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                     } else if (result.dismiss === 'cancel') {
                         // $('.essentialsdiv .custom-control-input').prop("checked", false);
                         event.preventDefault();

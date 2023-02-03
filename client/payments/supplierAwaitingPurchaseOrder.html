@@ -163,7 +163,7 @@
             </style>
 
             <div class="row" style="padding: 0px 20px; background-color: #ededed;">
-                <div class="col-6 col-md-7 col-lg-8">
+                <div class="col-6 col-md-4 col-lg-6">
                     <button class="btn btn-primary btnRefresh btnNav " type="button" style="margin :14px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                     <button class="btn btn-primary btnSuppPayment btnNav vs1ButtonMargin" type="button" ><i class="fa fa-credit-card" style="padding-right: 5px;"></i>Supplier Payment</button>
                     <button class="btn btn-primary btnPaymentList btnNav vs1ButtonMargin" type="button"><i class="fas fa-list" style="padding-right: 5px;"></i>Supplier Payment List</button>
@@ -171,11 +171,13 @@
                         <input type="text" id="selectedTot" name="selectedTot" class="form-control" style="cursor: default; background-color:#EDEDED; border-color:#EDEDED; font-size:20px; font-weight:600; padding: 0px;" readonly>
                     </div>
                 </div>
-                <div class="col-6 col-md-5 col-lg-4">
+                <div class="col-6 col-md-8 col-lg-6">
                     <a class="btn btnOpenSettings float-right " role="button" data-toggle="modal" style="margin :14px;" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
                     <button class="btn btn-primary printConfirm float-right btnNav vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
                     <button class="btn btn-primary export float-right btnNav vs1ButtonMargin" type="button"  id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                    <button class="btn btn-primary float-right vs1ButtonMargin btnSpreadSheetLink" type="button"><i class="fas fa-link" style="padding-right: 5px;"></i>SpreadSheet Link</button>
                     <a class="btn btnOpenSettings btnOpenSettingsMobile float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#myModal2" style=" display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                    {{> spreadsheet_link templateName="All Outstanding Expenses report result"}}
                 </div>
             </div>
 

@@ -35,6 +35,17 @@ Template.crmoverview.onRendered(function() {
     templateObject.crmtaskmitem.set(currentId);
     templateObject.currentTabID.set("allTasks-tab");
 
+    setTimeout(function() {
+        var url = window.location.href;
+        var geturl = url.split("#");
+        if(geturl[1] && geturl[1] == "projectsTab-tab"){
+            $('#projectsTab-tab').click();
+        }
+        else if(geturl[1] && geturl[1] == "tasksTab-tab"){
+            $('#allTasks-tab').click();
+        }
+    }, 1000);
+    
     function getCustomerData(customerID) {
         getVS1Data("TCustomerVS1").then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -939,6 +950,12 @@ Template.crmoverview.events({
 
     "click .menu_all_task": function(e) {
         $('#allTasks-tab').click();
+        $('#allTasks').addClass("active");
+        $('#allTasks').addClass("show");
+        $('#todayTab').removeClass("active");
+        $('#upcomingTab').removeClass("active");
+        $('#projectsTab').removeClass("active");
+        $('#filterLabelsTab').removeClass("active");
         $('#crm_header_title').html('All Tasks');
     },
 
@@ -954,6 +971,12 @@ Template.crmoverview.events({
 
     "click .menu_project": function(e) {
         $('#projectsTab-tab').click();
+        $('#allTasks').removeClass("active");
+        $('#todayTab').removeClass("active");
+        $('#upcomingTab').removeClass("active");
+        $('#projectsTab').addClass("active");
+        $('#projectsTab').addClass("show");
+        $('#filterLabelsTab').removeClass("active");
         $('#crm_header_title').html('Projects');
     },
 

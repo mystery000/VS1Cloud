@@ -29,6 +29,7 @@ import erpObject from "../../lib/global/erp-objects";
 import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
 import PayRun from "../../js/Api/Model/PayRun";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
+import moment from "moment";
 let payRunHandler = new PayRunHandler();
 
 Template.transaction_list.inheritsHooksFrom('export_import_print_display_button');
@@ -42,8 +43,7 @@ Template.transaction_list.onCreated(function() {
     templateObject.trans_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.tablename = new ReactiveVar();
-    templateObject.currentproductID = new ReactiveVar();
-    templateObject.currenttype = new ReactiveVar();
+
 });
 
 Template.transaction_list.onRendered(function() {
@@ -56,6 +56,11 @@ Template.transaction_list.onRendered(function() {
     const lineCustomerItems = [];
     const dataTableList = [];
     const tableHeaderList = [];
+    var url = FlowRouter.current().path;
+    let currenttablename = templateObject.data.tablename || "";
+    templateObject.tablename.set(currenttablename);
+    let currentProductID = templateObject.data.productID || "";
+    let currentType = templateObject.data.type || "";
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
@@ -75,19 +80,6 @@ Template.transaction_list.onRendered(function() {
 
         });
     };
-
-    var url = FlowRouter.current().path;
-    let currenttablename = templateObject.data.tablename || "";
-
-
-    templateObject.tablename.set(currenttablename);
-    let currentproductID = templateObject.data.productID || "";
-    templateObject.currentproductID.set(currentproductID);
-    let currenttype = templateObject.data.type || "";
-    templateObject.currenttype.set(currenttype);
-
-
-
     // set initial table rest_data
     templateObject.init_reset_data = function() {
         let reset_data = [];
@@ -102,7 +94,8 @@ Template.transaction_list.onRendered(function() {
                 { index: 6, label: "Amount (Inc)", class: "DebitEx", width: "120", active: true, display: true },
                 { index: 7, label: "Department", class: "Department", width: "80", active: true, display: true },
                 { index: 8, label: "Chq Ref No", class: "chqrefno", width: "110", active: false, display: true },
-                { index: 9, label: "Comments", class: "Notes", width: "", active: true, display: true },
+                { index: 9, label: "Status", class: "Status", width: "100", active: true, display: true },
+                { index: 10, label: "Comments", class: "Notes", width: "", active: true, display: true },
             ];
         }else if(currenttablename === "tblPayRunHistory"){
             reset_data = [
@@ -161,6 +154,28 @@ Template.transaction_list.onRendered(function() {
                 { index: 15, label: 'Hourly Rate', class: 'colHourlyrate hiddenColumn', active: false, display: true, width: "100" },
                 { index: 16, label: 'View', class: 'colView', active: true, display: true, width: "100" },
             ]
+        } else if (currenttablename === "tblchequelist") {
+            reset_data = [
+                { index: 0, label: 'ID', class:'ID', active: false, display: false, width: "0" },
+                { index: 1, label: "Order Date", class: "OrderDate", active: true, display: true, width: "100" },
+                { index: 2, label: "#ID", class: "ChequeID", active: true, display: true, width: "100" },
+                { index: 3, label: "Bank Account", class: "BankAccount", active: true, display: true, width: "100" },
+                { index: 4, label: "PurchaseNo", class: "PurchaseNo", active: true, display: true, width: "100" },
+                { index: 5, label: "Supplier", class: "Supplier", active: true, display: true, width: "100" },
+                { index: 6, label: "Reference", class: "Reference", active: true, display: true, width: "100" },
+                { index: 7, label: "Via", class: "Via", active: true, display: true, width: "100" },
+                { index: 8, label: "Currency", class: "Currency", active: true, display: true, width: "100" },
+                { index: 9, label: "AmountEx", class: "AmountEx", active: true, display: true, width: "100" },
+                { index: 10, label: "Tax", class: "Tax", active: true, display: true, width: "100" },
+                { index: 11, label: "Amount", class: "Amount", active: true, display: true, width: "100" },
+                { index: 12, label: "Paid", class: "Paid", active: true, display: true, width: "100" },
+                { index: 13, label: "Outstanding", class: "Outstanding", active: true, display: true, width: "100" },
+                { index: 14, label: "Status", class: "Status", active: true, display: true, width: "100" },
+                { index: 15, label: "PurchaseCustField1", class: "PurchaseCustField1", active: false, display: true, width: "100" },
+                { index: 16, label: "PurchaseCustField2", class: "PurchaseCustField2", active: false, display: true, width: "100" },
+                { index: 17, label: "Employee", class: "Employee", active: false, display: true, width: "100" },
+                { index: 18, label: "Comments", class: "Comments", active: true, display: true, width: "100" },
+            ]
         } else if(currenttablename == 'tblWorkorderList') {
             reset_data = [
                 { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
@@ -173,6 +188,16 @@ Template.transaction_list.onRendered(function() {
                 { index: 7, label: "Amount", class: "colAmount", width: "80", active: true, display: true },
                 { index: 8, label: "Comments", class: "colComment", width: "", active: true, display: true },
             ];
+        } else if(currenttablename == 'productrecentlist') {
+            reset_data = [
+                { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
+                { index: 0, label: "Date", class: "Date", active: true, display: true, width: "80" },
+                { index: 1, label: "Type", class: "Type", active: true, display: true, width: "130" },
+                { index: 2, label: "Ref", class: "Ref", active: true, display: true, width: "30" },
+                { index: 3, label: "Qty", class: "Qty", active: true, display: true, width: "30" },
+                { index: 4, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
+                { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
+            ];
         }
 
         templateObject.reset_data.set(reset_data);
@@ -184,6 +209,48 @@ Template.transaction_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
+        // if (listType === "tblBankingOverview" || listType === "tblchequelist") {
+        //     try {
+        //       getVS1Data("VS1_Customize").then(function (dataObject) {
+        //         if (dataObject.length == 0) {
+        //           sideBarService
+        //             .getNewCustomFieldsWithQuery(
+        //               parseInt(
+        //                 localStorage.getItem("mySessionEmployeeLoggedID")
+        //               ),
+        //               listType
+        //             )
+        //             .then(function (data) {
+        //               // reset_data = data.ProcessLog.CustomLayout.Columns;
+        //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+        //               templateObject.showCustomFieldDisplaySettings(reset_data);
+        //             })
+        //             .catch(function (err) {});
+        //         } else {
+        //           let data = JSON.parse(dataObject[0].data);
+        //           if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+        //             for (
+        //               let i = 0;
+        //               i < data.ProcessLog.Obj.CustomLayout.length;
+        //               i++
+        //             ) {
+        //               if (
+        //                 data.ProcessLog.Obj.CustomLayout[i].TableName ==
+        //                 listType
+        //               ) {
+        //                 reset_data =
+        //                   data.ProcessLog.Obj.CustomLayout[i].Columns;
+        //                 templateObject.showCustomFieldDisplaySettings(
+        //                   reset_data
+        //                 );
+        //               }
+        //             }
+        //           }
+        //           // handle process here
+        //         }
+        //       });
+        //     } catch (error) {}
+        // }
     }
 
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
@@ -202,11 +269,11 @@ Template.transaction_list.onRendered(function() {
             let currentTable = document.getElementById(currenttablename)
             if (reset_data[r].active == true) {
                 if(currentTable){
-                    $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
+                    $(`#${currenttablename} .${reset_data[r].class}`).removeClass('hiddenColumn');
                 }
             } else if (reset_data[r].active == false) {
                 if(currentTable){
-                    $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
+                    $(`#${currenttablename} .${reset_data[r].class}`).addClass('hiddenColumn');
                 }
             };
             custFields.push(customData);
@@ -216,10 +283,8 @@ Template.transaction_list.onRendered(function() {
     }
     templateObject.initCustomFieldDisplaySettings("", currenttablename);
 
-
-    var today = moment().format('DD/MM/YYYY');
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    let currentDate = new Date();
+    let begunDate = moment(currentDate).format("DD/MM/YYYY");
     let fromDateMonth = (currentDate.getMonth() + 1);
     let fromDateDay = currentDate.getDate();
     if ((currentDate.getMonth()+1) < 10) {
@@ -229,7 +294,9 @@ Template.transaction_list.onRendered(function() {
     if (currentDate.getDate() < 10) {
         fromDateDay = "0" + currentDate.getDate();
     }
-    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+    let fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+    let toDate = currentDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+    let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
@@ -278,6 +345,8 @@ Template.transaction_list.onRendered(function() {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TBankAccountReport').then(function(dataObject) {
+            $('#dateFrom').attr('readonly', false);
+            $('#dateTo').attr('readonly', false);
 
             if (dataObject.length == 0) {
                 sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
@@ -345,6 +414,7 @@ Template.transaction_list.onRendered(function() {
                             amountInc || 0.00,
                             useData[i].ClassName || '',
                             useData[i].ChqRefNo || '',
+                            useData[i].Active == true ? '' : "In-Active",
                             useData[i].Notes || '',
                             // creditex: creditEx || 0.00,
                             // customername: useData[i].ClientName || '',
@@ -368,8 +438,6 @@ Template.transaction_list.onRendered(function() {
                     //awaitingpaymentCount
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
-
-
                         setTimeout(function() {
                             MakeNegative();
                         }, 100);
@@ -434,7 +502,12 @@ Template.transaction_list.onRendered(function() {
                                 },
                                 {
                                     targets: 9,
-                                    className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                    className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                    width: "100px",
+                                },
+                                {
+                                    targets: 10,
+                                    className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                     width: "100px",
                                 },
                             ],
@@ -671,16 +744,35 @@ Template.transaction_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbankaccountreport;
-                if(data.Params.IgnoreDates == true){
-                    $('#dateFrom').attr('readonly', true);
-                    $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/bankingoverview?ignoredate=true');
-                }else{
-                    $('#dateFrom').attr('readonly', false);
-                    $('#dateTo').attr('readonly', false);
-                    $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-                    $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+
+                let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
+                let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
+                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                if(urlParametersDateFrom){
+                    if(urlParametersIgnoreDate == true){
+                        $('#dateFrom').attr('readonly', true);
+                        $('#dateTo').attr('readonly', true);
+                    }else
+                    {
+                        if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
+                        else
+                            $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
+                        if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
+                        else
+                            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+                    }
                 }
+
+                // if(data.Params.IgnoreDates == true){
+                //     $('#dateFrom').attr('readonly', true);
+                //     $('#dateTo').attr('readonly', true);
+                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
+                // }else{
+                //     $('#dateFrom').attr('readonly', false);
+                //     $('#dateTo').attr('readonly', false);
+                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+                // }
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
@@ -729,7 +821,8 @@ Template.transaction_list.onRendered(function() {
                         lineID = useData[i].TransID;
                     }
 
-
+                    if(useData[i].Active == false)
+                        alert(useData[i]);
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         '<span style="display:none;">' + (useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date).toString() + '</span>' +
@@ -741,6 +834,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
+                        useData[i].Active == true ? '' : "In-Active",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -829,7 +923,12 @@ Template.transaction_list.onRendered(function() {
                             },
                             {
                                 targets: 9,
-                                className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 10,
+                                className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                 width: "100px",
                             },
                         ],
@@ -1123,6 +1222,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
+                        useData[i].Active == true ? '' : "In-Active",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -1211,7 +1311,12 @@ Template.transaction_list.onRendered(function() {
                             },
                             {
                                 targets: 9,
-                                className: trans_displayfields[9].active == true ? "colNotes" : "colNotes hiddenColumn",
+                                className: trans_displayfields[9].active == true ? "colStatus" : "colStatus hiddenColumn",
+                                width: "100px",
+                            },
+                            {
+                                targets: 10,
+                                className: trans_displayfields[10].active == true ? "colNotes" : "colNotes hiddenColumn",
                                 width: "100px",
                             },
                         ],
@@ -1449,10 +1554,11 @@ Template.transaction_list.onRendered(function() {
         //$(".fullScreenSpin").css("display", "none");
     }
 
-    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate, deleteFilter = false) {
-        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(function(data) {
+    templateObject.getAllFilterbankingData = async function (fromDate,toDate, ignoreDate, deleteFilter = false) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        await sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(async function(data) {
 
-            addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
+            await addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
                 window.open('/bankingoverview?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate='+ignoreDate,'_self');
             }).catch(function (err) {
                 location.reload();
@@ -2342,6 +2448,433 @@ Template.transaction_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getChequeListData = function() {
+        getVS1Data('TChequeList').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getAllChequeListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+                    templateObject.displayChequeListData(data);
+                }).catch(function(err) {
+                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                    $('.fullScreenSpin').css('display', 'none');
+                    // Meteor._reload.reload();
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayChequeListData(data);
+            }
+        }).catch(function(err) {
+            sideBarService.getAllChequeListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(data) {
+                templateObject.displayChequeListData(data);
+            }).catch(function(err) {
+                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                $('.fullScreenSpin').css('display', 'none');
+                // Meteor._reload.reload();
+            });
+        });
+    };
+
+    templateObject.displayChequeListData = function (data) {
+        addVS1Data('TChequeList',JSON.stringify(data));
+        if (data.Params.IgnoreDates == true) {
+            $('#dateFrom').attr('readonly', true);
+            $('#dateTo').attr('readonly', true);
+
+        } else {
+            $('#dateFrom').attr('readonly', false);
+            $('#dateTo').attr('readonly', false);
+            $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+            $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+        }
+        for (let i = 0; i < data.tchequelist.length; i++) {
+            let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].TotalAmount) || 0.00;
+            let totalTax = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].TotalTax) || 0.00;
+            let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].TotalAmountInc) || 0.00;
+            let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].Balance) || 0.00;
+            let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tchequelist[i].Payment) || 0.00;
+
+              if(data.tchequelist[i].TotalAmount > 0 && data.tchequelist[i].TotalAmount != 0){
+                totalAmountEx = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].TotalAmount)) || 0.00;
+              }else{
+                totalAmountEx = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].TotalAmount)) || 0.00;
+              }
+
+              if(data.tchequelist[i].TotalTax > 0 && data.tchequelist[i].TotalTax != 0){
+                totalTax = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].TotalTax)) || 0.00;
+              }else{
+                totalTax = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].TotalTax)) || 0.00;
+              }
+
+
+              if(data.tchequelist[i].TotalAmountInc > 0 && data.tchequelist[i].TotalAmountInc != 0){
+                totalAmount = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].TotalAmountInc)) || 0.00;
+              }else{
+                totalAmount = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].TotalAmountInc)) || 0.00;
+              }
+
+
+              if(data.tchequelist[i].Balance > 0 && data.tchequelist[i].Balance != 0){
+                totalOutstanding = utilityService.modifynegativeCurrencyFormat(-Math.abs(data.tchequelist[i].Balance)) || 0.00;
+              }else{
+                totalOutstanding = utilityService.modifynegativeCurrencyFormat(Math.abs(data.tchequelist[i].Balance)) || 0.00;
+              }
+
+
+            let orderstatus = data.tchequelist[i].OrderStatus || '';
+            if (data.tchequelist[i].Deleted == true){
+                orderstatus = "Deleted";
+            } else if (data.tchequelist[i].SupplierName == ''){
+                orderstatus = "Deleted";
+            }
+            const dataList = [
+                data.tchequelist[i].OrderDate != '' ? moment(data.tchequelist[i].OrderDate).format("YYYY/MM/DD") : data.tchequelist[i].OrderDate,
+                `<span style="display:none;">{{item.sortdate}}</span>${data.tchequelist[i].OrderDate != '' ? moment(data.tchequelist[i].OrderDate).format("DD/MM/YYYY") : data.tchequelist[i].OrderDate}`,
+                data.tchequelist[i].PurchaseOrderID || '',
+                data.tchequelist[i].Account || '',
+                data.tchequelist[i].InvoiceNumber || '',
+                data.tchequelist[i].SupplierName || '',
+                data.tchequelist[i].RefNo || '',
+                data.tchequelist[i].Shipping || '',
+                data.tchequelist[i].ForeignExchangeCode || '',
+                totalAmountEx || 0.00,
+                totalTax || 0.00,
+                totalAmount || 0.00,
+                totalPaid || 0.00,
+                totalOutstanding || 0.00,
+                orderstatus || '',
+                '' || '',
+                '' || '',
+                data.tchequelist[i].Employee || '',
+                data.tchequelist[i].Comments || '',
+            ];
+            if (orderstatus != "Deleted") {
+                dataTableList.push(dataList);
+            }
+
+        }
+        templateObject.datatablerecords.set(dataTableList);
+
+        if (templateObject.datatablerecords.get()) {
+
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+
+        let trans_displayfields = templateObject.trans_displayfields.get();
+        setTimeout(function() {
+            $('.fullScreenSpin').css('display', 'none');
+            $('#tblchequelist').DataTable({
+                data: dataTableList,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 1,
+                        className: trans_displayfields[1].active == true ? "colOrderDate" : "colOrderDate hiddenColumn",
+                        width: "100px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
+                    },
+                    {
+                        targets: 2,
+                        className: trans_displayfields[2].active == true ? "colChequeID" : "colChequeID hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 3,
+                        className: trans_displayfields[3].active == true ? "colBankAccount" : "colBankAccount hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 4,
+                        className: trans_displayfields[4].active == true ? "colPurchaseNo" : "colPurchaseNo hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 5,
+                        className: trans_displayfields[5].active == true ? "colSupplier" : "colSupplier hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 6,
+                        className: trans_displayfields[6].active == true ? "colReference" : "colReference hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 7,
+                        className: trans_displayfields[7].active == true ? "colVia" : "colVia hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 8,
+                        className: trans_displayfields[8].active == true ? "colCurrency" : "colCurrency hiddenColumn",
+                        width: "120px",
+                    },
+                    {
+                        targets: 9,
+                        className: trans_displayfields[9].active == true ? "colAmountEx" : "colAmountEx hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 10,
+                        className: trans_displayfields[10].active == true ? "colTax" : "colTax hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 11,
+                        className: trans_displayfields[11].active == true ? "colAmount" : "colAmount hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 12,
+                        className: trans_displayfields[12].active == true ? "colPaid" : "colPaid hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 13,
+                        className: trans_displayfields[13].active == true ? "colBalanceOutstanding" : "colBalanceOutstanding hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 14,
+                        className: trans_displayfields[14].active == true ? "colStatus" : "colStatus hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 15,
+                        className: trans_displayfields[15].active == true ? "colPurchaseCustField1" : "colPurchaseCustField1 hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 16,
+                        className: trans_displayfields[16].active == true ? "colPurchaseCustField2" : "colPurchaseCustField2 hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 17,
+                        className: trans_displayfields[17].active == true ? "colEmployee" : "colEmployee hiddenColumn",
+                        width: "100px",
+                    },
+                    {
+                        targets: 18,
+                        className: trans_displayfields[18].active == true ? "colComments" : "colComments hiddenColumn",
+                        width: "100px",
+                    },
+                ],
+              "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: chequeSpelling+" "+"List - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function ( data, row, column ) {
+                                if(data.includes("</span>")){
+                                    var res = data.split("</span>");
+                                    data = res[1];
+                                }
+
+                                return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                            }
+                        }
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: chequeSpelling,
+                    filename: chequeSpelling+" "+"List - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible',
+                        stripHtml: false
+                    }
+                }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function() {
+                    $('#tblchequelist').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblchequelist_ellipsis').addClass('disabled');
+
+                    if(oSettings._iDisplayLength == -1){
+                        if(oSettings.fnRecordsDisplay() > 150){
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+                    }else{
+
+                    }
+                    if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function(){
+                            $('.fullScreenSpin').css('display','inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+                            const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            const dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                                sideBarService.getAllChequeListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                    getVS1Data('TChequeList').then(function (dataObjectold) {
+                                        if(dataObjectold.length == 0){
+
+                                        }else{
+                                            let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                            const thirdaryData = $.merge($.merge([], dataObjectnew.tchequelist), dataOld.tchequelist);
+                                            let objCombineData = {
+                                                Params: dataOld.Params,
+                                                tchequelist:thirdaryData
+                                            };
+
+
+                                            addVS1Data('TChequeList',JSON.stringify(objCombineData)).then(function (datareturn) {
+
+                                                templateObject.resetData(objCombineData);
+                                                $('.fullScreenSpin').css('display','none');
+                                            }).catch(function (err) {
+                                                $('.fullScreenSpin').css('display','none');
+                                            });
+
+                                        }
+                                    }).catch(function (err) {
+
+                                    });
+
+                                }).catch(function(err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                });
+                            }else{
+                                sideBarService.getAllChequeListData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                    getVS1Data('TChequeList').then(function (dataObjectold) {
+                                        if(dataObjectold.length == 0){
+
+                                        }else{
+                                            let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                            var thirdaryData = $.merge($.merge([], dataObjectnew.tchequelist), dataOld.tchequelist);
+                                            let objCombineData = {
+                                                Params: dataOld.Params,
+                                                tchequelist:thirdaryData
+                                            }
+
+
+                                            addVS1Data('TChequeList',JSON.stringify(objCombineData)).then(function (datareturn) {
+
+                                                templateObject.resetData(objCombineData);
+                                                $('.fullScreenSpin').css('display','none');
+                                            }).catch(function (err) {
+                                                $('.fullScreenSpin').css('display','none');
+                                            });
+
+                                        }
+                                    }).catch(function (err) {
+
+                                    });
+
+                                }).catch(function(err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                });
+                            }
+                        });
+
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    $("<button class='btn btn-primary btnRefreshCheque' type='button' id='btnRefreshCheque' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblchequelist_filter");
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+                },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+            }).on('column-reorder', function() {
+
+            });
+            $('.fullScreenSpin').css('display', 'none');
+
+        }, 0);
+
+        const columns = $('#tblchequelist th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+        $('#tblchequelist tbody').on('click', 'tr', function() {
+            var listData = $(this).closest('tr').attr('id');
+            var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+            if (listData) {
+                if(checkDeleted == "Deleted"){
+                    swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                }else{
+                    FlowRouter.go('/chequecard?id=' + listData);
+
+                }
+            }
+        });
+    }
+
     templateObject.getAllAppointmentListData = function(){
         getVS1Data('TAppointmentList').then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -2608,6 +3141,260 @@ Template.transaction_list.onRendered(function() {
         })
     }
 
+    templateObject.getAllProductRecentTransactions = async function (deptname) {
+      getVS1Data("T_VS1_Report_Productmovement").then(function (dataObject) {
+        let need_API = true;
+        if (dataObject.length > 0) {
+          let data = JSON.parse(dataObject[0].data);
+          for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+            let data_productID = data.t_vs1_report_productmovement[i].ProductID;
+            if (parseInt(currentProductID) == data_productID) {
+              need_API = false;
+              break;
+            }
+          }
+        }
+        if (currentProductID) {
+          if (need_API) {
+            productService.getProductRecentTransactionsAll(currentProductID).then(function (data) {
+              addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
+              templateObject.displayAllProductRecentTransactions(data, deptname);
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            templateObject.displayAllProductRecentTransactions(data, deptname);
+          }
+        }
+      });
+    };
+    templateObject.displayAllProductRecentTransactions = function (data, deptname) {
+      let recentTransList = new Array();
+      for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+        if (
+          parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID &&
+          (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)
+        ) {
+          let recentTranObject = [
+            data.t_vs1_report_productmovement[i].TransactionNo,
+            data.t_vs1_report_productmovement[i].TransactionDate != ""
+              ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY")
+              : data.t_vs1_report_productmovement[i].TransactionDate,
+            data.t_vs1_report_productmovement[i].TranstypeDesc,
+            data.t_vs1_report_productmovement[i].TransactionNo,
+            data.t_vs1_report_productmovement[i].Qty,
+            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
+          ];
+          recentTransList.push(recentTranObject);
+        }
+      }
+      let columnData = [];
+      let displayfields = templateObject.trans_displayfields.get();
+      if (displayfields.length > 0) {
+        displayfields.forEach(function (item, index) {
+          if (index === 0) {
+            columnData.push({
+              className: item.active ?  `col${item.class}` : `col${item.class} hiddenColumn`,
+              targets: [item.id],
+              createdCell: function (td, cellData, rowData, row, col) {
+                $(td).closest("tr").attr("id", rowData[3]);
+                $(td).closest("tr").addClass("dnd-moved");
+              },
+            });
+          } else {
+            columnData.push({
+              className: item.active ?  `col${item.class}` : `col${item.class} hiddenColumn`,
+              targets: [item.id],
+            });
+          }
+        });
+      }
+      templateObject.transactiondatatablerecords.set(recentTransList);
+      let currenttablename = templateObject.tablename.get();
+      setTimeout(function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        $("#" + currenttablename)
+          .DataTable({
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            data: recentTransList,
+            columnDefs: columnData,
+            select: true,
+            destroy: true,
+            colReorder: true,
+            // bStateSave: true,
+            // rowId: 0,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+              [initialDatatableLoad, -1],
+              [initialDatatableLoad, "All"],
+            ],
+            info: true,
+            responsive: true,
+            order: [
+              [0, "desc"],
+              [3, "desc"],
+            ],
+            action: function () {
+              $("#productrecentlist").DataTable().ajax.reload();
+            },
+            fnDrawCallback: function (oSettings) {
+              let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+              //if(checkurlIgnoreDate == 'true'){
+
+              //}else{
+              $(".paginate_button.page-item").removeClass("disabled");
+              $("#tblPaymentOverview_ellipsis").addClass("disabled");
+
+              if (oSettings._iDisplayLength == -1) {
+                if (oSettings.fnRecordsDisplay() > 150) {
+                  $(".paginate_button.page-item.previous").addClass("disabled");
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+              } else {
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                $(".paginate_button.page-item.next").addClass("disabled");
+              }
+              $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = oSettings._iDisplayLength;
+
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                let formatDateFrom =
+                  dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                if (data.Params.IgnoreDates == true) {
+                  sideBarService
+                    .getTPaymentList(
+                      formatDateFrom,
+                      formatDateTo,
+                      true,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay(),
+                      viewdeleted
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TPaymentList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(dataObjectold[0].data);
+                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tpaymentlist: thirdaryData,
+                            };
+
+                            addVS1Data("TPaymentList", JSON.stringify(objCombineData))
+                              .then(function (datareturn) {
+                                templateObject.resetData(objCombineData);
+                                $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                } else {
+                  sideBarService
+                    .getTPaymentList(
+                      formatDateFrom,
+                      formatDateTo,
+                      false,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay(),
+                      viewdeleted
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TPaymentList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(dataObjectold[0].data);
+                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tpaymentlist: thirdaryData,
+                            };
+
+                            addVS1Data("TPaymentList", JSON.stringify(objCombineData))
+                              .then(function (datareturn) {
+                                templateObject.resetData(objCombineData);
+                                $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              });
+
+              //}
+              setTimeout(function () {
+                // MakeNegative();
+              }, 100);
+            },
+          })
+          .on("page", function () {})
+          .on("column-reorder", function () {});
+        $("div.dataTables_filter input").addClass("form-control form-control-sm");
+        $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+      $("#productrecentlist tbody").on("click", "tr", function () {
+        var listData = $(this).closest("tr").attr("id");
+        var transactiontype = $(event.target).closest("tr").find(".colRef").text();
+
+        if (listData && transactiontype) {
+          if (transactiontype === "Quote") {
+            window.open("/quotecard?id=" + listData, "_self");
+          } else if (transactiontype === "Sales Order") {
+            window.open("/salesordercard?id=" + listData, "_self");
+          } else if (transactiontype === "Invoice") {
+            window.open("/invoicecard?id=" + listData, "_self");
+          } else if (transactiontype === "Purchase Order") {
+            window.open("/purchaseordercard?id=" + listData, "_self");
+          } else if (transactiontype === "Bill") {
+            //window.open('/billcard?id=' + listData,'_self');
+          } else if (transactiontype === "Credit") {
+            //window.open('/creditcard?id=' + listData,'_self');
+          }
+        }
+      });
+
+      // $('.product_recent_trans').css('display', 'block');
+      // $([document.documentElement, document.body]).animate({
+      //     scrollTop: $(".product_recent_trans").offset().top
+      // }, 2000);
+      $(".fullScreenSpin").css("display", "none");
+      // }).catch(function(err) {
+
+      //     $('.fullScreenSpin').css('display', 'none');
+      //     $('.product_recent_trans').css('display', 'block');
+      //     $([document.documentElement, document.body]).animate({
+      //         scrollTop: $(".product_recent_trans").offset().top
+      //     }, 2000);
+
+      //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
+      // });
+      // });
+      // Meteor.render(Template.non_transactional_list);
+      // templateObject.getAllProductRecentTransactions(currenttype);
+    };
+
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
     let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
@@ -2615,10 +3402,14 @@ Template.transaction_list.onRendered(function() {
         if(urlParametersIgnoreDate == true){
             $('#dateFrom').attr('readonly', true);
             $('#dateTo').attr('readonly', true);
-        }else{
-
-            $("#dateFrom").val(urlParametersDateFrom !=''? moment(urlParametersDateFrom).format("DD/MM/YYYY"): urlParametersDateFrom);
-            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+        }else
+        {
+            if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
+            else
+                $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
+            if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
+            else
+                $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
         }
     }
     //tableResize();
@@ -2632,10 +3423,14 @@ Template.transaction_list.onRendered(function() {
         templateObject.getPayrollLeaveData("");
     }else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetListData()
+    } else if (currenttablename === "tblchequelist") {
+        templateObject.getChequeListData()
     }else if (currenttablename === "tblappointmentlist"){
         templateObject.getAllAppointmentListData();
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
+    } else if (currenttablename === 'productrecentlist') {
+        templateObject.getAllProductRecentTransactions(currentType);
     }
     tableResize();
 
@@ -2643,6 +3438,58 @@ Template.transaction_list.onRendered(function() {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
 
+    });
+
+    $("#dateFrom").on('change', function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', false);
+        $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
+//            let templateObject = Template.instance();
+            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            //console.log("changed datefrom", dateFrom, dateTo);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+
+            } else {
+                if (currenttablename == "tblBankingOverview") {
+                    templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+                }
+            }
+        },500);
+    });
+
+    $("#dateTo").on('change', function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', false);
+        $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
+//            let templateObject = Template.instance();
+            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            //console.log("changed datefrom", dateFrom, dateTo);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+
+            } else {
+                if (currenttablename == "tblBankingOverview") {
+                    templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+                }
+            }
+        },500);
     });
 
 });
@@ -2658,7 +3505,7 @@ Template.transaction_list.events({
 
         if (currenttablename == "tblBankingOverview") {
             await clearData('TBankAccountReport');
-            templateObject.getBankingOverviewData();
+            templateObject.getBankingOverviewData(true);
         }else if (currenttablename === "tblPayRunHistory"){
             await clearData('TPayRunHistory');
             templateObject.getPayRunHistoryData("");
@@ -2829,9 +3676,326 @@ Template.transaction_list.events({
         jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
         $(".fullScreenSpin").css("display", "none");
     },
+    'click #ignoreDate': async function () {
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', true);
+        $('#dateTo').attr('readonly', true);
+        let currenttablename = await templateObject.tablename.get() || '';
+        if(currenttablename == "tblBankingOverview")
+            templateObject.getAllFilterbankingData('', '', true);
+    },
+    'click .thisweek': function () {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentBeginDate = new Date();
+        let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
+        let thisWeekFirstDay = new Date(utc - currentBeginDate.getDay() * 1000 * 3600 * 24);
+
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+
+        let thisWeekFromDate = thisWeekFirstDay.getDate();
+        let thisWeekFromMonth;
+
+        if((thisWeekFirstDay.getMonth()+1) < 10){
+            thisWeekFromMonth = "0" + (thisWeekFirstDay.getMonth()+1);
+        }else{
+            thisWeekFromMonth = (thisWeekFirstDay.getMonth()+1);
+        }
+        if(thisWeekFirstDay.getDate() < 10){
+            thisWeekFromDate = "0" + thisWeekFirstDay.getDate();
+        }
+
+        var toDateERPFrom = thisWeekFirstDay.getFullYear()+ "-" + thisWeekFromMonth + "-"+ thisWeekFromDate;
+        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+
+        var toDateDisplayFrom = thisWeekFromDate+ "/" + thisWeekFromMonth + "/" + thisWeekFirstDay.getFullYear();
+        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+
+        $("#dateFrom").val(toDateDisplayFrom);
+        $("#dateTo").val(toDateDisplayTo);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(toDateDisplayFrom,toDateDisplayTo, false);
+        }
+    },
+    'click .thisMonth': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+
+        var fromDate = formatDate(prevMonthFirstDate);
+        var toDate = formatDate(prevMonthLastDate);
+
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(toDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,toDate, false);
+        }
+    },
+    'click .thisQuarter': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        function getQuarter(d) {
+            d = d || new Date();
+            var m = Math.floor(d.getMonth() / 3) + 2;
+            return m > 4 ? m - 4 : m;
+        }
+
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment().subtract({
+            months: quarterAdjustment
+        }).endOf('month');
+        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+            months: 2
+        }).startOf('month');
+
+        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+        $("#dateFrom").val(lastQuarterStartDateFormat);
+        $("#dateTo").val(lastQuarterEndDateFormat);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
+        }
+    },
+    'click .thisfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
+    'click .previousweek': function () {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentBeginDate = new Date();
+        let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
+        let previousWeekFirstDay = new Date(utc - (currentBeginDate.getDay() + 7) * 1000 * 3600 * 24);
+        let previousWeekLastDay = new Date(utc - (currentBeginDate.getDay() + 1) * 1000 * 3600 * 24);
+
+        var begunDate = moment(previousWeekFirstDay).format("DD/MM/YYYY");
+        let previousWeekFromMonth = (previousWeekFirstDay.getMonth() + 1);
+        let previousWeekFromDay = previousWeekFirstDay.getDate();
+
+        if((previousWeekFirstDay.getMonth()+1) < 10){
+            previousWeekFromMonth = "0" + (previousWeekFirstDay.getMonth()+1);
+        }else{
+            previousWeekFromMonth = (previousWeekFirstDay.getMonth()+1);
+        }
+        if(previousWeekFirstDay.getDate() < 10){
+            previousWeekFromDay = "0" + previousWeekFirstDay.getDate();
+        }
+
+        let previousWeekToDate = previousWeekLastDay.getDate();
+        let previousWeekToMonth;
+
+        if((previousWeekLastDay.getMonth()+1) < 10){
+            previousWeekToMonth = "0" + (previousWeekLastDay.getMonth()+1);
+        }else{
+            previousWeekToMonth = (previousWeekLastDay.getMonth()+1);
+        }
+        if(previousWeekToDate < 10){
+            previousWeekToDate = "0" + previousWeekLastDay.getDate();
+        }
+
+        var toDateERPFrom = previousWeekFirstDay.getFullYear()+ "-" + previousWeekFromMonth + "-"+ previousWeekFromDay;
+        var toDateERPTo = previousWeekLastDay.getFullYear()+ "-" +(previousWeekToMonth) + "-"+(previousWeekToDate);
+
+        var toDateDisplayFrom = previousWeekFromDay+ "/" + previousWeekFromMonth + "/" + previousWeekFirstDay.getFullYear();
+        var toDateDisplayTo = (previousWeekToDate)+ "/" +(previousWeekToMonth) + "/"+previousWeekLastDay.getFullYear();
+
+        $("#dateFrom").val(toDateDisplayFrom);
+        $("#dateTo").val(toDateDisplayTo);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(toDateDisplayFrom,toDateDisplayTo, false);
+        }
+    },
+    'click .previousmonth': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+
+        var fromDate = formatDate(prevMonthFirstDate);
+        var toDate = formatDate(prevMonthLastDate);
+
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(toDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,toDate, false);
+        }
+
+    },
+    'click .previousquarter': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        function getQuarter(d) {
+            d = d || new Date();
+            var m = Math.floor(d.getMonth() / 3) + 2;
+            return m > 4 ? m - 4 : m;
+        }
+
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment().subtract({
+            months: quarterAdjustment
+        }).endOf('month');
+        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+            months: 2
+        }).startOf('month');
+
+        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+        $("#dateFrom").val(lastQuarterStartDateFormat);
+        $("#dateTo").val(lastQuarterEndDateFormat);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
+        }
+    },
+    'click .previousfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
     // "change #dateFrom, change #dateTo": function() {
     //     let templateObject = Template.instance();
 
+    // },
+
+    // 'change #dateFrom': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     setTimeout(function(){
+    //         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //         var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    //
+    //         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //
+    //         //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+    //         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+    //         //templateObject.dateAsAt.set(formatDate);
+    //         console.log("changed datefrom", dateFrom, dateTo);
+    //         if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+    //
+    //         } else {
+    //             templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+    //         }
+    //     },500);
     // },
 });
 

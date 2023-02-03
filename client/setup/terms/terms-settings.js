@@ -1,3 +1,4 @@
+// @ts-nocheck
 import './terms-settings.html'
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';

@@ -136,53 +136,44 @@ Template.agedpayables.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-
-    for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
+    for (let i = 0; i < data.tapreport.length; i++) {
       var dataList = [
-        data.tcustomersummaryreport[i].ACCOUNTID || "",
-        data.tcustomersummaryreport[i].ACCOUNTNAME || "",
-        data.tcustomersummaryreport[i].ACCOUNTNUMBER || "",
-        data.tcustomersummaryreport[i].ACCOUNTS || "",
-        data.tcustomersummaryreport[i].AMOUNTEX || "",
-        data.tcustomersummaryreport[i].AMOUNTINC || "",
-        data.tcustomersummaryreport[i].CHEQUENUMBER || "",
-        data.tcustomersummaryreport[i].CLASS || "",
-        data.tcustomersummaryreport[i].CLASSID || "",
-        data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
-        data.tcustomersummaryreport[i].CREDITSEX || "",
-        data.tcustomersummaryreport[i].CREDITSINC || "",
-        data.tcustomersummaryreport[i].DATE || "",
-        data.tcustomersummaryreport[i].DEBITSEX || "",
-        data.tcustomersummaryreport[i].DEBITSINC || "",
-        data.tcustomersummaryreport[i].DETAILS || "",
-        data.tcustomersummaryreport[i].FIXEDASSETID || "",
-        data.tcustomersummaryreport[i].GLOBALREF || "",
-        data.tcustomersummaryreport[i].ID || "",
-        data.tcustomersummaryreport[i].MEMO || "",
-        data.tcustomersummaryreport[i].PAYMENTID || "",
-        data.tcustomersummaryreport[i].PREPAYMENTID || "",
-        data.tcustomersummaryreport[i].PRODUCTDESCRIPTION || "",
-        data.tcustomersummaryreport[i].PRODUCTNAME || "",
-        data.tcustomersummaryreport[i].PURCHASEORDERID || "",
-        data.tcustomersummaryreport[i].REFERENCENO || "",
-        data.tcustomersummaryreport[i].REPNAME || "",
-        data.tcustomersummaryreport[i].SALEID || "",
-        data.tcustomersummaryreport[i].TAXCODE || "",
-        data.tcustomersummaryreport[i].TAXRATE || "",
-        data.tcustomersummaryreport[i].TYPE || "",
+        data.tapreport[i].ACCOUNTID || "",
+        data.tapreport[i].ACCOUNTNAME || "",
+        data.tapreport[i].ACCOUNTNUMBER || "",
+        data.tapreport[i].ACCOUNTS || "",
+        data.tapreport[i].AMOUNTEX || "",
+        data.tapreport[i].AMOUNTINC || "",
+        data.tapreport[i].CHEQUENUMBER || "",
+        data.tapreport[i].CLASS || "",
+        data.tapreport[i].CLASSID || "",
+        data.tapreport[i]["CLIENT NAME"] || "",
+        data.tapreport[i].CREDITSEX || "",
+        data.tapreport[i].CREDITSINC || "",
+        data.tapreport[i].DATE || "",
+        data.tapreport[i].DEBITSEX || "",
+        data.tapreport[i].DEBITSINC || "",
+        data.tapreport[i].DETAILS || "",
+        data.tapreport[i].FIXEDASSETID || "",
+        data.tapreport[i].GLOBALREF || "",
+        data.tapreport[i].ID || "",
+        data.tapreport[i].MEMO || "",
+        data.tapreport[i].PAYMENTID || "",
+        data.tapreport[i].PREPAYMENTID || "",
+        data.tapreport[i].PRODUCTDESCRIPTION || "",
+        data.tapreport[i].PRODUCTNAME || "",
+        data.tapreport[i].PURCHASEORDERID || "",
+        data.tapreport[i].REFERENCENO || "",
+        data.tapreport[i].REPNAME || "",
+        data.tapreport[i].SALEID || "",
+        data.tapreport[i].TAXCODE || "",
+        data.tapreport[i].TAXRATE || "",
+        data.tapreport[i].TYPE || "",
 
       ];
       splashArrayAgedPayablesReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
     }
-
-
-    if (templateObject.transactiondatatablerecords.get()) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    }
-    //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
       $('#tableExport').DataTable({
@@ -327,10 +318,6 @@ Template.agedpayables.onRendered(() => {
           $('#tableExport').DataTable().ajax.reload();
         },
 
-      }).on('page', function () {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
       }).on('column-reorder', function () {
 
       }).on('length.dt', function (e, settings, len) {
@@ -346,9 +333,6 @@ Template.agedpayables.onRendered(() => {
         } else {
           $(".fullScreenSpin").css("display", "none");
         }
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
       });
       $(".fullScreenSpin").css("display", "none");
     }, 0);

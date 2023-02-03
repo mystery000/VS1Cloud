@@ -303,7 +303,7 @@ Template.customersummaryreport.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        responsive: true,
+        // responsive: true,
         "order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
@@ -501,6 +501,12 @@ Template.customersummaryreport.events({
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1CustomerSummary_Report", "");
     Meteor._reload.reload();
+  },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Customer Summary report result" + ".xlsx";
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");

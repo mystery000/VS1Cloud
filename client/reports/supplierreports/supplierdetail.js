@@ -91,10 +91,10 @@ Template.supplierdetail.onRendered(() => {
   templateObject.getSupplierDetailData = async function (dateFrom, dateTo, ignoreDate) {
 
     templateObject.setDateAs(dateFrom);
-    getVS1Data('TGeneralLedgerTReport').then(function (dataObject) {
+    getVS1Data('SupplierDetailsReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+          await addVS1Data('SupplierDetailsReport', JSON.stringify(data));
           templateObject.displaySupplierDetailData(data);
         }).catch(function (err) {
         });
@@ -104,7 +104,7 @@ Template.supplierdetail.onRendered(() => {
       }
     }).catch(function (err) {
       reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-        await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+        await addVS1Data('SupplierDetailsReport', JSON.stringify(data));
         templateObject.displaySupplierDetailData(data);
       }).catch(function (err) {
 
@@ -310,7 +310,7 @@ Template.supplierdetail.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        responsive: true,
+        // responsive: true,
         "order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
@@ -585,6 +585,12 @@ Template.supplierdetail.events({
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1SupplierDetail_Report", "");
     Meteor._reload.reload();
+  },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Supplier Detail Report result" + ".xlsx";
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");

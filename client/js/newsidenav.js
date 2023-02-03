@@ -137,7 +137,7 @@ Template.newsidenav.onCreated(function () {
   sideBarService.getVS1MenuConfig().then((data) => {
     if (data.tpreference && !!data.tpreference.length) {
       const latestAction = data.tpreference[data.tpreference.length - 1];
-      const menuItem = JSON.parse(latestAction.PrefValue);
+      const menuItem = JSON.parse(latestAction.fields.PrefValue);
       if (menuItem.Location === "TopMenu") {
         templateObject.sideBarPositionClass.set('top');
         $('#sidebar').addClass('top');
@@ -163,9 +163,9 @@ Template.newsidenav.onCreated(function () {
   });
 });
 Template.newsidenav.onRendered(function () {
-  var countObjectTimes = 0;
-  let allDataToLoad = 79;
-  let progressPercentage = 0;
+  // var countObjectTimes = 0;
+  // let allDataToLoad = 93;
+  // let progressPercentage = 0;
   let templateObject = Template.instance();
 
   let vS1FormAccessDetail = localStorage.getItem('VS1FormAccessDetail');
@@ -559,7 +559,7 @@ Template.newsidenav.onRendered(function () {
         $('#sidenavreceipt').removeClass('active');
         $('#sidenavfixedAssets').removeClass('active');
         $('.collapse').collapse('hide');
-      } else if ((currentLoc == "/crmoverview") || (currentLoc == "/tasklist")) {
+      } else if ((currentLoc == "/crmoverview") || (currentLoc == "/tasklist") || (currentLoc == "/leadlist") || (currentLoc == "/campaign-list")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -585,9 +585,10 @@ Template.newsidenav.onRendered(function () {
         $('#sidenavfixedAssets').removeClass('active');
         $('.collapse').collapse('hide');
       } else if ((currentLoc == "/inventorylist") || (currentLoc == '/productview') ||
-        (currentLoc == "/stockadjustmentcard") ||
-        (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
-        (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist")) {
+      (currentLoc == "/stockadjustmentcard") ||
+      (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
+      (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -1213,7 +1214,7 @@ Template.newsidenav.events({
   'click #sidebarToggleBtn': function (event) {
 
     let payload = "";
-
+    let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
     if ($('#sidebar').hasClass("top")) {
       payload = {
         Name: "VS1_EmployeeAccess",
@@ -1225,7 +1226,7 @@ Template.newsidenav.events({
           }]
         }
       };
-      sideBarService.updateVS1MenuConfig('SideMenu')
+      sideBarService.updateVS1MenuConfig('SideMenu',employeeId)
       $('#sidebar').removeClass('top');
       $('#bodyContainer').removeClass('top');
       $('#sidebarToggleBtn .text').text('Top');
@@ -1240,7 +1241,7 @@ Template.newsidenav.events({
           }]
         }
       };
-      sideBarService.updateVS1MenuConfig('TopMenu')
+      sideBarService.updateVS1MenuConfig('TopMenu',employeeId)
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
       $('#sidebarToggleBtn .text').text('Side');
@@ -2912,6 +2913,9 @@ Template.newsidenav.events({
   'click #uomSettings': function (event) {
     window.open('/uomSettings', '_self');
   },
+  'click #sidenavInventorySettings': function (event) {
+    window.open('/inventorySettings', '_self');
+  },
   'click #sidenavcurrenciesSettings': function (event) {
     event.preventDefault();
     FlowRouter.go('/currenciessettings');
@@ -3302,6 +3306,16 @@ Template.newsidenav.events({
   'click .sidenavleads': function (event) {
     event.preventDefault();
     FlowRouter.go('/leadlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavtasks': function (event) {
+    event.preventDefault();
+    if (FlowRouter.current().path == "/crmoverview") {
+      $(".menu_all_task").trigger("click");
+    } else {
+      window.open('/crmoverview#tasksTab-tab', '_self');
+    }
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },

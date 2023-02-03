@@ -562,67 +562,7 @@
                     </style>
 
                     {{> DeleteLineModal}}
-
-                    <table id="taxRatesList" style="width:100%"
-                      class="dataTable table table-hover table-striped table-bordered taxRatesList">
-                      <thead>
-                        <tr class="dnd-moved">
-                          <th class="th colName " style="width:100px">Name</th>
-                          <th class="th colDescription">Description</th>
-                          <th class="th colRate" style="width:80px">Rate</th>
-                          <th class="th colPurcDef" style="width:20px">Purchase Default</th>
-                          <th class="th colSaleDef" style="width:20px">Sales Default</th>
-                          <th class="th colDelete" style="width:20px"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {{#if datatablerecords}}
-                        {{#each item in datatablerecords}}
-                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                          <td contenteditable="false" class="colName clickable">
-                            {{item.codename}}</td>
-                          <td contenteditable="false" class="colDescription clickable">
-                            {{item.description}}</td>
-                          <td contenteditable="false" class="colRate text-right clickable">
-                            {{item.rate}}</td>
-                          <td contenteditable="false" class="colPurcDef chkBox text-center" style="width:15px;">
-                            <div class="custom-control custom-switch">
-                              {{#if equals defaultpurchasetaxcode item.codename}}
-                              <input type="radio" class="custom-control-input optradioP" name="optradioP"
-                                id="formCheckP-{{item.id}}" value="{{item.codename}}" checked><label
-                                class="custom-control-label" for="formCheckP-{{item.id}}"></label>
-                              {{else}}
-                              <input type="radio" class="custom-control-input optradioP" name="optradioP"
-                                id="formCheckP-{{item.id}}" value="{{item.codename}}"><label
-                                class="custom-control-label" for="formCheckP-{{item.id}}"></label>
-                              {{/if}}
-                            </div>
-                          </td>
-                          <td contenteditable="false" class="colSaleDef chkBox text-center" style="width:15px;">
-
-                            <div class="custom-control custom-switch">
-                              {{#if equals defaultsaletaxcode item.codename}}
-                              <input type="radio" class="custom-control-input optradioS" name="optradioS"
-                                id="formCheckS-{{item.id}}" value="{{item.codename}}" checked><label
-                                class="custom-control-label" for="formCheckS-{{item.id}}"></label>
-                              {{else}}
-                              <input type="radio" class="custom-control-input optradioS" name="optradioS"
-                                id="formCheckS-{{item.id}}" value="{{item.codename}}"><label
-                                class="custom-control-label" for="formCheckS-{{item.id}}"></label>
-                              {{/if}}
-                            </div>
-                          </td>
-                          <!-- <td>{{item.region}}</td> -->
-                          <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button"
-                                class="btn btn-danger btn-rounded btn-sm my-0"><i
-                                  class="fa fa-remove"></i></button></span></td>
-                        </tr>
-                        {{/each}}
-                        {{/if}}
-
-                      </tbody>
-
-                    </table>
+                    {{> non_transactional_list tablename='taxRatesList'}}
                   </div>
                 </div>
                 <div class="row no-gutters">

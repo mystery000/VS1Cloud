@@ -328,7 +328,7 @@ Template.supplierproductreport.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        responsive: true,
+        // responsive: true,
         "order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
@@ -604,6 +604,12 @@ Template.supplierproductreport.events({
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1SupplierProduct_Report", "");
     Meteor._reload.reload();
+  },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Supplier Product Report result" + ".xlsx";
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");

@@ -1492,8 +1492,8 @@ Template.purchaseordercard.onRendered(() => {
     const statusList = [];
     const dataTableList = [];
 
-    let isBOnShippedQty = localStorage.getItem('CloudPurchaseQtyOnly');
-    if (isBOnShippedQty) {
+    let isBOnShippedQty = localStorage.getItem('CloudPurchaseQtyOnly')||false;
+    if (JSON.parse(isBOnShippedQty)) {
         templateObject.includeBOnShippedQty.set(false);
     }
 
@@ -2510,7 +2510,7 @@ Template.purchaseordercard.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
-                                       
+
                                     };
 
                                     lineItemsTable.push(dataListTable);
@@ -2859,7 +2859,7 @@ Template.purchaseordercard.onRendered(() => {
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
-        
+
         lineItemObj = {
             lineID: Random.id(),
             item: '',
@@ -2890,7 +2890,7 @@ Template.purchaseordercard.onRendered(() => {
                     quantity: detail.UOMQtySold,
                     qtyordered: detail.UOMQtySold,
                     qtyshipped: detail.UOMQtyShipped,
-                    qtybo: '',
+                    qtybo: detail.UOMQtyBackOrder,
                     unitPrice: detail.LineCost,
                     unitPriceInc:0,
                     TotalAmt: 0,
@@ -2900,7 +2900,7 @@ Template.purchaseordercard.onRendered(() => {
                     curTotalAmt: 0,
                     TaxTotal: 0,
                     TaxRate: 0,
-        
+
                 };
             }
         }
@@ -2947,7 +2947,7 @@ Template.purchaseordercard.onRendered(() => {
             isPartialPaid: false,
             workorderid: FlowRouter.current().queryParams.workorderid || '',
         };
-        
+
         if (FlowRouter.current().queryParams.supplierid) {
             getSupplierData(FlowRouter.current().queryParams.supplierid);
         } else {
@@ -8123,12 +8123,15 @@ Template.purchaseordercard.events({
         cancelButtonText: 'No'
             }).then(async (result) => {
                 if (result.value) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
                     var url = FlowRouter.current().path;
                     var getso_id = url.split('?id=');
                     var currentInvoice = getso_id[getso_id.length - 1];
                     var objDetails = '';
                     if (getso_id[1]) {
+                        $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                        $("#deleteLineModal").modal('hide');
+                        $("#deleteprogressbar").css('display', 'block');
+                        $("#deleteprogressbar").modal('show');
                         currentInvoice = parseInt(currentInvoice);
                         var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
                         var orderDate = poData.fields.OrderDate;
@@ -8142,6 +8145,7 @@ Template.purchaseordercard.events({
                             0
                         );
                         var poList = followingPOs.tpurchaseorderlist;
+                        var j = 0;
                         for (var i=0; i < poList.length; i++) {
                             var objDetails = {
                                 type: "TPurchaseOrderEx",
@@ -8150,16 +8154,16 @@ Template.purchaseordercard.events({
                                     Deleted: true
                                 }
                             };
+                            j ++;
+                            document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                            $('.deleteloadingbar').css('width', ((100/poList.length*j)) + '%').attr('aria-valuenow', ((100/poList.length*j)));
                             var result = await purchaseService.savePurchaseOrderEx(objDetails);
                         }
                     }
-                    if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                    }else{
-                        FlowRouter.go('/purchaseorderlist?success=true');
-                    };
-                    $('.modal-backdrop').css('display','none');
-                    $("#deleteLineModal").modal("toggle");
+                    $("#deletecheckmarkwrapper").removeClass('hide');
+                    $('.modal-backdrop').css('display', 'none');
+                    $("#deleteprogressbar").modal('hide');
+                    $("#btn_data").click();
                 }
             });
         }, delayTimeAfterSound);
@@ -8760,6 +8764,11 @@ Template.purchaseordercard.events({
                 };
 
                 await purchaseService.savePurchaseOrderEx(objDetails).then(async function(objDetails) {
+                    sideBarService.getAllSerialNumber().then(function(data) {
+                        addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    }).catch(function (err){
+                    });
+
                     if (localStorage.getItem("enteredURL") != null) {
                         FlowRouter.go(localStorage.getItem("enteredURL"));
                         localStorage.removeItem("enteredURL");
@@ -8793,19 +8802,32 @@ Template.purchaseordercard.events({
                             let index = workorders.findIndex((order, index)=>{
                                 return order.fields.ID == workorderid
                             })
-                            let workorderrecord = cloneDeep(workorders[index].fields);
-                            workorderrecord.POStatus = $('#sltStatus').val();
-                            let object = {
-                                type:"TVS1Workorder",
-                                fields: workorderrecord
+                            
+                            if(index > -1) {
+                                let workorderrecord = cloneDeep(workorders[index].fields);
+                                if(workorderrecord.POStatus == 'not created') {
+                                    workorderrecord.POStatus = 'ordered';
+                                }  
+                                if (getso_id[1]) {
+                                    workorderrecord.PONumber = getso_id[1];
+                                }
+                                if (workorderrecord.POStatus == 'ordered') {
+                                    if (splashLineArray[0].fields.UOMQtySold == splashLineArray[0].fields.UOMQtyShipped) {
+                                        workorderrecord.POStatus = 'received'; 
+                                    }
+                                }
+                                let object = {
+                                    type:"TVS1Workorder",
+                                    fields: workorderrecord
+                                }
+                                let tempWorkorders = cloneDeep(workorders);
+                                tempWorkorders.splice(index, 1, object);
+                                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
+                                    function() {getVS1Data('TVS1Workorder').then(function(dataObject){
+                                        let data = JSON.parse(dataObject[0].data);
+                                    })}
+                                )
                             }
-                            let tempWorkorders = cloneDeep(workorders);
-                            tempWorkorders.splice(index, 1, object);
-                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
-                                function() {getVS1Data('TVS1Workorder').then(function(dataObject){
-                                    let data = JSON.parse(dataObject[0].data);
-                                })}
-                            )
                         }
                     }
                     await updateWO()
@@ -9296,9 +9318,6 @@ Template.purchaseordercard.events({
                             FlowRouter.go('/purchaseorderlist?success=true');
                         };
                     }
-
-                   
-
                 }).catch(function(err) {
                     swal({
                         title: 'Oooops...',
@@ -12686,7 +12705,8 @@ Template.purchaseordercard.events({
                             cancelButtonText: 'No'
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
-                            if (result.value) {                        
+                            if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();
@@ -12798,7 +12818,8 @@ Template.purchaseordercard.events({
                             cancelButtonText: 'No'
                             // cancelButtonClass: "btn-default"
                         }).then((result) => {
-                            if (result.value) {                        
+                            if (result.value) {
+                                FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
                             } else if (result.dismiss === 'cancel') {
                                 // $('.essentialsdiv .custom-control-input').prop("checked", false);
                                 event.preventDefault();

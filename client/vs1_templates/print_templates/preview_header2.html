@@ -47,7 +47,7 @@
                 
             </div>
             <div class="col-4 col-md-4 col-sm-12">
-                <div style="width: 100%; text-align: right;"><svg id="lbl_barcode2"></svg></div>
+                <div style="width: 100%; text-align: right; z-index: 100;" class="draggable"><svg id="lbl_barcode2"></svg></div>
                 <script>
                     JsBarcode(
                         "#lbl_barcode2", 
@@ -63,55 +63,55 @@
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex">
-            <div class="col-6 col-md-6 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center;">
+            <div class="col-6 col-md-6 col-sm-12 d-flex" style="height: 10rem; margin: 0px; padding: 0px; flex-wrap: wrap; align-content: center; z-index: 0;">
                 <div style="width: 100%"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%; margin-bottom: 0px;">
+                    <img src="assets/img/VS1.png" class="uploadedImage draggable" style="width: 50%; margin-bottom: 0px;">
                 </div>
             </div>
-            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly;">
-                <p class="label-p print-header2" style="font-size: 36px !important;"></p>
+            <div class="col-6 col-md-6 col-sm-12 d-flex flex-column" style="margin: 0px; padding: 0px; border: none !important; justify-content: space-evenly; z-index: 0;">
+                <p class="label-p print-header2 draggable" style="font-size: 36px !important;"></p>
             </div>
         </div>
         <div class="d-flex flex-row d-sm-flex d-md-flex" style="margin: 10px 0px 0px;">
             <div class="col-6 col-md-6 col-sm-12" style="margin: 0px; padding: 0px;">
                 <div style="width: 100%; border: none !important; font-size: 18px;">
                     <p class="label-p">
-                        <span class="o_name2"></span><br>
-                        <span class="o_address2"></span><br>
-                        <span class="o_city2"></span><br>
-                        <span class="o_phone2"></span><br>
-                        <span class="o_email2"></span><br>
-                        <span class="o_state2"></span><br>
+                        <span class="o_name2 draggable"></span><br>
+                        <span class="o_address2 draggable"></span><br>
+                        <span class="o_city2 draggable"></span><br>
+                        <span class="o_phone2 draggable"></span><br>
+                        <span class="o_email2 draggable"></span><br>
+                        <span class="o_state2 draggable"></span><br>
                     </p>
                     <p class="label-p2">
-                        <span class="o_abn_label2"></span>&nbsp;&nbsp;
-                        <span class="o_abn2"></span>
+                        <span class="o_abn_label2 draggable"></span>&nbsp;&nbsp;
+                        <span class="o_abn2 draggable" style="left: 50px"></span>
                     </p>
                 </div>
             </div>
             <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
                 <div style="width: 100%; border: none !important; font-size: 18px; min-height: 180px;">
-                    <p class="label-p2">
-                        <span style="font-weight: bold;">Invoice Date</span><br>
-                        <span class="date2"></span>
+                    <p class="label-p2 InvoiceDate">
+                        <span style="font-weight: bold;" class="draggable">Invoice Date</span><br>
+                        <span class="date2 draggable" style="top: 18px;"></span>
                     </p>
-                    <p class="label-p2">
-                        <span style="font-weight: bold;">Invoice Number</span><br>
-                        <span class="io2"></span>
+                    <p class="label-p2 InvoiceNumber">
+                        <span style="font-weight: bold; top: 32px;" class="draggable">Invoice Number</span><br>
+                        <span class="io2 draggable" style="top: 50px;"></span>
                     </p>
-                    <p class="label-p2">
-                        <span style="font-weight: bold;">Reference</span><br>
-                        <span class="ro2"></span>
+                    <p class="label-p2 Reference">
+                        <span style="font-weight: bold; top: 65px;" class="draggable">Reference</span><br>
+                        <span class="ro2 draggable" style="top: 75px;"></span>
                     </p>
-                    <p class="label-p2">
-                        <span style="font-weight: bold;">Due Date</span><br>
-                        <span class="due2"></span>
+                    <p class="label-p2 Due">
+                        <span style="font-weight: bold; top: 85px;" class="draggable">Due Date</span><br>
+                        <span class="due2 draggable" style="top: 95px;"></span>
                     </p>
                 </div>
             </div>
             <div class="col-3 col-md-3 col-sm-12" style="margin: 0px; padding: 0px 0px 0px 20px;">
                 <div style="width: 100%; border: none !important;">
-                    <p class="pdfCustomerAddress2"></p>
+                    <p class="pdfCustomerAddress2 draggable"></p>
                 </div>
             </div>
         </div>

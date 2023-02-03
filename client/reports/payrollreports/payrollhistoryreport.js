@@ -33,9 +33,9 @@ Template.payrollhistoryreport.onRendered(() => {
   LoadingOverlay.show();
 
   let reset_data = [
-    { index: 1, label: 'LastName', class: 'colLastName', active: true, display: true, width: "200" },
-    { index: 2, label: 'FirstName', class: 'colFirstName', active: true, display: true, width: "100" },
-    { index: 3, label: 'G/L', class: 'colGL', active: true, display: true, width: "70" },
+    { index: 1, label: 'LastName', class: 'colLastName', active: true, display: true, width: "190" },
+    { index: 2, label: 'FirstName', class: 'colFirstName', active: true, display: true, width: "90" },
+    { index: 3, label: 'G/L', class: 'colGL', active: true, display: true, width: "140" },
     { index: 4, label: 'Date Paid', class: 'colDatePaid', active: true, display: true, width: "100" },
     { index: 5, label: 'Gross', class: 'colGross', active: true, display: true, width: "80" },
     { index: 6, label: 'Tax', class: 'colTax', active: true, display: true, width: "80" },
@@ -81,7 +81,7 @@ Template.payrollhistoryreport.onRendered(() => {
   templateObject.initUploadedImage = () => {
     // let imageData = localStorage.getItem("Image");
     let imageData;
-    getVS1Data("Image").then(function (dataObject) {
+    getVS1Data("TVS1Image").then(function (dataObject) {
       imageData =JSON.parse(dataObject[0]).data;
     });
     if (imageData) {
@@ -567,6 +567,7 @@ Template.payrollhistoryreport.helpers({
     return activeArray.length;
   },
   currencyList: () => {
+    console.log(Template.instance().currencyList.get(), "-----------");
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {

@@ -41,24 +41,37 @@ Template.availablelotnumberpop.onRendered(async () => {
 Template.availablelotnumberpop.helpers({});
 Template.availablelotnumberpop.events({
     'click .btnSNSave': async function(event) {
-        const activeNumber = $('.lot-no-row.active');
+        const activeNumber = $('#tblAvailableLotCheckbox input.chkServiceCard');
+        const expiryDates = $('#tblAvailableLotCheckbox tbody tr td:nth-child(4)');
         let newNumberList = [];
-        activeNumber.each((key, lotNumber) => {
-            newNumberList.push($(lotNumber).find('td:last-child').text());
+        let newExpiryDateList = [];
+        activeNumber.each((key, serialchk) => {
+            if($(serialchk).is(':checked')){
+                newNumberList.push($(serialchk).closest("tr").find(".colLot").html());
+            }            
+        });
+        expiryDates.each((key, lotExpiryEl) => {
+            const lotExpiryDate = $(lotExpiryEl).text();
+            newExpiryDateList.push(lotExpiryDate);
         });
         if (newNumberList.length === 0) {
             swal('', 'You didn\'t select any lot numbers', 'warning');
         } else {
-            let shtml = '';
-            shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Available Lot Numbers</td></tr>
-            <tr><td class="text-start">#</td><td class="text-start">Lot number</td></tr>
-            `;
-            for (let i = 0; i < newNumberList.length; i++) {
-                shtml += `
-                <tr><td></td><td>${Number(i)+1}</td><td contenteditable="true" class="lineLotnumbers">${newNumberList[i]}</td></tr>
-                `;
-            }
-            $('#tblLotlist').html(shtml);
+            // let shtml = '';
+            // shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Available Lot Numbers</td></tr>
+            // <tr><td class="text-start">#</td><td class="text-start">Lot number</td></tr>
+            // `;
+            // for (let i = 0; i < newNumberList.length; i++) {
+            //     shtml += `
+            //     <tr><td></td><td>${Number(i)+1}</td><td contenteditable="true" class="lineLotnumbers">${newNumberList[i]}</td></tr>
+            //     `;
+            // }
+            // $('#tblLotlist').html(shtml);
+
+            const rowNumber = $('#availableLotNumberModal').attr('data-row');
+            $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-lotnumbers', newNumberList.join(','));
+            $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-expirydates', newExpiryDateList.join(','));
+            $('#availableLotNumberModal').modal('hide');
         }
 
         $('#availableLotNumberModal').modal('hide');

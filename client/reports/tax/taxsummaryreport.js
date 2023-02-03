@@ -138,8 +138,8 @@ Template.taxsummaryreport.onRendered(() => {
 
 
     templateObject.loadReport = async(dateFrom, dateTo, ignoreDate = false) => {
-        document.getElementById("mainTaxCode").checked = true;
-        document.getElementById("subTaxCode").checked = false;
+        // document.getElementById("mainTaxCode").checked = true;
+        // document.getElementById("subTaxCode").checked = false;
         LoadingOverlay.show();
 
         const _data = await CachedHttp.get("TTaxSummaryReport", async() => {
@@ -1409,6 +1409,12 @@ Template.taxsummaryreport.events({
                 noPrintSelector: ".addSummaryEditor",
             });
         }, delayTimeAfterSound);
+    },
+    "click .btnSpreadSheetLink": function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let utilityService = new UtilityService();
+        const filename = "Tax Summary report result" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
     },
     'click .btnExportReport': function() {
         LoadingOverlay.show();

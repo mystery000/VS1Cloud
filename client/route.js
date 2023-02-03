@@ -255,14 +255,14 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
-// authenticatedRoutes.route('/onloginsuccess', {
-//     name: 'onsuccesswaterfall',
-//     action() {
-//         BlazeLayout.render('layout', {
-//             yield: 'onsuccesswaterfall'
-//         });
-//     }
-// });
+authenticatedRoutes.route('/onloginsuccess', {
+    name: 'onsuccesswaterfall',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'onsuccesswaterfall'
+        });
+    }
+});
 
 
 authenticatedRoutes.route('/dashboardexe', {
@@ -2201,6 +2201,15 @@ authenticatedRoutes.route('/uomSettings', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'uomSettings'
+        });
+    }
+});
+
+authenticatedRoutes.route('/inventorySettings', {
+    name: 'inventorySettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'inventorySettings'
         });
     }
 });

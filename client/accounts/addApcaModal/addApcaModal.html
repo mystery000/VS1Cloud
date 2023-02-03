@@ -1,0 +1,45 @@
+<template name="addApcaModal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="addApcaModal">
+    <div class="modal-dialog modal-md modal-dialog-scrollable modal-dialog-centered generated-id" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add APCA number</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="text-align: center">
+            <p class="m-3">
+              You need to ensure that any Supplier or Employee you wish to pay via EFT, has the banking details setup.
+            </p>
+            <p>Do you wish to add banking details to a Supplier or Employee now?</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn btn-success btnAddSupplier"
+            type="button"
+            style="margin: 8px"
+            id="btnAddSupplier"
+            name="btnAddSupplier"
+          >
+            <i class="fa fa-plus" style="margin-right: 5px"></i>Add to Supplier
+          </button>
+          <button
+            class="btn btn-info btnAddEmployee"
+            type="button"
+            style="margin: 8px"
+            id="btnAddEmployee"
+            name="btnAddEmployee"
+          >
+            <i class="fa fa-plus" style="margin-right: 5px"></i>Add to Employee
+          </button>
+          <button class="btn btn-secondary btnApcaClose" id="btnApcaClose" type="button" style="margin: 8px">
+            <i class="fa fa-close" style="margin-right: 5px"></i>Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
