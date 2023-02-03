@@ -1052,19 +1052,49 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <style>
+            #modalview {
+                left: calc(50vw - 500px);
+                top: 5vh;
+                margin: 0;
+            }
+        </style>
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document" style="max-width: 1000px;" id="modalview">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4>Departments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
-                    {{#each item in deptrecords}}
+                    <!-- {{#each item in deptrecords}}
                         <div class="custom-control custom-switch" style="margin: 8px;">
                             <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                            <!-- <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label> -->
                             <div class="custom-control-label" for="formCheck-{{item.id}}">{{item.DeptClassName}}</div>
                         </div>
-                    {{/each}}
+                    {{/each}} -->
+                    <style>
+                        input[type="checkbox"]{
+                            margin: 0px!important
+                        }
+                        #tblDepartmentCheckbox .colDeptClassName{
+                            width: 25%!important
+                        }
+                        #tblDepartmentCheckbox .colDescription{
+                            width: 30%!important
+                        }
+                        #tblDepartmentCheckbox .colSiteCode{
+                            width: 20%!important
+                        }
+                        #tblDepartmentCheckbox .colStatus{
+                            width: 20%!important
+                        }
+                        #tblDepartmentCheckbox .colChkBox{
+                            width: 40px!important
+                        }
+                        #tblDepartmentCheckbox .chkBox{
+                            margin: 0px!important
+                        }
+                    </style>
+                    {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>

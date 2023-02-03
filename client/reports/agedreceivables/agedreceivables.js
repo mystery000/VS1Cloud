@@ -101,7 +101,7 @@ Template.agedreceivables.onRendered(() => {
     templateObject.initUploadedImage = () => {
         // let imageData = localStorage.getItem("Image");
         let imageData;
-        getVS1Data("Image").then(function (dataObject) {
+        getVS1Data("TVS1Image").then(function (dataObject) {
             imageData =JSON.parse(dataObject[0]).data;
         });
         if (imageData) {
