@@ -1523,19 +1523,155 @@ Template.templatesettings.onRendered(function () {
       //   table header
       var tbl_header = $("#templatePreviewModal .tbl_header");
       tbl_header.empty();
-      for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
-        tbl_header.append(
-          "<th style='width:" +
-            value +
-            "%'; color: rgb(0 0 0);'>" +
-            key +
-            "</th>"
-        );
-      }
+      // for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+      //   tbl_header.append(
+      //     "<th style='width:" +
+      //       value +
+      //       "%'; color: rgb(0 0 0);'>" +
+      //       key +
+      //       "</th>"
+      //   );
+      // }
     }
   }
 
+  var tableId = 'printTemplateTable', table;
+
+  var dataSet = [
+    
+  ];
+  var columnDefs = [
+    
+  ];
+
+  function loadDataTable() {
+
+    // Adjust any columnDef widths set by the user
+    setUserColumnsDefWidths();
+            
+    table = $('#' + tableId).DataTable({
+      data: dataSet,
+      destroy: true,
+      autoWidth: false,
+      deferRender: true,
+      dom: 't',
+      scrollY: 300,
+      scrollX: true,
+      scrollCollapse: true,
+      scroller: true,
+      columnDefs: columnDefs,
+      "order": [[1, "asc"]],
+
+      initComplete: function (settings) {
+        
+        //Add JQueryUI resizable functionality to each th in the ScrollHead table
+
+        $('#' + tableId + '_wrapper .dataTables_scrollHead thead th').resizable({
+
+          handles: "e",
+
+          alsoResize: '#' + tableId + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
+
+          stop: function () {
+
+            saveColumnSettings();
+
+            loadDataTable();
+          }
+        });
+      },
+    });
+
+  }
+
+
+  function setUserColumnsDefWidths() {
+
+    var userColumnDef;
+
+    // Get the settings for this table from localStorage
+    var userColumnDefs = JSON.parse(localStorage.getItem(tableId)) || [];
+
+    if (userColumnDefs.length === 0 ) return;
+
+    columnDefs.forEach( function(columnDef) {
+
+      // Check if there is a width specified for this column
+      userColumnDef = userColumnDefs.find( function(column) {
+        return column.targets === columnDef.targets;
+      });
+
+      // If there is, set the width of this columnDef in px
+      if ( userColumnDef ) {
+
+        columnDef.width = userColumnDef.width + 'px';
+
+      }
+
+    });
+
+  }
+
+
+  function saveColumnSettings() {
+
+    var userColumnDefs = JSON.parse(localStorage.getItem(tableId)) || [];
+
+    var width, header, existingSetting; 
+
+    table.columns().every( function ( targets ) {
+
+      // Check if there is a setting for this column in localStorage
+      existingSetting = userColumnDefs.findIndex( function(column) { return column.targets === targets;});
+        
+      // Get the width of this column
+      header = this.header();
+      width = $(header).width();
+
+      if ( existingSetting !== -1 ) {
+
+        // Update the width
+        userColumnDefs[existingSetting].width = width;
+
+      } else {
+
+        // Add the width for this column
+        userColumnDefs.push({
+          targets: targets,
+          width:  width,
+        });
+
+      }
+
+    });
+
+    // Save (or update) the settings in localStorage
+    localStorage.setItem(tableId, JSON.stringify(userColumnDefs));
+
+  }
+
   function loadTemplateBody1(object_invoce) {
+
+    console.log('gggg')
+    console.log(object_invoce[0]["fields"])
+    console.log(typeof(object_invoce[0]["fields"]))
+    let indexID = 0;
+    columnDefs = []
+    for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+        let innerID = indexID++
+        columnDefs.push(
+          {
+            title: key,
+            data: null,
+            targets: innerID,
+            render: function(data) {return (data[innerID]);}
+          }
+        );
+    }
+    indexID = 0;
+    console.log(columnDefs)
+
+
     // table content
     var tbl_content = $("#templatePreviewModal .tbl_content");
     tbl_content.empty();
@@ -1609,22 +1745,31 @@ Template.templatesettings.onRendered(function () {
     const data = object_invoce[0]["data"];
     let className = Object.entries(object_invoce[0]['fields'])
     let idx = 0;
-    for (item of data) {
-      idx = 0;
-      tbl_content.append(
-        "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>"
-      );
-      var content = "";
-      for (item_temp of item) {
-        if (idx > left_idx)
-          content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-        else 
-          content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-        idx++;
-      }
-      tbl_content.append(content);
-      tbl_content.append("</tr>");
-    }
+
+    console.log("printTemplateSetting" + data)
+    console.log(typeof(data))
+    console.log(object_invoce)
+    dataSet = [];
+    dataSet.push(data[0]);
+    console.log("aaaa" + dataSet)
+    loadDataTable();
+
+    // for (item of data) {
+    //   idx = 0;
+    //   tbl_content.append(
+    //     "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>"
+    //   );
+    //   var content = "";
+    //   for (item_temp of item) {
+    //     if (idx > left_idx)
+    //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //     else 
+    //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //     idx++;
+    //   }
+    //   tbl_content.append(content);
+    //   tbl_content.append("</tr>");
+    // }
 
     // total amount
     if (noHasTotals.includes(object_invoce[0]["title"])) {
@@ -1663,6 +1808,21 @@ Template.templatesettings.onRendered(function () {
     var tbl_content = $("#templatePreviewModal .tbl_content");
     tbl_content.empty();
 
+    let indexID = 0;
+    columnDefs = []
+    for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+        let innerID = indexID++
+        columnDefs.push(
+          {
+            title: key,
+            data: null,
+            targets: innerID,
+            render: function(data) {return (data[innerID]);}
+          }
+        );
+    }
+    indexID = 0;
+
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {
       case "Bill":
@@ -1733,22 +1893,27 @@ Template.templatesettings.onRendered(function () {
     let className = Object.entries(object_invoce[0]['fields'])
     const data = object_invoce[0]["data"];
     let idx = 0;
-    for (item of data) {
-      idx = 0;
-      tbl_content.append(
-        "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>"
-      );
-      var content = "";
-      for (item_temp of item) {
-        if (idx > left_idx)
-          content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-        else 
-          content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-        idx++;
-      }
-      tbl_content.append(content);
-      tbl_content.append("</tr>");
-    }
+
+    dataSet = [];
+    dataSet.push(data[0]);
+    loadDataTable();
+
+    // for (item of data) {
+    //   idx = 0;
+    //   tbl_content.append(
+    //     "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>"
+    //   );
+    //   var content = "";
+    //   for (item_temp of item) {
+    //     if (idx > left_idx)
+    //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //     else 
+    //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //     idx++;
+    //   }
+    //   tbl_content.append(content);
+    //   tbl_content.append("</tr>");
+    // }
 
     if (noHasTotals.includes(object_invoce[0]["title"])) {
       $(".subtotal2").hide();
@@ -1775,6 +1940,22 @@ Template.templatesettings.onRendered(function () {
     var tbl_content = $("#templatePreviewModal .tbl_content");
     tbl_content.empty();
 
+
+    let indexID = 0;
+    columnDefs = []
+    for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
+        let innerID = indexID++
+        columnDefs.push(
+          {
+            title: key,
+            data: null,
+            targets: innerID,
+            render: function(data) {return (data[innerID]);}
+          }
+        );
+    }
+    indexID = 0;
+
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {
       case "Bill":
@@ -1845,22 +2026,27 @@ Template.templatesettings.onRendered(function () {
     let className = Object.entries(object_invoce[0]['fields'])
     const data = object_invoce[0]["data"];
     let idx = 0;
-    for (item of data) {
-      idx = 0;
-      tbl_content.append(
-        "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>"
-      );
-      var content = "";
-      for (item_temp of item) {
-        if (idx > left_idx)
-          content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-        else 
-          content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-        idx++;
-      }
-      tbl_content.append(content);
-      tbl_content.append("</tr>");
-    }
+
+    dataSet = [];
+    dataSet.push(data[0]);
+    loadDataTable();
+
+    // for (item of data) {
+    //   idx = 0;
+    //   tbl_content.append(
+    //     "<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>"
+    //   );
+    //   var content = "";
+    //   for (item_temp of item) {
+    //     if (idx > left_idx)
+    //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //     else 
+    //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //     idx++;
+    //   }
+    //   tbl_content.append(content);
+    //   tbl_content.append("</tr>");
+    // }
 
     // total amount
     if (noHasTotals.includes(object_invoce[0]["title"])) {
