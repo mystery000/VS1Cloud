@@ -283,13 +283,17 @@ Template.productview.onRendered(function () {
         $("#customerTypeListModal").modal("toggle");
       });
 
-      $(document).on("click", "#clienttypeList tbody tr", function (e) {
-        var table = $(this);
-        let custTypeName = table.find(".colUOMName").text();
-        $("#sltCustomerType").val(custTypeName);
-        $("#customerTypeListModal").modal("toggle");
+      $(document).on("click", "#tblUOMList tbody tr", function (e) {
+        let table = $(this);
+        let uomSelected = $("#uomSelected").val()
+        let uomName = table.find(".colUOMName").text();
+        if (uomSelected == "sales") {
+          $("#sltUomSales").val(uomName);
+        } else if (uomSelected == "purchase") {
+          $("#sltUomPurchases").val(uomName);
+        }
+        $("#UOMListModal").modal("toggle");
       });
-
     });
   };
 
