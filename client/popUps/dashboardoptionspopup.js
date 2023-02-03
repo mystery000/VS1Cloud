@@ -117,16 +117,20 @@ Template.dashboardoptionspopup.onRendered(function() {
     templateObject.getDashboardOptions();
 
 
-    $('#tblDashboardOptions tbody').on('change', 'tr input[type=radio]', function() {
-        $(this).closest('tr').find(".colOptionsName").click();
-    });
     let showDashboard = ["All"];
     $('#tblDashboardOptions tbody').on('change', 'tr input[type=checkbox]', function() {
         // $(this).closest('tr').find(".colOptionsName ").click();
         let dashboardStatus = $(this).closest('tr').find(".colOptionsName").text();
         if (dashboardStatus !== 'All') {
             $(this).closest("tbody").find("input[value='All']").prop('checked', false);
-            $(this).closest('tbody').find('td.colLogginDef input[type=radio]').disabled = true;
+            $(this).closest('tbody').find('td.colLogginDef input[type=radio]').attr('disabled', true);
+        } else {
+            $(this).closest("tbody").find("input[value='Accounts']").prop('checked', false);
+            $(this).closest("tbody").find("input[value='Executive']").prop('checked', false);
+            $(this).closest("tbody").find("input[value='Marketing']").prop('checked', false);
+            $(this).closest("tbody").find("input[value='Sales']").prop('checked', false);
+            $(this).closest("tbody").find("input[value='Sales Manager']").prop('checked', false);
+            $(this).closest('tbody').find('td.colLogginDef input[type=radio]').attr('disabled', false);
         }
         showDashboard = showDashboard.includes(dashboardStatus) ? showDashboard.filter(el => el !== dashboardStatus) : [...showDashboard, dashboardStatus];
         addVS1Data('TVS1DashboardStatus', JSON.stringify(showDashboard));

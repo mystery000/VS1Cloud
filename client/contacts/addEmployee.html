@@ -387,18 +387,7 @@
                                                         </div>
                                                         <div class="col-12 col-md-3" style="padding: 0px;">
                                                             <div class="form-group" style="margin: 4px; padding-left:4px;">
-                                                                <label>Dashboard Options</label>
-                                                                <select class="form-control" id="edtDashboardOptions" value="{{record.dashboardOptions}}" name="edtDashboardOptions" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                </select>
-                                                                <!-- <select class="form-control" id="edtDashboardOptions" name="edtDashboardOptions" style="cursor: pointer;">
-                                                                  {{#each item in dashboardOptionsList}}
-                                                                      {{#if equals item record.dashboardOptions }}
-                                                                          <option value="{{record.dashboardOptions}}" selected="">{{record.dashboardOptions}}</option>
-                                                                      {{else}}
-                                                                          <option value="{{item}}">{{item}}</option>
-                                                                      {{/if}}
-                                                                  {{/each}}
-                                                              </select> -->
+                                                                {{> dashboard_options target="edtDashboardOptions" value=record.dashboardOptions}}
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-md-2" style="padding: 0px;">
