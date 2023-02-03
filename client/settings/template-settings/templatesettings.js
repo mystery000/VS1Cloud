@@ -1538,17 +1538,17 @@ Template.templatesettings.onRendered(function () {
   var tableId = 'printTemplateTable', table;
 
   var dataSet = [
-    
+
   ];
   var columnDefs = [
-    
+
   ];
 
   function loadDataTable() {
 
     // Adjust any columnDef widths set by the user
     setUserColumnsDefWidths();
-            
+
     table = $('#' + tableId).DataTable({
       data: dataSet,
       destroy: true,
@@ -1563,7 +1563,7 @@ Template.templatesettings.onRendered(function () {
       "order": [[1, "asc"]],
 
       initComplete: function (settings) {
-        
+
         //Add JQueryUI resizable functionality to each th in the ScrollHead table
 
         $('#' + tableId + '_wrapper .dataTables_scrollHead thead th').resizable({
@@ -1617,13 +1617,13 @@ Template.templatesettings.onRendered(function () {
 
     var userColumnDefs = JSON.parse(localStorage.getItem(tableId)) || [];
 
-    var width, header, existingSetting; 
+    var width, header, existingSetting;
 
     table.columns().every( function ( targets ) {
 
       // Check if there is a setting for this column in localStorage
       existingSetting = userColumnDefs.findIndex( function(column) { return column.targets === targets;});
-        
+
       // Get the width of this column
       header = this.header();
       width = $(header).width();
@@ -1651,10 +1651,6 @@ Template.templatesettings.onRendered(function () {
   }
 
   function loadTemplateBody1(object_invoce) {
-
-    console.log('gggg')
-    console.log(object_invoce[0]["fields"])
-    console.log(typeof(object_invoce[0]["fields"]))
     let indexID = 0;
     columnDefs = []
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
@@ -1669,8 +1665,6 @@ Template.templatesettings.onRendered(function () {
         );
     }
     indexID = 0;
-    console.log(columnDefs)
-
 
     // table content
     var tbl_content = $("#templatePreviewModal .tbl_content");
@@ -1746,12 +1740,8 @@ Template.templatesettings.onRendered(function () {
     let className = Object.entries(object_invoce[0]['fields'])
     let idx = 0;
 
-    console.log("printTemplateSetting" + data)
-    console.log(typeof(data))
-    console.log(object_invoce)
     dataSet = [];
     dataSet.push(data[0]);
-    console.log("aaaa" + dataSet)
     loadDataTable();
 
     // for (item of data) {
@@ -1763,7 +1753,7 @@ Template.templatesettings.onRendered(function () {
     //   for (item_temp of item) {
     //     if (idx > left_idx)
     //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-    //     else 
+    //     else
     //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     idx++;
     //   }
@@ -1907,7 +1897,7 @@ Template.templatesettings.onRendered(function () {
     //   for (item_temp of item) {
     //     if (idx > left_idx)
     //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-    //     else 
+    //     else
     //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     idx++;
     //   }
@@ -2040,7 +2030,7 @@ Template.templatesettings.onRendered(function () {
     //   for (item_temp of item) {
     //     if (idx > left_idx)
     //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
-    //     else 
+    //     else
     //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     idx++;
     //   }
@@ -2068,7 +2058,7 @@ Template.templatesettings.onRendered(function () {
 
   //update template with invoice type
   async function updateTemplate1(object_invoce) {
-    
+
     initTemplateHeaderFooter1();
     $("#html-2-pdfwrapper").show();
     $("#html-2-pdfwrapper2").hide();
@@ -2101,8 +2091,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   async function updateTemplate2(object_invoce) {
-    console.log(object_invoce)
-    
+
     initTemplateHeaderFooter2();
     $("#html-2-pdfwrapper").hide();
     $("#html-2-pdfwrapper2").show();
@@ -2130,8 +2119,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   async function updateTemplate3(object_invoce) {
-    console.log(object_invoce)
-    
+
     initTemplateHeaderFooter3();
     $("#html-2-pdfwrapper").hide();
     $("#html-2-pdfwrapper2").hide();

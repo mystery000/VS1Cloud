@@ -443,7 +443,7 @@ Template.new_workorder.onRendered(async function(){
                 if(status == 'paused' || status == 'QAPaused' || ((status == 'stopped' || status == 'QAStopped') && new Date(startedTimes[startedTimes.length - 1]).getTime() > new Date(pausedTimes[pausedTimes.length -2]).getTime())) {
                     trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
                 }
-                
+
                 tempOrder.fields.PausedTimes = JSON.stringify(pausedTimes);
                 tempOrder.fields.TrackedTime = trackedTime;
                 record.trackedTime = trackedTime;
@@ -466,22 +466,21 @@ Template.new_workorder.onRendered(async function(){
                     record.showQAResume = false;
                     record.showQAStop = false;
                     record.showCompleteProcess = true;
-                    console.log('start and resumed times', startedTimes, 'paused and stopped times', pausedTimes, 'finally tracked time', formatTime(trackedTime))
                 }
             }
 
             if(status == 'QAStarted' || status == 'QAResumed') {
 
             }
-            
+
             record.status = status;
             templateObject.workorderrecord.set(record);
             tempOrders.splice(orderIndex, 1, tempOrder);
             templateObject.workOrderRecords.set(tempOrders);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
-        } 
+        }
 
-        
+
     }
 
 })
@@ -661,7 +660,7 @@ Template.new_workorder.events({
         event.stopPropagation();
         event.preventDefault()
         let templateObject = Template.instance();
-        
+
         playSaveAudio();
         if(!FlowRouter.current().queryParams.id) {
             swal({
@@ -674,13 +673,13 @@ Template.new_workorder.events({
             }).then(async (result)=>{
                 if(result.value) {
                     let record = templateObject.workorderrecord.get();
-                    let productData = await getProductData(record.productname)                    
+                    let productData = await getProductData(record.productname)
                     let splashLineArray = [];
                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
-                   
+
                     async function getTaxRate ()  {
                         return new Promise(async(resolve, reject)=> {
-                            
+
                             getVS1Data('TTaxcodeVS1').then(function(dataObject){
                                 if(dataObject.length == 0) {
                                     let data = JSON.parse(dataObject[0].data);
@@ -695,7 +694,7 @@ Template.new_workorder.events({
                                     }else {
                                         resolve(useData[index].Rate)
                                     }
-                                    
+
                                 }else {
                                     sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
                                         resolve(data.ttaxcodevs1[0].Rate)
@@ -744,7 +743,7 @@ Template.new_workorder.events({
                             await saveOrders(true)
                         }
                     })
-                    
+
                 }else if(result.dismiss == 'cancel') {
                     swal({
                         title: 'Warning',
@@ -780,7 +779,7 @@ Template.new_workorder.events({
                          if(index == -1) {
                             productService.getOneProductdatavs1byname(productName).then(function(data){
                                 resolve(data.tproduct[0].fields)
-                            })  
+                            })
                          }else {
                             resolve(useData[index].fields)
                          }
@@ -797,11 +796,11 @@ Template.new_workorder.events({
             setTimeout(async function(){
                 $('.fullScreenSpin').css('display', 'inline-block');
                 let mainOrderStart = new Date();
-        
+
                 async function getSupplierDetail ()  {
                     return new Promise(async(resolve, reject)=>{
                         let supplierName = 'Misc Supplier';
-        
+
                         contactService.getOneSupplierDataExByName(supplierName).then(function(dataObject) {
                             let data = dataObject.tsupplier;
                             if(data.length > 0) {
@@ -811,7 +810,7 @@ Template.new_workorder.events({
                                 let state = data[0].fields.State || '';
                                 let zipCode = data[0].fields.Postcode || '';
                                 let country = data[0].fields.Country || '';
-        
+
                                 let postalAddress = data[0].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
                                 resolve(postalAddress)
                             }else {
@@ -821,10 +820,10 @@ Template.new_workorder.events({
                             resolve('')
                         })
                     })
-        
-        
+
+
                 }
-        
+
                 async function createPurchaseOrder(products) {
                     return new Promise(async(resolve, reject)=>{
                         let foreignCurrencyFields = {
@@ -852,7 +851,7 @@ Template.new_workorder.events({
                                         LineClassName: defaultDept
                                     }
                                 };
-    
+
                                 splashLineArray.push(lineItemObjForm);
                             }
                         }
@@ -868,9 +867,9 @@ Template.new_workorder.events({
                                     Lines: splashLineArray,
                                     OrderTo: billingAddress,
                                     OrderDate: date,
-    
+
                                     SupplierInvoiceDate: date,
-    
+
                                     SaleLineRef: '',
                                     TermsName: 'COD',
                                     Shipping: '',
@@ -893,7 +892,7 @@ Template.new_workorder.events({
                         } else {
                             resolve()
                         }
-                        
+
                     })
                 }
                 let poProducts = [];
@@ -902,7 +901,7 @@ Template.new_workorder.events({
                     let bomStructure = templateObject.bomStructure.get();
                     let bomProducts = templateObject.bomProducts.get();
                     poProducts = [];
-        
+
                     let totalWorkOrders = await templateObject.getAllWorkorders();
                     let savedworkorders = totalWorkOrders.filter(order => {
                         return order.fields.SaleID == templateObject.salesOrderId.get();
@@ -925,8 +924,8 @@ Template.new_workorder.events({
                                         duration = d.tproctree[0].fields.QtyVariation
                                     })
                                 }
-        
-        
+
+
                                 let subBOMStructure = {
                                     Caption: subs.productName,
                                     Info: subs.process,
@@ -964,7 +963,7 @@ Template.new_workorder.events({
                                                 return new Date(e.end);
                                             })));
                                         }
-        
+
                                         let subDetail = {
                                             ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                             LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
@@ -986,8 +985,8 @@ Template.new_workorder.events({
                                             StartTime: '',
                                             StoppedTime: ''
                                         }
-        
-        
+
+
                                         if(subs.subs&&subs.subs.length > 0) {
                                             for(let n=0; n<subs.subs.length; n++) {
                                                 let rawName = subs.subs[n].productName;
@@ -1001,12 +1000,12 @@ Template.new_workorder.events({
                                         if(subEnd.getTime() > mainOrderStart.getTime()) {
                                             mainOrderStart = subEnd;
                                         }
-        
-        
+
+
                                         getVS1Data('TProductVS1').then(async function(dataObject) {
                                             if(dataObject.length == 0) {
                                                 productService.getOneProductdatavs1byname(subProductName).then(async function(data){
-        
+
                                                     // let line = JSON.parse(JSON.stringify(record.line));
                                                     let productname = subProductName;
                                                     let product_description = data.tproduct[0].fields.ProductDescription;
@@ -1017,7 +1016,7 @@ Template.new_workorder.events({
                                                     subDetail.ProductDescription = product_description;
                                                     // subDetail.Quantity = quantity;
                                                     subDetail.ProductID = productid;
-        
+
                                                     // let tempArray = localStorage.getItem('TWorkorders');
                                                     // let workorders = tempArray?JSON.parse(tempArray): [];
                                                     let workorders = await templateObject.getAllWorkorders();
@@ -1082,7 +1081,7 @@ Template.new_workorder.events({
                                                 subDetail.ProductDescription = product_description;
                                                 // subDetail.Quantity = quantity;
                                                 subDetail.ProductID = productid;
-        
+
                                                 // let tempArray = localStorage.getItem('TWorkorders');
                                                 // let workorders = tempArray?JSON.parse(tempArray): [];
                                                 let workorders = await templateObject.getAllWorkorders();
@@ -1108,17 +1107,17 @@ Template.new_workorder.events({
                                 await saveOneSubOrder();
 
                             }
-        
+
                         }
                     }
                 }
-        
+
                 await saveSubOrders();
 
                 if(poProducts.length > 0) {
                     await createPurchaseOrder(poProducts);
                 }
-        
+
                 async function saveMainOrders() {
                     let record = templateObject.workorderrecord.get();
                     let totalWorkOrders = await templateObject.getAllWorkorders();
@@ -1157,15 +1156,15 @@ Template.new_workorder.events({
                         StartTime: record.startTime,
                         StoppedTime: record.stoppedTime
                     }
-         
+
                     // manufacturingService.saveWorkOrder({
                     //     type: 'TVS1Workorder',
                     //     fields: objDetail
                     // }).then(function(){
                     // }).catch(function(er) {
                     // })
-        
-        
+
+
                     let workorders = await templateObject.getAllWorkorders();
                     let existIndex = workorders.findIndex(order=>{
                         return order.fields.SaleID == objDetail.SaleID && order.fields.ProductName == objDetail.ProductName
@@ -1178,11 +1177,11 @@ Template.new_workorder.events({
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
                     // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                 }
-        
+
                 await saveMainOrders();
-        
-        
-        
+
+
+
                 $('.fullScreenSpin').css('display', 'none');
 
                 if(vendorService == false) {
@@ -1193,13 +1192,13 @@ Template.new_workorder.events({
                         showCancelButton: false,
                         confirmButtonText: 'Continue',
                     }).then ((result)=>{
-            
+
                         if (localStorage.getItem("enteredURL") != null) {
                             FlowRouter.go(localStorage.getItem("enteredURL"));
                             localStorage.removeItem("enteredURL");
                             return;
                         }
-            
+
                         FlowRouter.go('/workorderlist')
                     });
                 } else {
@@ -1209,8 +1208,8 @@ Template.new_workorder.events({
                     })
                     FlowRouter.go('/purchaseordercard?workorderid=' + templateObject.salesOrderId.get() + "_" + (savedworkorders.length).toString())
                 }
-        
-        
+
+
             }, delayTimeAfterSound);
         }
     },
@@ -1299,7 +1298,7 @@ Template.new_workorder.events({
                          if(index == -1) {
                             productService.getOneProductdatavs1byname(productName).then(function(data){
                                 resolve(data.tproduct[0].fields)
-                            })  
+                            })
                          }else {
                             resolve(useData[index].fields)
                          }
@@ -1324,13 +1323,13 @@ Template.new_workorder.events({
             }).then(async (result)=>{
                 if(result.value) {
                     let record = templateObject.workorderrecord.get();
-                    let productData = await getProductData(record.productname)                    
+                    let productData = await getProductData(record.productname)
                     let splashLineArray = [];
                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
                     $('.fullScreenSpin').css('display', 'inline-block')
                     async function getTaxRate ()  {
                         return new Promise(async(resolve, reject)=> {
-                            
+
                             getVS1Data('TTaxcodeVS1').then(function(dataObject){
                                 if(dataObject.length == 0) {
                                     let data = JSON.parse(dataObject[0].data);
@@ -1345,7 +1344,7 @@ Template.new_workorder.events({
                                     }else {
                                         resolve(useData[index].Rate)
                                     }
-                                    
+
                                 }else {
                                     sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
                                         resolve(data.ttaxcodevs1[0].Rate)
@@ -1407,7 +1406,7 @@ Template.new_workorder.events({
         //     templateObject.workorderrecord.set(record);
         //     tempOrders.splice(orderIndex, 1, tempOrder);
         //     templateObject.workorderRecords.set(tempOrders);
-        //     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){console.log("timer started")})
+        //     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
         // } else {return}
         templateObject.changeWorkorderStatus('started')
     },

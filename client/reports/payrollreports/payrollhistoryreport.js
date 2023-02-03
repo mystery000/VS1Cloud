@@ -567,7 +567,6 @@ Template.payrollhistoryreport.helpers({
     return activeArray.length;
   },
   currencyList: () => {
-    console.log(Template.instance().currencyList.get(), "-----------");
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {

@@ -116,67 +116,15 @@ Template.paymentoverview.onRendered(function() {
     var splashArray = new Array();
     const dataTableList = [];
     const tableHeaderList = [];
-
-    const currentDate = new Date();
-    let fromDate = moment().subtract(2, 'month').format('DD/MM/YYYY');
-    let toDate = moment(currentDate).format("DD/MM/YYYY");
-
-    setTimeout(function() {
-        $("#date-input,#dateTo,#dateFrom").datepicker({
-            showOn: "button",
-            buttonText: "Show Date",
-            buttonImageOnly: true,
-            buttonImage: "/img/imgCal2.png",
-            dateFormat: "dd/mm/yy",
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-90:+10",
-            onChangeMonthYear: function(year, month, inst) {
-                // Set date to picker
-                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-                // Hide (close) the picker
-                // $(this).datepicker('hide');
-                // // Change ttrigger the on change function
-                // $(this).trigger('change');
-            }
-        });
-        let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
-        let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-        let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-        if (urlParametersDateFrom) {
-            if (urlParametersIgnoreDate == true) {
-                $("#dateFrom").attr("readonly", true);
-                $("#dateTo").attr("readonly", true);
-            } else {
-                let paramFromDate = urlParametersDateFrom != "" ? new Date(urlParametersDateFrom) : urlParametersDateFrom;
-                paramFromDate = moment(paramFromDate).format("DD/MM/YYYY");
-                $("#dateFrom").val(paramFromDate);
-                let paramToDate = urlParametersDateTo != "" ? new Date(urlParametersDateTo) : urlParametersDateTo;
-                paramToDate = moment(paramToDate).format("DD/MM/YYYY");
-                $("#dateTo").val(paramToDate);
-            }
-        } else {
-            $("#dateFrom").val(fromDate);
-            $("#dateTo").val(toDate);
-        }
-        if (urlParametersIgnoreDate == "true") {
-            $("#dateFrom").val(null);
-            $("#dateTo").val(null);
-        }
-        $('[data-toggle="tooltip"]').tooltip({ html: true });
-    }, 500);
-
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlertOverview');
     }
 
     var today = moment().format('DD/MM/YYYY');
-    currentDate = new Date();
+    var currentDate = new Date();
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
-    fromDateMonth = (currentDate.getMonth() + 1);
-    fromDateDay = currentDate.getDate();
+    let fromDateMonth = (currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
     if ((currentDate.getMonth() + 1) < 10) {
         fromDateMonth = "0" + (currentDate.getMonth() + 1);
     }
@@ -184,7 +132,7 @@ Template.paymentoverview.onRendered(function() {
     if (currentDate.getDate() < 10) {
         fromDateDay = "0" + currentDate.getDate();
     }
-    fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
 
 
     var currentBeginDate = new Date();
@@ -200,7 +148,7 @@ Template.paymentoverview.onRendered(function() {
     if (currentBeginDate.getDate() < 10) {
         fromDateDay2 = "0" + currentBeginDate.getDate();
     }
-    toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth2) + "-" + (fromDateDay2);
+    var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth2) + "-" + (fromDateDay2);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
