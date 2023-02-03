@@ -598,7 +598,6 @@ import './eft/transactionDescriptionModal/transactionDescriptionModal.js';
 import './eft/addNewEftModal/addNewEftModal.js';
 
 import './reports/transactionjournal/transactionjournal.js';
-import './vs1_templates/dashboard_options/dashboard_options.html';
 /* XiaoJang*/
 
 /* Scott */
