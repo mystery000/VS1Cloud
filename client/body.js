@@ -404,6 +404,8 @@ import './reports/supplierreports/supplierdetail.js';
 import './reports/supplierreports/supplierproductreport.js';
 import './reports/supplierreports/supplierreport.js';
 import './reports/supplierreports/suppliersummary.js';
+import './reports/supplierreports/supplierreport';
+import './reports/supplierreports/suppliersummary';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
