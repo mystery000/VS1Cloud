@@ -282,6 +282,38 @@ const XLSX = require("xlsx");
                 XLSX.writeFileXLSX(wb, options.filename);
             }
             return this;
+        },
+        tableToSpreadSheet: async function (options) {
+            const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
+                try {
+                    return window.self === window.top;
+                } catch {
+                    return false;
+                }
+            })();
+
+            if (supportsFileSystemAccess) {
+                try {
+                    const handle = await showSaveFilePicker({
+                        suggestedName: options.filename,
+                        type: [{
+                            description: 'XLSX file',
+                            accept: {"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls']}
+                        }]
+                    });
+                    const sheet = await fetch("downloads/Template Files/" + options.filename).then(resp => resp.blob());
+                    const data = new Blob([sheet], {type: "application/vnd.ms-excel"});
+                    const writable = await handle.createWritable();
+                    await writable.write(data);
+                    await writable.close();
+                    swal('Success', 'SpreadSheet Created Successfully!', 'success');
+                    return;
+                } catch (err) {
+                    if (err.name == 'AbortError') {
+                        return;
+                    }
+                }
+            }
         }
     });
 })(jQuery);
@@ -303,6 +335,14 @@ export class UtilityService {
     }
     exportReportToXLSX = function (tableName, filename, type) {
         $("#" + tableName).tableToXlsx({
+            type: 'xlsx',
+            filename: filename,
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    }
+
+    exportReportToSpreadSheet = function (tableName, filename, type) {
+        $("#" + tableName).tableToSpreadSheet({
             type: 'xlsx',
             filename: filename,
         });

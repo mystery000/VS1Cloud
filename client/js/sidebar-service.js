@@ -3255,6 +3255,13 @@ export class SideBarService extends BaseService {
   }
 
   getAllBankAccountDetails(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, isDeleted) {
+    let dateDivide = dateFrom.split("/");
+    if(dateDivide.length > 1)
+      dateFrom = dateDivide[2] + '-' + dateDivide[1] + '-' + dateDivide[0];
+    dateDivide = dateTo.split("/");
+    if(dateDivide.length > 1)
+      dateTo = dateDivide[2] + '-' + dateDivide[1] + '-' + dateDivide[0];
+
     let options = "";
     if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {

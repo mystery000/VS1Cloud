@@ -32,7 +32,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
                 text-transform: capitalize;
             }
 
@@ -136,7 +136,7 @@
 
         </style>
         {{#if viewInfoData}}
-            <ul class="eventDetail">
+            <ul class="eventDetail mb-0">
                 <li>
                     <span class="itemLabel">JOB/SO Number: </span>
                     <span class="eventDetailItem">{{viewInfoData.JOBNumber}}</span>
@@ -168,7 +168,7 @@
                     <span class="eventDetailItem">{{viewInfoData.Status}}</span>
                 </li>
             </ul>
-            <div class="d-flex align-items-center justify-content-center p-3" style="gap: 20px">
+            <div class="d-flex align-items-center justify-content-center p-1" style="gap: 20px">
                 {{#if equals viewInfoData.Status 'unscheduled'}}
                     {{> vs1_button
                         type='button'
@@ -189,6 +189,8 @@
                         tooltip = 'mark as unscheduled'
                         title="Mark as unscheduled"
                     }}
+                {{/if}}
+                {{#if showStartTimer}}
                     {{ > vs1_button
                         type="button"
                         classes="btnStartTimer"
@@ -198,27 +200,7 @@
                         title='Start timer'     
                     }}
                 {{/if}}
-
-                {{#if equals viewInfoData.Status 'started'}}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnPauseTimer'
-                        id='btnPauseTimer'
-                        iconName= ' fas fa-pause'
-                        tooltip='pause timer'
-                        title='Pause timer'
-                    }}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnStopTimer'
-                        id='btnStopTimer'
-                        iconName= ' fas fa-stop'
-                        tooltip='stop timer'
-                        title='Stop timer'
-                    }}
-                {{/if}}
-
-                {{#if equals viewInfoData.Status 'paused'}}
+                {{#if showResumeTimer}}
                     {{>vs1_button
                         type="button"
                         classes="btnResumeTimer"
@@ -227,6 +209,18 @@
                         tooltip='resume timer'
                         title='Resume timer'
                     }}
+                {{/if}}
+                {{#if showPauseTimer}}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnPauseTimer'
+                        id='btnPauseTimer'
+                        iconName= ' fas fa-pause'
+                        tooltip='pause timer'
+                        title='Pause timer'
+                    }}
+                {{/if}}
+                {{#if showStopTimer}}
                     {{>vs1_button
                         type='button'
                         classes='btnStopTimer'
@@ -236,8 +230,59 @@
                         title='Stop timer'
                     }}
                 {{/if}}
+
+                {{#if showStartQA}}
+                    {{ > vs1_button
+                        type="button"
+                        classes="btnStartQA"
+                        id="btnStartQA"
+                        iconName=' fas fa-play'
+                        tooltip= 'start QA'
+                        title='Start QA'     
+                    }}
+                {{/if}}
+                {{#if showResumeQA}}
+                    {{>vs1_button
+                        type="button"
+                        classes="btnResumeQA"
+                        id="btnResumeQA"
+                        iconName=' fas fa-play'
+                        tooltip='resume QA'
+                        title='Resume QA'
+                    }}
+                {{/if}}
+                {{#if showPauseQA}}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnPauseQA'
+                        id='btnPauseQA'
+                        iconName= ' fas fa-pause'
+                        tooltip='pause QA'
+                        title='Pause QA'
+                    }}
+                {{/if}}
+                {{#if showStopQA}}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnStopQA'
+                        id='btnStopQA'
+                        iconName= ' fas fa-stop'
+                        tooltip='stop QA'
+                        title='Stop QA'
+                    }}
+                {{/if}}
+                {{#if showMarkAsCompleted}}
+                    {{>vs1_button
+                        type='button'
+                        classes='btnMarkAsComplete'
+                        id='btnMarkAsComplete'
+                        tooltip='Mark as completed'
+                        title='Mark As Completed'
+                    }}
+                {{/if}}
+                
                 </div>
-                <div class="d-flex align-items-center justify-content-center p-3" style="gap: 20px">
+                <div class="d-flex align-items-center justify-content-center p-1" style="gap: 20px">
 
                 <!-- <button class="btn btn-primary btn-round">Attachments</button> -->
                 {{>vs1_button
