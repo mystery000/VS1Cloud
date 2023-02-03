@@ -8,8 +8,17 @@
                 <div class="card-header {{headerClass}} d-flex justify-content-between align-items-center" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
                     <h6 class="text-{{headerColor}} font-weight-bold m-0">{{headerTitle}}</h6>
-                    <div class="dropdown no-arrow" style="display: inline-flex;">
-                        <a id="hideearnings" class="on-editor-change-mode hideelement bankaccountschartedit btn btn-link" role="presentation" href="" ><i class="far fa-eye"></i></a>
+                    <div class="dropdown no-arrow custom-control custom-switch" style="display: inline-flex;">
+                        {{!-- <a id="hideearnings" class="on-editor-change-mode hideelement bankaccountschartedit btn btn-link" role="presentation" href="" ><i class="far fa-eye"></i></a> --}}
+                            <div class="custom-control custom-switch" data-bs-toggle="tooltip" title="Default">
+                                <input class="custom-control-input defaultDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch2-{{key}}" >
+                                <label class="custom-control-label hideelement" for="switch2-{{key}}"></label>
+                            </div>
+                        <div class="custom-control custom-switch" data-bs-toggle="tooltip" title="{{tooltip_text}}">
+                            <input class="custom-control-input chkShowState hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{key}}">
+                            <label class="custom-control-label hideelement" for="switch1-{{key}}"></label>
+                            <p class="simplestart hideelement" style=" margin-top: 4px;">Simple Start</p>
+                        </div>
                         <button class="btn btn-link btn-sm dropdown-toggle btnchartdropdown" id="" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
                         <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in" role="menu">
                             <a id="earnings" class="dropdown-item" role="presentation" href="{{hrefDetails}}">&nbsp;More Details</a>

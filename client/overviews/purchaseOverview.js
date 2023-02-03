@@ -36,6 +36,58 @@ Template.purchasesoverview.onRendered(function () {
   let templateObject = Template.instance();
 
 
+  const currentDate = new Date();
+    let fromDate = moment().subtract(2, 'month').format('DD/MM/YYYY');
+    let toDate = moment(currentDate).format("DD/MM/YYYY");
+
+    setTimeout(function() {
+        $("#date-input,#dateTo,#dateFrom").datepicker({
+            showOn: "button",
+            buttonText: "Show Date",
+            buttonImageOnly: true,
+            buttonImage: "/img/imgCal2.png",
+            dateFormat: "dd/mm/yy",
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+            onChangeMonthYear: function(year, month, inst) {
+                // Set date to picker
+                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+                // Hide (close) the picker
+                // $(this).datepicker('hide');
+                // // Change ttrigger the on change function
+                // $(this).trigger('change');
+            }
+        });
+        let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
+        let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
+        let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+        if (urlParametersDateFrom) {
+            if (urlParametersIgnoreDate == true) {
+                $("#dateFrom").attr("readonly", true);
+                $("#dateTo").attr("readonly", true);
+            } else {
+                let paramFromDate = urlParametersDateFrom != "" ? new Date(urlParametersDateFrom) : urlParametersDateFrom;
+                paramFromDate = moment(paramFromDate).format("DD/MM/YYYY");
+                $("#dateFrom").val(paramFromDate);
+                let paramToDate = urlParametersDateTo != "" ? new Date(urlParametersDateTo) : urlParametersDateTo;
+                paramToDate = moment(paramToDate).format("DD/MM/YYYY");
+                $("#dateTo").val(paramToDate);
+            }
+        } else {
+            $("#dateFrom").val(fromDate);
+            $("#dateTo").val(toDate);
+        }
+        if (urlParametersIgnoreDate == "true") {
+            $("#dateFrom").val(null);
+            $("#dateTo").val(null);
+        }
+        $('[data-toggle="tooltip"]').tooltip({ html: true });
+    }, 500);
+
+
   // set initial table rest_data
   function init_reset_data() {
     let reset_data = [
@@ -137,7 +189,7 @@ Template.purchasesoverview.onRendered(function () {
   let totPOCount = 0;
 
   var today = moment().format("DD/MM/YYYY");
-  var currentDate = new Date();
+  currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
   let fromDateMonth = currentDate.getMonth() + 1;
   let fromDateDay = currentDate.getDate();
@@ -148,7 +200,7 @@ Template.purchasesoverview.onRendered(function () {
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
   }
-  var fromDate =
+  fromDate =
     fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
 
   $("#date-input,#dateTo,#dateFrom").datepicker({
@@ -206,7 +258,7 @@ Template.purchasesoverview.onRendered(function () {
   };
 
   templateObject.getAllPurchaseOrderAll = function () {
-    var currentBeginDate = new Date();
+    currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
     let fromDateDay = currentBeginDate.getDate();
@@ -1518,7 +1570,7 @@ Template.purchasesoverview.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
-    var currentBeginDate = new Date();
+    currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
     let fromDateDay = currentBeginDate.getDate();
@@ -1660,7 +1712,7 @@ Template.purchasesoverview.events({
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
-    var currentBeginDate = new Date();
+    currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
     let fromDateDay = currentBeginDate.getDate();
@@ -1692,7 +1744,7 @@ Template.purchasesoverview.events({
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
-    var currentBeginDate = new Date();
+    currentBeginDate = new Date();
     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
     let fromDateMonth = currentBeginDate.getMonth() + 1;
     let fromDateDay = currentBeginDate.getDate();
@@ -1733,7 +1785,7 @@ Template.purchasesoverview.events({
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
+    currentDate = new Date();
 
     var prevMonthLastDate = new Date(
       currentDate.getFullYear(),
@@ -1770,8 +1822,8 @@ Template.purchasesoverview.events({
       );
     };
 
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
+    fromDate = formatDate(prevMonthFirstDate);
+    toDate = formatDate(prevMonthLastDate);
 
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(toDate);
@@ -1785,7 +1837,7 @@ Template.purchasesoverview.events({
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
+    currentDate = new Date();
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -1830,7 +1882,7 @@ Template.purchasesoverview.events({
     $(".fullScreenSpin").css("display", "inline-block");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
+    currentDate = new Date();
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
     let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
@@ -1842,7 +1894,7 @@ Template.purchasesoverview.events({
       fromDateDay = "0" + currentDate.getDate();
     }
 
-    var fromDate =
+    fromDate =
       fromDateDay +
       "/" +
       fromDateMonth +
@@ -1851,7 +1903,7 @@ Template.purchasesoverview.events({
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    var currentDate2 = new Date();
+    currentDate2 = new Date();
     if (currentDate2.getMonth() + 1 < 10) {
       fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
     }

@@ -27,11 +27,19 @@
     card-key="{{cardKey}}">
         <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+            <div class="hideShowDiv" style="display: inline-flex; justify-content: right;">
+                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="Default">
+                        <input class="custom-control-input defaultDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch2-{{cardKey}}" >
+                        <label class="custom-control-label hideelement" for="switch2-{{cardKey}}"></label>
+                    </div>
+                    <div class="custom-control custom-switch cardShowBtn" data-bs-toggle="tooltip" title="{{tooltip_text}}">
+                        <input class="custom-control-input chkDatatable hideelement bankaccountschartedit" role="presentation" type="checkbox" id="switch1-{{cardKey}}">
+                        <label class="custom-control-label hideelement" for="switch1-{{cardKey}}"></label>                        
+                    </div>
+                    <p class="hideelement card_simplestart" >Simple Start</p>
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
-            <div class="card-body {{actionClass}}" style="cursor: pointer;">
+            <div class="card-body {{actionClass}}" style="cursor: pointer; margin-top: 10px;">
                 {{> Template.contentBlock}}
             </div>
         </div>
