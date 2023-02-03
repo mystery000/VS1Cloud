@@ -1059,11 +1059,11 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === 'taxRatesList') {
             reset_data = [
                 { index: 0, label: 'Id', class: 'colTaxRateId', active: false, display: true },
-                { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true },
+                { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '80' },
                 { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
-                { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true },
-                { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '20' },
-                { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '20' },
+                { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '100' },
+                { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '120' },
+                { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '100' },
             ]
         } else if (currenttablename === "tblSerialNumberList"){
             reset_data = [
