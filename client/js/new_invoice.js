@@ -592,7 +592,7 @@ Template.new_invoice.onCreated(function () {
               expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
             }
           }
-          
+
           lineItemObj = {
             lineID: Random.id(),
             id: data.fields.Lines[i].fields.ID || "",
@@ -603,6 +603,7 @@ Template.new_invoice.onCreated(function () {
             qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
             qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
             qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
+            UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
             unitPrice: utilityService
               .modifynegativeCurrencyFormat(
                 data.fields.Lines[i].fields.OriginalLinePrice
@@ -644,7 +645,6 @@ Template.new_invoice.onCreated(function () {
             TaxTotal: TaxTotalGbp || 0,
             TaxRate: TaxRateGbp || 0,
             DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
-            UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
             SalesLinesCustField1: SalesLinesCustField1Val,
             serialnumbers: serialno,
             lotnumbers: lotno,
@@ -693,6 +693,7 @@ Template.new_invoice.onCreated(function () {
           id: data.fields.Lines.fields.ID || "",
           description: data.fields.Lines.fields.ProductDescription || "",
           quantity: data.fields.Lines.fields.UOMOrderQty || 0,
+          UnitOfMeasure: data.fields.Lines.fields.UnitOfMeasure || defaultUOM,
           unitPrice: data.fields.Lines[i].fields.OriginalLinePrice.toLocaleString(undefined, { minimumFractionDigits: 2, }) || 0,
           lineCost: data.fields.Lines[i].fields.LineCost.toLocaleString(undefined, { minimumFractionDigits: 2 }) || 0,
           taxRate: (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2) || 0,
@@ -702,7 +703,6 @@ Template.new_invoice.onCreated(function () {
           TaxTotal: TaxTotalGbp || 0,
           TaxRate: TaxRateGbp || 0,
           DiscountPercent: data.fields.Lines.fields.DiscountPercent || 0,
-          UnitOfMeasure: data.fields.Lines.fields.UnitOfMeasure || defaultUOM,
           SalesLinesCustField1: data.fields.Lines.fields.SalesLinesCustField1 || "",
         };
         lineItems.push(lineItemObj);
@@ -2819,6 +2819,7 @@ Template.new_invoice.onRendered(function () {
       qtyordered: "",
       qtyshipped: "",
       qtybo: "",
+      UnitOfMeasure: defaultUOM || "",
       unitPrice: 0,
       unitPriceInc: 0,
       TotalAmt: 0,
@@ -2828,7 +2829,6 @@ Template.new_invoice.onRendered(function () {
       curTotalAmt: 0,
       TaxTotal: 0,
       TaxRate: 0,
-      UnitOfMeasure: defaultUOM || "",
     };
     const dataListTable = [
       " " || "",
@@ -9146,7 +9146,7 @@ Template.new_invoice.events({
               await addVS1Data('TProductBatches', JSON.stringify(data));
           }).catch(function (err) {
           });
-          
+
           if (localStorage.getItem("enteredURL") != null) {
             FlowRouter.go(localStorage.getItem("enteredURL"));
             localStorage.removeItem("enteredURL");
@@ -11287,7 +11287,7 @@ Template.new_invoice.events({
     localStorage.setItem("productItem", selectedunit);
     let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
     localStorage.setItem("selectedProductName", selectedProductName);
-    
+
     let productService = new ProductService();
     const templateObject = Template.instance();
     const InvoiceData = templateObject.invoicerecord.get();
@@ -11580,7 +11580,7 @@ Template.new_invoice.events({
     localStorage.setItem("productItem", selectedunit);
     let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
     localStorage.setItem("selectedProductName", selectedProductName);
-    
+
     let productService = new ProductService();
     const templateObject = Template.instance();
     const InvoiceData = templateObject.invoicerecord.get();
