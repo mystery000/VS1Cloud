@@ -2392,7 +2392,7 @@ Template.employeescard.onRendered(function() {
                     const $earch = $(this);
                     const offset = $earch.offset();
                     const productDataName = e.target.value || '';
-                    edtProductSelect = "appointment"
+                    edtProductSelect = "appointment";
                     if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
                         $('#productListModal').modal('toggle');
                     } else {
@@ -2679,13 +2679,13 @@ Template.employeescard.onRendered(function() {
                     }
                 });
 
-            $('#edtDashboardOptions').editableSelect().on('click.editable-select', function(e, li) {
+            $(document).on('click', '#edtDashboardOptions', function(e, li) {
                 const $earch = $(this);
                 const offset = $earch.offset();
                 const dashboardoptions = e.target.value || '';
                 const dashboardDefaultoptions = $("#edtDashboardOptions").attr("defaultlogin") || 'Accounts';
                 if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-                    $('#dashboardOptionListModal').modal('toggle');
+                    $('#edtDashboardOptions').modal('toggle');
                 } else {
                     if (dashboardoptions.replace(/\s/g, '') != '') {
                         $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
@@ -2720,7 +2720,7 @@ Template.employeescard.onRendered(function() {
             }
         });
 
-        $(document).on("click", "#tblDashboardOptions tbody tr .colOptionsName", function(e) {
+        $(document).on("click", "#tblDashboardOptions tbody tr", function(e) {
             const tblDashboardOptions = $(this);
             var listData = $(this).closest("tr").attr("id");
             var optionName = $(event.target).closest("tr").find(".colOptionsName").text() || 'All';

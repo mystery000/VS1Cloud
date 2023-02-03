@@ -11,6 +11,7 @@ import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
 import GlobalFunctions from "../GlobalFunctions.js";
+
 const productService = new ProductService();
 const sideBarService = new SideBarService();
 const organisationService = new OrganisationService();
@@ -3811,7 +3812,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getClientTypeListData();
           });
 
-          getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
+          getVS1Data('SupplierDetailsReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getSupplierDetailData();
             } else {
