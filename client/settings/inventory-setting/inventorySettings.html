@@ -15,7 +15,9 @@
           <div class="card-header py-3" style="background-color: rgb(248, 249, 252)">
             <div align="left">
               <p class="text-primary m-0 font-weight-bold">Inventory Settings {{> helpbutton}}</p>
-              {{> help_modal}}
+              <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                {{> help_modal}}
+              </div>
             </div>
           </div>
           <div class="card-body">

@@ -222,7 +222,7 @@
             </div>
           </div>
         </div>
-        
+
         {{> transaction_calculation
         isPartialPaid=invoicerecord.isPartialPaid
         SubTotal=invoicerecord.SubTotal
@@ -238,7 +238,7 @@
       <div class="row justify-content-center mobileButtons" style="display: none;">
         {{> transaction_footer margin="12px" AttachmentCount=attachmentCount TransactionType="invoices" }}
       </div>
-     
+
     </form>
     <!-- Start PDF -->
     <style media="screen">
@@ -444,6 +444,7 @@
                 <th style="width: 200px; background-color: white; color: rgb(0 0 0);">Product Name</th>
                 <th style="width: 220px; background-color: white; color: rgb(0 0 0);">Description</th>
                 <th style="text-align: right; width: 50px; background-color: white; color: rgb(0 0 0);">Qty</th>
+                <th style="text-align: right; width: 90px; background-color: white; color: rgb(0 0 0);">Unit Type</th>
                 <th style="text-align: right; width: 90px; background-color: white; color: rgb(0 0 0);">Unit Price</th>
                 <th style="text-align: right; width: 100px; background-color: white; color: rgb(0 0 0);">Tax</th>
                 <th style="text-align: right; width: 77px; background-color: white; color: rgb(0 0 0);"
@@ -458,6 +459,7 @@
                 <td id="lineProductName">{{item.item}}</td>
                 <td id="lineProductDesc">{{item.description}}</td>
                 <td id="lineQty" style="text-align: right;">{{item.quantity}}</td>
+                <td id="lineUnitPrice" style="text-align: right;">{{item.UnitOfMeasure}}</td>
                 <td id="lineUnitPrice" style="text-align: right;">{{item.unitPrice}}</td>
                 <td id="lineTaxAmount" style="text-align: right;">{{item.TaxTotal}}</td>
                 <td id="lineTaxCode" class="hiddenColumn" style="text-align: right;">{{item.taxCode}}</td>

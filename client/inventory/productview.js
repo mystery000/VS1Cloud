@@ -26,8 +26,6 @@ let defaultUOM = "Each";
 
 const clickSalesAccount = editableService.clickSalesAccount;
 
-const clickUomSales = editableService.clickUomSales;
-
 const clickTaxCodeSales = editableService.clickTaxCodeSales;
 
 const clickBinNumber = editableService.clickBinNumber;
@@ -150,6 +148,8 @@ Template.productview.onRendered(function () {
       $("#slttaxcodesales").editableSelect().on("click.editable-select", editableService.clickTaxCodeSales);
 
       $("#newProcessModal #edtCOGS").editableSelect().on("click.editable-select", editableService.clickEdtCogsAccount);
+
+      $("#sltUomPurchases").editableSelect().on("click.editable-select", editableService.clickUomPurchase)
 
       $("#newProcessModal #edtExpenseAccount")
         .editableSelect()
@@ -282,6 +282,14 @@ Template.productview.onRendered(function () {
         $("#sltCustomerType").val(custTypeName);
         $("#customerTypeListModal").modal("toggle");
       });
+
+      $(document).on("click", "#clienttypeList tbody tr", function (e) {
+        var table = $(this);
+        let custTypeName = table.find(".colUOMName").text();
+        $("#sltCustomerType").val(custTypeName);
+        $("#customerTypeListModal").modal("toggle");
+      });
+
     });
   };
 
@@ -5219,7 +5227,7 @@ Template.productview.events({
 
     NewCOGSRow.find("#sltUomPurchases").editableSelect();
     NewCOGSRow.find("#sltUomPurchases").val(defaultUOM);
-    NewCOGSRow.find("#sltUomPurchases").editableSelect().on("click.editable-select", clickUomSales);
+    NewCOGSRow.find("#sltUomPurchases").editableSelect().on("click.editable-select", editableService.clickUomPurchase);
 
     NewCOGSRow.find("#slttaxcodesales").val(loggedTaxCodeSalesInc);
     NewCOGSRow.insertAfter(".COGSRow:last");

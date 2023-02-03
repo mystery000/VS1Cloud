@@ -159,18 +159,17 @@ Template.transaction_line.onRendered(function() {
                     if (index < unitIdnex) reset_data.push({...raw_reset_data[index], index: index})
                     if (index === unitIndex) continue
                     if (index > unitIndex && index <= boIndex) reset_data.push({...raw_reset_data[index], index: index - 1})
-                    if (index === boIndex) reset_data.push({...raw_reset_data[unitIndex], index: index})
+                    if (index === boIndex) reset_data.push({...raw_reset_data[unitIndex], index: index, label: "Unit Type"})
                     if (index > boIndex) reset_data.push({...raw_reset_data[index], index: index})
                 } else {
                     if (index <= boIndex) reset_data.push({...raw_reset_data[index], index: index})
-                    if (index === boIndex) reset_data.push({...raw_reset_data[unitIndex], index: index + 1})
+                    if (index === boIndex) reset_data.push({...raw_reset_data[unitIndex], index: index + 1, label: "Unit Type"})
                     if (index > boIndex && index < unitIndex) reset_data.push({...raw_reset_data[index], index: index + 1})
                     if (index === unitIndex) continue
                     if (index > unitIndex) reset_data.push({...raw_reset_data[index], index: index})
                 }
             }
         }
-        console.log('here', reset_data)
 
         let customFieldCount = reset_data.length;
 

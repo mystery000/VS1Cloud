@@ -1,5 +1,5 @@
 <!-- Stock Adjustment Header -->
-<!-- Params 
+<!-- Params
   data
 -->
 
@@ -11,7 +11,9 @@
               <div class="col-12 col-md-4">
                   <h1 style="margin: 32px;margin-bottom: 0px;">{{data.lid}}
                       {{> helpbutton}}
-                      {{> help_modal}}
+                      <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        {{> help_modal}}
+                      </div>
                   </h1>
                   <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
               </div>
@@ -29,7 +31,7 @@
         type="search"
       }}
     </div>
-   
+
     <div class="col-6 col-md-3 col-lg-2">
       {{> single_date_picker
         label="Date"
