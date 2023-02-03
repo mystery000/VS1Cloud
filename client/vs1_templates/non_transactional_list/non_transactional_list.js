@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ContactService } from "../../contacts/contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
@@ -939,7 +940,7 @@ Template.non_transactional_list.onRendered(function() {
               ];
         } else if(currenttablename === "tblServiceLogList"){
           reset_data = [
-            { index: 0, label: 'ID', class: 'LogId', active: true, display: true, width: "0" },
+            { index: 0, label: '#ID', class: 'LogId', active: true, display: true, width: "0" },
             { index: 1, label: 'Asset Code', class: 'AssetCode', active: true, display: true, width: "" },
             { index: 2, label: 'Asset Name', class: 'AssetName', active: true, display: true, width: "" },
             { index: 3, label: 'Service Type', class: 'ServiceType', active: true, display: true, width: "" },
@@ -968,6 +969,7 @@ Template.non_transactional_list.onRendered(function() {
             { index: 15, label: 'Registration Renewal Date', class: 'RegisterAssetRegisterRenewDate', active: true, display: true, width: "" },
             { index: 16, label: 'Insurance Info', class: 'RegisterAssetInsuranceInfo', active: true, display: true, width: "" },
             { index: 17, label: 'Depreciation Start Date', class: 'RegisterAssetRenewDate', active: true, display: true, width: "" },
+            { index: 18, label: 'Status', class: 'AssetStatus', active: true, display: true, width: "" },
           ];
         } else if(currenttablename === "tblFixedAssetList"){
           reset_data = [
@@ -998,7 +1000,7 @@ Template.non_transactional_list.onRendered(function() {
             { index: 24, label: 'Insured By', class: 'InsuredBy', active: false, display: true, width: "" },
             { index: 25, label: 'Insurance Policy', class: 'InsurancePolicy', active: false, display: true, width: "" },
             { index: 26, label: 'Insured Until', class: 'InsuredUntil', active: false, display: true, width: "" },
-            { index: 27, label: 'Active', class: 'Active', active: true, display: true, width: "" },
+            { index: 27, label: 'Status', class: 'AssetStatus', active: true, display: true, width: "" },
           ];
         } else if (currenttablename === "tblSubtaskDatatable") {
             reset_data = [
@@ -1014,9 +1016,9 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename === "tblFixedAssetType") {
             reset_data = [
                 { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
-                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "30%" },
-                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "30%" },
-                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "30%" },
+                { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "300" },
+                { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "300" },
+                { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "300" },
             ];
         } else if (currenttablename === "tblPayRuns"){
             reset_data = [
@@ -1081,7 +1083,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 0, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
                 { index: 1, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
                 { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
-                { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },                
+                { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
             ]
         } else if (currenttablename === "tblLotNumberList"){
             reset_data = [
@@ -1090,18 +1092,18 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
                 { index: 3, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
                 { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
-                { index: 5, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },                
+                { index: 5, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
                 { index: 6, label: 'Transaction', class: 'colTransaction', active: true, display: true, width: "" },
                 { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
                 { index: 8, label: 'Bin', class: 'colBin', active: true, display: true, width: "" },
-                { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },                
-                
+                { index: 9, label: 'Barcode', class: 'colBarcode', active: true, display: true, width: "" },
+
             ]
         } else if (currenttablename === "tblLotNumberListByID"){
             reset_data = [
                 { index: 0, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
                 { index: 1, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
-                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },                
+                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
                 { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
             ]
         } else if (currenttablename === "tblAllSingleTouchPayroll"){
@@ -1135,8 +1137,37 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "150" },
                 { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
             ];
+        } else if (currenttablename === "tblEftExport") {
+            reset_data = [
+                { index: 0, label: '#ID', class: '', active: false, display: true, width: "10" },
+                { index: 1, label: 'Apply?', class: 'colApply', active: true, display: true, width: "150" },
+                { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
+                { index: 3, label: 'BSB', class: 'colBSB', active: true, display: true, width: "100" },
+                { index: 4, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
+                { index: 5, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "100" },
+                { index: 6, label: 'Lodgement References', class: 'colLodgementReferences', active: true, display: true, width: "100" },
+                { index: 7, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
+                { index: 8, label: 'From BSB', class: 'colFromBSB', active: true, display: true, width: "100" },
+            ];
+        } else if (currenttablename === "tblAppointmentsByCustomer"){
+            reset_data = [
+                { index: 0, label: '', class: 'colCheckBox', active: false, display: true, width: "20" },
+                { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "50" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+                { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "100" },
+                { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
+                { index: 5, label: 'From Date', class: 'colFromDate', active: true, display: true, width: "80" },
+                { index: 6, label: 'To Date', class: 'colToDate', active: true, display: true, width: "80" },
+                { index: 7, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "60" },
+                { index: 8, label: 'To Time', class: 'colToTime', active: true, display: true, width: "60" },
+                { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "60" },
+                { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "60" },
+                { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "80" },
+                { index: 12, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "80" },
+                { index: 13, label: 'Notes', class: 'colNotes', active: false, display: true, width: "10" },
+                { index: 14, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
+            ]
         }
-
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -1286,6 +1317,80 @@ Template.non_transactional_list.onRendered(function() {
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }
+
+    // Appointment list by customer
+    templateObject.getAppointmentsByCustomer = async function(){
+        var currentBeginDate = new Date();
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if ((currentBeginDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+        } else {
+            fromDateMonth = (currentBeginDate.getMonth() + 1);
+        }
+
+        if (currentBeginDate.getDate() < 10) {
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+        getVS1Data("TAppointmentList").then(dataObject => {
+            if(dataObject.length){
+                const data = JSON.parse(dataObject[0].data);
+                console.log("data:", data);
+                templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
+            } else {
+                sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+                    addVS1Data('TAppointmentList', JSON.stringify(data));
+                    templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
+                })
+            }
+        }).catch(error => {
+            sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+                addVS1Data('TAppointmentList', JSON.stringify(data));
+                templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
+            })
+        })
+    }
+
+    templateObject.displayAppointmentsByCustomer = function (data) {
+        const customerId = FlowRouter.getQueryParam('id') || 0;
+        let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+        const customerAppointments = data.filter(d => d.CusID == customerId)
+            .map(item => {
+                const appStatus = !item.Active ? "Deleted" : item.Status;
+                if (item.CUSTFLD13 == "Yes") {
+                    if (item.CUSTFLD11 == "Yes") {
+                        confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                    } else if (item.CUSTFLD11 == "No") {
+                        confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                    } else {
+                        confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+                    }
+                } else {
+                    confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                }
+                return [
+                    '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + item.AppointID + '" name="' + item.AppointID + '"> <label class="custom-control-label" for="f-' +item.AppointID + '"></label></div>' || '',
+                    item.CreationDate != '' ? moment(item.CreationDate).format("YYYY/MM/DD") : item.CreationDate,
+                    item.AppointID || '',
+                    item.STARTTIME != '' ? moment(item.STARTTIME).format("DD/MM/YYYY") : item.STARTTIME,
+                    item.ClientName || '',
+                    item.EnteredByEmployeeName || '',
+                    moment(item.STARTTIME).format('dddd') + ', ' + moment(item.STARTTIME).format('DD'),
+                    moment(item.ENDTIME).format('dddd') + ', ' + moment(item.ENDTIME).format('DD'),
+                    moment(item.STARTTIME).format('h:mm a'),
+                    moment(item.ENDTIME).format('h:mm a'),
+                    item.Actual_Starttime || '',
+                    item.Actual_Endtime || '',
+                    appStatus || '',
+                    confirmedColumn,
+                    item.Notes || '',
+                    item.ProductDesc || '',
+                ]
+            })
+        console.log(customerAppointments)
+    }
 
     //Contact Overview Data
     templateObject.getContactOverviewData = async function(deleteFilter = false) {
@@ -5599,7 +5704,7 @@ Template.non_transactional_list.onRendered(function() {
         let tdCustomerDef = ""; //isSalesdefault
         let tdSupplierDef = ""; //isPurchasedefault
         let tdUseforAutoSplitQtyinSales = ""; //UseforAutoSplitQtyinSales
-        let currentData = data.tunitofmeasurelist[i].fields
+        let currentData = data.tunitofmeasurelist[i].fields == undefined ? data.tunitofmeasurelist[i] : data.tunitofmeasurelist[i].fields
         if (currentData.Active == true) {
           linestatus = "";
         } else if (currentData.Active == false) {
@@ -7956,6 +8061,7 @@ Template.non_transactional_list.onRendered(function() {
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
                     addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
+                    console.log(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -7963,11 +8069,14 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
             }
         }).catch(function(err) {
-            contactService.getAllJobListByCustomer(customerName).then(function(data) {
-                templateObject.displayCustomerJobDetailsListData(data, customerName);
-            }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
+            console.log("Strange error:", err)
+            // contactService.getAllJobListByCustomer(customerName).then(function(data) {
+            //     console.log("Job DATA HERE:", data)
+            //     templateObject.displayCustomerJobDetailsListData(data, customerName);
+            // }).catch(function(err) {
+            //     console.log(err);
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
         });
     }
 
@@ -8004,20 +8113,20 @@ Template.non_transactional_list.onRendered(function() {
         let deleteFilter = false;
         for (let i = 0; i < dataTableListJob.length; i++) {
             var dataList = [
-                data[i].id,
-                data[i].company,
-                data[i].phone,
-                data[i].arbalance,
-                data[i].creditbalance,
-                data[i].balance,
-                data[i].creditlimit,
-                data[i].salesorderbalance,
-                data[i].country,
-                data[i].email,
-                data[i].accountno,
-                data[i].clientno,
-                data[i].jobtitle,
-                data[i].notes,
+                dataTableListJob[i].id,
+                dataTableListJob[i].company,
+                dataTableListJob[i].phone,
+                dataTableListJob[i].arbalance,
+                dataTableListJob[i].creditbalance,
+                dataTableListJob[i].balance,
+                dataTableListJob[i].creditlimit,
+                dataTableListJob[i].salesorderbalance,
+                dataTableListJob[i].country,
+                dataTableListJob[i].email,
+                dataTableListJob[i].accountno,
+                dataTableListJob[i].clientno,
+                dataTableListJob[i].jobtitle,
+                dataTableListJob[i].notes,
             ];
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
@@ -8028,7 +8137,6 @@ Template.non_transactional_list.onRendered(function() {
                 MakeNegative();
             }, 100);
         }
-        // splashArrayClientTypeList =[[1,'company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1',]]
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayClientTypeList,
@@ -13253,24 +13361,24 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
     // Get ServiceLogList
-    templateObject.getServiceLogData = function () {
+    templateObject.getServiceLogData = function (activeFlag = 'all') {
       getVS1Data("TServiceLogList").then(function (dataObject) {
         if (dataObject.length == 0) {
           fixedAssetService.getServiceLogList().then(function (data) {
-            templateObject.setServiceLogList(data);
+            templateObject.setServiceLogList(data, activeFlag);
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          templateObject.setServiceLogList(data);
+          templateObject.setServiceLogList(data, activeFlag);
         }
       }).catch(function (err) {
         fixedAssetService.getServiceLogList().then(function (data) {
-            templateObject.setServiceLogList(data);
+            templateObject.setServiceLogList(data, activeFlag);
           });
       });
     };
 
-    templateObject.setServiceLogList = function (data) {
+    templateObject.setServiceLogList = function (data, activeFlag = false) {
       addVS1Data('TServiceLogList', JSON.stringify(data));
       const dataTableList = new Array();
 
@@ -13285,7 +13393,11 @@ Template.non_transactional_list.onRendered(function() {
           log.NextServiceDate || "",
           log.Done ? 'Completed' : 'Pending',
         ];
-        dataTableList.push(dataList);
+        if (activeFlag === 'all')
+            dataTableList.push(dataList);
+        else if (log.Done === activeFlag) {
+            dataTableList.push(dataList);
+        }
       }
       templateObject.transactiondatatablerecords.set(dataTableList);
 
@@ -13304,7 +13416,7 @@ Template.non_transactional_list.onRendered(function() {
             columnData.push({
               className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
               targets: item.id,
-              width: "10px",
+              width: item.width,
               createdCell: function(td, cellData, rowData, row, col) {
                 $(td).closest("tr").attr("id", rowData[0]);
               }
@@ -13314,6 +13426,7 @@ Template.non_transactional_list.onRendered(function() {
             columnData.push({
                 className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
                 targets: item.id,
+                width: item.width,
             })
           }
         });
@@ -13463,12 +13576,12 @@ Template.non_transactional_list.onRendered(function() {
             },
             language: { search: "", searchPlaceholder: "Search List..." },
             "fnInitComplete": function(oSettings) {
-                // if (deleteFilter) {
-                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // } else {
-                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // }
-                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                if (activeFlag) {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>View Pending</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Complete</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 // let countTableData = data.Params.Count || 0; //get count from API data
@@ -13506,28 +13619,28 @@ Template.non_transactional_list.onRendered(function() {
     };
 
     // Get AssetRegisterList
-    templateObject.getAssetRegisterData = function () {
+    templateObject.getAssetRegisterData = function (activeFlag = 'all') {
       getVS1Data("TFixedAssets").then(function (dataObject) {
         if (dataObject.length == 0) {
           fixedAssetService.getTFixedAssetsList().then(function (data) {
-            templateObject.setAssetRegisterList(data);
+            templateObject.setAssetRegisterList(data, activeFlag);
           }).catch(function (err) {
             $(".fullScreenSpin").css("display", "none");
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          templateObject.setAssetRegisterList(data);
+          templateObject.setAssetRegisterList(data, activeFlag);
         }
       }).catch(function (err) {
         fixedAssetService.getTFixedAssetsList().then(function (data) {
-          templateObject.setAssetRegisterList(data);
+          templateObject.setAssetRegisterList(data, activeFlag);
         }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
         });
       });
     };
 
-    templateObject.setAssetRegisterList = function (data) {
+    templateObject.setAssetRegisterList = function (data, activeFlag = false) {
       addVS1Data('TFixedAssets', JSON.stringify(data));
       const dataTableList = new Array();
       for (const asset of data.tfixedassets) {
@@ -13548,10 +13661,15 @@ Template.non_transactional_list.onRendered(function() {
           asset.fields.PurchCost || "",
           asset.fields.SupplierName,
           asset.fields.CUSTDATE1 ? moment(asset.fields.CUSTDATE1).format("DD/MM/YYYY") : "",
-          '',
-          asset.fields.DepreciationStartDate ? moment(asset.fields.DepreciationStartDate).format("DD/MM/YYYY") : ""
+          asset.fields.CUSTFLD7 || "",
+          asset.fields.DepreciationStartDate ? moment(asset.fields.DepreciationStartDate).format("DD/MM/YYYY") : "",
+          asset.fields.Active || false
         ];
-        dataTableList.push(dataList);
+        if (activeFlag === 'all')
+            dataTableList.push(dataList);
+        else if (asset.fields.Active === activeFlag) {
+            dataTableList.push(dataList);
+        }
       }
       $(".fullScreenSpin").css("display", "none");
       templateObject.transactiondatatablerecords.set(dataTableList);
@@ -13694,12 +13812,12 @@ Template.non_transactional_list.onRendered(function() {
             },
             language: { search: "", searchPlaceholder: "Search List..." },
             "fnInitComplete": function(oSettings) {
-                // if (deleteFilter) {
-                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // } else {
-                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // }
-                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                if (activeFlag) {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 // let countTableData = data.Params.Count || 0; //get count from API data
@@ -13736,28 +13854,28 @@ Template.non_transactional_list.onRendered(function() {
     };
 
     // Get FixedAssetList
-    templateObject.getFixedAssetData = function () {
+    templateObject.getFixedAssetData = function (activeFlag) {
       getVS1Data("TFixedAssets").then(function (dataObject) {
         if (dataObject.length == 0) {
           fixedAssetService.getTFixedAssetsList().then(function (data) {
-            templateObject.setFixedAssetList(data);
+            templateObject.setFixedAssetList(data, activeFlag);
           }).catch(function (err) {
             $(".fullScreenSpin").css("display", "none");
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          templateObject.setFixedAssetList(data);
+          templateObject.setFixedAssetList(data, activeFlag);
         }
       }).catch(function (err) {
         fixedAssetService.getTFixedAssetsList().then(function (data) {
-          templateObject.setFixedAssetList(data);
+          templateObject.setFixedAssetList(data, activeFlag);
         }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
         });
       });
     };
 
-    templateObject.setFixedAssetList = function (data) {
+    templateObject.setFixedAssetList = function (data, activeFlag = false) {
       addVS1Data('TFixedAssets', JSON.stringify(data));
       const dataTableList = new Array();
       for (const asset of data.tfixedassets) {
@@ -13791,7 +13909,11 @@ Template.non_transactional_list.onRendered(function() {
           asset.fields.InsuredUntil ? moment(asset.fields.InsuredUntil).format("DD/MM/YYYY") : "",
           asset.fields.Active || false
         ];
-        dataTableList.push(dataList);
+        if (activeFlag === 'all')
+            dataTableList.push(dataList);
+        else if (asset.fields.Active === activeFlag) {
+            dataTableList.push(dataList);
+        }
       }
       $(".fullScreenSpin").css("display", "none");
       templateObject.transactiondatatablerecords.set(dataTableList);
@@ -13875,12 +13997,12 @@ Template.non_transactional_list.onRendered(function() {
             },
             language: { search: "", searchPlaceholder: "Search List..." },
             "fnInitComplete": function(oSettings) {
-                // if (deleteFilter) {
-                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // } else {
-                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // }
-                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                if (activeFlag) {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 // let countTableData = data.Params.Count || 0; //get count from API data
@@ -13968,6 +14090,7 @@ Template.non_transactional_list.onRendered(function() {
               columnData.push({
                 className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
                 targets: item.id,
+                width: "10px",
                 createdCell: function(td, cellData, rowData, row, col) {
                   $(td).closest("tr").attr("id", rowData[0]);
                 }
@@ -13977,6 +14100,7 @@ Template.non_transactional_list.onRendered(function() {
               columnData.push({
                   className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
                   targets: item.id,
+                  width: item.width,
               })
             }
           });
@@ -14770,8 +14894,8 @@ Template.non_transactional_list.onRendered(function() {
             let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
             let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
             let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
-            let qty = data.tserialnumberlistcurrentreport[i].Quantity;
-            let transaction = data.tserialnumberlistcurrentreport[i].Quantity;
+            let qty = data.tserialnumberlistcurrentreport[i].Quantity || 1;
+            let transaction = data.tserialnumberlistcurrentreport[i].Description;
             let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
             let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
             let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
@@ -14826,7 +14950,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colSerialNumber",
@@ -15009,8 +15133,8 @@ Template.non_transactional_list.onRendered(function() {
             let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
             let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
             let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
-            let qty = data.tserialnumberlistcurrentreport[i].Quantity;
-            let transaction = data.tserialnumberlistcurrentreport[i].Quantity;
+            let qty = data.tserialnumberlistcurrentreport[i].Quantity || 1;
+            let transaction = data.tserialnumberlistcurrentreport[i].Description;
             let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
             let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
             let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
@@ -15077,7 +15201,7 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colDepartment",
                         targets: 3,
                         width:'40%'
-                    },                    
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -15198,7 +15322,7 @@ Template.non_transactional_list.onRendered(function() {
                         templateObject.displayLotNumberList(data, deleteFilter);
                     }
                 }).catch(function (err) {
-        
+
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -15211,7 +15335,7 @@ Template.non_transactional_list.onRendered(function() {
             }
         }).catch(function (err) {
             productService.getProductBatches().then(async function (data) {
-                // await addVS1Data('TProductBatches', JSON.stringify(data));
+                await addVS1Data('TProductBatches', JSON.stringify(data));
                 if(productID){
                     templateObject.displayLotNumberListByID(data, deleteFilter, productID);
                 }
@@ -15219,77 +15343,102 @@ Template.non_transactional_list.onRendered(function() {
                     templateObject.displayLotNumberList(data, deleteFilter);
                 }
             }).catch(function (err) {
-    
+
             });
         });
     }
 
     templateObject.displayLotNumberList = function(data, deleteFilter=false){
         let splashArrayTimeSheetList = new Array();
+        let productname = "";
+        let department = "";
+        let salsedes = "";
+        let barcode = "";
+        let binnumber = "";
+        let lotnumber = "";
+        let status = "";
+        let qty = "";
+        let transaction = "";
+        let expirydate = "";
+        let cssclass = "";
         for (let i = 0; i < data.tproductbatches.length; i++) {
 
             let tclass = '';
             if(data.tproductbatches[i].Alloctype == "OUT"){
                 tclass="text-sold";
-            }else if(data.tproductbatches[i].Alloctype == "IN"){
+            }else if(data.tproductbatches[i].Alloctype == ""){
                 tclass="text-instock";
-            }else if(data.tproductbatches[i].Alloctype == "Transferred (Not Available)"){
-                tclass="text-transfered";
             }else{
                 tclass='';
             }
+            let alloctype = data.tproductbatches[i].Alloctype === "" ? "In-Stock" : data.tproductbatches[i].Alloctype === "IN" ? "In-Stock" : "Sold";
 
-            let productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
-            let department = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
-            let salsedes = data.tproductbatches[i].QtyDescription;
-            let barcode = "";
-            let binnumber = "";
-            let lotnumber = data.tproductbatches[i].Batchno;
-            let status = data.tproductbatches[i].Alloctype;
-            let qty = data.tproductbatches[i].Qty;
-            let transaction = data.tproductbatches[i].QtyDescription;
-            let expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
-            let cssclass = tclass;
-
-            var dataTimeSheetList = [
-                lotnumber,
-                expirydate,
-                productname,
-                salsedes,
-                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",
-                qty,                
-                transaction,
-                department,
-                binnumber,
-                barcode,
-                cssclass,
-            ];
-
-            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype != ""){
-                if($("#tblDepartmentCheckbox") != undefined){
-                    if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
-                        if(!deleteFilter){
-                            if(data.tproductbatches[i].Alloctype != "OUT"){
-                                splashArrayTimeSheetList.push(dataTimeSheetList);
-                            }
-                        }
-                        else{
-                            splashArrayTimeSheetList.push(dataTimeSheetList);
-                        }
-                    }
+            if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == ""){
+                productname = data.tproductbatches[i].PARTNAME != '' ? data.tproductbatches[i].PARTNAME : 'Unknown';
+                let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                department = "<label style='width:100%;'>"+classname+"</label>";
+                salsedes = data.tproductbatches[i].QtyDescription;
+                barcode = "";
+                binnumber = "";
+                lotnumber = data.tproductbatches[i].Batchno;
+                status = "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                qty = "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                transaction = "";
+                expirydate = data.tproductbatches[i].ExpiryDate !=''? moment(data.tproductbatches[i].ExpiryDate).format("YYYY/MM/DD"): data.tproductbatches[i].ExpiryDate;
+                cssclass = tclass;
+            }
+            else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "OUT" && deleteFilter){
+                status += "<label class='" + tclass + "' style='width:100%; text-align:center'>" + alloctype + "</label>";
+                qty += "<label style='width:100%; text-align:right'>" + Math.abs(data.tproductbatches[i].Qty) + "</label>";
+                let classname = data.tproductbatches[i].classname != '' ? data.tproductbatches[i].classname : 'Unknown';
+                department += "<label style='width:100%;'>"+classname+"</label>";
+                if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                    transaction += "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>";
+                }
+                else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                    transaction += "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>";
                 }
                 else{
-                    if(!deleteFilter){
-                        if(data.tproductbatches[i].Alloctype != "OUT"){
-                            splashArrayTimeSheetList.push(dataTimeSheetList);
-                        }
-                    }
-                    else{
+                    transaction += "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>";
+                }
+            }
+            else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
+                qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
+                    transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                }
+                else if(data.tproductbatches[i].Transtype == "TInvoiceLine"){
+                    transaction = "<label style='width:100%;'>Inv-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                }
+                else{
+                    transaction = "<label style='width:100%;'>"+data.tproductbatches[i].Transtype+"-"+data.tproductbatches[i].transid+"</label>" + transaction;
+                }
+
+                var dataTimeSheetList = [
+                    lotnumber,
+                    expirydate,
+                    productname,
+                    salsedes,
+                    status,
+                    qty,
+                    transaction,
+                    department,
+                    binnumber,
+                    barcode,
+                    cssclass,
+                ];
+
+                if($("#tblDepartmentCheckbox") != undefined){
+                    if($("#tblDepartmentCheckbox #formCheck-"+data.tproductbatches[i].ClassId).prop("checked") == true){
                         splashArrayTimeSheetList.push(dataTimeSheetList);
                     }
                 }
+                else{
+                    splashArrayTimeSheetList.push(dataTimeSheetList);
+                }
             }
         }
+
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -15300,7 +15449,7 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         className: "colSerialNumber",
@@ -15329,15 +15478,15 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colStatus",
                         targets: 4,
                         width:'8%',
-                        createdCell: function (td, cellData, rowData, row, col) {
-                            $(td).addClass(rowData[10]);
-                        }
+                        // createdCell: function (td, cellData, rowData, row, col) {
+                        //     $(td).addClass(rowData[10]);
+                        // }
                     },
                     {
                         className: "colQty",
                         targets: 5,
                         width:'8%'
-                    },                    
+                    },
                     {
                         className: "colTransaction",
                         targets: 6,
@@ -15495,11 +15644,11 @@ Template.non_transactional_list.onRendered(function() {
             var dataTimeSheetList = [
                 lotnumber,
                 expirydate,
-                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",                
+                status === "" ? "Draft" : status === "IN" ? "In-Stock" : "Sold",
                 department,
                 cssclass,
             ];
-            
+
             if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype != ""){
                 if(data.tproductbatches[i].PartsID == productID){
                     if(!deleteFilter){
@@ -16537,7 +16686,7 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename == "tblAssetRegisterList") {
         templateObject.getAssetRegisterData();
     } else if (currenttablename == "tblFixedAssetList") {
-        templateObject.getFixedAssetData();
+        templateObject.getFixedAssetData('all');
     } else if (currenttablename == "tblFixedAssetType") {
         templateObject.getFixedAssetTypeData();
     } else if (currenttablename === "tblPayRuns"){
@@ -16557,7 +16706,7 @@ Template.non_transactional_list.onRendered(function() {
         }, 100);
     } else if (currenttablename === "tblLotNumberList"){
         setTimeout(function() {
-            templateObject.getLotNumberList(false);
+            templateObject.getLotNumberList(true);
         }, 100);
     } else if (currenttablename === "tblLotNumberListByID"){
         setTimeout(function() {
@@ -16572,6 +16721,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDraftPayRunData();
     } else if(currenttablename === "tblAllSingleTouchPayroll"){
         templateObject.getAllSingleTouchPayroll();
+    } else if(currenttablename === 'tblAppointmentsByCustomer'){
+        templateObject.getAppointmentsByCustomer();
     }
 
     tableResize();
@@ -16754,6 +16905,12 @@ Template.non_transactional_list.events({
             templateObject.getLotNumberList(true, prductID);
         } else if(currenttablename === "tblAllSingleTouchPayroll"){
             templateObject.getAllSingleTouchPayroll(true)
+        } else if (currenttablename == "tblFixedAssetList") {
+            templateObject.getFixedAssetData(true);
+        } else if (currenttablename == "tblAssetRegisterList") {
+            templateObject.getAssetRegisterData(true);
+        } else if (currenttablename == "tblServiceLogList") {
+            templateObject.getServiceLogData(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -16866,6 +17023,12 @@ Template.non_transactional_list.events({
             templateObject.getLotNumberList(false, prductID);
         }else if(currenttablename === "tblAllSingleTouchPayroll"){
             templateObject.getAllSingleTouchPayroll(false)
+        } else if (currenttablename == "tblFixedAssetList") {
+            templateObject.getFixedAssetData(false);
+        } else if (currenttablename == "tblAssetRegisterList") {
+            templateObject.getAssetRegisterData(false);
+        } else if (currenttablename == "tblServiceLogList") {
+            templateObject.getServiceLogData(false);
         }
     },
     'change .custom-range': async function(event) {

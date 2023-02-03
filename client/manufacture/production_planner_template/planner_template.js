@@ -143,7 +143,7 @@ Template.production_planner_template.onRendered(async function() {
                             return resource.title == processName;
                         })
                         let resourceId = resources[index].id;
-                        let startTime = new Date(workorders[i].fields.StartTime);
+                        let startTime = new Date(workorders[i].fields.OrderDate);
                         let filteredEvents = tempEvents.filter(itemEvent => itemEvent.resourceName == processName && new Date(itemEvent.end).getTime() > startTime.getTime() && new Date(itemEvent.start).getTime() < startTime.getTime())
                         if(filteredEvents.length > 1) {
                             filteredEvents.sort((a,b)=> a.end.getTime() - b.end.getTime())
@@ -181,7 +181,8 @@ Template.production_planner_template.onRendered(async function() {
                                 'quantity': quantity,
                                 "builds": buildSubs,
                                 "fromStocks": stockRaws,
-                                "completed":workorders[i].fields.IsCompleted || false
+                                "completed":workorders[i].fields.IsCompleted || false,
+                                "status": workorders[i].fields.Status
                             }
                         }
                         tempEvents.push(event);
@@ -340,6 +341,10 @@ Template.production_planner_template.onRendered(async function() {
                 let id = event.extendedProps.orderId;
                 FlowRouter.go('/workordercard?id=' + id)
             })
+
+            arg.el.addEventListener("contextmenu", (e)=> {
+                e.preventDefault()
+            })
             let sTime = event.start
             let current = new Date().getTime()
             if(current>sTime.getTime())   {
@@ -450,20 +455,24 @@ Template.production_planner_template.onRendered(async function() {
                     return order.fields.ProductName == title;
                 })
                 let percentage = 0;
-                if (new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
-                    let overallTime = (new Date(info.event.end)).getTime() - (new Date(info.event.start)).getTime();
-                    let processedTime = new Date().getTime() - (new Date(info.event.start)).getTime();
-                    percentage = ((processedTime / overallTime) * 100).toFixed(2);
+                if(info.event.extendedProps.status != 'unscheduled') {
+                    if (new Date().getTime() > (new Date(info.event.start)).getTime() && new Date().getTime() < (new Date(info.event.end)).getTime()) {
+                        let overallTime = (new Date(info.event.end)).getTime() - (new Date(info.event.start)).getTime();
+                        let processedTime = new Date().getTime() - (new Date(info.event.start)).getTime();
+                        percentage = ((processedTime / overallTime) * 100).toFixed(2);
+                    }
                 }
                 let object = {
-                    SONumber: workorders[orderIndex].fields.SaleID,
+                    JOBNumber: workorders[orderIndex].fields.ID,
                     Customer: workorders[orderIndex].fields.Customer,
                     OrderDate: new Date(workorders[orderIndex].fields.OrderDate).toLocaleDateString(),
                     ShipDate: workorders[orderIndex].fields.ShipDate,
                     JobNotes: JSON.parse(workorders[orderIndex].fields.BOMStructure).CustomInputClass || '',
                     Percentage: percentage + '%',
+                    Status: workorders[orderIndex].fields.Status
                 }
                 templateObject.viewInfoData.set(object);
+                $('.eventInfo').css('display', 'flex')
                 let orderId = info.event.extendedProps.orderId;
                 let salesorderId = orderId.toString().split('000')[0];
                 templateObject.selectedEventSalesorderId.set(salesorderId);
@@ -663,11 +672,258 @@ Template.production_planner_template.onRendered(async function() {
     //         $('.fc-prev-button').trigger('click')
     //     }, 1000)
     // }
+
+    templateObject.changeStatus = async function(status) {
+
+        const formatTime = milliseconds => {
+            const seconds = Math.floor((milliseconds / 1000) % 60);
+            const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
+            const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
+
+            return [
+                hours.toString().padStart(2, "0"),
+                minutes.toString().padStart(2, "0"),
+                seconds.toString().padStart(2, "0")
+            ].join(":");
+        }
+        // let templateObject = Template.instance();
+        let orderData = templateObject.viewInfoData.get();
+        let workorderid = orderData.JOBNumber;
+        let workorders = await templateObject.getWorkorders();
+        let events = templateObject.events.get();
+        let tempEvents = cloneDeep(events);
+        let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
+        tempInfoData.Status = status;
+        templateObject.viewInfoData.set(tempInfoData)
+        let eventIndex = tempEvents.findIndex(event=>{
+            return event.extendedProps.orderId == workorderid
+        })
+        let event = tempEvents[eventIndex];
+        let eventStartTime = event.start;
+        let tempOrders = cloneDeep(workorders)
+        let workorderIndex = workorders.findIndex(order=> {
+            return order.fields.ID == workorderid
+        })
+        let targetOrder = workorders[workorderIndex];
+        let tempOrder = cloneDeep(targetOrder);
+        let startedTimes = tempOrder.fields.StartedTimes !=''? JSON.parse(tempOrder.fields.StartedTimes): [];
+        let pausedTimes = tempOrder.fields.PausedTimes!= ''? JSON.parse(tempOrder.fields.PausedTimes): [];
+        tempOrder.fields.Status = status;
+        if(status == 'scheduled') {
+            tempOrder.fields.StartTime = new Date(eventStartTime);
+        }
+        if(status == 'unscheduled') {
+            tempOrder.fields.StartTime = '';
+        }
+        if(status == 'started' || status == 'resumed' || status == 'QAStarted' || status == 'QAResumed') {
+            if(status == 'started') {
+                tempOrder.fields.StartTime = new Date();
+                tempOrder.fields.InProgress = true;
+            }
+            startedTimes.push(new Date());
+            tempOrder.fields.StartedTimes = JSON.stringify(startedTimes)
+        }
+        if(status == 'paused' || status == 'stopped' || status == 'QAPaused' || status == 'QAStopped') {
+            let trackedTime = tempOrder.fields.TrackedTime;
+            pausedTimes.push(new Date());
+            if(status == 'paused' || status == 'QAPaused' || ((status == 'stopped' || status == 'QAStopped')&&new Date(startedTimes[startedTimes.length-1]).getTime() > new Date(pausedTimes[pausedTimes.length -2]).getTime() )) {
+                trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
+            } 
+            if(status =='QAStopped') {
+                let stoppedTime = new Date();
+                tempOrder.fields.StoppedTime = stoppedTime;
+            }
+            tempOrder.fields.PausedTimes = JSON.stringify(pausedTimes);
+            tempOrder.fields.TrackedTime = trackedTime;
+            if(status == 'QAStopped') {
+                console.log('Started and Resumed times:', startedTimes, 'Paused and Stopped Times', pausedTimes, 'Total tracked time', formatTime(trackedTime))
+            }
+        }
+
+        if(status == 'Completed') {
+            tempOrder.fields.IsCompleted = true;
+        }
+        
+        tempOrders.splice(workorderIndex, 1, tempOrder);
+        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
+    }
    
 })
 
 Template.production_planner_template.helpers({
     viewInfoData: () => {
         return Template.instance().viewInfoData.get();
+    },
+
+    showStartTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'scheduled'
+    },
+    showPauseTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'started' || info.Status == 'resumed'
+    },
+    showStopTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'started' || info.Status == 'resumed' || info.Status == 'paused'
+    },
+    showResumeTimer: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'paused'
+    },
+    showStartQA: ()=>{
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'stopped'
+    },
+    showPauseQA: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAStarted' || info.Status == 'QAResumed'
+    },
+    showStopQA: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAStarted' || info.Status == 'QAResumed' || info.Status == 'QAPaused'
+    },
+    showResumeQA: ()=> {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAPaused'
+    },
+    showMarkAsCompleted:() => {
+        let templateObject = Template.instance();
+        let info = templateObject.viewInfoData.get();
+        return info.Status == 'QAStopped'
+    }
+})
+
+Template.production_planner_template.events({
+    'click #btnMarkAsScheduled': async function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('scheduled')
+        // let orderData = templateObject.viewInfoData.get();
+        // let workorderid = orderData.JOBNumber;
+        // let workorders = await templateObject.getWorkorders();
+        // let events = templateObject.events.get();
+        // let tempEvents = cloneDeep(events);
+        // let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
+        // tempInfoData.Status = 'scheduled';
+        // templateObject.viewInfoData.set(tempInfoData)
+        // let eventIndex = tempEvents.findIndex(event=>{
+        //     return event.extendedProps.orderId == workorderid
+        // })
+        // let event = tempEvents[eventIndex];
+        // let eventStartTime = event.start;
+        // let tempOrders = cloneDeep(workorders)
+        // let workorderIndex = workorders.findIndex(order=> {
+        //     return order.fields.ID == workorderid
+        // })
+        // let targetOrder = workorders[workorderIndex];
+        // let tempOrder = cloneDeep(targetOrder);
+        // tempOrder.fields.StartTime = new Date(eventStartTime);
+        // tempOrder.fields.Status = 'scheduled';
+        // tempOrders.splice(workorderIndex, 1, tempOrder);
+        // addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
+
+    },
+
+    'click #btnMarkAsUnscheduled': async function (e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('unscheduled')
+        // let orderData = templateObject.viewInfoData.get();
+        // let workorderid = orderData.JOBNumber;
+        // let workorders = await templateObject.getWorkorders();
+        // let events = templateObject.events.get();
+        // let tempEvents = cloneDeep(events);
+        // let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
+        // tempInfoData.Status = 'unscheduled';
+        // templateObject.viewInfoData.set(tempInfoData)
+        // let eventIndex = tempEvents.findIndex(event=>{
+        //     return event.extendedProps.orderId == workorderid
+        // })
+        // let event = tempEvents[eventIndex];
+        // let eventStartTime = event.start;
+        // let tempOrders = cloneDeep(workorders)
+        // let workorderIndex = workorders.findIndex(order=> {
+        //     return order.fields.ID == workorderid
+        // })
+        // let targetOrder = workorders[workorderIndex];
+        // let tempOrder = cloneDeep(targetOrder);
+        // tempOrder.fields.StartTime = new Date(eventStartTime);
+        // tempOrder.fields.Status = 'unscheduled';
+        // tempOrders.splice(workorderIndex, 1, tempOrder);
+        // addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
+    },
+
+    'click #btnStartTimer': async function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('started')
+        // let orderData = templateObject.viewInfoData.get();
+        // let workorderid = orderData.JOBNumber;
+        // let workorders = await templateObject.getWorkorders();
+        // let events = templateObject.events.get();
+        // let tempEvents = cloneDeep(events);
+        // let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
+        // tempInfoData.Status = 'started';
+        // templateObject.viewInfoData.set(tempInfoData)
+        // let eventIndex = tempEvents.findIndex(event=>{
+        //     return event.extendedProps.orderId == workorderid
+        // })
+        // let event = tempEvents[eventIndex];
+        // event.start = new Date();
+        // tempEvents.splice(eventIndex, 1, event);
+        // templateObject.events.set(tempEvents)
+        // let tempOrders = cloneDeep(workorders)
+        // let workorderIndex = workorders.findIndex(order=> {
+        //     return order.fields.ID == workorderid
+        // })
+        // let targetOrder = workorders[workorderIndex];
+        // let tempOrder = cloneDeep(targetOrder);
+        // tempOrder.fields.StartTime = new Date();
+        // tempOrder.fields.Status = 'started';
+        // tempOrders.splice(workorderIndex, 1, tempOrder);
+        // addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
+    },
+
+    'click #btnPauseTimer': async function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('paused')
+    },
+
+    'click #btnStopTimer': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('stopped')
+    },
+
+    'click #btnResumeTimer': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('resumed')
+    },
+
+    'click #btnStartQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus ('QAStarted')
+    },
+
+    'click #btnResumeQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('QAResumed')
+    },
+    'click #btnPauseQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('QAPaused')
+    },
+    'click #btnStopQA': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('QAStopped');
+    },
+    'click #btnMarkAsComplete': function(e) {
+        let templateObject = Template.instance();
+        templateObject.changeStatus('Completed')
     }
 })

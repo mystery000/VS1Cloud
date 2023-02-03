@@ -1,22 +1,10 @@
 <template name="generalledger">
-    {{# vs1_report_template tabledisplayname="General Ledger" tablename="tblgeneralledger" dateAsAt=dateAsAt
-                            currencyList = currencyList}}
-        <style>
-            td{
-                color: #00a3d3;
-            }
-            tr td:nth-child(2){
-                color: #858796!important;
-                font-weight: bold;
-            }
-            .fw-bold{
-                font-weight: bold;
-            }
-        </style>
-        <div class="table-responsive">
-            <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tblgeneralledger"
-                   name="tblgeneralledger">
-                <thead>
+    {{# vs1_report_template tabledisplayname="General Ledger" tablename="tblgeneralledger" dateAsAt=dateAsAt sheetname="Generalledger report result"
+    currencyList = currencyList}}
+    <div class="table-responsive">
+        <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tblgeneralledger"
+            name="tblgeneralledger">
+            <thead>
                 <tr class="table-active customDoubleTableHeading">
                     {{#each c in generalledgerth}}
                         {{#if c.display}}

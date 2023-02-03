@@ -163,9 +163,9 @@ Template.newsidenav.onCreated(function () {
   });
 });
 Template.newsidenav.onRendered(function () {
-  var countObjectTimes = 0;
-  let allDataToLoad = 79;
-  let progressPercentage = 0;
+  // var countObjectTimes = 0;
+  // let allDataToLoad = 93;
+  // let progressPercentage = 0;
   let templateObject = Template.instance();
 
   let vS1FormAccessDetail = localStorage.getItem('VS1FormAccessDetail');
@@ -1214,7 +1214,7 @@ Template.newsidenav.events({
   'click #sidebarToggleBtn': function (event) {
 
     let payload = "";
-
+    let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
     if ($('#sidebar').hasClass("top")) {
       payload = {
         Name: "VS1_EmployeeAccess",
@@ -1226,7 +1226,7 @@ Template.newsidenav.events({
           }]
         }
       };
-      sideBarService.updateVS1MenuConfig('SideMenu')
+      sideBarService.updateVS1MenuConfig('SideMenu',employeeId)
       $('#sidebar').removeClass('top');
       $('#bodyContainer').removeClass('top');
       $('#sidebarToggleBtn .text').text('Top');
@@ -1241,7 +1241,7 @@ Template.newsidenav.events({
           }]
         }
       };
-      sideBarService.updateVS1MenuConfig('TopMenu')
+      sideBarService.updateVS1MenuConfig('TopMenu',employeeId)
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
       $('#sidebarToggleBtn .text').text('Side');

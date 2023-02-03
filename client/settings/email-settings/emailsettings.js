@@ -1,23 +1,22 @@
 import { TaxRateService } from "../settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
-import { CountryService } from "../../js/country-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { SMSService } from "../../js/sms-settings-service";
 import "../../lib/global/indexdbstorage.js";
-import { startOfDay } from "@fullcalendar/core";
-import { AccountService } from "../../accounts/account-service";
 import { UtilityService } from "../../utility-service";
 import "jquery-ui-dist/external/jquery/jquery";
 import "jquery-ui-dist/jquery-ui";
-import { jsPDF } from "jspdf";
 import "jQuery.print/jQuery.print.js";
 import { cloneDeep, find, extend } from "lodash";
 import { Template } from 'meteor/templating';
 import './emailsettings.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import '../../vs1_templates/datatable/vs1_datatable'
+
 // import ldb from 'localdata';
-let sideBarService = new SideBarService();
-let smsService = new SMSService();
+const sideBarService = new SideBarService();
+const smsService = new SMSService();
+const taxRateService = new TaxRateService();
 
 const smsSettings = [
   {
@@ -44,21 +43,20 @@ const smsSettings = [
 ];
 
 Template.emailsettings.onCreated(function () {
-  const templateObject = Template.instance();
-  templateObject.datatablerecords = new ReactiveVar([]);
-  templateObject.tableheaderrecords = new ReactiveVar([]);
-  templateObject.countryData = new ReactiveVar();
-  templateObject.originScheduleData = new ReactiveVar([]);
-  templateObject.employeescheduledrecord = new ReactiveVar([]);
-  templateObject.essentialemployeescheduledrecord = new ReactiveVar([]);
-  templateObject.formsData = new ReactiveVar([]);
-  templateObject.essentialReportSchedules = new ReactiveVar([]);
-  templateObject.invoicerecords = new ReactiveVar([]);
-  templateObject.correspondences = new ReactiveVar([]);
-  templateObject.isAdd = new ReactiveVar(true);
-  templateObject.selectedRowID = new ReactiveVar();
-  templateObject.historyUpcomingRecords = new ReactiveVar([]);
-  templateObject.formsData.set([
+  this.datatablerecords = new ReactiveVar([]);
+  this.tableheaderrecords = new ReactiveVar([]);
+  this.countryData = new ReactiveVar();
+  this.originScheduleData = new ReactiveVar([]);
+  this.employeescheduledrecord = new ReactiveVar([]);
+  this.essentialemployeescheduledrecord = new ReactiveVar([]);
+  this.formsData = new ReactiveVar([]);
+  this.essentialReportSchedules = new ReactiveVar([]);
+  this.invoicerecords = new ReactiveVar([]);
+  this.correspondences = new ReactiveVar([]);
+  this.isAdd = new ReactiveVar(true);
+  this.selectedRowID = new ReactiveVar();
+  this.historyUpcomingRecords = new ReactiveVar([]);
+  this.formsData.set([
     {
       id: 6,
       name: "Aged Payables",
@@ -156,18 +154,11 @@ Template.emailsettings.onCreated(function () {
 
 Template.emailsettings.onRendered(function () {
   tinymce.init({
-        selector: 'textarea#edtTemplateContent',
-    });
+    selector: 'textarea#edtTemplateContent',
+  });
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
-  let taxRateService = new TaxRateService();
-  const dataTableList = [];
-  const tableHeaderList = [];
-
-  var countryService = new CountryService();
-  let countries = [];
   let employeeScheduledRecord = [];
-  let essentailEmployeeScheduledRecord = [];
 
   Meteor.call(
     "readPrefMethod",
@@ -177,11 +168,11 @@ Template.emailsettings.onRendered(function () {
       if (error) {
       } else {
         if (result) {
+          console.log("ReadPrefMethod:", result)
           for (let i = 0; i < result.customFields.length; i++) {
             let customcolumn = result.customFields;
             let columData = customcolumn[i].label;
             let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let hiddenColumn = customcolumn[i].hidden;
             let columnClass = columHeaderUpdate.split(".")[1];
             let columnWidth = customcolumn[i].width;
 
@@ -594,14 +585,14 @@ Template.emailsettings.onRendered(function () {
                       nextDueDate: empData[i].fields.NextDueDate || "",
                       startDate:
                         startDate.split("-")[2] +
-                          "/" +
-                          startDate.split("-")[1] +
-                          "/" +
-                          startDate.split("-")[0] || "",
+                        "/" +
+                        startDate.split("-")[1] +
+                        "/" +
+                        startDate.split("-")[0] || "",
                       startTime:
                         startTime.split(":")[0] +
-                          ":" +
-                          startTime.split(":")[1] || "",
+                        ":" +
+                        startTime.split(":")[1] || "",
                       weekDay: empData[i].fields.WeekDay || "",
                       satAction: empData[i].fields.SatAction || "",
                       sunAction: empData[i].fields.SunAction || "",
@@ -732,7 +723,7 @@ Template.emailsettings.onRendered(function () {
                   let draftRecord = templateObject.employeescheduledrecord.get();
                   templateObject.employeescheduledrecord.set(draftRecord);
                 })
-                .on("column-reorder", function () {})
+                .on("column-reorder", function () { })
                 .on("length.dt", function (e, settings, len) {
                   setTimeout(function () {
                     MakeNegative();
@@ -804,7 +795,7 @@ Template.emailsettings.onRendered(function () {
                   let draftRecord = templateObject.employeescheduledrecord.get();
                   templateObject.employeescheduledrecord.set(draftRecord);
                 })
-                .on("column-reorder", function () {})
+                .on("column-reorder", function () { })
                 .on("length.dt", function (e, settings, len) {
                   setTimeout(function () {
                     MakeNegative();
@@ -958,14 +949,14 @@ Template.emailsettings.onRendered(function () {
                           nextDueDate: empData[i].fields.NextDueDate || "",
                           startDate:
                             startDate.split("-")[2] +
-                              "/" +
-                              startDate.split("-")[1] +
-                              "/" +
-                              startDate.split("-")[0] || "",
+                            "/" +
+                            startDate.split("-")[1] +
+                            "/" +
+                            startDate.split("-")[0] || "",
                           startTime:
                             startTime.split(":")[0] +
-                              ":" +
-                              startTime.split(":")[1] || "",
+                            ":" +
+                            startTime.split(":")[1] || "",
                           weekDay: empData[i].fields.WeekDay || "",
                           satAction: empData[i].fields.SatAction || "",
                           sunAction: empData[i].fields.SunAction || "",
@@ -1100,7 +1091,7 @@ Template.emailsettings.onRendered(function () {
                       let draftRecord = templateObject.employeescheduledrecord.get();
                       templateObject.employeescheduledrecord.set(draftRecord);
                     })
-                    .on("column-reorder", function () {})
+                    .on("column-reorder", function () { })
                     .on("length.dt", function (e, settings, len) {
                       setTimeout(function () {
                         MakeNegative();
@@ -1174,7 +1165,7 @@ Template.emailsettings.onRendered(function () {
                       let draftRecord = templateObject.employeescheduledrecord.get();
                       templateObject.employeescheduledrecord.set(draftRecord);
                     })
-                    .on("column-reorder", function () {})
+                    .on("column-reorder", function () { })
                     .on("length.dt", function (e, settings, len) {
                       setTimeout(function () {
                         MakeNegative();
@@ -1341,14 +1332,14 @@ Template.emailsettings.onRendered(function () {
                         nextDueDate: empData[i].fields.NextDueDate || "",
                         startDate:
                           startDate.split("-")[2] +
-                            "/" +
-                            startDate.split("-")[1] +
-                            "/" +
-                            startDate.split("-")[0] || "",
+                          "/" +
+                          startDate.split("-")[1] +
+                          "/" +
+                          startDate.split("-")[0] || "",
                         startTime:
                           startTime.split(":")[0] +
-                            ":" +
-                            startTime.split(":")[1] || "",
+                          ":" +
+                          startTime.split(":")[1] || "",
                         weekDay: empData[i].fields.WeekDay || "",
                         satAction: empData[i].fields.SatAction || "",
                         sunAction: empData[i].fields.SunAction || "",
@@ -1480,7 +1471,7 @@ Template.emailsettings.onRendered(function () {
                     let draftRecord = templateObject.employeescheduledrecord.get();
                     templateObject.employeescheduledrecord.set(draftRecord);
                   })
-                  .on("column-reorder", function () {})
+                  .on("column-reorder", function () { })
                   .on("length.dt", function (e, settings, len) {
                     setTimeout(function () {
                       MakeNegative();
@@ -1554,7 +1545,7 @@ Template.emailsettings.onRendered(function () {
                     let draftRecord = templateObject.employeescheduledrecord.get();
                     templateObject.employeescheduledrecord.set(draftRecord);
                   })
-                  .on("column-reorder", function () {})
+                  .on("column-reorder", function () { })
                   .on("length.dt", function (e, settings, len) {
                     setTimeout(function () {
                       MakeNegative();
@@ -1586,115 +1577,13 @@ Template.emailsettings.onRendered(function () {
 
   templateObject.getScheduleInfo();
 
-  // templateObject.getCorrespondence = () => {
-  //     let temp = localStorage.getItem('correspondence');
-  //     templateObject.correspondences.set(temp ? JSON.parse(temp) : [])
-  // }
-
   templateObject.getCorrespondence = async () => {
-    // let temp = localStorage.getItem('correspondence');
-    // getVS1Data("TCorrespondence")
-    //   .then(function (dataObject) {
-    //     if (dataObject.length > 0) {
-    //       let data = JSON.parse(dataObject[0].data);
-    //       let temp = data.tcorrespondence.filter((item) => {
-    //         return (
-    //           item.fields.EmployeeId == localStorage.getItem("mySessionEmployeeLoggedID")
-    //         );
-    //       });
-    //       let tempArray = [];
-    //       // for(let i = 0; i< temp.length; i++) {
-    //       //     for (let j = i+1; j< temp.length; j++ ) {
-    //       //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-    //       //             temp[j].fields.dup = true
-    //       //         }
-    //       //     }
-    //       // }
-    //       temp.map((item) => {
-    //         if (
-    //           item.fields.EmployeeId ==
-    //             localStorage.getItem("mySessionEmployeeLoggedID") &&
-    //           item.fields.MessageTo == ""
-    //         ) {
-    //           tempArray.push(item.fields);
-    //         }
-    //       });
-    //       templateObject.correspondences.set(tempArray);
-    //     } else {
-    //       sideBarService.getCorrespondences().then((dataObject) => {
-    //         addVS1Data("TCorrespondence", JSON.stringify(dataObject));
-    //         let tempArray = [];
-    //         if (dataObject.tcorrespondence.length > 0) {
-    //           let temp = dataObject.tcorrespondence.filter((item) => {
-    //             return (
-    //               item.fields.EmployeeId ==
-    //               localStorage.getItem("mySessionEmployeeLoggedID")
-    //             );
-    //           });
-
-    //           // for(let i = 0; i< temp.length; i++) {
-    //           //     for (let j = i+1; j< temp.length; j++ ) {
-    //           //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-    //           //             temp[j].fields.dup = true
-    //           //         }
-    //           //     }
-    //           // }
-
-    //           temp.map((item) => {
-    //             if (
-    //               item.fields.EmployeeId ==
-    //                 localStorage.getItem("mySessionEmployeeLoggedID") &&
-    //               item.fields.MessageTo == ""
-    //             ) {
-    //               tempArray.push(item.fields);
-    //             }
-    //           });
-    //         }
-    //         templateObject.correspondences.set(tempArray);
-    //       });
-    //     }
-    //   })
-    //   .catch(function () {
-    //     sideBarService.getCorrespondences().then((dataObject) => {
-    //       let tempArray = [];
-    //       if (dataObject.tcorrespondence.length > 0) {
-    //         let temp = dataObject.tcorrespondence.filter((item) => {
-    //           return (
-    //             item.fields.EmployeeId ==
-    //             localStorage.getItem("mySessionEmployeeLoggedID")
-    //           );
-    //         });
-
-    //         // for(let i = 0; i< temp.length; i++) {
-    //         //     for (let j = i+1; j< temp.length; j++ ) {
-    //         //         if(temp[i].fields.Ref_Type == temp[j].fields.Ref_Type) {
-    //         //             temp[j].fields.dup = true
-    //         //         }
-    //         //     }
-    //         // }
-
-    //         temp.map((item) => {
-    //           if (
-    //             item.fields.EmployeeId ==
-    //               localStorage.getItem("mySessionEmployeeLoggedID") &&
-    //             item.fields.MessageTo == ""
-    //           ) {
-    //             tempArray.push(item.fields);
-    //           }
-    //         });
-    //       }
-    //       templateObject.correspondences.set(tempArray);
-    //     });
-    //   });
-
     const smsSettingsFromService = await smsService.getSMSSettings();
     let correspondencesFromVsData = [];
-
     try {
       correspondencesFromVsData = await getVS1Data("TCorrespondence");
     } catch (error) {
     }
-
     if (smsSettingsFromService.terppreference.length > 0) {
       let isUpdatedForSms = false;
       let correspondences = [];
@@ -1774,7 +1663,6 @@ Template.emailsettings.onRendered(function () {
   });
 
   templateObject.saveSchedules = async (settings, isEssential) => {
-    let utilityService = new UtilityService();
 
     let ipAddress = localStorage.getItem("EIPAddress");
     let database = localStorage.getItem("EDatabase");
@@ -1830,7 +1718,7 @@ Template.emailsettings.onRendered(function () {
             addVS1Data(
               "TBasedOnType",
               JSON.stringify(temp)
-            ).then(function () {});
+            ).then(function () { });
           }, 300);
         }
       });
@@ -1927,48 +1815,48 @@ Template.emailsettings.onRendered(function () {
           }
           let attachmentExist = false;
           async function checkAttachmentExist() {
-            return new Promise(async(resolve, reject)=>{
-              getVS1Data("TAttachment").then(function(dataObject){
-                if(dataObject.length > 0) {
+            return new Promise(async (resolve, reject) => {
+              getVS1Data("TAttachment").then(function (dataObject) {
+                if (dataObject.length > 0) {
                   let data = JSON.parse(dataObject[0].data);
                   let useData = data.tattachment;
                   let temp = [];
-                  if(useData.length == 0) resolve(temp)
-                  for(let i=0; i<useData.length; i++) {
-                    if(useData[i].fields.TableName == 'tblEmailsettings' && useData[i].fields.KeyValue.split('_')[0] == formID){
+                  if (useData.length == 0) resolve(temp)
+                  for (let i = 0; i < useData.length; i++) {
+                    if (useData[i].fields.TableName == 'tblEmailsettings' && useData[i].fields.KeyValue.split('_')[0] == formID) {
                       attachmentExist = true;
                       // resolve(useData[i]);
                       temp.push(useData[i]);
                     }
-                    if(i==useData.length-1)resolve(temp);
+                    if (i == useData.length - 1) resolve(temp);
                   }
-                }else {
-                  taxRateService.getEmailAttachments('tblEmailsettings').then(data=>{
+                } else {
+                  taxRateService.getEmailAttachments('tblEmailsettings').then(data => {
                     let useData = data.tattachment;
                     let temp = [];
-                    if(useData.length == 0) resolve(temp)
+                    if (useData.length == 0) resolve(temp)
                     for (let i = 0; i < useData.length; i++) {
-                      if(useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID){
+                      if (useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID) {
                         attachmentExist = true;
                         // resolve(useData[i]);
                         temp.push(useData[i])
                       }
-                      if(i==useData.length-1)resolve(temp);
+                      if (i == useData.length - 1) resolve(temp);
                     }
                   })
                 }
-              }).catch(function(e) {
-                taxRateService.getEmailAttachments('tblEmailsettings').then(data=>{
+              }).catch(function (e) {
+                taxRateService.getEmailAttachments('tblEmailsettings').then(data => {
                   let useData = data.tattachment;
                   let temp = []
-                  if(useData.length == 0) resolve(temp)
+                  if (useData.length == 0) resolve(temp)
                   for (let i = 0; i < useData.length; i++) {
-                    if(useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID){
+                    if (useData[i].fields.TableName == "tblEmailsettings" && useData[i].fields.KeyValue.split('_')[0] == formID) {
                       attachmentExist = true;
                       // resolve(useData[i])
                       temp.push(useData[i]);
                     }
-                    if(i==useData.length-1)resolve(temp);
+                    if (i == useData.length - 1) resolve(temp);
                   }
                 })
               })
@@ -2273,28 +2161,28 @@ Template.emailsettings.onRendered(function () {
 
                 const convertedStartDate = startdate
                   ? startdate.split("/")[2] +
-                    "-" +
-                    startdate.split("/")[1] +
-                    "-" +
-                    startdate.split("/")[0]
+                  "-" +
+                  startdate.split("/")[1] +
+                  "-" +
+                  startdate.split("/")[0]
                   : "";
                 const convertedFinishDate = finishdate
                   ? finishdate.split("/")[2] +
-                    "-" +
-                    finishdate.split("/")[1] +
-                    "-" +
-                    finishdate.split("/")[0]
+                  "-" +
+                  finishdate.split("/")[1] +
+                  "-" +
+                  finishdate.split("/")[0]
                   : "";
 
                 const sDate = startdate
                   ? moment(convertedStartDate + " " + starttime).format(
-                      "YYYY-MM-DD HH:mm"
-                    )
+                    "YYYY-MM-DD HH:mm"
+                  )
                   : moment().format("YYYY-MM-DD HH:mm");
                 const fDate = finishdate
                   ? moment(convertedFinishDate + " " + starttime).format(
-                      "YYYY-MM-DD HH:mm"
-                    )
+                    "YYYY-MM-DD HH:mm"
+                  )
                   : moment().format("YYYY-MM-DD HH:mm");
 
                 const frequencyName =
@@ -2378,8 +2266,8 @@ Template.emailsettings.onRendered(function () {
                           // EmployeeEmailID: recipients[index],
                           HostURL: $(location).attr("protocal")
                             ? $(location).attr("protocal") +
-                              "://" +
-                              $(location).attr("hostname")
+                            "://" +
+                            $(location).attr("hostname")
                             : "http://" + $(location).attr("hostname"),
                           Offset: new Date().getTimezoneOffset(),
                         },
@@ -2464,7 +2352,7 @@ Template.emailsettings.onRendered(function () {
                         Meteor.call(
                           "sendNormalEmail",
                           temp,
-                          async (error, result) => {}
+                          async (error, result) => { }
                         );
                       }
                     }
@@ -2476,8 +2364,8 @@ Template.emailsettings.onRendered(function () {
                 if (frequencyName === "Monthly") {
                   const monthDate = frequencyEl.attr("data-monthdate")
                     ? parseInt(
-                        frequencyEl.attr("data-monthdate").replace("day", "")
-                      )
+                      frequencyEl.attr("data-monthdate").replace("day", "")
+                    )
                     : 0;
                   const ofMonths = frequencyEl.attr("data-ofMonths");
                   // objDetail.fields.ExtraOption = ofMonths;
@@ -2547,12 +2435,12 @@ Template.emailsettings.onRendered(function () {
                     oldSettings = oldSettings.filter((oldSetting) => {
                       return (
                         oldSetting.fields.FormID !=
-                          parseInt(
-                            $(groupedReport)
-                              .closest("tr")
-                              .attr("id")
-                              .replace("groupedReports-", "")
-                          ) ||
+                        parseInt(
+                          $(groupedReport)
+                            .closest("tr")
+                            .attr("id")
+                            .replace("groupedReports-", "")
+                        ) ||
                         oldSetting.fields.EmployeeID != parseInt(recipientId)
                       );
                     });
@@ -2565,8 +2453,8 @@ Template.emailsettings.onRendered(function () {
                   // objDetail.fields.Recipients = recipients[index];
                   objDetail.fields.HostURL = $(location).attr("protocal")
                     ? $(location).attr("protocal") +
-                      "://" +
-                      $(location).attr("hostname")
+                    "://" +
+                    $(location).attr("hostname")
                     : "http://localhost:3000";
 
                   //TODO: Set basedon type here
@@ -2635,16 +2523,16 @@ Template.emailsettings.onRendered(function () {
                     //     BasedOnType: basedOnType,
                     // }), function(){})
                     let eventType = "";
-                    if(basedOnType.includes("EN") == true) {
+                    if (basedOnType.includes("EN") == true) {
                       eventType += "EN";
                     }
-                    if(basedOnType.includes("EU") == true) {
+                    if (basedOnType.includes("EU") == true) {
                       eventType += "EU";
                     }
-                    for (let j = 0; j< documents.length; j++) {
+                    for (let j = 0; j < documents.length; j++) {
 
                       let existingAttachments = await checkAttachmentExist();
-                      if(attachmentExist == false) {
+                      if (attachmentExist == false) {
                         let attachmentObject = {
                           Active: true,
                           Attachment: documents[j].pdfObject.content,
@@ -2653,25 +2541,25 @@ Template.emailsettings.onRendered(function () {
                           Description: recipients[index],
                           TableName: "tblEmailsettings"
                         }
-                        contactService.saveCustomerAttachment(attachmentObject).then(function() {
-                          taxRateService.getAttachments().then(function(dataObject){
+                        contactService.saveCustomerAttachment(attachmentObject).then(function () {
+                          taxRateService.getAttachments().then(function (dataObject) {
                             addVS1Data('TAttachment', JSON.stringify(dataObject))
                           })
                         })
                       } else {
-                        for(let m=0; m< existingAttachments.length; m++) {
+                        for (let m = 0; m < existingAttachments.length; m++) {
                           let id = existingAttachments[m].fields.ID;
                           let updateObject = {
                             type: "TAttchment",
                             fields: {
                               Active: true,
                               ID: id,
-                              KeyValue:  `${objDetail.fields.FormID}_${eventType}`,
+                              KeyValue: `${objDetail.fields.FormID}_${eventType}`,
                               Description: recipients[index]
                             }
                           }
-                          contactService.saveCustomerAttachment(updateObject).then(function() {
-                            taxRateService.getAttachments().then(function(dataObject){
+                          contactService.saveCustomerAttachment(updateObject).then(function () {
+                            taxRateService.getAttachments().then(function (dataObject) {
                               addVS1Data('TAttachment', JSON.stringify(dataObject))
                             })
                           })
@@ -2687,8 +2575,8 @@ Template.emailsettings.onRendered(function () {
                   };
                   objDetail.fields.HostURL = $(location).attr("protocal")
                     ? $(location).attr("protocal") +
-                      "://" +
-                      $(location).attr("hostname")
+                    "://" +
+                    $(location).attr("hostname")
                     : "http://" + $(location).attr("hostname");
                   Meteor.call("addTask", cloneObjDetailFields);
                 } else {
@@ -2715,12 +2603,12 @@ Template.emailsettings.onRendered(function () {
                             addVS1Data(
                               "TReportSchedules",
                               JSON.stringify(dataUpdate)
-                            ).then(() => {}).catch(function(error){});
+                            ).then(() => { }).catch(function (error) { });
                           })
-                          .catch(function (error) {});
+                          .catch(function (error) { });
                       })
-                      .catch(function (err) {});
-                  } catch (e) {}
+                      .catch(function (err) { });
+                  } catch (e) { }
 
                   objDetail.fields.Offset = new Date().getTimezoneOffset();
 
@@ -2743,8 +2631,8 @@ Template.emailsettings.onRendered(function () {
 
                   objDetail.fields.HostURL = $(location).attr("protocal")
                     ? $(location).attr("protocal") +
-                      "://" +
-                      $(location).attr("hostname")
+                    "://" +
+                    $(location).attr("hostname")
                     : "http://localhost:3000";
                   //TODO: Set basedon type here
                   async function setBasedOnType() {
@@ -2839,16 +2727,16 @@ Template.emailsettings.onRendered(function () {
                     //     BasedOnType: basedOnType,
                     // }), function(){})
                     let eventType = "";
-                    if(basedOnType.includes("EN") == true) {
+                    if (basedOnType.includes("EN") == true) {
                       eventType += "EN";
                     }
-                    if(basedOnType.includes("EU") == true) {
+                    if (basedOnType.includes("EU") == true) {
                       eventType += "EU";
                     }
-                    for (let j = 0; j< documents.length; j++) {
+                    for (let j = 0; j < documents.length; j++) {
 
                       let existingAttachments = await checkAttachmentExist();
-                      if(attachmentExist == false) {
+                      if (attachmentExist == false) {
                         let attachmentObject = {
                           type: "TAttachment",
                           fields: {
@@ -2860,25 +2748,25 @@ Template.emailsettings.onRendered(function () {
                             TableName: "tblEmailsettings"
                           }
                         }
-                        contactService.saveCustomerAttachment(attachmentObject).then(function() {
-                          taxRateService.getAttachments().then(function(dataObject){
+                        contactService.saveCustomerAttachment(attachmentObject).then(function () {
+                          taxRateService.getAttachments().then(function (dataObject) {
                             addVS1Data('TAttachment', JSON.stringify(dataObject))
                           })
                         })
                       } else {
-                        for(let m=0; m< existingAttachments.length; m++) {
+                        for (let m = 0; m < existingAttachments.length; m++) {
                           let id = existingAttachments[m].fields.ID;
                           let updateObject = {
                             type: "TAttchment",
                             fields: {
                               Active: true,
                               ID: id,
-                              KeyValue:  `${objDetail.fields.FormID}_${eventType}`,
+                              KeyValue: `${objDetail.fields.FormID}_${eventType}`,
                               Description: recipients[index]
                             }
                           }
-                          contactService.saveCustomerAttachment(updateObject).then(function() {
-                            taxRateService.getAttachments().then(function(dataObject){
+                          contactService.saveCustomerAttachment(updateObject).then(function () {
+                            taxRateService.getAttachments().then(function (dataObject) {
                               addVS1Data('TAttachment', JSON.stringify(dataObject))
                             })
                           })
@@ -2936,7 +2824,7 @@ Template.emailsettings.onRendered(function () {
                         addVS1Data(
                           "TBasedOnType",
                           JSON.stringify(temp)
-                        ).then(function () {});
+                        ).then(function () { });
                       }
                     });
                   });
@@ -2944,7 +2832,7 @@ Template.emailsettings.onRendered(function () {
             }
 
             let activedTemplate = await checkAttachmentExist();
-            for (let n = 0 ; n < activedTemplate.length; i++) {
+            for (let n = 0; n < activedTemplate.length; i++) {
               let attachment = activedTemplate[n];
               let id = attachment.fields.ID;
               let removeObject = {
@@ -2955,11 +2843,11 @@ Template.emailsettings.onRendered(function () {
                 }
               }
 
-              contactService.saveCustomerAttachment(removeObject).then(function(){
-                taxRateService.getEmailAttachments('tblEmailsettings').then(function(dataObject){
-                  addVS1Data('TAttachment', JSON.stringify(dataObject)).then(function(){})
+              contactService.saveCustomerAttachment(removeObject).then(function () {
+                taxRateService.getEmailAttachments('tblEmailsettings').then(function (dataObject) {
+                  addVS1Data('TAttachment', JSON.stringify(dataObject)).then(function () { })
                 })
-              }).catch(function(error) {
+              }).catch(function (error) {
               })
             }
           }
@@ -3079,27 +2967,27 @@ Template.emailsettings.onRendered(function () {
           const finishdate = frequencyEl.attr("data-finishdate");
           const convertedStartDate = startdate
             ? startdate.split("/")[2] +
-              "-" +
-              startdate.split("/")[1] +
-              "-" +
-              startdate.split("/")[0]
+            "-" +
+            startdate.split("/")[1] +
+            "-" +
+            startdate.split("/")[0]
             : "";
           const convertedFinishDate = finishdate
             ? finishdate.split("/")[2] +
-              "-" +
-              finishdate.split("/")[1] +
-              "-" +
-              finishdate.split("/")[0]
+            "-" +
+            finishdate.split("/")[1] +
+            "-" +
+            finishdate.split("/")[0]
             : "";
           const sDate = startdate
             ? moment(convertedStartDate + " " + starttime).format(
-                "YYYY-MM-DD HH:mm"
-              )
+              "YYYY-MM-DD HH:mm"
+            )
             : moment().format("YYYY-MM-DD HH:mm");
           const fDate = finishdate
             ? moment(convertedFinishDate + " " + starttime).format(
-                "YYYY-MM-DD HH:mm"
-              )
+              "YYYY-MM-DD HH:mm"
+            )
             : moment().format("YYYY-MM-DD HH:mm");
           const frequencyName =
             frequencyEl.text() != "" ? frequencyEl.text().split(",")[0] : "";
@@ -3175,20 +3063,20 @@ Template.emailsettings.onRendered(function () {
             const oldSetting = oldSettings.filter((setting) => {
               return (
                 setting.fields.FormID ==
-                  $(groupedReport)
-                    .closest("tr")
-                    .attr("id")
-                    .replace("groupedReports-", "") &&
+                $(groupedReport)
+                  .closest("tr")
+                  .attr("id")
+                  .replace("groupedReports-", "") &&
                 setting.fields.EmployeeID == objDetail.fields.EmployeeID
               );
             });
             oldSettings = oldSettings.filter((setting) => {
               return (
                 setting.fields.FormID !=
-                  $(groupedReport)
-                    .closest("tr")
-                    .attr("id")
-                    .replace("groupedReports-", "") ||
+                $(groupedReport)
+                  .closest("tr")
+                  .attr("id")
+                  .replace("groupedReports-", "") ||
                 setting.fields.EmployeeID == objDetail.fields.EmployeeID
               );
             });
@@ -3221,10 +3109,10 @@ Template.emailsettings.onRendered(function () {
                   addVS1Data(
                     "TReportSchedules",
                     JSON.stringify(dataUpdate)
-                  ).then(function () {});
+                  ).then(function () { });
                 });
               })
-              .catch(function (err) {});
+              .catch(function (err) { });
           });
           await Promise.all(promises);
         });
@@ -3246,7 +3134,7 @@ Template.emailsettings.onRendered(function () {
                   addVS1Data("TReportSchedules", JSON.stringify(dataUpdate));
                 });
               })
-              .catch(function (error) {});
+              .catch(function (error) { });
           }
         });
         await Promise.all(removeSetting);
@@ -3982,7 +3870,7 @@ Template.emailsettings.events({
               // let draftRecord = templateObject.custdatatablerecords.get();
               // templateObject.custdatatablerecords.set(draftRecord);
             })
-            .on("column-reorder", function () {})
+            .on("column-reorder", function () { })
             .on("length.dt", function (e, settings, len) {
               //   $('.fullScreenSpin').css('display', 'inline-block');
               let dataLenght = settings._iDisplayLength;
@@ -4215,7 +4103,7 @@ Template.emailsettings.events({
     let tempSubject = $("#edtTemplateSubject").val();
     let iframe = document.getElementById("edtTemplateContent_ifr");
     var tempHtml = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
-      // let tempHtml = $("#edtTemplateContent_ifr").val();
+    // let tempHtml = $("#edtTemplateContent_ifr").val();
     let tempContent = tempHtml.replace(/<[^>]+>/g, ' ');
 
     const smsSetting = smsSettings.find(item => item.Ref_Type === tempLabel);
@@ -4283,9 +4171,9 @@ Template.emailsettings.events({
                           }
                         });
                       })
-                      .catch(function (err) {});
+                      .catch(function (err) { });
                   })
-                  .catch(function (err) {});
+                  .catch(function (err) { });
               })
               .catch(function (error) {
                 swal({
@@ -4349,9 +4237,9 @@ Template.emailsettings.events({
                         }
                       });
                     })
-                    .catch(function (err) {});
+                    .catch(function (err) { });
                 })
-                .catch(function (err) {});
+                .catch(function (err) { });
             })
             .catch(function () {
               swal({
@@ -4603,14 +4491,14 @@ Template.emailsettings.events({
 
               var dataList = [
                 '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                  data.terpcombinedcontactsvs1[i].ID +
-                  "-" +
-                  clienttype +
-                  '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                  data.terpcombinedcontactsvs1[i].ID +
-                  "-" +
-                  clienttype +
-                  '"></label></div>',
+                data.terpcombinedcontactsvs1[i].ID +
+                "-" +
+                clienttype +
+                '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
+                data.terpcombinedcontactsvs1[i].ID +
+                "-" +
+                clienttype +
+                '"></label></div>',
                 data.terpcombinedcontactsvs1[i].ID || "",
                 data.terpcombinedcontactsvs1[i].name || "",
                 clienttype || "",
@@ -4644,10 +4532,10 @@ Template.emailsettings.events({
             datatable.draw(false);
             $("#tblContactlist_wrapper .dataTables_info").html(
               "Showing 1 to " +
-                data.terpcombinedcontactsvs1.length +
-                " of " +
-                data.terpcombinedcontactsvs1.length +
-                " entries"
+              data.terpcombinedcontactsvs1.length +
+              " of " +
+              data.terpcombinedcontactsvs1.length +
+              " entries"
             );
             let reset_data = templateObject.reset_data.get();
             let customFieldCount = reset_data.length;
@@ -4702,18 +4590,18 @@ Template.emailsettings.events({
             if (dataNew.length < 25) {
               $("#tblContactlist_wrapper .dataTables_info").html(
                 "Showing 1 to " +
-                  dataNew.length +
-                  " of " +
-                  dataOld.Params.Count +
-                  " entries"
+                dataNew.length +
+                " of " +
+                dataOld.Params.Count +
+                " entries"
               );
             } else {
               $("#tblContactlist_wrapper .dataTables_info").html(
                 "Showing 1 to " +
-                  "25" +
-                  " of " +
-                  dataOld.Params.Count +
-                  " entries"
+                "25" +
+                " of " +
+                dataOld.Params.Count +
+                " entries"
               );
             }
 
@@ -4733,7 +4621,7 @@ Template.emailsettings.events({
             }
           }
         })
-        .catch(function (err) {});
+        .catch(function (err) { });
     }
   },
 
