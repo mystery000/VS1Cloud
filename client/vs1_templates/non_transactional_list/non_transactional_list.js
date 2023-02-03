@@ -342,6 +342,7 @@ Template.non_transactional_list.onRendered(function() {
     var url = FlowRouter.current().path;
     let currenttablename = templateObject.data.tablename || "";
 
+
     templateObject.tablename.set(currenttablename);
 
     const curdata = Template.currentData();
@@ -1150,30 +1151,21 @@ Template.non_transactional_list.onRendered(function() {
             ];
         } else if (currenttablename === "tblAppointmentsByCustomer"){
             reset_data = [
-                { index: 0, label: 'Appt ID', class: 'colID', active: true, display: true, width: "50" },
-                { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "150" },
-                { index: 2, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
-                { index: 3, label: 'From', class: 'colFromDate', active: true, display: true, width: "80" },
-                { index: 4, label: 'To', class: 'colToDate', active: true, display: true, width: "80" },
-                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "80" },
-                { index: 6, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "80" },
-                { index: 7, label: 'Notes', class: 'colNotes', active: false, display: true, width: "10" },
-                { index: 8, label: 'Product/Service', class: 'colProduct', active: true, display: true },
-            ]
-        } else if (currenttablename === 'tblSalesListByCustomer'){
-            reset_data = [
-                { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
-                { index: 1, label: 'Sale Date', class:'SaleDate', active: true, display: true, width: "" },
-                { index: 2, label: 'Sales No.', class:'SalesNo', active: true, display: true, width: "" },
-                { index: 3, label: 'Type', class:'Type', active: true, display: true, width: "" },
-                { index: 4, label: 'Amount (Ex)', class:'AmountEx', active: true, display: true, width: "" },
-                { index: 5, label: 'Tax', class:'Tax', active: true, display: true, width: "" },
-                { index: 6, label: 'Amount (Inc)', class:'Amount', active: true, display: true, width: "" },
-                { index: 7, label: 'Paid', class:'Paid', active: true, display: true, width: "" },
-                { index: 8, label: 'Balance Outstanding', class:'BalanceOutstanding', active: true, display: true, width: "" },
-                { index: 9, label: 'Status', class:'Status', active: true, display: true, width: "" },
-                { index: 10, label: 'Employee', class:'Employee', active: true, display: true, width: "" },
-                { index: 11, label: 'Comments', class: 'Comments', active: true, display: true, width: "" },
+                { index: 0, label: '', class: 'colCheckBox', active: false, display: true, width: "20" },
+                { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "50" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+                { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "100" },
+                { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
+                { index: 5, label: 'From Date', class: 'colFromDate', active: true, display: true, width: "80" },
+                { index: 6, label: 'To Date', class: 'colToDate', active: true, display: true, width: "80" },
+                { index: 7, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "60" },
+                { index: 8, label: 'To Time', class: 'colToTime', active: true, display: true, width: "60" },
+                { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "60" },
+                { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "60" },
+                { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "80" },
+                { index: 12, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "80" },
+                { index: 13, label: 'Notes', class: 'colNotes', active: false, display: true, width: "10" },
+                { index: 14, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
             ]
         }
         templateObject.reset_data.set(reset_data);
@@ -1263,68 +1255,68 @@ Template.non_transactional_list.onRendered(function() {
         }
         templateObject.transactiondatatablerecords.set(data);
         templateObject.displayDashboardOptions(data);
-    }
+      }
 
-    templateObject.displayDashboardOptions = function(data) {
-    const dataTableList = []
-    for (let i = 0; i < data.length; i++) {
+      templateObject.displayDashboardOptions = function(data) {
+        const dataTableList = []
+        for (let i = 0; i < data.length; i++) {
 
-        const isDefaultLoginCheckBox = `<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input optradioDL"
-        name="optcheckboxDL" id="formShowP-${data[i].Id}"
-        value="${data[i].name}" ${data[i].isdefaultlogin ? "checked" : ""}>
-        <label class="custom-control-label" for="formShowP-${data[i].Id}"></label></div>`;
+            const isDefaultLoginCheckBox = `<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input optradioDL"
+            name="optcheckboxDL" id="formShowP-${data[i].Id}"
+            value="${data[i].name}" ${data[i].isdefaultlogin ? "checked" : ""}>
+            <label class="custom-control-label" for="formShowP-${data[i].Id}"></label></div>`;
 
-        const isShowDefaultCheckbox = `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioDL"
-        name="showdefaultinput" id="formCheckP-${data[i].Id}" value="${data[i].name}" ${data[i].isshowdefault ? "checked" : ""}>
-        <label class="custom-control-label" for="formCheckP-${data[i].Id}"></label></div>`;
-        const dataList = [
-            data[i].Id || '',
-            data[i].name || '',
-            isDefaultLoginCheckBox,
-            isShowDefaultCheckbox
-        ]
-        dataTableList.push(dataList);
-    }
+            const isShowDefaultCheckbox = `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioDL"
+            name="showdefaultinput" id="formCheckP-${data[i].Id}" value="${data[i].name}" ${data[i].isshowdefault ? "checked" : ""}>
+            <label class="custom-control-label" for="formCheckP-${data[i].Id}"></label></div>`;
+            const dataList = [
+                data[i].Id || '',
+                data[i].name || '',
+                isDefaultLoginCheckBox,
+                isShowDefaultCheckbox
+            ]
+            dataTableList.push(dataList);
+        }
 
-    $('#' + currenttablename).DataTable({
-        data: dataTableList,
-        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-        columnDefs: [{
-                targets: 0,
-                className: 'colOptionsID hiddenColumn',
-                orderable: false,
-                width: "10px"
+        $('#' + currenttablename).DataTable({
+            data: dataTableList,
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            columnDefs: [{
+                    targets: 0,
+                    className: 'colOptionsID hiddenColumn',
+                    orderable: false,
+                    width: "10px"
+                },
+                {
+                    targets: 1,
+                    className: "colOptionsName",
+                },
+                {
+                    targets: 2,
+                    className: "colShowDef",
+                    width: "200px"
+                },
+                {
+                    targets: 3,
+                    className: "colLogginDef",
+                    width: "200px"
+                },
+            ],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            paging: false,
+            info: true,
+            responsive: true,
+            language: { search: "",searchPlaceholder: "Search List..." },
+            "fnInitComplete": function () {
+                $("<button class='btn btn-primary btnRefreshDashboardOption' type='button' id='btnRefreshDashboardOption' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDashboardOptions_filter");
             },
-            {
-                targets: 1,
-                className: "colOptionsName",
-            },
-            {
-                targets: 2,
-                className: "colShowDef",
-                width: "200px"
-            },
-            {
-                targets: 3,
-                className: "colLogginDef",
-                width: "200px"
-            },
-        ],
-        select: true,
-        destroy: true,
-        colReorder: true,
-        paging: false,
-        info: true,
-        responsive: true,
-        language: { search: "",searchPlaceholder: "Search List..." },
-        "fnInitComplete": function () {
-            $("<button class='btn btn-primary btnRefreshDashboardOption' type='button' id='btnRefreshDashboardOption' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblDashboardOptions_filter");
-        },
-    })
-    $('.fullScreenSpin').css('display', 'none');
+        })
+        $('.fullScreenSpin').css('display', 'none');
 
-    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-    }
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+      }
 
     // Appointment list by customer
     templateObject.getAppointmentsByCustomer = async function(){
@@ -1345,17 +1337,18 @@ Template.non_transactional_list.onRendered(function() {
         getVS1Data("TAppointmentList").then(dataObject => {
             if(dataObject.length){
                 const data = JSON.parse(dataObject[0].data);
-                templateObject.displayAppointmentsByCustomer(data);
+                console.log("data:", data);
+                templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
             } else {
                 sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                     addVS1Data('TAppointmentList', JSON.stringify(data));
-                    templateObject.displayAppointmentsByCustomer(data);
+                    templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
                 })
             }
         }).catch(error => {
             sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
                 addVS1Data('TAppointmentList', JSON.stringify(data));
-                templateObject.displayAppointmentsByCustomer(data);
+                templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
             })
         })
     }
@@ -1363,7 +1356,7 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.displayAppointmentsByCustomer = function (data) {
         const customerId = FlowRouter.getQueryParam('id') || 0;
         let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
-        const customerAppointments = data.tappointmentlist.filter(d => d.CusID == customerId)
+        const customerAppointments = data.filter(d => d.CusID == customerId)
             .map(item => {
                 const appStatus = !item.Active ? "Deleted" : item.Status;
                 if (item.CUSTFLD13 == "Yes") {
@@ -1378,237 +1371,25 @@ Template.non_transactional_list.onRendered(function() {
                     confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
                 }
                 return [
+                    '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + item.AppointID + '" name="' + item.AppointID + '"> <label class="custom-control-label" for="f-' +item.AppointID + '"></label></div>' || '',
+                    item.CreationDate != '' ? moment(item.CreationDate).format("YYYY/MM/DD") : item.CreationDate,
                     item.AppointID || '',
+                    item.STARTTIME != '' ? moment(item.STARTTIME).format("DD/MM/YYYY") : item.STARTTIME,
                     item.ClientName || '',
                     item.EnteredByEmployeeName || '',
-                    item.STARTTIME,
-                    item.ENDTIME,
+                    moment(item.STARTTIME).format('dddd') + ', ' + moment(item.STARTTIME).format('DD'),
+                    moment(item.ENDTIME).format('dddd') + ', ' + moment(item.ENDTIME).format('DD'),
+                    moment(item.STARTTIME).format('h:mm a'),
+                    moment(item.ENDTIME).format('h:mm a'),
+                    item.Actual_Starttime || '',
+                    item.Actual_Endtime || '',
                     appStatus || '',
                     confirmedColumn,
                     item.Notes || '',
                     item.ProductDesc || '',
                 ]
             })
-        $('#' + currenttablename).DataTable({
-            data: customerAppointments,
-            columnDefs: [
-            {
-                targets: 0,
-                className: "colID",
-                width: '50px'
-            },
-            {
-                targets: 1,
-                className: "colCompany",
-                width: "100px"
-            },
-            {
-                targets: 2,
-                className: "colReq",
-                width: '100px'
-            },
-            {
-                targets: 3,
-                className: "colFromDate",
-                width: "80px"
-            },
-            {
-                targets: 4,
-                className: "colToDate",
-                width: "80px"
-            },
-            {
-                targets: 5,
-                className: "colStatus",
-                width: "80px"
-            },
-            {
-                targets: 6,
-                className: "colconfirm",
-                width: "80px"
-            },
-            {
-                targets: 7,
-                className: "colNotes hiddenColumn",
-                width: "80px"
-            },
-            {
-                targets: 8,
-                className: "colProduct",
-                width: '120px'
-            },
-            ],
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            select: true,
-            destroy: true,
-            colReorder: true,
-            paging: false,
-            info: true,
-            responsive: true,
-            language: { search: "",searchPlaceholder: "Search List..." },
-            "fnInitComplete": function(oSettings) {
-                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-            },
-            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                let countTableData = customerAppointments.length || 0; //get count from API data
-
-                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-            }
-        })
-    }
-
-    // Sales list by customer
-    templateObject.getSalesListByCustomer = async function() {
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-        let fromDateMonth = currentBeginDate.getMonth() + 1;
-        let fromDateDay = currentBeginDate.getDate();
-        if (currentBeginDate.getMonth() + 1 < 10) {
-          fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-        } else {
-          fromDateMonth = currentBeginDate.getMonth() + 1;
-        }
-    
-        if (currentBeginDate.getDate() < 10) {
-          fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        var toDate =
-          currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-        let prevMonth11Date = moment()
-          .subtract(reportsloadMonths, "months")
-          .format("YYYY-MM-DD");
-        const customerName = Template.currentData().customerName;
-        getVS1Data("TSalesList").then(function (dataObject) {
-            if(dataObject.length){
-                const data = JSON.parse(dataObject[0].data)
-                templateObject.displaySalesListByCustomer(data, customerName)
-            } else {
-                sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0, deleteFilter)
-                .then(function (data) {
-                    addVS1Data("TSalesList", JSON.stringify(data));
-                    templateObject.displaySalesListByCustomer(data, customerName)
-                })
-            }
-        }).catch(error => {
-            console.log("Error:", error)
-            sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0, deleteFilter)
-                .then(function (data) {
-                    addVS1Data("TSalesList", JSON.stringify(data));
-                    templateObject.displaySalesListByCustomer(data, customerName)
-                })
-        })
-    }
-
-    templateObject.displaySalesListByCustomer = async function(data, customerName) {
-        const salesListByCustomer = data.tsaleslist.filter(item => item.CustomerName === customerName)
-            .map(item => {
-                let salestatus = item.Status || '';
-                if(item.Done == true){
-                    salestatus = "Deleted";
-                }else if(item.CustomerName == ''){
-                    salestatus = "Deleted";
-                };
-                return [
-                    item.SaleDate || '',
-                    item.Saleno || '',
-                    item.Type || '',
-                    utilityService.modifynegativeCurrencyFormat(
-                        item.TotalAmount
-                    ),
-                    utilityService.modifynegativeCurrencyFormat(
-                        item.TotalTax
-                    ),
-                    utilityService.modifynegativeCurrencyFormat(
-                        item.TotalAmountinc
-                    ),
-                    utilityService.modifynegativeCurrencyFormat(
-                        item.Payment
-                    ),
-                    utilityService.modifynegativeCurrencyFormat(
-                        item.Balance
-                    ),
-                    salestatus,
-                    item.employeename || '',
-                    item.Comments || ''
-                ]
-            })
-        $('#' + currenttablename).DataTable({
-            data: salesListByCustomer,
-            columnDefs: [
-                {
-                    targets: 0,
-                    className: "SortDate hiddenColumn",
-                    width: '10px'
-                },
-                {
-                    targets: 1,
-                    className: "SaleDate",
-                    width: "100px"
-                },
-                {
-                    targets: 2,
-                    className: "SalesNo",
-                    width: '100px'
-                },
-                {
-                    targets: 3,
-                    className: "Type",
-                    width: "80px"
-                },
-                {
-                    targets: 4,
-                    className: "AmountEx",
-                    width: "80px"
-                },
-                {
-                    targets: 5,
-                    className: "Tax",
-                    width: "80px"
-                },
-                {
-                    targets: 6,
-                    className: "Paid",
-                    width: "80px"
-                },
-                {
-                    targets: 7,
-                    className: "BalanceOutstanding",
-                    width: "80px"
-                },
-                {
-                    targets: 8,
-                    className: "Status",
-                    width: '100px'
-                },
-                {
-                    targets: 9,
-                    className: "Employee",
-                    width: '100px'
-                },
-                {
-                    targets: 10,
-                    className: "Comments",
-                    width: '100px'
-                },
-            ],
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            select: true,
-            destroy: true,
-            colReorder: true,
-            paging: false,
-            info: true,
-            responsive: true,
-            language: { search: "",searchPlaceholder: "Search List..." },
-            "fnInitComplete": function(oSettings) {
-                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-            },
-            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                let countTableData = salesListByCustomer.length || 0; //get count from API data
-
-                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-            }
-        })
-
+        console.log(customerAppointments)
     }
 
     //Contact Overview Data
@@ -16942,8 +16723,6 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getAllSingleTouchPayroll();
     } else if(currenttablename === 'tblAppointmentsByCustomer'){
         templateObject.getAppointmentsByCustomer();
-    } else if (currenttablename === 'tblSalesListByCustomer'){
-        templateObject.getSalesListByCustomer()
     }
 
     tableResize();
@@ -17250,8 +17029,6 @@ Template.non_transactional_list.events({
             templateObject.getAssetRegisterData(false);
         } else if (currenttablename == "tblServiceLogList") {
             templateObject.getServiceLogData(false);
-        } else if (currenttablename == 'tblSalesListByCustomer') {
-            templateObject.getSalesListByCustomer();
         }
     },
     'change .custom-range': async function(event) {
