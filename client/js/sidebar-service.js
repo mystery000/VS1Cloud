@@ -4186,21 +4186,17 @@ export class SideBarService extends BaseService {
 
   updateVS1MenuConfig (menuType, employeeId) {
     const prefValue = '{"Location": \"' + menuType + '\", "AccessLevel": 1, "AccessLevelName": \"Full Access\"}'
-    return this.POST(
-      this.ERPObjects.TPreference,
-      {
-          "type": "TPreference",
-          "fields": {
-            "Department": "",
-            "UserID": employeeId,
-            "PackageID": 0,
-            "PrefDesc": "",
-            "PrefGroup": "GuiPrefs",
-            "PrefName": "VS1Menu",
-            "PrefType": "",
-            "PrefValue": prefValue,
-        }
+    let send_data = {
+      "type": "TPreference",
+      "fields": {
+        "UserID": employeeId,
+        "PrefName": "VS1Menu",
+        "PrefType": "VS1Menu",
+        "PrefValue": prefValue,
       }
-    )
+    };
+    if (parseInt(localStorage.getItem('TPreferenceMenuID')) > 0)
+      send_data.fields['ID'] = parseInt(localStorage.getItem('TPreferenceMenuID'));
+    return this.POST(this.ERPObjects.TPreference, send_data);
   }
 }
