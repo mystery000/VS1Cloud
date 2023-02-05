@@ -290,6 +290,10 @@ Template.transaction_line.events({
     }
 });
 Template.transaction_line.helpers({
+    isForeignEnabled: () => {
+        let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicenceModule') ? true : false;
+        return isFxCurrencyLicence;
+    },
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
