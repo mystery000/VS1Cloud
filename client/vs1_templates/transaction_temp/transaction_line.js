@@ -10,8 +10,7 @@ import './transaction_line.html';
 
 
 let sideBarService = new SideBarService();
-export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
-
+export const foreignCols = ["UnitPriceEx", "UnitPriceInc","TaxAmount", "AmountEx", "AmountInc",  "CostPrice"];
 Template.transaction_line.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
@@ -202,7 +201,7 @@ Template.transaction_line.events({
         let currenttranstablename = templateObject.data.tablename||"";
         let reset_data = await templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display);
-        $(".displaySettings").each(function(index) {
+        $(`.${currenttranstablename}_Modal .displaySettings`).each(function(index) {
             let $tblrow = $(this);
             $tblrow.find(".divcolumn").text(reset_data[index].label);
             $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
@@ -232,7 +231,7 @@ Template.transaction_line.events({
         setTimeout(async function(){
             let lineItems = [];
             $(".fullScreenSpin").css("display", "inline-block");
-            $("."+currenttranstablename+"_Modal .displaySettings").each(function (index) {
+            $(`.${currenttranstablename}_Modal .displaySettings`).each(function (index) {
                 var $tblrow = $(this);
                 var fieldID = $tblrow.attr("custid") || 0;
                 var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -298,7 +297,7 @@ Template.transaction_line.helpers({
       return Template.instance().displayfields.get();
     },
     displayFieldColspan: (displayfield, isForeignEnabled) => {
-        if (foreignCols.includes(displayfield.custfieldlabel)) {
+        if (foreignCols.includes(displayfield.class)) {
             if (isForeignEnabled == true) {
                 return 2
             }
@@ -308,7 +307,7 @@ Template.transaction_line.helpers({
     },
     displayFieldRowspan: (displayfield, isForeignEnabled) => {
       if(isForeignEnabled == true) {
-          if (foreignCols.includes(displayfield.custfieldlabel)) {
+          if (foreignCols.includes(displayfield.class)) {
               return 1;
           }
           return 2;
@@ -316,7 +315,7 @@ Template.transaction_line.helpers({
       return 1;
     }, 
     subHeaderForeign: (displayfield) => {
-        if (foreignCols.includes(displayfield.custfieldlabel)) {
+        if (foreignCols.includes(displayfield.class)) {
             return true;
         }
         return false;
