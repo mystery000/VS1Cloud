@@ -1391,6 +1391,7 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     //Contact Overview Data
+    /*
     templateObject.getContactOverviewData = async function(deleteFilter = false) {
         var customerpage = 0;
         getVS1Data('TERPCombinedContactsVS1').then(function(dataObject) {
@@ -1860,7 +1861,7 @@ Template.non_transactional_list.onRendered(function() {
 
       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
-
+    */
     //Employee List Data
     templateObject.getEmployeeListData = function(deleteFilter = false) {
         getVS1Data('TEmployeeList').then(function(dataObject) {
@@ -16572,7 +16573,7 @@ Template.non_transactional_list.onRendered(function() {
 
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
-        templateObject.getContactOverviewData();
+        //templateObject.getContactOverviewData();
     } else if (currenttablename == "tblEmployeelist") {
         templateObject.getEmployeeListData();
     } else if (currenttablename == 'tblSetupDashboardOptions'){
