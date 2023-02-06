@@ -1,6 +1,6 @@
 <template name="departmentModal">
-  <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        <!-- <div class="modal-dialog modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4>Departments</h4>
@@ -43,6 +43,52 @@
           </button>
         </div>
       </div>
+    </div> -->
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Departments</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        /* input[type="checkbox"]{
+                      margin: 40px!important
+                  } */
+                        #tblDepartmentCheckbox .colChkBox {
+                            width: 40px !important;
+                        }
+                        #tblDepartmentCheckbox .chkBox {
+                            margin: 0px !important;
+                        }
+                        /* #tblDepartmentCheckbox .colDeptClassName{
+                      width: 25%!important
+                  }
+                  #tblDepartmentCheckbox .colDescription{
+                      width: 30%!important
+                  }
+                  #tblDepartmentCheckbox .colSiteCode{
+                      width: 20%!important
+                  }
+                  #tblDepartmentCheckbox .colStatus{
+                      width: 20%!important
+                  } */
+                    </style>
+                    <!-- {{> non_transactional_list tablename="tblDepartmentList"}} -->
+
+                    {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnDepartmentSelect" type="button">
+                        <i class="fa fa-save" style="margin-right: 8px"></i>Ok
+                    </button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                        <i class="fa fa-close" style="margin-right: 8px"></i>Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>

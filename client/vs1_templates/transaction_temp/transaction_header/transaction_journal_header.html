@@ -8,7 +8,9 @@
       <header>
         <h2 style="margin: 32px;margin-bottom: 0px;">{{data.lid}}
           {{> helpbutton}}
-          {{> help_modal}}
+          <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+            {{> help_modal}}
+          </div>
         </h2>
       </header>
     </div>
@@ -53,9 +55,9 @@
               }}
             </div>
             <div class="col-12">
-              {{# vs1_textarea 
-                label="Memo" 
-                row="3" 
+              {{# vs1_textarea
+                label="Memo"
+                row="3"
                 id="txaMemo"
                 name="txaMemo"
               }}{{data.memo}}{{/vs1_textarea}}
