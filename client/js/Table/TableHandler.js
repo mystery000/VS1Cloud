@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {SideBarService} from "../../js/sidebar-service";
 export default class TableHandler {
   constructor() {
@@ -50,7 +49,7 @@ export default class TableHandler {
         let tableName = table.attr("id");
         let tableClassName = table.context.className||'';
         if (tableClassName.indexOf("transactionLines") >= 0){
-          this.saveTableColumns(tableName);
+
         }else{
           if ((tableName != "tblBasReturnList") && (tableName != "tblInvoiceLine")) {
             this.saveTableColumns(tableName);
