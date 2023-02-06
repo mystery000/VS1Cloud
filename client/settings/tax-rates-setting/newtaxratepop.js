@@ -650,7 +650,7 @@ Template.newtaxratepop.onRendered(function() {
 Template.newtaxratepop.events({
 
     "click .taxRateBtn": (e) => {
-          $('#newTaxRateModal').modal('hide');
+          $('#taxRateModal').modal('hide');
       },
 
     'click .btnSaveTaxRate': function() {
