@@ -1,9 +1,8 @@
+// @ts-nocheck
 import './taxrate-settings.html';
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
-import LoadingOverlay from "../LoadingOverlay";
 import { SideBarService } from '../js/sidebar-service';
-import { OrganisationService } from "../js/organisation-service";
 import { TaxRateService } from "../settings/settings-service";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "../lib/global/indexdbstorage.js";
