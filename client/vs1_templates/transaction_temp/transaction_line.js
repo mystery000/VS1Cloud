@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {Session} from 'meteor/session';
 import '../../lib/global/indexdbstorage.js';
 import { ReactiveVar } from 'meteor/reactive-var';
@@ -9,8 +10,7 @@ import './transaction_line.html';
 
 
 let sideBarService = new SideBarService();
-export const foreignCols = ["Unit Price (Ex)", "Tax Amt", "Amount (Ex)", "Amount (Inc)", "Unit Price (Inc)", "Cost Price"];
-
+export const foreignCols = ["UnitPriceEx", "UnitPriceInc","TaxAmount", "AmountEx", "AmountInc",  "CostPrice"];
 Template.transaction_line.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.isForeignEnabled = new ReactiveVar(false);
@@ -26,6 +26,7 @@ Template.transaction_line.onRendered(function() {
     let canShowUOM = templateObject.data.canShowUOM.toString() === "true";
     let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
     let allowedExRateTables = ['tblPurchaseOrderLine', 'tblInvoiceLine'];
+    let isFixedAssets = localStorage.getItem('CloudFixedAssetsModule');
     templateObject.init_reset_data = function() {
         let reset_data = [
             { index: 0,  label: "Product Name",       class: "ProductName",   width: "300",       active: true,   display: true },
@@ -92,6 +93,9 @@ Template.transaction_line.onRendered(function() {
         // isBatchSerialNoTracking
         findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
         
+        //Fixed Asset
+        findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
+
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -105,6 +109,8 @@ Template.transaction_line.onRendered(function() {
                 employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')); 
                 sideBarService.getNewCustomFieldsWithQuery(employeeId, listType).then(function(data) {
                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns; 
+                    temp_reset_data = templateObject.reset_data.get();
+                    reset_data = TransactionFields.insertData(temp_reset_data, reset_data);
                     let findItem = null;
                     // canShowBackOrder
                     if(allowedExRateTables.includes(listType)){
@@ -117,6 +123,8 @@ Template.transaction_line.onRendered(function() {
                     findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
                     // isBatchSerialNoTracking
                     findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
+                    //Fixed Asset
+                    findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
                     templateObject.showCustomFieldDisplaySettings(reset_data);
                 }).catch( function(err) {});
             } else {
@@ -126,7 +134,8 @@ Template.transaction_line.onRendered(function() {
                     for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                         if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                             reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-
+                            temp_reset_data = templateObject.reset_data.get();
+                            reset_data = TransactionFields.insertData(temp_reset_data, reset_data);
                             let findItem = null;
                             // canShowBackOrder
                             if(allowedExRateTables.includes(listType)){
@@ -139,7 +148,8 @@ Template.transaction_line.onRendered(function() {
                             findItem = reset_data.find(item => item.class === "Units"); if(findItem != undefined) findItem.display = findItem.active = canShowUOM;
                             // isBatchSerialNoTracking
                             findItem = reset_data.find(item => item.class === "SerialNo"); if(findItem != undefined) findItem.display = findItem.active = isBatchSerialNoTracking;
-
+                            //Fixed Asset
+                            findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
                             templateObject.showCustomFieldDisplaySettings(reset_data);
                         }
                     }
@@ -191,7 +201,7 @@ Template.transaction_line.events({
         let currenttranstablename = templateObject.data.tablename||"";
         let reset_data = await templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display);
-        $(".displaySettings").each(function(index) {
+        $(`.${currenttranstablename}_Modal .displaySettings`).each(function(index) {
             let $tblrow = $(this);
             $tblrow.find(".divcolumn").text(reset_data[index].label);
             $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
@@ -221,7 +231,7 @@ Template.transaction_line.events({
         setTimeout(async function(){
             let lineItems = [];
             $(".fullScreenSpin").css("display", "inline-block");
-            $("."+currenttranstablename+"_Modal .displaySettings").each(function (index) {
+            $(`.${currenttranstablename}_Modal .displaySettings`).each(function (index) {
                 var $tblrow = $(this);
                 var fieldID = $tblrow.attr("custid") || 0;
                 var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -279,11 +289,15 @@ Template.transaction_line.events({
     }
 });
 Template.transaction_line.helpers({
+    isForeignEnabled: () => {
+        let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicenceModule') ? true : false;
+        return isFxCurrencyLicence;
+    },
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
     displayFieldColspan: (displayfield, isForeignEnabled) => {
-        if (foreignCols.includes(displayfield.custfieldlabel)) {
+        if (foreignCols.includes(displayfield.class)) {
             if (isForeignEnabled == true) {
                 return 2
             }
@@ -293,7 +307,7 @@ Template.transaction_line.helpers({
     },
     displayFieldRowspan: (displayfield, isForeignEnabled) => {
       if(isForeignEnabled == true) {
-          if (foreignCols.includes(displayfield.custfieldlabel)) {
+          if (foreignCols.includes(displayfield.class)) {
               return 1;
           }
           return 2;
@@ -301,7 +315,7 @@ Template.transaction_line.helpers({
       return 1;
     }, 
     subHeaderForeign: (displayfield) => {
-        if (foreignCols.includes(displayfield.custfieldlabel)) {
+        if (foreignCols.includes(displayfield.class)) {
             return true;
         }
         return false;
