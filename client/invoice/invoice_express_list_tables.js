@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
 import GlobalFunctions from '../GlobalFunctions';
@@ -68,33 +69,6 @@ Template.invoicelist.onRendered(function () {
     let templateObject = Template.instance();
     let reset_data = templateObject.reset_data.get();
     templateObject.showCustomFieldDisplaySettings(reset_data);
-
-    try {
-
-      getVS1Data("VS1_Customize").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              // reset_data = data.ProcessLog.CustomLayout.Columns;
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              templateObject.showCustomFieldDisplaySettings(reset_data);
-          }).catch(function (err) {
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if(data.ProcessLog.Obj.CustomLayout.length > 0){
-            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                templateObject.showCustomFieldDisplaySettings(reset_data);
-              }
-            }
-          }
-          // handle process here
-        }
-      });
-
-    } catch (error) {
-    }
     return;
   }
 
