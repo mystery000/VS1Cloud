@@ -299,6 +299,7 @@ import './manufacture/processList.js';
 import './vs1shipping/shippingoverview.js';
 import './vs1shipping/shippingdocket.js';
 import './deposits/deposit_list.js';
+import './vs1_templates/dashboard_options/dashboard_options.html';
 /* Tinyiko */
 
 /* Rasheed */
