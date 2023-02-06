@@ -912,15 +912,15 @@ Template.non_transactional_list.onRendered(function() {
         }else if(currenttablename === "tblCustomerlist" || currenttablename == 'tblSetupCustomerlist'){
              reset_data = [
                 { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "0" },
-                { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "200" },
-                { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "200" },
+                { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "100" },
+                { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "100" },
                 { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "95" },
                 { index: 4, label: "Mobile", class: "colMobile", active: false, display: true, width: "95" },
                 { index: 5, label: "AR Balance", class: "colARBalance", active: true, display: true, width: "80" },
                 { index: 6, label: "Credit Balance", class: "colCreditBalance", active: true, display: true, width: "80" },
-                { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "80" },
-                { index: 8, label: "Credit Limit", class: "colCreditLimit", active: true, display: true, width: "80" },
-                { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "80" },
+                { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "100" },
+                { index: 8, label: "Credit Limit", class: "colCreditLimit", active: true, display: true, width: "100" },
+                { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "100" },
                 { index: 10, label: "Street Address", class: "colStreetAddress", active: false, display: true, width: "0" },
                 { index: 11, label: "City/Suburb", class: "colSuburb", active: true, display: true, width: "100" },
                 { index: 12, label: "State", class: "colState", active: false, display: true, width: "100" },
@@ -1062,8 +1062,9 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '80' },
                 { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
                 { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '100' },
-                { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '120' },
-                { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '100' },
+                { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '200' },
+                { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '200' },
+                { index: 6, label: '', class: 'colTaxRateDelete', active: true, display: true, width: 60 },
             ]
         } else if (currenttablename === "tblSerialNumberList"){
             reset_data = [
@@ -1391,6 +1392,7 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     //Contact Overview Data
+    /*
     templateObject.getContactOverviewData = async function(deleteFilter = false) {
         var customerpage = 0;
         getVS1Data('TERPCombinedContactsVS1').then(function(dataObject) {
@@ -1860,7 +1862,7 @@ Template.non_transactional_list.onRendered(function() {
 
       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
-
+    */
     //Employee List Data
     templateObject.getEmployeeListData = function(deleteFilter = false) {
         getVS1Data('TEmployeeList').then(function(dataObject) {
@@ -14295,7 +14297,8 @@ Template.non_transactional_list.onRendered(function() {
                     targets: 24
                 },
                 {
-                    className: "colNotes","targets": 25
+                    className: "colNotes",
+                    targets: 25
                 },
             ],
             buttons: [{
@@ -14337,6 +14340,7 @@ Template.non_transactional_list.onRendered(function() {
             destroy: true,
             colReorder: true,
             pageLength: initialDatatableLoad,
+            bAutoWidth : false,
             lengthMenu: [
                 [initialDatatableLoad, -1],
                 [initialDatatableLoad, "All"]
@@ -14365,9 +14369,7 @@ Template.non_transactional_list.onRendered(function() {
 
                 $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
                 });
-                setTimeout(function() {
-                    MakeNegative();
-                }, 100);
+                
             },
             language: { search: "", searchPlaceholder: "Search ST Payroll..." },
             "fnInitComplete": function(oSettings) {
@@ -16572,7 +16574,7 @@ Template.non_transactional_list.onRendered(function() {
 
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
-        templateObject.getContactOverviewData();
+        //templateObject.getContactOverviewData();
     } else if (currenttablename == "tblEmployeelist") {
         templateObject.getEmployeeListData();
     } else if (currenttablename == 'tblSetupDashboardOptions'){

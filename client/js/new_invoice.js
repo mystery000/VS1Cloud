@@ -8257,6 +8257,7 @@ Template.new_invoice.events({
     }
   },
   "click .btnRemove": async function (event) {
+    
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
