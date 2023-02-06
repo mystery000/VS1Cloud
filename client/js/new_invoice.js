@@ -8257,6 +8257,7 @@ Template.new_invoice.events({
     }
   },
   "click .btnRemove": async function (event) {
+
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
@@ -11436,7 +11437,7 @@ Template.new_invoice.events({
       }
     }
   },
-  "click .btnSnLotmodal": function (event) {    
+  "click .btnSnLotmodal": function (event) {
     var target = event.target;
     let selectedShipped = $(target).closest("tr").find(".lineShipped").val();
     let selectedunit = $(target).closest("tr").find(".lineOrdered").val();
@@ -11485,7 +11486,7 @@ Template.new_invoice.events({
                             Batch: "false",
                           },
                         };
-                        
+
                         productService.saveProductVS1(objDetails)
                         .then(async function (objDetails) {
                           sideBarService.getProductListVS1("All", 0)
@@ -11494,7 +11495,7 @@ Template.new_invoice.events({
                               swal.close();
                               $(target).click();
                             })
-                            .catch(function (err) {                                
+                            .catch(function (err) {
                             });
                         })
                         .catch(function (err) {
@@ -11523,7 +11524,7 @@ Template.new_invoice.events({
                             Batch: "true",
                           },
                         };
-                        
+
                         productService.saveProductVS1(objDetails)
                         .then(async function (objDetails) {
                           sideBarService.getProductListVS1("All", 0)
@@ -11532,7 +11533,7 @@ Template.new_invoice.events({
                               swal.close();
                               $(target).click();
                             })
-                            .catch(function (err) {                                
+                            .catch(function (err) {
                             });
                         })
                         .catch(function (err) {
@@ -11616,7 +11617,7 @@ Template.new_invoice.events({
                               Batch: "false",
                             },
                           };
-                          
+
                           productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
@@ -11625,7 +11626,7 @@ Template.new_invoice.events({
                                 swal.close();
                                 $(target).click();
                               })
-                              .catch(function (err) {                                
+                              .catch(function (err) {
                               });
                           })
                           .catch(function (err) {
@@ -11654,7 +11655,7 @@ Template.new_invoice.events({
                               Batch: "true",
                             },
                           };
-                          
+
                           productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
@@ -11663,7 +11664,7 @@ Template.new_invoice.events({
                                 swal.close();
                                 $(target).click();
                               })
-                              .catch(function (err) {                                
+                              .catch(function (err) {
                               });
                           })
                           .catch(function (err) {
@@ -11746,7 +11747,7 @@ Template.new_invoice.events({
                           Batch: "false",
                         },
                       };
-                      
+
                       productService.saveProductVS1(objDetails)
                       .then(async function (objDetails) {
                         sideBarService.getProductListVS1("All", 0)
@@ -11755,7 +11756,7 @@ Template.new_invoice.events({
                             swal.close();
                             $(target).click();
                           })
-                          .catch(function (err) {                                
+                          .catch(function (err) {
                           });
                       })
                       .catch(function (err) {
@@ -11784,7 +11785,7 @@ Template.new_invoice.events({
                           Batch: "true",
                         },
                       };
-                      
+
                       productService.saveProductVS1(objDetails)
                       .then(async function (objDetails) {
                         sideBarService.getProductListVS1("All", 0)
@@ -11793,7 +11794,7 @@ Template.new_invoice.events({
                             swal.close();
                             $(target).click();
                           })
-                          .catch(function (err) {                                
+                          .catch(function (err) {
                           });
                       })
                       .catch(function (err) {

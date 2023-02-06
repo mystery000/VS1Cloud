@@ -475,6 +475,10 @@
                         <td class="colCostPrice {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}">
                         </td>
+                        <td contenteditable="false"
+                            class="colCostPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} pointer {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"
+                            style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount
+                            item.lineCost}}</td>
 
                         <td class="colDiscount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}"
