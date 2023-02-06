@@ -13,7 +13,9 @@
           <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
       </div>
   </header>
-  {{> help_modal}}
+  <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    {{> help_modal}}
+  </div>
 
   <div class="row" style="background-color: #ededed; padding: 32px; padding-bottom: 0px;">
     <div class="col-12 col-md-6 col-lg-2 colProcessed" id="colProcessed" style="display: none;">

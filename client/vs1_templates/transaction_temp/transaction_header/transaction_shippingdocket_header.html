@@ -1,12 +1,14 @@
 <!-- Shipping docket transaction header -->
-<!-- Params 
+<!-- Params
 data
 -->
 <template name="transaction_shippingdocket_header">
   <header style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
     <h2 class="shippingHeader" style="margin: 16px;margin-bottom: 0px;">Shipping Docket
       {{> helpbutton}}
-      {{> help_modal}}
+      <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+        {{> help_modal}}
+      </div>
     </h2>
     <input type="text" id="SalesId" name="SalesId" style="display: none;" readonly>
 </header>
