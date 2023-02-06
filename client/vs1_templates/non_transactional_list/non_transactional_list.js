@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ContactService } from "../../contacts/contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
@@ -1148,6 +1149,24 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 7, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
                 { index: 8, label: 'From BSB', class: 'colFromBSB', active: true, display: true, width: "100" },
             ];
+        } else if (currenttablename === "tblAppointmentsByCustomer"){
+            reset_data = [
+                { index: 0, label: '', class: 'colCheckBox', active: false, display: true, width: "20" },
+                { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "50" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+                { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "100" },
+                { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
+                { index: 5, label: 'From Date', class: 'colFromDate', active: true, display: true, width: "80" },
+                { index: 6, label: 'To Date', class: 'colToDate', active: true, display: true, width: "80" },
+                { index: 7, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "60" },
+                { index: 8, label: 'To Time', class: 'colToTime', active: true, display: true, width: "60" },
+                { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "60" },
+                { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "60" },
+                { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "80" },
+                { index: 12, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "80" },
+                { index: 13, label: 'Notes', class: 'colNotes', active: false, display: true, width: "10" },
+                { index: 14, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -1298,6 +1317,80 @@ Template.non_transactional_list.onRendered(function() {
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
       }
+
+    // Appointment list by customer
+    templateObject.getAppointmentsByCustomer = async function(){
+        var currentBeginDate = new Date();
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if ((currentBeginDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+        } else {
+            fromDateMonth = (currentBeginDate.getMonth() + 1);
+        }
+
+        if (currentBeginDate.getDate() < 10) {
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+        getVS1Data("TAppointmentList").then(dataObject => {
+            if(dataObject.length){
+                const data = JSON.parse(dataObject[0].data);
+                console.log("data:", data);
+                templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
+            } else {
+                sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+                    addVS1Data('TAppointmentList', JSON.stringify(data));
+                    templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
+                })
+            }
+        }).catch(error => {
+            sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+                addVS1Data('TAppointmentList', JSON.stringify(data));
+                templateObject.displayAppointmentsByCustomer(data.tappointmentlist);
+            })
+        })
+    }
+
+    templateObject.displayAppointmentsByCustomer = function (data) {
+        const customerId = FlowRouter.getQueryParam('id') || 0;
+        let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+        const customerAppointments = data.filter(d => d.CusID == customerId)
+            .map(item => {
+                const appStatus = !item.Active ? "Deleted" : item.Status;
+                if (item.CUSTFLD13 == "Yes") {
+                    if (item.CUSTFLD11 == "Yes") {
+                        confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                    } else if (item.CUSTFLD11 == "No") {
+                        confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                    } else {
+                        confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+                    }
+                } else {
+                    confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                }
+                return [
+                    '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + item.AppointID + '" name="' + item.AppointID + '"> <label class="custom-control-label" for="f-' +item.AppointID + '"></label></div>' || '',
+                    item.CreationDate != '' ? moment(item.CreationDate).format("YYYY/MM/DD") : item.CreationDate,
+                    item.AppointID || '',
+                    item.STARTTIME != '' ? moment(item.STARTTIME).format("DD/MM/YYYY") : item.STARTTIME,
+                    item.ClientName || '',
+                    item.EnteredByEmployeeName || '',
+                    moment(item.STARTTIME).format('dddd') + ', ' + moment(item.STARTTIME).format('DD'),
+                    moment(item.ENDTIME).format('dddd') + ', ' + moment(item.ENDTIME).format('DD'),
+                    moment(item.STARTTIME).format('h:mm a'),
+                    moment(item.ENDTIME).format('h:mm a'),
+                    item.Actual_Starttime || '',
+                    item.Actual_Endtime || '',
+                    appStatus || '',
+                    confirmedColumn,
+                    item.Notes || '',
+                    item.ProductDesc || '',
+                ]
+            })
+        console.log(customerAppointments)
+    }
 
     //Contact Overview Data
     templateObject.getContactOverviewData = async function(deleteFilter = false) {
@@ -5611,8 +5704,7 @@ Template.non_transactional_list.onRendered(function() {
         let tdCustomerDef = ""; //isSalesdefault
         let tdSupplierDef = ""; //isPurchasedefault
         let tdUseforAutoSplitQtyinSales = ""; //UseforAutoSplitQtyinSales
-        let currentData = data.tunitofmeasurelist[i].fields
-        if (!currentData) continue;
+        let currentData = data.tunitofmeasurelist[i].fields == undefined ? data.tunitofmeasurelist[i] : data.tunitofmeasurelist[i].fields
         if (currentData.Active == true) {
           linestatus = "";
         } else if (currentData.Active == false) {
@@ -7969,6 +8061,7 @@ Template.non_transactional_list.onRendered(function() {
                     templateObject.displayCustomerJobDetailsListData(data, customerName);
                     addVS1Data('TJobVS1',JSON.stringify(data));
                 }).catch(function(err) {
+                    console.log(err);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -7976,11 +8069,14 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayCustomerJobDetailsListData(data, customerName);
             }
         }).catch(function(err) {
-            contactService.getAllJobListByCustomer(customerName).then(function(data) {
-                templateObject.displayCustomerJobDetailsListData(data, customerName);
-            }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
+            console.log("Strange error:", err)
+            // contactService.getAllJobListByCustomer(customerName).then(function(data) {
+            //     console.log("Job DATA HERE:", data)
+            //     templateObject.displayCustomerJobDetailsListData(data, customerName);
+            // }).catch(function(err) {
+            //     console.log(err);
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
         });
     }
 
@@ -8017,20 +8113,20 @@ Template.non_transactional_list.onRendered(function() {
         let deleteFilter = false;
         for (let i = 0; i < dataTableListJob.length; i++) {
             var dataList = [
-                data[i].id,
-                data[i].company,
-                data[i].phone,
-                data[i].arbalance,
-                data[i].creditbalance,
-                data[i].balance,
-                data[i].creditlimit,
-                data[i].salesorderbalance,
-                data[i].country,
-                data[i].email,
-                data[i].accountno,
-                data[i].clientno,
-                data[i].jobtitle,
-                data[i].notes,
+                dataTableListJob[i].id,
+                dataTableListJob[i].company,
+                dataTableListJob[i].phone,
+                dataTableListJob[i].arbalance,
+                dataTableListJob[i].creditbalance,
+                dataTableListJob[i].balance,
+                dataTableListJob[i].creditlimit,
+                dataTableListJob[i].salesorderbalance,
+                dataTableListJob[i].country,
+                dataTableListJob[i].email,
+                dataTableListJob[i].accountno,
+                dataTableListJob[i].clientno,
+                dataTableListJob[i].jobtitle,
+                dataTableListJob[i].notes,
             ];
             splashArrayClientTypeList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayClientTypeList);
@@ -8041,7 +8137,6 @@ Template.non_transactional_list.onRendered(function() {
                 MakeNegative();
             }, 100);
         }
-        // splashArrayClientTypeList =[[1,'company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1','company1',]]
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayClientTypeList,
@@ -16728,6 +16823,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDraftPayRunData();
     } else if(currenttablename === "tblAllSingleTouchPayroll"){
         templateObject.getAllSingleTouchPayroll();
+    } else if(currenttablename === 'tblAppointmentsByCustomer'){
+        templateObject.getAppointmentsByCustomer();
     }
 
     tableResize();
