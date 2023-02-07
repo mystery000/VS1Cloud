@@ -455,7 +455,8 @@ import './vs1charts/employeeLeave/employeeLeave.js';
 /*Vladyslav*/
 
 /* Roverto */
-// import './manufacture/mobile/main.js';
+import './manufacture/mobile/main.js';
+import './basreturn/departmentOptionModal.js';
 import './Dashboard/appointments-widget/dsm-appointments-widget.js';
 import './crm/crm.js';
 import './crm/components/help-modal.html';
