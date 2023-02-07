@@ -19,7 +19,9 @@ Template.mobileapp.fetchEmployeeList = () => {
 
 Template.mobileapp.events({
     'click #btnOpentList': function(e, instance) {
-
+        getVS1Data('TEmployee').then(function (dataObject) {
+            console.log(dataObject)
+        });
     },
     'click .mobile-btn-number': function(e, instance) {
         $(".mobile-main-input").val($(".mobile-main-input").val() + e.target.attributes.calcvalue.nodeValue)
