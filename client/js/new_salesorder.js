@@ -9606,22 +9606,96 @@ Template.new_salesorder.events({
         productService.getProductStatus(selectedProductName).then(function (data) {
           LoadingOverlay.hide();
           if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+            var buttons = $("<div>")
+            .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+            .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+            .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
             swal({
-                title: '',
-                text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                type: 'info',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
-                // cancelButtonClass: "btn-default"
-            }).then((result) => {
-                if (result.value) {
-                    FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
-                } else if (result.dismiss === 'cancel') {
-                    // $('.essentialsdiv .custom-control-input').prop("checked", false);
-                    event.preventDefault();
-                    return false;
-                }
+              title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+              type: "warning",
+              showCancelButton: false,
+              showConfirmButton: false,
+              html: buttons,
+              onOpen: function (dObj) {
+                $('#trackSN').on('click',function () {
+                  objDetails = {
+                    type: "TProductVS1",
+                    fields: {
+                      ID: parseInt(data.tproductlist[i].PARTSID),
+                      Active: true,
+                      SNTracking: "true",
+                      Batch: "false",
+                    },
+                  };
+
+                  productService.saveProductVS1(objDetails)
+                  .then(async function (objDetails) {
+                    sideBarService.getProductListVS1("All", 0)
+                      .then(async function (dataReload) {
+                        await addVS1Data("TProductList", JSON.stringify(dataReload));
+                        swal.close();
+                        $(target).click();
+                      })
+                      .catch(function (err) {
+                      });
+                  })
+                  .catch(function (err) {
+                    swal({
+                      title: "Oooops...",
+                      text: err,
+                      type: "error",
+                      showCancelButton: false,
+                      confirmButtonText: "Try Again",
+                    }).then((result) => {
+                      if (result.value) {
+                        // Meteor._reload.reload();
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  });
+                });
+                $('#trackLN').on('click',function () {
+                  swal.close();
+                  objDetails = {
+                    type: "TProductVS1",
+                    fields: {
+                      ID: parseInt(data.tproductlist[i].PARTSID),
+                      Active: true,
+                      SNTracking: "false",
+                      Batch: "true",
+                    },
+                  };
+
+                  productService.saveProductVS1(objDetails)
+                  .then(async function (objDetails) {
+                    sideBarService.getProductListVS1("All", 0)
+                      .then(async function (dataReload) {
+                        await addVS1Data("TProductList", JSON.stringify(dataReload));
+                        swal.close();
+                        $(target).click();
+                      })
+                      .catch(function (err) {
+                      });
+                  })
+                  .catch(function (err) {
+                    swal({
+                      title: "Oooops...",
+                      text: err,
+                      type: "error",
+                      showCancelButton: false,
+                      confirmButtonText: "Try Again",
+                    }).then((result) => {
+                      if (result.value) {
+                        // Meteor._reload.reload();
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  });
+                });
+                $('#trackCancel').on('click',function () {
+                    swal.close();
+                });
+              }
             });
           } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
             var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
@@ -9719,22 +9793,96 @@ Template.new_salesorder.events({
         productService.getProductStatus(selectedProductName).then(function (data) {
           LoadingOverlay.hide();
           if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+            var buttons = $("<div>")
+            .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+            .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+            .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
             swal({
-                title: '',
-                text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                type: 'info',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
-                // cancelButtonClass: "btn-default"
-            }).then((result) => {
-                if (result.value) {
-                    FlowRouter.go("/productview?id=" + data.tproductvs1[0].Id);
-                } else if (result.dismiss === 'cancel') {
-                    // $('.essentialsdiv .custom-control-input').prop("checked", false);
-                    event.preventDefault();
-                    return false;
-                }
+              title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+              type: "warning",
+              showCancelButton: false,
+              showConfirmButton: false,
+              html: buttons,
+              onOpen: function (dObj) {
+                $('#trackSN').on('click',function () {
+                  objDetails = {
+                    type: "TProductVS1",
+                    fields: {
+                      ID: parseInt(data.tproductlist[i].PARTSID),
+                      Active: true,
+                      SNTracking: "true",
+                      Batch: "false",
+                    },
+                  };
+
+                  productService.saveProductVS1(objDetails)
+                  .then(async function (objDetails) {
+                    sideBarService.getProductListVS1("All", 0)
+                      .then(async function (dataReload) {
+                        await addVS1Data("TProductList", JSON.stringify(dataReload));
+                        swal.close();
+                        $(target).click();
+                      })
+                      .catch(function (err) {
+                      });
+                  })
+                  .catch(function (err) {
+                    swal({
+                      title: "Oooops...",
+                      text: err,
+                      type: "error",
+                      showCancelButton: false,
+                      confirmButtonText: "Try Again",
+                    }).then((result) => {
+                      if (result.value) {
+                        // Meteor._reload.reload();
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  });
+                });
+                $('#trackLN').on('click',function () {
+                  swal.close();
+                  objDetails = {
+                    type: "TProductVS1",
+                    fields: {
+                      ID: parseInt(data.tproductlist[i].PARTSID),
+                      Active: true,
+                      SNTracking: "false",
+                      Batch: "true",
+                    },
+                  };
+
+                  productService.saveProductVS1(objDetails)
+                  .then(async function (objDetails) {
+                    sideBarService.getProductListVS1("All", 0)
+                      .then(async function (dataReload) {
+                        await addVS1Data("TProductList", JSON.stringify(dataReload));
+                        swal.close();
+                        $(target).click();
+                      })
+                      .catch(function (err) {
+                      });
+                  })
+                  .catch(function (err) {
+                    swal({
+                      title: "Oooops...",
+                      text: err,
+                      type: "error",
+                      showCancelButton: false,
+                      confirmButtonText: "Try Again",
+                    }).then((result) => {
+                      if (result.value) {
+                        // Meteor._reload.reload();
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  });
+                });
+                $('#trackCancel').on('click',function () {
+                    swal.close();
+                });
+              }
             });
           } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
             var row = $(target).parent().parent().parent().children().index($(target).parent().parent());

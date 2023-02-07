@@ -11465,12 +11465,12 @@ Template.new_invoice.events({
             if (dataObject.length == 0) {
               productService.getProductStatus(selectedProductName).then(async function (data) {
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                  var buttons = $("<div>").append('This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.<br>')
+                  var buttons = $("<div>")
                   .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
                   .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
                   .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                   swal({
-                    title: "",
+                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                     type: "warning",
                     showCancelButton: false,
                     showConfirmButton: false,
@@ -11596,12 +11596,12 @@ Template.new_invoice.events({
               for (let i = 0; i < data.tproductlist.length; i++) {
                 if(data.tproductlist[i].PARTNAME == selectedProductName){
                   if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
-                    var buttons = $("<div>").append('This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.<br>')
+                    var buttons = $("<div>")
                     .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
                     .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
                     .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                     swal({
-                      title: "",
+                      title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                       type: "warning",
                       showCancelButton: false,
                       showConfirmButton: false,
@@ -11726,12 +11726,12 @@ Template.new_invoice.events({
           }).catch(function (err) {
             productService.getProductStatus(selectedProductName).then(async function (data) {
               if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                var buttons = $("<div>").append('This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.<br>')
+                var buttons = $("<div>")
                 .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
                 .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
                 .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                 swal({
-                  title: "",
+                  title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                   type: "warning",
                   showCancelButton: false,
                   showConfirmButton: false,
