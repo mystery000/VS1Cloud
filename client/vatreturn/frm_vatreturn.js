@@ -440,22 +440,22 @@ Template.vatreturn.onRendered(function() {
                     }
                     $('.fullScreenSpin').css('display', 'none');
                 }).catch(function(err) {
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
@@ -647,6 +647,7 @@ Template.vatreturn.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
             }
         }).catch(function(err) {
+            console.log("=========", err);
             let taxRateList = templateObject.taxRateList.get();
 
             reportService.getAllBASReturn().then(function(data) {
@@ -828,22 +829,22 @@ Template.vatreturn.onRendered(function() {
                 }
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function(err) {
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
@@ -1070,6 +1071,7 @@ Template.vatreturn.onRendered(function() {
     };
 
     $('#sltDepartment').editableSelect();
+    $('#departOptionTile').text("VAT Options");
     $('#sltDepartment').val("All");
     $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
@@ -2501,6 +2503,23 @@ Template.vatreturn.onRendered(function() {
                         $("#endDate-t3").val(toDate);
                     }
                 }
+
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
             }
 
             $(document).on("click", "#vatreturnCategory1", function(e) {
@@ -2752,7 +2771,7 @@ Template.vatreturn.helpers({
 });
 
 Template.vatreturn.events({
-    "click #loadVatOption": (e) => {
+    "click #loadOption": (e) => {
         if ($("#allDepart").prop('checked') == false && $('#sltDepartment').val() == "") {
             swal('Department cannot be blank!', '', 'warning');
         } else {
@@ -2789,14 +2808,22 @@ Template.vatreturn.events({
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate").val(toDate);
+                $("#datemethod1-t2, #datemethod1-t3").prop('checked', true);
+                $("#datemethod2-t2, #datemethod2-t3").prop('checked', false);
+                $("#beginmonthlydate-t2, #beginmonthlydate-t3").val($("#beginmonthlydate").val());
+                $("#currentyear-t2, #currentyear-t3").val($("#currentyear").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate").val(toDate);
+                $("#datemethod1-t2, #datemethod1-t3").prop('checked', false);
+                $("#datemethod2-t2, #datemethod2-t3").prop('checked', true);
+                $("#beginmonthlydate-t2, #beginmonthlydate-t3").val($("#beginmonthlydate").val());
+                $("#currentyear-t2, #currentyear-t3").val($("#currentyear").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2809,14 +2836,22 @@ Template.vatreturn.events({
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t2").val(toDate);
+                $("#datemethod1, #datemethod1-t3").prop('checked', true);
+                $("#datemethod2, #datemethod2-t3").prop('checked', false);
+                $("#beginmonthlydate, #beginmonthlydate-t3").val($("#beginmonthlydate-t2").val());
+                $("#currentyear, #currentyear-t3").val($("#currentyear-t2").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t2").val(toDate);
+                $("#datemethod1, #datemethod1-t3").prop('checked', false);
+                $("#datemethod2, #datemethod2-t3").prop('checked', true);
+                $("#beginmonthlydate, #beginmonthlydate-t3").val($("#beginmonthlydate-t2").val());
+                $("#currentyear, #currentyear-t3").val($("#currentyear-t2").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2829,14 +2864,22 @@ Template.vatreturn.events({
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t3").val(toDate);
+                $("#datemethod1, #datemethod1-t2").prop('checked', true);
+                $("#datemethod2, #datemethod2-t2").prop('checked', false);
+                $("#beginmonthlydate, #beginmonthlydate-t2").val($("#beginmonthlydate-t3").val());
+                $("#currentyear, #currentyear-t2").val($("#currentyear-t3").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate-t3").val()]);
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
                 toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t3").val(toDate);
+                $("#datemethod1, #datemethod1-t2").prop('checked', false);
+                $("#datemethod2, #datemethod2-t2").prop('checked', true);
+                $("#beginmonthlydate, #beginmonthlydate-t2").val($("#beginmonthlydate-t3").val());
+                $("#currentyear, #currentyear-t2").val($("#currentyear-t3").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
