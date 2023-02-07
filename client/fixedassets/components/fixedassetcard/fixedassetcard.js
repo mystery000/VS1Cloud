@@ -416,7 +416,7 @@ Template.fixedassetcard.events({
     }
   },
   "click button.btnBack": function() {
-    FlowRouter.go('/fixedassetlist');
+    history.back(1);
   },
   "click button.btnCalculate": function () {
     const templateObject = Template.instance();

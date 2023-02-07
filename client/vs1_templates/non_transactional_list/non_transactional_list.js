@@ -13705,7 +13705,7 @@ Template.non_transactional_list.onRendered(function() {
         let reset_data = new Array();
         for (let i = 0; i < data.tcosttypes.length; i ++) {
           const costType = data.tcosttypes[i];
-          const typeFeild = {
+          const typeField = {
             index: costType.fields.ID,
             label: costType.fields.TypeName,
             class: 'costType' + i,
@@ -13713,10 +13713,9 @@ Template.non_transactional_list.onRendered(function() {
             display: true,
             width: ''
           };
-          reset_data.push(typeFeild);
+          reset_data.push(typeField);
         }  
         templateObject.reset_data.set(reset_data);
-        console.log(reset_data);
         await templateObject.initCustomFieldDisplaySettings("", currenttablename);
     };
     // Get FixedAssetList
