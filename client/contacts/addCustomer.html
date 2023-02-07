@@ -1,95 +1,93 @@
 <template name="customerscard">
+  <style>
+    .results tr[visible='false'],
+    .no-result {
+      display: none;
+    }
+
+    .results tr[visible='true'] {
+      display: table-row;
+    }
+
+    .counter {
+      padding: 8px;
+      color: #ccc;
+    }
+
+    .sideSearch {
+      /*width: 200px;*/
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+
+    .cardB {
+      /* max-height: 700px; */
+      overflow-y: auto;
+    }
+
+    .cardB420 {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .rowB {
+      overflow-x: auto;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: rgb(0, 163, 211) !important;
+      background-color: #EDEDED !important;
+      border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
+    }
+
+    .nav-tabs .nav-link {
+      background-color: #fff !important;
+      border-color: #00a3d3 !important;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .sideSearch {
+        width: auto;
+      }
+    }
+
+    #btnView {
+      display: none;
+    }
+
+    @media screen and (min-width: 1025px) {
+      .viewList {
+        display: none;
+      }
+
+      .displayList {
+        height: 115vh;
+      }
+
+      .customerCardParent {
+        height: 100%;
+      }
+    }
+
+    .currentSelect {
+      background-color: #ededed99;
+      color: #00a3d3;
+    }
+
+    @media screen and (max-width: 450px) {
+      .sideSearch {
+        height: 400px !important;
+        overflow-y: scroll;
+      }
+    }
+  </style>
   <div>
     <div class="fullScreenSpin" style="display:none;">
       <div class="spinner"></div>
     </div>
     {{#if record}}
     <div style="margin: 16px;">
-      <style>
-        .results tr[visible='false'],
-        .no-result {
-          display: none;
-        }
-
-        .results tr[visible='true'] {
-          display: table-row;
-        }
-
-        .counter {
-          padding: 8px;
-          color: #ccc;
-        }
-
-        .sideSearch {
-          /*width: 200px;*/
-          overflow-x: hidden;
-          overflow-y: hidden;
-        }
-
-        .cardB {
-          /* max-height: 700px; */
-          overflow-y: auto;
-        }
-
-        .cardB420 {
-          max-height: 300px;
-          overflow-y: auto;
-        }
-
-        .rowB {
-          overflow-x: auto;
-        }
-
-        .nav-tabs .nav-link.active {
-          color: rgb(0, 163, 211) !important;
-          background-color: #EDEDED !important;
-          border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
-        }
-
-        .nav-tabs .nav-link {
-          background-color: #fff !important;
-          border-color: #00a3d3 !important;
-        }
-
-        @media only screen and (max-width: 600px) {
-          .sideSearch {
-            width: auto;
-          }
-        }
-
-        #btnView {
-          display: none;
-        }
-
-        @media screen and (min-width: 1025px) {
-          .viewList {
-            display: none;
-          }
-
-          .displayList {
-            height: 115vh;
-          }
-
-          .customerCardParent {
-            height: 100%;
-          }
-        }
-
-        .currentSelect {
-          background-color: #ededed99;
-          color: #00a3d3;
-        }
-
-        @media screen and (max-width: 450px) {
-          .sideSearch {
-            height: 400px !important;
-            overflow-y: scroll;
-          }
-        }
-      </style>
-      {{#if isModal}}
-
-      {{else}}
+      {{#unless isModal}}
       <div class="row">
         <div class="col-12 col-md-4">
           <h2 class="text-dark mb-0">Customer Overview Dashboard
@@ -98,12 +96,9 @@
         </div>
         <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
       </div>
-      
-      {{/if}}
+      {{/unless}}
       <div class="row">
-        {{#if isModal}}
-
-        {{else}}
+        {{#unless isModal}}
         <div class="col-12 col-md-4 col-lg-2 displayList" id="displayList">
           <div class="card shadow mb-4 customerCardParent" style="margin: 8px;">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -174,7 +169,7 @@
             </div>
           </div>
         </div>
-        {{/if}}
+        {{/unless}}
         <div class="{{#if isModal}}{{else}}col-12 col-md-8 col-lg-10 displayInfo{{/if}}" id="displayInfo"
           style="padding-top: 8px; width: 100%;">
           <!-- All Cards List -->
@@ -1709,44 +1704,48 @@
                               </div>
                             </div>
                             <!-- End View File attachment -->
-                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9"
-                              style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                               <div class="row no-gutters" style="margin: 14px;">
                                 <div class="col d-xl-flex align-items-xl-center">
-                                  <div class="form-group flex-grow-1 checkbox1div"
-                                    style="margin: 4px;padding-right:4px;">
-                                    <label class="lblCustomField1">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[0].label}}
-                                      {{else}}Custom
-                                      Field 1{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField1" name="edtCustomField1"
-                                      value="{{record.custfield1}}">
+                                  <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;padding-right:4px;">
+                                    <label class="lblCustomField1">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[0].label}}
+                                      {{else}}
+                                        Custom Field 1
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField1" name="edtCustomField1" value="{{record.custfield1}}">
                                   </div>
                                   <div class="form-group flex-grow-1 checkbox2div" style="margin: 4px;">
-                                    <label class="lblCustomField2">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[1].label}}
-                                      {{else}}Custom
-                                      Field 2{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField2" name="edtCustomField2"
-                                      value="{{record.custfield2}}">
+                                    <label class="lblCustomField2">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[1].label}}
+                                      {{else}}
+                                        Custom Field 2
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField2" name="edtCustomField2" value="{{record.custfield2}}">
                                   </div>
-                                  <div class="form-group flex-grow-1 checkbox3div"
-                                    style="margin: 4px;padding-left:4px;">
-                                    <label class="lblCustomField3">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[2].label}}
-                                      {{else}}Custom
-                                      Field 3{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField3" name="edtCustomField3"
-                                      value="{{record.custfield3}}">
+                                  <div class="form-group flex-grow-1 checkbox3div" style="margin: 4px;padding-left:4px;">
+                                    <label class="lblCustomField3">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[2].label}}
+                                      {{else}}
+                                        Custom Field 3
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField3" name="edtCustomField3" value="{{record.custfield3}}">
                                   </div>
-                                  <div class="form-group flex-grow-1 checkbox4div"
-                                    style="margin: 4px;padding-left:4px;">
-                                    <label class="lblCustomField4">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[3].label}}
-                                      {{else}}Custom
-                                      Field 4{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField4" name="edtCustomField4"
-                                      value="{{record.custfield4}}">
+                                  <div class="form-group flex-grow-1 checkbox4div" style="margin: 4px;padding-left:4px;">
+                                    <label class="lblCustomField4">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[3].label}}
+                                      {{else}}
+                                        Custom Field 4
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField4" name="edtCustomField4" value="{{record.custfield4}}">
                                   </div>
                                 </div>
                               </div>
