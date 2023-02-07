@@ -976,6 +976,34 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "300" },
                 { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "300" },
             ];
+        } else if (currenttablename === "tblAssetCostReportList") {
+            reset_data = [
+                { "index": 1, "label": "Administrative Cost", "class": "costType0", "active": true, "display": true, "width": "" },
+                { "index": 2, "label": "Depreciation", "class": "costType1", "active": true, "display": true, "width": "" },
+                { "index": 3, "label": "Fuel", "class": "costType2", "active": true, "display": true, "width": "" },
+                { "index": 4, "label": "Insurance", "class": "costType3", "active": true, "display": true, "width": "" },
+                { "index": 5, "label": "Maintenance", "class": "costType4", "active": true, "display": true, "width": "" },
+                { "index": 6, "label": "Registration", "class": "costType5", "active": true, "display": true, "width": "" },
+                { "index": 7, "label": "Tolls", "class": "costType6", "active": true, "display": true, "width": "" }
+            ];
+            // getVS1Data("TCostTypes").then(function (dataObject) {
+            //     if (dataObject.length == 0) {
+            //       fixedAssetService.getCostTypeList().then(function (data) {
+            //         templateObject.setAssetCostReportHeader(data);
+            //       }).catch(function (err) {
+            //         $(".fullScreenSpin").css("display", "none");
+            //       });
+            //     } else {
+            //       let data = JSON.parse(dataObject[0].data);
+            //       templateObject.setAssetCostReportHeader(data);
+            //     }
+            //   }).catch(function (err) {
+            //     fixedAssetService.getCostTypeList().then(function (data) {
+            //       templateObject.setAssetCostReportHeader(data);
+            //     }).catch(function (err) {
+            //       $(".fullScreenSpin").css("display", "none");
+            //     });
+            //   });
         } else if (currenttablename === "tblPayRuns"){
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTimeSheetId', active: false, display: true, width: "" },
@@ -13671,6 +13699,26 @@ Template.non_transactional_list.onRendered(function() {
       $('div.dataTables_filter input').addClass('form-control form-control-sm');
     };
 
+    // Set FixedAssetCostTypes
+    templateObject.setAssetCostReportHeader = async function (data) {
+        addVS1Data('TCostTypes', JSON.stringify(data));
+        let reset_data = new Array();
+        for (let i = 0; i < data.tcosttypes.length; i ++) {
+          const costType = data.tcosttypes[i];
+          const typeFeild = {
+            index: costType.fields.ID,
+            label: costType.fields.TypeName,
+            class: 'costType' + i,
+            active: true,
+            display: true,
+            width: ''
+          };
+          reset_data.push(typeFeild);
+        }  
+        templateObject.reset_data.set(reset_data);
+        console.log(reset_data);
+        await templateObject.initCustomFieldDisplaySettings("", currenttablename);
+    };
     // Get FixedAssetList
     templateObject.getFixedAssetTypeData = function () {
         getVS1Data("TFixedAssetType").then(function (dataObject) {
@@ -13756,7 +13804,7 @@ Template.non_transactional_list.onRendered(function() {
             info: true,
             responsive: true,
             "order": [
-                [1, "asc"]
+                [0, "asc"]
             ],
             action: function() {
                 $('#' + currenttablename).DataTable().ajax.reload();
@@ -13788,12 +13836,12 @@ Template.non_transactional_list.onRendered(function() {
             },
             language: { search: "", searchPlaceholder: "Search List..." },
             "fnInitComplete": function(oSettings) {
-                // if (deleteFilter) {
-                //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // } else {
-                //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                // }
-                // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                if (deleteFilter) {
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                } else {
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                }
+                $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
             },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 // let countTableData = data.Params.Count || 0; //get count from API data
@@ -16145,6 +16193,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getFixedAssetData('all');
     } else if (currenttablename == "tblFixedAssetType") {
         templateObject.getFixedAssetTypeData();
+    } else if (currenttablename === 'tblAssetCostReportList') {
+        
     } else if (currenttablename === "tblPayRuns"){
         templateObject.getPayRunsList();
     } else if (currenttablename === "tblTimeSheet"){
