@@ -525,8 +525,6 @@ Template.newbankrecon.onRendered(function() {
         });
     };
     function setAllTReconciliation(data, yodleeData) {
-        console.log('here', data)
-        console.log('there', yodleeData)
         let reconList = [];
         for(let i=0; i<data.treconciliation.length; i++){
             if (bankaccountname == data.treconciliation[i].fields.AccountName ) {

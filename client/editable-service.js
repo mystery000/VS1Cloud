@@ -171,16 +171,25 @@ export class EditableService {
     this.clickAccount(e);
   };
 
-
-  clickUomSales = (e) => {
-    $("#uomSelected").val("Each");
+  clickUom = (e) => {
     var $earch = $(e.currentTarget);
     var offset = $earch.offset();
     var uomDataName = e.target.value || "";
     if (e.pageX > offset.left + $earch.width() - 8) {
-      // X button 16px wide?
+      $("#UOMListModal").modal("show")
     } else {
+
     }
+  }
+
+  clickUomSales = (e) => {
+    $("#uomSelected").val("sales");
+    this.clickUom(e)
+  };
+
+  clickUomPurchase = (e) => {
+    $("#uomSelected").val("purchase");
+    this.clickUom(e)
   };
 
   clickTaxCodes = (e) => {

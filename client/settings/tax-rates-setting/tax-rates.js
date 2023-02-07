@@ -296,7 +296,7 @@ Template.taxRatesSettings.onRendered(function() {
                 }
 
                 $('.fullScreenSpin').css('display', 'none');
-               
+
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
 
@@ -394,8 +394,6 @@ Template.taxRatesSettings.onRendered(function() {
 
     $('#taxRatesList tbody').on('click', 'tr td.colTaxRateName , tr td.colTaxRateDesc, tr td.colTaxRate', function() {
         var listData = $(this).closest('tr').attr('id');
-        console.log(listData)
-
         if (listData) {
             $('#add-tax-title').text('Edit Tax Rate');
             $('#edtTaxName').prop('readonly', true);

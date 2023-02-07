@@ -28,9 +28,484 @@ Template.contactoverview.onCreated(function() {
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar();
+
+    templateObject.transactiondatatablerecords = new ReactiveVar([]);
 });
 
 Template.contactoverview.onRendered(function() {
+  const templateObject = Template.instance();
+  let currenttablename = 'tblcontactoverview';
+  //Contact Overview Data
+  templateObject.getContactOverviewData = async function(deleteFilter = false) {
+      var customerpage = 0;
+      getVS1Data('TERPCombinedContactsVS1').then(function(dataObject) {
+          if (dataObject.length == 0) {
+              sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                  await addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
+                  templateObject.displayContactOverviewData(data);
+              }).catch(function(err) {
+
+              });
+          } else {
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.displayContactOverviewData(data);
+          }
+      }).catch(function(err) {
+          sideBarService.getAllContactCombineVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+              await addVS1Data('TERPCombinedContactsVS1', JSON.stringify(data));
+              templateObject.displayContactOverviewData(data);
+          }).catch(function(err) {
+
+          });
+      });
+  }
+  templateObject.displayContactOverviewData = async function(data) {
+      var splashArrayContactOverview = new Array();
+      let lineItems = [];
+      let lineItemObj = {};
+      let clienttype = "";
+      let isprospect = false;
+      let iscustomer = false;
+      let isEmployee = false;
+      let issupplier = false;
+      let deleteFilter = false;
+      let isSingleTouchPayroll = false;
+      if (data.Params.Search.replace(/\s/g, "") == "") {
+          deleteFilter = true;
+      } else {
+          deleteFilter = false;
+      };
+
+      for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
+          isprospect = data.terpcombinedcontactsvs1[i].isprospect;
+          iscustomer = data.terpcombinedcontactsvs1[i].iscustomer;
+          isEmployee = data.terpcombinedcontactsvs1[i].isEmployee;
+          issupplier = data.terpcombinedcontactsvs1[i].issupplier;
+
+          if (isprospect == true && iscustomer == true && isEmployee == true && issupplier == true) {
+              clienttype = "Customer / Employee / Supplier";
+          } else if (isprospect == true && iscustomer == true && issupplier == true) {
+              clienttype = "Customer / Supplier";
+          } else if (iscustomer == true && issupplier == true) {
+              clienttype = "Customer / Supplier";
+          } else if (iscustomer == true) {
+              if (data.terpcombinedcontactsvs1[i].name.toLowerCase().indexOf("^") >= 0) {
+                  clienttype = "Job";
+              } else {
+                  clienttype = "Customer";
+              }
+          } else if (isEmployee == true) {
+              clienttype = "Employee";
+          } else if (issupplier == true) {
+              clienttype = "Supplier";
+          } else if (isprospect == true) {
+              clienttype = "Lead";
+          } else {
+              clienttype = " ";
+          }
+
+          let arBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].ARBalance) || 0.0;
+          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].CreditBalance) || 0.0;
+          let balance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].Balance) || 0.0;
+          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].CreditLimit) || 0.0;
+          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.terpcombinedcontactsvs1[i].SalesOrderBalance) || 0.0;
+          if (isNaN(data.terpcombinedcontactsvs1[i].ARBalance)) {
+              arBalance = Currency + "0.00";
+          }
+
+          if (isNaN(data.terpcombinedcontactsvs1[i].CreditBalance)) {
+              creditBalance = Currency + "0.00";
+          }
+          if (isNaN(data.terpcombinedcontactsvs1[i].Balance)) {
+              balance = Currency + "0.00";
+          }
+          if (isNaN(data.terpcombinedcontactsvs1[i].CreditLimit)) {
+              creditLimit = Currency + "0.00";
+          }
+
+          if (isNaN(data.terpcombinedcontactsvs1[i].SalesOrderBalance)) {
+              salesOrderBalance = Currency + "0.00";
+          }
+
+          let linestatus = '';
+          if (data.terpcombinedcontactsvs1[i].Active == true) {
+              linestatus = "";
+          } else if (data.terpcombinedcontactsvs1[i].Active == false) {
+              linestatus = "In-Active";
+          };
+
+
+          var dataList = [
+              '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.terpcombinedcontactsvs1[i].ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.terpcombinedcontactsvs1[i].ID + '-' + clienttype + '"></label></div>',
+              data.terpcombinedcontactsvs1[i].ID || "",
+              data.terpcombinedcontactsvs1[i].name || "",
+              clienttype || "",
+              data.terpcombinedcontactsvs1[i].phone || "",
+              data.terpcombinedcontactsvs1[i].mobile || "",
+              arBalance || 0.0,
+              creditBalance || 0.0,
+              balance || 0.0,
+              creditLimit || 0.0,
+              salesOrderBalance || 0.0,
+              data.terpcombinedcontactsvs1[i].email || "",
+              data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
+              data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
+              data.terpcombinedcontactsvs1[i].street || "",
+              data.terpcombinedcontactsvs1[i].suburb || "",
+              data.terpcombinedcontactsvs1[i].state || "",
+              data.terpcombinedcontactsvs1[i].postcode || "",
+              "",
+              linestatus,
+          ];
+
+
+
+          //if (data.terpcombinedcontactsvs1[i].name.replace(/\s/g, "") !== "") {
+          splashArrayContactOverview.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayContactOverview);
+
+      }
+
+
+      if (templateObject.transactiondatatablerecords.get()) {
+          setTimeout(function() {
+              makeNegativeGlobal();
+          }, 100);
+      }
+      //$('.fullScreenSpin').css('display','none');
+      setTimeout(function() {
+          //$('#'+currenttablename).removeClass('hiddenColumn');
+          $('#' + currenttablename).DataTable({
+              data: splashArrayContactOverview,
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: [{
+                      targets: 0,
+                      className: currenttablename == 'tblContactlist' ? "chkBox pointer" : "chkBox pointer hiddenColumn",
+                      orderable: false,
+                      width: "10px"
+                  },
+                  {
+                      targets: 1,
+                      className: "colContactID colID hiddenColumn",
+                      width: "10px",
+                      createdCell: function(td, cellData, rowData, row, col) {
+                          $(td).closest("tr").attr("id", rowData[1]);
+                          $(td).closest("tr").attr("isjob", rowData[3]);
+                      }
+                  },
+                  {
+                      targets: 2,
+                      className: "colClientName",
+                      width: "200px",
+                  },
+                  {
+                      targets: 3,
+                      className: "colType",
+                      width: "130px",
+                  },
+                  {
+                      targets: 4,
+                      className: "colPhone",
+                      width: "95px",
+                  },
+                  {
+                      targets: 5,
+                      className: "colMobile hiddenColumn",
+                      width: "95px",
+                  },
+                  {
+                      targets: 6,
+                      className: "colARBalance text-right",
+                      width: "90px",
+                  },
+                  {
+                      targets: 7,
+                      className: "colCreditBalance text-right",
+                      width: "110px",
+                  },
+                  {
+                      targets: 8,
+                      className: "colBalance text-right",
+                      width: "110px",
+                  },
+                  {
+                      targets: 9,
+                      className: "colCreditLimit hiddenColumn text-right",
+                      width: "90px",
+                  },
+                  {
+                      targets: 10,
+                      className: "colSalesOrderBalance text-right",
+                      width: "120px",
+                  },
+                  {
+                      targets: 11,
+                      className: currenttablename == 'tblContactlist' ? "colEmail" : "colEmail hiddenColumn",
+                      width: "200px",
+                  },
+                  {
+                      targets: 12,
+                      className: "colCustFld1 hiddenColumn",
+                      width: "120px",
+                  },
+                  {
+                      targets: 13,
+                      className: "colCustFld2 hiddenColumn",
+                      width: "120px",
+                  },
+                  {
+                      targets: 14,
+                      className: "colAddress"
+                  },
+                  {
+                      targets: 15,
+                      className: "colSuburb hiddenColumn",
+                      width: "120px",
+                  },
+                  {
+                      targets: 16,
+                      className: "colState hiddenColumn",
+                      width: "120px",
+                  },
+                  {
+                      targets: 17,
+                      className: "colPostcode hiddenColumn",
+                      width: "80px",
+                  },
+                  {
+                      targets: 18,
+                      className: "colCountry hiddenColumn",
+                      width: "200px",
+                  },
+                  {
+                      targets: 19,
+                      className: "colStatus",
+                      width: "100px",
+                  }
+              ],
+              buttons: [{
+                      extend: 'csvHtml5',
+                      text: '',
+                      download: 'open',
+                      className: "btntabletocsv hiddenColumn",
+                      filename: "Contact Overview",
+                      orientation: 'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+                  }, {
+                      extend: 'print',
+                      download: 'open',
+                      className: "btntabletopdf hiddenColumn",
+                      text: '',
+                      title: 'Contact Overview',
+                      filename: "Contact Overview",
+                      exportOptions: {
+                          columns: ':visible',
+                          stripHtml: false
+                      }
+                  },
+                  {
+                      extend: 'excelHtml5',
+                      title: '',
+                      download: 'open',
+                      className: "btntabletoexcel hiddenColumn",
+                      filename: "Contact Overview",
+                      orientation: 'portrait',
+                      exportOptions: {
+                          columns: ':visible'
+                      }
+
+                  }
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [
+                  [initialDatatableLoad, -1],
+                  [initialDatatableLoad, "All"]
+              ],
+              info: true,
+              responsive: true,
+              "order": [
+                  [1, "asc"]
+              ],
+              // "autoWidth": false,
+              action: function() {
+                  $('#' + currenttablename).DataTable().ajax.reload();
+              },
+              "fnDrawCallback": function(oSettings) {
+                  $('.paginate_button.page-item').removeClass('disabled');
+                  $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                  if (oSettings._iDisplayLength == -1) {
+                      if (oSettings.fnRecordsDisplay() > 150) {
+
+                      }
+                  } else {
+
+                  }
+                  if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                      $('.paginate_button.page-item.next').addClass('disabled');
+                  }
+
+                  $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                      $('.fullScreenSpin').css('display', 'inline-block');
+                      //var splashArrayCustomerListDupp = new Array();
+                      let dataLenght = oSettings._iDisplayLength;
+                      let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                      sideBarService.getAllContactCombineVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+
+                          for (let j = 0; j < dataObjectnew.terpcombinedcontactsvs1.length; j++) {
+                              isprospect = dataObjectnew.terpcombinedcontactsvs1[j].isprospect;
+                              iscustomer = dataObjectnew.terpcombinedcontactsvs1[j].iscustomer;
+                              isEmployee = dataObjectnew.terpcombinedcontactsvs1[j].isEmployee;
+                              issupplier = dataObjectnew.terpcombinedcontactsvs1[j].issupplier;
+
+                              if (isprospect == true && iscustomer == true && isEmployee == true && issupplier == true) {
+                                  clienttype = "Customer / Employee / Supplier";
+                              } else if (isprospect == true && iscustomer == true && issupplier == true) {
+                                  clienttype = "Customer / Supplier";
+                              } else if (iscustomer == true && issupplier == true) {
+                                  clienttype = "Customer / Supplier";
+                              } else if (iscustomer == true) {
+                                  if (dataObjectnew.terpcombinedcontactsvs1[j].name.toLowerCase().indexOf("^") >= 0) {
+                                      clienttype = "Job";
+                                  } else {
+                                      clienttype = "Customer";
+                                  }
+                              } else if (isEmployee == true) {
+                                  clienttype = "Employee";
+                              } else if (issupplier == true) {
+                                  clienttype = "Supplier";
+                              } else if (isprospect == true) {
+                                  clienttype = "Lead";
+                              } else {
+                                  clienttype = " ";
+                              }
+
+                              let linestatus = '';
+                              if (dataObjectnew.terpcombinedcontactsvs1[j].Active == true) {
+                                  linestatus = "";
+                              } else if (dataObjectnew.terpcombinedcontactsvs1[j].Active == false) {
+                                  linestatus = "In-Active";
+                              };
+
+                              let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance) || 0.0;
+                              let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance) || 0.0;
+                              let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].Balance) || 0.0;
+                              let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit) || 0.0;
+                              let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance) || 0.0;
+                              if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].ARBalance)) {
+                                  arBalance = Currency + "0.00";
+                              }
+
+                              if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditBalance)) {
+                                  creditBalance = Currency + "0.00";
+                              }
+                              if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].Balance)) {
+                                  balance = Currency + "0.00";
+                              }
+                              if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].CreditLimit)) {
+                                  creditLimit = Currency + "0.00";
+                              }
+
+                              if (isNaN(dataObjectnew.terpcombinedcontactsvs1[j].SalesOrderBalance)) {
+                                  salesOrderBalance = Currency + "0.00";
+                              }
+
+                              var dataListContactDupp = [
+                                  '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + dataObjectnew.terpcombinedcontactsvs1[j].ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + dataObjectnew.terpcombinedcontactsvs1[j].ID + '-' + clienttype + '"></label></div>',
+                                  dataObjectnew.terpcombinedcontactsvs1[j].ID || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].name || "",
+                                  clienttype || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].phone || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].mobile || "",
+                                  arBalance || 0.0,
+                                  creditBalance || 0.0,
+                                  balance || 0.0,
+                                  creditLimit || 0.0,
+                                  salesOrderBalance || 0.0,
+                                  dataObjectnew.terpcombinedcontactsvs1[j].email || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD1 || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].CUSTFLD2 || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].street || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].suburb || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].state || "",
+                                  dataObjectnew.terpcombinedcontactsvs1[j].postcode || "",
+                                  "",
+                                  linestatus
+                              ];
+
+                              splashArrayContactOverview.push(dataListContactDupp);
+                              //}
+                          }
+                          let uniqueChars = [...new Set(splashArrayContactOverview)];
+                          templateObject.transactiondatatablerecords.set(uniqueChars);
+                          var datatable = $('#' + currenttablename).DataTable();
+                          datatable.clear();
+                          datatable.rows.add(uniqueChars);
+                          datatable.draw(false);
+                          setTimeout(function() {
+                              $('#' + currenttablename).dataTable().fnPageChange('last');
+                          }, 400);
+
+                          $('.fullScreenSpin').css('display', 'none');
+
+                      }).catch(function(err) {
+                          $('.fullScreenSpin').css('display', 'none');
+                      });
+
+                  });
+                  setTimeout(function() {
+                      makeNegativeGlobal();
+                  }, 100);
+              },
+              language: { search: "", searchPlaceholder: "Search List..." },
+              "fnInitComplete": function(oSettings) {
+                  if (data.Params.Search.replace(/\s/g, "") == "") {
+                      $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                  } else {
+                      $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                  }
+                  $("<button class='btn btn-primary btnRefreshContactOverview' type='button' id='btnRefreshContactOverview' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+              },
+              "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                  let countTableData = data.Params.Count || 0; //get count from API data
+
+                  return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+              }
+
+          }).on('page', function() {
+              setTimeout(function() {
+                  makeNegativeGlobal();
+              }, 100);
+          }).on('column-reorder', function() {
+
+          }).on('length.dt', function(e, settings, len) {
+
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              if (dataLenght == -1) {
+                  if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                      $(".fullScreenSpin").css("display", "none");
+                  } else {
+                      $(".fullScreenSpin").css("display", "none");
+                  }
+              } else {
+                  $(".fullScreenSpin").css("display", "none");
+              }
+              setTimeout(function() {
+                  makeNegativeGlobal();
+              }, 100);
+          });
+          $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+    setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+  }
+  templateObject.getContactOverviewData();
     $("#tblcontactoverview tbody").on("click", "tr", function() {
         var listData = $(this).closest("tr").attr("id");
         var transactiontype = $(event.target).closest("tr").find(".colType").text() || '';

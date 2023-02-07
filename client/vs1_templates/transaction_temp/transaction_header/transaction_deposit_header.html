@@ -9,7 +9,9 @@
               <header>
                   <h1 style="margin: 32px;margin-bottom: 0;">{{data.lid}}
                       {{> helpbutton}}
-                      {{> help_modal}}
+                      <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        {{> help_modal}}
+                      </div>
                   </h1>
                   <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
               </header>

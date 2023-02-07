@@ -137,8 +137,7 @@ Template.newsidenav.onCreated(function () {
   sideBarService.getVS1MenuConfig().then((data) => {
     if (data.tpreference && data.tpreference.length > 0) {
       const latestAction = data.tpreference[data.tpreference.length - 1];
-      localStorage.setItem('TPreferenceMenuID', latestAction.fields.ID);
-      const menuItem = JSON.parse(latestAction.fields.PrefValue);
+      const menuItem = JSON.parse(latestAction.PrefValue);
       if (menuItem.Location === "TopMenu") {
         templateObject.sideBarPositionClass.set('top');
         $('#sidebar').addClass('top');
@@ -561,7 +560,7 @@ Template.newsidenav.onRendered(function () {
         $('#sidenavreceipt').removeClass('active');
         $('#sidenavfixedAssets').removeClass('active');
         $('.collapse').collapse('hide');
-      } else if ((currentLoc == "/crmoverview") || (currentLoc == "/tasklist")) {
+      } else if ((currentLoc == "/crmoverview") || (currentLoc == "/tasklist") || (currentLoc == "/leadlist") || (currentLoc == "/campaign-list")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -3308,6 +3307,16 @@ Template.newsidenav.events({
   'click .sidenavleads': function (event) {
     event.preventDefault();
     FlowRouter.go('/leadlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavtasks': function (event) {
+    event.preventDefault();
+    if (FlowRouter.current().path == "/crmoverview") {
+      $(".menu_all_task").trigger("click");
+    } else {
+      window.open('/crmoverview#tasksTab-tab', '_self');
+    }
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
