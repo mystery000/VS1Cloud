@@ -2304,6 +2304,15 @@ authenticatedRoutes.route('/workorderlist', {
     }
 })
 
+authenticatedRoutes.route('/mobileapp', {
+    name: 'mobileapp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mobileapp'
+        })
+    }
+})
+
 authenticatedRoutes.route('/exebalancesheetreport', {
     name: 'exebalancesheetreport',
     action() {
