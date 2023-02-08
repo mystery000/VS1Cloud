@@ -11857,8 +11857,24 @@ Template.new_invoice.events({
     }
   },
   "click .btnSNCreate": function (event) {
-    $("#availableSerialNumberModal").modal("hide");
-    $("#serialNumberModal").modal("show");
+    // $("#availableSerialNumberModal").modal("hide");
+    // $("#serialNumberModal").modal("show");
+
+    let tokenid = "random";
+    var rowData = `<tr class="dnd-moved checkRowSelected" id="${tokenid}">
+            <td class="colChkBox pointer" style="width:10%!important;">
+                <div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;">
+                    <input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-${tokenid}" checked>
+                    <label class="custom-control-label chkBox pointer" for="formCheck-${tokenid}"></label>
+                </div>
+            </td>
+            <td class="colID hiddenColumn dtr-control" tabindex="0">
+                ${tokenid}
+            </td>
+            <td class="colSN" contenteditable="true">Random</td>
+        </tr>`;
+
+    $("#tblAvailableSNCheckbox tbody").prepend(rowData);
   },
   // add to custom field
   "click #edtSaleCustField1": function (e) {
