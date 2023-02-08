@@ -537,6 +537,7 @@ openDb = function (dbName) {
       db.createObjectStore("VS1AgedReceivables_Report", { keyPath: "EmployeeEmail" });
       db.createObjectStore("VS1AgedReceivableSummary_Report", { keyPath: "EmployeeEmail" });
       db.createObjectStore("VS1ProfitandLoss_Report", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("PrintDisplaySettings", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
