@@ -138,6 +138,23 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let targetRows = [];
         var colnames = JSON.parse(localStorage.getItem("colnames_" + (currenttablename.split("_")[1] || ""))) || [];
         
+        if(currenttablename == "tblAvailableSNCheckbox"){
+            colnames.forEach(itemName => {
+                let index = currentTableData.findIndex(item => item[2] == itemName);
+                if (index < 0 && itemName != "empty") {
+                    let chkBox = `<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;">
+                                    <input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-random">
+                                    <label class="custom-control-label chkBox pointer" for="formCheck-random"></label></div>`; //switchbox
+                    var dataList = [
+                        chkBox,
+                        itemName || "",
+                        itemName || "",
+                    ];
+                    currentTableData.push(dataList);
+                }
+            });
+        }
+        
         colnames.forEach(itemName => {
             let index = currentTableData.findIndex(item => item[2] == itemName);
             if (index > -1) {
@@ -1776,7 +1793,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     }
     tableResize();
 
-    $(document).on("focusout", ".lineShipped", function(e) {
+    $(document).on("focusout", "#tblInvoiceLine .lineShipped, #tblQuoteLine .lineQty, #tblSalesOrderLine .lineQty", function(e) {
         // if (currenttablename === "tblAvailableSNCheckbox" || currenttablename === "tblAvailableLotCheckbox") {            
             var target = e.target;
             $(target).closest("tr").find(".btnSnLotmodal").click();
@@ -1859,22 +1876,38 @@ Template.internal_transaction_list_with_switchbox.events({
         event.stopPropagation();
         const templateObject = Template.instance();
         let currenttablename = await templateObject.tablename.get() || '';
+        if(currenttablename == "tblAvailableSNCheckbox"){
+            let newColumns = [];
+            $('#tblAvailableSNCheckbox > tbody > tr').each(function() {
+                let chkBox = $(this).find(".colChkBox").html(); //switchbox
+                let itemName = $(this).find(".colSN").html();
+                var dataList = [
+                    chkBox,
+                    itemName || "",
+                    itemName || "",
+                ];
+                newColumns.push(dataList);
+            });
+            templateObject.transactiondatatablerecords.set(newColumns);            
+        }
         if ($(event.target).is(':checked')) {
             let currentTableData = templateObject.transactiondatatablerecords.get();
             let itemID = $(event.target).closest('tr').find('.colID').text();
             let index = currentTableData.findIndex(item => item[1] == itemID);
             let targetRow = currentTableData[index];
-            let chk = targetRow[0];
-            chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
-            targetRow.splice(0, 1, chk);
+            let chk = Array.isArray(targetRow) ? targetRow[0] : "";
+            if(chk != ""){
+                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                targetRow.splice(0, 1, chk);
 
-            if (index > -1) {
-                currentTableData.splice(index, 1);
+                if (index > -1) {
+                    currentTableData.splice(index, 1);
+                }
+                let newTableData = [targetRow, ...currentTableData];
+                templateObject.transactiondatatablerecords.set(newTableData);
+                $('#' + currenttablename).DataTable().clear();
+                $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
             }
-            let newTableData = [targetRow, ...currentTableData];
-            templateObject.transactiondatatablerecords.set(newTableData);
-            $('#' + currenttablename).DataTable().clear();
-            $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
             let rows = $('#' + currenttablename).find('tbody tr');
             for (let i = 0; i < rows.length; i++) {
                 if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
@@ -1892,14 +1925,17 @@ Template.internal_transaction_list_with_switchbox.events({
                 return row[1] == itemID;
             })
             let targetRow = currentTableData[checkedRowIndex];
-            let chk = targetRow[0];
-            chk = chk.replace('type="checkbox" checked', 'type="checkbox"');
-            targetRow.splice(0, 1, chk);
-            currentTableData.splice(checkedRowIndex, 1);
-            let newTableData = [...currentTableData, targetRow];
-            templateObject.transactiondatatablerecords.set(newTableData);
-            $('#' + currenttablename).DataTable().clear();
-            $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+            let chk = Array.isArray(targetRow) ? targetRow[0] : "";
+            if(chk != ""){
+                chk = chk.replace('type="checkbox" checked', 'type="checkbox"');
+                targetRow.splice(0, 1, chk);
+                currentTableData.splice(checkedRowIndex, 1);
+                let newTableData = [...currentTableData, targetRow];
+                templateObject.transactiondatatablerecords.set(newTableData);
+                $('#' + currenttablename).DataTable().clear();
+                $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+            }
+            
             let rows = $('#' + currenttablename).find('tbody tr');
             for (let i = 0; i < rows.length; i++) {
                 if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
@@ -1907,6 +1943,10 @@ Template.internal_transaction_list_with_switchbox.events({
                         $(rows[i]).addClass('checkRowSelected');
                     }
                 }
+            }
+
+            if($(event.target).attr("id") == "formCheck-random"){
+                $(event.target).closest('tr').remove();
             }
         }
     },
