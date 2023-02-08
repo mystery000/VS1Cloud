@@ -3215,7 +3215,7 @@ Template.transaction_list.onRendered(function() {
         $(".fullScreenSpin").css("display", "inline-block");
         $("#" + currenttablename)
           .DataTable({
-            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            sDom: "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
             data: recentTransList,
             columnDefs: columnData,
             select: true,
@@ -3224,6 +3224,7 @@ Template.transaction_list.onRendered(function() {
             // bStateSave: true,
             // rowId: 0,
             pageLength: initialDatatableLoad,
+            bLengthChange: false,
             lengthMenu: [
               [initialDatatableLoad, -1],
               [initialDatatableLoad, "All"],
@@ -3347,6 +3348,18 @@ Template.transaction_list.onRendered(function() {
                 // MakeNegative();
               }, 100);
             },
+            language: { search: "",searchPlaceholder: "Search List..." },
+            "fnInitComplete": function () {
+                this.fnPageChange('last');
+                if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter(`#${currenttablename}_filter`);
+                }else{
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter(`#${currenttablename}_filter`);
+                }
+                $(`<button class="btn btn-primary btnRefresh${currenttablename}" type='button' id='btnRefresh${currenttablename}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${currenttablename}_filter`);
+
+                $('.myvarFilterForm').appendTo(".colDateFilter");
+            },
           })
           .on("page", function () {})
           .on("column-reorder", function () {});
@@ -3455,7 +3468,6 @@ Template.transaction_list.onRendered(function() {
             //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
             var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
             //templateObject.dateAsAt.set(formatDate);
-            //console.log("changed datefrom", dateFrom, dateTo);
             if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
             } else {
@@ -3481,7 +3493,6 @@ Template.transaction_list.onRendered(function() {
             //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
             var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
             //templateObject.dateAsAt.set(formatDate);
-            //console.log("changed datefrom", dateFrom, dateTo);
             if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
             } else {
@@ -3989,7 +4000,6 @@ Template.transaction_list.events({
     //         //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
     //         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
     //         //templateObject.dateAsAt.set(formatDate);
-    //         console.log("changed datefrom", dateFrom, dateTo);
     //         if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
     //
     //         } else {

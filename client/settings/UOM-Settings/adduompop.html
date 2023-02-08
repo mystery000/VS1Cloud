@@ -1,0 +1,234 @@
+<template name="adduompop">
+    <div class="modal-dialog modal-dialog-scrollable" role="document" style="max-height: 100%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>
+                    <div id="add-uom-title" name="add-uom-title" style="float: left">Add New UOM</div>
+                    <a
+                        role="button"
+                        data-toggle="modal"
+                        href="#helpViewModalAdd"
+                        style="font-size: 20px; padding-left: 5px"
+                        >Help <i class="fa fa-question-circle-o" style="font-size: 20px"></i
+                    ></a>
+
+                    <!-- Start Help View Modal -->
+                    <div class="modal fade" id="helpViewModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
+                        {{> help_modal}}
+                    </div>
+                    <!-- End Help View Modal -->
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" class="form-control" id="uomSelected" name="uomSelected" style="display: none" />
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label>Unit Name</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="edtUnitName"
+                                name="edtUnitName"
+                                autocomplete="off"
+                            />
+                            <input
+                                type="hidden"
+                                class="form-control"
+                                id="edtUOMID"
+                                name="edtUOMID"
+                                style="display: none"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label>Unit Multiplier</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="edtUnitMultiplier"
+                                name="edtUnitMultiplier"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 hide">
+                        <div class="form-group">
+                            <label style="width: 100%"
+                                >Link To<i
+                                    class="fas fa-question-circle float-right text-primary"
+                                    style="margin-top: 4px"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="If left blank, the unit can be used with all products"
+                                ></i
+                            ></label>
+                            <!-- <label style="width: 100%;">Link To<i class="fas fa-question-circle float-right text-primary" style="margin-top: 4px; cursor: help;" data-toggle="tooltip" data-placement="bottom" title="If left blank, the unit can be used with all products"></i></label> -->
+                            <input
+                                type="search"
+                                autocomplete="off"
+                                class="form-control es-input"
+                                id="sltProduct"
+                                name="sltProduct"
+                                style="background-color: rgb(255, 255, 255); cursor: pointer"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="form-group">
+                            <label>Unit Description</label>
+                            <textarea
+                                class="form-control"
+                                rows="3"
+                                id="txaUnitDescription"
+                                name="txaUnitDescription"
+                            ></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group" style="margin: 4px 8px">
+                            <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px">
+                                {{#if equals includeSalesDefault true}}
+                                <input
+                                    class="custom-control-input chkBox swtSalesDefault"
+                                    type="checkbox"
+                                    id="swtSalesDefault"
+                                    name="group1[]"
+                                    checked
+                                />
+                                {{else}}
+                                <input
+                                    class="custom-control-input chkBox swtSalesDefault"
+                                    type="checkbox"
+                                    id="swtSalesDefault"
+                                    name="group1[]"
+                                />
+                                {{/if}}
+                                <label class="custom-control-label chkBox" for="swtSalesDefault">Sales Default</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group" style="margin: 4px 8px">
+                            <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px">
+                                {{#if equals includePurchaseDefault true}}
+                                <input
+                                    class="custom-control-input chkBox swtPurchaseDefault"
+                                    type="checkbox"
+                                    id="swtPurchaseDefault"
+                                    name="group1[]"
+                                    checked
+                                />
+                                {{else}}
+                                <input
+                                    class="custom-control-input chkBox swtPurchaseDefault"
+                                    type="checkbox"
+                                    id="swtPurchaseDefault"
+                                    name="group1[]"
+                                />
+                                {{/if}}
+                                <label class="custom-control-label chkBox" for="swtPurchaseDefault"
+                                    >Purchase Default</label
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 hide">
+                        <hr />
+                    </div>
+                    <div class="col-12 col-md-6 hide">
+                        <div class="form-group">
+                            <label>Weight</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="edtUnitWeight"
+                                name="edtUnitWeight"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 hide">
+                        <div class="form-group">
+                            <label>No of Boxes</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="edtNoOfBoxes"
+                                name="edtNoOfBoxes"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 hide">
+                        <hr />
+                    </div>
+                    <div class="col-12 hide">
+                        <header>
+                            <h4>Dimensions in mm</h4>
+                        </header>
+                    </div>
+                    <div class="col-12 col-md-6 hide">
+                        <div class="form-group">
+                            <label>Height</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="edtHeight"
+                                name="edtHeight"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 hide">
+                        <div class="form-group">
+                            <label>Width</label>
+                            <input class="form-control" type="text" id="edtWidth" name="edtWidth" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 hide">
+                        <div class="form-group">
+                            <label>Length</label>
+                            <input
+                                class="form-control"
+                                type="text"
+                                id="edtLength"
+                                name="edtLength"
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 hide">
+                        <div class="input-group">
+                            <label style="width: 100%">Volume</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="edtVolume"
+                                name="edtVolume"
+                                aria-describedby="basic-addon2"
+                                style="border-top-left-radius: 5px; border-bottom-left-radius: 5px"
+                            />
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">mm<sup>3</sup></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btnSaveUOM" type="button">
+                    <i class="fa fa-save" style="margin-right: 5px"></i>Save
+                </button>
+                <span id="view-in-active"></span>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                    <i class="fa fa-close" style="margin-right: 5px"></i>Close
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

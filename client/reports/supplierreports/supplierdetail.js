@@ -91,10 +91,10 @@ Template.supplierdetail.onRendered(() => {
   templateObject.getSupplierDetailData = async function (dateFrom, dateTo, ignoreDate) {
 
     templateObject.setDateAs(dateFrom);
-    getVS1Data('TGeneralLedgerTReport').then(function (dataObject) {
+    getVS1Data('SupplierDetailsReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+          await addVS1Data('SupplierDetailsReport', JSON.stringify(data));
           templateObject.displaySupplierDetailData(data);
         }).catch(function (err) {
         });
@@ -104,7 +104,7 @@ Template.supplierdetail.onRendered(() => {
       }
     }).catch(function (err) {
       reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
-        await addVS1Data('TGeneralLedgerReport', JSON.stringify(data));
+        await addVS1Data('SupplierDetailsReport', JSON.stringify(data));
         templateObject.displaySupplierDetailData(data);
       }).catch(function (err) {
 

@@ -60,7 +60,7 @@
                         <label class="custom-control-label" for="vatreturnCategory2" style="cursor: pointer;">INPUT TAX</label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:160px;">
-                        <input class="custom-control-input" type="checkbox" name="vatreturnCategory3" id="vatreturnCategory3" checked style="cursor: pointer;">
+                        <input class="custom-control-input" type="checkbox" name="vatreturnCategory3" id="vatreturnCategory3" style="cursor: pointer;">
                         <label class="custom-control-label" for="vatreturnCategory3" style="cursor: pointer;">DIESEL REFUND</label>
                     </div>
                     <div class="custom-control custom-switch" style="float:left; margin-left: 20px; width:180px">
@@ -76,45 +76,6 @@
                     <div class="form-group">
                         <a role="button" data-toggle="modal" href="#vatoptionmodal" class="btn btn-primary" id="selVatOption" style="margin-top: 32px; float:right" autocomplete="off">Option</a>
                     </div>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="vatoptionmodal">
-                        <div class="modal-dialog modal-center" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" style="padding-bottom: 8px;">
-                                    <h4>VAT Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Department</label>
-                                        <div>
-                                            <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="float:left; width:80%; background-color:rgb(255, 255, 255); cursor: pointer;">
-                                            </select>
-                                            <div class="custom-control custom-switch" style="width:65px; float:right; margin-top:14px;">
-                                                <input class="custom-control-input" type="checkbox" name="allDepart" id="allDepart" checked="checked" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="allDepart" style="cursor: pointer;">All</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin-top:60px">
-                                        <label>Accounting Method</label>
-                                        <div style="padding-left:25px;">
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod1" checked style="cursor: pointer;">
-                                                <label class="custom-control-label" for="accountingmethod1" style="cursor: pointer;">Accrual</label>
-                                            </div>
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod2" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="accountingmethod2" style="cursor: pointer;">Cash</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer" style="padding: 6px;">
-                                    <button type="button" class="btn btn-primary" id="loadVatOption">OK</button>
-                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -127,7 +88,7 @@
                                     <ul class="nav nav-tabs nav-fill">
                                         <li class="nav-item" style="cursor: pointer;" id="nav-item1" name="nav-item1"><a class="nav-link active categoryTab1" role="tab" data-toggle="tab" data-target="#tab-1">OUTPUT TAX</a></li>
                                         <li class="nav-item" style="cursor: pointer;" id="nav-item2" name="nav-item2"><a class="nav-link categoryTab2" role="tab" data-toggle="tab" data-target="#tab-2">INPUT TAX</a></li>
-                                        <li class="nav-item" style="cursor: pointer;" id="nav-item3" name="nav-item3"><a class="nav-link categoryTab3" role="tab" data-toggle="tab" data-target="#tab-3">DIESEL REFUND</a></li>
+                                        <li class="nav-item" style="cursor: pointer; display:none" id="nav-item3" name="nav-item3"><a class="nav-link categoryTab3" role="tab" data-toggle="tab" data-target="#tab-3">DIESEL REFUND</a></li>
                                         <li class="nav-item" style="cursor: pointer;" id="nav-item4" name="nav-item4"><a class="nav-link categoryTab4" role="tab" data-toggle="tab" data-target="#tab-4">PAYMENT DETAILS</a></li>
                                         <li class="nav-item" style="cursor: pointer;" id="nav-item5" name="nav-item5"><a class="nav-link categoryTab5" role="tab" data-toggle="tab" data-target="#tab-5">REFUND DETAILS</a></li>
                                     </ul>
@@ -998,7 +959,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Reference No</div>
                                                         <div class="col-12 col-md-6" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
+                                                            <span style="float:left;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                             <input type="text" class="form-control" id="payment_refno" name="payment_refno" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
@@ -1021,7 +982,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Period (CCYYMM)</div>
                                                         <div class="col-12 col-md-6" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
+                                                            <span style="float:left;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                             <input type="text" class="form-control" id="payment_period" name="payment_period" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
@@ -1053,7 +1014,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Reference No</div>
                                                         <div class="col-12 col-md-6" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
+                                                            <span style="float:left;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                             <input type="text" class="form-control" id="refund_refno" name="refund_refno" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
@@ -1076,7 +1037,7 @@
                                                     <div class="row" style="margin-bottom:10px">
                                                         <div class="col-12 col-md-6" style="text-align: right; align-items: center; display: flex; justify-content: right; line-height:20px;">Payment Period (CCYYMM)</div>
                                                         <div class="col-12 col-md-6" style="align-items: center; display: flex;">
-                                                            <span style="float:left;">R&nbsp;</span>
+                                                            <span style="float:left;">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                                             <input type="text" class="form-control" id="refund_period" name="refund_period" value="" style="float:left; width:90%;">
                                                         </div>
                                                     </div>
@@ -1096,14 +1057,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
-                {{> departmentpop}}
-            </div>
-
-            <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-                {{> newdepartmentpop}}
             </div>
 
             <div class="row no-gutters">
@@ -1683,15 +1636,20 @@
         {{/if}}
 
         <!-- Modal print-button -modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-            {{> accountlistpop}}
-        </div>
-        <!-- End AccountList -->
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-            {{> addaccountpop}}
+        
+        
+        <div class="modal fade" role="dialog" tabindex="-1" id="vatoptionmodal">
+            {{> departmentOptionModal}}
         </div>
 
+        <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+            {{> departmentpop}}
+        </div>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+            {{> newdepartmentpop}}
+        </div>
+        
         <!-- Modal Tax Rate -modal -->
         <style>
             .colCodeName{
