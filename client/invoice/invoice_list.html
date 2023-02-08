@@ -402,7 +402,7 @@
                   </th>
                   {{/if}}
                   {{/each}}
-                  {{#if custfields}}
+                  <!-- {{#if custfields}}
                   {{#each custfield in custfields}}
                   {{#if custfield.display}}
                   <th data-class="{{custfield.class}}" data-col-index="{{custfield.id}}"
@@ -417,7 +417,7 @@
                   <th class="th colSaleCustField1 hiddenColumn"></th>
                   <th class="th colSaleCustField2 hiddenColumn"></th>
                   <th class="th colSaleCustField3 hiddenColumn"></th>
-                  {{/if}}
+                  {{/if}} -->
                 </tr>
               </thead>
               <tbody>
@@ -464,8 +464,17 @@
                   <td contenteditable="false"
                     class="colComments {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.comments}}
                   </td>
-
                   <td contenteditable="false"
+                  class="col{{displayfields.[15].class}} {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}
+                  </td>
+                  <td contenteditable="false"
+                  class="col{{displayfields.[16].class}} {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}
+                  </td>
+                  <td contenteditable="false"
+                  class="col{{displayfields.[17].class}} {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}
+                  </td>
+
+                  <!-- <td contenteditable="false"
                     class="colSaleCustField1 customFieldColumn {{#if custfields.[0].active}}{{else}}hiddenColumn{{/if}}">
                     {{item.custfield1}}</td>
                   <td contenteditable="false"
@@ -474,6 +483,9 @@
                   <td contenteditable="false"
                     class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">
                     {{item.custfield3}}</td>
+                  <td contenteditable="false"
+                    class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                    {{item.custfield3}}</td> -->
                 </tr>
                 {{/each}}
                 {{/if}}
