@@ -11,6 +11,9 @@ Template.mobileapp.onCreated(function() {
 
 Template.mobileapp.events({
     'click #btnOpentList': function(e, instance) {
+        if ($.fn.DataTable.isDataTable( '#tblEmployeeList' ) ) {
+            $("#tblEmployeeList").DataTable().destroy();
+        }
         getVS1Data('TEmployee').then(function (dataObject) {
             $(".mobile-left-employee-list").css('display', 'block');
             let empdata = JSON.parse(dataObject[0].data);
@@ -34,6 +37,8 @@ Template.mobileapp.events({
             });
             $("#startBreakContainer").css('display', 'none');
             $(".mobile-left-btn-containner").css('display', 'none');
+            $("#btnOpentList").prop('disabled', true);
+            $("#startBreakContainer").css('display', 'none');
         });
     },
     'click .mobile-btn-number': function(e, instance) {
@@ -97,6 +102,7 @@ Template.mobileapp.events({
         $("#btnStartBreak").css('background', '#999');
         $("#btnStopBreak").css('background', '#C5000B');
         $("#btnStopBreak").removeAttr('disabled');
+        $("#btnOpentList").removeAttr('disabled');
         $(".mobile-left-btn-containner").css('display', 'none');
         $(".mobile-left-employee-list").css('display', 'none');
     },
@@ -107,12 +113,14 @@ Template.mobileapp.events({
         $("#btnStartJob").removeAttr('disabled');
     },
     'click #btnStopBreak': function(e, instance) {
-        $(".mobile-left-btn-containner").css('display', 'block');
+        $(".mobile-left-btn-containner").css('display', 'flex');
+        $(".mobile-left-employee-list").css('display', 'none');
         $("#startBreakContainer").css('display', 'none');
         $('#btnStopBreak').prop('disabled', true);
         $("#btnStartBreak").css('background', '#00AE00');
         $("#btnStopBreak").css('background', '#0084D1');
         $("#btnStartBreak").removeAttr('disabled');
+        $("#btnOpentList").removeAttr('disabled');
     },
     'click #mobileBtnEnter': function(e, instance) {
         $("#frmOnHoldModal").modal();
