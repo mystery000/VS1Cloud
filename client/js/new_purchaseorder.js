@@ -18,6 +18,7 @@ import {autoTable} from 'jspdf-autotable';
 import 'jquery-ui-dist/external/jquery/jquery';
 import {SideBarService} from '../js/sidebar-service';
 import {ContactService} from "../contacts/contact-service";
+import { FixedAssetService } from '../fixedassets/fixedasset-service';
 import { TaxRateService } from "../settings/settings-service";
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
@@ -30,6 +31,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+let fixedAssetService = new FixedAssetService();
 var times = 0;
 let purchaseDefaultTerms = "";
 var template_list = [
@@ -86,6 +88,9 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.hasFollow = new ReactiveVar(false);
 
     templateObject.supplierRecord = new ReactiveVar();
+    templateObject.assetCostTypes = new ReactiveVar([]);
+    templateObject.currentAssetID = new ReactiveVar(0);
+    templateObject.currentLineID = new ReactiveVar(0);
 });
 Template.purchaseordercard.onRendered(() => {
     let templateObject = Template.instance();
@@ -1822,7 +1827,10 @@ Template.purchaseordercard.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-
+                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                         };
 
                                         lineItemsTable.push(dataListTable);
@@ -1849,7 +1857,11 @@ Template.purchaseordercard.onRendered(() => {
                                         customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
-                                        TaxRate: TaxRateGbp || 0
+                                        TaxRate: TaxRateGbp || 0,
+                                        fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                        costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                        fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                        costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                     };
                                     lineItems.push(lineItemObj);
                                 }
@@ -2065,7 +2077,10 @@ Template.purchaseordercard.onRendered(() => {
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
                                                 pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
-
+                                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                             };
 
                                             lineItemsTable.push(dataListTable);
@@ -2092,7 +2107,11 @@ Template.purchaseordercard.onRendered(() => {
                                             customerJob: useData[d].fields.Lines[i].fields.CustomerJob || '',
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
-                                            TaxRate: TaxRateGbp || 0
+                                            TaxRate: TaxRateGbp || 0,
+                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -2290,6 +2309,10 @@ Template.purchaseordercard.onRendered(() => {
                                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
+                                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
 
                                             };
 
@@ -2317,7 +2340,11 @@ Template.purchaseordercard.onRendered(() => {
                                             customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
-                                            TaxRate: TaxRateGbp || 0
+                                            TaxRate: TaxRateGbp || 0,
+                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -2510,6 +2537,10 @@ Template.purchaseordercard.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
+                                        fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                        costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                        fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                        costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
 
                                     };
 
@@ -2537,7 +2568,11 @@ Template.purchaseordercard.onRendered(() => {
                                     customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                     TaxTotal: TaxTotalGbp || 0,
-                                    TaxRate: TaxRateGbp || 0
+                                    TaxRate: TaxRateGbp || 0,
+                                    fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                    costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                    fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                    costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                 };
                                 lineItems.push(lineItemObj);
                             }
@@ -2725,6 +2760,10 @@ Template.purchaseordercard.onRendered(() => {
                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                 TaxTotal: TaxTotalGbp || 0,
                                 TaxRate: TaxRateGbp || 0,
+                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
 
                             };
 
@@ -2752,7 +2791,11 @@ Template.purchaseordercard.onRendered(() => {
                             customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                             TaxTotal: TaxTotalGbp || 0,
-                            TaxRate: TaxRateGbp || 0
+                            TaxRate: TaxRateGbp || 0,
+                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                         };
                         lineItems.push(lineItemObj);
                     }
@@ -2877,7 +2920,10 @@ Template.purchaseordercard.onRendered(() => {
             curTotalAmt: 0,
             TaxTotal: 0,
             TaxRate: 0,
-
+            fixedAssetID: 0,
+            costTypeID: 0,
+            fixedAssetName: '',
+            costTypeName: '',
         };
         if(url.indexOf('?workorderid=')>0) {
             let object = localStorage.getItem('newPOParamItem')? JSON.parse(localStorage.getItem('newPOParamItem')): []
@@ -2900,6 +2946,10 @@ Template.purchaseordercard.onRendered(() => {
                     curTotalAmt: 0,
                     TaxTotal: 0,
                     TaxRate: 0,
+                    fixedAssetID: 0,
+                    costTypeID: 0,
+                    fixedAssetName: '',
+                    costTypeName: '',
 
                 };
             }
@@ -3130,6 +3180,19 @@ Template.purchaseordercard.onRendered(() => {
         $('#shipvia').editableSelect();
         $('#fixedAssetLine').editableSelect();
         $('#costTypeLine').editableSelect();
+
+        $('#costTypeLine').editableSelect()
+            .on('select.editable-select', function (e, li) {
+            if (li) {
+                const lineID = templateObject.currentLineID.get();
+                const purchaseOrderData = templateObject.purchaseorderrecord.get();
+                const lineItems = purchaseOrderData.LineItems;
+                const index = lineItems.findIndex((item) => item.lineID === lineID);
+                purchaseOrderData.LineItems[index].costTypeID = parseInt(li.val()) || 0;
+                purchaseOrderData.LineItems[index].costTypeName = li.html();
+                templateObject.purchaseorderrecord.set(purchaseOrderData);
+            }
+            });
 
         $('#addRow').on('click', function() {
             var getTableFields = [ $('#tblPurchaseOrderLine tbody tr .lineProductName')];
@@ -6046,6 +6109,66 @@ Template.purchaseordercard.onRendered(function() {
 
     tempObj.getSubTaxCodes();
 
+    tempObj.getAllCostTypes = function () {
+        getVS1Data("TCostTypes").then(function (dataObject) {
+            if (dataObject.length == 0) {
+                fixedAssetService.getCostTypeList().then(function (data) {
+                    tempObj.setAssetCostList(data);
+                }).catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                tempObj.setAssetCostList(data);
+            }
+        }).catch(function (err) {
+            fixedAssetService.getCostTypeList().then(function (data) {
+                tempObj.setAssetCostList(data);
+            }).catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+    tempObj.setAssetCostList = function (data) {
+        addVS1Data('TCostTypes', JSON.stringify(data));
+        let type_record = new Array();
+        for (let i = 0; i < data.tcosttypes.length; i ++) {
+            const costType = data.tcosttypes[i];
+            const typeField = {
+                id: costType.fields.ID,
+                typeName: costType.fields.TypeName
+            };
+            type_record.push(typeField);
+            $('#costTypeLine').editableSelect('add', function(){
+                $(this).val(typeField.id);
+                $(this).text(typeField.typeName);
+            });
+        }
+        tempObj.assetCostTypes.set(type_record);
+    };
+    tempObj.getAllCostTypes();
+
+    $(document).on("click", "table#tblFixedAssetList tbody tr", function(e) {
+        $('input#fixedAssetLine').val($(this).find('td.AssetName').html());
+        // tempObj.currentAssetID.set(parseInt($(this).attr('id')));
+        const lineID = tempObj.currentLineID.get();
+        const purchaseOrderData = tempObj.purchaseorderrecord.get();
+        const lineItems = purchaseOrderData.LineItems;
+        const index = lineItems.findIndex((item) => item.lineID === lineID);
+        purchaseOrderData.LineItems[index].fixedAssetID = parseInt($(this).attr('id'));
+        purchaseOrderData.LineItems[index].fixedAssetName = $(this).find('td.AssetName').html();
+        tempObj.purchaseorderrecord.set(purchaseOrderData);
+        $('#fixedassetlistpopModal').modal('hide');
+    });
+
+    $(document).on("click", "table.tblPurchaseOrderLine tbody tr .btnFixedAsset", function(e) {
+        const lineId = $(this).parent().parent().attr('id');
+        const assetName = $(this).parent().attr('assetname');
+        const costTypeName = $(this).parent().attr('costtypename');
+        tempObj.currentLineID.set(lineId);
+        $('#fixedAssetLine').val(assetName);
+        $('#costTypeLine').val(costTypeName);
+    });
 });
 
 
@@ -6214,7 +6337,6 @@ Template.purchaseordercard.helpers({
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
     },
-
 });
 
 Template.purchaseordercard.events({
@@ -6371,9 +6493,9 @@ Template.purchaseordercard.events({
         $('#fixedassetlistpopModal').modal('toggle');
     },
 
-    'click #costTypeLine': function(event) {
-        $('#costtypelistpopModal').modal('toggle');
-    },
+    // 'click #costTypeLine': function(event) {
+    //     $('#costtypelistpopModal').modal('toggle');
+    // },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
@@ -8457,7 +8579,6 @@ Template.purchaseordercard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
-
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -8500,6 +8621,11 @@ Template.purchaseordercard.events({
                     let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
                     let tdExpiryDates = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
 
+                    let tdAssetID = $('#' + lineID + " .colFixedAsset").attr('assetid');
+                    let tdCostTypeID = $('#' + lineID + " .colFixedAsset").attr('costtypeid');
+                    let tdAssetName = $('#' + lineID + " .colFixedAsset").attr('assetname');
+                    let tdCostTypeName = $('#' + lineID + " .colFixedAsset").attr('costtypename');
+
                     if (tdproduct != "") {
                         if ($('input[name="chkCreatePOCredit"]').is(":checked")) {
                             lineItemObjForm = {
@@ -8512,7 +8638,11 @@ Template.purchaseordercard.events({
                                     LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                     CustomerJob: tdCustomerJob || '',
                                     LineTaxCode: tdtaxCode || '',
-                                    LineClassName: $('#sltDept').val() || defaultDept
+                                    LineClassName: $('#sltDept').val() || defaultDept,
+                                    CustomField1: tdAssetID,
+                                    CustomField2: tdCostTypeID,
+                                    CustomField3: tdAssetName,
+                                    CustomField4: tdCostTypeName
                                 }
                             };
                         } else {
@@ -8527,7 +8657,11 @@ Template.purchaseordercard.events({
                                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         CustomerJob: tdCustomerJob || '',
                                         LineTaxCode: tdtaxCode || '',
-                                        LineClassName: $('#sltDept').val() || defaultDept
+                                        LineClassName: $('#sltDept').val() || defaultDept,
+                                        CustomField1: tdAssetID,
+                                        CustomField2: tdCostTypeID,
+                                        CustomField3: tdAssetName,
+                                        CustomField4: tdCostTypeName
                                     }
                                 };
                             } else {
@@ -8541,7 +8675,11 @@ Template.purchaseordercard.events({
                                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         CustomerJob: tdCustomerJob || '',
                                         LineTaxCode: tdtaxCode || '',
-                                        LineClassName: $('#sltDept').val() || defaultDept
+                                        LineClassName: $('#sltDept').val() || defaultDept,
+                                        CustomField1: tdAssetID,
+                                        CustomField2: tdCostTypeID,
+                                        CustomField3: tdAssetName,
+                                        CustomField4: tdCostTypeName
                                     }
                                 };
 
@@ -12843,7 +12981,7 @@ Template.purchaseordercard.events({
         localStorage.setItem('productItem', selectedunit);
     },
 
-    'click .btnFixedAsset': function(event) {
+    'click .btnFixedAsset': function(e) {
         $('#FixedAssetLineAddModal').modal();
     },
     // add to custom field
