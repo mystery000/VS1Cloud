@@ -1793,7 +1793,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     }
     tableResize();
 
-    $(document).on("focusout", "#tblInvoiceLine .lineShipped, #tblQuoteLine .lineQty, #tblSalesOrderLine .lineQty", function(e) {
+    $(document).on("focusout", "#tblInvoiceLine .lineShipped, #tblQuoteLine .lineQty, #tblSalesOrderLine .lineQty, #tblInvoiceLine .lineQty, #tblStockAdjustmentLine .lineAdjustQty", function(e) {
         // if (currenttablename === "tblAvailableSNCheckbox" || currenttablename === "tblAvailableLotCheckbox") {            
             var target = e.target;
             $(target).closest("tr").find(".btnSnLotmodal").click();
