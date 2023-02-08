@@ -21,7 +21,7 @@
                     <a id="editPrintMore" class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#prtTemDisModal"><i class="icon ion-android-more-horizontal"></i></a>
                     <button type="button" class="close" onclick="$('#{{modalId}}').modal('hide');" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
-                    </button>                    
+                    </button>
                 </div>
             </div>
             <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
@@ -60,7 +60,7 @@
                     <div>
                             <form class="d-xl-flex align-items-xl-center">
                                 <div class="flex-grow-1" id="print_display_setting_div">
-                                    
+
                                   <!-- {{#each printfield in print_displayfields.display}}
                                       {{#if printfield}}
                                           <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -122,7 +122,7 @@
             saveFile(result);
         }
         async function saveFile(textToWrite)
-        {  
+        {
             // get the textbox data...
             var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
             var downloadLink = document.createElement("a");
@@ -187,7 +187,6 @@
         }
 
         function dragElement(elmnt) {
-            console.log(elmnt)
             var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
                 /* if present, the header is where you move the DIV from:*/
                 elmnt.onmousedown = dragMouseDown;
@@ -206,7 +205,6 @@
             }
 
             function elementDrag(e) {
-                console.log('ddd')
                 e = e || window.event;
                 e.preventDefault();
                 // calculate the new cursor position:
@@ -215,9 +213,6 @@
                 pos3 = e.clientX;
                 pos4 = e.clientY;
                 // set the element's new position:
-                console.log(pos3 + ',' + pos4)
-                console.log("qqqqq") 
-                console.log(elmnt.offsetTop + ',' + elmnt.offsetLeft)
                 if (pos3 < 1200 && pos4 < 430) {
                     elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
                     elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
@@ -232,12 +227,9 @@
         }
 
         function initDragElement() {
-            console.log("sss")
             let dragElements = document.getElementsByClassName("draggable")
-            console.log(dragElements)
 
             for(let i=0;i<dragElements.length;i++) {
-                console.log(dragElements[i].style.left + ': ' + dragElements[i].style.top)
                 dragElement(dragElements[i])
             }
         }

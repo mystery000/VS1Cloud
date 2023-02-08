@@ -1737,6 +1737,10 @@ Template.receiptsoverview.onRendered(function () {
                 } else {
                     $('.fullScreenSpin').css('display', 'none');
                     $('#tblSupplierlist_filter input').val(pf5);
+                    setTimeout(() => {                                                                                         
+                         $('#tblSupplierlist_filter input').val(pf5);  
+                         $('#tblSupplierlist_filter input').focus();
+                    }, 1800)
                     $('.btnRefreshSupplier').trigger('click');
                     $('#supplierListModal').modal('toggle');
                 }

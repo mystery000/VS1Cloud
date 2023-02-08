@@ -391,7 +391,7 @@
               class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
               <thead>
                 <tr class="dnd-moved">
-                  <!-- <th class="th colSortDate hiddenColumn"></th> -->
+                  <th class="th colSortDate hiddenColumn"></th>
                   {{#each displayfield in displayfields}}
                   {{#if displayfield.display}}
                   <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}"
@@ -402,7 +402,7 @@
                   </th>
                   {{/if}}
                   {{/each}}
-                  {{#if custfields}}
+                  <!-- {{#if custfields}}
                   {{#each custfield in custfields}}
                   {{#if custfield.display}}
                   <th data-class="{{custfield.class}}" data-col-index="{{custfield.id}}"
@@ -411,15 +411,13 @@
                     style="width:{{custfield.width}}px">
                     {{custfield.custfieldlabel}}
                   </th>
-                  {{else}}
-                  <th class="th col{{custfield.class}} hiddenColumn"></th>
                   {{/if}}
                   {{/each}}
                   {{else}}
                   <th class="th colSaleCustField1 hiddenColumn"></th>
                   <th class="th colSaleCustField2 hiddenColumn"></th>
                   <th class="th colSaleCustField3 hiddenColumn"></th>
-                  {{/if}}
+                  {{/if}} -->
                 </tr>
               </thead>
               <tbody>
@@ -466,8 +464,17 @@
                   <td contenteditable="false"
                     class="colComments {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">{{item.comments}}
                   </td>
-
                   <td contenteditable="false"
+                  class="col{{displayfields.[15].class}} {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}
+                  </td>
+                  <td contenteditable="false"
+                  class="col{{displayfields.[16].class}} {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}
+                  </td>
+                  <td contenteditable="false"
+                  class="col{{displayfields.[17].class}} {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}
+                  </td>
+
+                  <!-- <td contenteditable="false"
                     class="colSaleCustField1 customFieldColumn {{#if custfields.[0].active}}{{else}}hiddenColumn{{/if}}">
                     {{item.custfield1}}</td>
                   <td contenteditable="false"
@@ -478,7 +485,7 @@
                     {{item.custfield3}}</td>
                   <td contenteditable="false"
                     class="colSaleCustField3 customFieldColumn {{#if custfields.[2].active}}{{else}}hiddenColumn{{/if}}">
-                    {{item.custfield3}}</td>
+                    {{item.custfield3}}</td> -->
                 </tr>
                 {{/each}}
                 {{/if}}

@@ -20,7 +20,6 @@ Template.wizard_bankaccounts.events({
         .then(dataObject => {
           let data = JSON.parse(dataObject[0].data);
           const updatedDataIndex = data.taccountvs1.findIndex(tac => tac.fields.ID == id);
-          console.log("Updated DATA:", data.taccountvs1[updatedDataIndex]);
         })
     }
   },

@@ -134,14 +134,6 @@ Template.trialbalance.onRendered(() => {
       templateObject.transactiondatatablerecords.set(splashArrayTrialBalanceReport);
     }
 
-
-    if (templateObject.transactiondatatablerecords.get()) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    }
-    //$('.fullScreenSpin').css('display','none');
-
     setTimeout(function () {
       $('#trialbalance').DataTable({
         data: splashArrayTrialBalanceReport,
@@ -216,7 +208,6 @@ Template.trialbalance.onRendered(() => {
       }).on('column-reorder', function () {
 
       }).on('length.dt', function (e, settings, len) {
-
         $(".fullScreenSpin").css("display", "inline-block");
         let dataLenght = settings._iDisplayLength;
         if (dataLenght == -1) {

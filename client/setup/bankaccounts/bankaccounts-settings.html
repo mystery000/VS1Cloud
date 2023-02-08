@@ -136,12 +136,10 @@
           <div class="card-body">
             <div class="card-body py-3 px-0 rounded">
               <div class="bg-white d-flex flex-row justify-content-xl-center pt-2 pb-2">
-
-                <div class="col-sm-9 text-left pl-0">
+                <div class="col-sm-6 text-left pl-0">
                   <button class="btn btn-primary" type="button" id="btnRefreshAccount"
                     style="margin: 6px 6px 0; margin-left:0px;"><i class="la la-lightbulb-o"
                       style="padding-right: 5px;"></i>Refresh</button>
-
                   <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
                     <div class="modal-dialog modal-sm" role="document">
                       <div class="modal-content">
@@ -173,9 +171,7 @@
                     style="margin-top: 6px; margin-right: 6px; margin-left: 6px;"
                     class="downloadHelpFile btn  alerts-border btn-primary">Download Help File</a>
 
-                  <button style="margin: 6px 6px 0;" class="btn align-items-center btn-primary  alerts-border"
-                    role="button" data-toggle="modal" href="#importModal_step5"><i class="fas fa-file-import"
-                      style="padding-right: 5px;"></i>Import</button>
+                
                   <div>
 
                     <!-- <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button> -->
@@ -186,7 +182,7 @@
                         }
                       }
                     </style>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step5">
+                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -277,7 +273,13 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-3 text-right pl-0">
+                <div class="col-sm-6 text-right pl-0">
+                  <button id="exportbtn" class="btn btn-primary btnNav vs1ButtonMargin" type="button">
+                    <i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                  <button class="btn btnNav btn-primary vs1ButtonMargin" role="button" data-toggle="modal" href="#importModal">
+                    <i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                  <button class="btn btn-primary printConfirm btnNav vs1ButtonMargin" type="button">
+                    <i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                   <button class="btn btn-success confirmBtn" type="button" style="margin: 6px 6px 0;"
                     data-step-id="7">Confirm</button>
                 </div>

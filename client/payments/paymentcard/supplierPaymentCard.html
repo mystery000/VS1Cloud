@@ -1636,8 +1636,8 @@
 
         <div class="col-12 col-md-6">
           <div class="row justify-content-center desktopButtons">
-            {{> transaction_footer 
-              AttachmentCount=attachmentCount 
+            {{> transaction_footer
+              AttachmentCount=attachmentCount
               TransactionType="supplierpayments"}}
           </div>
         </div>
@@ -2267,6 +2267,10 @@
   <input type="hidden" id="colAccountID" name="colAccountID" />
 
   <!-- End Modal Supplier -->
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="eftExportModal">
+    {{> eftExportModal}}
+  </div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
     {{> accountlistpop}}

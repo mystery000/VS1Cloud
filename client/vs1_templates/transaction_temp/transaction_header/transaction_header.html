@@ -1,5 +1,5 @@
 <!-- Invoice header template -->
-<!-- 
+<!--
   data
   uploadedFile
   isCurrencyEnable
@@ -180,7 +180,9 @@
       </div>
   </header>
 
-  {{> help_modal}}
+  <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    {{> help_modal}}
+  </div>
   {{> customfieldDroppop}}
   {{> customfieldpop}}
 
@@ -235,13 +237,13 @@
         {{/if}}
       </div>
       {{/if}}
-      
+
       <div class="row" style="margin: 16px 16px 0px 16px;">
         {{#if showBilingAddress}}
         <div class="col-12 col-md-6 col-lg-2 col-xl-3">
-          {{# vs1_textarea 
-            label="Billing Address" 
-            row="5" 
+          {{# vs1_textarea
+            label="Billing Address"
+            row="5"
             id="txabillingAddress"
             name="txabillingAddress"
           }}{{data.invoiceToDesc}}{{/vs1_textarea}}
@@ -276,7 +278,7 @@
             {{/if}}
             {{#if showOrderNumber}}
             <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_input 
+              {{> default_input
                 label='Order Number'
                 id='edtOrderNumber'
                 name='edtOrderNumber'
@@ -332,6 +334,7 @@
                 label="Department"
                 id="sltDept"
                 name="sltDept"
+                type="search"
               }}
             </div>
             {{/if}}
@@ -399,7 +402,7 @@
     </div>
     <div class="col-12 col-xl-2">
       <div class="row justify-content-end">
-        {{> transaction_buttons_top 
+        {{> transaction_buttons_top
           hideBalanceDue=hideBalanceDue
           showButtons=showTransactionButtons
           recorddeleted=data.deleted

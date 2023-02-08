@@ -3255,6 +3255,13 @@ export class SideBarService extends BaseService {
   }
 
   getAllBankAccountDetails(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, isDeleted) {
+    let dateDivide = dateFrom.split("/");
+    if(dateDivide.length > 1)
+      dateFrom = dateDivide[2] + '-' + dateDivide[1] + '-' + dateDivide[0];
+    dateDivide = dateTo.split("/");
+    if(dateDivide.length > 1)
+      dateTo = dateDivide[2] + '-' + dateDivide[1] + '-' + dateDivide[0];
+
     let options = "";
     if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
@@ -4174,19 +4181,25 @@ export class SideBarService extends BaseService {
   }
 
   getVS1MenuConfig() {
-    const data = this.GET(this.erpGet.TPreference);
-    return data;
+    // const data = this.GET(this.erpGet.TPreference);
+    let options = {
+      ListType: "Detail",
+      select:"[PrefName]='VS1Menu' and [UserID]='"+localStorage.getItem('mySessionEmployeeLoggedID')+"'",
+    };
+
+    return this.getList(this.ERPObjects.TPreference, options);
+    // return data;
   }
 
-  updateVS1MenuConfig (menuType) {
+  updateVS1MenuConfig (menuType, employeeId) {
     const prefValue = '{"Location": \"' + menuType + '\", "AccessLevel": 1, "AccessLevelName": \"Full Access\"}'
     return this.POST(
-      this.erpGet.TPreference,
+      this.ERPObjects.TPreference,
       {
           "type": "TPreference",
           "fields": {
             "Department": "",
-            "IndustryId": 1,
+            "UserID": employeeId,
             "PackageID": 0,
             "PrefDesc": "",
             "PrefGroup": "GuiPrefs",

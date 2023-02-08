@@ -231,7 +231,6 @@
                         <table id="tblInvoicelistBO" name="tblInvoicelistBO" class="dataTable table table-hover table-striped table-bordered tblInvoicelistBO">
                             <thead>
                                 <tr class="dnd-moved">
-                                    <th class="th colSortDate hiddenColumn">id</th>
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
                                       <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
@@ -268,6 +267,15 @@
                                     <td contenteditable="false" class="colSaleCustField2 hiddenColumn">{{item.custfield2}}</td>
                                     <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employee}}</td>
                                     <td contenteditable="false" class="colComments" >{{item.comments}}</td>
+                                    <td contenteditable="false"
+                                    class="col{{displayfields.[19].class}} {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield1}}
+                                    </td>
+                                    <td contenteditable="false"
+                                    class="col{{displayfields.[20].class}} {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield2}}
+                                    </td>
+                                    <td contenteditable="false"
+                                    class="col{{displayfields.[21].class}} {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}">{{item.custfield3}}
+                                    </td>
                                 </tr>
                                 {{/each}}
                                 {{/if}}

@@ -300,6 +300,7 @@ import './manufacture/processList.js';
 import './vs1shipping/shippingoverview.js';
 import './vs1shipping/shippingdocket.js';
 import './deposits/deposit_list.js';
+import './vs1_templates/dashboard_options/dashboard_options.html';
 /* Tinyiko */
 
 /* Rasheed */
@@ -347,7 +348,7 @@ import './inventory/inventorypopups/onSalesOrderPopUp.js';
 
 /* Sasa */
 import './Dashboard/Dashboard.js';
-// import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
+import './Dashboard/dashboardCardCharts/dashboardCardCharts.js';
 import './Dashboard/my-tasks-widget/my-tasks-widget.js';
 import './contacts/addcustomerpop.js';
 import './Dashboard/Dashboardexe.js';
@@ -395,6 +396,7 @@ import './inventory/departmentModal/departmentModal.js';
 import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 import './settings/inventory-setting/inventorySettings.js';
+import './settings/UOM-Settings/adduompop.js';
 /* Martin */
 
 /* AlexV */
@@ -454,6 +456,8 @@ import './vs1charts/employeeLeave/employeeLeave.js';
 /*Vladyslav*/
 
 /* Roverto */
+import './manufacture/mobile/main.js';
+import './basreturn/departmentOptionModal.js';
 import './Dashboard/appointments-widget/dsm-appointments-widget.js';
 import './crm/crm.js';
 import './crm/components/help-modal.html';
@@ -600,6 +604,10 @@ import './eft/addNewEftModal/addNewEftModal.js';
 
 import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
+
+/* Scott */
+import './vs1_templates/template_buttons/spreadsheet_link.js';
+/* Scott */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

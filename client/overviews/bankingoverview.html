@@ -138,35 +138,35 @@
                         <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                         </div>
-                        <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                            <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                                <style>
-                                    .dropdown-toggle::after {
-                                        display: none;
-                                    }
-                                </style>
-                                <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                {{> daterangedropdownoption}}
-                            </div>
-                            <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                                <div class="input-group date" style="width: 160px;">
-                                    <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                                <div class="input-group date" style="width: 160px;">
-                                    <input type="text" class="form-control" id="dateTo" name="dateTo" >
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">-->
+<!--                            <div class="dropdown" style="margin: 8px; margin-top: 0px;">-->
+<!--                                <style>-->
+<!--                                    .dropdown-toggle::after {-->
+<!--                                        display: none;-->
+<!--                                    }-->
+<!--                                </style>-->
+<!--                                <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>-->
+<!--                                {{> daterangedropdownoption}}-->
+<!--                            </div>-->
+<!--                            <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">-->
+<!--                                <label style="margin-top: 8px; margin-right: 16px;">From</label>-->
+<!--                                <div class="input-group date" style="width: 160px;">-->
+<!--                                    <input type="text" class="form-control" id="dateFrom" name="dateFrom" >-->
+<!--                                    <div class="input-group-addon">-->
+<!--                                        <span class="glyphicon glyphicon-th"></span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">-->
+<!--                                <label style="margin-top: 8px; margin-right: 16px;">To</label>-->
+<!--                                <div class="input-group date" style="width: 160px;">-->
+<!--                                    <input type="text" class="form-control" id="dateTo" name="dateTo" >-->
+<!--                                    <div class="input-group-addon">-->
+<!--                                        <span class="glyphicon glyphicon-th"></span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                     {{> transaction_list tablename = "tblBankingOverview" }}
                 </div>
