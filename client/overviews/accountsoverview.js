@@ -1834,14 +1834,13 @@ Template.accountsoverview.events({
         $(".isCreditAccount").addClass("isNotCreditAccount");
     },
     "click #exportbtn": function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletocsv').click();
-        $('.fullScreenSpin').css('display', 'none');
-    },
-    "click #printConfirm": function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
-        let currenttablename = 'tblAccountOverview';
-        jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
+        jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletocsv").click();
+        $(".fullScreenSpin").css("display", "none");
+    },
+    "click .printConfirm": function(event) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletopdf").click();
         $(".fullScreenSpin").css("display", "none");
     },
     "click .templateDownload": function() {
