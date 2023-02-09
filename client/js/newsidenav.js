@@ -2627,6 +2627,12 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+  'click #sidenavbinlocationlist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/binlocationslist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
   'click #sidenaveproductlist': function (event) {
     event.preventDefault();
     FlowRouter.go('/productlist');

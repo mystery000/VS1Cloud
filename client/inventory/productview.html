@@ -638,7 +638,11 @@
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label style="display: none;">Deparment</label>
-                                                <input type="text" class="form-control" value="{{item.department}}">
+                                                <select type="search" value="{{item.department}}" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    {{#each itemt in deptrecords}}
+                                                    <option value="{{itemt.department}}" mytag="{{itemt.id}}" >{{itemt.department}}</option>
+                                                    {{/each}}
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-9">
@@ -661,7 +665,11 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
-                                                        <input type="search" class="form-control es-input" id="slttaxcodesales" value="No Bin" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer; padding-right: 12px !important;">
+                                                        <select type="search" value="" class="form-control" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                            {{#each itemtt in binrecords}}
+                                                            <option value="{{itemtt.binnumber}}" >{{itemtt.binnumber}}</option>
+                                                            {{/each}}
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>

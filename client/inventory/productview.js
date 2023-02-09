@@ -26,6 +26,7 @@ Template.productview.onCreated(() => {
     templateObject.records = new ReactiveVar();
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.deptrecords = new ReactiveVar();
+    templateObject.binrecords = new ReactiveVar();
     templateObject.tserialnumberList = new ReactiveVar();
     templateObject.tlotnumberList = new ReactiveVar();
     templateObject.recentTrasactions = new ReactiveVar([]);
@@ -75,6 +76,7 @@ Template.productview.onRendered(function() {
     const records = [];
     const taxCodesList = [];
     const deptrecords = [];
+    const binrecords = [];
 
     const coggsaccountrecords = [];
     const salesaccountrecords = [];
@@ -1801,6 +1803,53 @@ Template.productview.onRendered(function() {
 
     }
 
+    templateObject.getBinLocations = function() {
+        getVS1Data('TProductBin').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(function(data) {
+                    for (let i in data.tproductbin) {
+
+                        let binrecordObj = {
+                            binnumber: data.tproductbin[i].BinNumber || ' ',
+                        };
+
+                        binrecords.push(binrecordObj);
+                        templateObject.binrecords.set(binrecords);
+
+                    }
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductbin;
+                for (let i in useData) {
+
+                    let binrecordObj = {
+                        binnumber: useData[i].BinNumber || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+                }
+
+            }
+        }).catch(function(err) {
+            productService.getBins().then(function(data) {
+                for (let i in data.tproductbins) {
+
+                    let binrecordObj = {
+                        binnumber: data.tproductbins[i].BinNumber || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+                }
+            });
+        });
+
+    }
+
     templateObject.getClientTypeData = function() {
         getVS1Data('TClientType').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -1842,6 +1891,7 @@ Template.productview.onRendered(function() {
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
         templateObject.getDepartments();
+        templateObject.getBinLocations();
         //templateObject.getClientTypeData();
     }, 1000);
 
@@ -4282,13 +4332,16 @@ Template.productview.helpers({
         return Template.instance().taxraterecords.get();
     },
     deptrecords: () => {
-        return Template.instance().deptrecords.get().sort(function(a, b) {
-            if (a.department == 'NA') {
+        return Template.instance().deptrecords.get();
+    },
+    binrecords: () => {
+        return Template.instance().binrecords.get().sort(function(a, b) {
+            if (a.binnumber == 'NA') {
                 return 1;
-            } else if (b.department == 'NA') {
+            } else if (b.binnumber == 'NA') {
                 return -1;
             }
-            return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+            return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
         });
     },
     tserialnumberList: () => {

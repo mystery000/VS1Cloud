@@ -466,4 +466,15 @@ export class ProductService extends BaseService {
     saveBOMProduct(data) {
         return this.POST(this.ERPObjects.TProcTree, data)
     }
+
+    saveBin(data) {
+        return this.POST(this.ERPObjects.TProductBin, data);
+    }
+
+    getBins() {
+        let options = {
+            PropertyList: "ID, BinLocation, BinNumber, BinClassName"
+        };
+        return this.getList(this.ERPObjects.TProductBin, options);
+    }
 }

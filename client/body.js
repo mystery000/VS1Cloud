@@ -399,7 +399,6 @@ import './reports/supplierreports/suppliersummary';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
-import './reports/binlocations/binlocations.js';
 import './reports/stockreports/stockmovementreport.js';
 import './reports/stockreports/stockquantitybylocation.js';
 import './reports/stockreports/stockvaluereport.js';
@@ -590,6 +589,10 @@ import './eft/addNewEftModal/addNewEftModal.js';
 
 import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
+
+/* Vahagn*/
+import './inventory/binlocations/binlocations.js';
+/* Vahagn*/
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
