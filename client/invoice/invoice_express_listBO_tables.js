@@ -1,6 +1,7 @@
 import '../lib/global/indexdbstorage.js';
 import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
+import LoadingOverlay from "../LoadingOverlay";
 import { ReactiveVar } from 'meteor/reactive-var';
 import {SalesBoardService} from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
@@ -63,30 +64,30 @@ Template.invoicelistBO.onRendered(function() {
     let reset_data = templateObject.reset_data.get();
     showCustomFieldDisplaySettings(reset_data);
 
-    try {
-      getVS1Data("VS1_Customize").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              // reset_data = data.ProcessLog.CustomLayout.Columns;
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              showCustomFieldDisplaySettings(reset_data);
-          }).catch(function (err) {
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if(data.ProcessLog.Obj.CustomLayout.length > 0){
-           for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-             if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-               reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-               showCustomFieldDisplaySettings(reset_data);
-             }
-           }
-         };
-          // handle process here
-        }
-      });
-    } catch (error) {
-    }
+    // try {
+    //   getVS1Data("VS1_Customize").then(function (dataObject) {
+    //     if (dataObject.length == 0) {
+    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //           // reset_data = data.ProcessLog.CustomLayout.Columns;
+    //           reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+    //           showCustomFieldDisplaySettings(reset_data);
+    //       }).catch(function (err) {
+    //       });
+    //     } else {
+    //       let data = JSON.parse(dataObject[0].data);
+    //       if(data.ProcessLog.Obj.CustomLayout.length > 0){
+    //        for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+    //          if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+    //            reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+    //            showCustomFieldDisplaySettings(reset_data);
+    //          }
+    //        }
+    //      };
+    //       // handle process here
+    //     }
+    //   });
+    // } catch (error) {
+    // }
     return;
   }
 
@@ -199,6 +200,55 @@ Template.invoicelistBO.onRendered(function() {
     templateObject.resetData = function (dataVal) {
         location.reload();
     }
+
+    templateObject.loadCustomFields = async() => {
+        let custFields = [];
+        let customFieldCount = 3; // customfield tempcode
+        let customData = {};
+        let displayfields = templateObject.displayfields.get();
+    
+        await sideBarService.getAllCustomFields().then(function (data) {
+          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+            if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+              customData = {
+                active: data.tcustomfieldlist[x].fields.Active || false,
+                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                class: "custfield" + x,
+                display: data.tcustomfieldlist[x].fields.Active || false,
+                width: "100"
+              };
+              custFields.push(customData);  
+            }
+          }
+    
+          if (custFields.length < customFieldCount) {
+            let remainder = customFieldCount - custFields.length;
+            let getRemCustomFields = parseInt(custFields.length);
+            // count = count + remainder;
+            for (let r = 0; r < remainder; r++) {
+              getRemCustomFields++;
+              customData = {
+                active: false,
+                id: "",
+                custfieldlabel: "Custom Field " + getRemCustomFields,
+                class: "custfield" + r + customFields.length,
+                display: false,
+                width: "120"
+              };
+              // count++;
+              custFields.push(customData);
+            }
+          }
+          
+          displayfields = displayfields.concat(custFields);
+          templateObject.custfields.set(custFields);
+          // setTimeout(() => {
+            templateObject.displayfields.set(displayfields);
+          // }, 5000);
+          
+        })
+      }
 
     templateObject.getAllSalesOrderData = function () {
 
@@ -1201,7 +1251,7 @@ Template.invoicelistBO.onRendered(function() {
 
     }
 
-    templateObject.getAllSalesOrderData();
+    
 
     $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
         var listData = $(this).closest('tr').attr('id');
@@ -1243,6 +1293,15 @@ Template.invoicelistBO.onRendered(function() {
         }
     }
     tableResize();
+
+    templateObject.initPage = async () => {
+        LoadingOverlay.show();
+         await templateObject.loadCustomFields();
+         templateObject.getAllSalesOrderData();
+        
+        LoadingOverlay.hide();
+      }
+      templateObject.initPage();
 });
 
 
@@ -1489,7 +1548,6 @@ Template.invoicelistBO.events({
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblInvoicelistBO_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display','none');
-
     },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');

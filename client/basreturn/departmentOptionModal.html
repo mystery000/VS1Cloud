@@ -1,0 +1,39 @@
+<template name="departmentOptionModal">
+    <div class="modal-dialog modal-center" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-bottom: 8px;">
+                <h4 id="departOptionTile">BAS Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Department</label>
+                    <div>
+                        <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="float:left; width:80%; background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                        <div class="custom-control custom-switch" style="width:65px; float:right; margin-top:14px;">
+                            <input class="custom-control-input" type="checkbox" name="allDepart" id="allDepart" checked="checked" style="cursor: pointer;">
+                            <label class="custom-control-label" for="allDepart" style="cursor: pointer;">All</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:60px">
+                    <label>Accounting Method</label>
+                    <div style="padding-left:25px;">
+                        <div class="custom-control custom-switch">
+                            <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod1" checked style="cursor: pointer;">
+                            <label class="custom-control-label" for="accountingmethod1" style="cursor: pointer;">Accrual</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                            <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod2" style="cursor: pointer;">
+                            <label class="custom-control-label" for="accountingmethod2" style="cursor: pointer;">Cash</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 6px;">
+                <button type="button" class="btn btn-primary" id="loadOption">OK</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</template>

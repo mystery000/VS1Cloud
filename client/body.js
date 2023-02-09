@@ -263,6 +263,10 @@ import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
 
+/* Riley*/
+import './accounts/addApcaModal/addApcaModal.html';
+/* Riley*/
+
 /* Tinyiko */
 import './settings/subscription-settings/subscription.js';
 import './contacts/popemployeelist.js';
@@ -295,6 +299,7 @@ import './manufacture/processList.js';
 import './vs1shipping/shippingoverview.js';
 import './vs1shipping/shippingdocket.js';
 import './deposits/deposit_list.js';
+import './vs1_templates/dashboard_options/dashboard_options.html';
 /* Tinyiko */
 
 /* Rasheed */
@@ -386,6 +391,11 @@ import './reconciliation/newreconrule.js';
 import './reconciliation/reconciliation.js';
 import './reconciliation/reconciliationlist.js';
 import './reconciliation/reconrulelist.js';
+import './inventory/departmentModal/departmentModal.js';
+import './inventory/binNumberPopups/addBinNumberPop.js';
+import './inventory/binNumberPopups/binNumberListPop.js';
+import './settings/inventory-setting/inventorySettings.js';
+import './settings/UOM-Settings/adduompop.js';
 /* Martin */
 
 /* AlexV */
@@ -394,8 +404,8 @@ import './reports/customerreports/customerdetailsreport.js';
 import './reports/customerreports/customersummaryreport.js';
 import './reports/supplierreports/supplierdetail.js';
 import './reports/supplierreports/supplierproductreport.js';
-import './reports/supplierreports/supplierreport';
-import './reports/supplierreports/suppliersummary';
+import './reports/supplierreports/supplierreport.js';
+import './reports/supplierreports/suppliersummary.js';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
@@ -444,6 +454,8 @@ import './vs1charts/employeeLeave/employeeLeave.js';
 /*Vladyslav*/
 
 /* Roverto */
+import './manufacture/mobile/main.js';
+import './basreturn/departmentOptionModal.js';
 import './Dashboard/appointments-widget/dsm-appointments-widget.js';
 import './crm/crm.js';
 import './crm/components/help-modal.html';
@@ -478,6 +490,7 @@ import './payments/supplierAwaitingPurchaseOrder.js';
 import './contacts/statementlist.js';
 import './reports/balancesheet/balancetransactionlist.js';
 import './inventory/serialnumberview.js';
+import './popUps/deleteprogresspopup.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -590,9 +603,9 @@ import './eft/addNewEftModal/addNewEftModal.js';
 import './reports/transactionjournal/transactionjournal.js';
 /* XiaoJang*/
 
-/* Vahagn*/
-import './inventory/binlocations/binlocations.js';
-/* Vahagn*/
+/* Scott */
+import './vs1_templates/template_buttons/spreadsheet_link.js';
+/* Scott */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

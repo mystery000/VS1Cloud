@@ -138,8 +138,8 @@ Template.taxsummaryreport.onRendered(() => {
 
 
     templateObject.loadReport = async(dateFrom, dateTo, ignoreDate = false) => {
-        document.getElementById("mainTaxCode").checked = true;
-        document.getElementById("subTaxCode").checked = false;
+        // document.getElementById("mainTaxCode").checked = true;
+        // document.getElementById("subTaxCode").checked = false;
         LoadingOverlay.show();
 
         const _data = await CachedHttp.get("TTaxSummaryReport", async() => {

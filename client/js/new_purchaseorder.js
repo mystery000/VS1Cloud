@@ -18,6 +18,7 @@ import {autoTable} from 'jspdf-autotable';
 import 'jquery-ui-dist/external/jquery/jquery';
 import {SideBarService} from '../js/sidebar-service';
 import {ContactService} from "../contacts/contact-service";
+import { FixedAssetService } from '../fixedassets/fixedasset-service';
 import { TaxRateService } from "../settings/settings-service";
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
@@ -30,6 +31,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+let fixedAssetService = new FixedAssetService();
 var times = 0;
 let purchaseDefaultTerms = "";
 var template_list = [
@@ -86,6 +88,9 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.hasFollow = new ReactiveVar(false);
 
     templateObject.supplierRecord = new ReactiveVar();
+    templateObject.assetCostTypes = new ReactiveVar([]);
+    templateObject.currentAssetID = new ReactiveVar(0);
+    templateObject.currentLineID = new ReactiveVar(0);
 });
 Template.purchaseordercard.onRendered(() => {
     let templateObject = Template.instance();
@@ -1822,7 +1827,10 @@ Template.purchaseordercard.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-
+                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                         };
 
                                         lineItemsTable.push(dataListTable);
@@ -1849,7 +1857,11 @@ Template.purchaseordercard.onRendered(() => {
                                         customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
-                                        TaxRate: TaxRateGbp || 0
+                                        TaxRate: TaxRateGbp || 0,
+                                        fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                        costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                        fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                        costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                     };
                                     lineItems.push(lineItemObj);
                                 }
@@ -2065,7 +2077,10 @@ Template.purchaseordercard.onRendered(() => {
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
                                                 pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
-
+                                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                             };
 
                                             lineItemsTable.push(dataListTable);
@@ -2092,7 +2107,11 @@ Template.purchaseordercard.onRendered(() => {
                                             customerJob: useData[d].fields.Lines[i].fields.CustomerJob || '',
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
-                                            TaxRate: TaxRateGbp || 0
+                                            TaxRate: TaxRateGbp || 0,
+                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -2290,6 +2309,10 @@ Template.purchaseordercard.onRendered(() => {
                                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
+                                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
 
                                             };
 
@@ -2317,7 +2340,11 @@ Template.purchaseordercard.onRendered(() => {
                                             customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
-                                            TaxRate: TaxRateGbp || 0
+                                            TaxRate: TaxRateGbp || 0,
+                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -2510,6 +2537,10 @@ Template.purchaseordercard.onRendered(() => {
                                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                         TaxTotal: TaxTotalGbp || 0,
                                         TaxRate: TaxRateGbp || 0,
+                                        fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                        costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                        fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                        costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
 
                                     };
 
@@ -2537,7 +2568,11 @@ Template.purchaseordercard.onRendered(() => {
                                     customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                     TaxTotal: TaxTotalGbp || 0,
-                                    TaxRate: TaxRateGbp || 0
+                                    TaxRate: TaxRateGbp || 0,
+                                    fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                    costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                    fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                    costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                                 };
                                 lineItems.push(lineItemObj);
                             }
@@ -2725,6 +2760,10 @@ Template.purchaseordercard.onRendered(() => {
                                 curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                 TaxTotal: TaxTotalGbp || 0,
                                 TaxRate: TaxRateGbp || 0,
+                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
 
                             };
 
@@ -2752,7 +2791,11 @@ Template.purchaseordercard.onRendered(() => {
                             customerJob: data.fields.Lines[i].fields.CustomerJob || '',
                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                             TaxTotal: TaxTotalGbp || 0,
-                            TaxRate: TaxRateGbp || 0
+                            TaxRate: TaxRateGbp || 0,
+                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
+                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
+                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
+                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
                         };
                         lineItems.push(lineItemObj);
                     }
@@ -2877,7 +2920,10 @@ Template.purchaseordercard.onRendered(() => {
             curTotalAmt: 0,
             TaxTotal: 0,
             TaxRate: 0,
-
+            fixedAssetID: 0,
+            costTypeID: 0,
+            fixedAssetName: '',
+            costTypeName: '',
         };
         if(url.indexOf('?workorderid=')>0) {
             let object = localStorage.getItem('newPOParamItem')? JSON.parse(localStorage.getItem('newPOParamItem')): []
@@ -2890,7 +2936,7 @@ Template.purchaseordercard.onRendered(() => {
                     quantity: detail.UOMQtySold,
                     qtyordered: detail.UOMQtySold,
                     qtyshipped: detail.UOMQtyShipped,
-                    qtybo: '',
+                    qtybo: detail.UOMQtyBackOrder,
                     unitPrice: detail.LineCost,
                     unitPriceInc:0,
                     TotalAmt: 0,
@@ -2900,6 +2946,10 @@ Template.purchaseordercard.onRendered(() => {
                     curTotalAmt: 0,
                     TaxTotal: 0,
                     TaxRate: 0,
+                    fixedAssetID: 0,
+                    costTypeID: 0,
+                    fixedAssetName: '',
+                    costTypeName: '',
 
                 };
             }
@@ -3130,6 +3180,19 @@ Template.purchaseordercard.onRendered(() => {
         $('#shipvia').editableSelect();
         $('#fixedAssetLine').editableSelect();
         $('#costTypeLine').editableSelect();
+
+        $('#costTypeLine').editableSelect()
+            .on('select.editable-select', function (e, li) {
+            if (li) {
+                const lineID = templateObject.currentLineID.get();
+                const purchaseOrderData = templateObject.purchaseorderrecord.get();
+                const lineItems = purchaseOrderData.LineItems;
+                const index = lineItems.findIndex((item) => item.lineID === lineID);
+                purchaseOrderData.LineItems[index].costTypeID = parseInt(li.val()) || 0;
+                purchaseOrderData.LineItems[index].costTypeName = li.html();
+                templateObject.purchaseorderrecord.set(purchaseOrderData);
+            }
+            });
 
         $('#addRow').on('click', function() {
             var getTableFields = [ $('#tblPurchaseOrderLine tbody tr .lineProductName')];
@@ -6046,6 +6109,66 @@ Template.purchaseordercard.onRendered(function() {
 
     tempObj.getSubTaxCodes();
 
+    tempObj.getAllCostTypes = function () {
+        getVS1Data("TCostTypes").then(function (dataObject) {
+            if (dataObject.length == 0) {
+                fixedAssetService.getCostTypeList().then(function (data) {
+                    tempObj.setAssetCostList(data);
+                }).catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                tempObj.setAssetCostList(data);
+            }
+        }).catch(function (err) {
+            fixedAssetService.getCostTypeList().then(function (data) {
+                tempObj.setAssetCostList(data);
+            }).catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+    tempObj.setAssetCostList = function (data) {
+        addVS1Data('TCostTypes', JSON.stringify(data));
+        let type_record = new Array();
+        for (let i = 0; i < data.tcosttypes.length; i ++) {
+            const costType = data.tcosttypes[i];
+            const typeField = {
+                id: costType.fields.ID,
+                typeName: costType.fields.TypeName
+            };
+            type_record.push(typeField);
+            $('#costTypeLine').editableSelect('add', function(){
+                $(this).val(typeField.id);
+                $(this).text(typeField.typeName);
+            });
+        }
+        tempObj.assetCostTypes.set(type_record);
+    };
+    tempObj.getAllCostTypes();
+
+    $(document).on("click", "table#tblFixedAssetList tbody tr", function(e) {
+        $('input#fixedAssetLine').val($(this).find('td.AssetName').html());
+        // tempObj.currentAssetID.set(parseInt($(this).attr('id')));
+        const lineID = tempObj.currentLineID.get();
+        const purchaseOrderData = tempObj.purchaseorderrecord.get();
+        const lineItems = purchaseOrderData.LineItems;
+        const index = lineItems.findIndex((item) => item.lineID === lineID);
+        purchaseOrderData.LineItems[index].fixedAssetID = parseInt($(this).attr('id'));
+        purchaseOrderData.LineItems[index].fixedAssetName = $(this).find('td.AssetName').html();
+        tempObj.purchaseorderrecord.set(purchaseOrderData);
+        $('#fixedassetlistpopModal').modal('hide');
+    });
+
+    $(document).on("click", "table.tblPurchaseOrderLine tbody tr .btnFixedAsset", function(e) {
+        const lineId = $(this).parent().parent().attr('id');
+        const assetName = $(this).parent().attr('assetname');
+        const costTypeName = $(this).parent().attr('costtypename');
+        tempObj.currentLineID.set(lineId);
+        $('#fixedAssetLine').val(assetName);
+        $('#costTypeLine').val(costTypeName);
+    });
 });
 
 
@@ -6214,7 +6337,6 @@ Template.purchaseordercard.helpers({
     getDefaultCurrency: () => {
         return defaultCurrencyCode;
     },
-
 });
 
 Template.purchaseordercard.events({
@@ -6371,9 +6493,9 @@ Template.purchaseordercard.events({
         $('#fixedassetlistpopModal').modal('toggle');
     },
 
-    'click #costTypeLine': function(event) {
-        $('#costtypelistpopModal').modal('toggle');
-    },
+    // 'click #costTypeLine': function(event) {
+    //     $('#costtypelistpopModal').modal('toggle');
+    // },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
@@ -8123,12 +8245,15 @@ Template.purchaseordercard.events({
         cancelButtonText: 'No'
             }).then(async (result) => {
                 if (result.value) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
                     var url = FlowRouter.current().path;
                     var getso_id = url.split('?id=');
                     var currentInvoice = getso_id[getso_id.length - 1];
                     var objDetails = '';
                     if (getso_id[1]) {
+                        $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                        $("#deleteLineModal").modal('hide');
+                        $("#deleteprogressbar").css('display', 'block');
+                        $("#deleteprogressbar").modal('show');
                         currentInvoice = parseInt(currentInvoice);
                         var poData = await purchaseService.getOnePurchaseOrderdataEx(currentInvoice);
                         var orderDate = poData.fields.OrderDate;
@@ -8142,6 +8267,7 @@ Template.purchaseordercard.events({
                             0
                         );
                         var poList = followingPOs.tpurchaseorderlist;
+                        var j = 0;
                         for (var i=0; i < poList.length; i++) {
                             var objDetails = {
                                 type: "TPurchaseOrderEx",
@@ -8150,16 +8276,16 @@ Template.purchaseordercard.events({
                                     Deleted: true
                                 }
                             };
+                            j ++;
+                            document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                            $('.deleteloadingbar').css('width', ((100/poList.length*j)) + '%').attr('aria-valuenow', ((100/poList.length*j)));
                             var result = await purchaseService.savePurchaseOrderEx(objDetails);
                         }
                     }
-                    if(FlowRouter.current().queryParams.trans){
-                        FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
-                    }else{
-                        FlowRouter.go('/purchaseorderlist?success=true');
-                    };
-                    $('.modal-backdrop').css('display','none');
-                    $("#deleteLineModal").modal("toggle");
+                    $("#deletecheckmarkwrapper").removeClass('hide');
+                    $('.modal-backdrop').css('display', 'none');
+                    $("#deleteprogressbar").modal('hide');
+                    $("#btn_data").click();
                 }
             });
         }, delayTimeAfterSound);
@@ -8453,7 +8579,6 @@ Template.purchaseordercard.events({
         }, delayTimeAfterSound);
     },
     'click .btnSave': async (event, templateObject) => {
-
         playSaveAudio();
         let tempObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
@@ -8496,6 +8621,11 @@ Template.purchaseordercard.events({
                     let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
                     let tdExpiryDates = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
 
+                    let tdAssetID = $('#' + lineID + " .colFixedAsset").attr('assetid');
+                    let tdCostTypeID = $('#' + lineID + " .colFixedAsset").attr('costtypeid');
+                    let tdAssetName = $('#' + lineID + " .colFixedAsset").attr('assetname');
+                    let tdCostTypeName = $('#' + lineID + " .colFixedAsset").attr('costtypename');
+
                     if (tdproduct != "") {
                         if ($('input[name="chkCreatePOCredit"]').is(":checked")) {
                             lineItemObjForm = {
@@ -8508,7 +8638,11 @@ Template.purchaseordercard.events({
                                     LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                     CustomerJob: tdCustomerJob || '',
                                     LineTaxCode: tdtaxCode || '',
-                                    LineClassName: $('#sltDept').val() || defaultDept
+                                    LineClassName: $('#sltDept').val() || defaultDept,
+                                    CustomField1: tdAssetID,
+                                    CustomField2: tdCostTypeID,
+                                    CustomField3: tdAssetName,
+                                    CustomField4: tdCostTypeName
                                 }
                             };
                         } else {
@@ -8523,7 +8657,11 @@ Template.purchaseordercard.events({
                                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         CustomerJob: tdCustomerJob || '',
                                         LineTaxCode: tdtaxCode || '',
-                                        LineClassName: $('#sltDept').val() || defaultDept
+                                        LineClassName: $('#sltDept').val() || defaultDept,
+                                        CustomField1: tdAssetID,
+                                        CustomField2: tdCostTypeID,
+                                        CustomField3: tdAssetName,
+                                        CustomField4: tdCostTypeName
                                     }
                                 };
                             } else {
@@ -8537,7 +8675,11 @@ Template.purchaseordercard.events({
                                         LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                                         CustomerJob: tdCustomerJob || '',
                                         LineTaxCode: tdtaxCode || '',
-                                        LineClassName: $('#sltDept').val() || defaultDept
+                                        LineClassName: $('#sltDept').val() || defaultDept,
+                                        CustomField1: tdAssetID,
+                                        CustomField2: tdCostTypeID,
+                                        CustomField3: tdAssetName,
+                                        CustomField4: tdCostTypeName
                                     }
                                 };
 
@@ -8760,6 +8902,11 @@ Template.purchaseordercard.events({
                 };
 
                 await purchaseService.savePurchaseOrderEx(objDetails).then(async function(objDetails) {
+                    sideBarService.getAllSerialNumber().then(function(data) {
+                        addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    }).catch(function (err){
+                    });
+
                     if (localStorage.getItem("enteredURL") != null) {
                         FlowRouter.go(localStorage.getItem("enteredURL"));
                         localStorage.removeItem("enteredURL");
@@ -8793,19 +8940,32 @@ Template.purchaseordercard.events({
                             let index = workorders.findIndex((order, index)=>{
                                 return order.fields.ID == workorderid
                             })
-                            let workorderrecord = cloneDeep(workorders[index].fields);
-                            workorderrecord.POStatus = $('#sltStatus').val();
-                            let object = {
-                                type:"TVS1Workorder",
-                                fields: workorderrecord
+                            
+                            if(index > -1) {
+                                let workorderrecord = cloneDeep(workorders[index].fields);
+                                if(workorderrecord.POStatus == 'not created') {
+                                    workorderrecord.POStatus = 'ordered';
+                                }  
+                                if (getso_id[1]) {
+                                    workorderrecord.PONumber = getso_id[1];
+                                }
+                                if (workorderrecord.POStatus == 'ordered') {
+                                    if (splashLineArray[0].fields.UOMQtySold == splashLineArray[0].fields.UOMQtyShipped) {
+                                        workorderrecord.POStatus = 'received'; 
+                                    }
+                                }
+                                let object = {
+                                    type:"TVS1Workorder",
+                                    fields: workorderrecord
+                                }
+                                let tempWorkorders = cloneDeep(workorders);
+                                tempWorkorders.splice(index, 1, object);
+                                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
+                                    function() {getVS1Data('TVS1Workorder').then(function(dataObject){
+                                        let data = JSON.parse(dataObject[0].data);
+                                    })}
+                                )
                             }
-                            let tempWorkorders = cloneDeep(workorders);
-                            tempWorkorders.splice(index, 1, object);
-                            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempWorkorders})).then(
-                                function() {getVS1Data('TVS1Workorder').then(function(dataObject){
-                                    let data = JSON.parse(dataObject[0].data);
-                                })}
-                            )
                         }
                     }
                     await updateWO()
@@ -9296,9 +9456,6 @@ Template.purchaseordercard.events({
                             FlowRouter.go('/purchaseorderlist?success=true');
                         };
                     }
-
-
-
                 }).catch(function(err) {
                     swal({
                         title: 'Oooops...',
@@ -12677,20 +12834,95 @@ Template.purchaseordercard.events({
                 productService.getProductStatus(selectedProductName).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        var buttons = $("<div>")
+                        .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                        .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                        .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                         swal({
-                            title: '',
-                            text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                            type: 'info',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes',
-                            cancelButtonText: 'No'
-                            // cancelButtonClass: "btn-default"
-                        }).then((result) => {
-                            if (result.value) {
-                            } else if (result.dismiss === 'cancel') {
-                                // $('.essentialsdiv .custom-control-input').prop("checked", false);
-                                event.preventDefault();
-                                return false;
+                            title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                            type: "warning",
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            html: buttons,
+                            onOpen: function (dObj) {
+                            $('#trackSN').on('click',function () {
+                                objDetails = {
+                                type: "TProductVS1",
+                                fields: {
+                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    Active: true,
+                                    SNTracking: "true",
+                                    Batch: "false",
+                                },
+                                };
+
+                                productService.saveProductVS1(objDetails)
+                                .then(async function (objDetails) {
+                                sideBarService.getProductListVS1("All", 0)
+                                    .then(async function (dataReload) {
+                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    swal.close();
+                                    $(target).click();
+                                    })
+                                    .catch(function (err) {
+                                    });
+                                })
+                                .catch(function (err) {
+                                swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {
+                                    // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                });
+                                });
+                            });
+                            $('#trackLN').on('click',function () {
+                                swal.close();
+                                objDetails = {
+                                type: "TProductVS1",
+                                fields: {
+                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    Active: true,
+                                    SNTracking: "false",
+                                    Batch: "true",
+                                },
+                                };
+
+                                productService.saveProductVS1(objDetails)
+                                .then(async function (objDetails) {
+                                sideBarService.getProductListVS1("All", 0)
+                                    .then(async function (dataReload) {
+                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    swal.close();
+                                    $(target).click();
+                                    })
+                                    .catch(function (err) {
+                                    });
+                                })
+                                .catch(function (err) {
+                                swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {
+                                    // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                });
+                                });
+                            });
+                            $('#trackCancel').on('click',function () {
+                                swal.close();
+                            });
                             }
                         });
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
@@ -12789,20 +13021,95 @@ Template.purchaseordercard.events({
                 productService.getProductStatus(selectedProductName).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        var buttons = $("<div>")
+                        .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                        .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                        .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                         swal({
-                            title: '',
-                            text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                            type: 'info',
-                            showCancelButton: true,
-                            confirmButtonText: 'Yes',
-                            cancelButtonText: 'No'
-                            // cancelButtonClass: "btn-default"
-                        }).then((result) => {
-                            if (result.value) {
-                            } else if (result.dismiss === 'cancel') {
-                                // $('.essentialsdiv .custom-control-input').prop("checked", false);
-                                event.preventDefault();
-                                return false;
+                            title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                            type: "warning",
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            html: buttons,
+                            onOpen: function (dObj) {
+                            $('#trackSN').on('click',function () {
+                                objDetails = {
+                                type: "TProductVS1",
+                                fields: {
+                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    Active: true,
+                                    SNTracking: "true",
+                                    Batch: "false",
+                                },
+                                };
+
+                                productService.saveProductVS1(objDetails)
+                                .then(async function (objDetails) {
+                                sideBarService.getProductListVS1("All", 0)
+                                    .then(async function (dataReload) {
+                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    swal.close();
+                                    $(target).click();
+                                    })
+                                    .catch(function (err) {
+                                    });
+                                })
+                                .catch(function (err) {
+                                swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {
+                                    // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                });
+                                });
+                            });
+                            $('#trackLN').on('click',function () {
+                                swal.close();
+                                objDetails = {
+                                type: "TProductVS1",
+                                fields: {
+                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    Active: true,
+                                    SNTracking: "false",
+                                    Batch: "true",
+                                },
+                                };
+
+                                productService.saveProductVS1(objDetails)
+                                .then(async function (objDetails) {
+                                sideBarService.getProductListVS1("All", 0)
+                                    .then(async function (dataReload) {
+                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    swal.close();
+                                    $(target).click();
+                                    })
+                                    .catch(function (err) {
+                                    });
+                                })
+                                .catch(function (err) {
+                                swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                }).then((result) => {
+                                    if (result.value) {
+                                    // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                });
+                                });
+                            });
+                            $('#trackCancel').on('click',function () {
+                                swal.close();
+                            });
                             }
                         });
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
@@ -12822,7 +13129,7 @@ Template.purchaseordercard.events({
         localStorage.setItem('productItem', selectedunit);
     },
 
-    'click .btnFixedAsset': function(event) {
+    'click .btnFixedAsset': function(e) {
         $('#FixedAssetLineAddModal').modal();
     },
     // add to custom field

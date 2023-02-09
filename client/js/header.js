@@ -1161,6 +1161,30 @@ Template.header.onRendered(function () {
                     $('.fullScreenSpin').css('display', 'none');
                 });
 
+            } else if (segs[0] === Barcode_Prefix_Serial) {
+                sideBarService.getAllSerialNumber().then(async function (data) {
+                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    $('.fullScreenSpin').css('display', 'none');
+                    for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                        if(data.tserialnumberlistcurrentreport[i].SerialNumber == segs[1]){
+                            window.open('/serialnumberlist?sn=' + segs[1], '_self');
+                        }
+                    }
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else if (segs[0] === Barcode_Prefix_LOT) {
+                productService.getProductBatches().then(async function (data) {
+                    await addVS1Data('TProductBatches', JSON.stringify(data));
+                    $('.fullScreenSpin').css('display', 'none');
+                    for (let i = 0; i < data.tproductbatches.length; i++) {
+                        if(data.tproductbatches[i].Batchno == segs[1]){
+                            window.open('/lotnumberlist?ln=' + segs[1], '_self');
+                        }
+                    }
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });                
             } else {
                 productService.getGlobalSearchReport(searchName).then(function (data) {
                     let dataSelectID = '';

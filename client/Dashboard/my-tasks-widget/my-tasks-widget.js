@@ -24,7 +24,6 @@ Template.myTasksWidget.onCreated(function() {
 
 Template.myTasksWidget.onRendered(function() {
     let templateObject = Template.instance();
-
     templateObject.getInitialAllTaskList = function() {
         getVS1Data("TCRMTaskList").then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -101,7 +100,18 @@ Template.myTasksWidget.onRendered(function() {
                     task_list.push(pdata);
                 }
             }
-            task_list = sortArray(task_list, 'dueDate');
+            // task_list = sortArray(task_list, 'dueDate');
+            task_list.sort((a, b) => {
+                let x = new Date(a["dueDate"]);
+                let y = new Date(b["dueDate"]);
+                let px = a["priority"] == "Urgent" ? 3 : (a["priority"] == "High" ? 2 : (a["priority"] == "Normal" ? 1 : 0));
+                let py = b["priority"] == "Urgent" ? 3 : (b["priority"] == "High" ? 2 : (b["priority"] == "Normal" ? 1 : 0));
+                if (a["dueDate"] != b["dueDate"]) {
+                    return y - x;
+                } else {
+                    return py - px;
+                }
+            });
             templateObject.todayTasks.set(task_list.slice(0, 5));
         }
     }

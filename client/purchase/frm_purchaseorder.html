@@ -49,7 +49,7 @@
       <div>
         {{> transaction_line tablename="tblPurchaseOrderLine"
         recordLineItems=purchaseorderrecord.LineItems
-        isForeignEnabled=isForeignEnabled canShowBackOrder=false
+        isForeignEnabled=isForeignEnabled canShowBackOrder=true
         canShowUOM=false includeBOnShippedQty=includeBOnShippedQty
         isBatchSerialNoTracking=isBatchSerialNoTracking
         getDefaultCurrency=getDefaultCurrency }}
@@ -1085,7 +1085,8 @@
                   id="costTypeLine"
                   name="costTypeLine"
                   style="background-color: rgb(255, 255, 255); cursor: pointer"
-                ></select>
+                >
+                </select>
               </div>
             </div>
           </div>
@@ -1094,18 +1095,13 @@
     </div>
   </div>
 
-  <div
-    class="modal fade"
-    role="dialog"
-    tabindex="-1"
-    id="fixedassetlistpopModal"
-  >
+  <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal" style="padding: 32px;">
+    <h4>Fixed Asset List</h4>
     {{> fixedassetlistpop}}
   </div>
-
-  <div class="modal fade" role="dialog" tabindex="-1" id="costtypelistpopModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="costtypelistpopModal">
     {{> costtypelistpop}}
-  </div>
+  </div> -->
 
   <script>
     modalDraggable();

@@ -1,4 +1,9 @@
 <template name="custom_print_template">
+    <style>
+        .draggable {
+            position: absolute;
+        }
+    </style>
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header align-items-center">
@@ -52,15 +57,54 @@
                     <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
+                    <div>
+                            <form class="d-xl-flex align-items-xl-center">
+                                <div class="flex-grow-1" id="print_display_setting_div">
+
+                                  <!-- {{#each printfield in print_displayfields.display}}
+                                      {{#if printfield}}
+                                          <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
+                                              <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                  <input class="custom-control-input chkDatatable" type="checkbox" id="formCheck-{{@index}}" checked="{{printfield}}">
+                                                  <label class="custom-control-label" for="formCheck-{{@index}}">{{print_displayNames[index]}}</label>
+                                                  <div contenteditable="true" class="groove divcolumn" type="text"></div>
+                                              </div>
+                                          </div>
+                                      {{/if}}
+                                  {{/each}} -->
+                                  {{#each arrayify print_displayfields}}
+                                    <div class="columnSettings displaySettings">
+                                        <div class="custom-control custom-switch" style="margin: 8px; ">
+                                            <input class="custom-control-input chkDatatable" name="front" type="checkbox" id="formCheck-{{name}}" data-displaysetting-type="front{{value.[0]}}" onclick="showOrHidden(this)" checked="{{value.[2]}}">
+                                            <label class="custom-control-label" for="formCheck-{{name}}">
+                                                {{name}}
+                                            </label>
+
+                                            <input type="checkbox" name="end" id="{{value.[0]}}new" style="margin: 5px !important; float: right; display: none;" data-display-type="end{{value.[0]}}" onchange="grid_main(this)" checked="true">
+                                            <label style="float: right" for="{{value.[0]}}new">
+                                                {{#if equals value.[0] ''}}
+                                                    Main
+                                                {{else}}
+                                                    Grid
+                                                {{/if}}
+                                            </label>
+                                            <div contenteditable="false" class="groove divcolumn" type="text"></div>
+                                        </div>
+                                    </div>
+                                  {{/each}}
+                                </div>
+                            </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                    <button class="btn btn-primary saveTable savePrintTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-warning resetTable resetPrintTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button" style='margin: 14px !important;'><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
         async function getPrintTDetail() {
             try {
@@ -78,7 +122,7 @@
             saveFile(result);
         }
         async function saveFile(textToWrite)
-        {  
+        {
             // get the textbox data...
             var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
             var downloadLink = document.createElement("a");
@@ -101,5 +145,96 @@
             };
             input.click();
         }
+
+        function showOrHidden(e) {
+            let className = e.id
+
+            if(className.includes(' ') != -1) {
+                className = className.split('-')[1]
+                className = className.split(' ')[0]
+            }
+            var all_col = document.getElementsByClassName(className);
+            if (e.checked == false) {
+                for(var i=0;i<all_col.length;i++) {
+                    all_col[i].style.display="none";
+                }
+            } else {
+                for(var i=0;i<all_col.length;i++) {
+                    all_col[i].style.display="table-cell";
+                }
+            }
+        }
+
+        function grid_main(e) {
+            let all_chk_f = document.querySelectorAll('input[name="front"]')
+            if(e.id == 'new') {
+                for(var i=0;i<all_chk_f.length;i++) {
+                    if (all_chk_f[i].getAttribute("data-displaysetting-type") == 'front') {
+                        all_chk_f[i].disabled = false
+                    } else {
+                        all_chk_f[i].disabled = true
+                    }
+                }
+            } else {
+                for(var i=0;i<all_chk_f.length;i++) {
+                    if (all_chk_f[i].getAttribute("data-displaysetting-type") == 'front') {
+                        all_chk_f[i].disabled = true
+                    } else {
+                        all_chk_f[i].disabled = false
+                    }
+                }
+            }
+        }
+
+        function dragElement(elmnt) {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                /* if present, the header is where you move the DIV from:*/
+                elmnt.onmousedown = dragMouseDown;
+                /* otherwise, move the DIV from anywhere inside the DIV:*/
+                //elmnt.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                if (pos3 < 1200 && pos4 < 430) {
+                    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                    elmnt.style.border = "1px solid blue";
+                }
+            }
+
+            function closeDragElement() {
+                /* stop moving when mouse button is released:*/
+                document.onmouseup = null;
+                document.onmousemove = null;
+                elmnt.style.border = "";
+            }
+        }
+
+        function initDragElement() {
+            let dragElements = document.getElementsByClassName("draggable")
+
+            for(let i=0;i<dragElements.length;i++) {
+                dragElement(dragElements[i])
+            }
+        }
+        initDragElement()
     </script>
 </template>

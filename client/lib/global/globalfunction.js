@@ -1046,7 +1046,7 @@ loadTemplateHeaderFooter1 = function(object_invoce) {
       tbl_header.empty();
       for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
           tbl_header.append(
-          "<th style='width: " + value[0] + "%; color: rgb(0 0 0); text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
+          "<th class=" + key + " style='width: " + value[0] + "%; color: rgb(0 0 0); text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
           );
       }
   }
@@ -1143,7 +1143,7 @@ loadTemplateHeaderFooter2 = function(object_invoce) {
       tbl_header.empty();
       for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
           tbl_header.append(
-              "<th style='width: " + value[0] + "%; color: #000000; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
+              "<th class=" + key + " style='width: " + value[0] + "%; color: #000000; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
           );
       }
   }
@@ -1234,7 +1234,7 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
       tbl_header.empty();
       for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
           tbl_header.append(
-              "<th style='width: " + value[0] + "%; background-color: #00949E; color: white; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
+              "<th class=" + key + " style='width: " + value[0] + "%; background-color: #00949E; color: white; text-align: " + value[1] + "; padding-" + value[1] + ": " + firstIndentLeft + "px;'>" + key + "</th>"
           );
       }
   }

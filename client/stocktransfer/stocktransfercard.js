@@ -4298,12 +4298,15 @@ Template.stocktransfercard.events({
         cancelButtonText: 'No'
         }).then(async (result) => {
             if (result.value) {
-                $('.fullScreenSpin').css('display', 'inline-block');
                 var url = FlowRouter.current().path;
                 var getso_id = url.split('?id=');
                 var currentInvoice = getso_id[getso_id.length - 1];
                 var objDetails = '';
                 if (getso_id[1]) {
+                    $('.deleteloadingbar').css('width', ('0%')).attr('aria-valuenow', 0);
+                    $("#deleteLineModal").modal('hide');
+                    $("#deleteprogressbar").css('display', 'block');
+                    $("#deleteprogressbar").modal('show');
                     currentInvoice = parseInt(currentInvoice);
                     var stockData = await stockTransferService.getOneStockTransferData(currentInvoice);
                     var transferDate = stockData.fields.DateTransferred;
@@ -4311,6 +4314,7 @@ Template.stocktransfercard.events({
                     var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
                     var followingStocks = await sideBarService.getAllStockTransferEntry("All", stockData.fields.Recno);//initialDataLoad
                     var stockList = followingStocks.tstocktransferentry;
+                    var j = 0;
                     for (var i=0; i < stockList.length; i++) {
                         var objDetails = {
                             type: "TStockTransferEntry",
@@ -4319,12 +4323,16 @@ Template.stocktransfercard.events({
                                 Deleted: true
                             }
                         };
+                        j ++;
+                        document.getElementsByClassName("deleteprogressBarInner")[0].innerHTML = j + '';
+                        $('.deleteloadingbar').css('width', ((100/stockList.length*j)) + '%').attr('aria-valuenow', ((100/stockList.length*j)));
                         var result = await stockTransferService.saveStockTransfer(objDetails);
                     }
                 }
-                FlowRouter.go('/stocktransferlist?success=true');
+                $("#deletecheckmarkwrapper").removeClass('hide');
                 $('.modal-backdrop').css('display', 'none');
-                $('#deleteLineModal').modal('toggle');
+                $("#deleteprogressbar").modal('hide');
+                $("#btn_data").click();
             }
         });
     }, delayTimeAfterSound);
@@ -4526,20 +4534,95 @@ Template.stocktransfercard.events({
             productService.getProductStatus(selectedProductName).then(function(data) {
                 $('.fullScreenSpin').css('display', 'none');
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    var buttons = $("<div>")
+                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                     swal({
-                        title: '',
-                        text: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                        type: 'info',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: 'No'
-                        // cancelButtonClass: "btn-default"
-                    }).then((result) => {
-                        if (result.value) {                        
-                        } else if (result.dismiss === 'cancel') {
-                            // $('.essentialsdiv .custom-control-input').prop("checked", false);
-                            event.preventDefault();
-                            return false;
+                        title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                        type: "warning",
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        html: buttons,
+                        onOpen: function (dObj) {
+                        $('#trackSN').on('click',function () {
+                            objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                                ID: parseInt(data.tproductlist[i].PARTSID),
+                                Active: true,
+                                SNTracking: "true",
+                                Batch: "false",
+                            },
+                            };
+
+                            productService.saveProductVS1(objDetails)
+                            .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                                .then(async function (dataReload) {
+                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                                })
+                                .catch(function (err) {
+                                });
+                            })
+                            .catch(function (err) {
+                            swal({
+                                title: "Oooops...",
+                                text: err,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Try Again",
+                            }).then((result) => {
+                                if (result.value) {
+                                // Meteor._reload.reload();
+                                } else if (result.dismiss === "cancel") {
+                                }
+                            });
+                            });
+                        });
+                        $('#trackLN').on('click',function () {
+                            swal.close();
+                            objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                                ID: parseInt(data.tproductlist[i].PARTSID),
+                                Active: true,
+                                SNTracking: "false",
+                                Batch: "true",
+                            },
+                            };
+
+                            productService.saveProductVS1(objDetails)
+                            .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                                .then(async function (dataReload) {
+                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                                })
+                                .catch(function (err) {
+                                });
+                            })
+                            .catch(function (err) {
+                            swal({
+                                title: "Oooops...",
+                                text: err,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Try Again",
+                            }).then((result) => {
+                                if (result.value) {
+                                // Meteor._reload.reload();
+                                } else if (result.dismiss === "cancel") {
+                                }
+                            });
+                            });
+                        });
+                        $('#trackCancel').on('click',function () {
+                            swal.close();
+                        });
                         }
                     });
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {

@@ -210,6 +210,7 @@ FlowRouter.triggers.enter([
                     localStorage.setItem("enteredURL", context.path);
                     $(document).find(".btn-auto-save").click();
                     // FlowRouter.go(previous_url);
+                    FlowRouter.reload();
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
                     // Meteor._reload.reload();
@@ -255,14 +256,14 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
-// authenticatedRoutes.route('/onloginsuccess', {
-//     name: 'onsuccesswaterfall',
-//     action() {
-//         BlazeLayout.render('layout', {
-//             yield: 'onsuccesswaterfall'
-//         });
-//     }
-// });
+authenticatedRoutes.route('/onloginsuccess', {
+    name: 'onsuccesswaterfall',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'onsuccesswaterfall'
+        });
+    }
+});
 
 
 authenticatedRoutes.route('/dashboardexe', {
@@ -2205,6 +2206,15 @@ authenticatedRoutes.route('/uomSettings', {
     }
 });
 
+authenticatedRoutes.route('/inventorySettings', {
+    name: 'inventorySettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'inventorySettings'
+        });
+    }
+});
+
 authenticatedRoutes.route('/mailchimpsettings', {
   name: 'mailchimpSettings',
   action() {
@@ -2291,6 +2301,15 @@ authenticatedRoutes.route('/workorderlist', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'workorderlist'
+        })
+    }
+})
+
+authenticatedRoutes.route('/mobileapp', {
+    name: 'mobileapp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mobileapp'
         })
     }
 })

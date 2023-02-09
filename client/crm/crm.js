@@ -35,6 +35,17 @@ Template.crmoverview.onRendered(function() {
     templateObject.crmtaskmitem.set(currentId);
     templateObject.currentTabID.set("allTasks-tab");
 
+    setTimeout(function() {
+        var url = window.location.href;
+        var geturl = url.split("#");
+        if(geturl[1] && geturl[1] == "projectsTab-tab"){
+            $('#projectsTab-tab').click();
+        }
+        else if(geturl[1] && geturl[1] == "tasksTab-tab"){
+            $('#allTasks-tab').click();
+        }
+    }, 1000);
+    
     function getCustomerData(customerID) {
         getVS1Data("TCustomerVS1").then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -633,31 +644,13 @@ Template.crmoverview.events({
 
     // open new task modal
     "click .btnNewTask": function(e) {
-        $("#editProjectID").val("");
-        $("#txtCrmSubTaskID").val("");
-
-        $(".addTaskModalProjectName").html("All Tasks");
-        $(".lblAddTaskSchedule").html("Schedule");
-
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
-
-        // uncheck all labels
-        $(".chkAddLabel").prop("checked", false);
-
         // for add modal
         let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         let employeeName = localStorage.getItem("mySessionEmployee");
-        $('#add_assigned_name').val(employeeName);
+        $("#frmEditTaskModal")[0].reset();
+        $('#crmEditSelectEmployeeList').val(employeeName);
         $('#assignedID').val(employeeID)
-
-        $('#contactID').val('');
-        $('#contactType').val('')
-        $('#add_contact_name').val('')
-
-        $("#newTaskModal").modal("toggle");
+        $("#taskDetailModal").modal("toggle");
     },
 
     "click .detail_label": function(e) {
@@ -741,14 +734,15 @@ Template.crmoverview.events({
 
     "click .btnRefresh": function() {
         $(".fullScreenSpin").css("display", "inline-block");
-
+        let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
         crmService.getAllTaskList().then(function(data) {
             addVS1Data("TCRMTaskList", JSON.stringify(data));
             crmService.getTProjectList().then(function(data) {
                 addVS1Data("TCRMProjectList", JSON.stringify(data));
+                $(".fullScreenSpin").css("display", "none");
                 crmService.getAllLabels().then(function(data) {
                     addVS1Data("TCRMLabelList", JSON.stringify(data));
-
+                    
                     crmService.getAllLeads(dateFrom).then(function(data) {
                         let bar_records = [];
                         let pie_records = [];
@@ -939,6 +933,12 @@ Template.crmoverview.events({
 
     "click .menu_all_task": function(e) {
         $('#allTasks-tab').click();
+        $('#allTasks').addClass("active");
+        $('#allTasks').addClass("show");
+        $('#todayTab').removeClass("active");
+        $('#upcomingTab').removeClass("active");
+        $('#projectsTab').removeClass("active");
+        $('#filterLabelsTab').removeClass("active");
         $('#crm_header_title').html('All Tasks');
     },
 
@@ -954,6 +954,12 @@ Template.crmoverview.events({
 
     "click .menu_project": function(e) {
         $('#projectsTab-tab').click();
+        $('#allTasks').removeClass("active");
+        $('#todayTab').removeClass("active");
+        $('#upcomingTab').removeClass("active");
+        $('#projectsTab').addClass("active");
+        $('#projectsTab').addClass("show");
+        $('#filterLabelsTab').removeClass("active");
         $('#crm_header_title').html('Projects');
     },
 

@@ -134,14 +134,6 @@ Template.trialbalance.onRendered(() => {
       templateObject.transactiondatatablerecords.set(splashArrayTrialBalanceReport);
     }
 
-
-    if (templateObject.transactiondatatablerecords.get()) {
-      setTimeout(function () {
-        MakeNegative();
-      }, 100);
-    }
-    //$('.fullScreenSpin').css('display','none');
-
     setTimeout(function () {
       $('#trialbalance').DataTable({
         data: splashArrayTrialBalanceReport,
@@ -216,7 +208,6 @@ Template.trialbalance.onRendered(() => {
       }).on('column-reorder', function () {
 
       }).on('length.dt', function (e, settings, len) {
-
         $(".fullScreenSpin").css("display", "inline-block");
         let dataLenght = settings._iDisplayLength;
         if (dataLenght == -1) {
@@ -1179,7 +1170,7 @@ Template.trialbalance.events({
       });
     }, delayTimeAfterSound);
   },
-  "click .btnSpreadSheetLink": function() {
+  /*"click .btnSpreadSheetLink": function() {
     LoadingOverlay.show();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
@@ -1250,8 +1241,15 @@ Template.trialbalance.events({
 
     utilityService.multipleTablesToExcel(tables, wsnames, loggedCompany + "-Trial Balance", "");
   },
+  "click .btnSpreadSheetLink": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let utilityService = new UtilityService();
+    const filename = "Balancesheet report result" + ".xlsx";
+    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+  },*/
   "click .btnExportReport": function () {
     LoadingOverlay.show();
+    debugger
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));

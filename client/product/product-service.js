@@ -412,7 +412,7 @@ export class ProductService extends BaseService {
 
     getProductStatus(productName) {
         let options = {
-            PropertyList: "ID, ProductName, Batch, SNTracking, SellQty1Price",
+            PropertyList: "ID, ProductName, Batch, SNTracking, SellQty1Price, CUSTFLD13",
             select: "[ProductName]='" + productName + "'",
         };
         return this.getList(this.ERPObjects.TProductVS1, options);
@@ -465,6 +465,14 @@ export class ProductService extends BaseService {
 
     saveBOMProduct(data) {
         return this.POST(this.ERPObjects.TProcTree, data)
+    }
+
+    getProductBatches() {
+        let options = {
+            ListType: 'Detail',
+            // select: "[ID]="+id+" and [ProcStepItemRef]='vs1BOM'"
+        }
+        return this.getList(this.ERPObjects.TProductBatches, options)
     }
 
     saveBin(data) {

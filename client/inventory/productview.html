@@ -2,15 +2,14 @@
     <style>
         @media only screen and (max-width: 480px) {
             .form-control {
-                width: 100%!important;
+                width: 100% !important;
             }
             .form-group {
-                width: 100%!important;
+                width: 100% !important;
             }
         }
 
-        .inventorynottracking{
-
+        .inventorynottracking {
         }
 
         .custom-control-label {
@@ -37,7 +36,6 @@
         }
 
         .uploaded-element {
-
             border: 1px solid rgb(237, 237, 237);
             border-top: none;
 
@@ -106,10 +104,9 @@
         .uploaded-element {
             display: inherit;
         }
-
     </style>
-    <div style="margin-top: -24px;">
-        <div class="fullScreenSpin" style="display:none;">
+    <div style="margin-top: -24px">
+        <div class="fullScreenSpin" style="display: none">
             <div class="spinner"></div>
         </div>
         <style>
@@ -152,16 +149,15 @@
                 max-width: 100%!important;
             }
                 */
-
             }
             .groove {
                 border-style: solid;
                 border-width: 1px;
                 width: 200px;
                 padding: 2px;
-                border-radius: .35rem;
+                border-radius: 0.35rem;
             }
-            .custom-control-label{
+            .custom-control-label {
                 position: absolute;
             }
             .rngRange {
@@ -173,44 +169,60 @@
                 background-color: rgb(255, 255, 255);
                 background-clip: padding-box;
                 border: 1px solid rgb(133, 135, 150);
-                border-radius: .3rem;
+                border-radius: 0.3rem;
                 border-style: solid;
                 border-width: 1px;
                 padding: 2px;
-                border-radius: .35rem;
+                border-radius: 0.35rem;
                 color: rgb(128, 128, 128);
-                height:inherit!important;
+                height: inherit !important;
             }
             @media only screen and (max-width: 480px) {
-                .modal.show .modal-dialog{
-                    float: inherit!important;
-                    left: inherit!important;
-                    top: auto!important;
-
+                .modal.show .modal-dialog {
+                    float: inherit !important;
+                    left: inherit !important;
+                    top: auto !important;
                 }
-
             }
         </style>
         {{#if productrecord}}
-        <header style="padding: 16px;padding-bottom: 0px;">
+        <header style="padding: 16px; padding-bottom: 0px">
             <div class="row">
                 <div class="col-12 col-md-4">
-                    <h1 style="margin: 16px;" id="productcardbodyname">{{productrecord.lib}} {{#if notEquals productrecord.id ''}} {{productrecord.id}}{{/if}}
-                        {{> helpbutton}}
+                    <h1 style="margin: 16px" id="productcardbodyname">
+                        {{productrecord.lib}} {{#if notEquals productrecord.id ''}} {{productrecord.id}}{{/if}} {{>
+                        helpbutton}}
 
                         <!-- Start Help View Modal -->
                         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                             <div class="modal-dialog modal-sm" role="document">
                                 <div class="modal-content">
-                                    <div class="modal-header" style="padding-bottom: 8px;">
-                                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                    <div class="modal-body">
-                                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                                        <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                        {{> helpadvisor}}
-                                        {{> helpgotoforum}}
+                                    <div class="modal-header" style="padding-bottom: 8px">
+                                        <h4>Help</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
                                     </div>
-                                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                    <div class="modal-body">
+                                        <p class="text-center text-muted">
+                                            <a
+                                                role="button"
+                                                data-toggle="modal"
+                                                href="#helpModal"
+                                                class="btn btn-primary helpModal"
+                                                >View Help Video</a
+                                            >
+                                        </p>
+                                        <p class="text-center text-muted">
+                                            <a href="https://vs1forum.com/" target="_blank" class="btn btn-primary"
+                                                >Download Help File</a
+                                            >
+                                        </p>
+                                        {{> helpadvisor}} {{> helpgotoforum}}
+                                    </div>
+                                    <div class="modal-footer" style="padding: 6px">
+                                        <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -220,77 +232,147 @@
                 <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
             </div>
         </header>
-        <div style="padding: 0px 16px;">
-            <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
-                <div class="col-lg-6 col-md-12 col-sm-12 productCard" id="productCard">
+        <div style="padding: 0px 16px">
+            <div
+                class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
+                style="width: 100%"
+            >
+                <div class="col-lg-9 col-md-12 col-sm-12 productCard" id="productCard">
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <div>
-                                <p class="text-primary m-0 font-weight-bold" id="productcardbodycode">{{#if notEquals productrecord.id ''}}PRO-{{productrecord.id}} - {{/if}}{{productrecord.lib}}</p>
+                            <div style="display: flex; justify-content: space-between; width: 100%; margin-right: 25px">
+                                <div
+                                    class="text-primary m-0 font-weight-bold"
+                                    style="font-size: 28px"
+                                    id="productcardbodycode"
+                                >
+                                    {{productrecord.lib}}
+                                </div>
+                                <div class="text-primary m-0 font-weight-bold float-right" style="font-size: 28px">
+                                    {{#if notEquals productrecord.id ''}}PRO-{{productrecord.id}}{{/if}}
+                                </div>
                             </div>
-                            <div class="float-right"></div><div>
-                            <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="icon ion-android-more-horizontal"></i></a>
-                            <!-- Start {{> optionCustomFiled}} -->
+                            <div class="float-right"></div>
+                            <div>
+                                <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"
+                                    ><i class="icon ion-android-more-horizontal"></i
+                                ></a>
+                                <!-- Start {{> optionCustomFiled}} -->
 
-                            {{> customfieldDroppop}}
-                            {{> customfieldpop}}
+                                {{> customfieldDroppop}} {{> customfieldpop}}
 
-                            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                                <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4>Field Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div>
-                                                <form class="d-xl-flex align-items-xl-center">
-                                                    <div class="flex-grow-1">
-                                                        <div class="custom-control custom-switch" style="margin: 8px;">
-                                                            <input class="custom-control-input" type="checkbox" id="formCheck-one" value="one">
-                                                            {{#if productsCloudPreferenceRec}}
-                                                            {{#if equals productsCloudPreferenceRec.customFields.[0].hidden false}}
-                                                            <script>
-                                                                $('#formCheck-one').attr("checked","checked");
-                                                            </script>
-                                                            {{else}}
-                                                            <script>
-                                                                $('#formCheck-one').removeAttr("checked");
-                                                            </script>
-                                                            {{/if}}
-                                                            {{/if}}
-                                                            <label class="custom-control-label" style="position: absolute;" for="formCheck-one"></label>
-                                                            <div contenteditable="true" class="groove customField1Text">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</div>
-                                                        </div>
-
-                                                        <div class="custom-control custom-switch" style="margin: 8px;">
-                                                            <input class="custom-control-input" type="checkbox" id="formCheck-two" value="two" >
-                                                            {{#if productsCloudPreferenceRec}}
-                                                            {{#if equals productsCloudPreferenceRec.customFields.[1].hidden false}}
-                                                            <script>
-                                                                $('#formCheck-two').attr("checked","checked");
-                                                            </script>
-                                                            {{else}}
-                                                            <script>
-                                                                $('#formCheck-two').removeAttr("checked");
-                                                            </script>
-                                                            {{/if}}
-                                                            {{/if}}
-                                                            <label class="custom-control-label" style="position: absolute;" for="formCheck-two"></label>
-                                                            <div contenteditable="true" class="groove customField2Text">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</div>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                                    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4>Field Settings</h4>
+                                                <button
+                                                    type="button"
+                                                    class="close"
+                                                    data-dismiss="modal"
+                                                    aria-label="Close"
+                                                >
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-success btnSaveSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                            <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                            <div class="modal-body">
+                                                <div>
+                                                    <form class="d-xl-flex align-items-xl-center">
+                                                        <div class="flex-grow-1">
+                                                            <div
+                                                                class="custom-control custom-switch"
+                                                                style="margin: 8px"
+                                                            >
+                                                                <input
+                                                                    class="custom-control-input"
+                                                                    type="checkbox"
+                                                                    id="formCheck-one"
+                                                                    value="one"
+                                                                />
+                                                                {{#if productsCloudPreferenceRec}} {{#if equals
+                                                                productsCloudPreferenceRec.customFields.[0].hidden
+                                                                false}}
+                                                                <script>
+                                                                    $('#formCheck-one').attr('checked', 'checked');
+                                                                </script>
+                                                                {{else}}
+                                                                <script>
+                                                                    $('#formCheck-one').removeAttr('checked');
+                                                                </script>
+                                                                {{/if}} {{/if}}
+                                                                <label
+                                                                    class="custom-control-label"
+                                                                    style="position: absolute"
+                                                                    for="formCheck-one"
+                                                                ></label>
+                                                                <div
+                                                                    contenteditable="true"
+                                                                    class="groove customField1Text"
+                                                                >
+                                                                    {{#if
+                                                                    productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[0].label}}{{else}}Custom
+                                                                    Field 1{{/if}}
+                                                                </div>
+                                                            </div>
+
+                                                            <div
+                                                                class="custom-control custom-switch"
+                                                                style="margin: 8px"
+                                                            >
+                                                                <input
+                                                                    class="custom-control-input"
+                                                                    type="checkbox"
+                                                                    id="formCheck-two"
+                                                                    value="two"
+                                                                />
+                                                                {{#if productsCloudPreferenceRec}} {{#if equals
+                                                                productsCloudPreferenceRec.customFields.[1].hidden
+                                                                false}}
+                                                                <script>
+                                                                    $('#formCheck-two').attr('checked', 'checked');
+                                                                </script>
+                                                                {{else}}
+                                                                <script>
+                                                                    $('#formCheck-two').removeAttr('checked');
+                                                                </script>
+                                                                {{/if}} {{/if}}
+                                                                <label
+                                                                    class="custom-control-label"
+                                                                    style="position: absolute"
+                                                                    for="formCheck-two"
+                                                                ></label>
+                                                                <div
+                                                                    contenteditable="true"
+                                                                    class="groove customField2Text"
+                                                                >
+                                                                    {{#if
+                                                                    productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[1].label}}{{else}}Custom
+                                                                    Field 2{{/if}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-success btnSaveSettings" type="button">
+                                                    <i class="fa fa-save" style="margin-right: 5px"></i>Save
+                                                </button>
+                                                <button
+                                                    class="btn btn-warning btnResetSettings"
+                                                    data-dismiss="modal"
+                                                    type="reset"
+                                                >
+                                                    <i class="fa fa-repeat" style="margin-right: 5px"></i>Reset
+                                                </button>
+                                                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                                    <i class="fa fa-remove" style="margin-right: 5px"></i>Close
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- END  -->
+                                <!-- END  -->
                             </div>
                         </div>
 
@@ -329,148 +411,390 @@
                             }
                         </style>
 
-                        <div class="card-body" style="background-color: #ededed; padding: 2em;">
-
+                        <div class="card-body" style="background-color: #ededed; padding: 2em">
                             <div class="row">
                                 <div class="col-6 col-md-6 colProductName" id="colProductName">
                                     <div class="form-group">
                                         <label>Product Name</label>
-                                        <input type="text" class="form-control highlightInput" id="edtproductname" name="edtproductname" value="{{productrecord.productname}}">
+                                        <input
+                                            type="text"
+                                            class="form-control highlightInput"
+                                            id="edtproductname"
+                                            name="edtproductname"
+                                            value="{{productrecord.productname}}"
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3 colPrice" id="colPrice">
                                     <div class="form-group">
-                                        <label class="lblPriceEx hiddenColumn">Price (Ex Tax) <i class="fas fa-random"></i></label>
-                                        <label class="lblPriceInc ">Price (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
+                                        <label class="lblPriceEx hiddenColumn"
+                                            >Price (Ex Tax) <i class="fas fa-random"></i
+                                        ></label>
+                                        <label class="lblPriceInc"
+                                            >Price (Inc Tax) <i class="fas fa-random fa-trans"></i
+                                        ></label>
 
-                                        <input type="hidden" class="lblPriceCheckStatus" value="">
+                                        <input type="hidden" class="lblPriceCheckStatus" value="" />
 
-                                        <input type="text" class="form-control highlightInput edtsellqty1priceCheck hiddenColumn" id="edtsellqty1price" name="edtsellqty1price" value="{{productrecord.sellqty1price}}">
-                                        <input type="text" class="form-control highlightInput edtsellqty1priceIncCheck " id="edtsellqty1priceInc" name="edtsellqty1priceInc" value="{{productrecord.sellqty1priceinc}}">
+                                        <input
+                                            type="text"
+                                            class="form-control highlightInput edtsellqty1priceCheck hiddenColumn"
+                                            id="edtsellqty1price"
+                                            name="edtsellqty1price"
+                                            value="{{productrecord.sellqty1price}}"
+                                        />
+                                        <input
+                                            type="text"
+                                            class="form-control highlightInput edtsellqty1priceIncCheck"
+                                            id="edtsellqty1priceInc"
+                                            name="edtsellqty1priceInc"
+                                            value="{{productrecord.sellqty1priceinc}}"
+                                        />
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 trackItemvisible colTotalQty" id="colTotalQty" style="{{#if isTrackChecked}}visibility: visible;{{else}}visibility: hidden;{{/if}}">
+                                <div
+                                    class="col-6 col-md-3 trackItemvisible colTotalQty"
+                                    id="colTotalQty"
+                                    style="{{#if isTrackChecked}}visibility: visible;{{else}}visibility: hidden;{{/if}}"
+                                >
                                     <div class="form-group">
                                         <label>Total Quantity</label>
-                                        <input type="text" class="form-control highlightInput" id="edttotalqtyinstock" name="edttotalqtyinstock" value="{{totaldeptquantity}}">
+                                        <input
+                                            type="text"
+                                            class="form-control highlightInput"
+                                            id="edttotalqtyinstock"
+                                            name="edttotalqtyinstock"
+                                            value="{{totaldeptquantity}}"
+                                        />
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>Sales Description</label>
-                                        <textarea class="form-control" rows="3" id="txasalesdescription" name="txasalesdescription" style="">{{productrecord.salesdescription}}</textarea>
+                                        <textarea
+                                            class="form-control"
+                                            rows="3"
+                                            id="txasalesdescription"
+                                            name="txasalesdescription"
+                                        >
+{{productrecord.salesdescription}}</textarea
+                                        >
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" style="float: right;">
-                                <div style="margin-left: 8px;">
+                            <!-- </div>
+                    </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-body" style="background-color: #ededed; padding: 2em"> -->
+                            <div class="row" style="float: right; margin: 10px 0 0 0">
+                                <button class="btn btn-primary btnAddUOM btn-mg" type="button" id="addNewUOM">
+                                    <i class="fas fa-plus" style="margin-right: 8px; font-size: 14px !important"></i>Add
+                                    UOM
+                                </button>
+                                <!-- <div style="margin-left: 8px;">
                                     <span id="addNewUOM" class="btnSpinType"><i class="fas fa-plus" style="font-size: 11px !important;"></i></span>
-                                </div>
+                                </div> -->
                             </div>
-                            <div id="UOMRows">
-                                
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-6 col-md-4 colSalesAccount" id="colSalesAccount" style="padding-left:0px!important;">
+                            <div id="UOMRows"></div>
+
+                            <div class="row w-100 m-0">
+                                <div class="colSalesAccount pr-4" id="colSalesAccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>Sales Account</label>
-                                        <select type="search" class="form-control" id="sltsalesacount" name="sltsalesacount" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltsalesacount"
+                                            name="sltsalesacount"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colTaxCode" id="colTaxCode">
-                                    <div class="form-group">
-                                        <label>Tax Code</label>
-                                        <select type="search" class="form-control" id="slttaxcodesales" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row uomRow" style="display: none;" id="uomRow_0">
-                                <div class="col-6 col-md-3 colSalesAccount" id="colSalesAccount">
-                                    <div class="form-group">
-                                        <label>Sales Account</label>
-                                        <select type="search" class="form-control" id="sltsalesacount" name="sltsalesacount" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3 colTaxCode" id="colUOM">
+                                <div class="colUOM pr-4" id="colUOM" style="width: 13%">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
-                                        <input type="search" class="form-control"  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltUomSales"
+                                            name="sltUomSales"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colTaxCode" id="colTaxCode">
+                                <div class="colTaxCode pr-4" id="colTaxCode" style="width: 13%">
                                     <div class="form-group">
                                         <label>Tax Code</label>
-                                        <select type="search" class="form-control" id="slttaxcodesales" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="slttaxcodesales"
+                                            name="slttaxcodesales"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colPrice" id="colPrice">
+                                <div class="colMarkup pr-4" id="colMarkup" style="width: 6.5%">
                                     <div class="form-group">
-                                        <label class="lblPriceEx hiddenColumn">Price (Ex Tax) <i class="fas fa-random"></i></label>
-                                        <label class="lblPriceInc ">Price (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
-                                        <div style="display: flex;">
-                                            <input type="hidden" class="lblPriceCheckStatus" value="">
-    
-                                            <input type="text" class="form-control highlightInput edtsellqty1priceCheck hiddenColumn" id="edtsellqty1price" name="edtsellqty1price" value="{{productrecord.sellqty1price}}">
-                                            <input type="text" class="form-control highlightInput edtsellqty1priceIncCheck " id="edtsellqty1priceInc" name="edtsellqty1priceInc" value="{{productrecord.sellqty1priceinc}}">
-                                            <span class="table-remove btnRemoveUOM" style="margin-left: 10px;"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
+                                        <label>Markup</label>
+                                        <div style="display: flex">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput"
+                                                id="edtmarkup"
+                                                name="edtmarkup"
+                                                value="40"
+                                            />
                                         </div>
                                     </div>
-                                    
                                 </div>
-                                
-                            </div>
-                            <div class="row">
-                                <div class="col-6 col-md-3 colBarcode" id="colBarcode">
+                                <div class="colPrice pr-4" id="colPrice" style="width: 13%">
+                                    <div class="form-group">
+                                        <label class="lblPriceEx hiddenColumn"
+                                            >Price (Ex Tax) <i class="fas fa-random"></i
+                                        ></label>
+                                        <label class="lblPriceInc"
+                                            >Price (Inc Tax) <i class="fas fa-random fa-trans"></i
+                                        ></label>
+                                        <div style="display: flex">
+                                            <input type="hidden" class="lblPriceCheckStatus" value="" />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtsellqty1priceCheck hiddenColumn"
+                                                id="edtsellqty1price"
+                                                name="edtsellqty1price"
+                                            />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtsellqty1priceIncCheck"
+                                                id="edtsellqty1priceInc"
+                                                name="edtsellqty1priceInc"
+                                                value="$0.00"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="colBarcode pr-4" id="colBarcode" style="width: 28.5%">
                                     <div class="form-group">
                                         <label>Barcode</label>
-                                        <input type="text" class="form-control highlightInput" id="edtbarcode" name="edtbarcode" value="{{productrecord.barcode}}">
+                                        <div style="display: flex">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput"
+                                                id="edtbarcode"
+                                                name="edtbarcode"
+                                            />
+                                            <span class="table-remove btnRemoveUOM pl-4 invisible"
+                                                ><button
+                                                    type="button"
+                                                    class="btn btn-danger btn-rounded btn-sm"
+                                                    autocomplete="off"
+                                                >
+                                                    <i class="fa fa-remove"></i></button
+                                            ></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 checkbox1div colCustom1" id="colCustom1" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                            </div>
+                            <div class="row uomRow m-0 w-100" style="display: none" id="uomRow_0">
+                                <div class="pr-4 colSalesAccount" id="colSalesAccount" style="width: 26%">
+                                    <div class="form-group">
+                                        <label>Sales Account</label>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltsalesacount"
+                                            name="sltsalesacount"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="pr-4 colUOM" id="colUOM" style="width: 13%">
+                                    <div class="form-group">
+                                        <label>Unit of Measure</label>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltUomSales"
+                                            name="sltUomSales"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="pr-4 colTaxCode" id="colTaxCode" style="width: 13%">
+                                    <div class="form-group">
+                                        <label>Tax Code</label>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="slttaxcodesales"
+                                            name="slttaxcodesales"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="pr-4 colMarkup" id="colMarkup" style="width: 6.5%">
+                                    <div class="form-group">
+                                        <label>Markup</label>
+                                        <div style="display: flex">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput"
+                                                id="edtmarkup"
+                                                name="edtmarkup"
+                                                value="40"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pr-4 colPrice" id="colPrice" style="width: 13%">
+                                    <div class="form-group">
+                                        <label class="lblPriceEx hiddenColumn"
+                                            >Price (Ex Tax) <i class="fas fa-random"></i
+                                        ></label>
+                                        <label class="lblPriceInc"
+                                            >Price (Inc Tax) <i class="fas fa-random fa-trans"></i
+                                        ></label>
+                                        <div style="display: flex">
+                                            <input type="hidden" class="lblPriceCheckStatus" value="" />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtsellqty1priceCheck hiddenColumn"
+                                                id="edtsellqty1price"
+                                                name="edtsellqty1price"
+                                                value="{{productrecord.sellqty1price}}"
+                                            />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtsellqty1priceIncCheck"
+                                                id="edtsellqty1priceInc"
+                                                name="edtsellqty1priceInc"
+                                                value="{{productrecord.sellqty1priceinc}}"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pr-4 colBarcode" id="colBarcode" style="width: 28.5%">
+                                    <div class="form-group">
+                                        <label>Barcode</label>
+                                        <div style="display: flex">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput"
+                                                id="edtbarcode"
+                                                name="edtbarcode"
+                                                value="{{productrecord.barcode}}"
+                                            />
+                                            <span class="table-remove btnRemoveUOM pl-4"
+                                                ><button
+                                                    type="button"
+                                                    class="btn btn-danger btn-rounded btn-sm"
+                                                    autocomplete="off"
+                                                >
+                                                    <i class="fa fa-remove"></i></button
+                                            ></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div
+                                    class="col-6 col-md-3 checkbox1div colCustom1"
+                                    id="colCustom1"
+                                    style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
+                                >
                                     <!-- <div class="form-group">
                                         <label class="lblCustomField1">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</label>
-                                        <input type="text" class="form-control highlightInput" id="txtCustomField1" name="txtCustomField1" style="" value="{{productrecord.customfield1}}">
+                                        <input type="text" class="form-control highlightInput" id="txtCustomField1" name="txtCustomField1"  value="{{productrecord.customfield1}}">
                                     </div> -->
-                                    <div class="one box checkbox1div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                        <div class="form-group" style="margin-bottom: 0;">
+                                    <div
+                                        class="one box checkbox1div"
+                                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
+                                    >
+                                        <div class="form-group" style="margin-bottom: 0">
                                             <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
-                                            <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
+                                            <input
+                                                class="form-control form-control"
+                                                type="text"
+                                                id="edtSaleCustField1"
+                                                name="edtSaleCustField1"
+                                                value="{{invoicerecord.saleCustField1}}"
+                                                custfieldid=""
+                                            />
                                         </div>
-                                      </div>
+                                    </div>
                                 </div>
-                                <div class="col-6 col-md-3 checkbox2div colCustom2" id="colCustom2" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                <div
+                                    class="col-6 col-md-3 checkbox2div colCustom2"
+                                    id="colCustom2"
+                                    style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
+                                >
                                     <!-- <div class="form-group">
                                         <label class="lblCustomField2">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</label>
-                                        <input type="text" class="form-control highlightInput" id="txtCustomField2" name="txtCustomField2" value="{{productrecord.customfield2}}" style="">
+                                        <input type="text" class="form-control highlightInput" id="txtCustomField2" name="txtCustomField2" value="{{productrecord.customfield2}}" >
                                     </div> -->
-                                    <div class="two box checkbox2div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                        <div class="form-group" style="margin-bottom: 0;">
-                                            <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
-                                            <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
+                                    <div
+                                        class="two box checkbox2div"
+                                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
+                                    >
+                                        <div class="form-group" style="margin-bottom: 0">
+                                            <label class="lblCustomField2"
+                                                >{{custfields.[1].custfieldlabel}}<br
+                                            /></label>
+                                            <input
+                                                class="form-control form-control"
+                                                type="text"
+                                                id="edtSaleCustField2"
+                                                name="edtSaleCustField2"
+                                                value="{{invoicerecord.saleCustField2}}"
+                                                custfieldid=""
+                                            />
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-6 col-md-3 checkbox3div colCustom2" id="colCustom3" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[2].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                  <div class="two box checkbox3div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                  <div class="form-group" style="margin-bottom: 0;">
-                                      <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
-                                      <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
-                                  </div>
-                              </div>
+                                <div
+                                    class="col-6 col-md-3 checkbox3div colCustom2"
+                                    id="colCustom3"
+                                    style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[2].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
+                                >
+                                    <div
+                                        class="two box checkbox3div"
+                                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}"
+                                    >
+                                        <div class="form-group" style="margin-bottom: 0">
+                                            <label class="lblCustomField2"
+                                                >{{custfields.[2].custfieldlabel}}<br
+                                            /></label>
+                                            <input
+                                                class="form-control form-control"
+                                                type="text"
+                                                id="edtSaleCustField3"
+                                                name="edtSaleCustField3"
+                                                value="{{invoicerecord.saleCustField3}}"
+                                                custfieldid=""
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <hr class="reporthr" style="border-width: 3px;">
+                                    <hr class="reporthr" style="border-width: 3px" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label>Purchase Description</label>
-                                        <textarea class="form-control" rows="3" id="txapurchasedescription" name="txapurchasedescription">{{productrecord.purchasedescription}}</textarea>
+                                        <textarea
+                                            class="form-control"
+                                            rows="3"
+                                            id="txapurchasedescription"
+                                            name="txapurchasedescription"
+                                        >
+{{productrecord.purchasedescription}}</textarea
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -478,156 +802,313 @@
                                 <div class="col-6 col-md-4 colCOGSaccount" id="colCOGSaccount">
                                     <div class="form-group">
                                         <label>COGS Account</label>
-                                        <select type="search" value="{{productrecord.cogsaccount}}" class="form-control" id="sltcogsaccount" name="sltcogsaccount" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3 colTaxCode2" id="colTaxCode2">
-                                    <div class="form-group">
-                                        <label>Tax Code</label>
-                                        <select type="search" class="form-control" id="slttaxcodepurchase" name="slttaxcodepurchase" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3 colCost" id="colCost">
-                                    <div class="form-group">
-                                        <label class="lblCostEx hiddenColumn">Cost (Ex Tax) <i class="fas fa-random"></i></label>
-                                        <label class="lblCostInc ">Cost (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
-
-                                          <input type="hidden" class="lblCostCheckStatus" value="">
-
-                                        <input type="text" class="form-control highlightInput edtbuyqty1cost hiddenColumn" id="edtbuyqty1cost" name="edtbuyqty1cost" value="{{productrecord.buyqty1cost}}">
-                                        <input type="text" class="form-control highlightInput edtbuyqty1costInc " id="edtbuyqty1costInc" name="edtbuyqty1costInc" value="{{productrecord.buyqty1costinc}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row COGSRow" style="display: none;" id="COGSRow_0">
-                                <div class="col-6 col-md-4 colCOGS" id="colCOGS">
-                                    <div class="form-group">
-                                        <label>Cost of Goods Sold</label>
-                                        <input class="form-control" id="COGS" name="sltsalesacount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        <select
+                                            type="search"
+                                            value="{{productrecord.cogsaccount}}"
+                                            class="form-control"
+                                            id="sltcogsaccount"
+                                            name="sltcogsaccount"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3 colUOM" id="colUOM">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
-                                        <input type="search" class="form-control"  style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltUomPurchases"
+                                            name="sltUomPurchases"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                            value="Each"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-2 colTaxCode2" id="colTaxCode2">
+                                    <div class="form-group">
+                                        <label>Tax Code</label>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="slttaxcodepurchase"
+                                            name="slttaxcodepurchase"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colCost" id="colCost">
+                                    <div class="form-group">
+                                        <label class="lblCostEx hiddenColumn"
+                                            >Cost (Ex Tax) <i class="fas fa-random"></i
+                                        ></label>
+                                        <label class="lblCostInc"
+                                            >Cost (Inc Tax) <i class="fas fa-random fa-trans"></i
+                                        ></label>
+                                        <div class="d-flex">
+                                            <input type="hidden" class="lblCostCheckStatus" value="" />
+
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtbuyqty1cost hiddenColumn"
+                                                id="edtbuyqty1cost"
+                                                name="edtbuyqty1cost"
+                                                value="{{productrecord.buyqty1cost}}"
+                                            />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtbuyqty1costInc"
+                                                id="edtbuyqty1costInc"
+                                                name="edtbuyqty1costInc"
+                                                value="{{productrecord.buyqty1costinc}}"
+                                            />
+                                            <span class="table-remove btnRemoveCOGS invisible" style="margin-left: 10px"
+                                                ><button
+                                                    type="button"
+                                                    class="btn btn-danger btn-rounded btn-sm"
+                                                    autocomplete="off"
+                                                >
+                                                    <i class="fa fa-remove"></i></button
+                                            ></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row COGSRow" style="display: none" id="COGSRow_0">
+                                <div class="col-6 col-md-4 colCOGS" id="colCOGS">
+                                    <div class="form-group">
+                                        <label>Cost of Goods Sold</label>
+                                        <input
+                                            class="form-control"
+                                            id="sltcogsaccount"
+                                            name="sltsalesacount"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                    <div class="form-group">
+                                        <label>Unit of Measure</label>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="sltUomPurchases"
+                                            name="sltUomPurchases"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-2 colTaxCode" id="colTaxCode">
                                     <div class="form-group">
                                         <label>Tax Code</label>
-                                        <select type="search" class="form-control" id="slttaxcodesales" name="slttaxcodesales" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                        <select
+                                            type="search"
+                                            class="form-control"
+                                            id="slttaxcodesales"
+                                            name="slttaxcodesales"
+                                            style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3 colCost" id="colCost">
                                     <div class="form-group">
-                                        <label class="lblCostEx hiddenColumn">Cost (Ex Tax) <i class="fas fa-random"></i></label>
-                                        <label class="lblCostInc ">Cost (Inc Tax) <i class="fas fa-random fa-trans"></i></label>
-                                        <div style="display: flex;">
-                                            <input type="hidden" class="lblCostCheckStatus" value="">
-    
-                                            <input type="text" class="form-control highlightInput edtsellqty1CostCheck hiddenColumn" id="edtsellqty1Cost" name="edtsellqty1Cost" value="">
-                                            <input type="text" class="form-control highlightInput edtsellqty1costIncCheck " id="edtsellqty1costInc" name="edtsellqty1costInc" value="">
-                                            <span class="table-remove btnRemoveCOGS" style="margin-left: 10px;"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
+                                        <label class="lblCostEx hiddenColumn"
+                                            >Cost (Ex Tax) <i class="fas fa-random"></i
+                                        ></label>
+                                        <label class="lblCostInc"
+                                            >Cost (Inc Tax) <i class="fas fa-random fa-trans"></i
+                                        ></label>
+                                        <div style="display: flex">
+                                            <input type="hidden" class="lblCostCheckStatus" value="" />
+
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtsellqty1CostCheck hiddenColumn"
+                                                id="edtsellqty1Cost"
+                                                name="edtsellqty1Cost"
+                                                value=""
+                                            />
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput edtsellqty1costIncCheck"
+                                                id="edtsellqty1costInc"
+                                                name="edtsellqty1costInc"
+                                                value=""
+                                            />
+                                            <span class="table-remove btnRemoveCOGS" style="margin-left: 10px"
+                                                ><button
+                                                    type="button"
+                                                    class="btn btn-danger btn-rounded btn-sm"
+                                                    autocomplete="off"
+                                                >
+                                                    <i class="fa fa-remove"></i></button
+                                            ></span>
                                         </div>
                                     </div>
-                                    
                                 </div>
-                                
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <hr class="reporthr" style="border-width: 3px;">
+                                    <hr class="reporthr" style="border-width: 3px" />
                                 </div>
                             </div>
                             <div class="row">
-
                                 {{#if equals includeInventory false}}
-                                    <script>
-                                        $('#chkTrack').attr("disabled","disabled");
-                                    </script>
-                                    {{else}}
-                                    <script>
-                                        $('#chkTrack').removeAttr("disabled");
-                                    </script>
+                                <script>
+                                    $('#chkTrack').attr('disabled', 'disabled');
+                                </script>
+                                {{else}}
+                                <script>
+                                    $('#chkTrack').removeAttr('disabled');
+                                </script>
                                 {{/if}}
 
                                 <div class="col-12 col-md-4">
                                     <div class="custom-control custom-switch d-flex">
-                                        <input class="custom-control-input" type="checkbox" id="chkTrack" name="chkTrack" checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}">
-                                        <label class="custom-control-label position-relative {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
+                                        <input
+                                            class="custom-control-input"
+                                            type="checkbox"
+                                            id="chkTrack"
+                                            name="chkTrack"
+                                            checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}"
+                                        />
+                                        <label
+                                            class="custom-control-label position-relative {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}"
+                                            for="chkTrack"
+                                            >I Track This Product</label
+                                        >
                                     </div>
                                     <div class="custom-control custom-switch d-flex">
-                                        <input class="custom-control-input" type="checkbox" id="chkBOM" name="chkBOM" checked="{{productrecord.isManufactured}}">
-                                        <label class="custom-control-label position-relative" for="chkBOM">Bill Of Materials</label>
+                                        <input
+                                            class="custom-control-input"
+                                            type="checkbox"
+                                            id="chkBOM"
+                                            name="chkBOM"
+                                            checked="{{productrecord.isManufactured}}"
+                                        />
+                                        <label class="custom-control-label position-relative" for="chkBOM"
+                                            >Bill Of Materials</label
+                                        >
                                     </div>
                                 </div>
                                 {{#if equals isSNTrackChecked true}}
-                                    <div class="col-12 col-md-4">
-                                        <div class="">
-                                            <div class="custom-control custom-switch d-flex">
-                                                <input class="custom-control-input" type="checkbox" id="chkSNTrack" name="chkSNTrack">
-                                                <label class="custom-control-label position-relative" for="chkSNTrack">I Track Serial Numbers</label>
-                                                <div style="margin-left: 8px;">
-                                                    <span id="btnSNTrack" class="btnSpinType"><i class="fas fa-search" style="font-size: 11px !important;"></i></span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex">
-                                                <div class="custom-control custom-switch d-flex">
-                                                    <input class="custom-control-input" type="checkbox" id="chkAddSN" name="chkAddSN">
-                                                    <label class="custom-control-label position-relative" for="chkAddSN">I Can Create Serial Numbers</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-4">
+                                <div class="col-12 col-md-4">
+                                    <div class="">
                                         <div class="custom-control custom-switch d-flex">
-                                            <input class="custom-control-input" type="checkbox" id="chkLotTrack" name="chkLotTrack">
-                                            <label class="custom-control-label position-relative" for="chkLotTrack">I Track Lot Numbers</label>
-                                            <div style="margin-left: 8px;">
-                                                <span id="btnLotTrack" class="btnSpinType"><i class="fas fa-search" style="font-size: 11px !important;"></i></span>
+                                            <input
+                                                class="custom-control-input"
+                                                type="checkbox"
+                                                id="chkSNTrack"
+                                                name="chkSNTrack"
+                                            />
+                                            <label class="custom-control-label position-relative" for="chkSNTrack"
+                                                >I Track Serial Numbers</label
+                                            >
+                                            <div style="margin-left: 8px">
+                                                <span id="btnSNTrack" class="btnSpinType"
+                                                    ><i class="fas fa-search" style="font-size: 11px !important"></i
+                                                ></span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex">
+                                            <div class="custom-control custom-switch d-flex">
+                                                <input
+                                                    class="custom-control-input"
+                                                    type="checkbox"
+                                                    id="chkAddSN"
+                                                    name="chkAddSN"
+                                                />
+                                                <label class="custom-control-label position-relative" for="chkAddSN"
+                                                    >I Can Create Serial Numbers</label
+                                                >
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="custom-control custom-switch d-flex">
+                                        <input
+                                            class="custom-control-input"
+                                            type="checkbox"
+                                            id="chkLotTrack"
+                                            name="chkLotTrack"
+                                        />
+                                        <label class="custom-control-label position-relative" for="chkLotTrack"
+                                            >I Track Lot Numbers</label
+                                        >
+                                        <div style="margin-left: 8px">
+                                            <span id="btnLotTrack" class="btnSpinType"
+                                                ><i class="fas fa-search" style="font-size: 11px !important"></i
+                                            ></span>
+                                        </div>
+                                    </div>
+                                </div>
                                 {{/if}}
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-4" id="trackdiv">
-                                    <div class="trackItem" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
+                                    <div
+                                        class="trackItem"
+                                        style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
+                                    >
                                         <div class="form-group">
                                             <label>Inventory Account</label>
-                                            <select type="search" class="form-control" id="sltinventoryacount" name="sltinventoryacount" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                            <select
+                                                type="search"
+                                                class="form-control"
+                                                id="sltinventoryacount"
+                                                name="sltinventoryacount"
+                                                style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                            ></select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <hr class="reporthr" style="border-width: 3px;">
+                                    <hr class="reporthr" style="border-width: 3px" />
                                 </div>
                             </div>
-                            <div class="row trackItem" style="{{#if includeInventory}}{{#if isTrackChecked}}display: flex;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
+                            <div
+                                class="row trackItem"
+                                style="{{#if includeInventory}}{{#if isTrackChecked}}display: flex;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
+                            >
                                 <div class="col-3">
-                                    <div class="form-group" style="margin-bottom: 0px;"><label>Department</label></div>
+                                    <div class="form-group" style="margin-bottom: 0px">
+                                        <label>Department</label>
+                                    </div>
                                 </div>
                                 <div class="col-9">
                                     <div class="row">
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>Available</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px">
+                                                <label>Available</label>
+                                            </div>
                                         </div>
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>On SO</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px">
+                                                <label>On SO</label>
+                                            </div>
                                         </div>
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>On Bo</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px">
+                                                <label>On BO</label>
+                                            </div>
                                         </div>
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>In Stock</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px">
+                                                <label>In Stock</label>
+                                            </div>
                                         </div>
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>On Order</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px">
+                                                <label>On Order</label>
+                                            </div>
                                         </div>
                                         <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px;"><label>Bin Number</label></div>
+                                            <div class="form-group" style="margin-bottom: 0px">
+                                                <label>Bin Number</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -649,19 +1130,54 @@
                                             <!-- edited by matthias -->
                                             <div class="row">
                                                 <div class="col-2">
-                                                    <div class="form-group"><input type="text" class="form-control trackProd" value="{{item.availableqty}}" style="text-align: center;"></div>
+                                                    <div class="form-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control trackProd"
+                                                            value="{{item.availableqty}}"
+                                                            style="text-align: center"
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div class="col-2">
-                                                    <div class="form-group"><input type="text" class="form-control trackProd" value="{{item.onsoqty}} " style="text-align: center;"></div>
+                                                    <div class="form-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control trackProd"
+                                                            value="{{item.onsoqty}} "
+                                                            style="text-align: center"
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div class="col-2">
-                                                    <div class="form-group"><input type="text" class="form-control trackProd" value="{{item.onboqty}}" style="text-align: center;"></div>
+                                                    <div class="form-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control trackProd"
+                                                            value="{{item.onboqty}}"
+                                                            style="text-align: center"
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div class="col-2">
-                                                    <div class="form-group"><input type="text" class="form-control trackProd" value="{{item.instockqty}}" style="text-align: center;" ></div>
+                                                    <div class="form-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control trackProd"
+                                                            value="{{item.instockqty}}"
+                                                            style="text-align: center"
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div class="col-2">
-                                                    <div class="form-group"><input type="text" class="form-control trackProd" value="{{item.onorderqty}}" style="text-align: center;"></div>
+                                                    <div class="form-group">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control trackProd"
+                                                            value="{{item.onorderqty}}"
+                                                            style="text-align: center"
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
@@ -678,16 +1194,27 @@
                                 </div>
                                 {{/each}}
                             </div>
-                            <div class="row" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
+                            <div
+                                class="row"
+                                style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
+                            >
                                 <div class="col-12">
-                                    <hr class="reporthr" style="border-width: 3px;">
+                                    <hr class="reporthr" style="border-width: 3px" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
                                     <div class="custom-control custom-switch">
-                                        <input class="custom-control-input" type="checkbox" id="chkSellPrice" name="chkSellPrice" checked="{{#if isExtraSellChecked}}checked{{else}}{{/if}}">
-                                        <label class="custom-control-label" for="chkSellPrice">Customer Type Discount</label>
+                                        <input
+                                            class="custom-control-input"
+                                            type="checkbox"
+                                            id="chkSellPrice"
+                                            name="chkSellPrice"
+                                            checked="{{#if isExtraSellChecked}}checked{{else}}{{/if}}"
+                                        />
+                                        <label class="custom-control-label" for="chkSellPrice"
+                                            >Customer Type Discount</label
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -721,9 +1248,12 @@
                                     background-color: #00c2ef;
                                 }
                             </style>
-                            <div class="row trackCustomerTypeDisc" style="{{#if isExtraSellChecked}}display: flex;{{else}}display: none;{{/if}}">
+                            <div
+                                class="row trackCustomerTypeDisc"
+                                style="{{#if isExtraSellChecked}}display: flex;{{else}}display: none;{{/if}}"
+                            >
                                 <div class="col-4 colClientType1" id="colClientType1">
-                                    <div class="form-group" style="margin-bottom: 0px;">
+                                    <div class="form-group" style="margin-bottom: 0px">
                                         <label>Customer Type</label>
                                         <!-- edited by Matthias -->
                                         <!-- <span href="#" class="addClientType">+</span> -->
@@ -731,89 +1261,391 @@
                                     </div>
                                 </div>
                                 <div class="col-3 colDiscount1" id="colDiscount1">
-                                    <div class="form-group" style="margin-bottom: 0px;">
+                                    <div class="form-group" style="margin-bottom: 0px">
                                         <label>% Discount</label>
                                     </div>
                                 </div>
 
                                 <div class="col-3 colPrice1" id="colPrice1">
-                                    <div class="form-group" style="margin-bottom: 0px;">
+                                    <div class="form-group" style="margin-bottom: 0px">
                                         <label>Price (Ex)</label>
                                     </div>
                                 </div>
                                 <div class="col-1 colDelete1" id="colDelete1">
-                                    <div class="form-group" style="margin-bottom: 0px;"><label></label></div>
+                                    <div class="form-group" style="margin-bottom: 0px">
+                                        <label></label>
+                                    </div>
                                 </div>
                                 {{#each itemExtraSell in productExtraSell}}
-                                <div class="col-12 itemExtraSellRow" style="" id={{itemExtraSell.lineID}}>
+                                <div class="col-12 itemExtraSellRow" id="{{itemExtraSell.lineID}}">
                                     <div class="row">
                                         <div class="col-4 colClientType2">
                                             <div class="form-group">
-                                                <select type="search" class="form-control" id="sltCustomerType" name="sltCustomerType" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                                <select
+                                                    type="search"
+                                                    class="form-control"
+                                                    id="sltCustomerType"
+                                                    name="sltCustomerType"
+                                                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                                ></select>
                                             </div>
                                         </div>
                                         <!-- {{> clienttypemodal}} -->
                                         <div class="col-3 colDiscount2">
                                             <div class="form-group">
-                                                <input type="text" class="form-control highlightInput edtDiscount" style="width: 100%;" value="{{itemExtraSell.discount}}">
+                                                <input
+                                                    type="text"
+                                                    class="form-control highlightInput edtDiscount"
+                                                    style="width: 100%"
+                                                    value="{{itemExtraSell.discount}}"
+                                                />
                                             </div>
                                         </div>
 
                                         <div class="col-3 colPrice2">
                                             <div class="form-group">
-                                                <input type="text" class="form-control highlightInput edtPriceEx" style="width: 100%;" value="{{itemExtraSell.price}}">
+                                                <input
+                                                    type="text"
+                                                    class="form-control highlightInput edtPriceEx"
+                                                    style="width: 100%"
+                                                    value="{{itemExtraSell.price}}"
+                                                />
                                             </div>
                                         </div>
                                         <div class="col-1 colDel2">
                                             <div class="form-group">
-                                                <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm" autocomplete="off"><i class="fa fa-remove"></i></button></span>
+                                                <span class="table-remove btnRemove"
+                                                    ><button
+                                                        type="button"
+                                                        class="btn btn-danger btn-rounded btn-sm"
+                                                        autocomplete="off"
+                                                    >
+                                                        <i class="fa fa-remove"></i></button
+                                                ></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <hr class="reporthr" style="border-width: 3px;">
+                                        <hr class="reporthr" style="border-width: 3px" />
                                     </div>
                                 </div>
                                 {{/each}}
                                 <div class="col-12">
-                                    <button class="btn btn-primary addRowLine" type="button" id="addRowLine" style="float: right;" autocomplete="off">+ Add New Entry</button>
+                                    <button
+                                        class="btn btn-primary addRowLine"
+                                        type="button"
+                                        id="addRowLine"
+                                        style="float: right"
+                                        autocomplete="off"
+                                    >
+                                        + Add New Entry
+                                    </button>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <hr class="reporthr" style="border-width: 3px;">
+                                    <hr class="reporthr" style="border-width: 3px" />
                                 </div>
                             </div>
 
                             <!-- End Sell Price1111 -->
                             <div class="row recenttrasaction">
                                 <div class="col-12">
-                                    <button class="btn btn-primary loadrecenttransaction" type="button" id="loadrecenttransaction" name="loadrecenttransaction">Recent Transactions</button>
+                                    <button
+                                        class="btn btn-primary loadrecenttransaction"
+                                        type="button"
+                                        id="loadrecenttransaction"
+                                        name="loadrecenttransaction"
+                                    >
+                                        Recent Transactions
+                                    </button>
                                 </div>
-                                <div class="col-12 product_recent_trans" style="display:none; margin-top: 16px;">
-                                    <h3>Recent Transactions</h3>
+                                <div class="col-12 product_recent_trans mt-5" style="display: none;">
+                                    <header class="row">
+                                        <div class="col-12 col-md-4">
+                                            <h2 class="mr-1">Recent Transactions</h2>
+                                        </div>
+                                    </header>
+                                    <div class="row justify-content-end">
+                                        <div class="col">
+                                          <a
+                                            class="btn btnOpenSettings btnOpenSettingsDesktop float-right vs1ButtonMargin"
+                                            role="button"
+                                            data-toggle="modal"
+                                            href="#productrecentlist_Modal"
+                                            ><i class="icon ion-android-more-horizontal"></i
+                                          ></a>
+                                          <button class="btn btnNav btn-primary float-right printConfirm vs1ButtonMargin" type="button">
+                                            <i class="fas fa-print" style="padding-right: 5px"></i>Print
+                                          </button>
+                                          <button
+                                            class="btn btn-primary float-right vs1ButtonMargin"
+                                            type="button"
+                                            data-toggle="modal"
+                                            href="#importRecentTransctionModal"
+                                          >
+                                            <i class="fas fa-file-import" style="padding-right: 5px"></i>Import
+                                          </button>
+                                          <div class="modal fade" role="dialog" tabindex="-1" id="importRecentTransctionModal">
+                                            <div class="modal-dialog" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                  <h4>Import Items</h4>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                  <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                    <p style="margin-bottom: 0px; font-weight: bold">1. Download the &lt;&lt;form&gt;&gt; template</p>
+                                                    <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 4px">
+                                                      Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud
+                                                      to import your form's details.
+                                                    </p>
+                                                    <div class="col flex-grow-1">
+                                                      <button
+                                                        class="btn btn-primary templateDownload"
+                                                        type="button"
+                                                        style="margin: 12px; margin-bottom: 0px"
+                                                      >
+                                                        <i class="fas fa-file-csv" style="margin-right: 5px"></i>Download CSV Template
+                                                      </button>
+                                                      <button
+                                                        class="btn btn-primary templateDownloadXLSX"
+                                                        type="button"
+                                                        style="margin: 12px; margin-bottom: 0px"
+                                                      >
+                                                        <i class="fas fa-file-csv" style="margin-right: 5px"></i>Download Excel Template
+                                                      </button>
+                                                    </div>
+                                                    <div class="col d-xl-flex align-items-xl-center" style="width: 50px; max-width: 50px">
+                                                      <a href="#" download
+                                                        ><i
+                                                          class="fa fa-question-circle-o"
+                                                          data-toggle="tooltip"
+                                                          data-bs-tooltip=""
+                                                          title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                          style="margin: 12px"
+                                                        ></i
+                                                      ></a>
+                                                    </div>
+                                                  </div>
+                                                  <hr />
+                                                  <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                    <p style="margin-bottom: 0px; font-weight: bold">2. Copy your items into the template</p>
+                                                    <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 4px">
+                                                      Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your
+                                                      desired details.
+                                                    </p>
+                                                    <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 16px">
+                                                      Important: Avoid changing the column headings in the template file.
+                                                    </p>
+                                                  </div>
+                                                  <hr />
+                                                  <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                    <p style="margin-bottom: 0px; font-weight: bold">3. Import the updated template file</p>
+                                                    <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 4px">
+                                                      Save your updated template and you're ready to go.
+                                                    </p>
+
+                                                    <div class="divTable" id="file-display"></div>
+                                                    <input type="file" id="attachment-upload" style="display: none" accept=".csv,.txt,.xlsx" />
+                                                    <style>
+                                                      #row1 {
+                                                        display: flex;
+                                                        flex-direction: row;
+                                                        justify-content: space-around;
+                                                      }
+
+                                                      #column1 {
+                                                        display: flex;
+                                                      }
+
+                                                      #column2 {
+                                                        display: flex;
+                                                        flex-direction: column;
+                                                        margin: 16px;
+                                                        padding: 0.375rem 0.75rem;
+                                                      }
+                                                    </style>
+                                                    <div id="row1">
+                                                      <div id="column1"></div>
+                                                      <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px">
+                                                        <i class="fa fa-cloud-upload" style="margin-right: 5px"></i>Browse
+                                                      </button>
+                                                      <div class="file-name" id="column2"></div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                  <button class="btn btn-primary btnImport" type="button" disabled>
+                                                    <i class="fas fa-file-import" style="margin-right: 5px"></i>Import
+                                                  </button>
+                                                  <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                                    <i class="fa fa-close" style="margin-right: 5px"></i>Close
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <a
+                                            class="btn btnNav btn-primary float-right vs1ButtonMargin"
+                                            role="button"
+                                            data-toggle="modal"
+                                            href="#myModalDepartment"
+                                            ><i class="fas fa-users-cog" style="padding-right: 5px"></i>Department</a
+                                          >
+                                        </div>
+
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h4>Import Items</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                  <span aria-hidden="true">×</span>
+                                                </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
+                                                  <p style="margin-bottom: 0px; font-weight: bold">1. Download the &lt;&lt;form&gt;&gt; template</p>
+                                                  <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 4px">
+                                                    Start by downloading our template file. This file has the correct column headings to allow VS1 Cloud
+                                                    to import your form's details.
+                                                  </p>
+                                                  <div class="col flex-grow-1">
+                                                    <button
+                                                      class="btn btn-primary templateDownload"
+                                                      type="button"
+                                                      style="margin: 12px; margin-bottom: 0px"
+                                                    >
+                                                      <i class="fas fa-file-csv" style="margin-right: 5px"></i>Download CSV Template
+                                                    </button>
+                                                    <button
+                                                      class="btn btn-primary templateDownloadXLSX"
+                                                      type="button"
+                                                      style="margin: 12px; margin-bottom: 0px"
+                                                    >
+                                                      <i class="fas fa-file-csv" style="margin-right: 5px"></i>Download Excel Template
+                                                    </button>
+                                                  </div>
+                                                  <div class="col d-xl-flex align-items-xl-center" style="width: 50px; max-width: 50px">
+                                                    <a href="#" download
+                                                      ><i
+                                                        class="fa fa-question-circle-o"
+                                                        data-toggle="tooltip"
+                                                        data-bs-tooltip=""
+                                                        title="Having issues? Navigate to your Region Settings in your Control Panel and check that you have a comma selected as your 'List Seperator' and a period as your 'Decimal Symbol'."
+                                                        style="margin: 12px"
+                                                      ></i
+                                                    ></a>
+                                                  </div>
+                                                </div>
+                                                <hr />
+                                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                  <p style="margin-bottom: 0px; font-weight: bold">2. Copy your items into the template</p>
+                                                  <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 4px">
+                                                    Using MS Excel, or another spreadsheet editor, you can fill in the VS1 Cloud template with your
+                                                    desired details.
+                                                  </p>
+                                                  <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 16px">
+                                                    Important: Avoid changing the column headings in the template file.
+                                                  </p>
+                                                </div>
+                                                <hr />
+                                                <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start align-items-xl-start">
+                                                  <p style="margin-bottom: 0px; font-weight: bold">3. Import the updated template file</p>
+                                                  <p style="margin-left: 16px; margin-bottom: 0px; margin-top: 4px">
+                                                    Save your updated template and you're ready to go.
+                                                  </p>
+
+                                                  <div class="divTable" id="file-display"></div>
+                                                  <input type="file" id="attachment-upload" style="display: none" accept=".csv,.txt,.xlsx" />
+                                                  <style>
+                                                    #row1 {
+                                                      display: flex;
+                                                      flex-direction: row;
+                                                      justify-content: space-around;
+                                                    }
+
+                                                    #column1 {
+                                                      display: flex;
+                                                    }
+
+                                                    #column2 {
+                                                      display: flex;
+                                                      flex-direction: column;
+                                                      margin: 16px;
+                                                      padding: 0.375rem 0.75rem;
+                                                    }
+                                                  </style>
+                                                  <div id="row1">
+                                                    <div id="column1"></div>
+                                                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px">
+                                                      <i class="fa fa-cloud-upload" style="margin-right: 5px"></i>Browse
+                                                    </button>
+                                                    <div class="file-name" id="column2"></div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button class="btn btn-primary btnImport" type="button" disabled>
+                                                  <i class="fas fa-file-import" style="margin-right: 5px"></i>Import
+                                                </button>
+                                                <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                                                  <i class="fa fa-close" style="margin-right: 5px"></i>Close
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        {{> departmentModal}}
+                                      </div>
+
                                     <!-- {{>recentTransactionTable productID=productID type="all"}} -->
-                                    {{>non_transactional_list type="all" tablename="productrecentlist" productID=productID }}
+                                    {{>transaction_list type="all" tablename="productrecentlist" productID=productID }}
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-4">
                                     {{#if isManufactured}}
-                                        <button class="btn btn-primary showBOMBtn" type="button" id="showBOMBtn" name="showBOMBtn">Show BOM</button>
+                                    <button
+                                        class="btn btn-primary showBOMBtn"
+                                        type="button"
+                                        id="showBOMBtn"
+                                        name="showBOMBtn"
+                                    >
+                                        Show BOM
+                                    </button>
                                     {{/if}}
                                 </div>
-                                <div class="col-8 justify-content-xl-end" style="padding-right: 0px; padding-left: 0px;">
+                                <div class="col-8 justify-content-xl-end" style="padding-right: 0px; padding-left: 0px">
                                     <div class="d-xl-flex justify-content-xl-end">
-                                        <button class="btn btn-success" type="button" style="margin: 12px;" id="btnSave" name="btnSave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                        <button class="btn btn-danger btnDeleteInv" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                        <button class="btn btn-secondary btnBack" data-dismiss="modal" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                        <button
+                                            class="btn btn-success"
+                                            type="button"
+                                            style="margin: 12px"
+                                            id="btnSave"
+                                            name="btnSave"
+                                        >
+                                            <i class="fa fa-save" style="margin-right: 5px"></i>Save
+                                        </button>
+                                        <button class="btn btn-danger btnDeleteInv" type="button" style="margin: 12px">
+                                            <i class="fa fa-close" style="margin-right: 5px"></i>Delete
+                                        </button>
+                                        <button
+                                            class="btn btn-secondary btnBack"
+                                            data-dismiss="modal"
+                                            type="button"
+                                            style="margin: 12px"
+                                        >
+                                            <i class="fa fa-close" style="margin-right: 5px"></i>Close
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -824,18 +1656,27 @@
 
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content" >
-                <div class="modal-header" >
-
-                    <h4 class="title-header" >Product</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <div class="modal-dialog" role="document" style="max-width: 670px !important">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Product</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
                     <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/newproduct.mp4" type="video/mp4">
+                    <video
+                        preload="none"
+                        id="myVideo"
+                        width="640"
+                        height="360"
+                        controls=""
+                        name="media"
+                        style="border: solid 5px #999999f0; height: auto; outline: none"
+                    >
+                        <source src="https://erphelpes.com/vs1videos/newproduct.mp4" type="video/mp4" />
                     </video>
                 </div>
             </div>
@@ -847,37 +1688,30 @@
     <!-- Start Serial Number Modal -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="SerialNumberModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content" >
-                <div class="modal-header" >
-                    <h4 class="title-header" >Serial Number List</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Serial Number List</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div id="SNTracklist" style="display:none; padding-right: 0px; padding-left: 0px;">
-                        <div class="table-responsive">
-                            <table id="serialnumberlist" class="dataTable table table-striped table-bordered table-centered serialnumberlist">
-                                <thead>
-                                    <tr class="dnd-moved">
-                                        <th class="text-center" style="width: 30%">Serial Numbers</th>
-                                        <th class="text-center" style="width: 20%">Status</th>
-                                        <th class="text-center" style="width: 25%">Date</th>
-                                        <th class="text-center" style="width: 25%">Department</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each item in tserialnumberList}}
-                                    <tr id="{{item.SerialNumber}}">
-                                        <td class="text-center">{{item.SerialNumber}}</td>
-                                        <td id="transactiontype" class="text-center">{{item.Status}}</td>
-                                        <td class="text-center">{{item.date}}</td>
-                                        <td class="text-center">{{item.department}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <style>
+                        #tblSerialNumberListByID .colSerialNumber {
+                            width: 25% !important;
+                        }
+                        #tblSerialNumberListByID .colStatus {
+                            width: 15% !important;
+                        }
+                        #tblSerialNumberListByID .colDate {
+                            width: 25% !important;
+                        }
+                        #tblSerialNumberListByID .colDepartment {
+                            width: 30% !important;
+                        }
+                    </style>
+                    {{> non_transactional_list tablename = "tblSerialNumberListByID" prductID=productID}}
                 </div>
             </div>
         </div>
@@ -887,40 +1721,30 @@
     <!-- Start Lot number Modal -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="LotNumberModal">
-        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content" >
-                <div class="modal-header" >
-                    <h4 class="title-header" >Lot Number List</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Lot Number List</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div id="LotTracklist" style="display: none; padding-right: 0px; padding-left: 0px;">
-                        <div class="table-responsive">
-                            <table id="lotnumberlist" class="dataTable table table-striped table-bordered lotnumberlist">
-                                <thead>
-                                    <tr class="dnd-moved">
-                                        <th class="text-center" style="width: 25%">Lot Numbers</th>
-                                        <th class="text-center" style="width: 15%">Status</th>
-                                        <th class="text-center" style="width: 20%">Date</th>
-                                        <th class="text-center" style="width: 20%;">Expiry Date</th>
-                                        <th class="text-center" style="width: 20%">Department</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each item in tlotnumberList}}
-
-                                    <tr id="{{item.transactionno}}">
-                                        <td class="text-center">{{item.LotNumber}}</td>
-                                        <td id="transactiontype" class="text-center">{{item.Status}}</td>
-                                        <td class="text-center">{{item.date}}</td>
-                                        <td class="text-center">{{item.expriydate}}</td>
-                                        <td class="text-center">{{item.department}}</td>
-                                    </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <style>
+                        #tblLotNumberListByID .colSerialNumber {
+                            width: 25% !important;
+                        }
+                        #tblLotNumberListByID .colExpiryDate {
+                            width: 25% !important;
+                        }
+                        #tblLotNumberListByID .colStatus {
+                            width: 15% !important;
+                        }
+                        #tblLotNumberListByID .colDepartment {
+                            width: 30% !important;
+                        }
+                    </style>
+                    {{> non_transactional_list tablename = "tblLotNumberListByID" prductID=productID}}
                 </div>
             </div>
         </div>
@@ -931,114 +1755,160 @@
     <!-- Upgrade POP ACCESS -->
     <div class="modal fade" role="dialog" tabindex="-1" id="upgradeModal">
         <div class="modal-dialog" role="document">
-            <div class="modal-content" style="border: #00a3d3;">
-                <div class="modal-header" style="background-color:#00a3d3;">
+            <div class="modal-content" style="border: #00a3d3">
+                <div class="modal-header" style="background-color: #00a3d3">
                     <!-- <div class="mr-3"> -->
                     <!-- <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div> -->
                     <!-- </div> -->
-                    <h4 class="title-header" style="color:white;">UNLOCK FEATURE</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="title-header" style="color: white">UNLOCK FEATURE</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
-                        <p style="font-weight: bold;">Upgrade to the Essentials Pack</p>
-                        <p style="margin-bottom: 15px;margin-top: 4px;">Please upgrade to our Essentials plan to access this feature.</p>
-                        <hr class="reporthr" style="width: 100%; margin: 4px;border-width: 1px;">
-                        <h5 style="font-weight: bold;text-align: center; width:100%; color: rgb(89 89 89);">PLEASE NOTE</h5>
-                        <p style="margin-bottom: 0px;margin-top: 4px;">If Inventory Tracking is turned on it cannot be turned off for this product in the future.</p>
+                        <p style="font-weight: bold">Upgrade to the Essentials Pack</p>
+                        <p style="margin-bottom: 15px; margin-top: 4px">
+                            Please upgrade to our Essentials plan to access this feature.
+                        </p>
+                        <hr class="reporthr" style="width: 100%; margin: 4px; border-width: 1px" />
+                        <h5 style="font-weight: bold; text-align: center; width: 100%; color: rgb(89 89 89)">
+                            PLEASE NOTE
+                        </h5>
+                        <p style="margin-bottom: 0px; margin-top: 4px">
+                            If Inventory Tracking is turned on it cannot be turned off for this product in the future.
+                        </p>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success btnUpgradeToEssentials" type="button"><i class="fa fa-save" style="margin-right: 5px;" ></i>Upgrade</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
+                    <button class="btn btn-success btnUpgradeToEssentials" type="button">
+                        <i class="fa fa-save" style="margin-right: 5px"></i>Upgrade
+                    </button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                        <i class="fa fa-close" style="margin-right: 5px"></i>Close
+                    </button>
+                </div>
             </div>
         </div>
     </div>
     <!-- End Upgrade POP -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-        {{> taxratelistpop}}
-    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">{{> taxratelistpop}}</div>
 
-   
+    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">{{> addaccountpop}}</div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal" style="">
-        {{> addaccountpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="customerTypeListModal">
-        {{> clienttypepopup}}
-    </div>
-
+    <div class="modal fade" role="dialog" tabindex="-1" id="customerTypeListModal">{{> clienttypepopup}}</div>
 
     {{> clienttypemodal}}
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal" style="">
-        {{> newtaxratepop}}
-    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">{{> newtaxratepop}}</div>
 
-    
+    <div class="modal fade" role="dialog" tabindex="-1" id="binNumberListModal">{{> binNumberListPop}}</div>
 
-
+    <div class="modal fade" role="dialog" tabindex="-1" id="addBinNumberModal">{{> addBinNumberPop}}</div>
 
     <!-- Product Customer Type Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalClientType">
-        <div class="modal-dialog  modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 style="" ><div id="add-dept-title" name="add-dept-title" style="float: left;">Add New Customer Type</div>
-                      <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                      {{> helpbutton}}
+                    <h4>
+                        <div id="add-dept-title" name="add-dept-title" style="float: left">Add New Customer Type</div>
+                        <!-- <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
+                        {{> helpbutton}}
 
-                      <!-- Start Help View Modal -->
-                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
-                          <div class="modal-dialog modal-sm" role="document">
-                              <div class="modal-content">
-                                  <div class="modal-header" style="padding-bottom: 8px;">
-                                      <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                      <div class="modal-body">
-                                          <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
-                                          <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=186" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                          {{> helpadvisor}}
-                                          {{> helpgotoforum}}
-                                      </div>
-                                  <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                              </div>
-                          </div>
-                    </div>
-                      <!-- End Help View Modal -->
-                    </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                <div class="modal-body" style="background-color: #ededed;">
-                    <input type="hidden" class="form-control" id="edtDepartmentID" name="edtDepartmentID" style="display:none;">
-                    <div class="row no-gutters">
-                        <div class="col d-xl-flex align-items-xl-end">
-                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Type Name</label>
-                                <input type="text" class="form-control" id="edtTypeName" name="edtTypeName">
-                                <input type="hidden" class="form-control" id="typeID" name="typeID">
+                        <!-- Start Help View Modal -->
+                        <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
+                            <div class="modal-dialog modal-sm" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="padding-bottom: 8px">
+                                        <h4>Help</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-center text-muted">
+                                            <a
+                                                role="button"
+                                                data-toggle="modal"
+                                                href="#helpModalAdd"
+                                                class="btn btn-primary helpModal"
+                                                >View Help Video</a
+                                            >
+                                        </p>
+                                        <p class="text-center text-muted">
+                                            <a
+                                                href="https://vs1forum.com/viewtopic.php?f=6&t=186"
+                                                target="_blank"
+                                                class="btn btn-primary"
+                                                >Download Help File</a
+                                            >
+                                        </p>
+                                        {{> helpadvisor}} {{> helpgotoforum}}
+                                    </div>
+                                    <div class="modal-footer" style="padding: 6px">
+                                        <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="col d-xl-flex align-items-xl-end">
-                            <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">% Discount</label>
-                                <input type="text" class="form-control highlightInput edtDiscountModal">
-                            </div>
-                            <input type="hidden" class="form-control highlightInput edtPriceExModal">
-                        </div>
-                    </div>
-                    <div class="row no-gutters">
-                        <div class="col d-xl-flex align-items-xl-end">
-                            <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
-                                <textarea class="form-control" rows="5" id="txaDescription" name="txaDescription"></textarea>
-                              </div>
-                        </div>
-                    </div>
-
+                        <!-- End Help View Modal -->
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
-                <div class="modal-footer" style="background-color: #ededed;">
-                    <button class="btn btn-primary btnSaveClientType" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                <div class="modal-body" style="background-color: #ededed">
+                    <input
+                        type="hidden"
+                        class="form-control"
+                        id="edtDepartmentID"
+                        name="edtDepartmentID"
+                        style="display: none"
+                    />
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px">
+                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom"
+                                    >Type Name</label
+                                >
+                                <input type="text" class="form-control" id="edtTypeName" name="edtTypeName" />
+                                <input type="hidden" class="form-control" id="typeID" name="typeID" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px">
+                                <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom"
+                                    >% Discount</label
+                                >
+                                <input type="text" class="form-control highlightInput edtDiscountModal" />
+                            </div>
+                            <input type="hidden" class="form-control highlightInput edtPriceExModal" />
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col d-xl-flex align-items-xl-end">
+                            <div class="form-group flex-grow-1" style="margin: 8px">
+                                <label>Description</label>
+                                <textarea
+                                    class="form-control"
+                                    rows="5"
+                                    id="txaDescription"
+                                    name="txaDescription"
+                                ></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #ededed">
+                    <button class="btn btn-primary btnSaveClientType" type="button">
+                        <i class="fa fa-save" style="padding-right: 8px"></i>Save
+                    </button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                        <i class="fa fa-close" style="margin-right: 8px"></i>Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -1047,8 +1917,8 @@
 
     <style>
         @media screen and (min-width: 1280px) {
-        #BOMSetupModal .modal-dialog{
-                max-width: 1200px
+            #BOMSetupModal .modal-dialog {
+                max-width: 1200px;
             }
         }
 
@@ -1058,17 +1928,17 @@
             }
         }
     </style>
-    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-        {{> accountlistpop}}
-    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">{{> accountlistpop}}</div>
 
     {{#if showBomModal}}
     <div class="modal fade" role="dialog" tabindex="-1" id="BOMSetupModal">
         <div class="modal-dialog modal-xl modal-centered" role="document">
-            <div class="modal-content" >
-                <div class="modal-header" >
-                    <h4 class="title-header" >BOM Set up</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeBOMSetupModal"><span aria-hidden="true">×</span></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">BOM Set up</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeBOMSetupModal">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <!-- <style>
@@ -1136,7 +2006,7 @@
                                 <input type="text" class="edtProcessNote form-control w-100"/>
                             </div>
                             <div class="colAttachment">
-                               
+
                                 <a class="btn btn-primary btnAddAttachment" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
                                     {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
                                 <div class="attachedFiles d-none"></div>
@@ -1161,58 +2031,86 @@
                     </div> -->
                     {{> bom_template}}
                 </div>
-                <div class="modal-footer d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
-                    <button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                    <button class="btn btn-primary btn-print-bom" type="button"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
-                    <button class="btn btn-secondary btn-cancel-bom" type="button"><i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel</button>
+                <div
+                    class="modal-footer d-flex align-items-center justify-content-center px-3"
+                    style="border-top-width: 0px; gap: 15px"
+                >
+                    <button class="btn btn-success btn-save-bom" type="button">
+                        <i class="fa fa-save" style="padding-right: 8px"></i>Save
+                    </button>
+                    <button class="btn btn-primary btn-print-bom" type="button">
+                        <i class="fa fa-print" style="padding-right: 8px"></i>Print
+                    </button>
+                    <button class="btn btn-secondary btn-cancel-bom" type="button">
+                        <i class="fa fa-remove" style="padding-right: 8px"></i>Cancel
+                    </button>
                 </div>
             </div>
         </div>
     </div>
     {{/if}}
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-        {{> productlistpop}}
-    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">{{> productlistpop}}</div>
     <div class="modal fade" role="dialog" tabindex="-1" id="processListModal">
         {{> processlistpopup}}
         <!-- {{> statuspop}} -->
     </div>
 
-    <div class="modal fade" role="dialog" id="newProcessModal" tabindex="-1">
-        {{> new_processpop}}
-    </div>
+    <div class="modal fade" role="dialog" id="newProcessModal" tabindex="-1">{{> new_processpop}}</div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>Upload Attachments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>Upload Attachments</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
-                <div class="modal-body" style="padding: 0px;">
-                    <div class="divTable file-display" >
-                 
+                <div class="modal-body" style="padding: 0px">
+                    <div class="divTable file-display">
                         <div class="col inboxcol1">
-                            <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
+                            <img src="/icons/nofiles_icon.jpg" class="" style="width: 100%" />
                         </div>
-                        <div class="col inboxcol2" style="text-align: center;">
+                        <div class="col inboxcol2" style="text-align: center">
                             <div>Upload files or add files from the file library.</div>
                             {{#if isMobileDevices}}
-                                <div>Capture copies of receipt's or take photo's of completed jobs.</div>
+                            <div>Capture copies of receipt's or take photo's of completed jobs.</div>
                             {{/if}}
-                            <p style="color: #ababab;">Only users with access to your company can view these files</p>
+                            <p style="color: #ababab">Only users with access to your company can view these files</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-
                     {{#if isMobileDevices}}
-                        <input type="file" class="img-attachment-upload" id="img-attachment-upload" style="display:none" accept="image/*" capture="camera">
-                        <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button"><i class="fas fa-camera" style="margin-right: 5px;"></i>Capture</button>
+                    <input
+                        type="file"
+                        class="img-attachment-upload"
+                        id="img-attachment-upload"
+                        style="display: none"
+                        accept="image/*"
+                        capture="camera"
+                    />
+                    <button class="btn btn-primary btnUploadFile img_new_attachment_btn" type="button">
+                        <i class="fas fa-camera" style="margin-right: 5px"></i>Capture
+                    </button>
 
-                        <input type="file" class="attachment-upload" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png">
+                    <input
+                        type="file"
+                        class="attachment-upload"
+                        id="attachment-upload"
+                        style="display: none"
+                        multiple
+                        accept=".jpg,.gif,.png"
+                    />
                     {{else}}
-                        <input type="file" class="attachment-upload" id="attachment-upload" style="display:none" multiple accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                    <input
+                        type="file"
+                        class="attachment-upload"
+                        id="attachment-upload"
+                        style="display: none"
+                        multiple
+                        accept=".jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
                                .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
                                .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
                                image/gif,image/png,image/bmp,image/tiff,application/pdf,
@@ -1225,20 +2123,37 @@
                                application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
                                application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
                                application/vnd.apple.numbers,application/zip,application/rar,
-                               application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
+                               application/x-zip-compressed,application/x-zip,application/x-7z-compressed"
+                    />
                     {{/if}}
-                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
-                    <button class="btn btn-success closeModal" data-dismiss="modal" type="button" style="margin-right: 5px;" autocomplete="off">
-                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button">
+                        <i class="fa fa-cloud-upload" style="margin-right: 5px"></i>Upload
                     </button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                    <button
+                        class="btn btn-success closeModal"
+                        data-dismiss="modal"
+                        type="button"
+                        style="margin-right: 5px"
+                        autocomplete="off"
+                    >
+                        <i class="fa fa-save" style="padding-right: 8px"></i>Save
+                    </button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">
+                        <i class="fa fa-remove" style="margin-right: 5px"></i>Close
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    
-  
+    <div class="modal fade" role="dialog" tabindex="-1" id="UOMListModal">
+        {{> uomlistpop}}
+    </div>
+
+    <div class="modal fade" id="newUomModal" tabindex="-1" role="dialog" aria-hidden="true">
+        {{> adduompop}}
+    </div>
+
     <script>
         modalDraggable();
     </script>

@@ -104,7 +104,7 @@ Template.vatreturn.onCreated(() => {
     templateObject.getId = new ReactiveVar();
     templateObject.reasonT4 = new ReactiveVar([]);
     templateObject.reasonF4 = new ReactiveVar([]);
-    templateObject.basreturnData = new ReactiveVar([]);
+    templateObject.vatreturnData = new ReactiveVar([]);
 });
 
 Template.vatreturn.onRendered(function() {
@@ -262,9 +262,11 @@ Template.vatreturn.onRendered(function() {
             userdata = userdata.tvatreturns || [];
             if (userdata.length == 0) {
                 reportService.getAllVATReturn().then(function(data) {
+                    let accountingmethodflag = false;
                     for (let i = 0; i < data.tvatreturn.length; i++) {
                         if (getid == "") {
-                            if (i == 0) {
+                            if (data.tvatreturn[i].fields.Active == true && !accountingmethodflag) {
+                                accountingmethodflag = true;
                                 if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                     $("#accountingmethod1").prop('checked', true);
                                     $("#accountingmethod2").prop('checked', false);
@@ -322,12 +324,12 @@ Template.vatreturn.onRendered(function() {
                                 shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
                                 shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                             }
-                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate").val(previousStartDate);
                                 $("#previousEndDate").val(previousEndDate);
                                 var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
@@ -341,21 +343,21 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
                                     endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate").val(toDate);
                                 } else {
                                     endMonth = parseInt(fromDate.split("-")[1]);
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate").val(toDate);
                                 }
                             }
-                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t2").val(previousStartDate);
                                 $("#previousEndDate-t2").val(previousEndDate);
                                 var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
@@ -369,21 +371,21 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                     endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t2").val(toDate);
                                 } else {
                                     endMonth = parseInt(fromDate.split("-")[1]);
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t2").val(toDate);
                                 }
                             }
-                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab4_Year + "-" + months[data.tvatreturn[i].fields.Tab4_Month] + "-01";
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab4_Month] + "/" + data.tvatreturn[i].fields.Tab4_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t3").val(previousStartDate);
                                 $("#previousEndDate-t3").val(previousEndDate);
                                 var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
@@ -397,41 +399,41 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                     endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t3").val(toDate);
                                 } else {
                                     endMonth = parseInt(fromDate.split("-")[1]);
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t3").val(toDate);
                                 }
                             }
                         } else {
                             if (getid > data.tvatreturn[i].fields.ID) {
-                                if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                    let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                    let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                     let previousEndDate = "";
                                     var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                     previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                     $("#previousStartDate").val(previousStartDate);
                                     $("#previousEndDate").val(previousEndDate);
                                 }
-                                if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                    let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                    let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                     let previousEndDate = "";
                                     var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                     previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                     $("#previousStartDate-t2").val(previousStartDate);
                                     $("#previousEndDate-t2").val(previousEndDate);
                                 }
-                                if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                    let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                                if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                    let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                                     let previousEndDate = "";
                                     var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                     previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                     $("#previousStartDate-t3").val(previousStartDate);
                                     $("#previousEndDate-t3").val(previousEndDate);
                                 }
@@ -440,22 +442,22 @@ Template.vatreturn.onRendered(function() {
                     }
                     $('.fullScreenSpin').css('display', 'none');
                 }).catch(function(err) {
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
@@ -468,9 +470,11 @@ Template.vatreturn.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                let accountingmethodflag = false;
                 for (let i = 0; i < data.tvatreturn.length; i++) {
                     if (getid == "") {
-                        if (i == 0) {
+                        if (data.tvatreturn[i].fields.Active == true && !accountingmethodflag) {
+                            accountingmethodflag = true;
                             if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                 $("#accountingmethod1").prop('checked', true);
                                 $("#accountingmethod2").prop('checked', false);
@@ -528,12 +532,12 @@ Template.vatreturn.onRendered(function() {
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                         }
-                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate").val(previousStartDate);
                             $("#previousEndDate").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
@@ -547,21 +551,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t2").val(previousStartDate);
                             $("#previousEndDate-t2").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
@@ -575,21 +579,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t3").val(previousStartDate);
                             $("#previousEndDate-t3").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
@@ -603,41 +607,41 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             }
                         }
                     } else {
                         if (getid > data.tvatreturn[i].fields.ID) {
-                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate").val(previousStartDate);
                                 $("#previousEndDate").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t2").val(previousStartDate);
                                 $("#previousEndDate-t2").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t3").val(previousStartDate);
                                 $("#previousEndDate-t3").val(previousEndDate);
                             }
@@ -650,9 +654,11 @@ Template.vatreturn.onRendered(function() {
             let taxRateList = templateObject.taxRateList.get();
 
             reportService.getAllBASReturn().then(function(data) {
+                let accountingmethodflag = false;
                 for (let i = 0; i < data.tvatreturn.length; i++) {
                     if (getid == "") {
-                        if (i == 0) {
+                        if (data.tvatreturn[i].fields.Active == true && !accountingmethodflag) {
+                            accountingmethodflag = true;
                             if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                 $("#accountingmethod1").prop('checked', true);
                                 $("#accountingmethod2").prop('checked', false);
@@ -710,12 +716,12 @@ Template.vatreturn.onRendered(function() {
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                         }
-                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate").val(previousStartDate);
                             $("#previousEndDate").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
@@ -729,21 +735,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t2").val(previousStartDate);
                             $("#previousEndDate-t2").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
@@ -757,21 +763,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t3").val(previousStartDate);
                             $("#previousEndDate-t3").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
@@ -785,41 +791,41 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             }
                         }
                     } else {
                         if (getid > data.tvatreturn[i].fields.ID) {
-                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate").val(previousStartDate);
                                 $("#previousEndDate").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t2").val(previousStartDate);
                                 $("#previousEndDate-t2").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t3").val(previousStartDate);
                                 $("#previousEndDate-t3").val(previousEndDate);
                             }
@@ -828,22 +834,22 @@ Template.vatreturn.onRendered(function() {
                 }
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function(err) {
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
@@ -987,7 +993,7 @@ Template.vatreturn.onRendered(function() {
                     var tax11cost = parseFloat($("#tax10cost").val()) * 15 / (100 + 15);
                     $("#tax11cost").val(tax11cost.toFixed(2));
                     $("#prt_tax11cost").html("R" + tax11cost.toFixed(2));
-                    var tax13cost = tax4cost + tax4acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
+                    var tax13cost = tax4cost + tax4Acost + tax9cost + tax11cost + parseFloat($("#tax12cost").val());
                     $("#tax13cost").val(tax13cost.toFixed(2));
                     $("#prt_tax13cost").html("R" + tax13cost.toFixed(2));
                     var tax19cost = parseFloat($("#tax14cost").val()) + parseFloat($("#tax14Acost").val()) + parseFloat($("#tax15cost").val()) + parseFloat($("#tax15Acost").val()) + parseFloat($("#tax16cost").val()) + parseFloat($("#tax17cost").val()) + parseFloat($("#tax18cost").val());
@@ -1070,6 +1076,7 @@ Template.vatreturn.onRendered(function() {
     };
 
     $('#sltDepartment').editableSelect();
+    $('#departOptionTile').text("VAT Options");
     $('#sltDepartment').val("All");
     $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
@@ -1182,9 +1189,9 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                     document.getElementById("tax10").setAttribute("href", "#taxCode10option");
                                     document.getElementById("tax12").setAttribute("href", "#taxCode12option");
-                
+
                                     $("#tax4cost").removeAttr("disabled");
-                                    $("#tax4acost").removeAttr("disabled");
+                                    $("#tax4Acost").removeAttr("disabled");
                                     $("#tax11cost").removeAttr("disabled");
                                 } else {
                                     $("#nav-item1").hide();
@@ -1211,12 +1218,12 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax7").setAttribute("href", "#");
                                     document.getElementById("tax10").setAttribute("href", "#");
                                     document.getElementById("tax12").setAttribute("href", "#");
-                
+
                                     $("#tax4cost").attr("disabled", "disabled");
-                                    $("#tax4acost").attr("disabled", "disabled");
+                                    $("#tax4Acost").attr("disabled", "disabled");
                                     $("#tax11cost").attr("disabled", "disabled");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab2 == true) {
                                     $("#nav-item2").show();
                                     document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -1250,7 +1257,7 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax17").setAttribute("href", "#");
                                     document.getElementById("tax18").setAttribute("href", "#");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab3 == true) {
                                     $("#nav-item3").show();
                                     document.getElementById("tax21").setAttribute("href", "#taxCode21option");
@@ -1294,7 +1301,7 @@ Template.vatreturn.onRendered(function() {
                                     document.getElementById("tax35").setAttribute("href", "#");
                                     document.getElementById("tax36").setAttribute("href", "#");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab4 == true) {
                                     $("#nav-item4").show();
                                     $("#payment_refno").removeAttr("disabled");
@@ -1320,7 +1327,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#payment_period").attr("disabled", "disabled");
                                     $("#payment_penalty").attr("disabled", "disabled");
                                 }
-                            
+
                                 if (data.tvatreturn[0].fields.HasTab5 == true) {
                                     $("#nav-item5").show();
                                     $("#refund_refno").removeAttr("disabled");
@@ -1379,7 +1386,7 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[0].fields.Tab1_Month != "" && data.tvatreturn[0].fields.Tab1_Year > 0) {
                                     var endMonth = (data.tvatreturn[0].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab1_Month]);
                                     tab1endDate = new Date(data.tvatreturn[0].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                    tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                                    tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                                 }
                                 $("#endDate").val(tab1endDate);
                                 $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
@@ -1459,18 +1466,18 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[0].fields.Tab2_Month != "" && data.tvatreturn[0].fields.Tab2_Year > 0) {
                                     var endMonth2 = (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab2_Month]);
                                     tab2endDate = new Date(data.tvatreturn[0].fields.Tab2_Year, (parseInt(endMonth2)), 0);
-                                    tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                                    tab2endDate = moment(tab2endDate).format("DD/MM/YYYY");
                                 }
                                 $("#endDate-t2").val(tab2endDate);
                                 // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
                                 $("#tax14cost").val(data.tvatreturn[0].fields.VAT14);
                                 $("#prt_tax14cost").html("R" + data.tvatreturn[0].fields.VAT14);
-                                $("#tax14acost").val(data.tvatreturn[0].fields.VAT14A);
-                                $("#prt_tax14acost").html("R" + data.tvatreturn[0].fields.VAT14A);
+                                $("#tax14Acost").val(data.tvatreturn[0].fields.VAT14A);
+                                $("#prt_tax14Acost").html("R" + data.tvatreturn[0].fields.VAT14A);
                                 $("#tax15cost").val(data.tvatreturn[0].fields.VAT15);
                                 $("#prt_tax15cost").html("R" + data.tvatreturn[0].fields.VAT15);
-                                $("#tax15acost").val(data.tvatreturn[0].fields.VAT15A);
-                                $("#prt_tax15acost").html("R" + data.tvatreturn[0].fields.VAT15A);
+                                $("#tax15Acost").val(data.tvatreturn[0].fields.VAT15A);
+                                $("#prt_tax15Acost").html("R" + data.tvatreturn[0].fields.VAT15A);
                                 $("#tax16cost").val(data.tvatreturn[0].fields.VAT16);
                                 $("#prt_tax16cost").html("R" + data.tvatreturn[0].fields.VAT16);
                                 $("#tax17cost").val(data.tvatreturn[0].fields.VAT17);
@@ -1496,7 +1503,7 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[0].fields.Tab3_Month != "" && data.tvatreturn[0].fields.Tab3_Year > 0) {
                                     var endMonth3 = (data.tvatreturn[0].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab3_Month]);
                                     tab3endDate = new Date(data.tvatreturn[0].fields.Tab3_Year, (parseInt(endMonth3)), 0);
-                                    tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                                    tab3endDate = moment(tab3endDate).format("DD/MM/YYYY");
                                 }
                                 $("#endDate-t3").val(tab3endDate);
                                 // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
@@ -1576,7 +1583,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#refund_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
                                 $("#prt_refund_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
                                 $("#refund_period").val(data.tvatreturn[0].fields.PaymentPeriod);
-                                $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);                                
+                                $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);
                                 var refund_vatcost = tax20cost;
                                 $("#refund_vat").val(refund_vatcost);
                                 $("#prt_refund_vat").html("R" + refund_vatcost);
@@ -1597,7 +1604,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#vatreturnCategory3").prop('checked', data.tvatreturn[i].fields.HasTab3);
                                     $("#vatreturnCategory4").prop('checked', data.tvatreturn[i].fields.HasTab4);
                                     $("#vatreturnCategory5").prop('checked', data.tvatreturn[i].fields.HasTab5);
-                                    
+
                                     if (data.tvatreturn[i].fields.HasTab1 == true) {
                                         $("#nav-item1").show();
                                         document.getElementById("tax1").setAttribute("href", "#taxCode1option");
@@ -1609,9 +1616,9 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                         document.getElementById("tax10").setAttribute("href", "#taxCode10option");
                                         document.getElementById("tax12").setAttribute("href", "#taxCode12option");
-                    
+
                                         $("#tax4cost").removeAttr("disabled");
-                                        $("#tax4acost").removeAttr("disabled");
+                                        $("#tax4Acost").removeAttr("disabled");
                                         $("#tax11cost").removeAttr("disabled");
                                     } else {
                                         $("#nav-item1").hide();
@@ -1638,12 +1645,12 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax7").setAttribute("href", "#");
                                         document.getElementById("tax10").setAttribute("href", "#");
                                         document.getElementById("tax12").setAttribute("href", "#");
-                    
+
                                         $("#tax4cost").attr("disabled", "disabled");
-                                        $("#tax4acost").attr("disabled", "disabled");
+                                        $("#tax4Acost").attr("disabled", "disabled");
                                         $("#tax11cost").attr("disabled", "disabled");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab2 == true) {
                                         $("#nav-item2").show();
                                         document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -1677,7 +1684,7 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax17").setAttribute("href", "#");
                                         document.getElementById("tax18").setAttribute("href", "#");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab3 == true) {
                                         $("#nav-item3").show();
                                         document.getElementById("tax21").setAttribute("href", "#taxCode21option");
@@ -1721,7 +1728,7 @@ Template.vatreturn.onRendered(function() {
                                         document.getElementById("tax35").setAttribute("href", "#");
                                         document.getElementById("tax36").setAttribute("href", "#");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab4 == true) {
                                         $("#nav-item4").show();
                                         $("#payment_refno").removeAttr("disabled");
@@ -1747,7 +1754,7 @@ Template.vatreturn.onRendered(function() {
                                         $("#payment_period").attr("disabled", "disabled");
                                         $("#payment_penalty").attr("disabled", "disabled");
                                     }
-                                
+
                                     if (data.tvatreturn[i].fields.HasTab5 == true) {
                                         $("#nav-item5").show();
                                         $("#refund_refno").removeAttr("disabled");
@@ -1806,7 +1813,7 @@ Template.vatreturn.onRendered(function() {
                                     if (data.tvatreturn[i].fields.Tab1_Month != "" && data.tvatreturn[i].fields.Tab1_Year > 0) {
                                         var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                         tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                                        tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                                     }
                                     $("#endDate").val(tab1endDate);
                                     $("#prt_beginningDate").html(data.tvatreturn[i].fields.Tab1_Month + " " + data.tvatreturn[i].fields.Tab1_Year);
@@ -1886,18 +1893,18 @@ Template.vatreturn.onRendered(function() {
                                     if (data.tvatreturn[i].fields.Tab2_Month != "" && data.tvatreturn[i].fields.Tab2_Year > 0) {
                                         var endMonth2 = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                         tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth2)), 0);
-                                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                                        tab2endDate = moment(tab2endDate).format("DD/MM/YYYY");
                                     }
                                     $("#endDate-t2").val(tab2endDate);
                                     // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
                                     $("#tax14cost").val(data.tvatreturn[i].fields.VAT14);
                                     $("#prt_tax14cost").html("R" + data.tvatreturn[i].fields.VAT14);
-                                    $("#tax14acost").val(data.tvatreturn[i].fields.VAT14A);
-                                    $("#prt_tax14acost").html("R" + data.tvatreturn[i].fields.VAT14A);
+                                    $("#tax14Acost").val(data.tvatreturn[i].fields.VAT14A);
+                                    $("#prt_tax14Acost").html("R" + data.tvatreturn[i].fields.VAT14A);
                                     $("#tax15cost").val(data.tvatreturn[i].fields.VAT15);
                                     $("#prt_tax15cost").html("R" + data.tvatreturn[i].fields.VAT15);
-                                    $("#tax15acost").val(data.tvatreturn[i].fields.VAT15A);
-                                    $("#prt_tax15acost").html("R" + data.tvatreturn[i].fields.VAT15A);
+                                    $("#tax15Acost").val(data.tvatreturn[i].fields.VAT15A);
+                                    $("#prt_tax15Acost").html("R" + data.tvatreturn[i].fields.VAT15A);
                                     $("#tax16cost").val(data.tvatreturn[i].fields.VAT16);
                                     $("#prt_tax16cost").html("R" + data.tvatreturn[i].fields.VAT16);
                                     $("#tax17cost").val(data.tvatreturn[i].fields.VAT17);
@@ -1924,7 +1931,7 @@ Template.vatreturn.onRendered(function() {
                                     if (data.tvatreturn[i].fields.Tab3_Month != "" && data.tvatreturn[i].fields.Tab3_Year > 0) {
                                         var endMonth3 = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                         tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth3)), 0);
-                                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                                        tab3endDate = moment(tab3endDate).format("DD/MM/YYYY");
                                     }
                                     $("#endDate-t3").val(tab3endDate);
                                     // $("#prt_beginningDateT3").html(data.tvatreturn[i].fields.Tab4_Month + " " + data.tvatreturn[i].fields.Tab4_Year);
@@ -1984,7 +1991,7 @@ Template.vatreturn.onRendered(function() {
                                     var tax38cost = tax20cost - (tax25cost + tax29cost + tax33cost + tax37cost);
                                     $("#tax38cost").val(tax38cost.toFixed(2));
                                     $("#prt_tax38cost").html("R" + tax38cost.toFixed(2));
-                                    
+
                                     $("#payment_refno").val(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#prt_payment_refno").html(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#payment_period").val(data.tvatreturn[i].fields.PaymentPeriod);
@@ -2004,7 +2011,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#refund_refno").val(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#prt_refund_refno").html(data.tvatreturn[i].fields.PaymentRefNo);
                                     $("#refund_period").val(data.tvatreturn[i].fields.PaymentPeriod);
-                                    $("#prt_refund_period").html(data.tvatreturn[i].fields.PaymentPeriod);                                
+                                    $("#prt_refund_period").html(data.tvatreturn[i].fields.PaymentPeriod);
                                     var refund_vatcost = tax20cost;
                                     $("#refund_vat").val(refund_vatcost);
                                     $("#prt_refund_vat").html("R" + refund_vatcost);
@@ -2027,7 +2034,7 @@ Template.vatreturn.onRendered(function() {
                             $("#vatreturnCategory3").prop('checked', data.tvatreturn[0].fields.HasTab3);
                             $("#vatreturnCategory4").prop('checked', data.tvatreturn[0].fields.HasTab4);
                             $("#vatreturnCategory5").prop('checked', data.tvatreturn[0].fields.HasTab5);
-                            
+
                             if (data.tvatreturn[0].fields.HasTab1 == true) {
                                 $("#nav-item1").show();
                                 document.getElementById("tax1").setAttribute("href", "#taxCode1option");
@@ -2039,9 +2046,9 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax7").setAttribute("href", "#taxCode7option");
                                 document.getElementById("tax10").setAttribute("href", "#taxCode10option");
                                 document.getElementById("tax12").setAttribute("href", "#taxCode12option");
-            
+
                                 $("#tax4cost").removeAttr("disabled");
-                                $("#tax4acost").removeAttr("disabled");
+                                $("#tax4Acost").removeAttr("disabled");
                                 $("#tax11cost").removeAttr("disabled");
                             } else {
                                 $("#nav-item1").hide();
@@ -2068,12 +2075,12 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax7").setAttribute("href", "#");
                                 document.getElementById("tax10").setAttribute("href", "#");
                                 document.getElementById("tax12").setAttribute("href", "#");
-            
+
                                 $("#tax4cost").attr("disabled", "disabled");
-                                $("#tax4acost").attr("disabled", "disabled");
+                                $("#tax4Acost").attr("disabled", "disabled");
                                 $("#tax11cost").attr("disabled", "disabled");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab2 == true) {
                                 $("#nav-item2").show();
                                 document.getElementById("tax14").setAttribute("href", "#taxCode14option");
@@ -2107,7 +2114,7 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax17").setAttribute("href", "#");
                                 document.getElementById("tax18").setAttribute("href", "#");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab3 == true) {
                                 $("#nav-item3").show();
                                 document.getElementById("tax21").setAttribute("href", "#taxCode21option");
@@ -2151,7 +2158,7 @@ Template.vatreturn.onRendered(function() {
                                 document.getElementById("tax35").setAttribute("href", "#");
                                 document.getElementById("tax36").setAttribute("href", "#");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab4 == true) {
                                 $("#nav-item4").show();
                                 $("#payment_refno").removeAttr("disabled");
@@ -2177,7 +2184,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#payment_period").attr("disabled", "disabled");
                                 $("#payment_penalty").attr("disabled", "disabled");
                             }
-                        
+
                             if (data.tvatreturn[0].fields.HasTab5 == true) {
                                 $("#nav-item5").show();
                                 $("#refund_refno").removeAttr("disabled");
@@ -2201,7 +2208,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#refund_refno").attr("disabled", "disabled");
                                 $("#refund_period").attr("disabled", "disabled");
                             }
-                            
+
                             if (data.tvatreturn[0].fields.ClassID > 0) {
                                 for (var i = 0; i < deptrecords.length; i++) {
                                     if (deptrecords[i].id == data.tvatreturn[0].fields.ClassID) {
@@ -2236,7 +2243,7 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[0].fields.Tab1_Month != "" && data.tvatreturn[0].fields.Tab1_Year > 0) {
                                 var endMonth = (data.tvatreturn[0].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab1_Month]);
                                 tab1endDate = new Date(data.tvatreturn[0].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                                tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                             }
                             $("#endDate").val(tab1endDate);
                             $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
@@ -2277,8 +2284,8 @@ Template.vatreturn.onRendered(function() {
                             $("#prt_tax12cost").html("R" + data.tvatreturn[0].fields.VAT12);
                             let tax13cost = data.tvatreturn[0].fields.VAT4 + data.tvatreturn[0].fields.VAT4A + data.tvatreturn[0].fields.VAT9 + data.tvatreturn[0].fields.VAT11 + data.tvatreturn[0].fields.VAT12;
                             $("#tax13cost").val(tax13cost);
-                            $("#prt_tax13cost").html("R" + tax13cost);                            
-                            
+                            $("#prt_tax13cost").html("R" + tax13cost);
+
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1Selected, "tbltaxCodeCheckbox_1");
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT1ASelected, "tbltaxCodeCheckbox_1A");
                             shareFunctionByName.initTable(data.tvatreturn[0].fields.VAT2Selected, "tbltaxCodeCheckbox_2");
@@ -2316,18 +2323,18 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[0].fields.Tab2_Month != "" && data.tvatreturn[0].fields.Tab2_Year > 0) {
                                 var endMonth2 = (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab2_Month]);
                                 tab2endDate = new Date(data.tvatreturn[0].fields.Tab2_Year, (parseInt(endMonth2)), 0);
-                                tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                                tab2endDate = moment(tab2endDate).format("DD/MM/YYYY");
                             }
                             $("#endDate-t2").val(tab2endDate);
                             // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
                             $("#tax14cost").val(data.tvatreturn[0].fields.VAT14);
                             $("#prt_tax14cost").html("R" + data.tvatreturn[0].fields.VAT14);
-                            $("#tax14acost").val(data.tvatreturn[0].fields.VAT14A);
-                            $("#prt_tax14acost").html("R" + data.tvatreturn[0].fields.VAT14A);
+                            $("#tax14Acost").val(data.tvatreturn[0].fields.VAT14A);
+                            $("#prt_tax14Acost").html("R" + data.tvatreturn[0].fields.VAT14A);
                             $("#tax15cost").val(data.tvatreturn[0].fields.VAT15);
                             $("#prt_tax15cost").html("R" + data.tvatreturn[0].fields.VAT15);
-                            $("#tax15acost").val(data.tvatreturn[0].fields.VAT15A);
-                            $("#prt_tax15acost").html("R" + data.tvatreturn[0].fields.VAT15A);
+                            $("#tax15Acost").val(data.tvatreturn[0].fields.VAT15A);
+                            $("#prt_tax15Acost").html("R" + data.tvatreturn[0].fields.VAT15A);
                             $("#tax16cost").val(data.tvatreturn[0].fields.VAT16);
                             $("#prt_tax16cost").html("R" + data.tvatreturn[0].fields.VAT16);
                             $("#tax17cost").val(data.tvatreturn[0].fields.VAT17);
@@ -2353,7 +2360,7 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[0].fields.Tab3_Month != "" && data.tvatreturn[0].fields.Tab3_Year > 0) {
                                 var endMonth3 = (data.tvatreturn[0].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab3_Month]);
                                 tab3endDate = new Date(data.tvatreturn[0].fields.Tab3_Year, (parseInt(endMonth3)), 0);
-                                tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                                tab3endDate = moment(tab3endDate).format("DD/MM/YYYY");
                             }
                             $("#endDate-t3").val(tab3endDate);
                             // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
@@ -2433,7 +2440,7 @@ Template.vatreturn.onRendered(function() {
                             $("#refund_refno").val(data.tvatreturn[0].fields.PaymentRefNo);
                             $("#prt_refund_refno").html(data.tvatreturn[0].fields.PaymentRefNo);
                             $("#refund_period").val(data.tvatreturn[0].fields.PaymentPeriod);
-                            $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);                                
+                            $("#prt_refund_period").html(data.tvatreturn[0].fields.PaymentPeriod);
                             var refund_vatcost = tax20cost;
                             $("#refund_vat").val(refund_vatcost.toFixed(2));
                             $("#prt_refund_vat").html("R" + refund_vatcost.toFixed(2));
@@ -2450,6 +2457,74 @@ Template.vatreturn.onRendered(function() {
                 }
             } else {
                 templateObject.pageTitle.set("New VAT Return");
+                let currentDate = new Date();
+                let toDate = moment(currentDate).format("YYYY-MM-DD");
+                $("#currentyear, #currentyear-t2, #currentyear-t3").val(currentDate.getFullYear());
+                $("#beginmonthlydate, #beginmonthlydate-t2, #beginmonthlydate-t3").val("January");
+                if ($("#datemethod1").prop('checked') == true) {
+                    if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("DD/MM/YYYY");
+                        $("#endDate").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
+                        toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("DD/MM/YYYY");
+                        $("#endDate").val(toDate);
+                    }
+                }
+
+                if ($("#datemethod1-t2").prop('checked') == true) {
+                    if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("DD/MM/YYYY");
+                        $("#endDate-t2").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
+                        toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("DD/MM/YYYY");
+                        $("#endDate-t2").val(toDate);
+                    }
+                }
+
+                if ($("#datemethod1-t3").prop('checked') == true) {
+                    if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+                        var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
+                        toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("DD/MM/YYYY");
+                        $("#endDate-t3").val(toDate);
+                    }
+                } else {
+                    if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
+                        var endMonth = parseInt(months[$("#beginmonthlydate-t3").val()]);
+                        toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
+                        toDate = moment(toDate).format("DD/MM/YYYY");
+                        $("#endDate-t3").val(toDate);
+                    }
+                }
+
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
             }
 
             $(document).on("click", "#vatreturnCategory1", function(e) {
@@ -2466,7 +2541,7 @@ Template.vatreturn.onRendered(function() {
                     document.getElementById("tax12").setAttribute("href", "#taxCode12option");
 
                     $("#tax4cost").removeAttr("disabled");
-                    $("#tax4acost").removeAttr("disabled");
+                    $("#tax4Acost").removeAttr("disabled");
                     $("#tax11cost").removeAttr("disabled");
                 } else {
                     $("#nav-item1").hide();
@@ -2495,7 +2570,7 @@ Template.vatreturn.onRendered(function() {
                     document.getElementById("tax12").setAttribute("href", "#");
 
                     $("#tax4cost").attr("disabled", "disabled");
-                    $("#tax4acost").attr("disabled", "disabled");
+                    $("#tax4Acost").attr("disabled", "disabled");
                     $("#tax11cost").attr("disabled", "disabled");
                 }
             });
@@ -2701,7 +2776,7 @@ Template.vatreturn.helpers({
 });
 
 Template.vatreturn.events({
-    "click #loadVatOption": (e) => {
+    "click #loadOption": (e) => {
         if ($("#allDepart").prop('checked') == false && $('#sltDepartment').val() == "") {
             swal('Department cannot be blank!', '', 'warning');
         } else {
@@ -2737,15 +2812,23 @@ Template.vatreturn.events({
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1-t2, #datemethod1-t3").prop('checked', true);
+                $("#datemethod2-t2, #datemethod2-t3").prop('checked', false);
+                $("#beginmonthlydate-t2, #beginmonthlydate-t3").val($("#beginmonthlydate").val());
+                $("#currentyear-t2, #currentyear-t3").val($("#currentyear").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1-t2, #datemethod1-t3").prop('checked', false);
+                $("#datemethod2-t2, #datemethod2-t3").prop('checked', true);
+                $("#beginmonthlydate-t2, #beginmonthlydate-t3").val($("#beginmonthlydate").val());
+                $("#currentyear-t2, #currentyear-t3").val($("#currentyear").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2757,15 +2840,23 @@ Template.vatreturn.events({
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t2").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t3").prop('checked', true);
+                $("#datemethod2, #datemethod2-t3").prop('checked', false);
+                $("#beginmonthlydate, #beginmonthlydate-t3").val($("#beginmonthlydate-t2").val());
+                $("#currentyear, #currentyear-t3").val($("#currentyear-t2").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t2").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t3").prop('checked', false);
+                $("#datemethod2, #datemethod2-t3").prop('checked', true);
+                $("#beginmonthlydate, #beginmonthlydate-t3").val($("#beginmonthlydate-t2").val());
+                $("#currentyear, #currentyear-t3").val($("#currentyear-t2").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2777,15 +2868,23 @@ Template.vatreturn.events({
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t3").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t2").prop('checked', true);
+                $("#datemethod2, #datemethod2-t2").prop('checked', false);
+                $("#beginmonthlydate, #beginmonthlydate-t2").val($("#beginmonthlydate-t3").val());
+                $("#currentyear, #currentyear-t2").val($("#currentyear-t3").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate-t3").val()]);
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t3").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t2").prop('checked', false);
+                $("#datemethod2, #datemethod2-t2").prop('checked', true);
+                $("#beginmonthlydate, #beginmonthlydate-t2").val($("#beginmonthlydate-t3").val());
+                $("#currentyear, #currentyear-t2").val($("#currentyear-t3").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2980,7 +3079,7 @@ Template.vatreturn.events({
                             accMethod = "Cash";
                         }
 
-                        let hasTab1 = $("#basreturnCategory1").prop('checked');
+                        let hasTab1 = $("#vatreturnCategory1").prop('checked');
                         let tab1_type = "Quarterly";
                         if ($("#datemethod1").prop('checked') == true) {
                             tab1_type = "Quarterly";
@@ -3080,7 +3179,7 @@ Template.vatreturn.events({
                                 taxcodes35 = (taxcodes35 == "") ? taxRateList[i].CodeName : taxcodes35 + "," + taxRateList[i].CodeName;
                             }
                         }
-                        let hasTab2 = $("#basreturnCategory2").prop('checked');
+                        let hasTab2 = $("#vatreturnCategory2").prop('checked');
                         let tab2_type = "Quarterly";
                         // let startDate = "0000-00-00";
                         // let endDate = "0000-00-00";
@@ -3100,7 +3199,7 @@ Template.vatreturn.events({
                         let tax18cost = $('#tax18cost').val();
                         let tax19cost = $('#tax19cost').val();
                         let tax20cost = $('#tax20cost').val();
-                        let hasTab3 = $("#basreturnCategory3").prop('checked');
+                        let hasTab3 = $("#vatreturnCategory3").prop('checked');
                         let tab3_type = "Quarterly";
                         // let startDate = "0000-00-00";
                         // let endDate = "0000-00-00";
@@ -3131,11 +3230,11 @@ Template.vatreturn.events({
                         let tax34cost = $('#tax34cost').val();
                         let tax35cost = $('#tax35cost').val();
                         let tax36rate = $('#tax36rate').val();
-                        let hasTab4 = $("#basreturnCategory4").prop('checked');
+                        let hasTab4 = $("#vatreturnCategory4").prop('checked');
                         let payment_refno = $('#payment_refno').val();
                         let payment_period = $('#payment_period').val();
                         let payment_penalty = $('#payment_penalty').val();
-                        let hasTab5 = $("#basreturnCategory5").prop('checked');
+                        let hasTab5 = $("#vatreturnCategory5").prop('checked');
 
                         if (description === '') {
                             // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
@@ -3158,7 +3257,7 @@ Template.vatreturn.events({
                                         Tab1_Year: tab1_year,
                                         VAT1: parseFloat(tax1cost),
                                         VAT1Selected: taxcodes1,
-                                        VAT1A: parseFloat(tax1acost),
+                                        VAT1A: parseFloat(tax1Acost),
                                         VAT1ASelected: taxcodes1A,
                                         VAT2: parseFloat(tax2cost),
                                         VAT2Selected: taxcodes2,
@@ -3434,7 +3533,7 @@ Template.vatreturn.events({
                 accMethod = "Cash";
             }
 
-            let hasTab1 = $("#basreturnCategory1").prop('checked');
+            let hasTab1 = $("#vatreturnCategory1").prop('checked');
             let tab1_type = "Quarterly";
             if ($("#datemethod1").prop('checked') == true) {
                 tab1_type = "Quarterly";
@@ -3449,7 +3548,7 @@ Template.vatreturn.events({
             let tax2Acost = $('#tax2Acost').val();
             let tax3cost = $('#tax3cost').val();
             let tax4cost = $('#tax4cost').val();
-            let tax4Acost = $('#tax4acost').val();
+            let tax4Acost = $('#tax4Acost').val();
             let tax5cost = $('#tax5cost').val();
             let tax5rate = $('#tax5rate').val();
             let tax6cost = $('#tax6cost').val();
@@ -3534,7 +3633,7 @@ Template.vatreturn.events({
                     taxcodes35 = (taxcodes35 == "") ? taxRateList[i].CodeName : taxcodes35 + "," + taxRateList[i].CodeName;
                 }
             }
-            let hasTab2 = $("#basreturnCategory2").prop('checked');
+            let hasTab2 = $("#vatreturnCategory2").prop('checked');
             let tab2_type = "Quarterly";
             // let startDate = "0000-00-00";
             // let endDate = "0000-00-00";
@@ -3554,7 +3653,7 @@ Template.vatreturn.events({
             let tax18cost = $('#tax18cost').val();
             let tax19cost = $('#tax19cost').val();
             let tax20cost = $('#tax20cost').val();
-            let hasTab3 = $("#basreturnCategory3").prop('checked');
+            let hasTab3 = $("#vatreturnCategory3").prop('checked');
             let tab3_type = "Quarterly";
             // let startDate = "0000-00-00";
             // let endDate = "0000-00-00";
@@ -3585,12 +3684,12 @@ Template.vatreturn.events({
             let tax34cost = $('#tax34cost').val();
             let tax35cost = $('#tax35cost').val();
             let tax36rate = $('#tax36rate').val();
-            let hasTab4 = $("#basreturnCategory4").prop('checked');
+            let hasTab4 = $("#vatreturnCategory4").prop('checked');
             let payment_refno = $('#payment_refno').val();
             let payment_period = $('#payment_period').val();
             let payment_penalty = $('#payment_penalty').val();
-            let hasTab5 = $("#basreturnCategory5").prop('checked');
-            
+            let hasTab5 = $("#vatreturnCategory5").prop('checked');
+
             if (description === '') {
                 // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
                 swal('VAT Return Description cannot be blank!', '', 'warning');
@@ -3612,7 +3711,7 @@ Template.vatreturn.events({
                             Tab1_Year: tab1_year,
                             VAT1: parseFloat(tax1cost),
                             VAT1Selected: taxcodes1,
-                            VAT1A: parseFloat(tax1acost),
+                            VAT1A: parseFloat(tax1Acost),
                             VAT1ASelected: taxcodes1A,
                             VAT2: parseFloat(tax2cost),
                             VAT2Selected: taxcodes2,
@@ -3685,6 +3784,7 @@ Template.vatreturn.events({
                     if (templateObject.getId.get()) {
                         jsonObj.fields.ID = parseInt(templateObject.getId.get());
                     }
+
                     reportService.saveVATReturn(jsonObj).then(function(res) {
                         reportService.getAllVATReturn().then(function(data) {
                             addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {

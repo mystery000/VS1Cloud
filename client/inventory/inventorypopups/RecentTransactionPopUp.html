@@ -21,11 +21,11 @@
                             <h3>Recent Transactions</h3>
                             <!-- {{>recentTransactionTable productID=productID type="all"}} -->
                             {{#if productID}}
-                            {{>non_transactional_list tablename="productrecentlist" type=type productID = productID}}
+                            {{>transaction_list tablename="productrecentlist" type=type productID = productID}}
                             {{/if}}
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>

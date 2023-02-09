@@ -1558,12 +1558,12 @@ Template.vs1login.onRendered(function () {
             localStorage.setItem('CloudPayrollModule', isPayroll);
 
             localStorage.setItem('CloudAppointmentSchedulingModule', isAppointmentScheduling);
-            localStorage.setItem('CloudAppointmentStartStopAccessLevel', isAppointmentStartStop);
+            addVS1Data('CloudAppointmentStartStopAccessLevel', isAppointmentStartStop);
             localStorage.setItem('CloudAppointmentAppointmentLaunch', isAppointmentLaunch);
-            localStorage.setItem('CloudAppointmentAllocationLaunch', isAllocationLaunch);
+            addVS1Data('CloudAppointmentAllocationLaunch', isAllocationLaunch);
             localStorage.setItem('CloudAppointmentAddAttachment', isAddAttachment);
             localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly', isCanOnlySeeOwnAppointment);
-            localStorage.setItem('CloudAppointmentCreateAppointment', isCreateAppointment);
+            addVS1Data('CloudAppointmentCreateAppointment', isCreateAppointment);
             localStorage.setItem('CloudAppointmentNotes', isAppointmentNotes);
             localStorage.setItem('CloudEditTimesheetHours', isEditTimesheetHours);
 

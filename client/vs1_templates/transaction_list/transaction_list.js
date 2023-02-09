@@ -29,6 +29,7 @@ import erpObject from "../../lib/global/erp-objects";
 import PayrollSettingsOvertimes from "../../js/Api/Model/PayrollSettingsOvertimes";
 import PayRun from "../../js/Api/Model/PayRun";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
+import moment from "moment";
 let payRunHandler = new PayRunHandler();
 
 Template.transaction_list.inheritsHooksFrom('export_import_print_display_button');
@@ -42,8 +43,7 @@ Template.transaction_list.onCreated(function() {
     templateObject.trans_displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.tablename = new ReactiveVar();
-    templateObject.currentproductID = new ReactiveVar();
-    templateObject.currenttype = new ReactiveVar();
+
 });
 
 Template.transaction_list.onRendered(function() {
@@ -56,6 +56,11 @@ Template.transaction_list.onRendered(function() {
     const lineCustomerItems = [];
     const dataTableList = [];
     const tableHeaderList = [];
+    var url = FlowRouter.current().path;
+    let currenttablename = templateObject.data.tablename || "";
+    templateObject.tablename.set(currenttablename);
+    let currentProductID = templateObject.data.productID || "";
+    let currentType = templateObject.data.type || "";
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
@@ -75,19 +80,6 @@ Template.transaction_list.onRendered(function() {
 
         });
     };
-
-    var url = FlowRouter.current().path;
-    let currenttablename = templateObject.data.tablename || "";
-
-
-    templateObject.tablename.set(currenttablename);
-    let currentproductID = templateObject.data.productID || "";
-    templateObject.currentproductID.set(currentproductID);
-    let currenttype = templateObject.data.type || "";
-    templateObject.currenttype.set(currenttype);
-
-
-
     // set initial table rest_data
     templateObject.init_reset_data = function() {
         let reset_data = [];
@@ -195,6 +187,18 @@ Template.transaction_list.onRendered(function() {
                 { index: 6, label: "Product", class: "colProductName", width: "120", active: true, display: true },
                 { index: 7, label: "Amount", class: "colAmount", width: "80", active: true, display: true },
                 { index: 8, label: "Comments", class: "colComment", width: "", active: true, display: true },
+            ];
+        } else if(currenttablename == 'productrecentlist') {
+            reset_data = [
+                { index: 0, label: "id", class: "SortDate", width: "0", active: false, display: false },
+                { index: 0, label: "Date", class: "Date", active: true, display: true, width: "80" },
+                { index: 1, label: "Type", class: "Type", active: true, display: true, width: "130" },
+                { index: 2, label: "Ref", class: "Ref", active: true, display: true, width: "30" },
+                { index: 3, label: "Qty", class: "Qty", active: true, display: true, width: "30" },
+                { index: 4, label: "Total Running", class: "TotalRunning", active: true, display: true, width: "30" },
+                { index: 5, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
+                { index: 6, label: "Total", class: "Total", active: true, display: true, width: "80" },
+                { index: 7, label: "Deleted", class: "Deleted", active: true, display: true, width: "30" },
             ];
         }
 
@@ -343,6 +347,8 @@ Template.transaction_list.onRendered(function() {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TBankAccountReport').then(function(dataObject) {
+            $('#dateFrom').attr('readonly', false);
+            $('#dateTo').attr('readonly', false);
 
             if (dataObject.length == 0) {
                 sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
@@ -740,16 +746,35 @@ Template.transaction_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbankaccountreport;
-                if(data.Params.IgnoreDates == true){
-                    $('#dateFrom').attr('readonly', true);
-                    $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/bankingoverview?ignoredate=true');
-                }else{
-                    $('#dateFrom').attr('readonly', false);
-                    $('#dateTo').attr('readonly', false);
-                    $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-                    $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+
+                let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
+                let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
+                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                if(urlParametersDateFrom){
+                    if(urlParametersIgnoreDate == true){
+                        $('#dateFrom').attr('readonly', true);
+                        $('#dateTo').attr('readonly', true);
+                    }else
+                    {
+                        if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
+                        else
+                            $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
+                        if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
+                        else
+                            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+                    }
                 }
+
+                // if(data.Params.IgnoreDates == true){
+                //     $('#dateFrom').attr('readonly', true);
+                //     $('#dateTo').attr('readonly', true);
+                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
+                // }else{
+                //     $('#dateFrom').attr('readonly', false);
+                //     $('#dateTo').attr('readonly', false);
+                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+                // }
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
@@ -1531,10 +1556,11 @@ Template.transaction_list.onRendered(function() {
         //$(".fullScreenSpin").css("display", "none");
     }
 
-    templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate, deleteFilter = false) {
-        sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(function(data) {
+    templateObject.getAllFilterbankingData = async function (fromDate,toDate, ignoreDate, deleteFilter = false) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        await sideBarService.getAllBankAccountDetails(fromDate,toDate, ignoreDate,initialReportLoad,0, deleteFilter).then(async function(data) {
 
-            addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
+            await addVS1Data('TBankAccountReport',JSON.stringify(data)).then(function (datareturn) {
                 window.open('/bankingoverview?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate='+ignoreDate,'_self');
             }).catch(function (err) {
                 location.reload();
@@ -3117,6 +3143,275 @@ Template.transaction_list.onRendered(function() {
         })
     }
 
+    templateObject.getAllProductRecentTransactions = async function (deptname) {
+      getVS1Data("T_VS1_Report_Productmovement").then(function (dataObject) {
+        let need_API = true;
+        if (dataObject.length > 0) {
+          let data = JSON.parse(dataObject[0].data);
+          for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+            let data_productID = data.t_vs1_report_productmovement[i].ProductID;
+            if (parseInt(currentProductID) == data_productID) {
+              need_API = false;
+              break;
+            }
+          }
+        }
+        if (currentProductID) {
+          if (need_API) {
+            productService.getProductRecentTransactionsAll(currentProductID).then(function (data) {
+              addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
+              templateObject.displayAllProductRecentTransactions(data, deptname);
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            templateObject.displayAllProductRecentTransactions(data, deptname);
+          }
+        }
+      });
+    };
+    templateObject.displayAllProductRecentTransactions = function (data, deptname) {
+      let recentTransList = new Array();
+      for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
+        if (
+          parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID &&
+          (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)
+        ) {
+          let recentTranObject = [
+            data.t_vs1_report_productmovement[i].TransactionNo,
+            data.t_vs1_report_productmovement[i].TransactionDate != ""
+              ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY")
+              : data.t_vs1_report_productmovement[i].TransactionDate,
+            data.t_vs1_report_productmovement[i].TranstypeDesc,
+            data.t_vs1_report_productmovement[i].TransactionNo,
+            data.t_vs1_report_productmovement[i].Qty,
+            data.t_vs1_report_productmovement[i].Available || 0,
+            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
+            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
+            data.t_vs1_report_productmovement[i].isDeleted || false,
+          ];
+          recentTransList.push(recentTranObject);
+        }
+      }
+      let columnData = [];
+      let displayfields = templateObject.trans_displayfields.get();
+      if (displayfields.length > 0) {
+        displayfields.forEach(function (item, index) {
+          if (index === 0) {
+            columnData.push({
+              className: item.active ?  `col${item.class}` : `col${item.class} hiddenColumn`,
+              targets: [item.id],
+              createdCell: function (td, cellData, rowData, row, col) {
+                $(td).closest("tr").attr("id", rowData[3]);
+                $(td).closest("tr").addClass("dnd-moved");
+              },
+            });
+          } else {
+            columnData.push({
+              className: item.active ?  `col${item.class}` : `col${item.class} hiddenColumn`,
+              targets: [item.id],
+            });
+          }
+        });
+      }
+      templateObject.transactiondatatablerecords.set(recentTransList);
+      let currenttablename = templateObject.tablename.get();
+      setTimeout(function () {
+        $(".fullScreenSpin").css("display", "inline-block");
+        $("#" + currenttablename)
+          .DataTable({
+            sDom: "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            data: recentTransList,
+            columnDefs: columnData,
+            select: true,
+            destroy: true,
+            colReorder: true,
+            // bStateSave: true,
+            // rowId: 0,
+            pageLength: initialDatatableLoad,
+            bLengthChange: false,
+            lengthMenu: [
+              [initialDatatableLoad, -1],
+              [initialDatatableLoad, "All"],
+            ],
+            info: true,
+            responsive: true,
+            order: [
+              [0, "desc"],
+              [3, "desc"],
+            ],
+            action: function () {
+              $("#productrecentlist").DataTable().ajax.reload();
+            },
+            fnDrawCallback: function (oSettings) {
+              let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+              //if(checkurlIgnoreDate == 'true'){
+
+              //}else{
+              $(".paginate_button.page-item").removeClass("disabled");
+              $("#tblPaymentOverview_ellipsis").addClass("disabled");
+
+              if (oSettings._iDisplayLength == -1) {
+                if (oSettings.fnRecordsDisplay() > 150) {
+                  $(".paginate_button.page-item.previous").addClass("disabled");
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+              } else {
+              }
+              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                $(".paginate_button.page-item.next").addClass("disabled");
+              }
+              $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = oSettings._iDisplayLength;
+
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                let formatDateFrom =
+                  dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                if (data.Params.IgnoreDates == true) {
+                  sideBarService
+                    .getTPaymentList(
+                      formatDateFrom,
+                      formatDateTo,
+                      true,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay(),
+                      viewdeleted
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TPaymentList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(dataObjectold[0].data);
+                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tpaymentlist: thirdaryData,
+                            };
+
+                            addVS1Data("TPaymentList", JSON.stringify(objCombineData))
+                              .then(function (datareturn) {
+                                templateObject.resetData(objCombineData);
+                                $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                } else {
+                  sideBarService
+                    .getTPaymentList(
+                      formatDateFrom,
+                      formatDateTo,
+                      false,
+                      initialDatatableLoad,
+                      oSettings.fnRecordsDisplay(),
+                      viewdeleted
+                    )
+                    .then(function (dataObjectnew) {
+                      getVS1Data("TPaymentList")
+                        .then(function (dataObjectold) {
+                          if (dataObjectold.length == 0) {
+                          } else {
+                            let dataOld = JSON.parse(dataObjectold[0].data);
+                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
+                            let objCombineData = {
+                              Params: dataOld.Params,
+                              tpaymentlist: thirdaryData,
+                            };
+
+                            addVS1Data("TPaymentList", JSON.stringify(objCombineData))
+                              .then(function (datareturn) {
+                                templateObject.resetData(objCombineData);
+                                $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          }
+                        })
+                        .catch(function (err) {});
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              });
+
+              //}
+              setTimeout(function () {
+                // MakeNegative();
+              }, 100);
+            },
+            language: { search: "",searchPlaceholder: "Search List..." },
+            "fnInitComplete": function () {
+                this.fnPageChange('last');
+                if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                    $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter(`#${currenttablename}_filter`);
+                }else{
+                    $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter(`#${currenttablename}_filter`);
+                }
+                $(`<button class="btn btn-primary btnRefresh${currenttablename}" type='button' id='btnRefresh${currenttablename}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${currenttablename}_filter`);
+
+                $('.myvarFilterForm').appendTo(".colDateFilter");
+            },
+          })
+          .on("page", function () {})
+          .on("column-reorder", function () {});
+        $("div.dataTables_filter input").addClass("form-control form-control-sm");
+        $(".fullScreenSpin").css("display", "none");
+      }, 0);
+
+      $("#productrecentlist tbody").on("click", "tr", function () {
+        var listData = $(this).closest("tr").attr("id");
+        var transactiontype = $(event.target).closest("tr").find(".colRef").text();
+
+        if (listData && transactiontype) {
+          if (transactiontype === "Quote") {
+            window.open("/quotecard?id=" + listData, "_self");
+          } else if (transactiontype === "Sales Order") {
+            window.open("/salesordercard?id=" + listData, "_self");
+          } else if (transactiontype === "Invoice") {
+            window.open("/invoicecard?id=" + listData, "_self");
+          } else if (transactiontype === "Purchase Order") {
+            window.open("/purchaseordercard?id=" + listData, "_self");
+          } else if (transactiontype === "Bill") {
+            //window.open('/billcard?id=' + listData,'_self');
+          } else if (transactiontype === "Credit") {
+            //window.open('/creditcard?id=' + listData,'_self');
+          }
+        }
+      });
+
+      // $('.product_recent_trans').css('display', 'block');
+      // $([document.documentElement, document.body]).animate({
+      //     scrollTop: $(".product_recent_trans").offset().top
+      // }, 2000);
+      $(".fullScreenSpin").css("display", "none");
+      // }).catch(function(err) {
+
+      //     $('.fullScreenSpin').css('display', 'none');
+      //     $('.product_recent_trans').css('display', 'block');
+      //     $([document.documentElement, document.body]).animate({
+      //         scrollTop: $(".product_recent_trans").offset().top
+      //     }, 2000);
+
+      //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
+      // });
+      // });
+      // Meteor.render(Template.non_transactional_list);
+      // templateObject.getAllProductRecentTransactions(currenttype);
+    };
+
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
     let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
@@ -3124,10 +3419,14 @@ Template.transaction_list.onRendered(function() {
         if(urlParametersIgnoreDate == true){
             $('#dateFrom').attr('readonly', true);
             $('#dateTo').attr('readonly', true);
-        }else{
-
-            $("#dateFrom").val(urlParametersDateFrom !=''? moment(urlParametersDateFrom).format("DD/MM/YYYY"): urlParametersDateFrom);
-            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
+        }else
+        {
+            if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
+            else
+                $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
+            if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
+            else
+                $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
         }
     }
     //tableResize();
@@ -3147,6 +3446,8 @@ Template.transaction_list.onRendered(function() {
         templateObject.getAllAppointmentListData();
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
+    } else if (currenttablename === 'productrecentlist') {
+        templateObject.getAllProductRecentTransactions(currentType);
     }
     tableResize();
 
@@ -3154,6 +3455,56 @@ Template.transaction_list.onRendered(function() {
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
 
+    });
+
+    $("#dateFrom").on('change', function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', false);
+        $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
+//            let templateObject = Template.instance();
+            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+
+            } else {
+                if (currenttablename == "tblBankingOverview") {
+                    templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+                }
+            }
+        },500);
+    });
+
+    $("#dateTo").on('change', function(e) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', false);
+        $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
+//            let templateObject = Template.instance();
+            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+            //templateObject.dateAsAt.set(formatDate);
+            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+
+            } else {
+                if (currenttablename == "tblBankingOverview") {
+                    templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+                }
+            }
+        },500);
     });
 
 });
@@ -3340,9 +3691,325 @@ Template.transaction_list.events({
         jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
         $(".fullScreenSpin").css("display", "none");
     },
+    'click #ignoreDate': async function () {
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#dateFrom').attr('readonly', true);
+        $('#dateTo').attr('readonly', true);
+        let currenttablename = await templateObject.tablename.get() || '';
+        if(currenttablename == "tblBankingOverview")
+            templateObject.getAllFilterbankingData('', '', true);
+    },
+    'click .thisweek': function () {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentBeginDate = new Date();
+        let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
+        let thisWeekFirstDay = new Date(utc - currentBeginDate.getDay() * 1000 * 3600 * 24);
+
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+            fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+
+        let thisWeekFromDate = thisWeekFirstDay.getDate();
+        let thisWeekFromMonth;
+
+        if((thisWeekFirstDay.getMonth()+1) < 10){
+            thisWeekFromMonth = "0" + (thisWeekFirstDay.getMonth()+1);
+        }else{
+            thisWeekFromMonth = (thisWeekFirstDay.getMonth()+1);
+        }
+        if(thisWeekFirstDay.getDate() < 10){
+            thisWeekFromDate = "0" + thisWeekFirstDay.getDate();
+        }
+
+        var toDateERPFrom = thisWeekFirstDay.getFullYear()+ "-" + thisWeekFromMonth + "-"+ thisWeekFromDate;
+        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+
+        var toDateDisplayFrom = thisWeekFromDate+ "/" + thisWeekFromMonth + "/" + thisWeekFirstDay.getFullYear();
+        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+
+        $("#dateFrom").val(toDateDisplayFrom);
+        $("#dateTo").val(toDateDisplayTo);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(toDateDisplayFrom,toDateDisplayTo, false);
+        }
+    },
+    'click .thisMonth': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+
+        var fromDate = formatDate(prevMonthFirstDate);
+        var toDate = formatDate(prevMonthLastDate);
+
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(toDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,toDate, false);
+        }
+    },
+    'click .thisQuarter': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        function getQuarter(d) {
+            d = d || new Date();
+            var m = Math.floor(d.getMonth() / 3) + 2;
+            return m > 4 ? m - 4 : m;
+        }
+
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment().subtract({
+            months: quarterAdjustment
+        }).endOf('month');
+        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+            months: 2
+        }).startOf('month');
+
+        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+        $("#dateFrom").val(lastQuarterStartDateFormat);
+        $("#dateTo").val(lastQuarterEndDateFormat);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
+        }
+    },
+    'click .thisfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
+    'click .previousweek': function () {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentBeginDate = new Date();
+        let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
+        let previousWeekFirstDay = new Date(utc - (currentBeginDate.getDay() + 7) * 1000 * 3600 * 24);
+        let previousWeekLastDay = new Date(utc - (currentBeginDate.getDay() + 1) * 1000 * 3600 * 24);
+
+        var begunDate = moment(previousWeekFirstDay).format("DD/MM/YYYY");
+        let previousWeekFromMonth = (previousWeekFirstDay.getMonth() + 1);
+        let previousWeekFromDay = previousWeekFirstDay.getDate();
+
+        if((previousWeekFirstDay.getMonth()+1) < 10){
+            previousWeekFromMonth = "0" + (previousWeekFirstDay.getMonth()+1);
+        }else{
+            previousWeekFromMonth = (previousWeekFirstDay.getMonth()+1);
+        }
+        if(previousWeekFirstDay.getDate() < 10){
+            previousWeekFromDay = "0" + previousWeekFirstDay.getDate();
+        }
+
+        let previousWeekToDate = previousWeekLastDay.getDate();
+        let previousWeekToMonth;
+
+        if((previousWeekLastDay.getMonth()+1) < 10){
+            previousWeekToMonth = "0" + (previousWeekLastDay.getMonth()+1);
+        }else{
+            previousWeekToMonth = (previousWeekLastDay.getMonth()+1);
+        }
+        if(previousWeekToDate < 10){
+            previousWeekToDate = "0" + previousWeekLastDay.getDate();
+        }
+
+        var toDateERPFrom = previousWeekFirstDay.getFullYear()+ "-" + previousWeekFromMonth + "-"+ previousWeekFromDay;
+        var toDateERPTo = previousWeekLastDay.getFullYear()+ "-" +(previousWeekToMonth) + "-"+(previousWeekToDate);
+
+        var toDateDisplayFrom = previousWeekFromDay+ "/" + previousWeekFromMonth + "/" + previousWeekFirstDay.getFullYear();
+        var toDateDisplayTo = (previousWeekToDate)+ "/" +(previousWeekToMonth) + "/"+previousWeekLastDay.getFullYear();
+
+        $("#dateFrom").val(toDateDisplayFrom);
+        $("#dateTo").val(toDateDisplayTo);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(toDateDisplayFrom,toDateDisplayTo, false);
+        }
+    },
+    'click .previousmonth': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+
+        var fromDate = formatDate(prevMonthFirstDate);
+        var toDate = formatDate(prevMonthLastDate);
+
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(toDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,toDate, false);
+        }
+
+    },
+    'click .previousquarter': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        function getQuarter(d) {
+            d = d || new Date();
+            var m = Math.floor(d.getMonth() / 3) + 2;
+            return m > 4 ? m - 4 : m;
+        }
+
+        var quarterAdjustment = (moment().month() % 3) + 1;
+        var lastQuarterEndDate = moment().subtract({
+            months: quarterAdjustment
+        }).endOf('month');
+        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+            months: 2
+        }).startOf('month');
+
+        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+        $("#dateFrom").val(lastQuarterStartDateFormat);
+        $("#dateTo").val(lastQuarterEndDateFormat);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
+        }
+    },
+    'click .previousfinancialyear': function() {
+        let templateObject = Template.instance();
+        let currenttablename = templateObject.tablename.get() || '';
+
+        $('.dateFrom').attr('readonly', false);
+        $('.dateTo').attr('readonly', false);
+        var currentDate = new Date();
+        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+        let fromDateDay = currentDate.getDate();
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
+        }
+        if (currentDate.getDate() < 10) {
+            fromDateDay = "0" + currentDate.getDate();
+        }
+
+        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+        $("#dateFrom").val(fromDate);
+        $("#dateTo").val(begunDate);
+
+        if (currenttablename == "tblBankingOverview") {
+            templateObject.getAllFilterbankingData(fromDate,begunDate, false);
+        }
+    },
     // "change #dateFrom, change #dateTo": function() {
     //     let templateObject = Template.instance();
 
+    // },
+
+    // 'change #dateFrom': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     setTimeout(function(){
+    //         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //         var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    //
+    //         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //
+    //         //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+    //         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+    //         //templateObject.dateAsAt.set(formatDate);
+    //         if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+    //
+    //         } else {
+    //             templateObject.getAllFilterbankingData(formatDateFrom,formatDateTo, false);
+    //         }
+    //     },500);
     // },
 });
 

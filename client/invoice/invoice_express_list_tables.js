@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
 import GlobalFunctions from '../GlobalFunctions';
@@ -39,21 +40,21 @@ Template.invoicelist.onRendered(function () {
   // set initial table rest_data
   templateObject.init_reset_data = function() {
     let reset_data = [
-      { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
-      { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "" },
-      { index: 2, label: "Sales No.", class: "SalesNo", active: true, display: true, width: "" },
-      { index: 3, label: "Due Date", class: "DueDate", active: true, display: true, width: "" },
-      { index: 4, label: "Customer", class: "Customer", active: true, display: true, width: "" },
-      { index: 5, label: "Amount (Ex)", class: "AmountEx", active: true, display: true, width: "" },
-      { index: 6, label: "Tax", class: "Tax", active: true, display: true, width: "" },
-      { index: 7, label: "Amount (Inc)", class: "Amount", active: true, display: true, width: "" },
-      { index: 8, label: "Paid", class: "Paid", active: true, display: true, width: "" },
-      { index: 9, label: "Outstanding", class: "BalanceOutstanding", active: false, display: true, width: "" },
-      { index: 10, label: "Status", class: "Status", active: true, display: true, width: "" },
-      { index: 11, label: "P.O. Number", class: "PONumber", active: false, display: true, width: "" },
-      { index: 12, label: "Reference", class: "Reference", active: false, display: true, width: "" },
-      { index: 13, label: "Employee", class: "Employee", active: true, display: true, width: "" },
-      { index: 14, label: "Comments", class: "Comments", active: false, display: true, width: "" },
+      { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: true, width: "100" },
+      { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "100" },
+      { index: 2, label: "Sales No.", class: "SalesNo", active: true, display: true, width: "100" },
+      { index: 3, label: "Due Date", class: "DueDate", active: true, display: true, width: "100" },
+      { index: 4, label: "Customer", class: "Customer", active: true, display: true, width: "100" },
+      { index: 5, label: "Amount (Ex)", class: "AmountEx", active: true, display: true, width: "100" },
+      { index: 6, label: "Tax", class: "Tax", active: true, display: true, width: "100" },
+      { index: 7, label: "Amount (Inc)", class: "Amount", active: true, display: true, width: "100" },
+      { index: 8, label: "Paid", class: "Paid", active: true, display: true, width: "100" },
+      { index: 9, label: "Outstanding", class: "BalanceOutstanding", active: false, display: true, width: "100" },
+      { index: 10, label: "Status", class: "Status", active: true, display: true, width: "100" },
+      { index: 11, label: "P.O. Number", class: "PONumber", active: false, display: true, width: "100" },
+      { index: 12, label: "Reference", class: "Reference", active: false, display: true, width: "100" },
+      { index: 13, label: "Employee", class: "Employee", active: true, display: true, width: "100" },
+      { index: 14, label: "Comments", class: "Comments", active: false, display: true, width: "100" },
     ];
 
     let templateObject = Template.instance();
@@ -69,38 +70,38 @@ Template.invoicelist.onRendered(function () {
     let reset_data = templateObject.reset_data.get();
     templateObject.showCustomFieldDisplaySettings(reset_data);
 
-    try {
+    // try {
+    //   getVS1Data("VS1_Customize").then(function (dataObject) {
+    //     if (dataObject.length == 0) {
+    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
+    //           // reset_data = data.ProcessLog.CustomLayout.Columns;
+    //           reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+    //          
+    //           templateObject.showCustomFieldDisplaySettings(reset_data);
+    //       }).catch(function (err) {
+    //       });
+    //     } else {
+    //       let data = JSON.parse(dataObject[0].data);
+    //       if(data.ProcessLog.Obj.CustomLayout.length > 0){
+    //         for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+    //           if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
+    //             reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+    //        
+    //             templateObject.showCustomFieldDisplaySettings(reset_data);
+    //           }
+    //         }
+    //       }
+    //       // handle process here
+    //     }
+    //   });
 
-      getVS1Data("VS1_Customize").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function (data) {
-              // reset_data = data.ProcessLog.CustomLayout.Columns;
-              reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-              templateObject.showCustomFieldDisplaySettings(reset_data);
-          }).catch(function (err) {
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if(data.ProcessLog.Obj.CustomLayout.length > 0){
-            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-              if(data.ProcessLog.Obj.CustomLayout[i].TableName == listType){
-                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                templateObject.showCustomFieldDisplaySettings(reset_data);
-              }
-            }
-          }
-          // handle process here
-        }
-      });
-
-    } catch (error) {
-    }
+    // } catch (error) {
+    // }
     return;
   }
 
   templateObject.showCustomFieldDisplaySettings = function(reset_data){
   //function showCustomFieldDisplaySettings(reset_data) {
-
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
@@ -229,6 +230,7 @@ Template.invoicelist.onRendered(function () {
     let custFields = [];
     let customFieldCount = 3; // customfield tempcode
     let customData = {};
+    let displayfields = templateObject.displayfields.get();
 
     await sideBarService.getAllCustomFields().then(function (data) {
       for (let x = 0; x < data.tcustomfieldlist.length; x++) {
@@ -238,11 +240,10 @@ Template.invoicelist.onRendered(function () {
             id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
             custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
             class: "custfield" + x,
-            display: false,
-            width: ""
-
+            display: data.tcustomfieldlist[x].fields.Active || false,
+            width: "100"
           };
-          custFields.push(customData);
+          custFields.push(customData);  
         }
       }
 
@@ -258,13 +259,18 @@ Template.invoicelist.onRendered(function () {
             custfieldlabel: "Custom Field " + getRemCustomFields,
             class: "custfield" + r + customFields.length,
             display: false,
-            width: ""
+            width: "120"
           };
           // count++;
           custFields.push(customData);
         }
       }
+      
+      displayfields = displayfields.concat(custFields);
       templateObject.custfields.set(custFields);
+      // setTimeout(() => {
+        templateObject.displayfields.set(displayfields);
+      // }, 5000);
     })
   }
 
@@ -2206,7 +2212,7 @@ Template.invoicelist.onRendered(function () {
 
   templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
-    //await templateObject.loadCustomFields();
+     await templateObject.loadCustomFields();
      templateObject.loadInvoices(refresh);
 
     LoadingOverlay.hide();

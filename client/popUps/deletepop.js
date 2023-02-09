@@ -170,7 +170,6 @@ const hasFollowings = async function() {
     return;
   }
   isRendered = true;
-  console.log("hello")
   const templateInstance = Template.instance();
   let salesService = new SalesBoardService();
   let paymentService = new PaymentsService();

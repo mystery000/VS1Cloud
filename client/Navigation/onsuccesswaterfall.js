@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Template } from 'meteor/templating';
 
 import { AccessLevelService } from '../js/accesslevel-service.js';
@@ -7,10 +8,10 @@ import { UtilityService } from "../utility-service.js";
 import { SideBarService } from '../js/sidebar-service.js';
 import { OrganisationService } from "../js/organisation-service";
 import { ReportService } from "../reports/report-service";
-
 import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
+import GlobalFunctions from "../GlobalFunctions.js";
 
 const productService = new ProductService();
 const sideBarService = new SideBarService();
@@ -145,7 +146,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 78;
+  let allDataToLoad = 93;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -363,15 +364,6 @@ Template.onsuccesswaterfall.onRendered(function () {
         }
       });
     });
-  } else {
-    setTimeout(function () {
-      $('.allocationModal').removeClass('killAllocationPOP');
-      $('.headerprogressbar').addClass('headerprogressbarHidden');
-      templateObject.dashboardRedirectOnLogin();
-    }, 800);
-
-  }
-
   let currentDate = new Date();
   let hours = currentDate.getHours();
   let minutes = currentDate.getMinutes();
@@ -2666,7 +2658,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
     templateObject.getAllTExpenseClaimExData = function() {
-        sideBarService.getAllExpenseCliamExDataVS1().then(function(data) {
+        sideBarService.getAllExpenseClaimExData(initialDataLoad, 0).then(function(data) {
             countObjectTimes++;
             progressPercentage = (countObjectTimes * 100) / allDataToLoad;
             $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2727,48 +2719,6 @@ Template.onsuccesswaterfall.onRendered(function () {
       }
       addVS1Data('BalanceSheetReport', JSON.stringify(data));
       $("<span class='process'>Balance Sheet Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
-    }).catch(function(err) {
-
-    });
-  }
-  templateObject.getProfitandLossCompare = function() {
-    let dateFrom =
-        moment(prevMonth11Date).format("YYYY-MM-DD") ||
-        moment().format("YYYY-MM-DD");
-    let dateTo =
-        moment(toDate).format("YYYY-MM-DD") ||
-        moment().format("YYYY-MM-DD");
-    let periodMonths = 0;
-    reportService.getProfitandLossCompare(dateFrom,dateTo,false,periodMonths).then(async function (data) {
-      countObjectTimes++;
-      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
-      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
-      //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
-      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
-      $(".progressName").text("Receipt Claim ");
-      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
-        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
-          $('.headerprogressbar').removeClass('headerprogressbarHidden');
-        } else {
-          $('.headerprogressbar').addClass('headerprogressbarShow');
-          $('.headerprogressbar').removeClass('headerprogressbarHidden');
-        }
-
-      } else if (Math.round(progressPercentage) >= 100) {
-        $('.checkmarkwrapper').removeClass("hide");
-        setTimeout(function() {
-          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
-            $('.headerprogressbar').removeClass('headerprogressbarShow');
-            $('.headerprogressbar').addClass('headerprogressbarHidden');
-          } else {
-            $('.headerprogressbar').removeClass('headerprogressbarShow');
-            $('.headerprogressbar').addClass('headerprogressbarHidden');
-          }
-
-        }, 1000);
-      }
-      addVS1Data('VS1ProfitandLossCompare', JSON.stringify(data));
-      $("<span class='process'>Receipt Claim Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function(err) {
 
     });
@@ -2858,7 +2808,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     });
   }
   templateObject.getClientTypeListData = function() {
-    sideBarService.getClientTypeDataList("", "", "").then(async function(data) {
+    sideBarService.getClientTypeDataList(initialBaseDataLoad, 0, false).then(async function(data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -3575,7 +3525,6 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   /* Start Here */
-  if (JSON.parse(loggedUserEventFired)) {
     templateObject.getFollowedAllObjectPull = function () {
       setTimeout(function () {
         if (isPayments) {
@@ -3811,23 +3760,6 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getBalanceSheetData();
           });
 
-          getVS1Data('VS1ProfitandLossCompare').then(function (dataObject) {
-            if (dataObject.length == 0) {
-              templateObject.getProfitandLossCompare();
-            } else {
-              let getTimeStamp = dataObject[0].timestamp.split(' ');
-              if (getTimeStamp) {
-                if (loggedUserEventFired) {
-                  if (getTimeStamp[0] != currenctTodayDate) {
-                    templateObject.getProfitandLossCompare();
-                  }
-                }
-              }
-            }
-          }).catch(function (err) {
-            templateObject.getProfitandLossCompare();
-          });
-
           getVS1Data('TCustomerDetailsReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getCustomerDetailData();
@@ -3881,7 +3813,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getClientTypeListData();
           });
 
-          getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
+          getVS1Data('SupplierDetailsReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getSupplierDetailData();
             } else {
@@ -5099,9 +5031,9 @@ Template.onsuccesswaterfall.onRendered(function () {
                 }
                 addVS1Data('TInvoiceEx', JSON.stringify(data));
                 $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
-                templateObject.getFollowedQuickDataDetailsPull();
+
               }).catch(function (err) {
-                templateObject.getFollowedQuickDataDetailsPull();
+
               });
             } else {
               let data = JSON.parse(dataObject[0].data);
@@ -5129,11 +5061,11 @@ Template.onsuccesswaterfall.onRendered(function () {
                   addVS1Data('TInvoiceEx', JSON.stringify(data));
                   $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
                   //setTimeout(function() {
-                  templateObject.getFollowedQuickDataDetailsPull();
+
                   //}, 300);
                 }).catch(function (err) {
                   //setTimeout(function() {
-                  templateObject.getFollowedQuickDataDetailsPull();
+
                   //}, 300);
                 });
               } else {
@@ -5164,15 +5096,15 @@ Template.onsuccesswaterfall.onRendered(function () {
                         addVS1Data('TInvoiceEx', JSON.stringify(data));
                         $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
                         //setTimeout(function() {
-                        templateObject.getFollowedQuickDataDetailsPull();
+
                         //  }, 300);
                       }).catch(function (err) {
                         //setTimeout(function() {
-                        templateObject.getFollowedQuickDataDetailsPull();
+
                         //}, 300);
                       });
                     } else {
-                      templateObject.getFollowedQuickDataDetailsPull();
+
                     }
                   }
                 }
@@ -5202,11 +5134,11 @@ Template.onsuccesswaterfall.onRendered(function () {
               addVS1Data('TInvoiceEx', JSON.stringify(data));
               $("<span class='process'>Invoices Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
               //setTimeout(function() {
-              templateObject.getFollowedQuickDataDetailsPull();
+
               //}, 300);
             }).catch(function (err) {
               //setTimeout(function() {
-              templateObject.getFollowedQuickDataDetailsPull();
+
               //}, 300);
             });
           });
@@ -5294,7 +5226,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           }).catch(function (err) {
             templateObject.getAllTQuoteData();
           });
-
+          templateObject.getFollowedQuickDataDetailsPull();
         } else {
           templateObject.getFollowedQuickDataDetailsPull();
         }
@@ -5936,7 +5868,16 @@ Template.onsuccesswaterfall.onRendered(function () {
         templateObject.getFollowedContactDetailsPull();
       }
     }
-  }
+
+
+} else {
+  setTimeout(function () {
+    $('.allocationModal').removeClass('killAllocationPOP');
+    $('.headerprogressbar').addClass('headerprogressbarHidden');
+    templateObject.dashboardRedirectOnLogin();
+  }, 800);
+
+}
 
   setTimeout(function () {
     localStorage.setItem('LoggedUserEventFired', false);

@@ -86,28 +86,7 @@
           <div class="tab-content" id="myTabContent">
 
             <div class="tab-pane fade show active" id="allTasks" role="tabpanel" aria-labelledby="allTasks-tab">
-              <div class="tbl_responsive">
-
-                <table id="tblAllTaskDatatable" name="tblAllTaskDatatable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAllTaskDatatable">
-                  <thead>
-                    <tr class="dnd-moved">
-                      <!-- <th class="th colCompleteTask" style="width: 2%;">#
-                      </th> -->
-                      <th class="th colPriority no-modal">Priority</th>
-                      <th class="th colContact no-modal">Contact</th>
-                      <th class="th colDate no-modal">Date</th>
-                      <th class="th colTaskName no-modal">Task</th>
-                      <th class="th colTaskDesc no-modal">Description</th>
-                      <th class="th colTaskLabels no-modal">Labels</th>
-                      <th class="th colTaskProjects no-modal">Project</th>
-                      <th class="th colStatus no-modal">Status</th>
-                      <!-- <th class="th colTaskActions no-modal">Action</th> -->
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
+              {{> non_transactional_list tablename = "tblAllTaskDatatable"}}
             </div>
 
             <div class="tab-pane fade" id="todayTab" role="tabpanel" aria-labelledby="todayTab-tab">

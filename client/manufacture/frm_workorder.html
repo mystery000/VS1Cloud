@@ -19,9 +19,19 @@
                     showOrderNumber=true
                     showTransactionButtons=true
                     showQuantityBuild=true
-                    showCompleteProcess=isSaved
+                    showCompleteProcess=workorderrecord.showCompleteProcess
+                    showCompleted = workorderrecord.isCompleted
                     showVendorService=isSaved
                     poStatus=workorderrecord.poStatus
+                    woStatus=workorderrecord.status
+                    showTimerStart=workorderrecord.showTimerStart
+                    showTimerStop=workorderrecord.showTimerStop
+                    showTimerPause=workorderrecord.showTimerPause
+                    showTimerResume = workorderrecord.showTimerResume
+                    showQAStart = workorderrecord.showQAStart
+                    showQAResume = workorderrecord.showQAResume
+                    showQAPause = workorderrecord.showQAPause
+                    showQAStop = workorderrecord.showQAStop
                 }}
                 <!-- <div class="row">
                     <div class="col-12 col-xl-8">

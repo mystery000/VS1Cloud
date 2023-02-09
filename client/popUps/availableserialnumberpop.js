@@ -31,25 +31,33 @@ Template.availableserialnumberpop.onRendered(async () => {
 Template.availableserialnumberpop.helpers({});
 Template.availableserialnumberpop.events({
     'click .btnSNSave': async function(event) {
-        const activeNumber = $('.serial-no-row.active');
+        const activeNumber = $('#tblAvailableSNCheckbox input.chkServiceCard');
         let selectedunit = localStorage.getItem('productItem');
+        
         let newNumberList = [];
-        activeNumber.each((key, serialNumber) => {
-            newNumberList.push($(serialNumber).find('td:last-child').text());
+        
+        activeNumber.each((key, serialchk) => {
+            if($(serialchk).is(':checked')){
+                newNumberList.push($(serialchk).closest("tr").find(".colSN").html());
+            }            
         });
         if (newNumberList.length === 0) {
             swal('', 'You didn\'t select any serial numbers', 'warning');
         } else {
-            let shtml = '';
-            shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
-            <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
-            `;
-            for (let i = 0; i < newNumberList.length; i++) {
-                shtml += `
-                <tr><td></td><td>${Number(i)+1}</td><td contenteditable="true" class="lineSerialnumbers">${newNumberList[i]}</td></tr>
-                `;
-            }
-            $('#tblSeriallist').html(shtml);
+            // let shtml = '';
+            // shtml += `<tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+            // <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+            // `;
+            // for (let i = 0; i < newNumberList.length; i++) {
+            //     shtml += `
+            //     <tr><td></td><td>${Number(i)+1}</td><td contenteditable="true" class="lineSerialnumbers">${newNumberList[i]}</td></tr>
+            //     `;
+            // }
+            // $('#tblSeriallist').html(shtml);
+
+            const rowNumber = $('#availableSerialNumberModal').attr('data-row');
+            $(`table tbody tr:nth-child(${rowNumber}) td.colSerialNo`).attr('data-serialnumbers', newNumberList.join(','));
+            $('#availableSerialNumberModal').modal('hide');
         }
 
         $('#availableSerialNumberModal').modal('hide');

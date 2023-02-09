@@ -116,8 +116,12 @@ Template.new_workorder.onRendered(async function(){
                 return order.fields.ID == orderid
             })
             let workorder = templateObject.workOrderRecords.get()[workorderIndex]
-            if(workorder.fields.EndTime && new Date(workorder.fields.EndTime).getTime() < new Date().getTime()) {
-                templateObject.isCompleted = true;
+            // if(workorder.fields.StoppedTime && new Date(workorder.fields.StoppedTime).getTime() < new Date().getTime()) {
+            //     templateObject.isCompleted = true;
+            // }
+            let isCompleted = false
+            if(workorder.fields.IsCompleted == true) {
+                isCompleted = true;
             }
             templateObject.salesOrderId.set(workorder.fields.SaleID)
             let record = {
@@ -136,6 +140,22 @@ Template.new_workorder.onRendered(async function(){
                 shipDate: workorder.fields.ShipDate || "",
                 isStarted: workorder.fields.InProgress,
                 poStatus: workorder.fields.POStatus,
+                status: workorder.fields.Status,
+                showTimerStart: isCompleted == false &&  workorder.fields.Status == 'scheduled' ? true : false,
+                showTimerPause: isCompleted == false &&  (workorder.fields.Status == 'started' || workorder.fields.Status == 'resumed') ? true: false,
+                showTimerStop: isCompleted == false &&  (workorder.fields.Status == 'started' || workorder.fields.Status == 'resumed' || workorder.fields.Status =='paused') ? true: false,
+                showTimerResume: isCompleted == false &&  workorder.fields.Status == 'paused'? true: false,
+                showQAStart: isCompleted == false &&  workorder.fields.Status == 'stopped'? true: false,
+                showQAPause: isCompleted == false &&  (workorder.fields.Status == 'QAStarted' || workorder.fields.Status == 'QAResumed')? true: false,
+                showQAResume: isCompleted == false &&  workorder.fields.Status == 'QAPaused'? true : false,
+                showQAStop: isCompleted == false &&  (workorder.fields.Status == 'QAStarted' || workorder.fields.Status == 'QAResumed' || workorder.fields.Status == 'QAPaused')? true: false,
+                trackedTime: workorder.fields.TrackedTime || 0,
+                startedTimes: JSON.parse(workorder.fields.StartedTimes),
+                pausedTimes: JSON.parse(workorder.fields.PausedTimes),
+                stoppedTime: workorder.fields.StoppedTime,
+                startTime: workorder.fields.StartTime,
+                showCompleteProcess: isCompleted == false &&  workorder.fields.Status == 'QAStopped'  ? true: false,
+                isCompleted: isCompleted
             }
             templateObject.updateFromPO.set(workorder.fields.UpdateFromPO)
             templateObject.workorderrecord.set(record);
@@ -177,7 +197,23 @@ Template.new_workorder.onRendered(async function(){
                                 productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
                                 quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
                                 shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
-                                poStatus: ''
+                                poStatus: 'not created',
+                                status: "unscheduled",
+                                showTimerStart: false,
+                                showTimerPause: false,
+                                showTimerStop: false,
+                                showTimerResume: false,
+                                trackedTime: 0,
+                                startedTimes: [],
+                                pausedTimes: [],
+                                stoppedTime: '',
+                                startTime: '',
+                                showQAStart: false,
+                                showQAStop: false,
+                                showQAResume: false,
+                                showQAPause: false,
+                                showCompleteProcess: false,
+                                isCompleted: false
                             }
                             // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                             templateObject.workorderrecord.set(record);
@@ -219,7 +255,23 @@ Template.new_workorder.onRendered(async function(){
                                     productDescription: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
                                     quantity: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
                                     shipDate: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
-                                    poStatus: ''
+                                    poStatus: 'not created',
+                                    status: 'unscheduled',
+                                    showTimerStart: false,
+                                    showTimerStop: false,
+                                    showTimerPause: false,
+                                    showTimerResume: false,
+                                    trackedTime: 0,
+                                    startedTimes: [],
+                                    pausedTimes: [],
+                                    stoppedTime: '',
+                                    startTime: '',
+                                    showQAStart: false,
+                                    showQAStop: false,
+                                    showQAResume: false,
+                                    showQAPause: false,
+                                    showCompleteProcess: false,
+                                    isCompleted: false
                                 }
                                 // record.line.fields.ShipDate = record.line.fields.ShipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                                 templateObject.workorderrecord.set(record);
@@ -263,7 +315,23 @@ Template.new_workorder.onRendered(async function(){
                                 productDescription: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Product_Description || "",
                                 quantity: data.fields.Lines[templateObject.workOrderLineId.get()].fields.Qty || 1,
                                 shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
-                                poStatus: ''
+                                poStatus: 'not created',
+                                status: 'unscheduled',
+                                showTimerStart: false,
+                                showTimerStop: false,
+                                showTimerPause: false,
+                                showTimerResume: false,
+                                trackedTime: 0,
+                                startedTimes: [],
+                                pausedTimes: [],
+                                stoppedTime: '',
+                                startTime: '',
+                                showQAStart: false,
+                                showQAStop: false,
+                                showQAResume: false,
+                                showQAPause: false,
+                                showCompleteProcess: false,
+                                isCompleted: false
                         }
                         // record.shipDate = record.shipDate?moment(record.line.fields.ShipDate).format('DD/MM/YYYY'):''
                         templateObject.workorderrecord.set(record);
@@ -315,6 +383,105 @@ Template.new_workorder.onRendered(async function(){
     }, 500)
 
     //end getting work orders
+
+    templateObject.changeWorkorderStatus = function(status) {
+
+        const formatTime = milliseconds => {
+            const seconds = Math.floor((milliseconds / 1000) % 60);
+            const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
+            const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
+
+            return [
+                hours.toString().padStart(2, "0"),
+                minutes.toString().padStart(2, "0"),
+                seconds.toString().padStart(2, "0")
+            ].join(":");
+        }
+        let workorders = templateObject.workOrderRecords.get();
+        let tempOrders  = cloneDeep(workorders);
+        let id = FlowRouter.current().queryParams.id;
+        // if(!id) {return}
+        let orderIndex = tempOrders.findIndex(order => {
+            return order.fields.ID == id;
+        })
+        if(orderIndex > -1) {
+            let tempOrder = tempOrders[orderIndex];
+            let startedTimes = tempOrder.fields.StartedTimes !=''? JSON.parse(tempOrder.fields.StartedTimes): [];
+            let pausedTimes = tempOrder.fields.PausedTimes!= ''? JSON.parse(tempOrder.fields.PausedTimes): [];
+            let record = templateObject.workorderrecord.get();
+            tempOrder.fields.Status = status;
+            if(status == 'started' || status == 'resumed' || status == 'QAStarted' || status == 'QAResumed') {
+                if(status == 'started') {
+                    tempOrder.fields.StartTime = new Date();
+                    record.isStarted = true
+                }
+                startedTimes.push(new Date());
+                tempOrder.fields.StartedTimes = JSON.stringify(startedTimes)
+                record.startedTimes = startedTimes;
+                if(status == 'started' ||  status == 'resumed') {
+                    record.showTimerPause = true;
+                    record.showTimerStop = true;
+                    record.showTimerStart = false;
+                    record.showTimerResume = false;
+                }
+                if(status == 'QAStarted' || status == 'QAResumed') {
+                    record.showQAStart = false;
+                    record.showQAResume = false;
+                    record.showQAPause = true;
+                    record.showQAStop = true;
+                }
+            }
+            if(status == 'paused' || status == 'stopped' || status == 'QAPaused' || status == 'QAStopped') {
+                let trackedTime = tempOrder.fields.TrackedTime;
+                // if(status == 'paused') {
+                    pausedTimes.push(new Date());
+                 if(status == 'QAStopped') {
+                    let stoppedTime = new Date();
+                    tempOrder.fields.StoppedTime = stoppedTime;
+                    record.stoppedTime = stoppedTime
+                }
+                if(status == 'paused' || status == 'QAPaused' || ((status == 'stopped' || status == 'QAStopped') && new Date(startedTimes[startedTimes.length - 1]).getTime() > new Date(pausedTimes[pausedTimes.length -2]).getTime())) {
+                    trackedTime = trackedTime + (new Date().getTime() - new Date(startedTimes[startedTimes.length -1]).getTime())
+                }
+
+                tempOrder.fields.PausedTimes = JSON.stringify(pausedTimes);
+                tempOrder.fields.TrackedTime = trackedTime;
+                record.trackedTime = trackedTime;
+                record.pausedTimes = pausedTimes;
+                if(status == 'paused') {
+                    record.showTimerPause = false
+                    record.showTimerResume = true;
+                } else if (status == 'stopped') {
+                    record.showTimerStart = false;
+                    record.showTimerPause = false;
+                    record.showTimerStop = false;
+                    record.showTimerResume = false;
+                    record.showQAStart = true;
+                } else if (status == 'QAPaused') {
+                    record.showQAPause = false;
+                    record.showQAResume = true
+                } else if (status == 'QAStopped') {
+                    record.showQAStart = false;
+                    record.showQAPause = false;
+                    record.showQAResume = false;
+                    record.showQAStop = false;
+                    record.showCompleteProcess = true;
+                }
+            }
+
+            if(status == 'QAStarted' || status == 'QAResumed') {
+
+            }
+
+            record.status = status;
+            templateObject.workorderrecord.set(record);
+            tempOrders.splice(orderIndex, 1, tempOrder);
+            templateObject.workOrderRecords.set(tempOrders);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
+        }
+
+
+    }
 
 })
 
@@ -493,7 +660,7 @@ Template.new_workorder.events({
         event.stopPropagation();
         event.preventDefault()
         let templateObject = Template.instance();
-        
+
         playSaveAudio();
         if(!FlowRouter.current().queryParams.id) {
             swal({
@@ -506,13 +673,13 @@ Template.new_workorder.events({
             }).then(async (result)=>{
                 if(result.value) {
                     let record = templateObject.workorderrecord.get();
-                    let productData = await getProductData(record.productname)                    
+                    let productData = await getProductData(record.productname)
                     let splashLineArray = [];
                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
-                   
+
                     async function getTaxRate ()  {
                         return new Promise(async(resolve, reject)=> {
-                            
+
                             getVS1Data('TTaxcodeVS1').then(function(dataObject){
                                 if(dataObject.length == 0) {
                                     let data = JSON.parse(dataObject[0].data);
@@ -527,7 +694,7 @@ Template.new_workorder.events({
                                     }else {
                                         resolve(useData[index].Rate)
                                     }
-                                    
+
                                 }else {
                                     sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
                                         resolve(data.ttaxcodevs1[0].Rate)
@@ -548,6 +715,7 @@ Template.new_workorder.events({
                             ProductDescription: productData.ProductDescription || '',
                             UOMQtySold: record.quantity,
                             UOMQtyShipped: 0,
+                            UOMQtyBackOrder: record.quantity,
                             LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                             CustomerJob: record.customer || '',
                             LineTaxCode: productData.TaxCodePurchase || '',
@@ -575,7 +743,7 @@ Template.new_workorder.events({
                             await saveOrders(true)
                         }
                     })
-                    
+
                 }else if(result.dismiss == 'cancel') {
                     swal({
                         title: 'Warning',
@@ -611,7 +779,7 @@ Template.new_workorder.events({
                          if(index == -1) {
                             productService.getOneProductdatavs1byname(productName).then(function(data){
                                 resolve(data.tproduct[0].fields)
-                            })  
+                            })
                          }else {
                             resolve(useData[index].fields)
                          }
@@ -628,11 +796,11 @@ Template.new_workorder.events({
             setTimeout(async function(){
                 $('.fullScreenSpin').css('display', 'inline-block');
                 let mainOrderStart = new Date();
-        
+
                 async function getSupplierDetail ()  {
                     return new Promise(async(resolve, reject)=>{
                         let supplierName = 'Misc Supplier';
-        
+
                         contactService.getOneSupplierDataExByName(supplierName).then(function(dataObject) {
                             let data = dataObject.tsupplier;
                             if(data.length > 0) {
@@ -642,7 +810,7 @@ Template.new_workorder.events({
                                 let state = data[0].fields.State || '';
                                 let zipCode = data[0].fields.Postcode || '';
                                 let country = data[0].fields.Country || '';
-        
+
                                 let postalAddress = data[0].fields.ClientName + '\n' + street + '\n' + city + ' ' + state + ' ' + zipCode + '\n' + country;
                                 resolve(postalAddress)
                             }else {
@@ -652,43 +820,44 @@ Template.new_workorder.events({
                             resolve('')
                         })
                     })
-        
-        
+
+
                 }
-        
-                async function createPurchaseOrder(productName, neededQty) {
+
+                async function createPurchaseOrder(products) {
                     return new Promise(async(resolve, reject)=>{
                         let foreignCurrencyFields = {
                             ForeignExchangeCode: CountryAbbr,
                             ForeignExchangeRate: 0.00,
                         }
                         let purchaseService = new PurchaseBoardService();
+                        let splashLineArray = [];
+                        let billingAddress = await getSupplierDetail();
+                        for (let i = 0; i< products.length; i++) {
+                            let productData = await getProductData(products[i].productName);
+                            let stockQty = productData.TotalQtyInStock;
+                            if(stockQty < products[i].qty) {
+                                let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
+                                let lineItemObjForm = {
+                                    type: "TPurchaseOrderLine",
+                                    fields: {
+                                        ProductName: products[i].productName || '',
+                                        ProductDescription: productData.ProductDescription || '',
+                                        UOMQtySold: parseFloat(products[i].qty - stockQty),
+                                        UOMQtyShipped: 0,
+                                        LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                                        CustomerJob: '',
+                                        LineTaxCode: productData.TaxCodePurchase || '',
+                                        LineClassName: defaultDept
+                                    }
+                                };
 
-
-                        let productData = await getProductData(productName);
-                        let stockQty = productData.TotalQtyInStock;
-                        if(stockQty < neededQty) {
-                            let splashLineArray = [];
-                            let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
-                            let lineItemObjForm = {
-                                type: "TPurchaseOrderLine",
-                                fields: {
-                                    ProductName: productName || '',
-                                    ProductDescription: productData.ProductDescription || '',
-                                    UOMQtySold: parseFloat(neededQty - stockQty),
-                                    UOMQtyShipped: 0,
-                                    LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                    CustomerJob: '',
-                                    LineTaxCode: productData.TaxCodePurchase || '',
-                                    LineClassName: defaultDept
-                                }
-                            };
-
-                            splashLineArray.push(lineItemObjForm);
-                            let billingAddress = await getSupplierDetail();
+                                splashLineArray.push(lineItemObjForm);
+                            }
+                        }
+                        if(splashLineArray.length > 0) {
                             let saledateTime = new Date();
                             let date =  saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate()
-
                             let objDetails = {
                                 type: "TPurchaseOrderEx",
                                 fields: {
@@ -720,18 +889,19 @@ Template.new_workorder.events({
                             }).catch(function(err) {
                                 resolve()
                             })
-                        }else {
+                        } else {
                             resolve()
                         }
-                        
+
                     })
                 }
-        
+                let poProducts = [];
                 async function saveSubOrders () {
                     let record = templateObject.workorderrecord.get();
                     let bomStructure = templateObject.bomStructure.get();
                     let bomProducts = templateObject.bomProducts.get();
-        
+                    poProducts = [];
+
                     let totalWorkOrders = await templateObject.getAllWorkorders();
                     let savedworkorders = totalWorkOrders.filter(order => {
                         return order.fields.SaleID == templateObject.salesOrderId.get();
@@ -742,7 +912,6 @@ Template.new_workorder.events({
                         for(let k = 0; k< subBOMs.length; k++) {
                             let subs = subBOMs[k];
                             if(subs.isBuild == true) {
-        
                                 let subBOMIndex = bomProducts.findIndex(product=>{
                                     return product.fields.Caption == subs.productName
                                 })
@@ -750,13 +919,13 @@ Template.new_workorder.events({
                                 if(subBOMIndex > -1) {
                                     duration = bomProducts[subBOMIndex].fields.QtyVariation
                                 }else {
-                                await productService.getOneBOMProductByName(subs.productName).then(function(dataObject){
-                                        let d = JSON.parse(dataObject[0].data);
-                                    duration = d.tproctree[0].fields.QtyVariation
-                                })
+                                    await productService.getOneBOMProductByName(subs.productName).then(function(dataObject){
+                                            let d = JSON.parse(dataObject[0].data);
+                                        duration = d.tproctree[0].fields.QtyVariation
+                                    })
                                 }
-        
-        
+
+
                                 let subBOMStructure = {
                                     Caption: subs.productName,
                                     Info: subs.process,
@@ -794,7 +963,7 @@ Template.new_workorder.events({
                                                 return new Date(e.end);
                                             })));
                                         }
-        
+
                                         let subDetail = {
                                             ID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
                                             LID: templateObject.salesOrderId.get() + "_" + (count + k + 1).toString(),
@@ -809,15 +978,21 @@ Template.new_workorder.events({
                                             StartTime: subStart,
                                             OrderDate: new Date(),
                                             InProgress: record.isStarted,
-                                            Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty
+                                            Quantity: record.quantity? record.quantity* parseFloat(subs.qty) : subs.qty,
+                                            TrackedTime: 0,
+                                            StartedTimes: JSON.stringify([]),
+                                            PausedTimes: JSON.stringify([]),
+                                            StartTime: '',
+                                            StoppedTime: ''
                                         }
-        
-        
+
+
                                         if(subs.subs&&subs.subs.length > 0) {
                                             for(let n=0; n<subs.subs.length; n++) {
                                                 let rawName = subs.subs[n].productName;
                                                 let neededQty = subs.subs[n].qty * subDetail.Quantity;
-                                                await createPurchaseOrder(rawName, neededQty)
+                                                // await createPurchaseOrder(rawName, neededQty)
+                                                poProducts.push({productName: rawName, qty: neededQty})
                                             }
                                         }
                                         let subEnd = new Date();
@@ -825,12 +1000,12 @@ Template.new_workorder.events({
                                         if(subEnd.getTime() > mainOrderStart.getTime()) {
                                             mainOrderStart = subEnd;
                                         }
-        
-        
+
+
                                         getVS1Data('TProductVS1').then(async function(dataObject) {
                                             if(dataObject.length == 0) {
                                                 productService.getOneProductdatavs1byname(subProductName).then(async function(data){
-        
+
                                                     // let line = JSON.parse(JSON.stringify(record.line));
                                                     let productname = subProductName;
                                                     let product_description = data.tproduct[0].fields.ProductDescription;
@@ -841,7 +1016,7 @@ Template.new_workorder.events({
                                                     subDetail.ProductDescription = product_description;
                                                     // subDetail.Quantity = quantity;
                                                     subDetail.ProductID = productid;
-        
+
                                                     // let tempArray = localStorage.getItem('TWorkorders');
                                                     // let workorders = tempArray?JSON.parse(tempArray): [];
                                                     let workorders = await templateObject.getAllWorkorders();
@@ -849,6 +1024,11 @@ Template.new_workorder.events({
                                                         return order.fields.SaleID == subDetail.SaleID && order.fields.ProductName == subDetail.ProductName
                                                     })
                                                     if(existIndex > -1) {
+                                                        subDetail.TrackedTime =  workorders[existIndex].fields.TrackedTime
+                                                        subDetail.StartedTimes =  workorders[existIndex].fields.StartedTimes,
+                                                        subDetail.PausedTimes =  workorders[existIndex].fields.pausedTimes,
+                                                        subDetail.StartTime =  workorders[existIndex].fields.StartTime,
+                                                        subDetail.StoppedTime =  workorders[existIndex].fields.StoppedTime
                                                         workorders.splice(existIndex, 1, {type:'TVS1Workorder', fields:subDetail})
                                                     }else {
                                                         workorders = [...workorders, {type:'TVS1Workorder', fields:subDetail}];
@@ -901,7 +1081,7 @@ Template.new_workorder.events({
                                                 subDetail.ProductDescription = product_description;
                                                 // subDetail.Quantity = quantity;
                                                 subDetail.ProductID = productid;
-        
+
                                                 // let tempArray = localStorage.getItem('TWorkorders');
                                                 // let workorders = tempArray?JSON.parse(tempArray): [];
                                                 let workorders = await templateObject.getAllWorkorders();
@@ -925,16 +1105,20 @@ Template.new_workorder.events({
                                     })
                                 }
                                 await saveOneSubOrder();
+
                             }
-        
+
                         }
                     }
                 }
-        
+
                 await saveSubOrders();
-        
+
+                if(poProducts.length > 0) {
+                    await createPurchaseOrder(poProducts);
+                }
+
                 async function saveMainOrders() {
-        
                     let record = templateObject.workorderrecord.get();
                     let totalWorkOrders = await templateObject.getAllWorkorders();
                     let savedworkorders = totalWorkOrders.filter(order => {
@@ -964,17 +1148,23 @@ Template.new_workorder.events({
                         InProgress: record.isStarted,
                         ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
                         UpdateFromPO: templateObject.updateFromPO.get(),
-                        POStatus: ''
+                        POStatus: record.poStatus,
+                        Status: record.status,
+                        TrackedTime: record.trackedTime,
+                        StartedTimes: JSON.stringify(record.startedTimes),
+                        PausedTimes: JSON.stringify(record.pausedTimes),
+                        StartTime: record.startTime,
+                        StoppedTime: record.stoppedTime
                     }
-         
+
                     // manufacturingService.saveWorkOrder({
                     //     type: 'TVS1Workorder',
                     //     fields: objDetail
                     // }).then(function(){
                     // }).catch(function(er) {
                     // })
-        
-        
+
+
                     let workorders = await templateObject.getAllWorkorders();
                     let existIndex = workorders.findIndex(order=>{
                         return order.fields.SaleID == objDetail.SaleID && order.fields.ProductName == objDetail.ProductName
@@ -987,11 +1177,11 @@ Template.new_workorder.events({
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
                     // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                 }
-        
+
                 await saveMainOrders();
-        
-        
-        
+
+
+
                 $('.fullScreenSpin').css('display', 'none');
 
                 if(vendorService == false) {
@@ -1002,13 +1192,13 @@ Template.new_workorder.events({
                         showCancelButton: false,
                         confirmButtonText: 'Continue',
                     }).then ((result)=>{
-            
+
                         if (localStorage.getItem("enteredURL") != null) {
                             FlowRouter.go(localStorage.getItem("enteredURL"));
                             localStorage.removeItem("enteredURL");
                             return;
                         }
-            
+
                         FlowRouter.go('/workorderlist')
                     });
                 } else {
@@ -1018,8 +1208,8 @@ Template.new_workorder.events({
                     })
                     FlowRouter.go('/purchaseordercard?workorderid=' + templateObject.salesOrderId.get() + "_" + (savedworkorders.length).toString())
                 }
-        
-        
+
+
             }, delayTimeAfterSound);
         }
     },
@@ -1108,7 +1298,7 @@ Template.new_workorder.events({
                          if(index == -1) {
                             productService.getOneProductdatavs1byname(productName).then(function(data){
                                 resolve(data.tproduct[0].fields)
-                            })  
+                            })
                          }else {
                             resolve(useData[index].fields)
                          }
@@ -1133,13 +1323,13 @@ Template.new_workorder.events({
             }).then(async (result)=>{
                 if(result.value) {
                     let record = templateObject.workorderrecord.get();
-                    let productData = await getProductData(record.productname)                    
+                    let productData = await getProductData(record.productname)
                     let splashLineArray = [];
                     let tdunitprice = utilityService.modifynegativeCurrencyFormat(Math.floor(productData.BuyQty1Cost * 100) / 100);
                     $('.fullScreenSpin').css('display', 'inline-block')
                     async function getTaxRate ()  {
                         return new Promise(async(resolve, reject)=> {
-                            
+
                             getVS1Data('TTaxcodeVS1').then(function(dataObject){
                                 if(dataObject.length == 0) {
                                     let data = JSON.parse(dataObject[0].data);
@@ -1154,7 +1344,7 @@ Template.new_workorder.events({
                                     }else {
                                         resolve(useData[index].Rate)
                                     }
-                                    
+
                                 }else {
                                     sideBarService.getTaxRateVS1ByName(productData.TaxCodePurchase).then(function(data){
                                         resolve(data.ttaxcodevs1[0].Rate)
@@ -1175,6 +1365,7 @@ Template.new_workorder.events({
                             ProductDescription: productData.ProductDescription || '',
                             UOMQtySold: record.quantity,
                             UOMQtyShipped: 0,
+                            UOMQtyBackOrder: record.quantity,
                             LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
                             CustomerJob: record.customer || '',
                             LineTaxCode: productData.TaxCodePurchase || '',
@@ -1195,7 +1386,83 @@ Template.new_workorder.events({
         } else {
             FlowRouter.go('/purchaseordercard?id=' + purchaseOrderId)
         }
+    },
+
+    'click #btnStartTimer': async function(event) {
+        let templateObject = Template.instance();
+        // let workorders = templateObject.workorderRecords.get();
+        // let tempOrders  = cloneDeep(workorders);
+        // let id = FlowRouter.current().queryParams.id;
+        // if(!id) {return}
+        // let orderIndex = tempOrders.findIndex(order => {
+        //     return order.fields.ID == id;
+        // })
+        // if(orderIndex > -1) {
+        //     let tempOrder = tempOrders[orderIndex];
+        //     tempOrder.fields.StartTime = new Date();
+        //     tempOrder.fields.Status = 'started';
+        //     let record = templateObject.workorderrecord.get();
+        //     record.status = 'started';
+        //     templateObject.workorderrecord.set(record);
+        //     tempOrders.splice(orderIndex, 1, tempOrder);
+        //     templateObject.workorderRecords.set(tempOrders);
+        //     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
+        // } else {return}
+        templateObject.changeWorkorderStatus('started')
+    },
+
+    'click #btnPauseTimer': async function(event) {
+        let templateObject = Template.instance();
+        // let workorders = templateObject.workorderRecords.get();
+        // let tempOrders = cloneDeep(workorders);
+        // let id = FlowRouter.current.queryParams.id;
+        // if(!id) {return}
+        // let orderIndex = tempOrders.findIndex(order=> {
+        //     return order.fields.ID == id
+        // })
+        // if(orderIndex > -1) {
+        //     let tempOrder = tempOrders[orderIndex];
+        //     tempOrder.fields.Status = 'paused';
+        //     let record = templateObject.workorderrecord.get();
+        //     record.stauts = 'paused';
+        //     templateObject.workorderrecord.set(record);
+        //     tempOrders.splice(orderIndex, 1, tempOrder);
+        //     templateObject.workorderRecords.set(tempOrders)
+        // }else{return}
+        templateObject.changeWorkorderStatus('paused')
+    },
+
+    'click #btnResumeTimer': async function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('resumed')
+    },
+
+    'click #btnStopTimer': async function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('stopped')
+    },
+
+    'click #btnStartQA': function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAStarted')
+    },
+
+    'click #btnPauseQA': function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAPaused')
+    },
+
+    'click #btnResumeQA': function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAResumed')
+    },
+
+    'click #btnStopQA': function(event){
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('QAStopped')
     }
+
+
 
 })
 
@@ -1579,7 +1846,8 @@ Template.new_workorder.events({
             //     // })
             // }
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), IsCompleted: true}
+            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
+            // tempworkorder.fields = {...tempworkorder.fields, EndTime: new Date(), IsCompleted: true}
             workorders.splice(workorderindex, 1, tempworkorder)
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
                 // async function getSalesOrders() {
@@ -1619,6 +1887,10 @@ Template.new_workorder.events({
         }else {
             $('.fullScreenSpin').css('display', 'none')
         }
+        let record = templateObject.workorderrecord.get();
+        record.isCompleted = true;
+        record.status = 'Completed';
+        templateObject.workorderrecord.set(record);
     },
 
     'click .btnBack': function(event) {
