@@ -389,7 +389,6 @@ Template.fixedassetcard.events({
         Active: true
       }
     };
-    
     if (templateObject.currentAssetID.get() == 0) {
       fixedAssetService.saveTFixedAsset(newFixedAsset).then((data) => {
         fixedAssetService.getTFixedAssetsList().then(function (data) {
