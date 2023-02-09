@@ -442,6 +442,16 @@ export class ProductService extends BaseService {
                 select: "[ProcStepItemRef]='vs1BOM'",
             };
         }
+
+        return this.getList(this.ERPObjects.TProcTree, options);
+    }
+
+    getBOMListByName(productname) {
+        let options = {
+            ListType: 'Detail',
+            // LimitCount: 1,
+            select: "[Caption] f7like '"+productname+"' and [ProcStepItemRef]='vs1BOM'"
+        }
         return this.getList(this.ERPObjects.TProcTree, options);
     }
 

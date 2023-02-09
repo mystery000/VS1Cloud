@@ -1428,30 +1428,51 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSalesOrderEx, options);
   }
 
-  getAllTSalesOrderListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTSalesOrderListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter) {
     let options = "";
 
-    if (ignoreDate == true) {
-      options = {
-        IgnoreDates: true,
-        OrderBy: "SaleID desc",
-        Search: "Deleted != true",
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
-      };
+    if(deleteFilter == undefined || deleteFilter == null || deleteFilter == '' || deleteFilter == false) {
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          OrderBy: "SaleID desc",
+          Search: "Deleted != true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      } else {
+        options = {
+          OrderBy: "SaleID desc",
+          IgnoreDates: false,
+          Search: "Deleted != true",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
     } else {
-      options = {
-        OrderBy: "SaleID desc",
-        IgnoreDates: false,
-        Search: "Deleted != true",
-        DateFrom: '"' + dateFrom + '"',
-        DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
-      };
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          OrderBy: "SaleID desc",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      } else {
+        options = {
+          OrderBy: "SaleID desc",
+          IgnoreDates: false,
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
     }
     return this.getList(this.ERPObjects.TSalesOrderList, options);
   }
+
 
   getAllTSalesOrderListFilterData(filterData,dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
