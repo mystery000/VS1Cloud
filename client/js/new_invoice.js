@@ -1614,7 +1614,6 @@ Template.new_invoice.onCreated(function () {
       dept +
       "&currency=" +
       currencyname;
-      console.log("stringQuery", stringQuery)
     if (stripe_id != "") {
       $(".linkText").attr("href", stripeGlobalURL + stringQuery);
     } else {
@@ -8146,12 +8145,13 @@ Template.new_invoice.events({
         $("#html-Invoice-pdfwrapper").css("display", "block");
         let stripe_id = templateObject.accountID.get() || "";
         let file = "Invoice-" + invoiceId + ".pdf";
+        let stringQuery = '?';
         return new Promise((resolve, reject) => {
-          // if (stripe_id != "") {
-          //   $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-          // } else {
-          //   $(".linkText").attr("href", "#");
-          // }
+          if (stripe_id != "") {
+            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+          } else {
+            $(".linkText").attr("href", "#");
+          }
 
           var source = document.getElementById("html-2-pdfwrapper");
           var opt = {
