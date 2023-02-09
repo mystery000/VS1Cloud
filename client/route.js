@@ -194,33 +194,34 @@ const authenticatedRoutes = FlowRouter.group({
 let previous_url = "";
 
 FlowRouter.triggers.enter([
-    function (context, redirect, stop) {
-        localStorage.removeItem("enteredURL");
-        if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
-            stop();
-            swal({
-                title: 'WARNING!',
-                text: 'Do you wish to save your changes?',
-                type: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Save',
-                cancelButtonText: 'No'
-            }).then((result) => {
-                if (result.value) {
-                    localStorage.setItem("enteredURL", context.path);
-                    $(document).find(".btn-auto-save").click();
-                    // FlowRouter.go(previous_url);
-                } else if (result.dismiss === 'cancel') {
-                    FlowRouter.go(context.path);
-                    // Meteor._reload.reload();
-                    //TODO need to url async
-                    previous_url = "";
-                    localStorage.setItem("isFormUpdated", false);
-                    FlowRouter.reload();
-                }
-            });
-        }
-    }
+    // function (context, redirect, stop) {
+    //     localStorage.removeItem("enteredURL");
+    //     if (previous_url !== "" && previous_url !== context.path && JSON.parse(localStorage.getItem("isFormUpdated"))) {
+    //         stop();
+    //         swal({
+    //             title: 'WARNING!',
+    //             text: 'Do you wish to save your changes?',
+    //             type: 'question',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Save',
+    //             cancelButtonText: 'No'
+    //         }).then((result) => {
+    //             if (result.value) {
+    //                 localStorage.setItem("enteredURL", context.path);
+    //                 $(document).find(".btn-auto-save").click();
+    //                 // FlowRouter.go(previous_url);
+    //                 FlowRouter.reload();
+    //             } else if (result.dismiss === 'cancel') {
+    //                 FlowRouter.go(context.path);
+    //                 // Meteor._reload.reload();
+    //                 //TODO need to url async
+    //                 previous_url = "";
+    //                 localStorage.setItem("isFormUpdated", false);
+    //                 FlowRouter.reload();
+    //             }
+    //         });
+    //     }
+    // }
 ]);
 
 FlowRouter.triggers.exit([
@@ -2300,6 +2301,15 @@ authenticatedRoutes.route('/workorderlist', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'workorderlist'
+        })
+    }
+})
+
+authenticatedRoutes.route('/mobileapp', {
+    name: 'mobileapp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mobileapp'
         })
     }
 })

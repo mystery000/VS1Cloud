@@ -2481,8 +2481,8 @@ Template.leadscard.events({
         let tokenid = "random";
         let currentDate = new Date();
         let completeDate = new Date();
-        currentDate = moment(currentDate).format("DD/MM/YYYY");
-        completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
+        currentDate = moment(currentDate).subtract(-1, "days").format("DD/MM/YYYY");
+        completeDate = moment(completeDate).subtract(-3, "days").format("DD/MM/YYYY");
         var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}

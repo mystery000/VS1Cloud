@@ -18,6 +18,7 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import "jQuery.print/jQuery.print.js";
 import { jsPDF } from "jspdf";
+import Datehandler from "../../DateHandler";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './new_profit.html';
@@ -86,11 +87,12 @@ function buildSubAccountJson( $sortContainer ){
 }
 
 Template.newprofitandloss.onRendered(function () {
-  LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];
   localStorage.setItem("colnames_", "");
   templateObject.setReportOptions = async function (compPeriod = 0, formatDateFrom = new Date(), formatDateTo = new Date() ) {
+    LoadingOverlay.show();
+    $(".pnlTable").hide();
     // New Code Start here
     let fromYear = moment(formatDateFrom).format("YYYY");
     let toYear = moment(formatDateTo).format("YYYY");
@@ -105,6 +107,7 @@ Template.newprofitandloss.onRendered(function () {
       defaultOptions.fromDate = formatDateFrom;
       defaultOptions.toDate = formatDateTo;
       defaultOptions.threcords = dateRange;
+      defaultOptions.compPeriod = compPeriod;
     } else {
       defaultOptions = {
         compPeriod: compPeriod,
@@ -118,9 +121,23 @@ Template.newprofitandloss.onRendered(function () {
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    setTimeout(function () {
+      $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+      $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+    }, 100);
+    
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
   };
+
+  $(document).on("change", "#dateFrom, #dateTo", function(e) {
+    // let defaultOptions = templateObject.reportOptions.get();
+    setTimeout(function () {
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      templateObject.setReportOptions(0, dateFrom, dateTo);
+    }, 100);
+  });
 
   let utilityService = new UtilityService();
   let salesOrderTable;
@@ -307,116 +324,112 @@ Template.newprofitandloss.onRendered(function () {
         try {
           let periodMonths = `${options.compPeriod} Month`;
 
-          let data = await CachedHttp.get(erpObject.TProfitAndLossPeriodCompareReport, async () => {
-            return await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          }, {
-            useIndexDb: true,
-            useLocalStorage: false,
-            validate: (cachedResponse) => {
-              return false;
+          reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths ).then(function(data) {
+            let records = [];
+            options.threcords = [];
+            if (data.tprofitandlossperiodcomparereport) {
+              let accountData = data.tprofitandlossperiodcomparereport;
+              
+              let accountType = "";
+              var dataList = "";
+              for (let i = 0; i < accountData.length; i++) {
+                if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+                  accountType = "";
+                } else {
+                  accountType = accountData[i]["AccountTypeDesc"];
+                }
+                let compPeriod = options.compPeriod + 1;
+                let periodAmounts = [];
+                let totalAmount = 0;
+                for (let counter = 1; counter <= compPeriod; counter++) {
+                  if (i == 0) {
+                    options.threcords.push(accountData[i]["DateDesc_" + counter]);
+                  }
+                  totalAmount += accountData[i]["Amount_" + counter];
+                  let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+                  let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                  let Percentage = accountData[i]["Percentage_" + counter];
+                  periodAmounts.push({
+                    decimalAmt: AmountEx,
+                    roundAmt: RoundAmount,
+                    percentage: Percentage,
+                  });
+                }
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+                  let totalRoundAmount = Math.round(totalAmount) || 0;
+                  if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+                    dataList = {
+                      id: accountData[i]["AccountID"] || "",
+                      accounttype: accountType || "",
+                      accounttypeshort: accountData[i]["AccountType"] || "",
+                      accountname: accountData[i]["AccountName"] || "",
+                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                      accountno: accountData[i]["AccountNo"] || "",
+                      totalamountex: "",
+                      totalroundamountex: "",
+                      periodAmounts: "",
+                      name: $.trim(accountData[i]["AccountName"])
+                        .split(" ")
+                        .join("_"),
+                    };
+                  } else {
+                    dataList = {
+                      id: accountData[i]["AccountID"] || "",
+                      accounttype: accountType || "",
+                      accounttypeshort: accountData[i]["AccountType"] || "",
+                      accountname: accountData[i]["AccountName"] || "",
+                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                      accountno: accountData[i]["AccountNo"] || "",
+                      totalamountex: totalAmountEx || 0.0,
+                      periodAmounts: periodAmounts,
+                      totalroundamountex: totalRoundAmount,
+                      name: $.trim(accountData[i]["AccountName"])
+                        .split(" ")
+                        .join("_"),
+                      // totaltax: totalTax || 0.00
+                    };
+                  }
+
+                  if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+                  } else {
+                      if( dataList.totalroundamountex !== 0 ) {
+                        records.push(dataList);
+                      }
+                  }
+              }
+
+              // Set Table Data
+              options.showPercentage = true;
+              templateObject.reportOptions.set(options);
+              templateObject.records.set(records);
+              // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
+              // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
+              if (templateObject.records.get()) {
+                setTimeout(function () {
+                  $("td a").each(function () {
+                    if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                  $("td").each(function () {
+                    if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                }, 100);
+              }
+              setTimeout(function () {
+                $(".pnlTable").show();
+                $(".fullScreenSpin").css("display", "none");
+              }, 300);
             }
           });
-
-          data = data.response;
+          // data = data.response;
 
           //let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          let records = [];
-          options.threcords = [];
-          if (data.tprofitandlossperiodcomparereport) {
-            let accountData = data.tprofitandlossperiodcomparereport;
-
-            let accountType = "";
-            var dataList = "";
-            for (let i = 0; i < accountData.length; i++) {
-              if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
-                accountType = "";
-              } else {
-                accountType = accountData[i]["AccountTypeDesc"];
-              }
-              let compPeriod = options.compPeriod + 1;
-              let periodAmounts = [];
-              let totalAmount = 0;
-              for (let counter = 1; counter <= compPeriod; counter++) {
-                if (i == 0) {
-                  options.threcords.push(accountData[i]["DateDesc_" + counter]);
-                }
-                totalAmount += accountData[i]["Amount_" + counter];
-                let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
-                let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
-                let Percentage = accountData[i]["Percentage_" + counter];
-                periodAmounts.push({
-                  decimalAmt: AmountEx,
-                  roundAmt: RoundAmount,
-                  percentage: Percentage,
-                });
-              }
-                let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
-                let totalRoundAmount = Math.round(totalAmount) || 0;
-                if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
-                  dataList = {
-                    id: accountData[i]["AccountID"] || "",
-                    accounttype: accountType || "",
-                    accounttypeshort: accountData[i]["AccountType"] || "",
-                    accountname: accountData[i]["AccountName"] || "",
-                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                    accountno: accountData[i]["AccountNo"] || "",
-                    totalamountex: "",
-                    totalroundamountex: "",
-                    periodAmounts: "",
-                    name: $.trim(accountData[i]["AccountName"])
-                      .split(" ")
-                      .join("_"),
-                  };
-                } else {
-                  dataList = {
-                    id: accountData[i]["AccountID"] || "",
-                    accounttype: accountType || "",
-                    accounttypeshort: accountData[i]["AccountType"] || "",
-                    accountname: accountData[i]["AccountName"] || "",
-                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                    accountno: accountData[i]["AccountNo"] || "",
-                    totalamountex: totalAmountEx || 0.0,
-                    periodAmounts: periodAmounts,
-                    totalroundamountex: totalRoundAmount,
-                    name: $.trim(accountData[i]["AccountName"])
-                      .split(" ")
-                      .join("_"),
-                    // totaltax: totalTax || 0.00
-                  };
-                }
-
-                if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-                } else {
-                    if( dataList.totalroundamountex !== 0 ) {
-                      records.push(dataList);
-                    }
-                }
-            }
-
-            // Set Table Data
-            options.showPercentage = true;
-            templateObject.reportOptions.set(options);
-            templateObject.records.set(records);
-            // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
-            // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
-            if (templateObject.records.get()) {
-              setTimeout(function () {
-                $("td a").each(function () {
-                  if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $("td").each(function () {
-                  if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              }, 100);
-            }
-          }
+          
         } catch (err) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -434,121 +447,115 @@ Template.newprofitandloss.onRendered(function () {
           options.threcords = dateRange;
           let departments = options.departments.length ? options.departments.join(",") : "";
 
-          let data = await CachedHttp.get(erpObject.ProfitLossReport, async () => {
-            return await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
-          }, {
-            useIndexDb: true,
-            useLocalStorage: false,
-            validate: (cachedResponse) => {
-              return false;
+          reportService.getProfitandLoss( dateFrom, dateTo, false, departments ).then(function(data) {
+            let records = [];
+            if (data.profitandlossreport) {
+              let accountData = data.profitandlossreport;
+              let accountType = "";
+              var dataList = "";
+              for (let i = 0; i < accountData.length; i++) {
+                if (accountData[i]["Account Type"].replace(/\s/g, "") == "") {
+                  accountType = "";
+                } else {
+                  accountType = accountData[i]["Account Type"];
+                }
+                let periodAmounts = []
+                var totalAmount = accountData[i]["TotalAmountEx"];
+                let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
+                let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
+                // let Percentage = accountData[i]["Percentage_" + counter];
+                periodAmounts.push({
+                  decimalAmt: totalAmountEx,
+                  roundAmt: totalRoundAmount,
+                  // percentage: Percentage,
+                });
+                if( options.departments.length ){
+                  options.departments.forEach(dept => {
+                    totalAmount += accountData[i][dept+"_AmountColumnInc"];
+                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
+                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
+                    if( i == 0 ){
+                      options.threcords.push( dept );
+                    }
+                    periodAmounts.push({
+                      decimalAmt: deptAmountEx,
+                      roundAmt: deptRoundAmount,
+                    });
+                  });
+                }
+                if (
+                  accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
+                  accountType != ""
+                ) {
+                  dataList = {
+                    id: accountData[i]["AccountID"] || "",
+                    accounttype: accountType || "",
+                    accounttypeshort: accountData[i]["AccountType"] || "",
+                    accountname: accountData[i]["AccountName"] || "",
+                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                    accountno: accountData[i]["AccountNo"] || "",
+                    totalamountex: "",
+                    periodAmounts: "",
+                    totalroundamountex: "",
+                    name: $.trim(accountData[i]["AccountName"])
+                      .split(" ")
+                      .join("_"),
+                  };
+                } else {
+                  dataList = {
+                    id: accountData[i]["AccountID"] || "",
+                    accounttype: accountType || "",
+                    accounttypeshort: accountData[i]["AccountType"] || "",
+                    accountname: accountData[i]["AccountName"] || "",
+                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                    accountno: accountData[i]["AccountNo"] || "",
+                    totalamountex: totalAmountEx || 0.0,
+                    totalroundamountex: totalRoundAmount,
+                    periodAmounts: periodAmounts,
+                    name: $.trim(accountData[i]["AccountName"])
+                      .split(" ")
+                      .join("_"),
+                    // totaltax: totalTax || 0.00
+                  };
+                }
+
+                if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+                } else {
+                  if( dataList.totalroundamountex !== 0 ) {
+                    records.push(dataList);
+                  }
+                }
+              }
+
+              // Set Table Data
+              options.showPercentage = false;
+              templateObject.reportOptions.set(options);
+              templateObject.records.set(records);
+              // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
+              // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
+              if (templateObject.records.get()) {
+                setTimeout(function () {
+                  $("td a").each(function () {
+                    if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                  $("td").each(function () {
+                    if ($(this).text().indexOf("-" + Currency) >= 0) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                }, 100);
+              }
+              $(".pnlTable").show();
+              $(".fullScreenSpin").css("display", "none");
             }
           });
 
-          data = data.response;
-          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
-          let records = [];
-          if (data.profitandlossreport) {
-            let accountData = data.profitandlossreport;
-            let accountType = "";
-            var dataList = "";
-            for (let i = 0; i < accountData.length; i++) {
-              if (accountData[i]["Account Type"].replace(/\s/g, "") == "") {
-                accountType = "";
-              } else {
-                accountType = accountData[i]["Account Type"];
-              }
-              let periodAmounts = []
-              var totalAmount = accountData[i]["TotalAmountEx"];
-              let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
-              let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
-              // let Percentage = accountData[i]["Percentage_" + counter];
-              periodAmounts.push({
-                decimalAmt: totalAmountEx,
-                roundAmt: totalRoundAmount,
-                // percentage: Percentage,
-              });
-              if( options.departments.length ){
-                options.departments.forEach(dept => {
-                  totalAmount += accountData[i][dept+"_AmountColumnInc"];
-                  let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
-                  let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
-                  if( i == 0 ){
-                    options.threcords.push( dept );
-                  }
-                  periodAmounts.push({
-                    decimalAmt: deptAmountEx,
-                    roundAmt: deptRoundAmount,
-                  });
-                });
-              }
-              if (
-                accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
-                accountType != ""
-              ) {
-                dataList = {
-                  id: accountData[i]["AccountID"] || "",
-                  accounttype: accountType || "",
-                  accounttypeshort: accountData[i]["AccountType"] || "",
-                  accountname: accountData[i]["AccountName"] || "",
-                  accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                  accountno: accountData[i]["AccountNo"] || "",
-                  totalamountex: "",
-                  periodAmounts: "",
-                  totalroundamountex: "",
-                  name: $.trim(accountData[i]["AccountName"])
-                    .split(" ")
-                    .join("_"),
-                };
-              } else {
-                dataList = {
-                  id: accountData[i]["AccountID"] || "",
-                  accounttype: accountType || "",
-                  accounttypeshort: accountData[i]["AccountType"] || "",
-                  accountname: accountData[i]["AccountName"] || "",
-                  accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                  accountno: accountData[i]["AccountNo"] || "",
-                  totalamountex: totalAmountEx || 0.0,
-                  totalroundamountex: totalRoundAmount,
-                  periodAmounts: periodAmounts,
-                  name: $.trim(accountData[i]["AccountName"])
-                    .split(" ")
-                    .join("_"),
-                  // totaltax: totalTax || 0.00
-                };
-              }
-
-              if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-              } else {
-                if( dataList.totalroundamountex !== 0 ) {
-                  records.push(dataList);
-                }
-              }
-            }
-
-            // Set Table Data
-            options.showPercentage = false;
-            templateObject.reportOptions.set(options);
-            templateObject.records.set(records);
-            // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
-            // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
-            if (templateObject.records.get()) {
-              setTimeout(function () {
-                $("td a").each(function () {
-                  if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $("td").each(function () {
-                  if ($(this).text().indexOf("-" + Currency) >= 0) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              }, 500);
-            }
-          }
+          // data = data.response;
+          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );          
         } catch (error) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -627,6 +634,12 @@ Template.newprofitandloss.onRendered(function () {
     let getDateFrom = moment(currentDate2).subtract(3, "months").format("YYYY-MM-DD");
     templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
+
+  templateObject.initDate = () => {
+    Datehandler.initOneMonth();
+  };
+
+  templateObject.initDate();
 
   templateObject.getDepartments = function () {
     getVS1Data("TDeptClass")
@@ -846,9 +859,9 @@ $('.tblAvoid').each(function(){
   //Dragable items in edit layout screen end
   /*Visually hide additional periods so that custom selection handles it*/
 
-  setTimeout(function () {
-    $(".pnlTable").show();
-  }, 6000);
+  // setTimeout(function () {
+  //   $(".pnlTable").show();
+  // }, 6000);
   /*Visual hide end*/
   // var eLayScreenArr = [];
   // var pnlTblArr = [];
@@ -872,10 +885,46 @@ $('.tblAvoid').each(function(){
   //            sortArray(eLayScreenArr, pnlTblArr);
 
 
-  LoadingOverlay.hide();
+  // LoadingOverlay.hide();
 });
 
 Template.newprofitandloss.events({
+  "click .nonePeriod": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(0, dateFrom, dateTo);
+  },
+  "click .onePeriod": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(1, dateFrom, dateTo);
+  },
+  "click .twoPeriods": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(2, dateFrom, dateTo);
+  },
+  "click .threePeriods": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(3, dateFrom, dateTo);
+  },
+  "click .fourPeriods": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(4, dateFrom, dateTo);
+  },
+  "click .PSother": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(4, dateFrom, dateTo);
+  },
   "click .pnlReportAccount": async function (e) {
     let templateObject = Template.instance();
     await clearData("TAccountRunningBalanceReport");
@@ -1224,137 +1273,137 @@ Template.newprofitandloss.events({
   },
 
   // Current Month
-  "click #thisMonth": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().endOf("month").format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #thisMonth": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("month").format("YYYY-MM-DD");
+  //   let endDate = moment().endOf("month").format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #thisQuarter": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().endOf("Q").format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #thisQuarter": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().endOf("Q").format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #thisFinYear": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = null;
-    let endDate = null;
-    if (moment().quarter() == 4) {
-      fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
-      endDate = moment()
-        .add(1, "year")
-        .month("June")
-        .endOf("month")
-        .format("YYYY-MM-DD");
-    } else {
-      fromDate = moment()
-        .subtract(1, "year")
-        .month("July")
-        .startOf("month")
-        .format("YYYY-MM-DD");
-      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
-    }
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #thisFinYear": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = null;
+  //   let endDate = null;
+  //   if (moment().quarter() == 4) {
+  //     fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
+  //     endDate = moment()
+  //       .add(1, "year")
+  //       .month("June")
+  //       .endOf("month")
+  //       .format("YYYY-MM-DD");
+  //   } else {
+  //     fromDate = moment()
+  //       .subtract(1, "year")
+  //       .month("July")
+  //       .startOf("month")
+  //       .format("YYYY-MM-DD");
+  //     endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+  //   }
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #lastMonth": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment()
-      .subtract(1, "months")
-      .startOf("month")
-      .format("YYYY-MM-DD");
-    let endDate = moment()
-      .subtract(1, "months")
-      .endOf("month")
-      .format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #lastMonth": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment()
+  //     .subtract(1, "months")
+  //     .startOf("month")
+  //     .format("YYYY-MM-DD");
+  //   let endDate = moment()
+  //     .subtract(1, "months")
+  //     .endOf("month")
+  //     .format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #lastQuarter": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #lastQuarter": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #lastFinYear": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = null;
-    let endDate = null;
-    if (moment().quarter() == 4) {
-      fromDate = moment()
-        .subtract(1, "year")
-        .month("July")
-        .startOf("month")
-        .format("YYYY-MM-DD");
-      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
-    } else {
-      fromDate = moment()
-        .subtract(2, "year")
-        .month("July")
-        .startOf("month")
-        .format("YYYY-MM-DD");
-      endDate = moment()
-        .subtract(1, "year")
-        .month("June")
-        .endOf("month")
-        .format("YYYY-MM-DD");
-    }
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #lastFinYear": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = null;
+  //   let endDate = null;
+  //   if (moment().quarter() == 4) {
+  //     fromDate = moment()
+  //       .subtract(1, "year")
+  //       .month("July")
+  //       .startOf("month")
+  //       .format("YYYY-MM-DD");
+  //     endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+  //   } else {
+  //     fromDate = moment()
+  //       .subtract(2, "year")
+  //       .month("July")
+  //       .startOf("month")
+  //       .format("YYYY-MM-DD");
+  //     endDate = moment()
+  //       .subtract(1, "year")
+  //       .month("June")
+  //       .endOf("month")
+  //       .format("YYYY-MM-DD");
+  //   }
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #monthToDate": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("M").format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #monthToDate": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("M").format("YYYY-MM-DD");
+  //   let endDate = moment().format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #quarterToDate": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #quarterToDate": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #finYearToDate": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment()
-      .month("january")
-      .startOf("month")
-      .format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #finYearToDate": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment()
+  //     .month("january")
+  //     .startOf("month")
+  //     .format("YYYY-MM-DD");
+  //   let endDate = moment().format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
   "click .btnDepartmentSelect": async function () {
     let departments = [];
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $(".chkDepartment").each(function () {
-      if ($(this).is(":checked")) {
-        let dpt = $(this).val();
+    $("#tblDepartmentCheckbox .chkServiceCard").each(function () {
+      if ($(this).is(":checked")) {        
+        let dpt = $(this).closest("tr").find(".colDeptName").text();
         departments.push(dpt);
       }
     });
@@ -1438,6 +1487,7 @@ Template.newprofitandloss.events({
       $(".table tbody tr").show();
     }
   },
+  ...Datehandler.getDateRangeEvents(),
   "blur #myInputSearch": function (event) {
     $(".table tbody tr").show();
     let searchItem = $(event.target).val();

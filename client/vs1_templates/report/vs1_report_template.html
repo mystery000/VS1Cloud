@@ -64,6 +64,9 @@
                     width: 100%;
                 }
             }
+            input[type="checkbox"] {
+                margin: 0!important;
+            }
         </style>
         <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
             <div class="col-12 col-md-8">
@@ -84,12 +87,35 @@
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 9px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
                                     {{>FxRatesButton}}
                                     {{#if isAccountingMoreOption }}
-                                        <div class="dropdown periodSelector scnd" style="margin: 9px;">
-                                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More
-                                            </button>
-                                            <div class="dropdown-menu accountingBasisDropdown p-3" aria-labelledby="dropdownMenuButton" style="width: 250px;">
+                                    <div class="dropdown periodSelector scnd" style="margin: 9px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More
+                                        </button>
+                                        <div class="dropdown-menu accountingBasisDropdown p-3" aria-labelledby="dropdownMenuButton" style="width: 250px;">
+                                        <span>Accounting basis</span>
+                                        <br/>
+                                        <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                            <input class="form-check-input rbAccrual" type="radio" name="radio" id="mddItem1" value="accrual">
+                                            <label class="form-check-label" for="mddItem1">Accrual</label>
+                                        </div>
+                                        <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                            <input class="form-check-input rbCash" type="radio" name="radio" id="mddItem2" value="cash">
+                                            <label class="form-check-label" for="mddItem2">Cash</label>
+                                        </div>
+                                        <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;"/>
+                                        <span>Show</span>
+                                        <span class="dropdown-item custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input chkAccBasis" id="mddItem3" name="checkbox">
+                                            <label class="custom-control-label" for="mddItem3">Accounting basis</label>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    {{/if}}
+                                    {{#if isProfitAndLossMoreOption }}
+                                    <div class="dropdown periodSelector scnd" style="margin: 8px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More </button>
+                                        <div class="dropdown-menu accountingBasisDropdown" aria-labelledby="dropdownMenuButton" style="width: 250px;">
                                             <span>Accounting basis</span>
-                                            <br/>
+                                            <br />
                                             <div class="form-check form-check-inline" style="margin-top: 8px;">
                                                 <input class="form-check-input rbAccrual" type="radio" name="radio" id="mddItem1" value="accrual">
                                                 <label class="form-check-label" for="mddItem1">Accrual</label>
@@ -98,14 +124,55 @@
                                                 <input class="form-check-input rbCash" type="radio" name="radio" id="mddItem2" value="cash">
                                                 <label class="form-check-label" for="mddItem2">Cash</label>
                                             </div>
-                                            <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;"/>
+                                            <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;" />
                                             <span>Show</span>
-                                            <span class="dropdown-item custom-control custom-switch">
+                                            <span class="custom-control custom-switch">
                                                 <input type="checkbox" class="custom-control-input chkAccBasis" id="mddItem3" name="checkbox">
                                                 <label class="custom-control-label" for="mddItem3">Accounting basis</label>
                                             </span>
-                                            </div>
+                                            <span class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkAccCodes" id="mddItem4" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem4">Account codes</label>
+                                            </span>
+                                            <span class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkDecimals" checked="" id="mddItem5" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem5">Decimals</label>
+                                            </span>
+                                            <span class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkPercIncome" checked="" id="mddItem6" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem6">Percentage of trading
+                                                    income</label>
+                                            </span>
+                                            <span class="custom-control custom-switch">
+                                                <input type="checkbox" checked class="custom-control-input chkTotal" id="mddItem7" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem7">Running Total</label>
+                                            </span>
+                                            <span class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkYTDate" id="mddItem8" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem8">Year to date</label>
+                                            </span>
                                         </div>
+                                    </div>
+                                    {{/if}}
+                                    {{#if isPeriodSelection }}
+                                    <div class="dropdown periodSelector" style="margin: 8px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comparison Period</button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item nonePeriod selPeriod pointer" data-period="0" role="presentation">None</a>
+                                            <hr class="periodSelectorLine" />
+                                            <a class="dropdown-item onePeriod selPeriod pointer" data-period="1" role="presentation">1 Extra Period</a>
+                                            <a class="dropdown-item twoPeriods selPeriod pointer" data-period="2" role="presentation">2 Extra Periods</a>
+                                            <a class="dropdown-item threePeriods selPeriod pointer" data-period="3" role="presentation">3 Extra Periods</a>
+                                            <a class="dropdown-item fourPeriods selPeriod pointer" data-period="4" role="presentation">4 Extra Periods</a>
+                                            <hr class="periodSelectorLine" />
+                                            <a class="dropdown-item PSother pointer" style="color:#3a3b45;" data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
+                                        </div>
+                                    </div>
+                                    {{/if}}
+                                    {{#if isDepartmentSelection }}
+                                    <div class="dropdown float-left" style="margin: 8px;">
+                                        <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
+                                    </div>
                                     {{/if}}
                                 </div>
                             </div>
