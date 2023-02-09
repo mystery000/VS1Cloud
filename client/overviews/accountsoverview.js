@@ -1834,13 +1834,9 @@ Template.accountsoverview.events({
         $(".isCreditAccount").addClass("isNotCreditAccount");
     },
     "click #exportbtn": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let currenttablename = 'tblAccountOverview';
-        let utilityService = new UtilityService();
-        const filename = loggedCompany + "- Accounts List" + ".xlsx";
-        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-        // jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletocsv').click();
-        $(".fullScreenSpin").css("display", "none");
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletocsv').click();
+        $('.fullScreenSpin').css('display', 'none');
     },
     "click #printConfirm": function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
