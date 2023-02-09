@@ -195,8 +195,10 @@ Template.transaction_list.onRendered(function() {
                 { index: 1, label: "Type", class: "Type", active: true, display: true, width: "130" },
                 { index: 2, label: "Ref", class: "Ref", active: true, display: true, width: "30" },
                 { index: 3, label: "Qty", class: "Qty", active: true, display: true, width: "30" },
-                { index: 4, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
-                { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
+                { index: 4, label: "Total Running", class: "TotalRunning", active: true, display: true, width: "30" },
+                { index: 5, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
+                { index: 6, label: "Total", class: "Total", active: true, display: true, width: "80" },
+                { index: 7, label: "Deleted", class: "Deleted", active: true, display: true, width: "30" },
             ];
         }
 
@@ -3182,8 +3184,10 @@ Template.transaction_list.onRendered(function() {
             data.t_vs1_report_productmovement[i].TranstypeDesc,
             data.t_vs1_report_productmovement[i].TransactionNo,
             data.t_vs1_report_productmovement[i].Qty,
+            data.t_vs1_report_productmovement[i].Available || 0,
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
+            data.t_vs1_report_productmovement[i].isDeleted || false,
           ];
           recentTransList.push(recentTranObject);
         }

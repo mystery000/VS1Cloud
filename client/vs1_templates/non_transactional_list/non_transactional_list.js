@@ -1465,7 +1465,7 @@ Template.non_transactional_list.onRendered(function() {
         } else {
           fromDateMonth = currentBeginDate.getMonth() + 1;
         }
-    
+
         if (currentBeginDate.getDate() < 10) {
           fromDateDay = "0" + currentBeginDate.getDate();
         }
@@ -5438,8 +5438,8 @@ Template.non_transactional_list.onRendered(function() {
         }
 
         var dataList = [
-          currentData.ID || "",
-          currentData.UOMName || "",
+          currentData.UnitID || "",
+          currentData.UOMName || currentData.UnitName || "",
           currentData.UnitDescription || "",
           currentData.UnitProductKeyName || "",
           currentData.BaseUnitName || "",
