@@ -18,6 +18,7 @@ import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import "jQuery.print/jQuery.print.js";
 import { jsPDF } from "jspdf";
+import Datehandler from "../../DateHandler";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './new_profit.html';
@@ -86,11 +87,12 @@ function buildSubAccountJson( $sortContainer ){
 }
 
 Template.newprofitandloss.onRendered(function () {
-  LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];
   localStorage.setItem("colnames_", "");
   templateObject.setReportOptions = async function (compPeriod = 0, formatDateFrom = new Date(), formatDateTo = new Date() ) {
+    LoadingOverlay.show();
+    $(".pnlTable").hide();
     // New Code Start here
     let fromYear = moment(formatDateFrom).format("YYYY");
     let toYear = moment(formatDateTo).format("YYYY");
@@ -105,6 +107,7 @@ Template.newprofitandloss.onRendered(function () {
       defaultOptions.fromDate = formatDateFrom;
       defaultOptions.toDate = formatDateTo;
       defaultOptions.threcords = dateRange;
+      defaultOptions.compPeriod = compPeriod;
     } else {
       defaultOptions = {
         compPeriod: compPeriod,
@@ -118,9 +121,22 @@ Template.newprofitandloss.onRendered(function () {
       };
     }
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    setTimeout(function () {
+      $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+    }, 100);
+    
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
   };
+
+  $(document).on("change", "#dateFrom, #dateTo", function(e) {
+    // let defaultOptions = templateObject.reportOptions.get();
+    setTimeout(function () {
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      templateObject.setReportOptions(0, dateFrom, dateTo);
+    }, 100);
+  });
 
   let utilityService = new UtilityService();
   let salesOrderTable;
@@ -312,7 +328,7 @@ Template.newprofitandloss.onRendered(function () {
             options.threcords = [];
             if (data.tprofitandlossperiodcomparereport) {
               let accountData = data.tprofitandlossperiodcomparereport;
-
+              
               let accountType = "";
               var dataList = "";
               for (let i = 0; i < accountData.length; i++) {
@@ -403,8 +419,10 @@ Template.newprofitandloss.onRendered(function () {
                   });
                 }, 100);
               }
-              $(".pnlTable").show();
-              $(".fullScreenSpin").css("display", "none");
+              setTimeout(function () {
+                $(".pnlTable").show();
+                $(".fullScreenSpin").css("display", "none");
+              }, 300);
             }
           });
           // data = data.response;
@@ -615,6 +633,12 @@ Template.newprofitandloss.onRendered(function () {
     let getDateFrom = moment(currentDate2).subtract(3, "months").format("YYYY-MM-DD");
     templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
+
+  templateObject.initDate = () => {
+    Datehandler.initOneMonth();
+  };
+
+  templateObject.initDate();
 
   templateObject.getDepartments = function () {
     getVS1Data("TDeptClass")
@@ -864,6 +888,42 @@ $('.tblAvoid').each(function(){
 });
 
 Template.newprofitandloss.events({
+  "click .nonePeriod": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(0, dateFrom, dateTo);
+  },
+  "click .onePeriod": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(1, dateFrom, dateTo);
+  },
+  "click .twoPeriods": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(2, dateFrom, dateTo);
+  },
+  "click .threePeriods": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(3, dateFrom, dateTo);
+  },
+  "click .fourPeriods": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(4, dateFrom, dateTo);
+  },
+  "click .PSother": async function (e) {
+    let templateObject = Template.instance();
+    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    var dateTo = new Date($("#dateTo").datepicker("getDate"));
+    templateObject.setReportOptions(4, dateFrom, dateTo);
+  },
   "click .pnlReportAccount": async function (e) {
     let templateObject = Template.instance();
     await clearData("TAccountRunningBalanceReport");
@@ -1212,129 +1272,129 @@ Template.newprofitandloss.events({
   },
 
   // Current Month
-  "click #thisMonth": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("month").format("YYYY-MM-DD");
-    let endDate = moment().endOf("month").format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #thisMonth": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("month").format("YYYY-MM-DD");
+  //   let endDate = moment().endOf("month").format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #thisQuarter": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().endOf("Q").format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #thisQuarter": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().endOf("Q").format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #thisFinYear": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = null;
-    let endDate = null;
-    if (moment().quarter() == 4) {
-      fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
-      endDate = moment()
-        .add(1, "year")
-        .month("June")
-        .endOf("month")
-        .format("YYYY-MM-DD");
-    } else {
-      fromDate = moment()
-        .subtract(1, "year")
-        .month("July")
-        .startOf("month")
-        .format("YYYY-MM-DD");
-      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
-    }
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #thisFinYear": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = null;
+  //   let endDate = null;
+  //   if (moment().quarter() == 4) {
+  //     fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
+  //     endDate = moment()
+  //       .add(1, "year")
+  //       .month("June")
+  //       .endOf("month")
+  //       .format("YYYY-MM-DD");
+  //   } else {
+  //     fromDate = moment()
+  //       .subtract(1, "year")
+  //       .month("July")
+  //       .startOf("month")
+  //       .format("YYYY-MM-DD");
+  //     endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+  //   }
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #lastMonth": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment()
-      .subtract(1, "months")
-      .startOf("month")
-      .format("YYYY-MM-DD");
-    let endDate = moment()
-      .subtract(1, "months")
-      .endOf("month")
-      .format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #lastMonth": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment()
+  //     .subtract(1, "months")
+  //     .startOf("month")
+  //     .format("YYYY-MM-DD");
+  //   let endDate = moment()
+  //     .subtract(1, "months")
+  //     .endOf("month")
+  //     .format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #lastQuarter": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #lastQuarter": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #lastFinYear": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = null;
-    let endDate = null;
-    if (moment().quarter() == 4) {
-      fromDate = moment()
-        .subtract(1, "year")
-        .month("July")
-        .startOf("month")
-        .format("YYYY-MM-DD");
-      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
-    } else {
-      fromDate = moment()
-        .subtract(2, "year")
-        .month("July")
-        .startOf("month")
-        .format("YYYY-MM-DD");
-      endDate = moment()
-        .subtract(1, "year")
-        .month("June")
-        .endOf("month")
-        .format("YYYY-MM-DD");
-    }
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #lastFinYear": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = null;
+  //   let endDate = null;
+  //   if (moment().quarter() == 4) {
+  //     fromDate = moment()
+  //       .subtract(1, "year")
+  //       .month("July")
+  //       .startOf("month")
+  //       .format("YYYY-MM-DD");
+  //     endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+  //   } else {
+  //     fromDate = moment()
+  //       .subtract(2, "year")
+  //       .month("July")
+  //       .startOf("month")
+  //       .format("YYYY-MM-DD");
+  //     endDate = moment()
+  //       .subtract(1, "year")
+  //       .month("June")
+  //       .endOf("month")
+  //       .format("YYYY-MM-DD");
+  //   }
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #monthToDate": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("M").format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #monthToDate": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("M").format("YYYY-MM-DD");
+  //   let endDate = moment().format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #quarterToDate": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #quarterToDate": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+  //   let endDate = moment().format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
-  "click #finYearToDate": function () {
-    $(".fullScreenSpin").css("display", "block");
-    let templateObject = Template.instance();
-    let fromDate = moment()
-      .month("january")
-      .startOf("month")
-      .format("YYYY-MM-DD");
-    let endDate = moment().format("YYYY-MM-DD");
-    localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
-  },
+  // "click #finYearToDate": function () {
+  //   $(".fullScreenSpin").css("display", "block");
+  //   let templateObject = Template.instance();
+  //   let fromDate = moment()
+  //     .month("january")
+  //     .startOf("month")
+  //     .format("YYYY-MM-DD");
+  //   let endDate = moment().format("YYYY-MM-DD");
+  //   localStorage.setItem('VS1ProfitAndLoss_Report', '');
+  //   templateObject.setReportOptions(0, fromDate, endDate);
+  // },
 
   "click .btnDepartmentSelect": async function () {
     let departments = [];
@@ -1426,6 +1486,7 @@ Template.newprofitandloss.events({
       $(".table tbody tr").show();
     }
   },
+  ...Datehandler.getDateRangeEvents(),
   "blur #myInputSearch": function (event) {
     $(".table tbody tr").show();
     let searchItem = $(event.target).val();

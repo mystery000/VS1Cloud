@@ -1,5 +1,5 @@
 <template name="newprofitandloss">
-    {{# vs1_report_template tabledisplayname="Profit and Loss" tablename="tblgeneralledger" dateAsAt=dateAsAt sheetname="Profit and Loss report result"
+    {{# vs1_report_template tabledisplayname="Profit and Loss" tablename="tblprofitandloss" dateAsAt=dateAsAt sheetname="Profit and Loss report result"
         currencyList = currencyList}}
         <style>
             /* Remove Hyperlinks */
@@ -59,9 +59,9 @@
                 border-left: 0.3em solid transparent;
             }
 
-            .pnlTable th {
+            /* .pnlTable th {
                 background-color: transparent !important;
-            }
+            } */
 
             .pnlTable,
             .pnlTable td,
@@ -118,6 +118,7 @@
             }
             .customProfitLossTable .table-sm th {
                 color: #858796;
+                border: 1px solid #e3e6f0;
             }
             .customProfitLossTable .table-sm td,
             .customProfitLossTable .table-sm th {
@@ -264,10 +265,10 @@
                 display: none !important;
             }
 
-            .customProfitLossTable .customDoubleTableHeading th {
+            /* .customProfitLossTable .customDoubleTableHeading th {
                 padding-top: 0px !important;
                 padding-bottom: 0px !important;
-            }
+            } */
             .customProfitLossTable .customDoubleTableHeading + tr th {
                 border-right: 1px solid #d5d5d5 !important;
             }
@@ -295,8 +296,8 @@
                 color: #e74a3b !important;
             }
             .customProfitLossTable table th {
-                min-width: 170px !important;
-                width: 170px;
+                min-width: 190px !important;
+                width: 190px;
             }
         </style>
         

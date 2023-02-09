@@ -993,6 +993,15 @@ Template.vs1_report_template.onRendered(function () {
           { index: 11, label: 'Edited Flag', class: 'colEditedFlag', active: false, display: true, width: "100" },
         ]
         break;
+      case "tblprofitandloss":  
+        reset_data = [
+          { index: 1, label: 'Account ID', class: 'colAccountID', active: false, display: true, width: "155" },
+          { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "190" },
+          { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "190" },
+          { index: 4, label: 'Percent', class: 'plAmountPercentage', active: true, display: true, width: "190" },
+          { index: 8, label: 'Total', class: 'tglTotal', active: true, display: true, width: "190" },        
+        ];
+        break;
       default:
         break;
     }
