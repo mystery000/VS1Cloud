@@ -40,6 +40,9 @@ export class FixedAssetService extends BaseService {
     return this.getOneById(this.ERPObjects.TFixedAssetType, id);
   }
 
+  saveTFixedAssetType(data) {
+    return this.POST(this.ERPObjects.TFixedAssetType, data);
+  }
 
   getServiceLogList() {
     let options = {
