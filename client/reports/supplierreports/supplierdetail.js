@@ -586,12 +586,6 @@ Template.supplierdetail.events({
     localStorage.setItem("VS1SupplierDetail_Report", "");
     Meteor._reload.reload();
   },
-  "click .btnSpreadSheetLink": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let utilityService = new UtilityService();
-    const filename = "Supplier Detail Report result" + ".xlsx";
-    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-  },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let utilityService = new UtilityService();

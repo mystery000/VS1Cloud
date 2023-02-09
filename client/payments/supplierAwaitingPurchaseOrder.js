@@ -2282,12 +2282,6 @@ Template.supplierawaitingpurchaseorder.events({
       }
       },500);
   },
-    "click .btnSpreadSheetLink": function () {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let utilityService = new UtilityService();
-        const filename = "All Outstanding Expenses report result" + ".xlsx";
-        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-    },
   'change #dateFrom': function() {
       let templateObject = Template.instance();
       $('.fullScreenSpin').css('display', 'inline-block');
