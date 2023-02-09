@@ -8145,6 +8145,7 @@ Template.new_invoice.events({
         $("#html-Invoice-pdfwrapper").css("display", "block");
         let stripe_id = templateObject.accountID.get() || "";
         let file = "Invoice-" + invoiceId + ".pdf";
+        let stringQuery = '?';
         return new Promise((resolve, reject) => {
           if (stripe_id != "") {
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
