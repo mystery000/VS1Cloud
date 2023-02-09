@@ -1,0 +1,188 @@
+<template name="mobileapp">
+	<style>
+		#tblEmployeeList{
+			display: none;
+		}
+		#mobile-left-employee-list{
+			display: none;
+		}
+		#sidebar.top, .navbar{
+			display: none !important;
+		}
+		#colContent{
+			padding: 0px !important;
+		}
+		#bodyContainer{
+			margin: 0;
+		}
+		.mobile-header-container{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: .7vw 1vw;
+			background-color: black;
+		}
+		.mobile-header-text{
+			font-size: 1.8vw;
+			color: #C3C603;
+		}
+		.mobile-header-logo{
+			padding-bottom: 2vw;
+			padding-top: 1.5vw;
+			width: 19vw;
+		}
+		.mobile-phone-header-container{
+			display: none;
+			width: 100%;
+			height: 10vw;
+		}
+		.mobile-main-input{
+			padding: .3vw 1vw;
+			width: 80%;
+			border: solid .1vw #000;
+			outline: none;
+		}
+		.mobile-btn{
+			border: solid .1vw #000;
+		}
+		.mobile-btn:focus {
+			outline: none;
+		}
+		.mobile-right-side-btn{
+			padding: .6vw 0vw;
+			width: 17vw;
+			font-size: 1.7vw;
+		}
+		.mobile-page-container{
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			padding: 1vw;
+			width: 100%;
+		}
+		.mobile-btn-number{
+			height: 10vw;
+			width: 15.8vw;
+			border: none;
+			font-weight: 800;
+			font-size: 2.5vw;
+			background-color: #D8E3E9;
+		}
+		.mobile-row{
+			display: flex;
+			flex-wrap: wrap;
+		}
+		.mobile-right-btn-containner button{
+			height: auto;
+			width: 15.97vw;
+			font-weight: 800;
+			font-size: 1.8vw;
+		}
+		.m-border-n{
+			border: none;
+		}
+		.m-mb-1{
+			margin-bottom: .3vw;
+		}
+		.m-ml-1{
+			margin-left: .3vw;
+		}
+		.mobile-bg-color-grey{
+			background-color: #C0C0C0;
+		}
+		.mobile-bg-color-blue{
+			background-color: #0084D1;
+		}
+		.mobile-bg-color-green{
+			background-color: #00AE00;
+		}
+		.mobile-color-white{
+			color: #fff;
+		}
+		.mobile-left-btn-containner{
+			width: 49.5%;
+		}
+		.mobile-right-btn-containner{
+			width: 49.5%;
+		}
+		#qr-reader-productmodal__scan_region img{
+			width: 20vw;
+			height: 20vw;
+		}
+		@media (max-width: 480px) {
+			.mobile-right-btn-containner{
+				justify-content: space-between;
+				width: 100%;
+				padding-top: 0 !important;
+			}
+			.mobile-right-btn-containner button{
+				width: 48.5vw;
+				height: 48.5vw;
+				margin: 0;
+				margin-bottom: 1vw;
+				font-size: 4vw;
+			}
+			.mobile-left-btn-containner, .mobile-header-container, .mobile-main-input, button.mobile-bg-color-grey, .mobile-right-side-btn{
+				display: none;
+			}
+			.mobile-phone-header-container{
+				display: block;
+			}
+		}
+	</style>
+	{{>mobileHeader}}
+	<div class="mobile-page-container">
+		<input class="mobile-main-input" type="number" />
+		<button class="mobile-bg-color-green mobile-btn mobile-right-side-btn mobile-color-white" id="mobileBtnEnter">
+			ENTER
+		</button>
+		<div id="qr-reader-productmodal" style="width:100%"></div>
+		<div class="w-100 mobile-row" style="justify-content: space-between;">
+			<div class="pt-4 mobile-row mobile-left-employee-list">
+				<table id="tblEmployeeList" name="tblEmployeeList" style="width: 100%" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
+					<thead>
+						<tr class="dnd-moved">
+							<th class="th colName">Name</th>
+							<th class="th colDescription">Description</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#if datatablerecords}}
+						{{#each item in datatablerecords}}
+						<tr class="dnd-moved" id="{{item.fields.ID}}" style="cursor:pointer">
+							<td contenteditable="false" class="colName">{{item.fields.KeyValue}}</td>
+							<td contenteditable="false" class="colDescription">{{item.fields.Description}}</td>
+						</tr>
+						{{/each}}
+						{{/if}}
+					</tbody>
+				</table>
+			</div>
+			<div class="pt-4 mobile-row mobile-left-btn-containner">
+				<button calcValue="7" class="mobile-btn-number m-mb-1 mobile-btn">7</button>
+				<button calcValue="8" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">8</button>
+				<button calcValue="9" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">9</button>
+				<button calcValue="4" class="mobile-btn-number m-mb-1 mobile-btn">4</button>
+				<button calcValue="5" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">5</button>
+				<button calcValue="6" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">6</button>
+				<button calcValue="1" class="mobile-btn-number m-mb-1 mobile-btn">1</button>
+				<button calcValue="2" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">2</button>
+				<button calcValue="3" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">3</button>
+				<button calcValue="-" class="mobile-btn-number mobile-btn">-</button>
+				<button calcValue="0" class="mobile-btn-number m-ml-1 mobile-btn">0</button>
+				<button calcValue="." class="mobile-btn-number m-ml-1 mobile-btn">.</button>
+			</div>
+			<div class="pt-4 mobile-row mobile-right-btn-containner">
+				<button id="btnOpentList" class="m-mb-1 mobile-bg-color-grey mobile-btn">OPEN LIST</button>
+				<button id="btnClockIn" class="m-mb-1 mobile-bg-color-green mobile-color-white m-ml-1 mobile-btn">CLOCK IN</button>
+				<button id="btnClockOut" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn">CLOCK OUT</button>
+				<button class="m-mb-1 mobile-bg-color-grey mobile-btn" id="mobileBtnQrCobeScan">SCAN</button>
+				<button id="btnStartBreak" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn">START BREAK</button>
+				<button id="btnStopBreak" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn">STOP BREAK</button>
+				<button id="mobileBtnCancel" class="mobile-bg-color-grey mobile-btn">CANCEL</button>
+				<button id="btnStartJob" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn">START JOB</button>
+				<button id="btnStopJob" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn">STOP JOB</button>
+			</div>
+		</div>
+	</div>
+</template>
