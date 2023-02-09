@@ -317,7 +317,8 @@ import './js/Table/TableHandler.js';
 /* Jeyhun */
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
-import './vs1charts/mfgPlanner/mfgPlannerchart.js';
+import './vs1charts/mfgPlanner/mfgPlannerchart.js';'
+import './vs1_templates/datatablelist/datatablelist.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
