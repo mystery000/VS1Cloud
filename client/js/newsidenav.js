@@ -2364,6 +2364,12 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+  'click #sidenavmobileapp': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/mobileapp');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
   'click #sidenavnewworkorder': function (event) {
     event.preventDefault();
     FlowRouter.go('/workordercard');

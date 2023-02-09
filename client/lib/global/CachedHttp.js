@@ -1,3 +1,4 @@
+// @ts-nocheck
 import GlobalFunctions from "../../GlobalFunctions.js";
 import "../global/indexdbstorage.js";
 import {Meteor} from 'meteor/meteor';
