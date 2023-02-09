@@ -30,6 +30,9 @@ Template.vs1_report_template.onCreated(function () {
   templateObject.report_displayfields = new ReactiveVar();
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.isAccountingMoreOption = new ReactiveVar();
+  templateObject.isProfitAndLossMoreOption = new ReactiveVar();
+  templateObject.isPeriodSelection = new ReactiveVar();
+  templateObject.isDepartmentSelection = new ReactiveVar();
   templateObject.isTaxCodeOption = new ReactiveVar();
   // templateObject.dateAsAt = new ReactiveVar();
 });
@@ -53,10 +56,18 @@ Template.vs1_report_template.onRendered(function () {
   let currenttablename = "100";
   let displaytablename = "100";
   templateObject.isAccountingMoreOption.set(false);
+  templateObject.isProfitAndLossMoreOption.set(false);
+  templateObject.isPeriodSelection.set(false);
+  templateObject.isDepartmentSelection.set(false);
   templateObject.isTaxCodeOption.set(false);
   if (url.includes("/taxsummaryreport")) {
     templateObject.isAccountingMoreOption.set(true);
     templateObject.isTaxCodeOption.set(true);
+  };
+  if (url.includes("/newprofitandloss")) {
+    templateObject.isProfitAndLossMoreOption.set(true);
+    templateObject.isPeriodSelection.set(true);
+    templateObject.isDepartmentSelection.set(true);
   };
 
   currenttablename = templateObject.data.tablename || "100";
@@ -1171,6 +1182,15 @@ Template.vs1_report_template.helpers({
   },
   isAccountingMoreOption: () => {
     return Template.instance().isAccountingMoreOption.get();;
+  },
+  isProfitAndLossMoreOption: () => {
+    return Template.instance().isProfitAndLossMoreOption.get();;
+  },
+  isPeriodSelection: () => {
+    return Template.instance().isPeriodSelection.get();;
+  },
+  isDepartmentSelection: () => {
+    return Template.instance().isDepartmentSelection.get();
   },
   companyname: () => {
     return loggedCompany;

@@ -307,116 +307,110 @@ Template.newprofitandloss.onRendered(function () {
         try {
           let periodMonths = `${options.compPeriod} Month`;
 
-          let data = await CachedHttp.get(erpObject.TProfitAndLossPeriodCompareReport, async () => {
-            return await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          }, {
-            useIndexDb: true,
-            useLocalStorage: false,
-            validate: (cachedResponse) => {
-              return false;
+          reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths ).then(function(data) {
+            let records = [];
+            options.threcords = [];
+            if (data.tprofitandlossperiodcomparereport) {
+              let accountData = data.tprofitandlossperiodcomparereport;
+
+              let accountType = "";
+              var dataList = "";
+              for (let i = 0; i < accountData.length; i++) {
+                if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+                  accountType = "";
+                } else {
+                  accountType = accountData[i]["AccountTypeDesc"];
+                }
+                let compPeriod = options.compPeriod + 1;
+                let periodAmounts = [];
+                let totalAmount = 0;
+                for (let counter = 1; counter <= compPeriod; counter++) {
+                  if (i == 0) {
+                    options.threcords.push(accountData[i]["DateDesc_" + counter]);
+                  }
+                  totalAmount += accountData[i]["Amount_" + counter];
+                  let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+                  let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                  let Percentage = accountData[i]["Percentage_" + counter];
+                  periodAmounts.push({
+                    decimalAmt: AmountEx,
+                    roundAmt: RoundAmount,
+                    percentage: Percentage,
+                  });
+                }
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+                  let totalRoundAmount = Math.round(totalAmount) || 0;
+                  if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+                    dataList = {
+                      id: accountData[i]["AccountID"] || "",
+                      accounttype: accountType || "",
+                      accounttypeshort: accountData[i]["AccountType"] || "",
+                      accountname: accountData[i]["AccountName"] || "",
+                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                      accountno: accountData[i]["AccountNo"] || "",
+                      totalamountex: "",
+                      totalroundamountex: "",
+                      periodAmounts: "",
+                      name: $.trim(accountData[i]["AccountName"])
+                        .split(" ")
+                        .join("_"),
+                    };
+                  } else {
+                    dataList = {
+                      id: accountData[i]["AccountID"] || "",
+                      accounttype: accountType || "",
+                      accounttypeshort: accountData[i]["AccountType"] || "",
+                      accountname: accountData[i]["AccountName"] || "",
+                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                      accountno: accountData[i]["AccountNo"] || "",
+                      totalamountex: totalAmountEx || 0.0,
+                      periodAmounts: periodAmounts,
+                      totalroundamountex: totalRoundAmount,
+                      name: $.trim(accountData[i]["AccountName"])
+                        .split(" ")
+                        .join("_"),
+                      // totaltax: totalTax || 0.00
+                    };
+                  }
+
+                  if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+                  } else {
+                      if( dataList.totalroundamountex !== 0 ) {
+                        records.push(dataList);
+                      }
+                  }
+              }
+
+              // Set Table Data
+              options.showPercentage = true;
+              templateObject.reportOptions.set(options);
+              templateObject.records.set(records);
+              // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
+              // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
+              if (templateObject.records.get()) {
+                setTimeout(function () {
+                  $("td a").each(function () {
+                    if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                  $("td").each(function () {
+                    if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                }, 100);
+              }
+              $(".pnlTable").show();
+              $(".fullScreenSpin").css("display", "none");
             }
           });
-
-          data = data.response;
+          // data = data.response;
 
           //let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          let records = [];
-          options.threcords = [];
-          if (data.tprofitandlossperiodcomparereport) {
-            let accountData = data.tprofitandlossperiodcomparereport;
-
-            let accountType = "";
-            var dataList = "";
-            for (let i = 0; i < accountData.length; i++) {
-              if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
-                accountType = "";
-              } else {
-                accountType = accountData[i]["AccountTypeDesc"];
-              }
-              let compPeriod = options.compPeriod + 1;
-              let periodAmounts = [];
-              let totalAmount = 0;
-              for (let counter = 1; counter <= compPeriod; counter++) {
-                if (i == 0) {
-                  options.threcords.push(accountData[i]["DateDesc_" + counter]);
-                }
-                totalAmount += accountData[i]["Amount_" + counter];
-                let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
-                let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
-                let Percentage = accountData[i]["Percentage_" + counter];
-                periodAmounts.push({
-                  decimalAmt: AmountEx,
-                  roundAmt: RoundAmount,
-                  percentage: Percentage,
-                });
-              }
-                let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
-                let totalRoundAmount = Math.round(totalAmount) || 0;
-                if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
-                  dataList = {
-                    id: accountData[i]["AccountID"] || "",
-                    accounttype: accountType || "",
-                    accounttypeshort: accountData[i]["AccountType"] || "",
-                    accountname: accountData[i]["AccountName"] || "",
-                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                    accountno: accountData[i]["AccountNo"] || "",
-                    totalamountex: "",
-                    totalroundamountex: "",
-                    periodAmounts: "",
-                    name: $.trim(accountData[i]["AccountName"])
-                      .split(" ")
-                      .join("_"),
-                  };
-                } else {
-                  dataList = {
-                    id: accountData[i]["AccountID"] || "",
-                    accounttype: accountType || "",
-                    accounttypeshort: accountData[i]["AccountType"] || "",
-                    accountname: accountData[i]["AccountName"] || "",
-                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                    accountno: accountData[i]["AccountNo"] || "",
-                    totalamountex: totalAmountEx || 0.0,
-                    periodAmounts: periodAmounts,
-                    totalroundamountex: totalRoundAmount,
-                    name: $.trim(accountData[i]["AccountName"])
-                      .split(" ")
-                      .join("_"),
-                    // totaltax: totalTax || 0.00
-                  };
-                }
-
-                if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-                } else {
-                    if( dataList.totalroundamountex !== 0 ) {
-                      records.push(dataList);
-                    }
-                }
-            }
-
-            // Set Table Data
-            options.showPercentage = true;
-            templateObject.reportOptions.set(options);
-            templateObject.records.set(records);
-            // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
-            // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
-            if (templateObject.records.get()) {
-              setTimeout(function () {
-                $("td a").each(function () {
-                  if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $("td").each(function () {
-                  if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              }, 100);
-            }
-          }
+          
         } catch (err) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -434,121 +428,115 @@ Template.newprofitandloss.onRendered(function () {
           options.threcords = dateRange;
           let departments = options.departments.length ? options.departments.join(",") : "";
 
-          let data = await CachedHttp.get(erpObject.ProfitLossReport, async () => {
-            return await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
-          }, {
-            useIndexDb: true,
-            useLocalStorage: false,
-            validate: (cachedResponse) => {
-              return false;
+          reportService.getProfitandLoss( dateFrom, dateTo, false, departments ).then(function(data) {
+            let records = [];
+            if (data.profitandlossreport) {
+              let accountData = data.profitandlossreport;
+              let accountType = "";
+              var dataList = "";
+              for (let i = 0; i < accountData.length; i++) {
+                if (accountData[i]["Account Type"].replace(/\s/g, "") == "") {
+                  accountType = "";
+                } else {
+                  accountType = accountData[i]["Account Type"];
+                }
+                let periodAmounts = []
+                var totalAmount = accountData[i]["TotalAmountEx"];
+                let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
+                let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
+                // let Percentage = accountData[i]["Percentage_" + counter];
+                periodAmounts.push({
+                  decimalAmt: totalAmountEx,
+                  roundAmt: totalRoundAmount,
+                  // percentage: Percentage,
+                });
+                if( options.departments.length ){
+                  options.departments.forEach(dept => {
+                    totalAmount += accountData[i][dept+"_AmountColumnInc"];
+                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
+                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
+                    if( i == 0 ){
+                      options.threcords.push( dept );
+                    }
+                    periodAmounts.push({
+                      decimalAmt: deptAmountEx,
+                      roundAmt: deptRoundAmount,
+                    });
+                  });
+                }
+                if (
+                  accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
+                  accountType != ""
+                ) {
+                  dataList = {
+                    id: accountData[i]["AccountID"] || "",
+                    accounttype: accountType || "",
+                    accounttypeshort: accountData[i]["AccountType"] || "",
+                    accountname: accountData[i]["AccountName"] || "",
+                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                    accountno: accountData[i]["AccountNo"] || "",
+                    totalamountex: "",
+                    periodAmounts: "",
+                    totalroundamountex: "",
+                    name: $.trim(accountData[i]["AccountName"])
+                      .split(" ")
+                      .join("_"),
+                  };
+                } else {
+                  dataList = {
+                    id: accountData[i]["AccountID"] || "",
+                    accounttype: accountType || "",
+                    accounttypeshort: accountData[i]["AccountType"] || "",
+                    accountname: accountData[i]["AccountName"] || "",
+                    accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                    accountno: accountData[i]["AccountNo"] || "",
+                    totalamountex: totalAmountEx || 0.0,
+                    totalroundamountex: totalRoundAmount,
+                    periodAmounts: periodAmounts,
+                    name: $.trim(accountData[i]["AccountName"])
+                      .split(" ")
+                      .join("_"),
+                    // totaltax: totalTax || 0.00
+                  };
+                }
+
+                if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+                } else {
+                  if( dataList.totalroundamountex !== 0 ) {
+                    records.push(dataList);
+                  }
+                }
+              }
+
+              // Set Table Data
+              options.showPercentage = false;
+              templateObject.reportOptions.set(options);
+              templateObject.records.set(records);
+              // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
+              // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
+              if (templateObject.records.get()) {
+                setTimeout(function () {
+                  $("td a").each(function () {
+                    if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                  $("td").each(function () {
+                    if ($(this).text().indexOf("-" + Currency) >= 0) {
+                      $(this).addClass("text-danger");
+                      $(this).removeClass("fgrblue");
+                    }
+                  });
+                }, 100);
+              }
+              $(".pnlTable").show();
+              $(".fullScreenSpin").css("display", "none");
             }
           });
 
-          data = data.response;
-          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
-          let records = [];
-          if (data.profitandlossreport) {
-            let accountData = data.profitandlossreport;
-            let accountType = "";
-            var dataList = "";
-            for (let i = 0; i < accountData.length; i++) {
-              if (accountData[i]["Account Type"].replace(/\s/g, "") == "") {
-                accountType = "";
-              } else {
-                accountType = accountData[i]["Account Type"];
-              }
-              let periodAmounts = []
-              var totalAmount = accountData[i]["TotalAmountEx"];
-              let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
-              let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
-              // let Percentage = accountData[i]["Percentage_" + counter];
-              periodAmounts.push({
-                decimalAmt: totalAmountEx,
-                roundAmt: totalRoundAmount,
-                // percentage: Percentage,
-              });
-              if( options.departments.length ){
-                options.departments.forEach(dept => {
-                  totalAmount += accountData[i][dept+"_AmountColumnInc"];
-                  let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
-                  let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
-                  if( i == 0 ){
-                    options.threcords.push( dept );
-                  }
-                  periodAmounts.push({
-                    decimalAmt: deptAmountEx,
-                    roundAmt: deptRoundAmount,
-                  });
-                });
-              }
-              if (
-                accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
-                accountType != ""
-              ) {
-                dataList = {
-                  id: accountData[i]["AccountID"] || "",
-                  accounttype: accountType || "",
-                  accounttypeshort: accountData[i]["AccountType"] || "",
-                  accountname: accountData[i]["AccountName"] || "",
-                  accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                  accountno: accountData[i]["AccountNo"] || "",
-                  totalamountex: "",
-                  periodAmounts: "",
-                  totalroundamountex: "",
-                  name: $.trim(accountData[i]["AccountName"])
-                    .split(" ")
-                    .join("_"),
-                };
-              } else {
-                dataList = {
-                  id: accountData[i]["AccountID"] || "",
-                  accounttype: accountType || "",
-                  accounttypeshort: accountData[i]["AccountType"] || "",
-                  accountname: accountData[i]["AccountName"] || "",
-                  accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                  accountno: accountData[i]["AccountNo"] || "",
-                  totalamountex: totalAmountEx || 0.0,
-                  totalroundamountex: totalRoundAmount,
-                  periodAmounts: periodAmounts,
-                  name: $.trim(accountData[i]["AccountName"])
-                    .split(" ")
-                    .join("_"),
-                  // totaltax: totalTax || 0.00
-                };
-              }
-
-              if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-              } else {
-                if( dataList.totalroundamountex !== 0 ) {
-                  records.push(dataList);
-                }
-              }
-            }
-
-            // Set Table Data
-            options.showPercentage = false;
-            templateObject.reportOptions.set(options);
-            templateObject.records.set(records);
-            // localStorage.setItem('VS1ProfitAndLoss_Report_Options', JSON.stringify(options) || '');
-            // localStorage.setItem('VS1ProfitAndLoss_Report', JSON.stringify(records) || '');
-            if (templateObject.records.get()) {
-              setTimeout(function () {
-                $("td a").each(function () {
-                  if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $("td").each(function () {
-                  if ($(this).text().indexOf("-" + Currency) >= 0) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              }, 500);
-            }
-          }
+          // data = data.response;
+          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );          
         } catch (error) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -846,9 +834,9 @@ $('.tblAvoid').each(function(){
   //Dragable items in edit layout screen end
   /*Visually hide additional periods so that custom selection handles it*/
 
-  setTimeout(function () {
-    $(".pnlTable").show();
-  }, 6000);
+  // setTimeout(function () {
+  //   $(".pnlTable").show();
+  // }, 6000);
   /*Visual hide end*/
   // var eLayScreenArr = [];
   // var pnlTblArr = [];
@@ -872,7 +860,7 @@ $('.tblAvoid').each(function(){
   //            sortArray(eLayScreenArr, pnlTblArr);
 
 
-  LoadingOverlay.hide();
+  // LoadingOverlay.hide();
 });
 
 Template.newprofitandloss.events({
@@ -1352,9 +1340,9 @@ Template.newprofitandloss.events({
     let departments = [];
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $(".chkDepartment").each(function () {
-      if ($(this).is(":checked")) {
-        let dpt = $(this).val();
+    $("#tblDepartmentCheckbox .chkServiceCard").each(function () {
+      if ($(this).is(":checked")) {        
+        let dpt = $(this).closest("tr").find(".colDeptName").text();
         departments.push(dpt);
       }
     });
