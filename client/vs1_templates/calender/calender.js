@@ -27,8 +27,8 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let smsService = new SMSService();
-let createAppointment = localStorage.getItem("CloudAppointmentCreateAppointment") || false;
-let startAndStopAppointmentOnly = localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
+let createAppointment = false;
+let startAndStopAppointmentOnly = false;
 
 Template.calender.onCreated(function() {
     const templateObject = Template.instance();
@@ -72,6 +72,8 @@ Template.calender.onCreated(function() {
     };
     templateObject.repeatDays.set(dayObj);
     templateObject.toupdatelogid = new ReactiveVar();
+    templateObject.createAppointment = new ReactiveVar();
+    templateObject.createAppointment.set(false);
 });
 
 async function sendAppointmentEmail() {
@@ -265,6 +267,7 @@ async function sendAppointmentEmail() {
 }
 
 Template.calender.onRendered(function() {
+    
     let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
     let templateObject = Template.instance();
     let tempObj = Template.instance();
@@ -283,7 +286,7 @@ Template.calender.onRendered(function() {
     let calendarSettings = [];
     let prefObject = {};
     let globalSet = {};
-    let launchAllocations = localStorage.getItem("CloudAppointmentAllocationLaunch");
+    let launchAllocations = ""; 
 
     $('#edtFrequencyDetail').css('display', 'none');
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
@@ -299,6 +302,13 @@ Template.calender.onRendered(function() {
         changeYear: true,
         yearRange: "-90:+10",
     });
+
+    templateObject.getValuesForAppointmentSettings = async function() {
+        createAppointment = await getVS1Data("CloudAppointmentCreateAppointment") || false;
+        startAndStopAppointmentOnly = await getVS1Data("CloudAppointmentStartStopAccessLevel") || false;
+        launchAllocations = await getVS1Data("CloudAppointmentAllocationLaunch");
+    };
+    templateObject.getValuesForAppointmentSettings();
 
     templateObject.getDayNumber = function(day) {
         day = day.toLowerCase();
@@ -419,7 +429,7 @@ Template.calender.onRendered(function() {
             }, 900);
         }
     }
-    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+    if (startAndStopAppointmentOnly == true) {
         //$("#btnHold").prop("disabled", true);
     }
 
@@ -823,7 +833,7 @@ Template.calender.onRendered(function() {
                         $("#btnHold").prop("disabled", false);
                     }
 
-                    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                    if (startAndStopAppointmentOnly == true) {
                         //$("#btnHold").prop("disabled", true);
                     }
 
@@ -1086,7 +1096,7 @@ Template.calender.onRendered(function() {
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
 
-                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                if (startAndStopAppointmentOnly == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, "");
@@ -1402,7 +1412,7 @@ Template.calender.onRendered(function() {
                         $("#btnHold").prop("disabled", false);
                     }
 
-                    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                    if (startAndStopAppointmentOnly == true) {
                         //$("#btnHold").prop("disabled", true);
                     }
 
@@ -1643,7 +1653,7 @@ Template.calender.onRendered(function() {
                 $("#tActualStartTime").prop("disabled", false);
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
-                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                if (startAndStopAppointmentOnly == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, "");
@@ -3066,7 +3076,7 @@ Template.calender.onRendered(function() {
                 $("#tActualStartTime").prop("disabled", false);
                 $("#tActualEndTime").prop("disabled", false);
                 $("#txtActualHoursSpent").prop("disabled", false);
-                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                if (startAndStopAppointmentOnly == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, "");
@@ -3634,7 +3644,7 @@ Template.calender.onRendered(function() {
         return hour
     };
 
-    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+    if (startAndStopAppointmentOnly == true) {
         //$("#btnHold").prop("disabled", true);
     }
 
@@ -3984,7 +3994,7 @@ Template.calender.onRendered(function() {
                                 $("#btnHold").prop("disabled", false);
                             }
 
-                            if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                            if (startAndStopAppointmentOnly == true) {
                                 //$("#btnHold").prop("disabled", true);
                             }
                             if (result[0].aEndTime != "") {
@@ -4136,7 +4146,7 @@ Template.calender.onRendered(function() {
                         $("#tActualStartTime").prop("disabled", false);
                         $("#tActualEndTime").prop("disabled", false);
                         $("#txtActualHoursSpent").prop("disabled", false);
-                        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                        if (startAndStopAppointmentOnly == true) {
                             //$("#btnHold").prop("disabled", true);
                         }
                         document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, "");
@@ -4888,7 +4898,7 @@ Template.calender.events({
                     $("#btnHold").prop("disabled", false);
                 }
 
-                if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                if (startAndStopAppointmentOnly == true) {
                     //$("#btnHold").prop("disabled", true);
                 }
 
@@ -7590,7 +7600,7 @@ Template.calender.events({
         }
     },
     'click #btnHold': function(event) {
-        // if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+        // if (startAndStopAppointmentOnly == true) {
         //     swal({
         //         title: 'Oops...',
         //         text: 'You do not have access to put appointments "On Hold"',
@@ -7989,7 +7999,7 @@ Template.calender.events({
 
     },
     'click #btnHold span': function(event) {
-        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+        if (startAndStopAppointmentOnly == true) {
             swal({
                 title: 'Oops...',
                 text: 'You do not have access to put appointments "On Hold"',
@@ -9017,10 +9027,10 @@ Template.calender.helpers({
         return Template.instance().appointmentrecords.get();
     },
     accessOnHold: () => {
-        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
+        return Template.instance().createAppointment || false;
     },
     accessStartStopOnly: () => {
-        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
+        return Template.instance().createAppointment || false;
     },
     addAttachment: () => {
         return localStorage.getItem("CloudAppointmentAddAttachment") || false;
@@ -9035,7 +9045,7 @@ Template.calender.helpers({
         return Template.instance().attachmentCount.get();
     },
     createnewappointment: () => {
-        return localStorage.getItem("CloudAppointmentCreateAppointment") || false;
+        return Template.instance().createAppointment || false;
     },
     uploadedFile: () => {
         return Template.instance().uploadedFile.get();
