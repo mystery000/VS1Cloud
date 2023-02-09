@@ -126,10 +126,10 @@ Template.addaccountpop.onRendered(function () {
                         accountTypeList.push(accounttyperecordObj);
                       }
                     }else if(currentLoc == "/chequecard"){
-                      if((data.taccountvs1[i].AccountTypeName == "EQUITY")||(data.taccountvs1[i].AccountTypeName == "BANK")||(data.taccountvs1[i].AccountTypeName == "CCARD") ||(data.taccountvs1[i].AccountTypeName == "COGS")
-                      ||(data.taccountvs1[i].AccountTypeName == "EXP")||(data.taccountvs1[i].AccountTypeName == "FIXASSET")||(data.taccountvs1[i].AccountTypeName == "INC")||(data.taccountvs1[i].AccountTypeName == "LTLIAB")
-                      ||(data.taccountvs1[i].AccountTypeName == "OASSET")||(data.taccountvs1[i].AccountTypeName == "OCASSET")||(data.taccountvs1[i].AccountTypeName == "OCLIAB")||(data.taccountvs1[i].AccountTypeName == "EXEXP")
-                      ||(data.taccountvs1[i].AccountTypeName == "EXINC")){
+                      if((data.taccounttype[i].AccountTypeName == "EQUITY")||(data.taccounttype[i].AccountTypeName == "BANK")||(data.taccounttype[i].AccountTypeName == "CCARD") ||(data.taccounttype[i].AccountTypeName == "COGS")
+                      ||(data.taccounttype[i].AccountTypeName == "EXP")||(data.taccounttype[i].AccountTypeName == "FIXASSET")||(data.taccounttype[i].AccountTypeName == "INC")||(data.taccounttype[i].AccountTypeName == "LTLIAB")
+                      ||(data.taccounttype[i].AccountTypeName == "OASSET")||(data.taccounttype[i].AccountTypeName == "OCASSET")||(data.taccounttype[i].AccountTypeName == "OCLIAB")||(data.taccounttype[i].AccountTypeName == "EXEXP")
+                      ||(data.taccounttype[i].AccountTypeName == "EXINC")){
                         accountTypeList.push(accounttyperecordObj);
                       }
                     }else{
@@ -189,10 +189,10 @@ Template.addaccountpop.onRendered(function () {
                     accountTypeList.push(accounttyperecordObj);
                   }
                 }else if(currentLoc == "/chequecard"){
-                  if((data.taccountvs1[i].AccountTypeName == "EQUITY")||(data.taccountvs1[i].AccountTypeName == "BANK")||(data.taccountvs1[i].AccountTypeName == "CCARD") ||(data.taccountvs1[i].AccountTypeName == "COGS")
-                  ||(data.taccountvs1[i].AccountTypeName == "EXP")||(data.taccountvs1[i].AccountTypeName == "FIXASSET")||(data.taccountvs1[i].AccountTypeName == "INC")||(data.taccountvs1[i].AccountTypeName == "LTLIAB")
-                  ||(data.taccountvs1[i].AccountTypeName == "OASSET")||(data.taccountvs1[i].AccountTypeName == "OCASSET")||(data.taccountvs1[i].AccountTypeName == "OCLIAB")||(data.taccountvs1[i].AccountTypeName == "EXEXP")
-                  ||(data.taccountvs1[i].AccountTypeName == "EXINC")){
+                  if((data.taccounttype[i].AccountTypeName == "EQUITY")||(data.taccounttype[i].AccountTypeName == "BANK")||(data.taccounttype[i].AccountTypeName == "CCARD") ||(data.taccounttype[i].AccountTypeName == "COGS")
+                  ||(data.taccounttype[i].AccountTypeName == "EXP")||(data.taccounttype[i].AccountTypeName == "FIXASSET")||(data.taccounttype[i].AccountTypeName == "INC")||(data.taccounttype[i].AccountTypeName == "LTLIAB")
+                  ||(data.taccounttype[i].AccountTypeName == "OASSET")||(data.taccounttype[i].AccountTypeName == "OCASSET")||(data.taccounttype[i].AccountTypeName == "OCLIAB")||(data.taccounttype[i].AccountTypeName == "EXEXP")
+                  ||(data.taccounttype[i].AccountTypeName == "EXINC")){
                     accountTypeList.push(accounttyperecordObj);
                   }
                 }else{

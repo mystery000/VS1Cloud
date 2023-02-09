@@ -7,15 +7,14 @@ import { Template } from 'meteor/templating';
 import './eftExportModal.html';
 
 let templateObject = Template.instance();
-  let accountService = new AccountService();
-  let eftService = new EftService();
+let accountService = new AccountService();
+let eftService = new EftService();
 
 Template.eftExportModal.onCreated(function () {
     templateObject = Template.instance();
     templateObject.eftOptionsList = new ReactiveVar([]);
     templateObject.accountTypes = new ReactiveVar([]);
     templateObject.transactionDescriptions = new ReactiveVar([]);
-    templateObject.bankNames = new ReactiveVar([]);
     templateObject.eftRowId = new ReactiveVar(null);
     templateObject.tabadescriptiverecordList = new ReactiveVar([]);
     templateObject.tabadetailrecordList = new ReactiveVar([]);
@@ -38,13 +37,6 @@ Template.eftExportModal.onRendered(function () {
         {
             value: 'insurance',
             label: 'Insurance',
-        },
-    ]);
-
-    templateObject.bankNames.set([
-        {
-            value: 'None',
-            label: '',
         },
     ]);
 
@@ -285,17 +277,16 @@ Template.eftExportModal.onRendered(function () {
     $(document).on('click', '#tblAccount tbody tr', function (e) {
         $('.colAccount').removeClass('boldtablealertsborder');
         var table = $(this);
-        let colAccountID = table.find('.colAccountID').text();
+        let colAccountID = table.find('.colAccountId').text();
         if (colAccountID) {
             $('.fullScreenSpin').css('display', 'inline-block');
-
             templateObject.loadTABADetailRecordById(colAccountID);
             templateObject.loadTabaDescriptiveRecordById(colAccountID);
         }
 
-        let lineProductName = table.find('.productName').text();
-        let lineProductDesc = table.find('.productDesc').text();
-        let lineAccoutNo = table.find('.accountnumber').text();
+        let lineProductName = table.find('.colAccountName').text();
+        let lineProductDesc = table.find('.colDescription').text();
+        let lineAccoutNo = table.find('.colAccountNo').text();
         $('#accountListModal').modal('toggle');
         $('#sltBankAccountName').val(lineProductName);
     });
@@ -475,7 +466,7 @@ Template.eftExportModal.events({
         playSaveAudio();
         setTimeout(function () {
             let sltAccountType = $('#sltBankAccountName').val();
-            let sltBankName = $('#sltBankAccountName').val();
+            let sltBankName = $('#sltBankName').val();
             let eftProcessingDate = $('#eftProcessingDate').val();
             let eftUserName = $('#eftUserName').val();
             let eftNumberUser = $('#eftNumberUser').val();
@@ -500,7 +491,7 @@ Template.eftExportModal.events({
                 swal('Please input Transaction Description', '', 'error');
                 return false;
             }
-
+            eftNumberUser = eftNumberUser.length >= 6 ? eftNumberUser : '0'.repeat(6 - eftNumberUser.length) + eftNumberUser
             var arrData = [];
             var eftData = '';
             $('#eftExportTableBody tr').each(function () {
@@ -606,12 +597,16 @@ Template.eftExportModal.events({
             $('.fullScreenSpin').css('display', 'inline-block');
             const link = document.createElement('a');
             const content =
-                sltAccountType +
+                '0                 01' +
                 sltBankName +
-                moment(eftProcessingDate).format('DDMMYY') +
-                eftUserName +
+                '       ' +
+                sltAccountType +
+                '           ' +
                 eftNumberUser +
                 sltTransactionDescription +
+                '     ' +
+                moment(eftProcessingDate).format('DDMMYY') +
+                // eftUserName +
                 '\n' +
                 eftData;
             const file = new Blob([content], { type: 'text/plain' });

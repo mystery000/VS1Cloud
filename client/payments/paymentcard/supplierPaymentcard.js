@@ -140,7 +140,8 @@ Template.supplierpaymentcard.onRendered(() => {
     let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
     let employeeName = localStorage.getItem("mySessionEmployee");
 
-    let lines = templateObject.outstandingExpenses.get();
+    let lines = templateObject.record.get();
+    lines = lines.LineItems
     let eftService = new EftService();
 
     let descRecord = {
@@ -149,7 +150,8 @@ Template.supplierpaymentcard.onRendered(() => {
         "AccountID": data.ID,
         "DirectEntryUserID": employeeID.toString(),
         "DirectEntryUserName": employeeName,
-        // "TransactionDescription": "Payroll",
+        "TransactionDescription": "Supplier",
+        "ProcessingDate": moment(),
         "UserBankName": bankAccount
       }
     }
@@ -165,14 +167,14 @@ Template.supplierpaymentcard.onRendered(() => {
         fields: {
           "AccountID": data.ID,
           "AccountName": bankAccount,
-          "Amount": parseFloat(line.paymentAmount.replace(/[^0-9.-]+/g, "")) || 0,
+          "Amount": parseFloat(line.paymentamount.replace(/[^0-9.-]+/g, "")) || 0,
           "BSB": data.BSB,
-          "CreditDebitAccountNumber": line.receiptNo,
+          "CreditDebitAccountNumber": line.invoiceNumber,
           "LodgementReferences": reference,
           "TransactionCode": "53",
           "TransCodeDesc": "Pay",
-          "TransID": line.awaitingId,
-          "TransType": line.type,
+          "TransID": line.transid,
+          "TransType": line.transtype,
           "UsersAccountNumber": "",
           "UsersBSB": ""
         }
@@ -3496,6 +3498,7 @@ Template.supplierpaymentcard.onRendered(() => {
                         paymentamount: paymentAmt || 0,
                         ouststandingamount: outstandingAmt,
                         orginalamount: originalAmt,
+                        invoiceNumber: data.fields.Lines[i].fields.InvoiceNo || "",
                       };
                       lineItems.push(lineItemObj);
                     }
@@ -3545,6 +3548,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       paymentamount: paymentAmt || 0,
                       ouststandingamount: outstandingAmt,
                       orginalamount: originalAmt,
+                      invoiceNumber: data.fields.Lines.fields.InvoiceNo || "",
                     };
                     lineItems.push(lineItemObj);
                   }
@@ -4216,6 +4220,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       paymentamount: paymentAmt || 0,
                       ouststandingamount: outstandingAmt,
                       orginalamount: originalAmt,
+                      invoiceNumber: data.fields.Lines[i].fields.InvoiceNo || "",
                     };
                     lineItems.push(lineItemObj);
                   }
@@ -4265,6 +4270,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     paymentamount: paymentAmt || 0,
                     ouststandingamount: outstandingAmt,
                     orginalamount: originalAmt,
+                    invoiceNumber: data.fields.Lines.fields.InvoiceNo || "",
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -12017,7 +12023,7 @@ Template.supplierpaymentcard.events({
     LoadingOverlay.hide();
   }, delayTimeAfterSound);
   },
-  "click #tblSupplierPaymentcard tr .colTransNoDONT": function (e) {
+  "click #tblSupplierPaymentcard tr .colTransNo": function (e) {
     let custname = $("#edtSupplierName").val() || "";
     if (custname === "") {
       swal("Supplier has not been selected!", "", "warning");
@@ -13111,15 +13117,6 @@ Template.supplierpaymentcard.events({
   //   $('.appliedAmount').text(currency + calculatedAppliedAmount);
   //  }, 500);
   // },
-
-
-  "click #chkEFT": function (event) {
-    if ($("#chkEFT").is(":checked")) {
-      $("#eftExportModal").modal("show");
-    } else {
-      $("#eftExportModal").modal("hide");
-    }
-  },
 });
 
 
