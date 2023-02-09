@@ -47,8 +47,6 @@ Template.mobileapp.events({
     'click #mobileBtnQrCobeScan': function(e, instance) {
         $("#qr-reader-productmodal").css('display', 'block');
         function onScanSuccessProdModal(decodedText, decodedResult) {
-            console.log(decodedText)
-            alert(decodedText)
         }
         html5QrcodeScannerProdModal = new Html5QrcodeScanner(
             "qr-reader-productmodal", {
@@ -57,13 +55,10 @@ Template.mobileapp.events({
                 rememberLastUsedCamera: true
             });
         html5QrcodeScannerProdModal.render(onScanSuccessProdModal);
-        console.log(html5QrcodeScannerProdModal)
     },
     'click #mobileBtnCancel': function(e, instance) {
         $("#qr-reader-productmodal").css('display', 'none');
-        console.log(html5QrcodeScannerProdModal)
         html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
-            console.log(ignore)
         }).catch((err) => console.log(err));
     },
     'click #btnClockIn': function(e, instance) {
