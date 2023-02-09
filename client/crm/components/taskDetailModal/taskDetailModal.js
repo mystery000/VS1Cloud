@@ -364,7 +364,6 @@ Template.taskDetailModal.events({
 
             crmService.saveNewTask(objDetails).then(function(data) {
                 $(".btnRefresh").addClass('btnSearchAlert');
-
                 crmService.getAllTaskList().then(async function(data) {
                     if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                         await addVS1Data("TCRMTaskList", JSON.stringify(data));
