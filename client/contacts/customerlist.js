@@ -303,7 +303,7 @@ Template.customerlist.onRendered(function() {
 
         }).on('page', function() {
             setTimeout(function() {
-                MakeNegative();
+                makeNegativeGlobal();
             }, 100);
         })
 
@@ -872,7 +872,21 @@ Template.customerlist.events({
 
           }
       });
-  }
+  },
+  // "click .btnViewDeleted": async function(e) {
+  //     $(".fullScreenSpin").css("display", "inline-block");
+  //     e.stopImmediatePropagation();
+  //     const templateObject = Template.instance();
+  //     await clearData('TERPCombinedContactsVS1');
+  //     templateObject.getCustomerTransactionListData(false);
+  // },
+  // "click .btnHideDeleted": async function(e) {
+  //     $(".fullScreenSpin").css("display", "inline-block");
+  //     e.stopImmediatePropagation();
+  //     let templateObject = Template.instance();
+  //     await clearData('TERPCombinedContactsVS1');
+  //     templateObject.getCustomerTransactionListData(false);
+  // },
 });
 
 Template.customerlist.helpers({

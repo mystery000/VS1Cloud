@@ -51,7 +51,7 @@ Template.accountsoverview.onRendered(function() {
     let needAddTravel = true;
     let needAddVehicle = true;
     const templateObject = Template.instance();
-    let currenttablename = 'tblAccountOverview';
+    const currenttablename = 'tblAccountOverview';
 
     if(localStorage.getItem("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
@@ -372,7 +372,6 @@ Template.accountsoverview.onRendered(function() {
                                     linestatus = "In-Active";
                                 };
 
-
                                 var dataListDupp = [
                                     dataObjectnew.taccountvs1list[j].AccountID || "",
                                     dataObjectnew.taccountvs1list[j].AccountName || "",
@@ -394,10 +393,12 @@ Template.accountsoverview.onRendered(function() {
                                     dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
                                     dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
                                     linestatus,
+                                    dataObjectnew.taccountvs1list[j].Level1 || "",
+                                    dataObjectnew.taccountvs1list[j].Level2 || "",
+                                    dataObjectnew.taccountvs1list[j].Level3 || "",
                                 ];
 
                                 splashArrayAccountsOverview.push(dataListDupp);
-                                //}
                             }
                             let uniqueChars = [...new Set(splashArrayAccountsOverview)];
                             templateObject.transactiondatatablerecords.set(uniqueChars);
@@ -1529,16 +1530,18 @@ Template.accountsoverview.events({
     "click .btnTaxSummary": function(event) {
         FlowRouter.go("/taxsummaryreport");
     },
-    "click .exportbtn": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletocsv").click();
-        $(".fullScreenSpin").css("display", "none");
-    },
+
     "click .exportbtnExcel": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletoexcel").click();
         $(".fullScreenSpin").css("display", "none");
     },
+    // "click .btnSpreadSheetLink": function () {
+    //     $(".fullScreenSpin").css("display", "inline-block");
+    //     let utilityService = new UtilityService();
+    //     const filename = "Accountslist report result" + ".xlsx";
+    //     utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+    // },
     "keyup #tblAccountOverview_filter input": function (event) {
       if ($(event.target).val() != "") {
         $(".btnRefreshList").addClass("btnSearchAlert");
@@ -1830,10 +1833,19 @@ Template.accountsoverview.events({
         $(".isBankAccount").addClass("isNotBankAccount");
         $(".isCreditAccount").addClass("isNotCreditAccount");
     },
-    "click .printConfirm": function(event) {
-        playPrintAudio();
+    "click #exportbtn": function() {
         $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblAccountOverview_wrapper .dt-buttons .btntabletopdf").click();
+        let currenttablename = 'tblAccountOverview';
+        let utilityService = new UtilityService();
+        const filename = loggedCompany + "- Accounts List" + ".xlsx";
+        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
+        // jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletocsv').click();
+        $(".fullScreenSpin").css("display", "none");
+    },
+    "click #printConfirm": function(event) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        let currenttablename = 'tblAccountOverview';
+        jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
         $(".fullScreenSpin").css("display", "none");
     },
     "click .templateDownload": function() {
@@ -2525,6 +2537,20 @@ Template.accountsoverview.events({
             $('.fullScreenSpin').css('display', 'none');
         });
     }
+    },
+    "click .btnViewDeleted": async function(e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        const templateObject = Template.instance();
+        await clearData('TAccountVS1List');
+        templateObject.getAccountsOverviewData(true);
+    },
+    "click .btnHideDeleted": async function(e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        let templateObject = Template.instance();
+        await clearData('TAccountVS1List');
+        templateObject.getAccountsOverviewData(false);
     },
 });
 
