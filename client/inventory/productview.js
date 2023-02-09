@@ -731,8 +731,6 @@ Template.productview.onRendered(function () {
       });
   };
 
-    }
-
     templateObject.getBinLocations = function() {
         getVS1Data('TProductBin').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -778,7 +776,7 @@ Template.productview.onRendered(function () {
             });
         });
 
-    }
+    };
 
     templateObject.getClientTypeData = function() {
         getVS1Data('TClientType').then(function(dataObject) {
@@ -3280,7 +3278,16 @@ Template.productview.helpers({
         return Template.instance().taxraterecords.get();
     },
     deptrecords: () => {
-        return Template.instance().deptrecords.get();
+        return Template.instance()
+          .deptrecords.get()
+          .sort(function (a, b) {
+            if (a.department == "NA") {
+              return 1;
+            } else if (b.department == "NA") {
+              return -1;
+            }
+            return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+          });
     },
     binrecords: () => {
         return Template.instance().binrecords.get().sort(function(a, b) {
@@ -3397,143 +3404,7 @@ Template.productview.helpers({
     },
     productID: () => {
         return Template.instance().productID.get();
-    }
-
-  productrecord: () => {
-    return Template.instance().records.get();
-  },
-  taxraterecords: () => {
-    return Template.instance().taxraterecords.get();
-  },
-  deptrecords: () => {
-    return Template.instance()
-      .deptrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  tserialnumberList: () => {
-    return Template.instance().tserialnumberList.get();
-  },
-  tlotnumberList: () => {
-    return Template.instance().tlotnumberList.get();
-  },
-  recentTrasactions: () => {
-    return Template.instance().recentTrasactions.get();
-  },
-  coggsaccountrecords: () => {
-    return Template.instance()
-      .coggsaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  salesaccountrecords: () => {
-    return Template.instance()
-      .salesaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  inventoryaccountrecords: () => {
-    return Template.instance()
-      .inventoryaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  productqtyrecords: () => {
-    return Template.instance()
-      .productqtyrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  productExtraSell: () => {
-    return Template.instance()
-      .productExtraSell.get()
-      .sort(function (a, b) {
-        if (a.clienttype == "NA") {
-          return 1;
-        } else if (b.clienttype == "NA") {
-          return -1;
-        }
-        return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
-      });
-  },
-  totaldeptquantity: () => {
-    return Template.instance().totaldeptquantity.get();
-  },
-  productsCloudPreferenceRec: () => {
-    return CloudPreference.findOne({
-      userid: localStorage.getItem("mycloudLogonID"),
-      PrefName: "productview",
-    });
-  },
-  isSNTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isSNTrackChecked.get();
-  },
-  isTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isTrackChecked.get();
-  },
-  isExtraSellChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isExtraSellChecked.get();
-  },
-  includeInventory: () => {
-    return Template.instance().includeInventory.get();
-  },
-  clienttypeList: () => {
-    return Template.instance()
-      .clienttypeList.get()
-      .sort(function (a, b) {
-        if (a == "NA") {
-          return 1;
-        } else if (b == "NA") {
-          return -1;
-        }
-        return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
-      });
-  },
-  isMobileDevices: () => {
-    return Template.instance().isMobileDevices.get();
-  },
-  isManufactured: () => {
-    return Template.instance().isManufactured.get();
-  },
-  showBomModal: () => {
-    return Template.instance().isShowBOMModal.get();
-  },
-  productID: () => {
-    return Template.instance().productID.get();
-  },
+    },
 });
 
 Template.productview.events({
