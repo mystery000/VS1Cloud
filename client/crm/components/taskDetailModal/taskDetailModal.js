@@ -363,12 +363,11 @@ Template.taskDetailModal.events({
             $(".fullScreenSpin").css("display", "inline-block");
 
             crmService.saveNewTask(objDetails).then(function(data) {
-                $(".fullScreenSpin").css("display", "none");
                 $(".btnRefresh").addClass('btnSearchAlert');
-
                 crmService.getAllTaskList().then(async function(data) {
                     if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                         await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                        $(".fullScreenSpin").css("display", "none");
                         if($("#btnRefreshList") != undefined){
                             $("#btnRefreshList").trigger("click");
                         }
