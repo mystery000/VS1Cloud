@@ -123,6 +123,7 @@ Template.newprofitandloss.onRendered(function () {
     templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     setTimeout(function () {
       $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
+      $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     }, 100);
     
     await templateObject.reportOptions.set(defaultOptions);
