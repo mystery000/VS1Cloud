@@ -56,11 +56,20 @@ Template.new_process.onRendered(() => {
                 }else {
                     let data = JSON.parse(dataObject[0].data)
                     let useData = data.tprocessstep;
+                    let added = true
                     for(let i = 0; i< useData.length; i++) {
                         if(useData[i].fields.ID == id) {
+                            added =  false
                            objDetail = useData[i].fields;
                            $('.fullScreenSpin').css('display', 'none');
                         }
+                    }
+                    if(added == true) {
+                        manufacturingService.getOneProcessDataByID(id).then(function(data){
+                            objDetail = data.fields
+                            templateObject.processrecord.set(objDetail);
+                            $('.fullScreenSpin').css('display', 'none');
+                        })
                     }
 
                     templateObject.processrecord.set(objDetail);
@@ -84,10 +93,10 @@ Template.new_process.onRendered(() => {
                         COGS: '',
                         ExpenseAccount: '',
                         OHourlyCost: '',
-                        OCOGS: '',
-                        OExpense: '',
+                        OCOGS: 'Manufacturing Labour',
+                        OExpense: 'Manufacturing Labour off Set',
                         TotalHourlyCost: '',
-                        Wastage: ''
+                        Wastage: 'Manufacturing Wastage'
                     }
 
                     templateObject.processrecord.set(objDetail);
@@ -216,7 +225,7 @@ Template.new_process.events({
                 return;
             }
 
-            manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(datareturn) {
+            manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(datareturn) {
                 addVS1Data('TProcessStep', JSON.stringify(datareturn)).then(function(){
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -244,10 +253,43 @@ Template.new_process.events({
 
     },
 
-    'click .btnCancel': function(event) {
+    'click .btnBack': function(event) {
         event.preventDefault();
         event.stopPropagation();
         FlowRouter.go('/processlist')
+    },
+
+    'click .btnRemove': async function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let templateObject = Template.instance()
+        if(FlowRouter.current().queryParams.id) {
+            let id = FlowRouter.current().queryParams.id;
+            // async function getObjectFields () {
+            //     return new Promise(async(resolve, reject) => {
+            //         // getVS1Data('TProcessStep').then(function(dataObject){
+            //         //     if(dataObject.length == 0) {
+            //         //         manufacturingService.getOneProcessDataByID(id).then(data) {
+            //         //             resolve()
+            //         //         }
+            //         //     }
+            //         // })
+            //     })
+            // }
+            let fields = templateObject.processrecord.get();
+            let objDetail = {
+                type: 'TProcessStep',
+                fields: {
+                    ...fields,
+                    Active: false
+                }
+            }
+            manufacturingService.saveProcessData(objDetail).then(function() {
+                FlowRouter.go('/processlist?success=true')
+            }).catch(function(e) {
+            })
+
+        }
     },
 
     'click #edtCOGS': function (event) {
@@ -340,19 +382,32 @@ Template.new_process.events({
         $('#assetAccountListModal').modal('toggle');
     },
     'blur .edtHourlyCost': function(e) {
-        if($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() == '') {
-            $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
-        } else if ($('#edtHourlyCost').val() == '' &&  $('#edtHourlyOverheadCost').val() != '') {
-            $('#edtTotalHourlyCosts').val($('#edtHourlyOverheadCost').val())
-        } else if ($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() != '') {
-            $('#edtTotalHourlyCosts').val(Currency + (parseFloat($('#edtHourlyCost').val().replace('$', '')) + parseFloat($('#edtHourlyOverheadCost').val().replace('$', ''))).toFixed(2))
+        let costPrice = $('#edtHourlyCost').val();
+        let cost = parseFloat(costPrice.replace(/[^0-9.-]+/g, "")) || 0;
+        $("#edtHourlyCost").val(utilityService.modifynegativeCurrencyFormat(cost));
+            // $('#edtTotalHourlyCosts').val($('#edtHourlyCost').val())
+        if ($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() != '') {
+            costPrice = (parseFloat($('#edtHourlyCost').val().replace(/[^0-9.-]+/g, "")) || 0 ) + (parseFloat($('#edtHourlyOverheadCost').val().replace(/[^0-9.-]+/g, "")) || 0 )
+            $('#edtTotalHourlyCosts').val(utilityService.modifynegativeCurrencyFormat(costPrice))
+        }
+    },
+
+    'blur .edtHourlyOverheadCost': function(e) {
+        let costPrice = $('#edtHourlyOverheadCost').val();
+        let cost = parseFloat(costPrice.replace(/[^0-9.-]+/g, "")) || 0;
+        $('#edtHourlyOverheadCost').val(utilityService.modifynegativeCurrencyFormat(cost))
+
+        if ($('#edtHourlyCost').val() != '' &&  $('#edtHourlyOverheadCost').val() != '') {
+            costPrice = (parseFloat($('#edtHourlyCost').val().replace(/[^0-9.-]+/g, "")) || 0 ) + (parseFloat($('#edtHourlyOverheadCost').val().replace(/[^0-9.-]+/g, "")) || 0 )
+            $('#edtTotalHourlyCosts').val(utilityService.modifynegativeCurrencyFormat(costPrice))
+            // $('#edtTotalHourlyCosts').val(Currency + (parseFloat($('#edtHourlyCost').val().replace('$', '')) + parseFloat($('#edtHourlyOverheadCost').val().replace('$', ''))).toFixed(2))
         }
     },
 
     'blur #edtHourlyCost': function(e){
         e.preventDefault();
         e.stopPropagation();
-        $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2))
+        // $('#edtHourlyCost').val(Currency +parseFloat( $('#edtHourlyCost').val()).toFixed(2))
     },
 
     'focus #edtHourlyCost': function(e){
@@ -364,7 +419,7 @@ Template.new_process.events({
     'blur #edtHourlyOverheadCost': function(e){
         e.preventDefault();
         e.stopPropagation();
-        $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2))
+        // $('#edtHourlyOverheadCost').val(Currency +parseFloat( $('#edtHourlyOverheadCost').val()).toFixed(2))
     },
 
     'focus #edtHourlyOverheadCost': function(e){

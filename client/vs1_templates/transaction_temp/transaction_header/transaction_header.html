@@ -186,7 +186,7 @@
   {{> customfieldDroppop}}
   {{> customfieldpop}}
 
-  <div class="row" style="background-color: #ededed;">
+  <div class="row align-items-end pb-3" style="background-color: #ededed;">
     {{#if data.ispaid}}
     <div class="col-12 colPaid" style="display: none;">
       <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
@@ -249,136 +249,154 @@
           }}{{data.invoiceToDesc}}{{/vs1_textarea}}
         </div>
         {{/if}}
-        <div class="col-12 col-md-6 col-lg-8 col-xl-9 ">
-          <div class="row row-middle">
-            {{#if showSalesDate}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-            {{> sale_date_selector
-              label=getDateInputLabel
-              SODate=data.saledate
-              DueDate=data.duedate
-            }}
-            </div>
-            {{/if}}
-            {{#if showPONumber}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> po_number_input
-                value=data.custPONumber
-                firstname=data.firstname
-                lastname=data.lastname
-              }}
-            </div>
-            {{/if}}
-            {{#if showInvoiceNumber}}
+        <div class="col-12 col-md-6 col-lg-8 col-xl-9 d-flex flex-column justify-content-between ">
+          <div>
+            <div class="row row-middle">
+              {{#if showSalesDate}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-                {{> invoice_number_input
-                  value=data.invoicenumber
+              {{> sale_date_selector
+                label=getDateInputLabel
+                SODate=data.saledate
+                DueDate=data.duedate
+              }}
+              </div>
+              {{/if}}
+              {{#if showPONumber}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> po_number_input
+                  value=data.custPONumber
+                  firstname=data.firstname
+                  lastname=data.lastname
                 }}
               </div>
-            {{/if}}
-            {{#if showOrderNumber}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_input
-                label='Order Number'
-                id='edtOrderNumber'
-                name='edtOrderNumber'
-                defaultValue=data.salesorderid
-              }}
-            </div>
-            {{/if}}
-            {{#if showVia}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_select
-                label="Via"
-                id="shipvia"
-                type="search"
-                name="shipvia"
-              }}
-            </div>
-            {{/if}}
-            {{#if showTerms}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_select
-                label="Terms"
-                id="sltTerms"
-                type="search"
-                name="sltTerms"
-              }}
-            </div>
-            {{/if}}
-            {{#if showStatus}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_select
-                label="Status"
-                type="search"
-                id="sltStatus"
-                name="sltStatus"
-              }}
-            </div>
-            {{/if}}
-            {{#if showReference}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_input
-                label="Reference"
-                classes=""
-                type="text"
-                id="edtRef"
-                name="edtRef"
-                defaultValue=data.reference
-              }}
-            </div>
-            {{/if}}
-            {{#if showDepartment}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-              {{> default_select
-                label="Department"
-                id="sltDept"
-                name="sltDept"
-                type="search"
-              }}
-            </div>
-            {{/if}}
-            {{#if isCurrencyEnable}}
-              {{#if equals cardType 'Invoice'}}
-              {{> CurrencyWidget rate="sell" trans="true"}}
-              {{else}}
-              {{#if equals cardType 'Sales Order'}}
-              {{> CurrencyWidget rate="sell" trans="true"}}
-              {{else}}
-              {{> CurrencyWidget rate="buy" row="true"}}
               {{/if}}
+              {{#if showInvoiceNumber}}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                  {{> invoice_number_input
+                    value=data.invoicenumber
+                  }}
+                </div>
               {{/if}}
-            {{/if}}
-            {{#if showCustomFields}}
-            {{> custom_fields
-              containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
-              salesCloudPreferenceRec=salesCloudPreferenceRec
-              custfields=custfields
-              data=data
-            }}
-            {{/if}}
-            {{#if poStatus}}
+              {{#if showOrderNumber}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
                 {{> default_input
-                  label="POStatus"
-                  id="sltPOStatus"
-                  name="sltPOStatus"
-                  readonly=true
-                  defaultValue=data.poStatus
+                  label='Order Number'
+                  id='edtOrderNumber'
+                  name='edtOrderNumber'
+                  defaultValue=data.salesorderid
                 }}
               </div>
-            {{/if}}
-            {{#if woStatus}}
+              {{/if}}
+              {{#if showVia}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> default_select
+                  label="Via"
+                  id="shipvia"
+                  type="search"
+                  name="shipvia"
+                }}
+              </div>
+              {{/if}}
+              {{#if showTerms}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> default_select
+                  label="Terms"
+                  id="sltTerms"
+                  type="search"
+                  name="sltTerms"
+                }}
+              </div>
+              {{/if}}
+              {{#if showStatus}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> default_select
+                  label="Status"
+                  type="search"
+                  id="sltStatus"
+                  name="sltStatus"
+                }}
+              </div>
+              {{/if}}
+              {{#if showReference}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
                 {{> default_input
-                  label="WOStatus"
-                  id="sltWOStatus"
-                  name="sltWOStatus"
-                  readonly=true
-                  defaultValue=woStatus
+                  label="Reference"
+                  classes=""
+                  type="text"
+                  id="edtRef"
+                  name="edtRef"
+                  defaultValue=data.reference
                 }}
               </div>
-            {{/if}}
+              {{/if}}
+              {{#if showDepartment}}
+              <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                {{> default_select
+                  label="Department"
+                  id="sltDept"
+                  name="sltDept"
+                  type="search"
+                }}
+              </div>
+              {{/if}}
+              {{#if isCurrencyEnable}}
+                {{#if equals cardType 'Invoice'}}
+                {{> CurrencyWidget rate="sell" trans="true"}}
+                {{else}}
+                {{#if equals cardType 'Sales Order'}}
+                {{> CurrencyWidget rate="sell" trans="true"}}
+                {{else}}
+                {{> CurrencyWidget rate="buy" row="true"}}
+                {{/if}}
+                {{/if}}
+              {{/if}}
+              {{#if showCustomFields}}
+              {{> custom_fields
+                containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+                salesCloudPreferenceRec=salesCloudPreferenceRec
+                custfields=custfields
+                data=data
+              }}
+              {{/if}}
+            </div>
+          </div>
+          <div >
+            <div class="row">
+              
+              {{#if poStatus}}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                  {{> default_input
+                    label="POStatus"
+                    id="sltPOStatus"
+                    name="sltPOStatus"
+                    readonly=true
+                    defaultValue=data.poStatus
+                  }}
+                </div>
+              {{/if}}
+              {{#if woStatus}}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                  {{> default_input
+                    label="WOStatus"
+                    id="sltWOStatus"
+                    name="sltWOStatus"
+                    readonly=true
+                    defaultValue=woStatus
+                  }}
+                </div>
+              {{/if}}
+              {{#if showQuantityBuild}}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                  {{> default_input
+                    label="Quantity Built"
+                    id="edtTotalQuantity"
+                    name="edtTotalQuantity"
+                    defaultValue=data.quantity
+                    readonly=showCompleted
+                  }}
+                </div>
+              {{/if}}
+            </div>
           </div>
         </div>
       </div>
@@ -415,7 +433,6 @@
           showCopyTransaction=showCopyTransaction
           showCopyToInvoice=showCopyToInvoice
           showCopyToOrder=showCopyToOrder
-          showQuantityBuild=showQuantityBuild
           data=data
           showCompleteProcess=showCompleteProcess
           showVendorService=showVendorService

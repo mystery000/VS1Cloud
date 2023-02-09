@@ -1443,7 +1443,7 @@ Template.new_salesorder.onCreated(function () {
         //check if the workorder is already exists
         let workOrderIndex = workorderList.findIndex((order) => {
           return (
-            order.fields.SaleID == tempObj.SalesOrderId.get() &&
+            order.fields.SaleID == templateObject.SalesOrderId.get() &&
             order.fields.ProductName == productName
           );
         });

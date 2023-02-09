@@ -140,7 +140,7 @@
 
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 16px">
-                    <div class="table-responsive">
+                    <!-- <div class="table-responsive">
                         <style>
                             th {
                                 background-color: #ededed;
@@ -182,63 +182,20 @@
                             }
 
                         </style>
-                        <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                            <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                                <style>
-                                    .dropdown-toggle::after {
-                                        display: none;
-                                    }
-                                </style>
-                                <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                {{> daterangedropdownoption}}
-                            </div>
-                            <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                                <div class="input-group date" style="width: 160px;">
-                                    <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                                <div class="input-group date" style="width: 160px;">
-                                    <input type="text" class="form-control" id="dateTo" name="dateTo" >
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <table id="tblWorkorderList" name="tblWorkorderList" style="width: 100%" class="dataTable table table-hover table-striped table-bordered tblWorkorderList">
-                            <thead>
-                                <tr class="dnd-moved">
-                                    <th class="th colId">ID</th>
-                                    <th class="th colOrderNumber">Order Number</th>
-                                    <th class="th colCustomer">Customer</th>
-                                    <th class="th colPONumber">PO Number</th>
-                                    <th class="th colSaleDate">Sale Date</th>
-                                    <th class="th colDueDate">Due Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#if datatablerecords}}
-                                {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.fields.ID}}" style="cursor:pointer">
-                                    <td contenteditable="false" class="colId">{{item.fields.ID}}</td>
-                                    <td contenteditable="false" class="colOrderNumber">{{item.fields.SaleID}}</td>
-                                    <td contenteditable="false" class="colCustomer">{{item.fields.Customer}}</td>
-                                    <td contenteditable="false" class="colPONumber">{{item.fields.PONumber}}</td>
-                                    <td contenteditable="false" class="colSaleDate">{{item.fields.SaleDate}}</td>
-                                    <td contenteditable="false" class="colDueDate">{{item.fields.DueDate}}</td>
-                                </tr>
-                                {{/each}}
-                                {{/if}}
-                            </tbody>
-                        </table> -->
-                        {{> transaction_list tablename = "tblWorkorderList" }}
-                    </div>
+                        
+                        
+                    </div> -->
+                    {{>datatablelist 
+                        tablename="tblWorkorderList"
+                        indexeddbname = 'TVS1Workorder'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Work Order List'
+                        istransaction = true
+                        datahandler = datahandler
+                        lowercaseDataName='tvs1workorder'
+                        exportfilename='Work Order List'
+                        exIndexDBName = 'tvs1workorder'
+                    }}
                 </div>
             </div>
 
