@@ -1133,6 +1133,17 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 10, label: 'Employee', class:'Employee', active: true, display: true, width: "" },
                 { index: 11, label: 'Comments', class: 'Comments', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblAllTaskDatatable"){
+            reset_data = [
+                { index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "" },
+                { index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "" },
+                { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "" },
+                { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
+                { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -8559,8 +8570,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -9581,11 +9592,11 @@ Template.non_transactional_list.onRendered(function() {
             customerName = $('#edtJobCustomerCompany').val() || "";
         }
 
-        let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
-        let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
+        let fromDate = datefrom == "" ? moment(new Date()).subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
+        let toDate = dateto == "" ? moment(new Date()).format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -10616,8 +10627,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
 
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
@@ -11591,8 +11602,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
 
         $(".fullScreenSpin").css("display", "inline-block");
         getVS1Data('TBASReturn').then(function(dataObject) {
@@ -12139,8 +12150,8 @@ Template.non_transactional_list.onRendered(function() {
         let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
 
-        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
-        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
 
         $(".fullScreenSpin").css("display", "inline-block");
         getVS1Data('TVATReturn').then(function(dataObject) {
@@ -16005,6 +16016,495 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.getAllTasksList = async function(deleteFilter = false, dateFilter="all"){
+        var url = FlowRouter.current().path;
+        url = new URL(window.location.href);
+        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+        getVS1Data("TCRMTaskList").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                crmService.getAllTaskList(employeeID).then(function(data) {
+                    if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                        let all_records = data.tprojecttasks;
+                        let today = moment().format("YYYY-MM-DD");
+
+                        if(!deleteFilter){
+                            all_records = all_records.filter((item) => item.fields.Completed == false);
+                        }
+                        
+                        $(".crm_all_count").text(all_records.length);
+        
+                        if(dateFilter == "today"){
+                            all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                            $(".crm_today_count").text(today_records.length);
+                        }
+                        else if(dateFilter == "upcoming"){
+                            upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                            $(".crm_upcoming_count").text(upcoming_records.length);
+                        }
+        
+                        setTimeout(() => {
+                            getVS1Data("TCRMProjectList").then(function(dataObject) {
+                                if (dataObject.length == 0) {
+                                    crmService.getTProjectList(employeeID).then(function(data) {
+                                        if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                            let all_projects = data.tprojectlist;
+                                            all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                            templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                        }
+                                        addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                    }).catch(function(err) {});
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                }
+                            }).catch(function(err) {
+                                crmService.getTProjectList(employeeID).then(function(data) {
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);                                    
+                                        templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                    addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                }).catch(function(err) {});
+                            });
+                        }, 100);
+                    } else {
+                        $(".crm_all_count").text(0);
+                        $(".crm_today_count").text(0);
+                        $(".crm_upcoming_count").text(0);
+                    }
+                    $(".fullScreenSpin").css("display", "none");
+                }).catch(function(err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let all_records = data.tprojecttasks;
+                let today = moment().format("YYYY-MM-DD");                
+                
+                if (employeeID) {
+                    all_records = all_records.filter(item => item.fields.EnteredBy == employeeID);
+                }
+                if(!deleteFilter){
+                    all_records = all_records.filter((item) => item.fields.Completed == false);
+                }
+                
+                $(".crm_all_count").text(all_records.length);
+
+                if(dateFilter == "today"){
+                    all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                    $(".crm_today_count").text(today_records.length);
+                }
+                else if(dateFilter == "upcoming"){
+                    upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                    $(".crm_upcoming_count").text(upcoming_records.length);
+                }
+
+                setTimeout(() => {
+                    getVS1Data("TCRMProjectList").then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            crmService.getTProjectList(employeeID).then(function(data) {
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                    templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                }
+                                addVS1Data("TCRMProjectList", JSON.stringify(data));
+                            }).catch(function(err) {});
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                let all_projects = data.tprojectlist;
+                                templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                            }
+                        }
+                    }).catch(function(err) {
+                        crmService.getTProjectList(employeeID).then(function(data) {
+                            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                let all_projects = data.tprojectlist;
+                                all_projects = all_projects.filter((proj) => proj.fields.ID != 11);                                    
+                                templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                            }
+                            addVS1Data("TCRMProjectList", JSON.stringify(data));
+                        }).catch(function(err) {});
+                    });
+                }, 100);
+
+                $(".fullScreenSpin").css("display", "none");
+            }
+        }).catch(function(err) {
+            crmService.getAllTaskList(employeeID).then(function(data) {
+                if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                    let all_records = data.tprojecttasks;
+                    let today = moment().format("YYYY-MM-DD");
+
+                    if(!deleteFilter){
+                        all_records = all_records.filter((item) => item.fields.Completed == false);
+                    }
+                    
+                    $(".crm_all_count").text(all_records.length);
+    
+                    if(dateFilter == "today"){
+                        all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                        $(".crm_today_count").text(today_records.length);
+                    }
+                    else if(dateFilter == "upcoming"){
+                        upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                        $(".crm_upcoming_count").text(upcoming_records.length);
+                    }
+    
+                    setTimeout(() => {
+                        getVS1Data("TCRMProjectList").then(function(dataObject) {
+                            if (dataObject.length == 0) {
+                                crmService.getTProjectList(employeeID).then(function(data) {
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                        templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                    addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                }).catch(function(err) {});
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                }
+                            }
+                        }).catch(function(err) {
+                            crmService.getTProjectList(employeeID).then(function(data) {
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    all_projects = all_projects.filter((proj) => proj.fields.ID != 11);                                    
+                                    templateObject.displayAllTasksList(all_records, deleteFilter, all_projects);
+                                }
+                                addVS1Data("TCRMProjectList", JSON.stringify(data));
+                            }).catch(function(err) {});
+                        });
+                    }, 100);
+                } else {
+                    $(".crm_all_count").text(0);
+                    $(".crm_today_count").text(0);
+                    $(".crm_upcoming_count").text(0);
+                }
+                $(".fullScreenSpin").css("display", "none");
+            }).catch(function(err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+
+    templateObject.displayAllTasksList = async function(task_array, deleteFilter = false, project_array){
+        var splashArrayLeadList = new Array();        
+        let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
+            tcontact = "";
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+        
+        task_array.forEach((item) => {
+            if (item.fields.Completed) {
+                completed = "checked";
+                chk_complete = "chk_uncomplete";
+            } else {
+                completed = "";
+                chk_complete = "chk_complete";
+            }
+            td0 = `
+                <div class="custom-control custom-checkbox chkBox pointer no-modal "
+                style="width:15px;margin-right: -6px;">
+                <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+                    id="formCheck-${item.fields.ID}" ${completed}>
+                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+                    for="formCheck-${item.fields.ID}"></label>
+                </div>`;
+
+            tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+
+            tcontact = item.fields.ContactName;
+            
+            if (item.fields.due_date == "" || item.fields.due_date == null) {
+                td1 = "";
+                td11 = "";
+            } else {
+                td11 = moment(item.fields.due_date).format("DD/MM/YYYY");
+                td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
+
+                let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
+                if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                    color_num = 3; // Red
+                } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                    color_num = 2; // Orange
+                } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                    color_num = 0; // Green
+                }
+
+                td0 = `
+                    <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+                    style="width:15px;margin-right: -6px;${completed_style}">
+                    <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+                        id="formCheck-${item.fields.ID}" ${completed}>
+                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+                        for="formCheck-${item.fields.ID}"></label>
+                    </div>`;
+            }
+
+            td2 = item.fields.TaskName;
+            td3 = item.fields.TaskDescription.length < 80 ? item.fields.TaskDescription : item.fields.TaskDescription.substring(0, 79) + "...";
+
+            if (item.fields.TaskLabel) {
+                if (item.fields.TaskLabel.fields) {
+                    td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
+                        style="margin-right: 5px; color:${item.fields.TaskLabel.fields.Color}" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+                    labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
+                } else {
+                    item.fields.TaskLabel.forEach((lbl) => {
+                        td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
+                            style="margin-right: 5px; color:${lbl.fields.Color}" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+                        labelsForExcel += lbl.fields.TaskLabelName + " ";
+                    });
+                }
+            } else {
+                td4 = "";
+            }
+
+            projectName = item.fields.ProjectName;
+            if (item.fields.ProjectName == "" || item.fields.ProjectName == "Default") {
+                projectName = "";
+            }
+
+            let all_projects = project_array;
+            let projectColor = 'transparent';
+            if (item.fields.ProjectID != 0) {
+                let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
+                if (projects.length && projects[0].fields.ProjectColour) {
+                    projectColor = projects[0].fields.ProjectColour;
+                }
+            }
+            
+            td6 = ``;
+            if (item.fields.Active) {
+                td6 = "";
+            } else {
+                td6 = "In-Active";
+            }
+
+            splashArrayLeadList.push([
+                tflag,
+                tcontact,
+                td1,
+                td2,
+                td3,
+                td4,
+                projectName,
+                td6,
+                item.fields.ID,
+                color_num,
+                labelsForExcel,
+                item.fields.Completed,
+                projectColor
+            ]);
+        });
+        templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+        
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayLeadList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 0,
+                        className: "colPriority openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("data-id", rowData[8]);
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "100px",
+                    },
+                    {
+                        orderable: false,
+                        targets: 1,
+                        className: "colContact openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "200px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colDate openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "120px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colTaskName openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 4,
+                        className: "colTaskDesc openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 5,
+                        className: "colTaskLabels openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 6,
+                        className: "colTaskProjects openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background', rowData[13]);
+                        },
+                    },
+                    {
+                        orderable: false,
+                        targets: 7,
+                        className: "colStatus openEditSubTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                order: [
+                    [3, "desc"],
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');                    
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = task_array.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         //templateObject.getContactOverviewData(); //Tinyiko moved to contactoverview.js
@@ -16181,6 +16681,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getAppointmentsByCustomer();
     } else if (currenttablename === 'tblSalesListByCustomer'){
         templateObject.getSalesListByCustomer()
+    } else if(currenttablename === 'tblAllTaskDatatable'){
+        templateObject.getAllTasksList(false);
     }
 
     tableResize();
@@ -16198,6 +16700,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getBasReturnData(false, datefrom, dateto);
         } else if (currenttablename === "tblVATReturnList") {
             templateObject.getVatReturnData(false, datefrom, dateto);
+        } else if (currenttablename === "tblAllTaskDatatable") {
+            templateObject.getAllTasksList(false);
         }
     });
 
@@ -16219,23 +16723,6 @@ Template.non_transactional_list.onRendered(function() {
             }
         }
         $("#myModalDepartment").modal("toggle");
-    });
-
-    $(document).on("click", "#btnRefreshList", function(e) {
-        const datefrom = $("#dateFrom").val();
-        const dateto = $("#dateTo").val();
-
-        if (currenttablename === "tblLeadCrmListWithDate") {
-            templateObject.getLeadCrmListDataWithDate(false, datefrom, dateto);
-        } else if (currenttablename === "tblCustomerCrmListWithDate") {
-            templateObject.getCustomerCrmListDataWithDate(false, datefrom, dateto);
-        } else if (currenttablename === "tblSupplierCrmListWithDate") {
-            templateObject.getSupplierCrmListDataWithDate(false, datefrom, dateto);
-        } else if (currenttablename === "tblBASReturnList") {
-            templateObject.getBasReturnData(false, datefrom, dateto);
-        } else if (currenttablename === "tblVATReturnList") {
-            templateObject.getVatReturnData(false, datefrom, dateto);
-        }
     });
 });
 
@@ -16369,6 +16856,8 @@ Template.non_transactional_list.events({
             templateObject.getAssetRegisterData(true);
         } else if (currenttablename == "tblServiceLogList") {
             templateObject.getServiceLogData(true);
+        } else if (currenttablename == "tblAllTaskDatatable") {
+            templateObject.getAllTasksList(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -16487,6 +16976,8 @@ Template.non_transactional_list.events({
             templateObject.getAssetRegisterData(false);
         } else if (currenttablename == "tblServiceLogList") {
             templateObject.getServiceLogData(false);
+        } else if (currenttablename == "tblAllTaskDatatable") {
+            templateObject.getAllTasksList(false);
         }
     },
     'change .custom-range': async function(event) {

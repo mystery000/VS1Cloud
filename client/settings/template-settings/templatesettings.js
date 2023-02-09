@@ -19,6 +19,7 @@ import '../../vs1_templates/print_templates/preview_footer3.html';
 import '../../vs1_templates/print_templates/preview_header1.html';
 import '../../vs1_templates/print_templates/preview_header2.html';
 import '../../vs1_templates/print_templates/preview_header3.html';
+import LoadingOverlay from '../../LoadingOverlay'
 
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
@@ -51,6 +52,315 @@ var noHasTotals = [
   "Deposit",
 ];
 
+var PrintDisplaySettingData = {
+  "templateList": [
+    {
+      "Bills": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Credits": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Customer Payments": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Customer Statements": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Invoices": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Invoice Back Orders": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Purchase Orders": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Quotes": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Refunds": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Sales Orders": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Supplier Payments": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Statements": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Delivery Docket": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Journal Entry": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Deposits": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+    {
+      "Cheques": [
+        {
+          "template_type": 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ] 
+    },
+  ]
+};
+
 let displaySetttingHeader1 = {}
 let displaySetttingHeader2 = {}
 let displaySetttingHeader3 = {}
@@ -62,9 +372,11 @@ Template.templatesettings.onCreated(() => {
   let templateObject = Template.instance();
   templateObject.invoice_data = new ReactiveVar([]);
   templateObject.print_displayfields = new ReactiveVar();
+  templateObject.print_displaysettings = new ReactiveVar();
 });
 
 Template.templatesettings.onRendered(function () {
+
   $("#templatePreviewModal #templatePreviewInput").keyup(function (event) {
     $('input[name="' + title + "_" + number + '"]').val($(this).val());
     // localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
@@ -1544,12 +1856,11 @@ Template.templatesettings.onRendered(function () {
 
   ];
 
-  function loadDataTable() {
-
+  function loadDataTable(num) {
     // Adjust any columnDef widths set by the user
     setUserColumnsDefWidths();
 
-    table = $('#' + tableId).DataTable({
+    table = $('#' + tableId + num).DataTable({
       data: dataSet,
       destroy: true,
       autoWidth: false,
@@ -1559,6 +1870,7 @@ Template.templatesettings.onRendered(function () {
       scrollX: true,
       scrollCollapse: true,
       scroller: true,
+      colReorder: true,
       columnDefs: columnDefs,
       "order": [[1, "asc"]],
 
@@ -1566,22 +1878,22 @@ Template.templatesettings.onRendered(function () {
 
         //Add JQueryUI resizable functionality to each th in the ScrollHead table
 
-        $('#' + tableId + '_wrapper .dataTables_scrollHead thead th').resizable({
+        $('#' + tableId + num + '_wrapper .dataTables_scrollHead thead th').resizable({
 
           handles: "e",
 
-          alsoResize: '#' + tableId + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
+          alsoResize: '#' + tableId + num + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
 
           stop: function () {
 
             saveColumnSettings();
 
-            loadDataTable();
+            loadDataTable(num);
           }
         });
       },
     });
-
+    table.colReorder.move( 0, 1 );
   }
 
 
@@ -1742,7 +2054,7 @@ Template.templatesettings.onRendered(function () {
 
     dataSet = [];
     dataSet.push(data[0]);
-    loadDataTable();
+    loadDataTable(1);
 
     // for (item of data) {
     //   idx = 0;
@@ -1752,7 +2064,7 @@ Template.templatesettings.onRendered(function () {
     //   var content = "";
     //   for (item_temp of item) {
     //     if (idx > left_idx)
-    //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //       content = content + "<td class=" + className[idx][0] + " style='text-align: left; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     else
     //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     idx++;
@@ -1794,10 +2106,6 @@ Template.templatesettings.onRendered(function () {
   }
 
   function loadTemplateBody2(object_invoce) {
-    // table content
-    var tbl_content = $("#templatePreviewModal .tbl_content");
-    tbl_content.empty();
-
     let indexID = 0;
     columnDefs = []
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
@@ -1812,6 +2120,10 @@ Template.templatesettings.onRendered(function () {
         );
     }
     indexID = 0;
+
+    // table content
+    var tbl_content = $("#templatePreviewModal .tbl_content");
+    tbl_content.empty();
 
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {
@@ -1886,7 +2198,8 @@ Template.templatesettings.onRendered(function () {
 
     dataSet = [];
     dataSet.push(data[0]);
-    loadDataTable();
+    loadDataTable(2);
+
 
     // for (item of data) {
     //   idx = 0;
@@ -1896,7 +2209,7 @@ Template.templatesettings.onRendered(function () {
     //   var content = "";
     //   for (item_temp of item) {
     //     if (idx > left_idx)
-    //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //       content = content + "<td class=" + className[idx][0] + " style='text-align: left; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     else
     //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     idx++;
@@ -1926,11 +2239,6 @@ Template.templatesettings.onRendered(function () {
   }
 
   function loadTemplateBody3(object_invoce) {
-    // table content
-    var tbl_content = $("#templatePreviewModal .tbl_content");
-    tbl_content.empty();
-
-
     let indexID = 0;
     columnDefs = []
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
@@ -1945,6 +2253,10 @@ Template.templatesettings.onRendered(function () {
         );
     }
     indexID = 0;
+
+    // table content
+    var tbl_content = $("#templatePreviewModal .tbl_content");
+    tbl_content.empty();
 
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {
@@ -2019,7 +2331,7 @@ Template.templatesettings.onRendered(function () {
 
     dataSet = [];
     dataSet.push(data[0]);
-    loadDataTable();
+    loadDataTable(3);
 
     // for (item of data) {
     //   idx = 0;
@@ -2029,7 +2341,7 @@ Template.templatesettings.onRendered(function () {
     //   var content = "";
     //   for (item_temp of item) {
     //     if (idx > left_idx)
-    //       content = content + "<td class=" + className[idx][0] + " style='text-align: right; padding-right: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
+    //       content = content + "<td class=" + className[idx][0] + " style='text-align: left; padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     else
     //       content = content + "<td class=" + className[idx][0] + " style='padding-left: " + firstIndentLeft + "px;'>" + item_temp + "</td>";
     //     idx++;
@@ -2184,8 +2496,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$900.00",
         gst: "$0.00",
@@ -2230,8 +2542,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$900.00",
         gst: "$0.00",
@@ -2276,8 +2588,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$900.00",
         gst: "$0.00",
@@ -2357,8 +2669,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2404,8 +2716,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2450,8 +2762,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2529,10 +2841,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           Trans: ["10", "left"],
-          Original: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Original: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -2578,10 +2890,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           Trans: ["10", "left"],
-          Original: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Original: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "",
         gst: "",
@@ -2627,10 +2939,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           Trans: ["10", "left"],
-          Original: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Original: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "",
         gst: "",
@@ -2730,9 +3042,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "right"],
-          Paid: ["15", "right"],
-          Balance: ["15", "right"],
+          Total: ["15", "left"],
+          Paid: ["15", "left"],
+          Balance: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -2779,9 +3091,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "right"],
-          Paid: ["15", "right"],
-          Balance: ["15", "right"],
+          Total: ["15", "left"],
+          Paid: ["15", "left"],
+          Balance: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -2828,9 +3140,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "right"],
-          Paid: ["15", "right"],
-          Balance: ["15", "right"],
+          Total: ["15", "left"],
+          Paid: ["15", "left"],
+          Balance: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -2915,10 +3227,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -2963,10 +3275,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3011,10 +3323,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3101,10 +3413,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3149,10 +3461,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3197,10 +3509,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3275,10 +3587,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3324,10 +3636,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3372,10 +3684,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3451,10 +3763,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3498,10 +3810,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3545,10 +3857,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3623,10 +3935,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "-$50.00",
         gst: "$0.00",
@@ -3671,10 +3983,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "-$50.00",
         gst: "$0.00",
@@ -3719,10 +4031,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "-$50.00",
         gst: "$0.00",
@@ -3797,10 +4109,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3845,10 +4157,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3893,10 +4205,10 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["25", "left"],
           Description: ["30", "left"],
-          Qty: ["10", "right"],
-          "Unit Price": ["10", "right"],
-          Tax: ["10", "right"],
-          Amount: ["15", "right"],
+          Qty: ["10", "left"],
+          "Unit Price": ["10", "left"],
+          Tax: ["10", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3974,10 +4286,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           No: ["10", "left"],
-          Amount: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Amount: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "",
         gst: "",
@@ -4023,10 +4335,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           No: ["10", "left"],
-          Amount: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Amount: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "",
         gst: "",
@@ -4072,10 +4384,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           No: ["10", "left"],
-          Amount: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Amount: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "",
         gst: "",
@@ -4151,10 +4463,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           No: ["10", "left"],
-          Amount: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Amount: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -4200,10 +4512,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           No: ["10", "left"],
-          Amount: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Amount: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -4249,10 +4561,10 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           No: ["10", "left"],
-          Amount: ["15", "right"],
-          Due: ["15", "right"],
-          Paid: ["15", "right"],
-          Outstanding: ["15", "right"],
+          Amount: ["15", "left"],
+          Due: ["15", "left"],
+          Paid: ["15", "left"],
+          Outstanding: ["15", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -4322,7 +4634,7 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["40", "left"],
           Description: ["40", "left"],
-          Qty: ["20", "right"],
+          Qty: ["20", "left"],
         },
         subtotal: "",
         gst: "",
@@ -4367,7 +4679,7 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["40", "left"],
           Description: ["40", "left"],
-          Qty: ["20", "right"],
+          Qty: ["20", "left"],
         },
         subtotal: "",
         gst: "",
@@ -4412,7 +4724,7 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Product Name": ["40", "left"],
           Description: ["40", "left"],
-          Qty: ["20", "right"],
+          Qty: ["20", "left"],
         },
         subtotal: "",
         gst: "",
@@ -4489,8 +4801,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          "Credit (Ex)": ["15", "right"],
-          "Debit (Ex)": ["15", "right"],
+          "Credit (Ex)": ["15", "left"],
+          "Debit (Ex)": ["15", "left"],
         },
         subtotal: "$700.00",
         gst: "$0.00",
@@ -4536,8 +4848,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          "Credit (Ex)": ["15", "right"],
-          "Debit (Ex)": ["15", "right"],
+          "Credit (Ex)": ["15", "left"],
+          "Debit (Ex)": ["15", "left"],
         },
         subtotal: "$700.00",
         gst: "$0.00",
@@ -4583,8 +4895,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          "Credit (Ex)": ["15", "right"],
-          "Debit (Ex)": ["15", "right"],
+          "Credit (Ex)": ["15", "left"],
+          "Debit (Ex)": ["15", "left"],
         },
         subtotal: "$700.00",
         gst: "$0.00",
@@ -4655,7 +4967,7 @@ Template.templatesettings.onRendered(function () {
           "Payment Method": ["20", "left"],
           "Reference No": ["20", "left"],
           "Received From": ["25", "left"],
-          Amount: ["15", "right"],
+          Amount: ["15", "left"],
         },
         subtotal: "-$900.00",
         gst: "$0.00",
@@ -4703,7 +5015,7 @@ Template.templatesettings.onRendered(function () {
           "Payment Method": ["20", "left"],
           "Reference No": ["20", "left"],
           "Received From": ["25", "left"],
-          Amount: ["15", "right"],
+          Amount: ["15", "left"],
         },
         subtotal: "-$900.00",
         gst: "$0.00",
@@ -4751,7 +5063,7 @@ Template.templatesettings.onRendered(function () {
           "Payment Method": ["20", "left"],
           "Reference No": ["20", "left"],
           "Received From": ["25", "left"],
-          Amount: ["15", "right"],
+          Amount: ["15", "left"],
         },
         subtotal: "-$900.00",
         gst: "$0.00",
@@ -4825,8 +5137,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$900.00",
         gst: "$0.00",
@@ -4872,8 +5184,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$900.00",
         gst: "$0.00",
@@ -4919,8 +5231,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "right"],
-          Amount: ["15", "right"],
+          Tax: ["15", "left"],
+          Amount: ["15", "left"],
         },
         subtotal: "$900.00",
         gst: "$0.00",
@@ -9169,6 +9481,28 @@ Template.templatesettings.events({
   "click #print_display_setting_div input": function () {
 
   },
+
+  "click .savePrintTable": function() {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    getVS1Data('PrintDisplaySettings').then(function (dataObject) {
+      if (dataObject.length == 0) {
+          addVS1Data('PrintDisplaySettings', JSON.stringify(PrintDisplaySettingData));
+          templateObject.print_displaysettings.set(PrintDisplaySettingData);
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.print_displaysettings.set(data);
+      }
+    }).catch(function (err) {
+        addVS1Data('PrintDisplaySettings', JSON.stringify(PrintDisplaySettingData));
+        templateObject.print_displaysettings.set(PrintDisplaySettingData);
+    });
+    LoadingOverlay.hide();
+  },
+
+  "click .resetPrintTable": function() {
+
+  }
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;

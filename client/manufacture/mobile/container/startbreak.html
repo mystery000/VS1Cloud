@@ -1,0 +1,38 @@
+<template name="StartBreak">
+    <div id="startBreakContainer" class="modal-content mtw-50 mt-4 mmw-100">
+        <div class="modal-header">
+            <div style="font-size: 1rem;">Reason For Pausing Job</div>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="break" value="Break" />
+                        <label class="custom-control-label" for="break">Break</label></div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1em;">
+                <div class="col-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="lunch" value="Lunch" />
+                        <label class="custom-control-label" for="lunch">Lunch</label></div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1em;">
+                <div class="col-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="purchase" value="Purchase" />
+                        <label class="custom-control-label" for="purchase">Purchase</label></div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1em;">
+                <div class="col-12">
+                    <div class="form-group flex-grow-1" style="margin: 8px 0px 0px 0px;">
+                        <label>Notes</label>
+                        <textarea class="form-control" id="txtpause-notes"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
