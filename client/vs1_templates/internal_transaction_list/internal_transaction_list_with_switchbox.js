@@ -2074,7 +2074,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         // else if (currenttablename === "tblAvailableLotCheckbox") {
         //     var target = e.target;
         //     let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
-        //     alert(selectedProductName);
         //     templateObject.getLotNumbersData(selectedProductName);
         // }
     });

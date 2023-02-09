@@ -824,7 +824,6 @@ Template.transaction_list.onRendered(function() {
                     }
 
                     if(useData[i].Active == false)
-                        alert(useData[i]);
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         '<span style="display:none;">' + (useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date).toString() + '</span>' +
