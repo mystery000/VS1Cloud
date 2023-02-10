@@ -324,9 +324,7 @@ Template.contactoverview.onRendered(function() {
               ],
               info: true,
               responsive: true,
-              "order": [
-                  [1, "asc"]
-              ],
+              "order": [[2, "asc"]],
               // "autoWidth": false,
               action: function() {
                   $('#' + currenttablename).DataTable().ajax.reload();

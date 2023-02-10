@@ -567,6 +567,31 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllCustomersData = function () {
+    sideBarService.getAllTCustomerList(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Customer List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TCustomerVS1List', JSON.stringify(data));
+      $("<span class='process'>Customer List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
     sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -593,6 +618,31 @@ Template.onsuccesswaterfall.onRendered(function () {
 
     });
 
+
+    sideBarService.getAllLeadDataList(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Lead List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TProspectList', JSON.stringify(data));
+      $("<span class='process'>Lead List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
 
     sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
@@ -622,6 +672,33 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllSuppliersData = function () {
+
+    sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Supplier List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+
+      addVS1Data('TSupplierVS1List', JSON.stringify(data));
+      $("<span class='process'>Supplier List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
     sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -1107,6 +1184,31 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllEmployeeData = function () {
+    sideBarService.getAllTEmployeeList(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Employee List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TEmployeeList', JSON.stringify(data));
+      $("<span class='process'>Employee List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
     sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;

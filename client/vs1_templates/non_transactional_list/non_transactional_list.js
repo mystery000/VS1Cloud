@@ -16541,7 +16541,7 @@ Template.non_transactional_list.onRendered(function() {
         $("#dateTo").val(moment().format('DD/MM/YYYY'));
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
-        templateObject.getVatReturnData(false, datefrom, dateto);
+        // templateObject.getVatReturnData(false, datefrom, dateto);
     } else if (currenttablename === "tblSubtaskDatatable"){
         templateObject.getSubtaskData(true);
     } else if (currenttablename == "tblServiceLogList") {

@@ -558,6 +558,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"EmployeeName asc"',
       select:'[EmployeeName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TEmployee, options);
@@ -567,6 +568,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TProspect, options);
@@ -576,6 +578,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TSupplierVS1, options);
@@ -586,11 +589,12 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
+        orderby: '"PrintName asc"',
         select: "[Active]=true",
       };
     } else {
       options = {
-        orderby: '"ClientID desc"',
+        orderby: '"PrintName asc"',
         ListType: "Detail",
         select: "[Active]=true",
         LimitCount: parseInt(limitcount),
@@ -839,12 +843,13 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
+        orderby: "PrintName asc",
         select: "[Active]=true",
       };
     } else {
       options = {
-        orderby: '"ClientID desc"',
         ListType: "Detail",
+        orderby: '"PrintName asc"',
         select: "[Active]=true",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
@@ -856,6 +861,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select: '[ClientName] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -865,6 +871,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select:'[Companyname] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -943,6 +950,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"EmployeeName asc"',
       select: '[EmployeeName] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TEmployee, options);
@@ -961,6 +969,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select: '[ClientName] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TSupplierVS1, options);
@@ -972,13 +981,13 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
           IgnoreDates:true,
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           Search: "Active = true",
         };
       } else {
         options = {
           IgnoreDates:true,
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
@@ -987,13 +996,13 @@ export class SideBarService extends BaseService {
     }else{
       if (limitcount == "All") {
         options = {
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           IgnoreDates:true,
         };
       } else {
         options = {
           IgnoreDates:true,
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -1007,6 +1016,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select: '[Company] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TProspect, options);
@@ -1018,13 +1028,13 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
           IgnoreDates:true,
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           Search: "Active = true",
         };
       } else {
         options = {
           IgnoreDates:true,
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           Search: "Active = true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
@@ -1033,13 +1043,13 @@ export class SideBarService extends BaseService {
     }else{
       if (limitcount == "All") {
         options = {
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           IgnoreDates:true,
         };
       } else {
         options = {
           IgnoreDates:true,
-          orderby: '"Company asc"',
+          orderby: '"PrintName asc"',
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -1053,6 +1063,7 @@ export class SideBarService extends BaseService {
     var options = "";
     options = {
       PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount",
+      orderby: '"PrintName asc"',
       select: '[ClientName] = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -1061,6 +1072,7 @@ export class SideBarService extends BaseService {
   getClientVS1() {
     let options = {
       PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount,BillStreet,BillStreet2,BillState,BillPostcode,Billcountry",
+      orderby: '"PrintName asc"',
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -1071,11 +1083,12 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
+        orderby: '"PrintName asc"',
         select: "[Active]=true",
       };
     } else {
       options = {
-        orderby: '"ClientID desc"',
+        orderby: '"PrintName asc"',
         ListType: "Detail",
         select: "[Active]=true",
         LimitCount: parseInt(limitcount),
@@ -1267,16 +1280,56 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployeeList, options);
   }
 
+
+  getAllTCustomerList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"PrintName asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"PrintName asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"PrintName asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"PrintName asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TCustomerVS1List, options);
+  }
+
+
   getClientVS1(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
       options = {
         PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
+        orderby: '"PrintName asc"',
         select: "[Active]=true",
       };
     } else {
       options = {
-        orderby: '"ClientID desc"',
+        orderby: '"PrintName asc"',
         PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
         select: "[Active]=true",
         LimitCount: parseInt(limitcount),
@@ -1290,11 +1343,12 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
+        orderby: '"EmployeeName asc"',
         select: "[Active]=true",
       };
     } else {
       options = {
-        orderby: '"ClientID desc"',
+        orderby: '"EmployeeName asc"',
         ListType: "Detail",
         select: "[Active]=true",
       };
@@ -1307,12 +1361,14 @@ export class SideBarService extends BaseService {
     if (limitcount === "All") {
       options = {
         ListType: "Detail",
+        orderby: '"PrintName asc"',
         select: "[Active]=true"
       };
     } else {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
+        orderby: '"PrintName asc"',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -1325,12 +1381,14 @@ export class SideBarService extends BaseService {
     if (limitcount === "All") {
       options = {
         ListType: "Detail",
+        orderby: '"PrintName asc"',
         select: "[Active]=true"
       };
     } else {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
+        orderby: '"PrintName asc"',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -1377,11 +1435,12 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
+        orderby: '"EmployeeName asc"',
         select: "[Active]=true",
       };
     } else {
       options = {
-        orderby: '"ClientID desc"',
+        orderby: '"EmployeeName asc"',
         ListType: "Detail",
         select: "[Active]=true",
       };
@@ -2702,6 +2761,7 @@ export class SideBarService extends BaseService {
   getAllCustomersDataVS1Update(msTimeStamp) {
     let options = {
       ListType: "Detail",
+      orderby: '"PrintName asc"',
       select: '[Active]=true and [MsTimeStamp]>"' + msTimeStamp + '"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -3211,6 +3271,7 @@ export class SideBarService extends BaseService {
   getAllEmployeesUpdate(msTimeStamp) {
     let options = {
       ListType: "Detail",
+      orderby: '"EmployeeName asc"',
       select: '[Active]=true and [MsTimeStamp]>"' + msTimeStamp + '"',
     };
     return this.getList(this.ERPObjects.TEmployee, options);
@@ -4221,6 +4282,7 @@ export class SideBarService extends BaseService {
         "PrefName": "VS1Menu",
         "PrefType": "VS1Menu",
         "PrefValue": prefValue,
+        "PrefGroup": "GuiPrefs",
       }
     };
     if (parseInt(localStorage.getItem('TPreferenceMenuID')) > 0)
