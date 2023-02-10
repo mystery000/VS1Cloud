@@ -303,12 +303,21 @@ Template.calender.onRendered(function() {
         yearRange: "-90:+10",
     });
 
-    templateObject.getValuesForAppointmentSettings = async function() {
-        createAppointment = await getVS1Data("CloudAppointmentCreateAppointment") || false;
-        startAndStopAppointmentOnly = await getVS1Data("CloudAppointmentStartStopAccessLevel") || false;
-        launchAllocations = await getVS1Data("CloudAppointmentAllocationLaunch");
-    };
-    templateObject.getValuesForAppointmentSettings();
+    getVS1Data("CloudAppointmentCreateAppointment").then(function(dataObject) {
+        createAppointment = dataObject;
+    }).catch(function(err) {});
+    getVS1Data("CloudAppointmentStartStopAccessLevel").then(function(dataObject) {
+        startAndStopAppointmentOnly = dataObject;
+    }).catch(function(err) {});
+    getVS1Data("CloudAppointmentAllocationLaunch").then(function(dataObject) {
+        launchAllocations = dataObject;
+    }).catch(function(err) {});
+    // templateObject.getValuesForAppointmentSettings = async function() {
+    //     createAppointment = await getVS1Data("CloudAppointmentCreateAppointment") || false;
+    //     startAndStopAppointmentOnly = await getVS1Data("CloudAppointmentStartStopAccessLevel") || false;
+    //     launchAllocations = await getVS1Data("CloudAppointmentAllocationLaunch");
+    // };
+    // templateObject.getValuesForAppointmentSettings();
 
     templateObject.getDayNumber = function(day) {
         day = day.toLowerCase();
