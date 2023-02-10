@@ -697,7 +697,9 @@ Template.newprofitandloss.onRendered(function () {
       profitLossLayoutApi.collectionNames.TProfitLossLayout
     );
     // Fetch a default layout
-    // reportService.getProfitLossLayout();
+    // reportService.getProfitLossLayout().then(function(data){
+    //   console.log("----------", data);
+    // });
     // return false
 
     profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
@@ -706,9 +708,11 @@ Template.newprofitandloss.onRendered(function () {
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
+      console.log("jsonResponse=", jsonResponse);
       const profitLossLists = ProfitLossLayout.fromList(
-        jsonResponse.tprofitlosslayout
+        jsonResponse.tprofitandlossreport
       );
+      
       // Save default list
       templateObject.profitlosslayoutfields.set(profitLossLists);
 
