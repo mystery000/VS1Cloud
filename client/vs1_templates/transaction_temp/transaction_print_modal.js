@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SideBarService } from "../../js/sidebar-service";
 import { ContactService } from "../../contacts/contact-service";
 import LoadingOverlay from "../../LoadingOverlay";
@@ -145,10 +146,22 @@ const TransactionTypeData = {
 Template.transaction_print_modal.onCreated(async function () {
   const templateObject = Template.instance();
   const transactionType = templateObject.data.TransactionType;
+  this.smsSettings = new ReactiveVar({
+    twilioAccountId: "",
+    twilioAccountToken: "",
+    twilioTelephoneNumber: "",
+    twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
+    headerAppointmentSMSMessage: "Sent from [Company Name]",
+    startAppointmentSMSMessage:
+      "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
+    saveAppointmentSMSMessage:
+      "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
+    stopAppointmentSMSMessage:
+      "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
+  });
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
-
     if (vs1Data.length == 0) {
       const templateInfomation = await sideBarService.getTemplateInformation(
         initialBaseDataLoad,
@@ -208,9 +221,51 @@ Template.transaction_print_modal.onCreated(async function () {
     }
   };
 
-  const templates = await getTemplates();
+  const getSMSSettings = async () => {
+    
+    const smsSettings = this.smsSettings.get()
 
+    const smsServiceSettings = await smsService.getSMSSettings();
+    if (smsServiceSettings.terppreference.length > 0) {
+      for (let i = 0; i < smsServiceSettings.terppreference.length; i++) {
+        switch (smsServiceSettings.terppreference[i].PrefName) {
+          case "VS1SMSID":
+            smsSettings.twilioAccountId =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+            break;
+          case "VS1SMSToken":
+            smsSettings.twilioAccountToken =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+            break;
+          case "VS1SMSPhone":
+            smsSettings.twilioTelephoneNumber =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+            break;
+          case "VS1HEADERSMSMSG":
+            smsSettings.headerAppointmentSMSMessage =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+            break;
+          case "VS1SAVESMSMSG":
+            smsSettings.saveAppointmentSMSMessage =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+            break;
+          case "VS1STARTSMSMSG":
+            smsSettings.startAppointmentSMSMessage =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+            break;
+          case "VS1STOPSMSMSG":
+            smsSettings.stopAppointmentSMSMessage =
+              smsServiceSettings.terppreference[i].Fieldvalue;
+        }
+      }
+    }
+
+    this.smsSettings.set(smsSettings);
+  }
+
+  const templates = await getTemplates();
   this.templates = new ReactiveVar(templates);
+  getSMSSettings();
 });
 
 Template.transaction_print_modal.onRendered(function () {
@@ -279,14 +334,14 @@ Template.transaction_print_modal.events({
     $('.chkEmailCopy').prop("checked", $("#emailSend").is(":checked"));
   },
   "click #printModal .printConfirm": async function (event) {
+    LoadingOverlay.show();
     const templateObject = Template.instance();
     const transactionType = templateObject.data.TransactionType;
     const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
     const customerElId = $("#customer_id").val();
-    const customerId =
-      $(`#${customerElId}`).attr("custid").trim() ||
-      $(`#${customerElId}`).attr("suppid").trim();
+    const customerId = $("#__customer_id").val();
+    console.log(customerId)
 
     const contactService = new ContactService();
 
@@ -305,6 +360,7 @@ Template.transaction_print_modal.events({
         );
       }
     }
+
     // const data = await Template.new_salesorder.__helpers
     //   .get("saleOrder")
     //   .call();
@@ -313,7 +369,6 @@ Template.transaction_print_modal.events({
     // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
     if (isCheckedEmail) {
       $(".btnSave").trigger("click");
-      // LoadingOverlay.show();
       // Meteor.call(
       //   "sendEmail",
       //   {
@@ -341,69 +396,22 @@ Template.transaction_print_modal.events({
       //   }
       // );
     }
-
     // Send SMS
     if (isCheckedSms && contactServiceData) {
-      LoadingOverlay.show();
+      
       const phoneNumber = contactServiceData.fields.Mobile;
-      // const phoneNumber = "18044461901";
-
-      const smsSettings = {
-        twilioAccountId: "",
-        twilioAccountToken: "",
-        twilioTelephoneNumber: "",
-        twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
-        headerAppointmentSMSMessage: "Sent from [Company Name]",
-        startAppointmentSMSMessage:
-          "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
-        saveAppointmentSMSMessage:
-          "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
-        stopAppointmentSMSMessage:
-          "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
-      };
-
-      const smsServiceSettings = await smsService.getSMSSettings();
-      if (smsServiceSettings.terppreference.length > 0) {
-        for (let i = 0; i < smsServiceSettings.terppreference.length; i++) {
-          switch (smsServiceSettings.terppreference[i].PrefName) {
-            case "VS1SMSID":
-              smsSettings.twilioAccountId =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1SMSToken":
-              smsSettings.twilioAccountToken =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1SMSPhone":
-              smsSettings.twilioTelephoneNumber =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1HEADERSMSMSG":
-              smsSettings.headerAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1SAVESMSMSG":
-              smsSettings.saveAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1STARTSMSMSG":
-              smsSettings.startAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-              break;
-            case "VS1STOPSMSMSG":
-              smsSettings.stopAppointmentSMSMessage =
-                smsServiceSettings.terppreference[i].Fieldvalue;
-          }
-        }
-      }
+      console.log("Phone Number:", phoneNumber)
+      // const phoneNumber = "+13374761311";
+      // Send SMS function here!
 
       const companyName = Session.get("vs1companyName");
+      const smsSettings = templateObject.smsSettings.get();
       let message = smsSettings.headerAppointmentSMSMessage.replace(
         "[Company Name]",
         companyName
       );
 
-      message = `${message} - Hi ${contactServiceData.fields.FirstName} ${contactServiceData.fields.LastName}`;
+      message = `${message} - Hi ${contactServiceData?.fields?.FirstName} ${contactServiceData?.fields?.LastName}`;
 
       if (phoneNumber) {
         Meteor.call(
@@ -436,7 +444,17 @@ Template.transaction_print_modal.events({
           }
         );
       }
+    } else if ( isCheckedSms && !contactServiceData){
+      LoadingOverlay.hide();
+      swal({
+        title: "Oops...",
+        text: "We can not get Customer data to send SMS!",
+        type: "error",
+        showCancelButton: false,
+        confirmButtonText: "Try again",
+      });
     }
+    LoadingOverlay.hide();
   },
   "click #printModal .chooseTemplateBtn": function (event, key, param) {
     const dataKey = $(event.target).attr("data-id");

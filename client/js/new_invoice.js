@@ -750,6 +750,7 @@ Template.new_invoice.onCreated(function () {
       totalPaid: totalPaidAmount,
       ispaid: data.fields.IsPaid,
       isPartialPaid: isPartialPaid,
+      CustomerID: data.fields.CustomerID
     };
 
     $("#edtCustomerName").val(data.fields.CustomerName);

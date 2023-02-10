@@ -1253,6 +1253,7 @@ Template.new_salesorder.onCreated(function () {
     const selectedTaxCodeName = data.fields.TaxCodeName || 'E';
     templateObject.setCustomerInfo(selectedTaxCodeName);
   }
+
   this.getCustomerData = function(customerID) {
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -1956,7 +1957,8 @@ Template.new_salesorder.onRendered(function () {
                 saleCustField1: data.fields.SaleCustField1,
                 saleCustField2: data.fields.SaleCustField2,
                 totalPaid: totalPaidAmount,
-                isConverted: data.fields.Converted
+                isConverted: data.fields.Converted,
+                CustomerID: data.fields.CustomerID
               };
 
               $('#edtCustomerName').val(data.fields.CustomerName);
@@ -2223,7 +2225,8 @@ Template.new_salesorder.onRendered(function () {
                   saleCustField1: useData[d].fields.SaleCustField1,
                   saleCustField2: useData[d].fields.SaleCustField2,
                   totalPaid: totalPaidAmount,
-                  isConverted: useData[d].fields.Converted
+                  isConverted: useData[d].fields.Converted,
+                  CustomerID: useData[d].fields.CustomerID
                 };
 
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
@@ -2354,6 +2357,7 @@ Template.new_salesorder.onRendered(function () {
                     }
                   });
                 }
+                break;
               }
             }
             if (!added) { }
@@ -2503,7 +2507,8 @@ Template.new_salesorder.onRendered(function () {
               saleCustField1: data.fields.SaleCustField1,
               saleCustField2: data.fields.SaleCustField2,
               totalPaid: totalPaidAmount,
-              isConverted: data.fields.Converted
+              isConverted: data.fields.Converted,
+              CustomerID: data.fields.CustomerID
             };
             $('#edtCustomerName').val(data.fields.CustomerName);
             templateObject.CleintName.set(data.fields.CustomerName);
