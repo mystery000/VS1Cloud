@@ -152,6 +152,7 @@ const erpObject = {
     TBankAccounts: "TBankAccounts",
     TBankAccountReport: "TBankAccountReport",
     TCustomerVS1: "TCustomerVS1",
+    TCustomerVS1List: "TCustomerVS1List",
     TJobVS1: "TJobVS1",
     TOtherContactVS1: "TOtherContactVS1",
     TProspectVS1: "TProspectVS1",
