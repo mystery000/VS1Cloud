@@ -2,7 +2,12 @@
     {{# vs1_report_template tabledisplayname="General Ledger" tablename="tblgeneralledger" dateAsAt=dateAsAt sheetname="General Ledger Report Result"
     currencyList = currencyList}}
     <div class="table-responsive">
-        <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tblgeneralledger"
+        <style>
+            tr{
+                height: 35px!important;
+            }
+        </style>
+        <table class="table tableExportDetailDiv table-sm" id="tblgeneralledger"
             name="tblgeneralledger">
             <thead>
                 <tr class="table-active customDoubleTableHeading">
