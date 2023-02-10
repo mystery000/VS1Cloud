@@ -46,54 +46,54 @@ var noHasTotals = ["Customer Payment", "Customer Statement", "Supplier Payment",
 let defaultCurrencyCode = CountryAbbr;
 
 Template.new_salesorder.onCreated(function () {
-  const templateObject = this;
-  this.isForeignEnabled = new ReactiveVar(false);
-  this.records = new ReactiveVar();
-  this.CleintName = new ReactiveVar();
-  this.Department = new ReactiveVar();
-  this.Date = new ReactiveVar();
-  this.DueDate = new ReactiveVar();
-  this.SalesOrderNo = new ReactiveVar();
-  this.RefNo = new ReactiveVar();
-  this.Branding = new ReactiveVar();
-  this.Currency = new ReactiveVar();
-  this.Total = new ReactiveVar();
-  this.Subtotal = new ReactiveVar();
-  this.TotalTax = new ReactiveVar();
-  this.salesorderrecord = new ReactiveVar({});
-  this.taxrateobj = new ReactiveVar();
-  this.Accounts = new ReactiveVar([]);
-  this.SalesOrderId = new ReactiveVar();
-  this.selectedCurrency = new ReactiveVar([]);
-  this.inputSelectedCurrency = new ReactiveVar([]);
-  this.currencySymbol = new ReactiveVar([]);
-  this.deptrecords = new ReactiveVar();
-  this.termrecords = new ReactiveVar();
-  this.clientrecords = new ReactiveVar([]);
-  this.taxraterecords = new ReactiveVar([]);
-  this.taxcodes = new ReactiveVar([]);
-  this.accountID = new ReactiveVar();
-  this.stripe_fee_method = new ReactiveVar();
-  this.uploadedFile = new ReactiveVar();
-  this.uploadedFiles = new ReactiveVar([]);
-  this.attachmentCount = new ReactiveVar();
-  this.address = new ReactiveVar();
-  this.abn = new ReactiveVar();
-  this.referenceNumber = new ReactiveVar();
-  this.statusrecords = new ReactiveVar([]);
-  this.record = new ReactiveVar({});
-  this.productextrasellrecords = new ReactiveVar([]);
-  this.defaultsaleterm = new ReactiveVar();
-  this.subtaxcodes = new ReactiveVar([]);
-  this.abletomakeworkorder = new ReactiveVar(false);
-  this.saleOrders = new ReactiveVar([]);
-  this.saleOrder = new ReactiveVar();
-  this.products = new ReactiveVar([]);
-  this.hasFollow = new ReactiveVar(false);
-  this.customerRecord = new ReactiveVar();
+  const templateObject = Template.instance();
+  templateObject.isForeignEnabled = new ReactiveVar(false);
+  templateObject.records = new ReactiveVar();
+  templateObject.CleintName = new ReactiveVar();
+  templateObject.Department = new ReactiveVar();
+  templateObject.Date = new ReactiveVar();
+  templateObject.DueDate = new ReactiveVar();
+  templateObject.SalesOrderNo = new ReactiveVar();
+  templateObject.RefNo = new ReactiveVar();
+  templateObject.Branding = new ReactiveVar();
+  templateObject.Currency = new ReactiveVar();
+  templateObject.Total = new ReactiveVar();
+  templateObject.Subtotal = new ReactiveVar();
+  templateObject.TotalTax = new ReactiveVar();
+  templateObject.salesorderrecord = new ReactiveVar({});
+  templateObject.taxrateobj = new ReactiveVar();
+  templateObject.Accounts = new ReactiveVar([]);
+  templateObject.SalesOrderId = new ReactiveVar();
+  templateObject.selectedCurrency = new ReactiveVar([]);
+  templateObject.inputSelectedCurrency = new ReactiveVar([]);
+  templateObject.currencySymbol = new ReactiveVar([]);
+  templateObject.deptrecords = new ReactiveVar();
+  templateObject.termrecords = new ReactiveVar();
+  templateObject.clientrecords = new ReactiveVar([]);
+  templateObject.taxraterecords = new ReactiveVar([]);
+  templateObject.taxcodes = new ReactiveVar([]);
+  templateObject.accountID = new ReactiveVar();
+  templateObject.stripe_fee_method = new ReactiveVar();
+  templateObject.uploadedFile = new ReactiveVar();
+  templateObject.uploadedFiles = new ReactiveVar([]);
+  templateObject.attachmentCount = new ReactiveVar();
+  templateObject.address = new ReactiveVar();
+  templateObject.abn = new ReactiveVar();
+  templateObject.referenceNumber = new ReactiveVar();
+  templateObject.statusrecords = new ReactiveVar([]);
+  templateObject.record = new ReactiveVar({});
+  templateObject.productextrasellrecords = new ReactiveVar([]);
+  templateObject.defaultsaleterm = new ReactiveVar();
+  templateObject.subtaxcodes = new ReactiveVar([]);
+  templateObject.abletomakeworkorder = new ReactiveVar(false);
+  templateObject.saleOrders = new ReactiveVar([]);
+  templateObject.saleOrder = new ReactiveVar();
+  templateObject.products = new ReactiveVar([]);
+  templateObject.hasFollow = new ReactiveVar(false);
+  templateObject.customerRecord = new ReactiveVar();
 
   // Methods
-  this.hasFollowings = async function () {
+  templateObject.hasFollowings = async function () {
     let salesService = new SalesBoardService();
     var url = FlowRouter.current().path;
     var getso_id = url.split('?id=');
@@ -102,10 +102,10 @@ Template.new_salesorder.onCreated(function () {
       currentInvoice = parseInt(currentInvoice);
       var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
       var isRepeated = soData.fields.RepeatedFrom;
-      this.hasFollow.set(isRepeated);
+      templateObject.hasFollow.set(isRepeated);
     }
   }
-  this.getTemplateInfoNew = function () {
+  templateObject.getTemplateInfoNew = function () {
     LoadingOverlay.show();
     getVS1Data('TTemplateSettings').then(function (dataObject) {
       if (dataObject.length == 0) {
@@ -203,7 +203,7 @@ Template.new_salesorder.onCreated(function () {
     });
   };
   // should be updated with indexeddb
-  this.getLastSOData = async function () {
+  templateObject.getLastSOData = async function () {
     let lastDepartment = defaultDept || "";
     salesService.getLastSOID().then(function (data) {
       let latestSOId;
@@ -220,7 +220,7 @@ Template.new_salesorder.onCreated(function () {
     });
   };
 
-  this.generateInvoiceData = function (template_title, number) {
+  templateObject.generateInvoiceData = function (template_title, number) {
     switch (template_title) {
       case "Sales Orders":
         showSealsOrder1(template_title, number, false);
@@ -266,7 +266,7 @@ Template.new_salesorder.onCreated(function () {
     var po = $('#ponumber').val() || '.';
 
     $('#tblSalesOrderLine > tbody > tr').each(function () {
-      var lineID = this.id;
+      var lineID = templateObject.id;
       let tdproduct = $('#' + lineID + " .lineProductName").val();
       let tddescription = $('#' + lineID + " .lineProductDesc").text();
       let tdQty = $('#' + lineID + " .lineQty").val();
@@ -298,8 +298,10 @@ Template.new_salesorder.onCreated(function () {
         tdQty,
         tdunitprice,
         taxamount,
-        tdlineamt,
+        // tdlineamt,
+        ""
       ]);
+      console.log("TEST:", tdunitprice)
       const lineItemObj = {
         description: tddescription || '',
         quantity: tdQty || 0,
@@ -523,7 +525,7 @@ Template.new_salesorder.onCreated(function () {
     let po = $('#ponumber').val() || '.';
 
     $('#tblSalesOrderLine > tbody > tr').each(function () {
-      let lineID = this.id;
+      let lineID = templateObject.id;
       let tdproduct = $('#' + lineID + " .lineProductName").val();
       let tddescription = $('#' + lineID + " .lineProductDesc").text();
       let tdQty = $('#' + lineID + " .lineQty").val();
@@ -950,7 +952,7 @@ Template.new_salesorder.onCreated(function () {
     localStorage.setItem(key, value)
   }
   
-  this.exportSalesToPdf = function (template_title, number) {
+  templateObject.exportSalesToPdf = function (template_title, number) {
     if (template_title == 'Sales Order') {
       showSealsOrder1(template_title, number, true);
     }
@@ -1850,7 +1852,7 @@ Template.new_salesorder.onRendered(function () {
                     let serialno = "";
                     let lotno = "";
                     let expirydate = "";
-                    if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
+                    if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                         serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
                         }
@@ -6320,6 +6322,7 @@ Template.new_salesorder.events({
   },
   'click .printConfirm': async function (event) {
     playPrintAudio();
+    const templateObject = Template.instance();
     setTimeout(async function () {
       var printTemplate = [];
       LoadingOverlay.show();
@@ -6566,6 +6569,7 @@ Template.new_salesorder.events({
         printTemplate.push('Delivery Docket');
       }
 
+
       if (printTemplate.length > 0) {
         for (var i = 0; i < printTemplate.length; i++) {
           if (printTemplate[i] == 'Sales Order') {
@@ -6574,7 +6578,7 @@ Template.new_salesorder.events({
           else if (printTemplate[i] == 'Delivery Docket') {
             var template_number = $('input[name="Delivery Docket"]:checked').val();
           }
-          await Template.instance().exportSalesToPdf(printTemplate[i], template_number);
+          await templateObject.exportSalesToPdf(printTemplate[i], template_number);
         }
       }
     }, delayTimeAfterSound);

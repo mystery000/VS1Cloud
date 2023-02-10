@@ -580,12 +580,12 @@ Template.new_invoice.onCreated(function () {
           let serialno = "";
           let lotno = "";
           let expirydate = "";
-          if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
+          if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
             for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
               serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
             }
           }
-          if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
+          if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
             for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
               lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
               let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
@@ -8194,6 +8194,7 @@ Template.new_invoice.events({
       attachment.push(pdfObject);
       let values = [];
       let basedOnTypeStorages = Object.keys(localStorage);
+
       basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
         let employeeId = storage.split("_")[2];
         return storage.includes("BasedOnType_");

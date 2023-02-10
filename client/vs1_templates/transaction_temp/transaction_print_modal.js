@@ -341,25 +341,31 @@ Template.transaction_print_modal.events({
     const isCheckedSms = $("#printModal #sms").is(":checked");
     const customerElId = $("#customer_id").val();
     const customerId = $("#__customer_id").val();
-    console.log(customerId)
 
     const contactService = new ContactService();
 
     const customData = await getVS1Data("TCustomerVS1");
     let contactServiceData = null;
-
-    if (customerId) {
-      if (customData.length === 0) {
-        contactServiceData = await contactService.getOneCustomerDataEx(
-          customerId
-        );
-      } else {
-        const data = JSON.parse(customData[0].data);
-        contactServiceData = data.tcustomervs1.find(
-          (customer) => parseInt(customer.fields.ID) === parseInt(customerId)
-        );
-      }
+    if(customerId){
+      contactServiceData = await contactService.getOneCustomerDataEx(
+        customerId
+      );
     }
+
+    console.log("Customer DATA:", contactServiceData);
+    
+    // if (customerId) {
+    //   if (customData.length === 0) {
+    //     contactServiceData = await contactService.getOneCustomerDataEx(
+    //       customerId
+    //     );
+    //   } else {
+    //     const data = JSON.parse(customData[0].data);
+    //     contactServiceData = data.tcustomervs1.find(
+    //       (customer) => parseInt(customer.fields.ID) === parseInt(customerId)
+    //     );
+    //   }
+    // }
 
     // const data = await Template.new_salesorder.__helpers
     //   .get("saleOrder")
@@ -368,7 +374,7 @@ Template.transaction_print_modal.events({
     // Send Email with attachments
     // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
     if (isCheckedEmail) {
-      $(".btnSave").trigger("click");
+      // $(".btnSave").trigger("click");
       // Meteor.call(
       //   "sendEmail",
       //   {
@@ -398,9 +404,19 @@ Template.transaction_print_modal.events({
     }
     // Send SMS
     if (isCheckedSms && contactServiceData) {
-      
       const phoneNumber = contactServiceData.fields.Mobile;
-      console.log("Phone Number:", phoneNumber)
+      if (phoneNumber == '' || phoneNumber == null) {
+        LoadingOverlay.hide();
+        swal({
+          title: "Oops...",
+          text: "Customer does not have phone number!",
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try again",
+        });
+
+        return;
+      }
       // const phoneNumber = "+13374761311";
       // Send SMS function here!
 
