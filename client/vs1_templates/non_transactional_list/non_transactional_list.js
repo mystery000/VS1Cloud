@@ -818,8 +818,8 @@ Template.non_transactional_list.onRendered(function() {
 
             reset_data = [
                 { index: 0, label: "#ID", class: "ProductID", width: "10", active: false, display: true },
-                { index: 1, label: "Product Name", class: "ProductName", width: "200", active: true, display: true },
-                { index: 2, label: "Sales Description", class: "SalesDescription", width: "450", active: true, display: true },
+                { index: 1, label: "Product Name", class: "ProductName", width: "150", active: true, display: true },
+                { index: 2, label: "Sales Description", class: "SalesDescription", width: "300", active: true, display: true },
                 { index: 3, label: "Available", class: "Available", width: "80", active: true, display: true },
                 { index: 4, label: "On SO", class: "OnSO", width: "80", active: true, display: true },
                 { index: 5, label: "On BO", class: "OnBO", width: "80", active: true, display: true },
@@ -832,9 +832,10 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
                 { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
                 { index: 14, label: "Department", class: "Departmentth", width: "100", active: false, display: true },
-                { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "", active: false, display: true },
-                { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
-                { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
+                { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "80", active: false, display: true },
+                { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "80", active: false, display: true },
+                { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "80", active: false, display: true },
+                { index: 18, label: "Status", class: "colStatus", width: "150", active: true, display: true },
               ];
 
         } else if(currenttablename === "tblBASReturnList"){
@@ -1179,8 +1180,6 @@ Template.non_transactional_list.onRendered(function() {
 
     // set initial table rest_data
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        //function initCustomFieldDisplaySettings(data, listType) {
-        let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
 
@@ -2420,23 +2419,25 @@ Template.non_transactional_list.onRendered(function() {
 
     //Do Something Here
     //InventoryOverview Data
-    templateObject.getAllProductData = async function(deptname) {
-        await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
-        getVS1Data("TProductList").then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
-                            addVS1Data("TProductList", JSON.stringify(data));
-                            templateObject.displayAllProductData(data,deptname);
-                        });
-
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    templateObject.displayAllProductData(data,deptname);
-                }
-            });
+    templateObject.getAllProductData = async function(deleteFilter=false) {
+        // await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
+        getVS1Data("TProductList").then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService
+                .getProductListVS1(initialBaseDataLoad, 0, deleteFilter)
+                .then(async function (data) {
+                    await addVS1Data("TProductList", JSON.stringify(data));
+                    templateObject.displayAllProductData(data);
+                })
+                .catch(function (err) {});
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayAllProductData(data);
+            }
+        });
     };
 
-    templateObject.displayAllProductData = async function(data,deptname) {
+    templateObject.displayAllProductData = async function(data) {
         let dataTableList = new Array();
         let splashArrayProductList = new Array();
 
@@ -2474,6 +2475,7 @@ Template.non_transactional_list.onRendered(function() {
                 data.tproductlist[i].PURCHASEDESC || "",
                 data.tproductlist[i].CUSTFLD1 || "",
                 data.tproductlist[i].CUSTFLD2 || "",
+                data.tproductlist[i].Active ? "" : "In-Active"
             ];
             splashArrayProductList.push(dataList);
             dataTableList.push(dataList);
@@ -2490,17 +2492,19 @@ Template.non_transactional_list.onRendered(function() {
                 displayfields.forEach(function( item ){
                     columnData.push({
                         className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
-                        targets: [item.id],
+                        targets: item.id,
+                        width: `${item.width}px`
                     })
                 });
-            }
+            }                       
             $("#" + currenttablename).dataTable({
                 data: splashArrayProductList,
                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: columnData,
                   select: true,
                   destroy: true,
-                  colReorder: true,
+                  colReorder: true,    
+                  "autoWidth": false,            
                   buttons: [{
                           extend: "excelHtml5",
                           text: "",
@@ -2530,7 +2534,7 @@ Template.non_transactional_list.onRendered(function() {
                       [initialBaseDataLoad, "All"],
                   ],
                   info: true,
-                  responsive: true,
+                  responsive: false,
                   order: [
                       [1, "asc"] // modified by matthias
                   ],
@@ -2588,6 +2592,11 @@ Template.non_transactional_list.onRendered(function() {
                     if (urlParametersPage) {
                       this.fnPageChange("last");
                     };
+                    if (data.Params.Search.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
                       $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
                       ).insertAfter("#tblInventoryOverview_filter");
                   },
@@ -16524,7 +16533,7 @@ Template.non_transactional_list.onRendered(function() {
     }else if( currenttablename === "productrecentlist"){
         templateObject.getAllProductRecentTransactions(currenttype);
     }else if(currenttablename === "tblInventoryOverview"){
-        templateObject.getAllProductData("All");
+        templateObject.getAllProductData();
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
     } else if (currenttablename == "tblBASReturnList") {
@@ -16643,7 +16652,7 @@ Template.non_transactional_list.events({
             templateObject.getSubtaskData(false);
         }, 10);
     },
-    "click .btnViewDeleted111": async function(e) {
+    "click .btnViewDeleted": async function(e) {
         $(".fullScreenSpin").css("display", "inline-block");
         e.stopImmediatePropagation();
         const templateObject = Template.instance();
@@ -16733,7 +16742,7 @@ Template.non_transactional_list.events({
             templateObject.getOverTimeSheets(true);
         }else if(currenttablename === "tblInventoryOverview"){
             await clearData('TProductList');
-            templateObject.getAllProductData();
+            templateObject.getAllProductData(true);
         }else if(currenttablename === 'tblTransactionSOList'){
             await clearData('TSalesOrderList');
             templateObject.getAllSOListData();
@@ -16769,7 +16778,7 @@ Template.non_transactional_list.events({
             templateObject.getAllTasksList(true);
         }
     },
-    "click .btnHideDeleted222": async function(e) {
+    "click .btnHideDeleted": async function(e) {
         $(".fullScreenSpin").css("display", "inline-block");
         e.stopImmediatePropagation();
         let templateObject = Template.instance();
@@ -16851,6 +16860,9 @@ Template.non_transactional_list.events({
             templateObject.getRateTypeListData(false);
         } else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(false);
+        } else if(currenttablename === "tblInventoryOverview"){
+            await clearData('TProductList');
+            templateObject.getAllProductData(false);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();

@@ -3186,7 +3186,7 @@ Template.transaction_list.onRendered(function() {
             data.t_vs1_report_productmovement[i].Available || 0,
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
-            data.t_vs1_report_productmovement[i].isDeleted ? "In-Active" : "Active",
+            data.t_vs1_report_productmovement[i].Active ? "In-Active" : "",
           ];
           recentTransList.push(recentTranObject);
         }
@@ -3348,7 +3348,7 @@ Template.transaction_list.onRendered(function() {
 
               //}
               setTimeout(function () {
-                // MakeNegative();
+                MakeNegative();
               }, 100);
             },
             language: { search: "",searchPlaceholder: "Search List..." },
@@ -3362,9 +3362,20 @@ Template.transaction_list.onRendered(function() {
                 $(`<button class="btn btn-primary btnRefresh${currenttablename}" type='button' id='btnRefresh${currenttablename}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${currenttablename}_filter`);
 
                 $('.myvarFilterForm').appendTo(".colDateFilter");
-            },
+            },            
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
           })
-          .on("page", function () {})
+          .on("page", function () {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.datatablerecords.get();
+            templateObject.datatablerecords.set(draftRecord);
+          })
           .on("column-reorder", function () {});
         $("div.dataTables_filter input").addClass("form-control form-control-sm");
         $(".fullScreenSpin").css("display", "none");

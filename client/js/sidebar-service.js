@@ -32,23 +32,22 @@ export class SideBarService extends BaseService {
         return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
-  getProductListVS1(limitcount, limitfrom) {
-    let options = "";
+  getProductListVS1(limitcount, limitfrom, deleteFilter) {
+    let options = "";    
     if (limitcount == "All") {
       options = {
-        ListType: "Detail",
-        Search: "Active == true",
+        ListType: "Detail",        
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
-        ListType: "Detail",
-        Search: "Active = true",
+        ListType: "Detail",        
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if (!deleteFilter) options.search = "Active = true"
     return this.getList(this.ERPObjects.TProductList, options);
   }
 
