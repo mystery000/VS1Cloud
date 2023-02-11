@@ -198,7 +198,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 4, label: "Total Running", class: "TotalRunning", active: true, display: true, width: "30" },
                 { index: 5, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
                 { index: 6, label: "Total", class: "Total", active: true, display: true, width: "80" },
-                { index: 7, label: "Deleted", class: "Deleted", active: true, display: true, width: "30" },
+                { index: 7, label: "Status", class: "Status", active: true, display: true, width: "30" },
             ];
         }
 
@@ -321,7 +321,7 @@ Template.transaction_list.onRendered(function() {
         }
     });
 
-    $("#dateFrom").val(fromDate);
+    $("#dateFrom").val((moment().subtract(reportsloadMonths, 'months')).format("DD/MM/YYYY"));
     $("#dateTo").val(begunDate);
 
     templateObject.resetData = function(dataVal) {
@@ -3186,7 +3186,7 @@ Template.transaction_list.onRendered(function() {
             data.t_vs1_report_productmovement[i].Available || 0,
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
-            data.t_vs1_report_productmovement[i].isDeleted || false,
+            data.t_vs1_report_productmovement[i].isDeleted ? "In-Active" : "Active",
           ];
           recentTransList.push(recentTranObject);
         }
