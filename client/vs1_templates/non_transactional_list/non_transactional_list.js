@@ -319,7 +319,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 13, label: 'Width', class: 'colUOMWidth', active: false, display: true, width: "100" },
                 { index: 14, label: 'Length', class: 'colUOMLength', active: false, display: true, width: "100" },
                 { index: 15, label: 'Volume', class: 'colUOMVolume', active: false, display: true, width: "100" },
-                { index: 16, label: 'Status', class: 'colStatus', active: false, display: true, width: "100" },
+                { index: 16, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
                 { index: 17, label: 'Qty in Sales', class: 'colQtyinSales', active: false, display: true, width: "150" },
             ];
         } else if (currenttablename == "tblBOMList") { //Do Something Here
@@ -2382,7 +2382,7 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
         $(".fullScreenSpin").css("display", "none");
     };
-    
+
     //Supplier List Data
     templateObject.getSupplierListData = async function(deleteFilter = false) {
         var customerpage = 0;
@@ -4550,8 +4550,7 @@ Template.non_transactional_list.onRendered(function() {
 
     //UOM List Data
     templateObject.getUOMListData = async function (deleteFilter = false) {
-      //GET Data here from Web API or IndexDB
-      var customerpage = 0;
+      //GET Data here from Web API or IndexDB      
       getVS1Data("TUnitOfMeasureList")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -16031,7 +16030,7 @@ Template.non_transactional_list.events({
             await clearData('TTermsVS1List');
             templateObject.getTermsData(true);
         } else if (currenttablename == "tblUOMList") {
-            await clearData('TUOMList');
+            await clearData('TUnitOfMeasureList');
             templateObject.getUOMListData(true);
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
             await clearData('TSupplierVS1List');
@@ -16152,7 +16151,7 @@ Template.non_transactional_list.events({
             await clearData('TTermsVS1List');
             templateObject.getTermsData(false);
         } else if (currenttablename == "tblUOMList") {
-            await clearData('TUOMList');
+            await clearData('TUnitOfMeasureList');
             templateObject.getUOMListData(false);
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
             await clearData('TSupplierVS1List');
