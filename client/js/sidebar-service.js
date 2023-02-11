@@ -47,7 +47,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    if (!deleteFilter) options.search = "Active = true"
+    if (!deleteFilter) options.Search = "Active = true"
     return this.getList(this.ERPObjects.TProductList, options);
   }
 

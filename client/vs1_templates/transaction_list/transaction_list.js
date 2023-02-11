@@ -3142,7 +3142,8 @@ Template.transaction_list.onRendered(function() {
         })
     }
 
-    templateObject.getAllProductRecentTransactions = async function (deptname) {
+    templateObject.getAllProductRecentTransactions = async function (deleteFilter = false) {
+        let deptname = currentType
       getVS1Data("T_VS1_Report_Productmovement").then(function (dataObject) {
         let need_API = true;
         if (dataObject.length > 0) {
@@ -3157,7 +3158,7 @@ Template.transaction_list.onRendered(function() {
         }
         if (currentProductID) {
           if (need_API) {
-            productService.getProductRecentTransactionsAll(currentProductID).then(function (data) {
+            productService.getProductRecentTransactionsAll(currentProductID, deleteFilter).then(function (data) {
               addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
               templateObject.displayAllProductRecentTransactions(data, deptname);
             });
@@ -3457,7 +3458,7 @@ Template.transaction_list.onRendered(function() {
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
     } else if (currenttablename === 'productrecentlist') {
-        templateObject.getAllProductRecentTransactions(currentType);
+        templateObject.getAllProductRecentTransactions();
     }
     tableResize();
 
@@ -3543,6 +3544,9 @@ Template.transaction_list.events({
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
             templateObject.getBankingOverviewData(true);
+        } else if (currenttablename === 'productrecentlist') {
+            await clearData('T_VS1_Report_Productmovement')
+            templateObject.getAllProductRecentTransactions(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -3571,8 +3575,9 @@ Template.transaction_list.events({
             templateObject.getTimeSheetListData()
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
+        } else if (currenttablename === 'productrecentlist') {            
+            templateObject.getAllProductRecentTransactions(true);
         }
-
     },
     'change .custom-range': async function(event) {
         const tableHandler = new TableHandler();
