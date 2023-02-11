@@ -3219,7 +3219,7 @@ export class SideBarService extends BaseService {
   getCurrencies() {
     let options = {
       ListType: "Detail",
-      Search: "Active = true",
+      select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }

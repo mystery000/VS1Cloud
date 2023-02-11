@@ -580,6 +580,7 @@ Template.new_invoice.onCreated(function () {
           let serialno = "";
           let lotno = "";
           let expirydate = "";
+          if(data.fields.Lines[i].fields.PQA != null){
           if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
             for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
               serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -592,7 +593,7 @@ Template.new_invoice.onCreated(function () {
               expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
             }
           }
-
+        }
           lineItemObj = {
             lineID: Random.id(),
             id: data.fields.Lines[i].fields.ID || "",
