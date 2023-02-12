@@ -2121,9 +2121,6 @@ Template.new_salesorder.onCreated(function () {
   function generatePdfForMail(invoiceId) {
     let file = "Sales Order-" + invoiceId + ".pdf"
     return new Promise((resolve, reject) => {
-      let templateObject = Template.instance();
-      let completeTabRecord;
-      let doc = new jsPDF('p', 'pt', 'a4');
       var source = document.getElementById('html-2-pdfwrapper');
       var opt = {
         margin: 0,

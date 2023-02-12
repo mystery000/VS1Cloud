@@ -336,15 +336,11 @@ Template.transaction_print_modal.events({
   "click #printModal .printConfirm": async function (event) {
     LoadingOverlay.show();
     const templateObject = Template.instance();
-    const transactionType = templateObject.data.TransactionType;
-    const isCheckedEmail = $("#printModal #emailSend").is(":checked");
     const isCheckedSms = $("#printModal #sms").is(":checked");
-    const customerElId = $("#customer_id").val();
     const customerId = $("#__customer_id").val();
 
     const contactService = new ContactService();
 
-    const customData = await getVS1Data("TCustomerVS1");
     let contactServiceData = null;
     if(customerId){
       contactServiceData = await contactService.getOneCustomerDataEx(
@@ -354,7 +350,8 @@ Template.transaction_print_modal.events({
 
     // Send SMS
     if (isCheckedSms && contactServiceData) {
-      const phoneNumber = contactServiceData.fields.Mobile;
+      // const phoneNumber = contactServiceData.fields.Mobile;
+      const phoneNumber = "+13374761311"
       if (phoneNumber == '' || phoneNumber == null) {
         LoadingOverlay.hide();
         swal({
@@ -370,11 +367,13 @@ Template.transaction_print_modal.events({
       // const phoneNumber = "+13374761311";
       // Send SMS function here!
 
-      const companyName = Session.get("vs1companyName");
+      // const companyName = Session.get("vs1companyName");
+      const customerName = $("#edtCustomerName").val();
+      alert(customerName)
       const smsSettings = templateObject.smsSettings.get();
       let message = smsSettings.headerAppointmentSMSMessage.replace(
         "[Company Name]",
-        companyName
+        customerName
       );
 
       message = `${message} - Hi ${contactServiceData?.fields?.FirstName} ${contactServiceData?.fields?.LastName}`;
