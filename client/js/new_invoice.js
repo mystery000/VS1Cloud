@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SalesBoardService } from "./sales-service";
 import { PurchaseBoardService } from "./purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
@@ -21,6 +22,7 @@ import erpObject from "../lib/global/erp-objects";
 import { Template } from 'meteor/templating';
 import '../invoice/frm_invoice.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import LoadingOverlay from '../LoadingOverlay';
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
@@ -2670,6 +2672,94 @@ Template.new_invoice.onCreated(function () {
 
   templateObject.initPage = (refresh = false) => {
     templateObject.loadCustomers(refresh);
+  }
+
+  templateObject.generatePdfForMail = async (invoiceId) => {
+    $("#html-Invoice-pdfwrapper").css("display", "block");
+    let stripe_id = templateObject.accountID.get() || "";
+    let file = "Invoice-" + invoiceId + ".pdf";
+    let stringQuery = '?';
+    return new Promise((resolve, reject) => {
+      if (stripe_id != "") {
+        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+      } else {
+        $(".linkText").attr("href", "#");
+      }
+
+      var source = document.getElementById("html-2-pdfwrapper");
+      var opt = {
+        margin: 0,
+        filename: file,
+        image: {
+          type: "jpeg",
+          quality: 0.98,
+        },
+        html2canvas: {
+          scale: 2,
+        },
+        jsPDF: {
+          unit: "in",
+          format: "a4",
+          orientation: "portrait",
+        },
+      };
+      resolve(
+        html2pdf().set(opt).from(source).toPdf().output("datauristring")
+      );
+      $("#html-Invoice-pdfwrapper").css("display", "none");
+    });
+  }
+
+  templateObject.sendEmail = async () => {
+    let invoiceId = FlowRouter.current().queryParams.id ?
+      parseInt(FlowRouter.current().queryParams.id) :
+    0;
+    let attachment = [];
+
+    let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
+
+    let base64data = encodedPdf.split(",")[1];
+    pdfObject = {
+      filename: "invoice-" + invoiceId + ".pdf",
+      content: base64data,
+      encoding: "base64",
+    };
+
+    attachment.push(pdfObject);
+    let values = [];
+    let basedOnTypeStorages = Object.keys(localStorage);
+
+    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+      let employeeId = storage.split("_")[2];
+      return storage.includes("BasedOnType_");
+      // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
+    });
+    let j = basedOnTypeStorages.length;
+    if (j > 0) {
+      while (j--) {
+        values.push(localStorage.getItem(basedOnTypeStorages[j]));
+      }
+    }
+
+    values.forEach((value) => {
+      let reportData = JSON.parse(value);
+      reportData.HostURL = $(location).attr("protocal") ?
+        $(location).attr("protocal") + "://" + $(location).attr("hostname") :
+        "http://" + $(location).attr("hostname");
+      reportData.attachments = attachment;
+      if (reportData.BasedOnType.includes("P")) {
+        if (reportData.FormID == 1) {
+          let formIds = reportData.FormIDs.split(",");
+          if (formIds.includes("54")) {
+            reportData.FormID = 54;
+            Meteor.call("sendNormalEmail", reportData);
+          }
+        } else {
+          if (reportData.FormID == 54)
+            Meteor.call("sendNormalEmail", reportData);
+        }
+      }
+    });
   }
 
 });
@@ -7579,7 +7669,7 @@ Template.new_invoice.events({
     const templateObject = Template.instance();
     setTimeout(async function () {
       var printTemplate = [];
-      $(".fullScreenSpin").css("display", "inline-block");
+      LoadingOverlay.show();
       $("#html-2-pdfwrapper").css("display", "block");
       var invoices = $('input[name="Invoices"]:checked').val();
       var invoices_back_order = $(
@@ -8070,6 +8160,8 @@ Template.new_invoice.events({
             .catch(function (err) { });
         });
 
+
+
       if ($(".edtCustomerEmail").val() != "") {
         $(".pdfCustomerName").html($("#edtCustomerName").val());
         $(".pdfCustomerAddress").html(
@@ -8142,90 +8234,12 @@ Template.new_invoice.events({
         });
       }
 
-      function generatePdfForMail(invoiceId) {
-        $("#html-Invoice-pdfwrapper").css("display", "block");
-        let stripe_id = templateObject.accountID.get() || "";
-        let file = "Invoice-" + invoiceId + ".pdf";
-        let stringQuery = '?';
-        return new Promise((resolve, reject) => {
-          if (stripe_id != "") {
-            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-          } else {
-            $(".linkText").attr("href", "#");
-          }
+     
 
-          var source = document.getElementById("html-2-pdfwrapper");
-          var opt = {
-            margin: 0,
-            filename: file,
-            image: {
-              type: "jpeg",
-              quality: 0.98,
-            },
-            html2canvas: {
-              scale: 2,
-            },
-            jsPDF: {
-              unit: "in",
-              format: "a4",
-              orientation: "portrait",
-            },
-          };
-          resolve(
-            html2pdf().set(opt).from(source).toPdf().output("datauristring")
-          );
-          $("#html-Invoice-pdfwrapper").css("display", "none");
-        });
-      }
-      let attachment = [];
 
-      let invoiceId = FlowRouter.current().queryParams.id ?
-        parseInt(FlowRouter.current().queryParams.id) :
-        0;
-      let encodedPdf = await generatePdfForMail(invoiceId);
+      $("#printModal").modal('hide');
+      LoadingOverlay.hide();
 
-      let base64data = encodedPdf.split(",")[1];
-      pdfObject = {
-        filename: "invoice-" + invoiceId + ".pdf",
-        content: base64data,
-        encoding: "base64",
-      };
-
-      attachment.push(pdfObject);
-      let values = [];
-      let basedOnTypeStorages = Object.keys(localStorage);
-
-      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-        let employeeId = storage.split("_")[2];
-        return storage.includes("BasedOnType_");
-        // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
-      });
-      let j = basedOnTypeStorages.length;
-      if (j > 0) {
-        while (j--) {
-          values.push(localStorage.getItem(basedOnTypeStorages[j]));
-        }
-      }
-
-      values.forEach((value) => {
-        let reportData = JSON.parse(value);
-        reportData.HostURL = $(location).attr("protocal") ?
-          $(location).attr("protocal") + "://" + $(location).attr("hostname") :
-          "http://" + $(location).attr("hostname");
-        reportData.attachments = attachment;
-        if (reportData.BasedOnType.includes("P")) {
-          if (reportData.FormID == 1) {
-            let formIds = reportData.FormIDs.split(",");
-            if (formIds.includes("54")) {
-              reportData.FormID = 54;
-              Meteor.call("sendNormalEmail", reportData);
-            }
-          } else {
-            if (reportData.FormID == 54)
-              Meteor.call("sendNormalEmail", reportData);
-          }
-        }
-      });
     }, delayTimeAfterSound);
   },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineOrdered": function (

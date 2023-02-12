@@ -352,56 +352,6 @@ Template.transaction_print_modal.events({
       );
     }
 
-    console.log("Customer DATA:", contactServiceData);
-    
-    // if (customerId) {
-    //   if (customData.length === 0) {
-    //     contactServiceData = await contactService.getOneCustomerDataEx(
-    //       customerId
-    //     );
-    //   } else {
-    //     const data = JSON.parse(customData[0].data);
-    //     contactServiceData = data.tcustomervs1.find(
-    //       (customer) => parseInt(customer.fields.ID) === parseInt(customerId)
-    //     );
-    //   }
-    // }
-
-    // const data = await Template.new_salesorder.__helpers
-    //   .get("saleOrder")
-    //   .call();
-
-    // Send Email with attachments
-    // if (isCheckedEmail && validateEmail(data.checkEmailData)) {
-    if (isCheckedEmail) {
-      // $(".btnSave").trigger("click");
-      // Meteor.call(
-      //   "sendEmail",
-      //   {
-      //     from: "" + data.mailFromName + " <" + data.mailFrom + ">",
-      //     to: data.checkEmailData,
-      //     subject: data.mailSubject,
-      //     text: "",
-      //     html: data.htmlmailBody,
-      //     attachments: data.attachment,
-      //   },
-      //   function (error, result) {
-      //     if (error && error.error === "error") {
-      //       if (FlowRouter.current().queryParams.trans) {
-      //         // FlowRouter.go(
-      //         //   "/customerscard?id=" +
-      //         //     FlowRouter.current().queryParams.trans +
-      //         //     "&transTab=active"
-      //         // );
-      //       } else {
-      //         // FlowRouter.go("/salesorderslist?success=true");
-      //       }
-      //     } else {
-      //     }
-      //     LoadingOverlay.hide();
-      //   }
-      // );
-    }
     // Send SMS
     if (isCheckedSms && contactServiceData) {
       const phoneNumber = contactServiceData.fields.Mobile;
