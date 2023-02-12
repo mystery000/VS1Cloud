@@ -52,7 +52,6 @@ Template.customerlist.onRendered(function() {
                 templateObject.displayCustomerList(data);
             }
         }).catch(function (err) {
-          console.log(err);
           sideBarService.getAllTCustomerList(initialBaseDataLoad, 0).then(async function (data) {
                 addVS1Data('TCustomerVS1List', JSON.stringify(data));
                 templateObject.displayCustomerList(data);
