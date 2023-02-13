@@ -301,7 +301,6 @@ Template.new_salesorder.onCreated(function () {
         // tdlineamt,
         ""
       ]);
-      console.log("TEST:", array_data)
       const lineItemObj = {
         description: tddescription || '',
         quantity: tdQty || 0,
