@@ -45,13 +45,11 @@ Template.export_import_print_display_button.events({
       event.stopPropagation();
       let templateObject = Template.instance();
       let tablename = templateObject.data.tablename || '';
-      // if(tablename != '') {
-      //   $('.fullScreenSpin').css('display','inline-block');
-      //   jQuery('#' + tablename + '_wrapper .dt-buttons .btntabletopdf').click();
-      //   $('.fullScreenSpin').css('display','none');
-      // }
-      var table = $('#'+ tablename).DataTable();
-      console.log(table)
+      if(tablename != '') {
+        $('.fullScreenSpin').css('display','inline-block');
+        jQuery('#' + tablename + '_wrapper .dt-buttons .btntabletopdf').click();
+        $('.fullScreenSpin').css('display','none');
+      }
     }
 });
 

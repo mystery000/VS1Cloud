@@ -1042,10 +1042,8 @@ Template.productview.onRendered(function () {
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
                 setTimeout(async function () {
-                  console.log("$$$$$$$$$$$$$", useData[i].fields.IncomeAccount)
                   await templateObject.setEditableSelect();
                   $("#sltsalesacount").val(useData[i].fields.IncomeAccount);
-                  console.log("++++++++++++++", $("#sltsalesacount").val())
                   $("#sltcogsaccount").val(useData[i].fields.CogsAccount);
                   $("#sltinventoryacount").val(useData[i].fields.AssetAccount);
                   $("#sltUomSales").val(defaultUOM);
@@ -1161,7 +1159,6 @@ Template.productview.onRendered(function () {
                 templateObject.isShowBOMModal.set(true);
               }
             }
-            console.log("added: ", added)
             if (!added) {
               productService
                 .getOneProductdata(currentProductID)
@@ -3654,7 +3651,6 @@ Template.productview.events({
           };
         }
 
-        console.log("object details", objDetails)
         saveBOMStructure();
         return;
         productService
@@ -4244,7 +4240,6 @@ Template.productview.events({
         let bomObject = templateObject.bomStructure.get();
 
         let bomProducts = templateObject.bomProducts.get() || [];
-        console.log("*********", bomProducts)
         let existID = -1;
         let existIndex = bomProducts.findIndex((product) => {
           return product.fields.Caption == bomObject.fields.Caption;
@@ -4263,7 +4258,6 @@ Template.productview.events({
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
         temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
-        console.log('&&&&&&&&&', templateObject.isManufactured.get());
         return
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
