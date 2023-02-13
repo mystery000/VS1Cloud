@@ -91,7 +91,7 @@ Template.bom_list.events({
   'click #tblBOMList tbody tr': async function(event) {
     let templateObject = Template.instance();
     let productService = new ProductService();
-    let productName = $(event.target).closest('tr').find('td.colProductName').text();
+    let productName = $(event.target).closest('tr').find('td.colName').text();
     let bomProducts = templateObject.bomProducts.get();
     let index = bomProducts.findIndex(product => {
       return product.fields.Caption == productName;
@@ -116,9 +116,17 @@ Template.bom_list.events({
   'click .btnRefresh':  (e, ui) => {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    setTimeout(()=>{
+    let productService = new ProductService();
+    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+      addVS1Data('TProcTree', JSON.stringify(data)).then(function() {
+        window.open('/bomlist','_self');  
+      })
+    }).catch(function(err) {
       window.open('/bomlist','_self');
-    }, 3000)
+    })
+    // setTimeout(()=>{
+    //   window.open('/bomlist','_self');
+    // }, 3000)
 
   },
 'click .templateDownload': function () {
