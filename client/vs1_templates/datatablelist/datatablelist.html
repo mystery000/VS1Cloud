@@ -134,12 +134,13 @@
         }
     </style>
     <!-- End -->
-    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-        {{#if istransaction}}
-
-        {{> transaction_list_date}}
-        {{/if}}
+    {{#if istransaction}}
+    <div style ="margin-bottom: -20px;">
+    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm" style="margin-bottom: -45px; width: fit-content">
+            {{> transaction_list_date}}
+        </div>
     </div>
+    {{/if}}
     <div class="table-responsive">
         <style>
             th {

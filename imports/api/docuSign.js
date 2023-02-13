@@ -10,6 +10,18 @@ Meteor.methods({
     },
     'requestSign'(signerEmail, signerName, ccEmail, ccName) {
 
+        // pdf.create(html, { format: 'A4' }).toFile('/output.pdf', (err, res) => {
+        //     html = '';
+        //
+        //     if (err) return console.log(err);
+        //
+        //     console.log(res);
+        //
+        //     requestSignDocument(signerEmail, signerName, ccEmail, ccName);
+        // });
+        //
+        // html = '';
+
         requestSignDocument(signerEmail, signerName, ccEmail, ccName, html);
 
         html = '';

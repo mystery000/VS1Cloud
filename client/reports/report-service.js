@@ -314,7 +314,7 @@ export class ReportService extends BaseService {
         let options = {
             LayoutID: 3
         };
-        return this.getList('TProfitAndLossReport', options);
+        return this.getList('VS1_PNLGetLayout', options);
     }
 
     getAgedPayableDetailsData(dateFrom, dateTo, ignoreDate) {
@@ -923,6 +923,10 @@ export class ReportService extends BaseService {
             ListType: "Detail",
         };
         return this.getList(this.ERPObjects.TVATReturn, options);
+    }
+
+    savePNLNewGroup(data) {
+        return this.POST(this.ERPObjects.VS1_PNLAddGroup, data);
     }
 
 }

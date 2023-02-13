@@ -234,7 +234,7 @@ Template.refundcard.onCreated(() => {
               taxItems[taxCode] = amount;
             }
           });
-        } 
+        }
       }
 
       array_data.push([
@@ -888,7 +888,7 @@ Template.refundcard.onCreated(() => {
         });
       });
   };
-  
+
   templateObject.getTerms = function () {
     const termrecords = [];
     getVS1Data("TTermsVS1")
@@ -1165,10 +1165,11 @@ Template.refundcard.onRendered(() => {
                           let TaxRateGbp = (
                               data.fields.Lines[i].fields.LineTaxRate * 100
                           ).toFixed(2);
-                          
+
                           let serialno = "";
                           let lotno = "";
                           let expirydate = "";
+                          if(data.fields.Lines[i].fields.PQA != null){
                           if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
                               for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                               serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -1181,7 +1182,7 @@ Template.refundcard.onRendered(() => {
                               expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                               }
                           }
-                          
+                        }
                           lineItemObj = {
                             lineID: Random.id(),
                             id: data.fields.Lines[i].fields.ID || "",
@@ -2870,6 +2871,7 @@ Template.refundcard.onRendered(() => {
                         let serialno = "";
                         let lotno = "";
                         let expirydate = "";
+                        if(data.fields.Lines[i].fields.PQA != null){
                         if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
                             for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                             serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -2882,7 +2884,7 @@ Template.refundcard.onRendered(() => {
                             expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                             }
                         }
-
+                      }
                         lineItemObj = {
                           lineID: Random.id(),
                           id: data.fields.Lines[i].fields.ID || "",
@@ -6693,7 +6695,7 @@ Template.refundcard.events({
     clickedInput = "three";
     $("#clickedControl").val(clickedInput);
   },
-  
+
   "click #edtCustomerName": function (event) {
     $("#edtCustomerName").select();
     $("#edtCustomerName").editableSelect();
@@ -6714,7 +6716,7 @@ Template.refundcard.events({
     $("#sltStatus").select();
     $("#sltStatus").editableSelect();
   },
-  
+
   "blur .lineQty": function (event) {
     let templateObject = Template.instance();
     let taxcodeList = templateObject.taxraterecords.get();
@@ -10428,7 +10430,7 @@ Template.refundcard.events({
   },
 
   "change input.colUnitPriceEx": (e, ui) => {
-    
+
   },
 });
 
