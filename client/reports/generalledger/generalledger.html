@@ -3,11 +3,17 @@
     currencyList = currencyList}}
     <div class="table-responsive">
         <style>
-            tr{
-                height: 35px!important;
+            td{
+                padding: 7px !important;
+            }
+            .text-center0 {
+                text-align: right !important;
+            }
+            .text-bold {
+                font-weight: 800;
             }
         </style>
-        <table class="table tableExportDetailDiv table-sm" id="tblgeneralledger"
+        <table class="table table-sm" id="tblgeneralledger"
             name="tblgeneralledger">
             <thead>
                 <tr class="table-active customDoubleTableHeading">
@@ -16,7 +22,7 @@
                             <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
                                 data-col-active="{{ c.active}}"
                                 class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                                style="text-align: left!important; width:{{c.width}}px">
+                                style="font-weight: 800; text-align: left; width:{{c.width}}px">
                                 {{c.label}}
                             </th>
                         {{/if}}
@@ -31,5 +37,4 @@
             </table>
         </div>
     {{/vs1_report_template}}
-
 </template>

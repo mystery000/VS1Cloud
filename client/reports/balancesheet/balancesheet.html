@@ -1,6 +1,17 @@
 <template name="balancesheetreport">
     {{# vs1_report_template tabledisplayname="Balance Sheet" tablename="tblBalanceSheet" dateAsAt=dateAsAt sheetname="Balancesheet Report Result"
                             currencyList = currencyList}}
+        <style>
+            td :not{
+                padding: 7px !important;
+            }
+            .text-center0 {
+                text-align: right !important;
+            }
+            .text-bold {
+                font-weight: 800;
+            }
+        </style>
         <div class="table-responsive">
             <table class="table table-sm" id="tblBalanceSheet"
                    name="tblBalanceSheet">
@@ -13,7 +24,7 @@
 
                                 <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
                                     class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                                    style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                                    style="font-weight: 800; text-align: left; width:{{c.width}}px">{{ c.label }}</th>
                             {{/if}}
                         {{/each}}
                     {{/if}}
@@ -138,67 +149,5 @@
             </table>
         </div>
     {{/vs1_report_template}}
-    <style>
-        th {
-            background-color: #ededed;
-        }
 
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: white !important;
-        }
-
-        .table-striped tbody tr:nth-of-type(even) {
-            background-color: #0000000d !important;
-        }
-
-        .JColResizer>tbody>tr>td,
-        .JColResizer>tbody>tr>th {
-            padding: .75rem !important;
-        }
-
-        .hiddenColumn {
-            display: none;
-        }
-
-        .showColumn {
-            display: table-cell;
-            padding: .75rem;
-            vertical-align: top;
-        }
-
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            opacity: 1;
-        }
-
-        .tbl_responsive {
-            width: 100% !important;
-            overflow-x: auto !important;
-            overflow-y: hidden !important;
-        }
-
-        .table th.colARBalance,
-        .table th.colCreditBalance,
-        .table th.colBalance,
-        .table th.colCreditLimit,
-        .table th.colSalesOrderBalance {
-            text-align: right !important;
-        }
-
-        @media print {
-            table.dataTable {
-                width: 100% !important;
-            }
-
-            table.dataTable tr td {
-                font-size: 0.7rem !important;
-                padding: 0.6rem !important;
-            }
-
-            table.dataTable tr th {
-                font-size: 0.7rem !important;
-                padding: 0.6rem !important;
-            }
-        }
-    </style>
 </template>

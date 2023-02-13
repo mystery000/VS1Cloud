@@ -676,13 +676,13 @@ Template.generalledger.onRendered(() => {
     reset_data = [
       // { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
       { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
-      { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
-      { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "90" },
-      { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "190" },
-      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "170" },
-      { index: 6, label: 'Debits', class: 'colDebitsEx', active: true, display: true, width: "90" },
-      { index: 7, label: 'Credits', class: 'colCreditEx', active: true, display: true, width: "90" },
-      { index: 8, label: 'Amount', class: 'colAmountEx', active: true, display: true, width: "90" },
+      { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "" },
+      { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+      { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "180" },
+      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "" },
+      { index: 6, label: 'Debits', class: 'colDebitsEx', active: true, display: true, width: "" },
+      { index: 7, label: 'Credits', class: 'colCreditEx', active: true, display: true, width: "" },
+      { index: 8, label: 'Amount', class: 'colAmountEx', active: true, display: true, width: "" },
 
       // { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
       // { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
@@ -802,7 +802,7 @@ Template.generalledger.onRendered(() => {
     let balanceSheetReport = [];
     let symDollar = '$';
     balanceSheetReport.push([
-      `<span class="table-cells"><strong>${T_AccountName}</strong></span>`,
+      `<span class="table-cells text-bold">${T_AccountName}</span>`,
       "",
       "",
       "",
@@ -815,11 +815,11 @@ Template.generalledger.onRendered(() => {
       if(start != splashArrayBalanceSheetReport[i][0]) {
         creditSum += (credit - 0), debitSum += (debit - 0), totalSum += (total - 0);
         start = splashArrayBalanceSheetReport[i][0];
-        credit = credit >= 0 ? `<span class='table-cells'><strong>${showCurrency(credit)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(credit)}</strong></span>`;
-        debit = debit >= 0 ? `<span class='table-cells'><strong>${showCurrency(debit)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(debit)}</strong></span>`;
-        total = total >= 0 ? `<span class='table-cells'><strong>${showCurrency(total)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(total)}</strong></span>`;
+        credit = credit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(credit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(credit)}</span>`;
+        debit = debit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(debit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(debit)}</span>`;
+        total = total >= 0 ? `<span class='table-cells text-bold'>${showCurrency(total)}</span>` : `<span class='text-danger text-bold'>${showCurrency(total)}</span>`;
         balanceSheetReport.push([
-          `<span class="table-cells"><strong>Total ${T_AccountName}</strong></span>`,
+          `<span class="table-cells text-bold">Total ${T_AccountName}</span>`,
           "",
           "",
           "",
@@ -829,7 +829,7 @@ Template.generalledger.onRendered(() => {
           total,
         ]);
         balanceSheetReport.push([
-          `<span class="table-cells"><strong>${splashArrayBalanceSheetReport[i][0]}</strong></span>`,
+          `<span class="table-cells text-bold">${splashArrayBalanceSheetReport[i][0]}</span>`,
           "",
           "",
           "",
@@ -867,26 +867,26 @@ Template.generalledger.onRendered(() => {
       }
     }
     balanceSheetReport.push([
-      `<span class="table-cells"><strong>Total ${T_AccountName}</strong></span>`,
+      `<span class="table-cells">Total ${T_AccountName}</span>`,
       "",
       "",
       "",
       "",
-      credit >= 0 ? `<span class='table-cells'><strong>${showCurrency(credit)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(credit)}</strong></span>`,
-      debit >= 0 ? `<span class='table-cells'><strong>${showCurrency(debit)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(debit)}</strong></span>`,
-      total >= 0 ? `<span class='table-cells'><strong>${showCurrency(total)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(total)}</strong></span>`,
+      credit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(credit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(credit)}</span>`,
+      debit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(debit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(debit)}</span>`,
+      total >= 0 ? `<span class='table-cells text-bold'>${showCurrency(total)}</span>` : `<span class='text-danger text-bold'>${showCurrency(total)}</span>`,
     ]);
     creditSum += (credit - 0), debitSum += (debit - 0);
     totalSum = (creditSum - debitSum);
     balanceSheetReport.push([
-      `<span class="table-cells"><strong>Grand Total</strong></span>`,
+      `<span class="table-cells">Grand Total</span>`,
       "",
       "",
       "",
       "",
-      creditSum >= 0 ? `<span class='table-cells'><strong>${showCurrency(creditSum)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(creditSum)}</strong></span>`,
-      debitSum >= 0 ? `<span class='table-cells'><strong>${showCurrency(debitSum)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(debitSum)}</strong></span>`,
-      totalSum >= 0 ? `<span class='table-cells'><strong>${showCurrency(totalSum)}</strong></span>` : `<span class='text-danger'><strong>${showCurrency(totalSum)}</strong></span>`,
+      creditSum >= 0 ? `<span class='table-cells text-bold'>${showCurrency(creditSum)}</span>` : `<span class='text-danger text-bold'>${showCurrency(creditSum)}</span>`,
+      debitSum >= 0 ? `<span class='table-cells text-bold'>${showCurrency(debitSum)}</span>` : `<span class='text-danger text-bold'>${showCurrency(debitSum)}</span>`,
+      totalSum >= 0 ? `<span class='table-cells text-bold'>${showCurrency(totalSum)}</span>` : `<span class='text-danger text-bold'>${showCurrency(totalSum)}</span>`,
     ]);
     templateObject.transactiondatatablerecords.set(balanceSheetReport);
     if (templateObject.transactiondatatablerecords.get()) {
@@ -898,6 +898,7 @@ Template.generalledger.onRendered(() => {
       $('#tblgeneralledger').DataTable({
         data: balanceSheetReport,
         searching: false,
+        "bSort" : false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
           // {
@@ -926,15 +927,15 @@ Template.generalledger.onRendered(() => {
           },
           {
             targets: 5,
-            className: "colDebitsEx",
+            className: "colDebitsEx text-center0",
           },
           {
             targets: 6,
-            className: "colCreditEx",
+            className: "colCreditEx text-center0",
           },
           {
             targets: 7,
-            className: "colAmountEx",
+            className: "colAmountEx text-center0",
           },
           // {
           //   targets: 3,

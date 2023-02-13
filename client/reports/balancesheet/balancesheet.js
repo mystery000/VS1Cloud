@@ -53,9 +53,9 @@ Template.balancesheetreport.onRendered(() => {
             // { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
             // { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
             // { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
-            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "350" },
-            { index: 2, label: 'Sub Account Totals', class: 'colSubAccountTotals', active: true, display: true, width: "300" },
-            { index: 3, label: 'Header Account Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "300" },
+            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "320" },
+            { index: 2, label: 'Sub Account Totals', class: 'colSubAccountTotals', active: true, display: true, width: "" },
+            { index: 3, label: 'Header Account Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "" },
         ]
         templateObject.currencyRecord.set(reset_data);
     }
@@ -161,19 +161,20 @@ Template.balancesheetreport.onRendered(() => {
             let tmp;
             dataList[0] = dataList[0].replaceAll(' ', '&nbsp');
             if(!dataList[1] && !dataList[2]) {
-                dataList[0] = `<span class="table-cells"><strong>${dataList[0]}</strong></span>`;
+                dataList[0] = `<span class="table-cells text-bold">${dataList[0]}</span>`;
                 if (data.balancesheetreport[i]["Total Current Asset & Liability"]) {
                     tmp = data.balancesheetreport[i]["Total Current Asset & Liability"];
+                    dataList[2] = (tmp >= 0) ? `<span class="table-cells text-bold">${showCurrency(tmp)}</span>` : `<span class="text-danger text-bold">${showCurrency(tmp)}</span>`;
                 }
                 else if(data.balancesheetreport[i]["Total Asset & Liability"]){
                     tmp = data.balancesheetreport[i]["Total Asset & Liability"];
+                    dataList[2] = (tmp >= 0) ? `<span class="table-cells text-bold">${showCurrency(tmp)}</span>` : `<span class="text-danger text-bold">${showCurrency(tmp)}</span>`;
                 }
-                dataList[2] = (tmp >= 0) ? `<span class="table-cells"><strong>${showCurrency(tmp)}</strong></span>` : `<span class="text-danger"><strong>${showCurrency(tmp)}</strong></span>`;
             }
             else if(dataList[2]){
                 tmp = dataList[2];
-                dataList[0] = `<span class="text-primary"><strong>${dataList[0]}</strong></span>`;
-                dataList[2] = (tmp >= 0) ? `<span class="text-primary">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
+                dataList[0] = `<span class="text-primary text-bold">${dataList[0]}</span>`;
+                dataList[2] = (tmp >= 0) ? `<span class="text-primary text-bold">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
             }
             else if(dataList[1]){
                 tmp = dataList[1];
@@ -195,6 +196,7 @@ Template.balancesheetreport.onRendered(() => {
             $('#tblBalanceSheet').DataTable({
                 data: splashArrayBalanceSheetReport,
                 searching: false,
+                "bSort" : false,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
@@ -203,11 +205,11 @@ Template.balancesheetreport.onRendered(() => {
                     },
                     {
                         targets: 1,
-                        className: "colSubAccountTotals",
+                        className: "colSubAccountTotals text-center0",
                     },
                     {
                         targets: 2,
-                        className: "colHeaderAccountTotals",
+                        className: "colHeaderAccountTotals text-center0",
                     },
                     /*
                     {
@@ -593,9 +595,9 @@ Template.balancesheetreport.events({
     "click #printButtonBalanceSheet": function () {
         $("#printBalanceSheet").print({
             prepend: "<p style='margin-top: 80px; font-size: 23px;'>" +
-                "<strong>" +
+                "" +
                 loggedCompany +
-                " - Balance Sheet</strong></p></br>",
+                " - Balance Sheet</p></br>",
             title: document.title + " | Balance Sheet | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
         });
