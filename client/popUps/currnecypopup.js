@@ -43,24 +43,6 @@ Template.currencypop.onRendered(function () {
   var countryService = new CountryService();
   let countries = [];
 
-  Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
-    if (error) {} else {
-      if (result) {
-        for (let i = 0; i < result.customFields.length; i++) {
-          let customcolumn = result.customFields;
-          let columData = customcolumn[i].label;
-          let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-          let hiddenColumn = customcolumn[i].hidden;
-          let columnClass = columHeaderUpdate.split(".")[1];
-          let columnWidth = customcolumn[i].width;
-
-          $("th." + columnClass + "").html(columData);
-          $("th." + columnClass + "").css("width", "" + columnWidth + "px");
-        }
-      }
-    }
-  });
-
   function MakeNegative() {
     $("td").each(function () {
       if ($(this).text().indexOf("-" + Currency) >= 0)
@@ -72,21 +54,25 @@ Template.currencypop.onRendered(function () {
   templateObject.loadCurrencies = async () => {
     let currencies = [];
     LoadingOverlay.show();
-    //let dataObject = await getVS1Data('TCurrency');
-    let data = await taxRateService.getCurrencies();
-
+    let data = "";
+    let dataObject = await getVS1Data('TCurrency')||'';
+    if(dataObject.length > 0){
+      data = JSON.parse(dataObject[0].data);
+    }else{
+      data = await sideBarService.getCurrencies();
+    };
     data.tcurrency.forEach(_currency => {
 
         currencies.push({
-          id: _currency.Id || "",
-          code: _currency.Code || "N/A",
-          currency: _currency.Currency || "N/A",
-          symbol: _currency.CurrencySymbol || currencySymbolEmpty,
-          buyrate: _currency.BuyRate || "N/A",
-          sellrate: _currency.SellRate || "N/A",
-          country: _currency.Country || "N/A",
-          description: _currency.CurrencyDesc || "N/A",
-          ratelastmodified: _currency.RateLastModified ||"N/A",
+          id: _currency.fields.ID || "",
+          code: _currency.fields.Code || "N/A",
+          currency: _currency.fields.Currency || "N/A",
+          symbol: _currency.fields.CurrencySymbol || currencySymbolEmpty,
+          buyrate: _currency.fields.BuyRate || "N/A",
+          sellrate: _currency.fields.SellRate || "N/A",
+          country: _currency.fields.Country || "N/A",
+          description: _currency.fields.CurrencyDesc || "N/A",
+          ratelastmodified: _currency.fields.RateLastModified ||"N/A",
         });
 
         if(_currency.currency == defaultCurrencyCode) {
@@ -99,29 +85,6 @@ Template.currencypop.onRendered(function () {
     templateObject.datatablerecordscurrencypop.set(currencies);
 
     if (templateObject.datatablerecordscurrencypop.get()) {
-      Meteor.call("readPrefMethod", localStorage.getItem("mycloudLogonID"), "tblCurrencyPopList", function (error, result) {
-        if (error) {} else {
-          if (result) {
-            for (let i = 0; i < result.customFields.length; i++) {
-              let customcolumn = result.customFields;
-              let columData = customcolumn[i].label;
-              let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-              let hiddenColumn = customcolumn[i].hidden;
-              let columnClass = columHeaderUpdate.split(".")[1];
-              let columnWidth = customcolumn[i].width;
-              let columnindex = customcolumn[i].index + 1;
-
-              if (hiddenColumn == true) {
-                $("." + columnClass + "").addClass("hiddenColumn");
-                $("." + columnClass + "").removeClass("showColumn");
-              } else if (hiddenColumn == false) {
-                $("." + columnClass + "").removeClass("hiddenColumn");
-                $("." + columnClass + "").addClass("showColumn");
-              }
-            }
-          }
-        }
-      });
 
       setTimeout(function () {
         MakeNegative();
@@ -1004,7 +967,7 @@ Template.currencypop.events({
     playDeleteAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    
+
     let currencyId = $("#selectDeleteLineID").val();
     let objDetails = {
       type: "TCurrency",
@@ -1161,7 +1124,7 @@ Template.currencypop.events({
     });
   }, delayTimeAfterSound);
   }
-  
+
 });
 
 Template.currencypop.helpers({

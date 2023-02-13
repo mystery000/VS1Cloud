@@ -3271,6 +3271,7 @@ Template.new_quote.onRendered(() => {
                     let serialno = "";
                     let lotno = "";
                     let expirydate = "";
+                    if(data.fields.Lines[i].fields.PQA != null){
                     if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                         serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -3283,7 +3284,7 @@ Template.new_quote.onRendered(() => {
                         expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                         }
                     }
-
+                  }
                     lineItemObj = {
                         lineID: Random.id(),
                         id: data.fields.Lines[i].fields.ID || '',
@@ -11382,7 +11383,7 @@ Template.new_quote.events({
     "click .btnSNCreate": function (event) {
         // $("#availableSerialNumberModal").modal("hide");
         // $("#serialNumberModal").modal("show");
-    
+
         let tokenid = "random";
         var rowData = `<tr class="dnd-moved checkRowSelected" id="${tokenid}">
                 <td class="colChkBox pointer" style="width:10%!important;">
@@ -11396,7 +11397,7 @@ Template.new_quote.events({
                 </td>
                 <td class="colSN" contenteditable="true">Random</td>
             </tr>`;
-    
+
         $("#tblAvailableSNCheckbox tbody").prepend(rowData);
     },
     'change #sltCurrency': (e, ui) => {

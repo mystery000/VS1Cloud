@@ -481,8 +481,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
     });
 
-    organisationService.getOrganisationDetail()
-    .then(dataListRet => {
+    organisationService.getOrganisationDetail().then(dataListRet => {
       addVS1Data('TCompanyInfo', JSON.stringify(dataListRet));
     })
   }
@@ -567,6 +566,31 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllCustomersData = function () {
+    sideBarService.getAllTCustomerList(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Customer List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TCustomerVS1List', JSON.stringify(data));
+      $("<span class='process'>Customer List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
     sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -593,6 +617,31 @@ Template.onsuccesswaterfall.onRendered(function () {
 
     });
 
+
+    sideBarService.getAllLeadDataList(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Lead List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TProspectList', JSON.stringify(data));
+      $("<span class='process'>Lead List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
 
     sideBarService.getAllLeads(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
@@ -622,6 +671,33 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllSuppliersData = function () {
+
+    sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Supplier List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+
+      addVS1Data('TSupplierVS1List', JSON.stringify(data));
+      $("<span class='process'>Supplier List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
     sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -1107,6 +1183,31 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllEmployeeData = function () {
+    sideBarService.getAllTEmployeeList(initialBaseDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Employee List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TEmployeeList', JSON.stringify(data));
+      $("<span class='process'>Employee List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
     sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -1770,7 +1871,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllTStockAdjustEntryData = function () {
-    if (isStockAdjustment) {
+    if (JSON.parse(isStockAdjustment)) {
       sideBarService.getAllStockAdjustEntry(initialDataLoad, 0).then(function (data) {
         countObjectTimes++;
         progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -1801,7 +1902,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   templateObject.getAllTStockTransferEntryData = function () {
-    if (isStockTransfer) {
+    if (JSON.parse(isStockTransfer)) {
       sideBarService.getAllStockTransferEntry(initialDataLoad, 0).then(function (data) {
         countObjectTimes++;
         progressPercentage = (countObjectTimes * 100) / allDataToLoad;
@@ -3527,7 +3628,7 @@ Template.onsuccesswaterfall.onRendered(function () {
   /* Start Here */
     templateObject.getFollowedAllObjectPull = function () {
       setTimeout(function () {
-        if (isPayments) {
+        if (JSON.parse(isPayments)) {
           getVS1Data('TStatementList').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getTStatementListData();
@@ -3546,7 +3647,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
 
         }
-        if (isBanking) {
+        if (JSON.parse(isBanking)) {
           getVS1Data('TVS1BankDeposit').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getTVS1BankDepositData();
@@ -3565,7 +3666,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
 
         }
-        if (isPayroll) {
+        if (JSON.parse(isPayroll)) {
           getVS1Data('TTimeSheet').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTimeSheetData();
@@ -3652,7 +3753,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
 
         }
-        if (isAccounts) {
+        if (JSON.parse(isAccounts)) {
           getVS1Data('TJournalEntryLines').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllJournalEntryLineData();
@@ -3675,7 +3776,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllJournalEntryLineData();
           });
         }
-        if (isBanking) {
+        if (JSON.parse(isBanking)) {
           getVS1Data('TReconciliation').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTReconcilationData();
@@ -3694,7 +3795,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllTReconcilationData();
           });
         }
-        if (isExpenseClaims) {
+        if (JSON.parse(isExpenseClaims)) {
           getVS1Data('TExpenseClaim').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTExpenseClaimExData();
@@ -3713,7 +3814,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllTExpenseClaimExData();
           });
         }
-        if (isInventory) {
+        if (JSON.parse(isInventory)) {
           getVS1Data('TStockAdjustEntry').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTStockAdjustEntryData();
@@ -3742,7 +3843,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
         }
 
-        if (isReports) {
+        if (JSON.parse(isReports)) {
           getVS1Data('BalanceSheetReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getBalanceSheetData();
@@ -4119,7 +4220,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getTAPReportData();
           });
         }
-        if (isPayments) {
+        if (JSON.parse(isPayments)) {
           getVS1Data('TPaymentList').then(function (dataObject) {
 
             if (dataObject.length == 0) {
@@ -4188,7 +4289,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllAwaitingCustomerPaymentData();
           });
         }
-        if (isBanking) {
+        if (JSON.parse(isBanking)) {
           getVS1Data('TBankAccountReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllBankAccountReportData();
@@ -4197,7 +4298,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllBankAccountReportData();
           });
         }
-        if (isContacts) {
+        if (JSON.parse(isContacts)) {
           getVS1Data('TTransactionListReport').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTTransactionListReportData();
@@ -4268,7 +4369,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     //Followed by Bill Details
     templateObject.getFollowedBillDetailsPull = function () {
       setTimeout(function () {
-        if (isPurchases) {
+        if (JSON.parse(isPurchases)) {
 
           getVS1Data('TCredit').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -4447,7 +4548,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
         }
         setTimeout(function () {
-          if (isBanking) {
+          if (JSON.parse(isBanking)) {
             getVS1Data('TCheque').then(function (dataObject) {
               if (dataObject.length == 0) {
                 templateObject.getAllTChequeData();
@@ -4484,7 +4585,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     //Followed by Purchase Details
     templateObject.getFollowedPurchaseDetailsPull = function () {
       setTimeout(function () {
-        if (isPurchases) {
+        if (JSON.parse(isPurchases)) {
           getVS1Data('TPurchaseOrderEx').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTPurchaseOrderData();
@@ -4627,7 +4728,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
         } else {
           templateObject.getFollowedAllObjectPull();
-          if (isBanking) {
+          if (JSON.parse(isBanking)) {
             getVS1Data('TCheque').then(function (dataObject) {
               if (dataObject.length == 0) {
                 templateObject.getAllTChequeData();
@@ -4666,7 +4767,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     /* Quick Objects*/
     templateObject.getFollowedQuickDataDetailsPull = function () {
       setTimeout(function () {
-        if (isSettings) {
+        if (JSON.parse(isSettings)) {
           getVS1Data('TTaxcodeVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTaxCodeData();
@@ -4675,7 +4776,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllTaxCodeData();
           });
         }
-        if (isSettings) {
+        if (JSON.parse(isSettings)) {
           getVS1Data('TTermsVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTermsData();
@@ -4684,7 +4785,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllTermsData();
           });
         }
-        if (isSettings) {
+        if (JSON.parse(isSettings)) {
           getVS1Data('TDeptClass').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllDepartmentData();
@@ -4693,7 +4794,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllDepartmentData();
           });
         }
-        if (isCurrencyEnable) {
+        if (JSON.parse(isCurrencyEnable)) {
           if ((!isSettings) && (!isSales)) {
 
           } else {
@@ -4707,7 +4808,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           }
         }
 
-        if (isSettings) {
+        if (JSON.parse(isSettings)) {
           getVS1Data('TCountries').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getTCountriesData();
@@ -4716,7 +4817,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getTCountriesData();
           });
         } else {
-          if (isContacts) {
+          if (JSON.parse(isContacts)) {
             getVS1Data('TCountries').then(function (dataObject) {
               if (dataObject.length == 0) {
                 templateObject.getTCountriesData();
@@ -4727,7 +4828,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           }
         }
 
-        if (isSettings) {
+        if (JSON.parse(isSettings)) {
           getVS1Data('TPaymentMethod').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getTPaymentMethodData();
@@ -4750,7 +4851,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
         }
 
-        if (isSales) {
+        if (JSON.parse(isSales)) {
           getVS1Data('TLeadStatusType').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllLeadStatusData();
@@ -4759,7 +4860,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllLeadStatusData();
           });
         }
-        if (isContacts) {
+        if (JSON.parse(isContacts)) {
           getVS1Data('TShippingMethod').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllShippingMethodData();
@@ -4768,7 +4869,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllShippingMethodData();
           });
         }
-        if (isAccounts) {
+        if (JSON.parse(isAccounts)) {
           getVS1Data('TAccountType').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllAccountTypeData();
@@ -4778,7 +4879,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
         }
 
-        if (isSettings) {
+        if (JSON.parse(isSettings)) {
           getVS1Data('TERPForm').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllERPFormData();
@@ -4796,8 +4897,8 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
         }
 
-        if (isAppointmentScheduling) {
-          if (isContacts) {
+        if (JSON.parse(isAppointmentScheduling)) {
+          if (JSON.parse(isContacts)) {
 
           } else {
             templateObject.getAllEmployeeData();
@@ -4980,7 +5081,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     //Followed By Sales Details
     templateObject.getFollowedSalesDetailsPull = function () {
       setTimeout(function () {
-        if (isCRM) {
+        if (JSON.parse(isCRM)) {
           getVS1Data('TCRMTaskList').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllCRMData();
@@ -4990,7 +5091,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           });
         }
 
-        if (isSales) {
+        if (JSON.parse(isSales)) {
           getVS1Data('TSalesList').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTSalesListData();
@@ -5231,7 +5332,7 @@ Template.onsuccesswaterfall.onRendered(function () {
           templateObject.getFollowedQuickDataDetailsPull();
         }
 
-        if (isShipping) {
+        if (JSON.parse(isShipping)) {
           getVS1Data('TInvoiceBackOrder').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllBackOrderInvoicetData();
@@ -5265,7 +5366,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     //Followed By Contact Details
     templateObject.getFollowedContactDetailsPull = function () {
       setTimeout(function () {
-        if (isContacts) {
+        if (JSON.parse(isContacts)) {
           var currentBeginDate = new Date();
           var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
           let fromDateMonth = (currentBeginDate.getMonth() + 1)
@@ -5416,8 +5517,8 @@ Template.onsuccesswaterfall.onRendered(function () {
     }
 
     //If launching Appoing. Don't worry about the rest
-    if (isAppointmentLaunch) {
-      if (isAppointmentScheduling) {
+    if (JSON.parse(isAppointmentLaunch)) {
+      if (JSON.parse(isAppointmentScheduling)) {
 
         getVS1Data('TAppointment').then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -5488,8 +5589,8 @@ Template.onsuccesswaterfall.onRendered(function () {
         });
       }
       setTimeout(function () {
-        if (isInventory) {
-          if (isPayroll || isAppointmentScheduling) {
+        if (JSON.parse(isInventory)) {
+          if (JSON.parse(isPayroll) || JSON.parse(isAppointmentScheduling)) {
             getVS1Data('TProductWeb').then(function (dataObject) {
               if (dataObject.length == 0) {
                 templateObject.getAllProductServiceData();
@@ -5681,8 +5782,8 @@ Template.onsuccesswaterfall.onRendered(function () {
         }
       }, 1000);
     } else {
-      if (isAccounts) {
-        getVS1Data('TAccountVS1').then(function (dataObject) {
+      if (JSON.parse(isAccounts)) {
+        getVS1Data('TAccountVS1List').then(function (dataObject) {
           if (dataObject.length == 0) {
             templateObject.getAllAccountsData();
           } else {
@@ -5699,8 +5800,8 @@ Template.onsuccesswaterfall.onRendered(function () {
           templateObject.getAllAccountsData();
         });
       }
-      if (isInventory) {
-        if (isPayroll || isAppointmentScheduling) {
+      if (JSON.parse(isInventory)) {
+        if (JSON.parse(isPayroll) || JSON.parse(isAppointmentScheduling)) {
           getVS1Data('TProductWeb').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllProductServiceData();

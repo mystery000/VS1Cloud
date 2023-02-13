@@ -88,7 +88,7 @@ Template.customerscard.onCreated(function () {
   templateObject.checkedSales = new ReactiveVar(false);
 
   templateObject.currentTab = new ReactiveVar("")
-
+ let currentId = FlowRouter.current().queryParams;
   // Methods
   templateObject.updateTaskSchedule = function (id, date) {
     let due_date = "";
@@ -1005,7 +1005,7 @@ Template.customerscard.onCreated(function () {
       discount: 0
     };
     templateObject.records.set(lineItemObj);
-    templateObject.getTermsList();
+    // templateObject.getTermsList();
     $('#edtCustomerCompany').attr('readonly', false);
     $('#sltPreferredPayment').val(lineItemObj.preferedpayment);
     $('#sltTerms').val(lineItemObj.terms);
@@ -1171,6 +1171,7 @@ Template.customerscard.onRendered(function () {
   }
 
   $(document).ready(function () {
+    setTimeout(function () {
     function setTermsVS1(data, termsDataName) {
       for (let i in data.ttermsvs1) {
         if (data.ttermsvs1.hasOwnProperty(i)) {
@@ -1479,6 +1480,7 @@ Template.customerscard.onRendered(function () {
       const taxRateDataName = e.target.value || '';
       editableTaxCode(e, $each, offset, taxRateDataName);
     });
+    }, 3000);
   });
 
   $(document).on('click', '#editCustomerTitle', function (e, li) {
@@ -1501,9 +1503,9 @@ Template.customerscard.onRendered(function () {
     $('#' + selectedDropdownID + '').val($(this).find(".colName").text());
     $('#paymentMethodModal').modal('toggle');
   });
-  $(document).on("click", "#clienttypeList tbody tr", function (e) {
+  $(document).on("click", "#tblClienttypeList tbody tr", function (e) {
     let selectedClientTypeDropdownID = $('#selectLineID').val() || 'sltCustomerType';
-    $('#' + selectedClientTypeDropdownID + '').val($(this).find(".colClientTypeName").text());
+    $('#' + selectedClientTypeDropdownID + '').val($(this).find(".colTypeName").text());
     $('#clienttypeListModal').modal('toggle');
   });
   $(document).on("click", "#tblTaxRate tbody tr", function (e) {

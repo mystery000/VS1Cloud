@@ -919,7 +919,7 @@ Template.new_salesorder.onCreated(function () {
     $("#html-2-pdfwrapper_quotes3").hide();
     if (bprint == false)
       $("#templatePreviewModal").modal("toggle");
-    //global function 
+    //global function
     loadTemplateHeaderFooter1(object_invoce);
     loadTemplateBody1(object_invoce);
   }
@@ -949,7 +949,7 @@ Template.new_salesorder.onCreated(function () {
   function saveTemplateFields(key, value) {
     localStorage.setItem(key, value)
   }
-  
+
   this.exportSalesToPdf = function (template_title, number) {
     if (template_title == 'Sales Order') {
       showSealsOrder1(template_title, number, true);
@@ -1014,7 +1014,7 @@ Template.new_salesorder.onCreated(function () {
     return true;
   };
 
-  
+
   this.getAllClients = function () {
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -1301,7 +1301,7 @@ Template.new_salesorder.onCreated(function () {
     this.saleOrders.set(saleOrders);
     this.saleOrder.set(saleOrder);
   }
-  
+
   this.getDepartments = function () {
     const deptrecords = [];
     getVS1Data('TDeptClass').then(function (dataObject) {
@@ -1338,7 +1338,7 @@ Template.new_salesorder.onCreated(function () {
       });
     });
   };
-  
+
   this.getTerms = function () {
     const termrecords = [];
     getVS1Data('TTermsVS1').then(function (dataObject) {
@@ -1835,7 +1835,7 @@ Template.new_salesorder.onRendered(function () {
               let totalPaidAmount = currencySymbol + '' + data.fields.TotalPaid.toLocaleString(undefined, {
                 minimumFractionDigits: 2
               });
-              
+
               if (data.fields.Lines != null) {
                 if (data.fields.Lines.length) {
                   for (let i = 0; i < data.fields.Lines.length; i++) {
@@ -1849,6 +1849,7 @@ Template.new_salesorder.onRendered(function () {
                     let serialno = "";
                     let lotno = "";
                     let expirydate = "";
+                    if(data.fields.Lines[i].fields.PQA != null){
                     if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                         serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -1861,7 +1862,7 @@ Template.new_salesorder.onRendered(function () {
                         expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                         }
                     }
-
+                  }
                     lineItemObj = {
                       lineID: Random.id(),
                       id: data.fields.Lines[i].fields.ID || '',
@@ -2395,6 +2396,7 @@ Template.new_salesorder.onRendered(function () {
                   let serialno = "";
                   let lotno = "";
                   let expirydate = "";
+                  if(data.fields.Lines[i].fields.PQA != null){
                   if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
                       for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                       serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
@@ -2407,7 +2409,7 @@ Template.new_salesorder.onRendered(function () {
                       expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                       }
                   }
-
+                }
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines[i].fields.ID || '',
@@ -8968,7 +8970,7 @@ Template.new_salesorder.events({
       }).then((result) => {
         if (result.value) {
           window.open('paymentmethodSettings', '_self');
-        } 
+        }
       });
     }
   },
