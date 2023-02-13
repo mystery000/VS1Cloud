@@ -349,8 +349,8 @@ Template.transaction_print_modal.events({
 
     // Send SMS
     if (isCheckedSms && contactServiceData) {
-      // const phoneNumber = contactServiceData.fields.Mobile;
-      const phoneNumber = "+13374761311"
+      const phoneNumber = contactServiceData.fields.Mobile;
+      // const phoneNumber = "+13374761311"
       if (phoneNumber == '' || phoneNumber == null) {
         LoadingOverlay.hide();
         swal({
