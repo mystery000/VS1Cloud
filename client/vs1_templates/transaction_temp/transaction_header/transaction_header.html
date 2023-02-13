@@ -214,18 +214,27 @@
           {{# if equals cardType 'Invoice'}}
             {{> customer_selector
               label=getUserLabel
+              value=data.CustomerID
             }}
           {{else}}
           {{# if equals cardType 'Sales Order'}}
             {{> customer_selector
               label=getUserLabel
-              value=data.customer
+              value=data.CustomerID
+            }}
+          {{else}}
+          {{#if equals cardType 'Quote'}}
+            {{> customer_selector
+              label=getUserLabel
+              value=data.CustomerID
             }}
           {{else}}
           {{> customer_selector
             label=getUserLabel
             id='edtSupplierName'
+            value=data.CustomerID
           }}
+          {{/if}}
           {{/if}}
           {{/if}}
         </div>
