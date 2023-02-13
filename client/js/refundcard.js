@@ -85,54 +85,6 @@ Template.refundcard.onCreated(() => {
   templateObject.defaultsaleterm = new ReactiveVar();
   templateObject.subtaxcodes = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
-
-  // setTimeout(function () {
-  //   const x = window.matchMedia("(max-width: 1024px)");
-  //   function mediaQuery(x) {
-  //     if (x.matches) {
-  //       $("#colInvnoReference").removeClass("col-auto");
-  //       $("#colInvnoReference").addClass("col-6");
-  //       $("#colTermsVia").removeClass("col-auto");
-  //       $("#colTermsVia").addClass("col-6");
-  //       $("#colStatusDepartment").removeClass("col-auto");
-  //       $("#colStatusDepartment").addClass("col-6");
-  //       $("#colBillingAddress").removeClass("col-auto");
-  //       $("#colBillingAddress").addClass("col-6");
-  //       $("#colOrderDue").removeClass("col-auto");
-  //       $("#colOrderDue").addClass("col-6");
-  //       $("#fieldwidth").removeClass("billaddressfield");
-  //       $("#fieldwidth").addClass("billaddressfield2");
-  //     }
-  //   }
-  //   mediaQuery(x);
-  //   x.addListener(mediaQuery);
-  // }, 10);
-  // setTimeout(function () {
-  //   const x = window.matchMedia("(max-width: 420px)");
-  //   function mediaQuery(x) {
-  //     if (x.matches) {
-  //       $("#colInvnoReference").removeClass("col-auto");
-  //       $("#colInvnoReference").addClass("col-12");
-  //       $("#colTermsVia").removeClass("col-auto");
-  //       $("#colTermsVia").addClass("col-12");
-  //       $("#colStatusDepartment").removeClass("col-auto");
-  //       $("#colStatusDepartment").addClass("col-12");
-  //       $("#colBillingAddress").removeClass("col-auto");
-  //       $("#colBillingAddress").addClass("col-12");
-  //       $("#colOrderDue").removeClass("col-auto");
-  //       $("#colOrderDue").addClass("col-12");
-  //       $("#colSupplierName").removeClass("col-auto");
-  //       $("#colSupplierName").addClass("col-12");
-  //       $("#colSupplierEmail").removeClass("col-auto");
-  //       $("#colSupplierEmail").addClass("col-12");
-  //       $("#fieldwidth").removeClass("billaddressfield");
-  //       $("#fieldwidth").addClass("billaddressfield2");
-  //     }
-  //   }
-  //   mediaQuery(x);
-  //   x.addListener(mediaQuery);
-  // }, 10);
-
   templateObject.customerRecord = new ReactiveVar();
 
   // Methods
@@ -150,16 +102,8 @@ Template.refundcard.onCreated(() => {
       templateObject.hasFollow.set(isRepeated);
     }
   };
-  templateObject.generateInvoiceData = function (template_title, number) {
-    object_invoce = [];
-    switch (template_title) {
-      case "Refunds":
-        showRefund1(template_title, number, false);
-        break;
-    }
-  };
 
-  function showRefund1(template_title, number, bprint) {
+  templateObject.showRefund1 = (template_title, number, bprint) => {
     var array_data = [];
     let lineItems = [];
     let taxItems = {};
@@ -510,6 +454,16 @@ Template.refundcard.onCreated(() => {
 
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
+
+  templateObject.generateInvoiceData = function (template_title, number) {
+    object_invoce = [];
+    switch (template_title) {
+      case "Refunds":
+        templateObject.showRefund1(template_title, number, false);
+        break;
+      default: null
+    }
+  };
 
   function loadTemplateBody1(object_invoce) {
     if (object_invoce[0]["taxItems"]) {
@@ -946,6 +900,9 @@ Template.refundcard.onCreated(() => {
         });
       });
   };
+
+  // send Email Part
+
 });
 
 Template.refundcard.onRendered(() => {
@@ -1384,6 +1341,7 @@ Template.refundcard.onRendered(() => {
                       saleCustField2: data.fields.SaleCustField2,
                       totalPaid: totalPaidAmount,
                       ispaid: data.fields.IsPaid,
+                      CustomerID: data.fields.CustomerID
                     };
 
                     $("#edtCustomerName").val(data.fields.CustomerName);
@@ -1967,6 +1925,7 @@ Template.refundcard.onRendered(() => {
                     saleCustField2: useData[d].fields.SaleCustField2,
                     totalPaid: totalPaidAmount,
                     ispaid: useData[d].fields.IsPaid,
+                    CustomerID: useData[d].fields.CustomerID
                   };
 
                   $("#edtCustomerName").val(useData[d].fields.CustomerName);
@@ -1981,13 +1940,6 @@ Template.refundcard.onRendered(() => {
                       $("#sltCurrency").val(),
                       defaultCurrencyCode
                   );
-                  // tempcode
-                  // setTimeout(function () {
-                  //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                  //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                  //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                  // }, 2500);
-
                   /* START attachment */
                   templateObject.attachmentCount.set(0);
                   if (useData[d].fields.Attachments) {
@@ -2504,6 +2456,7 @@ Template.refundcard.onRendered(() => {
                         saleCustField2: data.fields.SaleCustField2,
                         totalPaid: totalPaidAmount,
                         ispaid: data.fields.IsPaid,
+                        CustomerID: data.fields.CustomerID
                       };
 
                       $("#edtCustomerName").val(data.fields.CustomerName);
@@ -3084,6 +3037,7 @@ Template.refundcard.onRendered(() => {
                     saleCustField2: data.fields.SaleCustField2,
                     totalPaid: totalPaidAmount,
                     ispaid: data.fields.IsPaid,
+                    CustomerID: data.field.CustomerID
                   };
 
                   $("#edtCustomerName").val(data.fields.CustomerName);
@@ -3425,6 +3379,7 @@ Template.refundcard.onRendered(() => {
       saleCustField2: "",
       totalPaid: Currency + "" + 0.0,
       ispaid: false,
+      CustomerID: 0
     };
     if (FlowRouter.current().queryParams.customerid) {
       getCustomerData(FlowRouter.current().queryParams.customerid);
@@ -6049,7 +6004,7 @@ Template.refundcard.onRendered(() => {
 
   exportSalesToPdf = async function (template_title, number) {
     if (template_title == "Refunds") {
-      await showRefund1(template_title, number, true);
+      await templateObject.showRefund1(template_title, number, true);
     }
     let invoice_data = templateObject.invoicerecord.get();
     var source;
@@ -7863,6 +7818,10 @@ Template.refundcard.events({
           );
         }
       }
+
+      const isCheckedEmail = $("#emailSend").is(":checked")
+      alert(isCheckedEmail)
+
     }, delayTimeAfterSound);
   },
   "keydown .lineQty, keydown .lineUnitPrice": function (event) {
