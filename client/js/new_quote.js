@@ -3530,8 +3530,6 @@ Template.new_quote.onRendered(() => {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          console.log("Quote data:", data)
-
           let useData = data.tquoteex;
           let added = false;
           for (let d = 0; d < useData.length; d++) {
