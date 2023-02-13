@@ -494,7 +494,7 @@
                             </div>
                             <div id="UOMRows"></div>
 
-                            <div class="row w-100 m-0">
+                            <div class="row w-100 m-0 saleRowWrapper">
                                 <div class="colSalesAccount pr-3" id="colSalesAccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>Sales Account</label>
@@ -512,7 +512,7 @@
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomSales"
                                             id="sltUomSales"
                                             name="sltUomSales"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -563,7 +563,7 @@
                                         <div class="input-group">
                                             <input
                                                 type="text"
-                                                class="form-control highlightInput"
+                                                class="form-control highlightInput baseEdtMarkup"
                                                 id="edtmarkup"
                                                 name="edtmarkup"
                                                 value="40"
@@ -614,7 +614,7 @@
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomSales"
                                             id="sltUomSales"
                                             name="sltUomSales"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -801,7 +801,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row m-0 w-100">
+                            <div class="row m-0 w-100 purchaseRowWrapper">
                                 <div class="pr-3 colCOGSaccount" id="colCOGSaccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>COGS Account</label>
@@ -820,7 +820,7 @@
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomPurchases"
                                             id="sltUomPurchases"
                                             name="sltUomPurchases"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -886,7 +886,7 @@
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomPurchases"
                                             id="sltUomPurchases"
                                             name="sltUomPurchases"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -899,8 +899,8 @@
                                         <select
                                             type="search"
                                             class="form-control"
-                                            id="slttaxcodesales"
-                                            name="slttaxcodesales"
+                                            id="slttaxcodepurchase"
+                                            name="slttaxcodepurchase"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
                                         ></select>
                                     </div>
@@ -928,7 +928,7 @@
                                                 class="form-control highlightInput edtsellqty1costIncCheck"
                                                 id="edtsellqty1costInc"
                                                 name="edtsellqty1costInc"
-                                                value=""
+                                                value="{{productrecord.sellqty1priceinc}}"
                                             />                                            
                                         </div>
                                     </div>
@@ -1121,7 +1121,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd Available"
                                                             value="{{item.availableqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1131,7 +1131,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd OnSO"
                                                             value="{{item.onsoqty}} "
                                                             style="text-align: center"
                                                         />
@@ -1141,7 +1141,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd OnBO"
                                                             value="{{item.onboqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1151,7 +1151,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd InStock"
                                                             value="{{item.instockqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1161,7 +1161,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd OnOrder"
                                                             value="{{item.onorderqty}}"
                                                             style="text-align: center"
                                                         />
