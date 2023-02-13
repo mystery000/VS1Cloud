@@ -8019,7 +8019,6 @@ Template.new_invoice.events({
 
 
       if ($(".edtCustomerEmail").val() != "") {
-        alert("Email here!")
         $(".pdfCustomerName").html($("#edtCustomerName").val());
         $(".pdfCustomerAddress").html(
           $("#txabillingAddress")

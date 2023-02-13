@@ -369,7 +369,6 @@ Template.transaction_print_modal.events({
 
       // const companyName = Session.get("vs1companyName");
       const customerName = $("#edtCustomerName").val();
-      alert(customerName)
       const smsSettings = templateObject.smsSettings.get();
       let message = smsSettings.headerAppointmentSMSMessage.replace(
         "[Company Name]",
