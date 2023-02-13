@@ -73,9 +73,24 @@ function makeEnvelope(args) {
     let env = new docusign.EnvelopeDefinition();
     env.emailSubject = "Please sign this document set";
 
+    let htmlData = `
+        <!DOCTYPE html>
+        <html>
+            <head>
+              <meta charset="UTF-8">
+            </head>
+        
+            <body style="font-family:sans-serif;margin-left:2em;">
+            ` + args.htmlData + `
+            </body>
+        </html>
+    `;
+
+    // console.log('>>>>>>>>>>>', htmlData);
+
     // add the documents
     let doc1 = new docusign.Document(),
-        doc1b64 = Buffer.from(document1(args)).toString("base64"),
+        doc1b64 = Buffer.from(htmlData).toString("base64"),
         doc2b64 = Buffer.from(doc2DocxBytes).toString("base64"),
         doc3b64 = Buffer.from(doc3PdfBytes).toString("base64");
     doc1.documentBase64 = doc1b64;
@@ -84,13 +99,13 @@ function makeEnvelope(args) {
     doc1.documentId = "1"; // a label used to reference the doc
 
     // Alternate pattern: using constructors for docs 2 and 3...
-    let doc2 = new docusign.Document.constructFromObject({
-        documentBase64: doc2b64,
-        name: "Battle Plan", // can be different from actual file name
-        fileExtension: "docx",
-        documentId: "2",
-    });
-
+    // let doc2 = new docusign.Document.constructFromObject({
+    //     documentBase64: doc2b64,
+    //     name: "Battle Plan", // can be different from actual file name
+    //     fileExtension: "docx",
+    //     documentId: "2",
+    // });
+    //
     let doc3 = new docusign.Document.constructFromObject({
         documentBase64: doc3b64,
         name: "Lorem Ipsum", // can be different from actual file name
@@ -99,7 +114,8 @@ function makeEnvelope(args) {
     });
 
     // The order in the docs array determines the order in the envelope
-    env.documents = [doc1, doc2, doc3];
+    // env.documents = [doc1, doc2, doc3];
+    env.documents = [doc1];
 
     // create a signer recipient to sign the document, identified by name and email
     // We're setting the parameters via the object constructor

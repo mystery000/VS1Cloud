@@ -103,7 +103,7 @@ function getArgs(apiAccountId, accessToken, basePath, signerEmail, signerName, c
 }
 
 
-const requestSignDocument = async function (signerEmail, signerName, ccEmail, ccName) {
+const requestSignDocument = async function (signerEmail, signerName, ccEmail, ccName, htmlData) {
     console.log('Ready send email to');
     let accountInfo = await authenticate();
 
@@ -111,9 +111,12 @@ const requestSignDocument = async function (signerEmail, signerName, ccEmail, cc
     let args = getArgs(accountInfo.apiAccountId, accountInfo.accessToken, accountInfo.basePath, signerEmail, signerName, ccEmail, ccName);
 
     console.log('Sending Envelope');
-    let envelopeId = await signingViaEmail.sendEnvelope(args);
 
-    console.log('Done');
+    args.envelopeArgs.htmlData = htmlData;
+
+    const {envelopeId} = await signingViaEmail.sendEnvelope(args);
+
+    console.log('Done', envelopeId);
 }
 
 

@@ -3,6 +3,15 @@ import { loadStripe } from "@stripe/stripe-js";
 import './mailgun_config.js';
 import './mailchimp';
 
+/*
+* damien99
+* for DocuSign
+* */
+import '/imports/api/docuSign';
+
+
+
+
 const stripe = loadStripe(
   "pk_test_51H019EDvlF0UkKE2KE9etEOQmp7Ujth0Zzuhxp8y7rrrj5NwowQDWqKZVCZTIlQGOWd3RH8ANsAaYqEg57ODSW6D00TNGazZJU"
 );
