@@ -4609,32 +4609,32 @@ Template.non_transactional_list.onRendered(function() {
         if (currentData.SalesDefault == true) {
           tdSupplierDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '" checked><label class="custom-control-label chkBox" for="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         } else {
           tdSupplierDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"><label class="custom-control-label chkBox" for="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         }
         //Check if Purchase default is checked
         if (currentData.PurchasesDefault == true) {
           tdPurchaseDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         } else {
           tdPurchaseDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         }
 
@@ -4642,16 +4642,16 @@ Template.non_transactional_list.onRendered(function() {
         if (currentData.UseforAutoSplitQtyinSales == true) {
           tdUseforAutoSplitQtyinSales =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         } else {
           tdUseforAutoSplitQtyinSales =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         }
 
