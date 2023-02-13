@@ -505,6 +505,8 @@ import './contacts/statementlist.js';
 import './reports/balancesheet/balancetransactionlist.js';
 import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
+import './reports/profitandloss/nplEditLayoutScreenModal.js';
+import './reports/profitandloss/nplAddGroupScreenModal.js';
 /* Roverto */
 
 /* Kelvin More */
