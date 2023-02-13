@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../LoadingOverlay";
 import GlobalFunctions from '../GlobalFunctions';

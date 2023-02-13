@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {SideBarService} from "../../js/sidebar-service";
 export default class TableHandler {
   constructor() {

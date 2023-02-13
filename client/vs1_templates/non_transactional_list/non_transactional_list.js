@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ContactService } from "../../contacts/contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';

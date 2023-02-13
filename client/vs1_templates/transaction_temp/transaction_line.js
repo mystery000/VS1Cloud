@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {Session} from 'meteor/session';
 import '../../lib/global/indexdbstorage.js';
 import { ReactiveVar } from 'meteor/reactive-var';
