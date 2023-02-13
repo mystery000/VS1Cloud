@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Template } from 'meteor/templating';
 
 import { AccessLevelService } from '../js/accesslevel-service.js';

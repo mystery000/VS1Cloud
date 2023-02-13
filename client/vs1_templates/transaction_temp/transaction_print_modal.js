@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SideBarService } from "../../js/sidebar-service";
 import { ContactService } from "../../contacts/contact-service";
 import LoadingOverlay from "../../LoadingOverlay";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { jsPDF } from 'jspdf';
 import 'jquery-editable-select';
 import 'jquery-ui-dist/jquery-ui';

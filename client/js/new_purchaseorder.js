@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {CoreService} from '../js/core-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";

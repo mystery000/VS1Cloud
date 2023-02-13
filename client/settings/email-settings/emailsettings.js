@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { TaxRateService } from "../settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";

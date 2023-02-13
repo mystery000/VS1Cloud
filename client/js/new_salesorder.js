@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SalesBoardService } from './sales-service';
 import { PurchaseBoardService } from './purchase-service';
 import { ReactiveVar } from 'meteor/reactive-var';
