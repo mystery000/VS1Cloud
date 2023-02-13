@@ -32,23 +32,22 @@ export class SideBarService extends BaseService {
         return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
-  getProductListVS1(limitcount, limitfrom) {
-    let options = "";
+  getProductListVS1(limitcount, limitfrom, deleteFilter) {
+    let options = "";    
     if (limitcount == "All") {
       options = {
-        ListType: "Detail",
-        Search: "Active == true",
+        ListType: "Detail",        
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
-        ListType: "Detail",
-        Search: "Active = true",
+        ListType: "Detail",        
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if (!deleteFilter) options.Search = "Active = true"
     return this.getList(this.ERPObjects.TProductList, options);
   }
 
@@ -3722,19 +3721,19 @@ export class SideBarService extends BaseService {
   }
 
   getClientTypeDataList(limitcount, limitfrom, deleteFilter) {
-    let options = "";
+    let options = {};
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
             orderby: '"TypeName asc"',
-            Search: "Active = true",
+            Search: "[Active]=true",
         };
       } else {
         options = {
           orderby: '"TypeName asc"',
           ListType: "Detail",
-          Search: "Active = true",
+          Search: "[Active]=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
