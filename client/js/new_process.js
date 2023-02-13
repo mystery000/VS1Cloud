@@ -89,13 +89,13 @@ Template.new_process.onRendered(() => {
                         KeyValue: '',
                         DailyHours: '',
                         Description: '',
-                        HourlyLabourCost: '',
-                        COGS: '',
-                        ExpenseAccount: '',
-                        OHourlyCost: '',
-                        OCOGS: 'Manufacturing Labour',
-                        OExpense: 'Manufacturing Labour off Set',
-                        TotalHourlyCost: '',
+                        HourlyLabourCost: '$0.00',
+                        COGS: 'Manufacturing Labour',
+                        ExpenseAccount: 'Manufacturing Labour off Set',
+                        OHourlyCost: '$0.00',
+                        OCOGS: 'Manufacturing Labour OH',
+                        OExpense: 'Manufacturing Labour Set OH',
+                        TotalHourlyCost: '$0.00',
                         Wastage: 'Manufacturing Wastage'
                     }
 
@@ -265,17 +265,7 @@ Template.new_process.events({
         let templateObject = Template.instance()
         if(FlowRouter.current().queryParams.id) {
             let id = FlowRouter.current().queryParams.id;
-            // async function getObjectFields () {
-            //     return new Promise(async(resolve, reject) => {
-            //         // getVS1Data('TProcessStep').then(function(dataObject){
-            //         //     if(dataObject.length == 0) {
-            //         //         manufacturingService.getOneProcessDataByID(id).then(data) {
-            //         //             resolve()
-            //         //         }
-            //         //     }
-            //         // })
-            //     })
-            // }
+           
             let fields = templateObject.processrecord.get();
             let objDetail = {
                 type: 'TProcessStep',

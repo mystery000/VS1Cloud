@@ -191,6 +191,7 @@ const XLSX = require("xlsx");
                     });
                     const writable = await handle.createWritable();
                     const Excel = await fetch('downloads/Template FIles/' + options.filename).then((res) => res.blob())
+                    console.log("$%$%$%$%$%$%$%$%$%", Excel)
                     const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
                     await writable.write(data);
                     await writable.close();
@@ -302,6 +303,7 @@ const XLSX = require("xlsx");
                         }]
                     });
                     const sheet = await fetch("downloads/Template Files/" + options.filename).then(resp => resp.blob());
+                    console.log("$%$%$%$%$%$%$%$%$%", sheet)
                     const data = new Blob([sheet], {type: "application/vnd.ms-excel"});
                     const writable = await handle.createWritable();
                     await writable.write(data);
