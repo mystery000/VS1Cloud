@@ -24,6 +24,7 @@ let uomSelected = "";
 let taxSelected = "";
 let defaultUOM = "Each";
 let currentLineIndex
+let customerLineIndex = 0
 
 const clickSalesAccount = editableService.clickSalesAccount;
 
@@ -295,10 +296,10 @@ Template.productview.onRendered(function () {
         $("#accountListModal").modal("toggle");
       });
 
-      $(document).on("click", "#clienttypeList tbody tr", function (e) {
+      $(document).on("click", "#tblClienttypeList tbody tr", function (e) {
         var table = $(this);
-        let custTypeName = table.find(".colClientTypeName").text();
-        $("#sltCustomerType").val(custTypeName);
+        let custTypeName = table.find(".colTypeName").text();
+        $($(".sltCustomerType")[customerLineIndex]).val(custTypeName);
         $("#customerTypeListModal").modal("toggle");
       });
 
@@ -309,6 +310,19 @@ Template.productview.onRendered(function () {
         $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)        
         $("#UOMListModal").modal("toggle");
       });
+
+      $(document).on('click', 'div.saleRowWrapper', function() {
+        currentLineIndex = $('div.saleRowWrapper').index(this)    
+      })
+      
+      $(document).on('click', 'div.purchaseRowWrapper', function() {
+        currentLineIndex = $('div.purchaseRowWrapper').index(this)    
+      }) 
+
+      $(document).on('click', 'div.itemExtraSellRow', function() {
+        customerLineIndex = $('div.itemExtraSellRow').index(this)    
+      }) 
+
     // });
   };
 
@@ -3151,14 +3165,6 @@ Template.productview.onRendered(function () {
     $("#edtProcess").editableSelect();    
   });
 
-  $(document).on('click', 'div.saleRowWrapper', function() {
-    currentLineIndex = $('div.saleRowWrapper').index(this)    
-  })
-  
-  $(document).on('click', 'div.purchaseRowWrapper', function() {
-    currentLineIndex = $('div.purchaseRowWrapper').index(this)    
-  }) 
-
   // $(document).on('click', '.new_attachment_btn', function(event) {
   //     let inputEle = $(event.target).closest('.modal-footer').find('.attachment-upload');
   //     $(inputEle).trigger('click');
@@ -4393,6 +4399,7 @@ Template.productview.events({
   "click #chkSellPrice": function (event) {
     if ($(event.target).is(":checked")) {
       $(".trackCustomerTypeDisc").css("display", "flex");
+      $("#customerTypeListModal").modal("toggle");
     } else {
       $(".trackCustomerTypeDisc").css("display", "none");
     }
@@ -4853,7 +4860,11 @@ Template.productview.events({
     var itemClineID = itemDataClone.clone().prop("id", tokenid);
     itemClineID.find('input[type="text"]').val("");
     itemClineID.find('select[name^="sltCustomerType"]').val("");
+    itemClineID.find('.sltCustomerType').editableSelect();
+    itemClineID.find('.sltCustomerType').editableSelect().on("click.editable-select", editableService.clickCustomerType);
+    customerLineIndex = $(".itemExtraSellRow").length
     itemClineID.insertAfter(".itemExtraSellRow:last");
+    $("#customerTypeListModal").modal("toggle");
     // $('.itemExtraSellRow:first').clone().insertAfter(".itemExtraSellRow:last");
   },
   "click .btnRemove": function (event) {

@@ -3721,19 +3721,19 @@ export class SideBarService extends BaseService {
   }
 
   getClientTypeDataList(limitcount, limitfrom, deleteFilter) {
-    let options = "";
+    let options = {};
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
             orderby: '"TypeName asc"',
-            Search: "Active = true",
+            Search: "[Active]=true",
         };
       } else {
         options = {
           orderby: '"TypeName asc"',
           ListType: "Detail",
-          Search: "Active = true",
+          Search: "[Active]=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
