@@ -65,7 +65,7 @@
                                             <div class="form-group">
                                                 <!-- <label>Description</label>
                                                 <input type="text" class="form-control edtDescription" id="edtDescription" name="edtDescription" style="background-color: #fff;" value="{{processrecord.Description}}"/> -->
-                                                {{>default_input label='Description' classes='edtDescription' id="edtDescription" name="edtDescription" value= processrecord.Description type='text'}}
+                                                {{>default_input label='Description' classes='edtDescription' id="edtDescription" name="edtDescription" defaultValue= processrecord.Description type='text'}}
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                                 <div class="input-box">
                                                     <input type="text" class="form-control edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value="{{processrecord.HourlyLabourCost}}"/>
                                                 </div> -->
-                                                {{>default_input label='Hourly Labour Cost' type='text' classes="edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value=processrecord.HourlyLabourCost}}
+                                                {{>default_input label='Hourly Labour Cost' type='text' classes="edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" defaultValue=processrecord.HourlyLabourCost}}
                                             </div>
                                         </div>
                                         <div class="col-9">
@@ -106,7 +106,7 @@
                                                 <div class="input-box">
                                                     <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.OHourlyCost}}"/>
                                                 </div> -->
-                                                {{>default_input label="Hourly Overhead Cost" type="text" classes="edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value=processrecord.OHourlyCost}}
+                                                {{>default_input label="Hourly Overhead Cost" type="text" classes="edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" defaultValue=processrecord.OHourlyCost}}
                                             </div>
                                         </div>
                                         <div class="col-9">
@@ -136,7 +136,7 @@
                                                 <div class="input-box">
                                                     <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.TotalHourlyCost}}" name="edtTotalHourlyCosts" disabled/>
                                                 </div> -->
-                                                {{> default_input label='Total Hourly Costs' classes='edtTotalHourlyCosts' id="edtTotalHourlyCosts" name="edtTotalHourlyCosts" readonly=true value=processrecord.TotalHourlyCost}}
+                                                {{> default_input label='Total Hourly Costs' classes='edtTotalHourlyCosts' id="edtTotalHourlyCosts" name="edtTotalHourlyCosts" readonly=true defaultValue=processrecord.TotalHourlyCost}}
                                             </div>
                                         </div>
 
@@ -149,19 +149,9 @@
                                                         {{> vs1_dropdown id='edtWastage' name='edtWastage' value=processrecord.Wastage type='search' classes='edtWastage'}}
                                                     </div>
                                                 </div>
-                                                <!-- <div class="col-6 d-flex align-items-center justify-content-end " style="gap: 20px">
-                                                    {{> template_footer_save_button}}
-                                                    {{> template_footer_cancel_button }}
-                                                </div> -->
+                                               
                                             </div>
                                         </div>
-                                        <!-- <div class="col-5" style="margin-bottom: 1rem;">
-                                            <div class="row align-items-end justify-content-end" style="gap: 20px">
-                                            
-                                                {{> template_footer_save_button}}
-                                                {{> template_footer_cancel_button }}
-                                            </div>
-                                        </div> -->
                                     </div>
                                     <div class="row align-items-center justify-content-center my-3" style="gap: 20px;">
                                         {{> template_footer_save_button}}

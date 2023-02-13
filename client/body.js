@@ -315,10 +315,22 @@ import './js/Table/TableHandler.js';
 /* Rasheed */
 
 /* Jeyhun */
+
+import 'datatables.net';
+import 'datatables.net-buttons';
+import 'pdfmake/build/pdfmake';
+import 'pdfmake/build/vfs_fonts';
+import 'datatables.net-buttons/js/buttons.html5.mjs';
+import 'datatables.net-buttons/js/buttons.flash';
+import 'datatables.net-buttons/js/buttons.print.min.mjs';
+import 'datatables.net-bs4/js/dataTables.bootstrap4.min.mjs';
+import 'datatables.net-responsive/js/dataTables.responsive.min.mjs'
+import 'datatables.net-responsive-bs4/js/responsive.bootstrap4.min.mjs'
+import './vs1_templates/datatablelist/datatablelist.js'
+
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
-import './vs1_templates/datatablelist/datatablelist.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
