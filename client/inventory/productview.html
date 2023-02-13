@@ -495,7 +495,7 @@
                             <div id="UOMRows"></div>
 
                             <div class="row w-100 m-0">
-                                <div class="colSalesAccount pr-4" id="colSalesAccount" style="width: 26%">
+                                <div class="colSalesAccount pr-3" id="colSalesAccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>Sales Account</label>
                                         <select
@@ -507,7 +507,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="colUOM pr-4" id="colUOM" style="width: 13%">
+                                <div class="colUOM pr-3" id="colUOM" style="width: 13%">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
@@ -519,7 +519,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="colTaxCode pr-4" id="colTaxCode" style="width: 13%">
+                                <div class="colTaxCode pr-3" id="colTaxCode" style="width: 9.5%">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -530,22 +530,8 @@
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
                                         ></select>
                                     </div>
-                                </div>
-                                <div class="colMarkup pr-4" id="colMarkup" style="width: 6.5%">
-                                    <div class="form-group">
-                                        <label>Markup</label>
-                                        <div style="display: flex">
-                                            <input
-                                                type="text"
-                                                class="form-control highlightInput"
-                                                id="edtmarkup"
-                                                name="edtmarkup"
-                                                value="40"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="colPrice pr-4" id="colPrice" style="width: 13%">
+                                </div>                                
+                                <div class="colPrice pr-3" id="colPrice" style="width: 13%">
                                     <div class="form-group">
                                         <label class="lblPriceEx hiddenColumn"
                                             >Price (Ex Tax) <i class="fas fa-random"></i
@@ -571,7 +557,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="colBarcode pr-4" id="colBarcode" style="width: 28.5%">
+                                <div class="colMarkup pr-3" id="colMarkup" style="width: 10%">
+                                    <div class="form-group">
+                                        <label>Markup</label>
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput"
+                                                id="edtmarkup"
+                                                name="edtmarkup"
+                                                value="40"
+                                            />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" style="z-index: 0;">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="colBarcode" id="colBarcode" style="width: 28.5%">
                                     <div class="form-group">
                                         <label>Barcode</label>
                                         <div style="display: flex">
@@ -581,7 +584,7 @@
                                                 id="edtbarcode"
                                                 name="edtbarcode"
                                             />
-                                            <span class="table-remove btnRemoveUOM pl-4 invisible"
+                                            <span class="table-remove btnRemoveUOM pl-3 invisible"
                                                 ><button
                                                     type="button"
                                                     class="btn btn-danger btn-rounded btn-sm"
@@ -594,7 +597,7 @@
                                 </div>
                             </div>
                             <div class="row uomRow m-0 w-100" style="display: none" id="uomRow_0">
-                                <div class="pr-4 colSalesAccount" id="colSalesAccount" style="width: 26%">
+                                <div class="pr-3 colSalesAccount" id="colSalesAccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>Sales Account</label>
                                         <select
@@ -606,7 +609,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="pr-4 colUOM" id="colUOM" style="width: 13%">
+                                <div class="pr-3 colUOM" id="colUOM" style="width: 13%">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
@@ -618,7 +621,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="pr-4 colTaxCode" id="colTaxCode" style="width: 13%">
+                                <div class="pr-3 colTaxCode" id="colTaxCode" style="width: 9.5%">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -629,22 +632,8 @@
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
                                         ></select>
                                     </div>
-                                </div>
-                                <div class="pr-4 colMarkup" id="colMarkup" style="width: 6.5%">
-                                    <div class="form-group">
-                                        <label>Markup</label>
-                                        <div style="display: flex">
-                                            <input
-                                                type="text"
-                                                class="form-control highlightInput"
-                                                id="edtmarkup"
-                                                name="edtmarkup"
-                                                value="40"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="pr-4 colPrice" id="colPrice" style="width: 13%">
+                                </div>                                
+                                <div class="pr-3 colPrice" id="colPrice" style="width: 13%">
                                     <div class="form-group">
                                         <label class="lblPriceEx hiddenColumn"
                                             >Price (Ex Tax) <i class="fas fa-random"></i
@@ -671,7 +660,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="pr-4 colBarcode" id="colBarcode" style="width: 28.5%">
+                                <div class="pr-3 colMarkup" id="colMarkup" style="width: 10%">
+                                    <div class="form-group">
+                                        <label>Markup</label>
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput"
+                                                id="edtmarkup"
+                                                name="edtmarkup"
+                                                value="40"
+                                            />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" style="z-index: 0;">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="colBarcode" id="colBarcode" style="width: 28.5%">
                                     <div class="form-group">
                                         <label>Barcode</label>
                                         <div style="display: flex">
@@ -682,7 +688,7 @@
                                                 name="edtbarcode"
                                                 value="{{productrecord.barcode}}"
                                             />
-                                            <span class="table-remove btnRemoveUOM pl-4"
+                                            <span class="table-remove btnRemoveUOM pl-3"
                                                 ><button
                                                     type="button"
                                                     class="btn btn-danger btn-rounded btn-sm"
@@ -795,8 +801,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6 col-md-4 colCOGSaccount" id="colCOGSaccount">
+                            <div class="row m-0 w-100">
+                                <div class="pr-3 colCOGSaccount" id="colCOGSaccount" style="width: 26%">
                                     <div class="form-group">
                                         <label>COGS Account</label>
                                         <select
@@ -809,7 +815,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                <div class="pr-3 colUOM" id="colUOM" style="width: 13%">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
@@ -822,7 +828,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-2 colTaxCode2" id="colTaxCode2">
+                                <div class="pr-3 colTaxCode2" id="colTaxCode2" style="width: 9.5%">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -834,7 +840,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colCost" id="colCost">
+                                <div class="pr-3 colCost" id="colCost" style="width: 13%">
                                     <div class="form-group">
                                         <label class="lblCostEx hiddenColumn"
                                             >Cost (Ex Tax) <i class="fas fa-random"></i
@@ -858,21 +864,13 @@
                                                 id="edtbuyqty1costInc"
                                                 name="edtbuyqty1costInc"
                                                 value="{{productrecord.buyqty1costinc}}"
-                                            />
-                                            <span class="table-remove btnRemoveCOGS invisible" style="margin-left: 10px"
-                                                ><button
-                                                    type="button"
-                                                    class="btn btn-danger btn-rounded btn-sm"
-                                                    autocomplete="off"
-                                                >
-                                                    <i class="fa fa-remove"></i></button
-                                            ></span>
+                                            />                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row COGSRow" style="display: none" id="COGSRow_0">
-                                <div class="col-6 col-md-4 colCOGS" id="colCOGS">
+                            <div class="row COGSRow m-0 w-100" style="display: none" id="COGSRow_0">
+                                <div class="pr-3 colCOGS" id="colCOGS" style="width: 26%">
                                     <div class="form-group">
                                         <label>Cost of Goods Sold</label>
                                         <input
@@ -883,7 +881,7 @@
                                         />
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                <div class="pr-3 colUOM" id="colUOM" style="width: 13%">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
@@ -895,7 +893,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-2 colTaxCode" id="colTaxCode">
+                                <div class="pr-3 colTaxCode" id="colTaxCode" style="width: 9.5%">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -907,7 +905,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colCost" id="colCost">
+                                <div class="pr-3 colCost" id="colCost"  style="width: 13%">
                                     <div class="form-group">
                                         <label class="lblCostEx hiddenColumn"
                                             >Cost (Ex Tax) <i class="fas fa-random"></i
@@ -931,17 +929,14 @@
                                                 id="edtsellqty1costInc"
                                                 name="edtsellqty1costInc"
                                                 value=""
-                                            />
-                                            <span class="table-remove btnRemoveCOGS" style="margin-left: 10px"
-                                                ><button
-                                                    type="button"
-                                                    class="btn btn-danger btn-rounded btn-sm"
-                                                    autocomplete="off"
-                                                >
-                                                    <i class="fa fa-remove"></i></button
-                                            ></span>
+                                            />                                            
                                         </div>
                                     </div>
+                                </div>
+                                <div class="mt-4 d-flex align-items-center">
+                                    <span class="table-remove btnRemoveCOGS"><button type="button"
+                                            class="btn btn-danger btn-rounded btn-sm" autocomplete="off">
+                                            <i class="fa fa-remove"></i></button></span>
                                 </div>
                             </div>
                             <div class="row">
