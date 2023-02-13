@@ -347,6 +347,8 @@ Template.transaction_print_modal.events({
       );
     }
 
+    console.log(contactServiceData)
+
     // Send SMS
     if (isCheckedSms && contactServiceData) {
       const phoneNumber = contactServiceData.fields.Mobile;
