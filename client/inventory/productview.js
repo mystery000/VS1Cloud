@@ -118,7 +118,7 @@ Template.productview.onRendered(function () {
   };
 
   templateObject.setEditableSelect = async function (data) {
-    $(document).ready(function () {
+    // $(document).ready(function () {
       $("#slttaxcodepurchase").editableSelect();
       $("#slttaxcodesales").editableSelect();
       $("#sltcogsaccount").editableSelect();
@@ -294,7 +294,7 @@ Template.productview.onRendered(function () {
         }
         $("#UOMListModal").modal("toggle");
       });
-    });
+    // });
   };
 
   templateObject.getAllBOMProducts = function () {
@@ -3651,6 +3651,8 @@ Template.productview.events({
           };
         }
 
+        saveBOMStructure();
+        return;
         productService
           .saveProductVS1(objDetails)
           .then(function (objDetails) {
@@ -3670,7 +3672,7 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            saveBOMStructure();
+            
             sideBarService
               .getNewProductListVS1(initialBaseDataLoad, 0)
               .then(function (dataReload) {
@@ -4238,7 +4240,6 @@ Template.productview.events({
         let bomObject = templateObject.bomStructure.get();
 
         let bomProducts = templateObject.bomProducts.get() || [];
-
         let existID = -1;
         let existIndex = bomProducts.findIndex((product) => {
           return product.fields.Caption == bomObject.fields.Caption;
@@ -4257,13 +4258,14 @@ Template.productview.events({
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
         temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
+        return
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
             temp.fields.ID = existID;
           }
           productService.saveBOMProduct(temp).then(function () {
             productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
-              addVS1Data("TProcTree", data.tproctree).then(function () {});
+              addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
             });
           });
         } else {
@@ -4272,7 +4274,7 @@ Template.productview.events({
             temp.fields.ProcStepItemRef = "deleted";
             productService.saveBOMProduct(temp).then(function () {
               productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
-                addVS1Data("TProcTree", data.tproctree).then(function () {});
+                addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
               });
             });
           }
