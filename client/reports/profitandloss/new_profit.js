@@ -48,44 +48,6 @@ Template.newprofitandloss.onCreated(function () {
 });
 
 
-
-function buildPositions() {
-  const sortfields = $(".pSortItems");
-
-  // Level 0 Sorting
-  let counter = 1;
-  for (let i = 0; i <= sortfields.length; i++) {
-    $(sortfields[i]).attr("position", counter );
-    counter++;
-  }
-  // Level 1 Sorting
-  const cSortItems = $(".cSortItems");
-  counter = 1;
-  for (let i = 0; i <= cSortItems.length; i++) {
-    $(cSortItems[i]).attr("position", counter );
-    counter++;
-  }
-  // Level 2 Sorting
-  const scSortItems = $(".scSortItems");
-  counter = 1;
-  for (let i = 0; i <= scSortItems.length; i++) {
-    $(scSortItems[i]).attr("position", counter );
-    counter++;
-  }
-}
-
-function buildSubAccountJson( $sortContainer ){
-  return Array.from($sortContainer.map(function(){
-    return {
-      "accountId": $(this).attr('plid'),
-      "position": $(this).attr('position'),
-      "accountType": $(this).data('group'),
-      "employeeId": employeeId,
-      "subAccounts": ( $(this).find('ol li').length > 0 )? buildSubAccountJson( $(this).find('ol li') ) : []
-    }
-  }))
-}
-
 Template.newprofitandloss.onRendered(function () {
   const templateObject = Template.instance();
   const deptrecords = [];
@@ -325,6 +287,7 @@ Template.newprofitandloss.onRendered(function () {
           let periodMonths = `${options.compPeriod} Month`;
 
           reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths ).then(function(data) {
+            console.log("------------", data);
             let records = [];
             options.threcords = [];
             if (data.tprofitandlossperiodcomparereport) {
@@ -448,6 +411,7 @@ Template.newprofitandloss.onRendered(function () {
           let departments = options.departments.length ? options.departments.join(",") : "";
 
           reportService.getProfitandLoss( dateFrom, dateTo, false, departments ).then(function(data) {
+            console.log("==========", data);
             let records = [];
             if (data.profitandlossreport) {
               let accountData = data.profitandlossreport;
@@ -697,9 +661,9 @@ Template.newprofitandloss.onRendered(function () {
       profitLossLayoutApi.collectionNames.TProfitLossLayout
     );
     // Fetch a default layout
-    // reportService.getProfitLossLayout().then(function(data){
-    //   console.log("----------", data);
-    // });
+    reportService.getProfitLossLayout().then(function(data){
+      console.log("----------", data);
+    });
     // return false
 
     profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
@@ -712,7 +676,9 @@ Template.newprofitandloss.onRendered(function () {
       const profitLossLists = ProfitLossLayout.fromList(
         jsonResponse.tprofitandlossreport
       );
-      
+
+      console.log("profitLossLists=", profitLossLists);
+            
       // Save default list
       templateObject.profitlosslayoutfields.set(profitLossLists);
 
@@ -2226,6 +2192,43 @@ Template.newprofitandloss.events({
         });
         $("#newGroupName").val("");
         templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
+
+        let jsonObj = {
+            type: "VS1_PNLAddGroup",
+            fields: {
+              "LayoutID": 3,
+              "GropuName": groupName,
+              // "Destination": 83,
+            }
+            // type: "VS1_PNLAddGroup",
+            // fields: {
+            //     AccMethod: accMethod,
+            //     Active: true,
+            //     AllClass: allClass,
+            //     ClassID: classID,
+            //     VatSheetDesc: description,
+            //     Done: false,
+            //     HasTab1: hasTab1,
+            //     Tab1_Type: tab1_type,
+            // }
+        }
+
+        reportService.savePNLNewGroup(jsonObj).then(function(res){
+            console.log("===========", res);
+        }).catch(function(err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+                    // Meteor._reload.reload();
+                } else if (result.dismiss === 'cancel') {}
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
       } else {
         let updateLayouts = profitlosslayoutfields.filter(function (
           item,
@@ -2272,78 +2275,8 @@ Template.newprofitandloss.events({
         $("#newGroupName").val("");
         templateObject.profitlosslayoutrecords.set(updateLayouts);
       }
-
       $("#nplAddGroupScreen").modal("hide");
     }
-  },
-  "click .saveProfitLossLayouts": async function () {
-
-    $('.fullScreenSpin').css('display', 'block');
-    buildPositions();
-
-    const profitLossLayoutApis = new ProfitLossLayoutApi();
-
-    // make post request to save layout data
-    const apiEndpoint = profitLossLayoutApis.collection.findByName(
-      profitLossLayoutApis.collectionNames.TProfitLossLayout
-    );
-
-    const pSortfields = $(".pSortItems");
-    const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-    let pSortList = [];
-    pSortfields.each(function(){
-      let Position = $(this).attr('position');
-      let accountType = $(this).data('group');
-      pSortList.push({
-        "position": Position,
-        "accountType": accountType,
-        "employeeId": employeeId,
-        "subAccounts": buildSubAccountJson( $(this).find('ol li') )
-      });
-    });
-
-    /**
-     *
-     * Update all layout fields index DB
-     */
-    let name = $("#nplLayoutName").val();
-    let description = $("#nplLayoutDescr").val();
-    let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
-    let profitLossLayoutData = {
-      "type": "TProfitLossLayout",
-      "action": "save",
-      "layout": pSortList
-    }
-
-    try {
-      const ApiResponse = await apiEndpoint.fetch(null, {
-          method: "POST",
-          headers: ApiService.getPostHeaders(),
-          body: JSON.stringify(profitLossLayoutData),
-      });
-
-      if (ApiResponse.ok == true) {
-          const jsonResponse = await ApiResponse.json();
-          LoadingOverlay.hide();
-      }else{
-          LoadingOverlay.hide();
-      }
-  } catch (error) {
-      LoadingOverlay.hide();
-  }
-
-    // "type": "TProfitLossLayout",
-    // "action": "save",
-    // "layout": [
-
-    // let layoutLists = {
-    //   Name: name,
-    //   Description: description,
-    //   Isdefault: isdefault,
-    //   EmployeeID: employeeID,
-    //   LayoutLists: profitlosslayoutfields,
-    // };
-    // await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
   },
   ...FxGlobalFunctions.getEvents(),
 });
