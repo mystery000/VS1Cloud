@@ -35,23 +35,38 @@
                                 Define how accounts are grouped </a>
                             <div class="m-0 p-0" id="defineGrouping" style="display:none;">
                                 <h6>Place in:</h6>
-                                <div class="p-1 m-1 d-flex form-group-sm flex-row align-items-baseline">
-                                    <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accCodeCheck">
-                                    <label style="" class="mr-1" for="accCodeCheck">Account code begins with:
-                                    </label>
-                                    <input type="text" class="form-control" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:100px;">
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-7" style="padding-top:10px">
+                                        <div class="custom-control custom-switch">
+                                            <input type="radio" class="custom-control-input" id="accCodeCheck1" name="accCodeCheck" checked="checked">
+                                            <label class="custom-control-label" for="accCodeCheck">Account code begins with:</label>                                    
+                                        </div>
+                                    </div>
+                                    <div class="col-5" style="padding:5px">
+                                        <input type="text" class="form-control" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off">
+                                    </div>
                                 </div>
-                                <div class="p-1 m-1 form-group-sm d-flex flex-row align-items-baseline">
-                                    <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accCodeCheck">
-                                    <label style="" class="mr-1" for="accCodeCheck">Account code is within range:
-                                    </label>
-                                    <input type="text" class="form-control mr-1" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:50px;"> to
-                                    <input type="text" class="form-control ml-1" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:50px;">
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-7" style="padding-top:10px">
+                                        <div class="custom-control custom-switch">
+                                            <input type="radio" class="custom-control-input" id="accCodeCheck2" name="accCodeCheck">
+                                            <label class="custom-control-label" for="accCodeCheck">Account code is within range:</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-5" style="padding:5px">
+                                        <input type="text" class="form-control mr-1" id="accCodeFrom" name="accCodeFrom" autocomplete="off" style="float:left; max-width:80px;">
+                                        <span style="float:left; line-height:36px">to</span>
+                                        <input type="text" class="form-control ml-1" id="accCodeTo" name="accCodeTo" autocomplete="off" style="float:left; max-width:80px;">
+                                    </div>
                                 </div>
-                                <div class="p-1 m-1 d-flex form-group-sm flex-row align-items-baseline">
-                                    <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accBlockAddition">
-                                    <label style="" class="" for="accBlockAddition">Do not automatically add
-                                        accounts to this group</label>
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-12" style="padding-top:10px">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="accBlockAddition">
+                                            <label class="custom-control-label" for="accBlockAddition">Do not automatically add
+                                                accounts to this group</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

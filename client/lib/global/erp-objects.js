@@ -307,6 +307,7 @@ const erpObject = {
     TleaveAccruals: "TleaveAccruals",
     TPNLLayout: "TPNLLayout",
     VS1_PNLGetLayout: "VS1_PNLGetLayout",
+    VS1_PNLAddGroup: "VS1_PNLAddGroup",
     TSupplierVS1List: "TSupplierVS1List",
     TleaveAccruals: "TleaveAccruals",
     TProspectList: "TProspectList",
