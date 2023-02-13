@@ -210,7 +210,7 @@ Template.new_quote.onCreated(() => {
   templateObject.addAttachment = async(objDetails, stringQuery) => {
     let attachment = [];
     let invoiceId = objDetails.fields.ID;
-    let encodedPdf = await generatePdfForMail(invoiceId);
+    let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
     let base64data = encodedPdf.split(',')[1];
     let pdfObject = {
       filename: 'Quote-' + invoiceId + '.pdf',
@@ -668,12 +668,12 @@ Template.new_quote.onCreated(() => {
         }
       };
     }
+    const erpGet = erpDb();
     let stringQuery = "?";
     for (let l = 0; l < lineItemsForm.length; l++) {
       stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
     }
     stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-    alert("Send EMail")
     await templateObject.addAttachment(objDetails, stringQuery);
   }
 });
