@@ -2867,7 +2867,7 @@ Template.new_invoice.onCreated(function () {
         attachments: attachment,
       },
         function (error, result) {
-          
+
         }
       );
 
@@ -2883,7 +2883,7 @@ Template.new_invoice.onCreated(function () {
         function (error, result) {
           if (error && error.error === "error") {
             if (FlowRouter.current().queryParams.trans) {
-              
+
             } else {
             }
           } else {
@@ -3124,7 +3124,7 @@ Template.new_invoice.onCreated(function () {
         },
       };
     }
-    
+
     await templateObject.addAttachment(objDetails);
   }
 
@@ -4170,57 +4170,37 @@ Template.new_invoice.onRendered(function () {
                     $(".fullScreenSpin").css("display", "none");
                     $("#add-customer-title").text("Edit Customer");
                     let popCustomerID = data.tcustomer[0].fields.ID || "";
-                    let popCustomerName =
-                      data.tcustomer[0].fields.ClientName || "";
-                    let popCustomerEmail =
-                      data.tcustomer[0].fields.Email || "";
-                    let popCustomerTitle =
-                      data.tcustomer[0].fields.Title || "";
-                    let popCustomerFirstName =
-                      data.tcustomer[0].fields.FirstName || "";
-                    let popCustomerMiddleName =
-                      data.tcustomer[0].fields.CUSTFLD10 || "";
-                    let popCustomerLastName =
-                      data.tcustomer[0].fields.LastName || "";
-                    let popCustomerPhone =
-                      data.tcustomer[0].fields.Phone || "";
-                    let popCustomerMobile =
-                      data.tcustomer[0].fields.Mobile || "";
-                    let popCustomerFaxnumber =
-                      data.tcustomer[0].fields.Faxnumber || "";
-                    let popCustomerSkypeName =
-                      data.tcustomer[0].fields.SkypeName || "";
+                    let popCustomerName = data.tcustomer[0].fields.ClientName || "";
+                    let popCustomerEmail = data.tcustomer[0].fields.Email || "";
+                    let popCustomerTitle = data.tcustomer[0].fields.Title || "";
+                    let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
+                    let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
+                    let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
+                    let popCustomertfn = "" || "";
+                    let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
+                    let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
+                    let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
+                    let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
                     let popCustomerURL = data.tcustomer[0].fields.URL || "";
-                    let popCustomerStreet =
-                      data.tcustomer[0].fields.Street || "";
-                    let popCustomerStreet2 =
-                      data.tcustomer[0].fields.Street2 || "";
-                    let popCustomerState =
-                      data.tcustomer[0].fields.State || "";
-                    let popCustomerPostcode =
-                      data.tcustomer[0].fields.Postcode || "";
-                    let popCustomerCountry =
-                      data.tcustomer[0].fields.Country || LoggedCountry;
-                    let popCustomercustfield1 =
-                      data.tcustomer[0].fields.CUSTFLD1 || "";
-                    let popCustomercustfield2 =
-                      data.tcustomer[0].fields.CUSTFLD2 || "";
-                    let popCustomercustfield3 =
-                      data.tcustomer[0].fields.CUSTFLD3 || "";
-                    let popCustomercustfield4 =
-                      data.tcustomer[0].fields.CUSTFLD4 || "";
-                    let popCustomernotes =
-                      data.tcustomer[0].fields.Notes || "";
-                    let popCustomerpreferedpayment =
-                      data.tcustomer[0].fields.PaymentMethodName || "";
-                    let popCustomerterms =
-                      data.tcustomer[0].fields.TermsName || "";
-                    let popCustomerTaxCode =
-                      data.tcustomer[0].fields.TaxCodeName || "";
-                    let popCustomerDiscount =
-                      data.tcustomer[0].fields.Discount || 0;
-                    let popCustomerType =
-                      data.tcustomer[0].fields.ClientTypeName || "";
+                    let popCustomerStreet = data.tcustomer[0].fields.Street || "";
+                    let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
+                    let popCustomerState = data.tcustomer[0].fields.State || "";
+                    let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
+                    let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+                    let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
+                    let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
+                    let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
+                    let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
+                    let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
+                    let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
+                    let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
+                    let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
+                    let popCustomernotes = data.tcustomer[0].fields.Notes || "";
+                    let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
+                    let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
+                    let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
+                    let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+                    let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
                     $("#edtCustomerCompany").val(popCustomerName);
                     $("#edtCustomerPOPID").val(popCustomerID);
                     $("#edtCustomerPOPEmail").val(popCustomerEmail);
@@ -4317,50 +4297,37 @@ Template.new_invoice.onRendered(function () {
                 $(".fullScreenSpin").css("display", "none");
                 $("#add-customer-title").text("Edit Customer");
                 let popCustomerID = data.tcustomer[0].fields.ID || "";
-                let popCustomerName =
-                  data.tcustomer[0].fields.ClientName || "";
+                let popCustomerName = data.tcustomer[0].fields.ClientName || "";
                 let popCustomerEmail = data.tcustomer[0].fields.Email || "";
                 let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-                let popCustomerFirstName =
-                  data.tcustomer[0].fields.FirstName || "";
-                let popCustomerMiddleName =
-                  data.tcustomer[0].fields.CUSTFLD10 || "";
-                let popCustomerLastName =
-                  data.tcustomer[0].fields.LastName || "";
+                let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
+                let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
+                let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
+                let popCustomertfn = "" || "";
                 let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
                 let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-                let popCustomerFaxnumber =
-                  data.tcustomer[0].fields.Faxnumber || "";
-                let popCustomerSkypeName =
-                  data.tcustomer[0].fields.SkypeName || "";
+                let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
+                let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
                 let popCustomerURL = data.tcustomer[0].fields.URL || "";
                 let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-                let popCustomerStreet2 =
-                  data.tcustomer[0].fields.Street2 || "";
+                let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
                 let popCustomerState = data.tcustomer[0].fields.State || "";
-                let popCustomerPostcode =
-                  data.tcustomer[0].fields.Postcode || "";
-                let popCustomerCountry =
-                  data.tcustomer[0].fields.Country || LoggedCountry;
-                let popCustomercustfield1 =
-                  data.tcustomer[0].fields.CUSTFLD1 || "";
-                let popCustomercustfield2 =
-                  data.tcustomer[0].fields.CUSTFLD2 || "";
-                let popCustomercustfield3 =
-                  data.tcustomer[0].fields.CUSTFLD3 || "";
-                let popCustomercustfield4 =
-                  data.tcustomer[0].fields.CUSTFLD4 || "";
+                let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
+                let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+                let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
+                let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
+                let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
+                let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
+                let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
+                let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
+                let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
+                let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
                 let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-                let popCustomerpreferedpayment =
-                  data.tcustomer[0].fields.PaymentMethodName || "";
-                let popCustomerterms =
-                  data.tcustomer[0].fields.TermsName || "";
-                let popCustomerTaxCode =
-                  data.tcustomer[0].fields.TaxCodeName || "";
-                let popCustomerDiscount =
-                  data.tcustomer[0].fields.Discount || 0;
-                let popCustomerType =
-                  data.tcustomer[0].fields.ClientTypeName || "";
+                let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
+                let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
+                let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
+                let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+                let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
                 $("#edtCustomerCompany").val(popCustomerName);
                 $("#edtCustomerPOPID").val(popCustomerID);
                 $("#edtCustomerPOPEmail").val(popCustomerEmail);
@@ -8091,7 +8058,7 @@ Template.new_invoice.events({
         });
       }
 
-     
+
 
 
       $("#printModal").modal('hide');

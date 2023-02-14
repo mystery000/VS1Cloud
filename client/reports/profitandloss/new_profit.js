@@ -87,7 +87,7 @@ Template.newprofitandloss.onRendered(function () {
       $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
       $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     }, 100);
-    
+
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
   };
@@ -287,12 +287,11 @@ Template.newprofitandloss.onRendered(function () {
           let periodMonths = `${options.compPeriod} Month`;
 
           reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths ).then(function(data) {
-            console.log("------------", data);
             let records = [];
             options.threcords = [];
             if (data.tprofitandlossperiodcomparereport) {
               let accountData = data.tprofitandlossperiodcomparereport;
-              
+
               let accountType = "";
               var dataList = "";
               for (let i = 0; i < accountData.length; i++) {
@@ -392,7 +391,7 @@ Template.newprofitandloss.onRendered(function () {
           // data = data.response;
 
           //let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          
+
         } catch (err) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -411,7 +410,6 @@ Template.newprofitandloss.onRendered(function () {
           let departments = options.departments.length ? options.departments.join(",") : "";
 
           reportService.getProfitandLoss( dateFrom, dateTo, false, departments ).then(function(data) {
-            console.log("==========", data);
             let records = [];
             if (data.profitandlossreport) {
               let accountData = data.profitandlossreport;
@@ -519,7 +517,7 @@ Template.newprofitandloss.onRendered(function () {
           });
 
           // data = data.response;
-          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );          
+          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
         } catch (error) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -662,7 +660,6 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
-      console.log("----------", data);
     });
     // return false
 
@@ -672,13 +669,10 @@ Template.newprofitandloss.onRendered(function () {
     if (profitLossLayoutEndResponse.ok == true) {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
-      console.log("jsonResponse=", jsonResponse);
       const profitLossLists = ProfitLossLayout.fromList(
         jsonResponse.tprofitandlossreport
       );
 
-      console.log("profitLossLists=", profitLossLists);
-            
       // Save default list
       templateObject.profitlosslayoutfields.set(profitLossLists);
 
@@ -1040,11 +1034,11 @@ Template.newprofitandloss.events({
   },
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block');
-    
+
     playPrintAudio();
     setTimeout( async function(){
       let targetElement = document.getElementsByClassName('printReport')[0];
-    
+
       targetElement.style.display = "block";
       targetElement.style.width = "210mm";
       targetElement.style.backgroundColor = "#ffffff";
@@ -1119,7 +1113,7 @@ Template.newprofitandloss.events({
 
       async function checkBasedOnType() {
         return new Promise(async(resolve, reject)=>{
-          
+
           let values = [];
           let basedOnTypeStorages = Object.keys(localStorage);
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1161,7 +1155,7 @@ Template.newprofitandloss.events({
             }
             if(j == values.length -1) {resolve()}
           }
-          
+
         })
       }
       await checkBasedOnType();
@@ -1179,7 +1173,7 @@ Template.newprofitandloss.events({
       targetElement.style.padding = "0px";
       targetElement.style.fontSize = "1rem";
 
-    
+
     }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
@@ -1372,7 +1366,7 @@ Template.newprofitandloss.events({
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $("#tblDepartmentCheckbox .chkServiceCard").each(function () {
-      if ($(this).is(":checked")) {        
+      if ($(this).is(":checked")) {
         let dpt = $(this).closest("tr").find(".colDeptName").text();
         departments.push(dpt);
       }
@@ -2214,7 +2208,6 @@ Template.newprofitandloss.events({
         }
 
         reportService.savePNLNewGroup(jsonObj).then(function(res){
-            console.log("===========", res);
         }).catch(function(err) {
             swal({
                 title: 'Oooops...',
