@@ -312,9 +312,10 @@ export class ReportService extends BaseService {
 
     getProfitLossLayout() {
         let options = {
-            LayoutID: 3
+            LayoutID: 3,
+            ListType: "'Detail'"
         };
-        return this.getList('VS1_PNLGetLayout', options);
+        return this.getList('TProfitAndLossReport', options);
     }
 
     getAgedPayableDetailsData(dateFrom, dateTo, ignoreDate) {
@@ -926,7 +927,7 @@ export class ReportService extends BaseService {
     }
 
     savePNLNewGroup(data) {
-        return this.POST(this.ERPObjects.VS1_PNLAddGroup, data);
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLAddGroup"', data);
     }
 
 }

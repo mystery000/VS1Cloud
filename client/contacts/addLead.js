@@ -1017,22 +1017,36 @@ Template.leadscard.onRendered(function() {
     }
 
     templateObject.getLeadsList = function() {
-        getVS1Data('TProspectVS1').then(function(dataObject) {
+        getVS1Data('TProspectEx').then(function(dataObject) {
             if (dataObject.length === 0) {
-                contactService.getAllLeadSideDataVS1().then(function(data) {
-                    setAllLeads(data);
-                }).catch(function(err) {
-                    //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                // contactService.getAllLeadSideDataVS1().then(function(data) {
+                //     setAllLeads(data);
+                // }).catch(function(err) {
+                //     //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                // });
+                sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (data) {
+                    addVS1Data('TProspectEx', JSON.stringify(data)).then(function (res) {
+                        setAllLeads(data);
+                    }).catch(function (err) {                        
+                    });
+                }).catch(function (err) {                    
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 setAllLeads(data);
             }
         }).catch(function(err) {
-            contactService.getAllLeadSideDataVS1().then(function(data) {
-                setAllLeads(data);
-            }).catch(function(err) {
-                //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+            // contactService.getAllLeadSideDataVS1().then(function(data) {
+            //     setAllLeads(data);
+            // }).catch(function(err) {
+            //     //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+            // });
+            sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (data) {
+                addVS1Data('TProspectEx', JSON.stringify(data)).then(function (res) {
+                    setAllLeads(data);
+                }).catch(function (err) {                        
+                });
+            }).catch(function (err) {                    
             });
         });
 
@@ -1041,17 +1055,17 @@ Template.leadscard.onRendered(function() {
 
     function setAllLeads(data) {
         let lineItems = [];
-        for (let i = 0; i < data.tprospectvs1.length; i++) {
+        for (let i = 0; i < data.tprospect.length; i++) {
             let classname = '';
             if (!isNaN(currentId.id)) {
-                if (data.tprospectvs1[i].Id === parseInt(currentId.id)) {
+                if (data.tprospect[i].fields.ID === parseInt(currentId.id)) {
                     classname = 'currentSelect';
                 }
             }
             const dataList = {
-                id: data.tprospectvs1[i].Id || '',
-                employeeName: data.tprospectvs1[i].ClientName || '',
-                companyName: data.tprospectvs1[i].CompanyName || '',
+                id: data.tprospect[i].fields.ID || '',
+                employeeName: data.tprospect[i].fields.ClientName || '',
+                companyName: data.tprospect[i].fields.CompanyName || '',
                 classname: classname
             };
             lineItems.push(dataList);

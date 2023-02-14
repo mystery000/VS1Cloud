@@ -2194,25 +2194,14 @@ Template.newprofitandloss.events({
         templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
 
         let jsonObj = {
-            type: "VS1_PNLAddGroup",
-            fields: {
+            Name: "VS1_PNLAddGroup",
+            Params: {
               "LayoutID": 3,
-              "GropuName": groupName,
-              // "Destination": 83,
+              "GroupName": groupName,
+              "Destination": 83,
             }
-            // type: "VS1_PNLAddGroup",
-            // fields: {
-            //     AccMethod: accMethod,
-            //     Active: true,
-            //     AllClass: allClass,
-            //     ClassID: classID,
-            //     VatSheetDesc: description,
-            //     Done: false,
-            //     HasTab1: hasTab1,
-            //     Tab1_Type: tab1_type,
-            // }
         }
-
+        
         reportService.savePNLNewGroup(jsonObj).then(function(res){
             console.log("===========", res);
         }).catch(function(err) {
