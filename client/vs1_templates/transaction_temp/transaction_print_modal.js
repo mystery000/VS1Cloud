@@ -347,8 +347,6 @@ Template.transaction_print_modal.events({
       );
     }
 
-    console.log(contactServiceData)
-
     // Send SMS
     if (isCheckedSms && contactServiceData) {
       const phoneNumber = contactServiceData.fields.Mobile;
@@ -429,6 +427,16 @@ Template.transaction_print_modal.events({
     } else {
       $(`#${dataKey}-modal`).modal("hide");
     }
+  },
+  "click #printModal .btn-check-template": function (event) {
+    const checkboxID = $(event.target).data('id');
+    $("#" + checkboxID).trigger("click");
+  },
+  "click #printModal #choosePrintTemplate": function(event) {
+    const $selectedPrintOption = $(".chooseTemplateBtn:checked").first()
+    const dataKey = $selectedPrintOption.data('id')
+    $(`#${dataKey}-modal`).modal("hide");
+    $(`#${dataKey}-modal`).modal("show");
   },
   "click #printModal .btnPreview": function (event) {
     // const templateObject = Template.instance();
