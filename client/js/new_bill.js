@@ -23,7 +23,7 @@ import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-// import { object } from 'underscore'; 
+// import { object } from 'underscore';
 
 
 import { Template } from 'meteor/templating';
@@ -230,7 +230,6 @@ Template.billcard.onCreated(() => {
         });
     }
     templateObject.addAttachment = async (objDetails) => {
-        console.log(objDetails)
         let attachment = [];
         let templateObject = Template.instance();
         let invoiceId = objDetails.fields.ID;
@@ -307,7 +306,6 @@ Template.billcard.onCreated(() => {
             '</table>';
 
         if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-            console.log("Erehrer1")
             Meteor.call('sendEmail', {
                 from: "" + mailFromName + " <" + mailFrom + ">",
                 to: checkEmailData,
@@ -340,7 +338,6 @@ Template.billcard.onCreated(() => {
                 }
             });
         } else if (($('.chkEmailCopy').is(':checked'))) {
-            console.log("Erehrer2")
 
             Meteor.call('sendEmail', {
                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -364,7 +361,6 @@ Template.billcard.onCreated(() => {
                 }
             });
         } else if (($('.chkEmailRep').is(':checked'))) {
-            console.log("Erehrer3")
 
             Meteor.call('sendEmail', {
                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -7998,7 +7994,7 @@ Template.billcard.events({
             $('#templateselection').modal('hide');
         }
     },
-    
+
     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
 

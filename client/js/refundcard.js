@@ -1032,7 +1032,7 @@ Template.refundcard.onCreated(() => {
           function (error, result) {
             if (error && error.error === "error") {
               if (FlowRouter.current().queryParams.trans) {
-                
+
               } else {
               }
             }
@@ -1067,7 +1067,7 @@ Template.refundcard.onCreated(() => {
               }).then((result) => {
                 if (result.value) {
                   if (FlowRouter.current().queryParams.trans) {
-                    
+
                   } else {
                   }
                 } else if (result.dismiss === "cancel") {
@@ -1104,7 +1104,7 @@ Template.refundcard.onCreated(() => {
               }).then((result) => {
                 if (result.value) {
                   if (FlowRouter.current().queryParams.trans) {
-                    
+
                   } else {
                   }
                 }
@@ -1137,7 +1137,7 @@ Template.refundcard.onCreated(() => {
               }).then((result) => {
                 if (result.value) {
                   if (FlowRouter.current().queryParams.trans) {
-                    
+
                   } else {
                   }
                 }
@@ -1361,8 +1361,6 @@ Template.refundcard.onCreated(() => {
         },
       };
     }
-
-    console.log(objDetails)
 
     await templateObject.addAttachment(objDetails)
   }
@@ -5966,7 +5964,6 @@ Template.refundcard.onRendered(() => {
           $(".fullScreenSpin").css("display", "none");
         })
         .catch(error => {
-          console.log(error)
         })
 
     return true;
@@ -7656,7 +7653,6 @@ Template.refundcard.events({
         for (var i = 0; i < printTemplate.length; i++) {
           if (printTemplate[i] == "Refunds") {
             var template_number = $('input[name="Refunds"]:checked').val();
-            alert(template_number)
           }
           let result = await exportSalesToPdf(
               printTemplate[i],

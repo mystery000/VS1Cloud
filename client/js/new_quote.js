@@ -612,7 +612,7 @@ Template.new_quote.onCreated(() => {
       }
     }
     const uploadedItems = templateObject.uploadedFiles.get();
-  
+
     let objDetails = '';
     if (getso_id[1]) {
       currentQuote = parseInt(currentQuote);
@@ -1970,7 +1970,6 @@ Template.new_quote.onRendered(() => {
   templateObject.getAllLeadStatuss();
 
   function getCustomerData(customerID) {
-    alert(customerID)
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
         contactService.getOneCustomerDataEx(customerID).then(function (data) {
@@ -6923,7 +6922,7 @@ Template.new_quote.events({
       }
 
       await templateObject.sendEamil()
-     
+
     }, delayTimeAfterSound);
   },
   'keydown .lineQty, keydown .lineUnitPrice': function (event) {
@@ -7417,7 +7416,7 @@ Template.new_quote.events({
       let surname = $('#edtCustomerEmail').attr('customerlastname');
 
       let termname = $('#sltTerms').val() || '';
-     
+
       if (customername.val() === '') {
         swal({
           title: "Customer has not been selected!",
