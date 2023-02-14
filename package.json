@@ -71,7 +71,6 @@
     "mysql": "^2.18.1",
     "node-magento2": "^1.1.4",
     "pdfmake": "^0.1.65",
-    "prompt-sync": "^4.2.0",
     "quagga": "^0.12.1",
     "react": "^18.2.0",
     "react-addons-pure-render-mixin": "^15.6.3",
