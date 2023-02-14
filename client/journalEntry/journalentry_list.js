@@ -1860,12 +1860,6 @@ Template.journalentrylist.events({
     jQuery("#tblJournalList_wrapper .dt-buttons .btntabletocsv").click();
     LoadingOverlay.hide();
   },
-  "click .btnSpreadSheetLink": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let utilityService = new UtilityService();
-    const filename = "Journal Entry List result" + ".xlsx";
-    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-  },
   "click .printConfirm": function (event) {
     playPrintAudio();
     setTimeout(function(){

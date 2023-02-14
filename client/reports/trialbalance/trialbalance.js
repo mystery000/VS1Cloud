@@ -1170,7 +1170,7 @@ Template.trialbalance.events({
       });
     }, delayTimeAfterSound);
   },
-  "click .btnSpreadSheetLink": function() {
+  /*"click .btnSpreadSheetLink": function() {
     LoadingOverlay.show();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
@@ -1246,7 +1246,7 @@ Template.trialbalance.events({
     let utilityService = new UtilityService();
     const filename = "Balancesheet report result" + ".xlsx";
     utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-  },
+  },*/
   "click .btnExportReport": function () {
     LoadingOverlay.show();
     debugger

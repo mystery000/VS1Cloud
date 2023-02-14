@@ -8,6 +8,7 @@ import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
 import { Template } from 'meteor/templating';
 import './agedreceivablessummary.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();

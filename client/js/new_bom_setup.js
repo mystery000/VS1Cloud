@@ -62,7 +62,9 @@ Template.bom_setup.onRendered(function() {
 
 Template.bom_setup.events({
     
-    'click .btn-save-bom': function(event) {
+    'click .btnSave': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         const tempObject = Template.instance();
         playSaveAudio();
         setTimeout(function(){
@@ -307,7 +309,9 @@ Template.bom_setup.events({
         }, delayTimeAfterSound);
     },
 
-    'click .btn-cancel-bom': function(event) {
+    'click .btnBack': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         FlowRouter.go('/bomlist')
     },
 

@@ -14,14 +14,14 @@
                 }
 
                 .productRow .colNote {
-                    width: 19%;
+                    width: 22%;
                     text-align: right;
                 }
                 .productRow .colQty {
                     width: 8%;
-                    text-align: left;
+                    text-align: center;
                 }
-                    .productRow .colDelete {
+                .productRow .colDelete {
                     width: 4%;
                     text-align: left;
                 }
@@ -37,8 +37,8 @@
                 }
 
                 .productRow .colAttachment {
-                    width: 18%;
-                    text-align: left;
+                    width: 15%;
+                    text-align: right;
                 }
 
                 div.form-group {
@@ -52,7 +52,7 @@
                 <div class="th colProduct">Product</div>
                 <div class="th colQty">Qty</div>
                 <div class="th colProcess">Process</div>
-                <div class="th colDuration">Duration(hours)</div>
+                <div class="th colDuration">Hours</div>
                 <div class="th colNote">Notes</div>
                 <div class="th colAttachment"></div>
                 <div class="th colDelete"></div>
@@ -60,16 +60,16 @@
             <div class="product-content">
                 <div class="d-flex productRow">
                     <div class="colProduct form-group d-flex">
-                        <select class="edtMainProductName form-control" id="edtMainProductName"  style="width: 60%"></select>
+                        <select class="edtMainProductName form-control" id="edtMainProductName"  style="width: 60%" ></select>
                     </div>
                     <div class="colQty form-group">
                         <input type="text" class="edtQuantity form-control w-100" value="1" disabled/>
                     </div>
                     <div class="colProcess form-group">
-                        <select type="search" id="edtProcess" class="edtProcessName form-control w-100" name="edtProcess"></select>
+                        <select type="search" id="edtProcess" class="edtProcessName form-control w-100" name="edtProcess" value="Assembly"></select>
                     </div>
                     <div class="colDuration">
-                        <input type="text" class="edtDuration form-control w-100" name="edtDuration"/>
+                        <input type="text" class="edtDuration form-control w-100" name="edtDuration" value="1"/>
                     </div>
                     <div class="colNote form-group">
                         <input type="text" class="edtProcessNote form-control w-100"/>
@@ -77,7 +77,10 @@
                     <div class="colAttachment">
                         
                         <a class="btn btn-primary btnAddAttachment no-print" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                            {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
+                            {{#if attachmentCount}}
+                                <span id="attachment-count">{{attachmentCount}}</span>
+                            {{/if}}
+                            <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
                         <div class="attachedFiles d-none"></div>
                     </div>
                     <div class="colDelete"></div>

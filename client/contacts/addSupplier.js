@@ -235,7 +235,7 @@ Template.supplierscard.onCreated(function () {
     templateObject.termsList.set(terms);
   }
 
-  
+
   function setTab() {
     if (currentId.crmTab === 'active') {
       $('.supplierTab').removeClass('active');
@@ -292,7 +292,7 @@ Template.supplierscard.onCreated(function () {
     $('.fullScreenSpin').css('display', 'none');
   }
 
-  
+
   templateObject.getCountryData = function () {
     getVS1Data('TCountries').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -320,7 +320,7 @@ Template.supplierscard.onCreated(function () {
     templateObject.countryData.set(countries);
   }
 
-  
+
   function setOneSupplierDataEx(data) {
     let lineItemObj = {
       id: data.fields.ID,
@@ -427,7 +427,7 @@ Template.supplierscard.onCreated(function () {
       });
     });
   };
-  
+
   templateObject.getEmployeeDataByName = function (supplierID) {
     getVS1Data('TSupplierVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -463,7 +463,7 @@ Template.supplierscard.onCreated(function () {
     });
   };
 
-  
+
   templateObject.getPreferredPaymentList = function () {
     getVS1Data('TPaymentMethod').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -514,7 +514,7 @@ Template.supplierscard.onCreated(function () {
     }
     templateObject.deliveryMethodList.set(deliveryMethods);
   }
-  
+
   templateObject.getTaxCodesList = function () {
     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -541,7 +541,7 @@ Template.supplierscard.onCreated(function () {
     templateObject.taxCodeList.set(taxCodes);
   }
 
-  
+
   templateObject.getAllTask = function (supplierName) {
     getVS1Data("TCRMTaskList").then(async function (dataObject) {
       if (dataObject.length == 0) {
@@ -613,7 +613,7 @@ Template.supplierscard.onCreated(function () {
       }, 100);
     }
   }
-  
+
   let currentId = FlowRouter.current().queryParams;
   if (FlowRouter.current().route.name != "supplierscard") {
     currentId = "";
@@ -642,7 +642,7 @@ Template.supplierscard.onCreated(function () {
 });
 
 Template.supplierscard.onRendered(function () {
-  
+
   $('.fullScreenSpin').css('display', 'inline-block');
 
   let templateObject = Template.instance();
@@ -1232,7 +1232,7 @@ Template.supplierscard.onRendered(function () {
         $('#supplierTitlePopModal').modal('toggle');
       });
 
-    }, 1000);
+    }, 3000);
   });
 
   $(document).on("click", "#tblSupplierCrmListWithDate tbody .dnd-moved .colDate, #tblSupplierCrmListWithDate tbody .dnd-moved .colType", function (e) {
@@ -2506,8 +2506,8 @@ Template.supplierscard.events({
     let tokenid = "random";
     let currentDate = new Date();
     let completeDate = new Date();
-    currentDate = moment(currentDate).format("DD/MM/YYYY");
-    completeDate = moment(completeDate).subtract(-2, "days").format("DD/MM/YYYY");
+    currentDate = moment(currentDate).subtract(-1, "days").format("DD/MM/YYYY");
+    completeDate = moment(completeDate).subtract(-3, "days").format("DD/MM/YYYY");
     var rowData = `<tr class="dnd-moved" id="${tokenid}">
             <td class="colTaskId hiddenColumn dtr-control" tabindex="0">
                 ${tokenid}

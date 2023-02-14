@@ -195,8 +195,10 @@ Template.transaction_list.onRendered(function() {
                 { index: 1, label: "Type", class: "Type", active: true, display: true, width: "130" },
                 { index: 2, label: "Ref", class: "Ref", active: true, display: true, width: "30" },
                 { index: 3, label: "Qty", class: "Qty", active: true, display: true, width: "30" },
-                { index: 4, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
-                { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
+                { index: 4, label: "Total Running", class: "TotalRunning", active: true, display: true, width: "30" },
+                { index: 5, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
+                { index: 6, label: "Total", class: "Total", active: true, display: true, width: "80" },
+                { index: 7, label: "Status", class: "Status", active: true, display: true, width: "30" },
             ];
         }
 
@@ -319,7 +321,7 @@ Template.transaction_list.onRendered(function() {
         }
     });
 
-    $("#dateFrom").val(fromDate);
+    $("#dateFrom").val((moment().subtract(reportsloadMonths, 'months')).format("DD/MM/YYYY"));
     $("#dateTo").val(begunDate);
 
     templateObject.resetData = function(dataVal) {
@@ -822,7 +824,6 @@ Template.transaction_list.onRendered(function() {
                     }
 
                     if(useData[i].Active == false)
-                        alert(useData[i]);
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         '<span style="display:none;">' + (useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date).toString() + '</span>' +
@@ -3141,7 +3142,8 @@ Template.transaction_list.onRendered(function() {
         })
     }
 
-    templateObject.getAllProductRecentTransactions = async function (deptname) {
+    templateObject.getAllProductRecentTransactions = async function (deleteFilter = false) {
+        let deptname = currentType
       getVS1Data("T_VS1_Report_Productmovement").then(function (dataObject) {
         let need_API = true;
         if (dataObject.length > 0) {
@@ -3156,7 +3158,7 @@ Template.transaction_list.onRendered(function() {
         }
         if (currentProductID) {
           if (need_API) {
-            productService.getProductRecentTransactionsAll(currentProductID).then(function (data) {
+            productService.getProductRecentTransactionsAll(currentProductID, deleteFilter).then(function (data) {
               addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
               templateObject.displayAllProductRecentTransactions(data, deptname);
             });
@@ -3182,8 +3184,10 @@ Template.transaction_list.onRendered(function() {
             data.t_vs1_report_productmovement[i].TranstypeDesc,
             data.t_vs1_report_productmovement[i].TransactionNo,
             data.t_vs1_report_productmovement[i].Qty,
+            data.t_vs1_report_productmovement[i].Available || 0,
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
+            data.t_vs1_report_productmovement[i].Active ? "In-Active" : "",
           ];
           recentTransList.push(recentTranObject);
         }
@@ -3345,7 +3349,7 @@ Template.transaction_list.onRendered(function() {
 
               //}
               setTimeout(function () {
-                // MakeNegative();
+                MakeNegative();
               }, 100);
             },
             language: { search: "",searchPlaceholder: "Search List..." },
@@ -3359,9 +3363,20 @@ Template.transaction_list.onRendered(function() {
                 $(`<button class="btn btn-primary btnRefresh${currenttablename}" type='button' id='btnRefresh${currenttablename}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${currenttablename}_filter`);
 
                 $('.myvarFilterForm').appendTo(".colDateFilter");
-            },
+            },            
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
           })
-          .on("page", function () {})
+          .on("page", function () {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.datatablerecords.get();
+            templateObject.datatablerecords.set(draftRecord);
+          })
           .on("column-reorder", function () {});
         $("div.dataTables_filter input").addClass("form-control form-control-sm");
         $(".fullScreenSpin").css("display", "none");
@@ -3443,7 +3458,7 @@ Template.transaction_list.onRendered(function() {
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
     } else if (currenttablename === 'productrecentlist') {
-        templateObject.getAllProductRecentTransactions(currentType);
+        templateObject.getAllProductRecentTransactions();
     }
     tableResize();
 
@@ -3529,6 +3544,9 @@ Template.transaction_list.events({
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
             templateObject.getBankingOverviewData(true);
+        } else if (currenttablename === 'productrecentlist') {
+            await clearData('T_VS1_Report_Productmovement')
+            templateObject.getAllProductRecentTransactions(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -3557,8 +3575,9 @@ Template.transaction_list.events({
             templateObject.getTimeSheetListData()
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
+        } else if (currenttablename === 'productrecentlist') {            
+            templateObject.getAllProductRecentTransactions(true);
         }
-
     },
     'change .custom-range': async function(event) {
         const tableHandler = new TableHandler();

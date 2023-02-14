@@ -140,19 +140,12 @@
                 </div>
             <!-- {{/if}} -->
             <div class="col-5 col-md-5">
-                <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin" role="button" data-toggle="modal" href="#tblAccountOverview_Modal" ><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btnNav btn-primary float-right printConfirm vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                <button class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                <div class="btn-group btnNav float-right exportbtngroup vs1ButtonMargin" >
-                    <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
-                    <div role="menu" class="dropdown-menu">
-                        <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
-                        <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
-                    </div>
+                <div
+                  class="col d-xl-flex justify-content-xl-end align-items-xl-start"
+                  style="padding: 0px !important">
+                    {{> spreadsheet_link templateName="Accountslist report result"}}
+                    {{> export_import_print_display_button Import="hiddenButton"  tablename="tblAccountOverview"}}
                 </div>
-                {{> spreadsheet_link templateName="Accountslist report result"}}
-
                 <div>
 
                     <div class="modal fade" role="dialog" tabindex="-1" id="importAccountModal">

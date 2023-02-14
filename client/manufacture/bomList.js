@@ -3,8 +3,9 @@ import { ProductService } from "../product/product-service";
 import { Template } from 'meteor/templating';
 import './bom_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { ManufacturingService } from "./manufacturing-service";
 
-Template.bom_list.inheritsHooksFrom('non_transactional_list');
+// Template.bom_list.inheritsHooksFrom('non_transactional_list');
 Template.bom_list.onCreated(function(){
     const templateObject = Template.instance()
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -13,6 +14,39 @@ Template.bom_list.onCreated(function(){
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar()
     templateObject.bomProducts = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data){
+      let subs = data.fields.Details != '' ?JSON.parse(data.fields.Details)||[] : [];
+      let rawName = "";
+      if(subs.length > 0) {
+          for (let j = 0; j < subs.length; j++) {
+              if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
+          }
+      }
+      var dataList = [
+        data.fields.ID || "1",
+        data.fields.Caption || "", //product name -- should be changed on TProcTree
+        data.fields.Description || "",
+        data.fields.Info || "",
+        data.fields.TotalQtyOriginal || 0,
+        // data.fields.subs || [],
+        rawName || '',
+        data.fields.Value == '' ? 'No Attachment' : JSON.parse(data.fields.Value).length.toString() + " attachments"
+      ];
+      return dataList;
+    }
+
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true },
+    { index: 1, label: 'Product Name', class: 'colName', active: true, display: true },
+    { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true },
+    { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
+    { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
+    { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
+    { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
       
 })
 Template.bom_list.onRendered(function(){
@@ -57,7 +91,7 @@ Template.bom_list.events({
   'click #tblBOMList tbody tr': async function(event) {
     let templateObject = Template.instance();
     let productService = new ProductService();
-    let productName = $(event.target).closest('tr').find('td.colProductName').text();
+    let productName = $(event.target).closest('tr').find('td.colName').text();
     let bomProducts = templateObject.bomProducts.get();
     let index = bomProducts.findIndex(product => {
       return product.fields.Caption == productName;
@@ -78,46 +112,23 @@ Template.bom_list.events({
     FlowRouter.go('/bomsetupcard')
   },
 
-  'keyup #tblBOMList_filter input': function (event) {
-    if($(event.target).val() != ''){
-      $(".btnRefreshList").addClass('btnSearchAlert');
-    }else{
-      $(".btnRefreshList").removeClass('btnSearchAlert');
-    }
-    if (event.keyCode == 13) {
-       $(".btnRefreshList").trigger("click");
-    }
-  },
-
-  'click .exportbtn': function () {
-    $('.fullScreenSpin').css('display','inline-block');
-    jQuery('#tblBOMList_wrapper .dt-buttons .btntabletocsv').click();
-    $('.fullScreenSpin').css('display','none');
-
-  },
-  'click .exportbtnExcel': function () {
-      $('.fullScreenSpin').css('display','inline-block');
-      jQuery('#tblBOMList_wrapper .dt-buttons .btntabletoexcel').click();
-      $('.fullScreenSpin').css('display','none');
-  },
 
   'click .btnRefresh':  (e, ui) => {
-    // ui.initPage(true);
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    setTimeout(()=>{
+    let productService = new ProductService();
+    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+      addVS1Data('TProcTree', JSON.stringify(data)).then(function() {
+        window.open('/bomlist','_self');  
+      })
+    }).catch(function(err) {
       window.open('/bomlist','_self');
-    }, 3000)
+    })
+    // setTimeout(()=>{
+    //   window.open('/bomlist','_self');
+    // }, 3000)
 
   },
-'click .printConfirm' : function(event){
-    playPrintAudio();
-    setTimeout(function(){
-    $('.fullScreenSpin').css('display','inline-block');
-    jQuery('#tblBOMList_wrapper .dt-buttons .btntabletopdf').click();
-    $('.fullScreenSpin').css('display','none');
-}, delayTimeAfterSound);
-},
 'click .templateDownload': function () {
     let utilityService = new UtilityService();
     let rows =[];
@@ -304,5 +315,43 @@ Template.bom_list.helpers({
   getSkippedSteps() {
     let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
     return setupUrl[1];
-},
+  },
+  apiFunction:function() {
+    let productService = new ProductService();
+    return productService.getAllBOMProducts;
+  },
+  service: function() {
+    let productService = new ProductService();
+    return productService;
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+
+  apiParams: ()=>{
+    return ['limitCount', 'limitFrom']
+  },
+
+  searchAPI: function() {
+    let productService = new ProductService();
+    return productService.getBOMListByName;
+  },
+
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+
 })

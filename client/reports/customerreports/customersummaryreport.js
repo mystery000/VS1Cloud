@@ -502,12 +502,6 @@ Template.customersummaryreport.events({
     localStorage.setItem("VS1CustomerSummary_Report", "");
     Meteor._reload.reload();
   },
-  "click .btnSpreadSheetLink": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let utilityService = new UtilityService();
-    const filename = "Customer Summary report result" + ".xlsx";
-    utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-  },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let utilityService = new UtilityService();
