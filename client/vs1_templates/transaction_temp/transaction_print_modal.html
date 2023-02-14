@@ -20,12 +20,14 @@
             {{#each printTypeTemplate in printTypeTemplates}}
             <div class="row mb-3">
               <div class="col-10 d-flex justify-content-center">
-                <span
-                  class="badge badge-primary w-75 p-3"
+                <button 
+                  class="btn btn-success btn-check-template btn-sm w-75 p-2"
+                  data-id="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
                   style="font-size: 100%;"
-                  >{{getTemplateTitle TransactionType
-                  printTypeTemplate.templateName}}</span
-                >
+                  >
+                  {{getTemplateTitle TransactionType
+                  printTypeTemplate.templateName}}
+                </button>
               </div>
               <div
                 class="col-2 d-flex justify-content-center align-items-center"
@@ -52,11 +54,12 @@
             <!-- Email -->
             <div class="row mb-3">
               <div class="col-10 d-flex justify-content-center">
-                <span
-                  class="badge badge-primary w-75 p-3"
+                <button
+                  class="btn btn-success btn-check-template w-75 p-2"
                   style="font-size: 100%;"
-                  >Email</span
-                >
+                  data-id="emailSend"
+                  >Email
+                  </button>
               </div>
               <div
                 class="col-2 d-flex justify-content-center align-items-center"
@@ -79,11 +82,12 @@
             <!-- SMS -->
             <div class="row mb-3">
               <div class="col-10 d-flex justify-content-center">
-                <span
-                  class="badge badge-primary w-75 p-3"
+                <button
+                  class="btn btn-success btn-check-template w-75 p-2"
                   style="font-size: 100%;"
-                  >SMS</span
-                >
+                  data-id="sms"
+                  >SMS
+                </button>
               </div>
               <div
                 class="col-2 d-flex justify-content-center align-items-center"
@@ -104,13 +108,14 @@
               </div>
             </div>
             <!-- Print -->
-            <div class="row mb-3">
+            <!-- <div class="row mb-3">
               <div class="col-10 d-flex justify-content-center">
-                <span
-                  class="badge badge-primary w-75 p-3"
+                <button
+                  class="btn btn-success btn-check-template w-75 p-2"
                   style="font-size: 100%;"
-                  >Print</span
-                >
+                  data-id="print"
+                  >Print
+                  </button>
               </div>
               <div
                 class="col-2 d-flex justify-content-center align-items-center"
@@ -130,15 +135,16 @@
                   ></label>
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- Preview -->
             <div class="row">
               <div class="col-10 d-flex justify-content-center">
-                <span
-                  class="badge badge-primary w-75 p-3"
+                <button
+                  class="btn btn-success w-75 p-2"
                   style="font-size: 100%;"
-                  >Preview</span
-                >
+                  id="previewTemplate"
+                  >Preview
+                  </button>
               </div>
               <div
                 class="col-2 d-flex justify-content-center align-items-center"
@@ -156,11 +162,15 @@
         </div>
         <!-- Footer Buttons -->
         <div class="modal-footer">
-          <button class="btn btn-primary printConfirm btnFooter" type="button">
+          <button class="btn btn-primary" type="button" id="choosePrintTemplate">
+            <i class="fa fa-eye" style="margin-right: 5px;"></i>
+           Choose Template
+          </button>
+          <button class="btn btn-primary printConfirm" type="button">
             <i class="fa fa-print" style="margin-right: 5px;"></i>
             Confirm Print
           </button>
-          <button class="btn btn-light" data-dismiss="modal" type="button">
+          <button class="btn btn-secondary" data-dismiss="modal" type="button">
             Cancel
           </button>
         </div>
