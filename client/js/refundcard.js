@@ -1361,9 +1361,6 @@ Template.refundcard.onCreated(() => {
         },
       };
     }
-
-    console.log(objDetails)
-
     await templateObject.addAttachment(objDetails)
   }
 
