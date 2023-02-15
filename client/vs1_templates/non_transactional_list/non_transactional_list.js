@@ -186,12 +186,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
             ];
-        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
+        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblAccountListPop" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
             let bsbname = "Branch Code";
             if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
                 bsbname = "BSB";
             }
-            if (currenttablename == "tblAccountOverview" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
+            if (currenttablename == "tblAccountOverview" || currenttablename == "tblAccountListPop" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
                     { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -15779,6 +15779,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDashboardOptions();
     }  else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
         // templateObject.getAccountsOverviewData(); - moved to accountOverview.js
+    } else if (currenttablename == "tblAccountListPop") {
+        
     } else if (currenttablename == 'tblBankAccountsOverview') {
         templateObject.getBankAccountsOverviewData();
     } else if (currenttablename == "tblClienttypeList") {
