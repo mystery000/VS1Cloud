@@ -169,7 +169,8 @@ Template.npleditlayoutscreen.helpers({
     return templateObject.data.dateAsAt || "";
   },
   profitlosslayoutrecords() {
-    return Template.instance().profitlosslayoutrecords.get();
+    const templateObject = Template.instance();
+    return templateObject.data.profitlosslayoutrecords || [];
   },
   recordslayout: () => {
     return Template.instance().recordslayout.get();

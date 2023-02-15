@@ -315,7 +315,7 @@ export class ReportService extends BaseService {
             LayoutID: 3,
             ListType: "'Detail'"
         };
-        return this.getList('TProfitAndLossReport', options);
+        return this.getList('VS1_PNLGetLayout', options);
     }
 
     getAgedPayableDetailsData(dateFrom, dateTo, ignoreDate) {
