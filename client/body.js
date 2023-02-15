@@ -422,7 +422,6 @@ import './reports/supplierreports/suppliersummary.js';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
-import './reports/binlocations/binlocations.js';
 import './reports/stockreports/stockmovementreport.js';
 import './reports/stockreports/stockquantitybylocation.js';
 import './reports/stockreports/stockvaluereport.js';

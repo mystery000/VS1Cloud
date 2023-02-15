@@ -51,14 +51,17 @@ const toggleRecentTransaction = () => {
 }
 
 Template.productview.onCreated(() => {
-  const templateObject = Template.instance();
-  templateObject.bomProducts = new ReactiveVar([]);
-  templateObject.records = new ReactiveVar();
-  templateObject.taxraterecords = new ReactiveVar([]);
-  templateObject.deptrecords = new ReactiveVar();
-  templateObject.tserialnumberList = new ReactiveVar();
-  templateObject.tlotnumberList = new ReactiveVar();
-  templateObject.recentTrasactions = new ReactiveVar([]);
+    const templateObject = Template.instance();
+    templateObject.bomProducts = new ReactiveVar([]);
+    templateObject.records = new ReactiveVar();
+    templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.deptrecords = new ReactiveVar();
+    templateObject.binrecords = new ReactiveVar();
+    templateObject.bindept = new ReactiveVar();
+    templateObject.tserialnumberList = new ReactiveVar();
+    templateObject.tlotnumberList = new ReactiveVar();
+    templateObject.recentTrasactions = new ReactiveVar([]);
+
 
   templateObject.coggsaccountrecords = new ReactiveVar();
   templateObject.salesaccountrecords = new ReactiveVar();
@@ -99,11 +102,13 @@ Template.productview.onRendered(function () {
   // $('.newProcessModal')[0].removeChild($('.newProcessModal')[0].children[1]);
   let templateObject = Template.instance();
 
-  let purchaseService = new PurchaseBoardService();
-  let taxRateService = new TaxRateService();
-  const records = [];
-  const taxCodesList = [];
-  const deptrecords = [];
+    let purchaseService = new PurchaseBoardService();
+    let taxRateService = new TaxRateService();
+    const records = [];
+    const taxCodesList = [];
+    const deptrecords = [];
+    const binrecords = [];
+    const bindept = 'Default';
 
   const coggsaccountrecords = [];
   const salesaccountrecords = [];
@@ -757,46 +762,106 @@ Template.productview.onRendered(function () {
       });
   };
 
-  templateObject.getClientTypeData = function () {
-    getVS1Data("TClientType")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          productService.getClientTypeData().then((data) => {
-            for (let i = 0; i < data.tclienttype.length; i++) {
-              clientType.push(data.tclienttype[i].fields.TypeName);
-            }
-            clientType = _.sortBy(clientType);
-            templateObject.clienttypeList.set(clientType);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tclienttype;
-          for (let i = 0; i < useData.length; i++) {
-            clientType.push(useData[i].fields.TypeName);
-          }
-          clientType = _.sortBy(clientType);
-          templateObject.clienttypeList.set(clientType);
-          //$('.customerTypeSelect option:first').prop('selected', false);
-          $(".customerTypeSelect").attr("selectedIndex", 0);
-        }
-      })
-      .catch(function (err) {
-        productService.getClientTypeData().then((data) => {
-          for (let i = 0; i < data.tclienttype.length; i++) {
-            clientType.push(data.tclienttype[i].fields.TypeName);
-          }
-          clientType = _.sortBy(clientType);
-          templateObject.clienttypeList.set(clientType);
-        });
-      });
-  };
+    templateObject.getBinLocations = function() {
+        getVS1Data('TProductBin').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(function(data) {
+                    for (let i in data.tproductbin) {
 
-  setTimeout(function () {
-    templateObject.getAccountNames();
-    templateObject.getAllTaxCodes();
-    templateObject.getDepartments();
-    //templateObject.getClientTypeData();
-  }, 1000);
+                        let binrecordObj = {
+                            binnumber: data.tproductbin[i].BinNumber || ' ',
+                            binlocation: data.tproductbins[i].BinLocation || '',
+                            binclass: data.tproductbin[i].BinClassName || ' ',
+                        };
+
+                        binrecords.push(binrecordObj);
+                        templateObject.binrecords.set(binrecords);
+
+                    }
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductbin;
+                for (let i in useData) {
+
+                    let binrecordObj = {
+                        binnumber: useData[i].BinNumber || ' ',
+                        binlocation: useData[i].BinLocation || '',
+                        binclass: useData[i].BinClassName || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+
+                }
+                console.log(binrecords);
+
+            }
+        }).catch(function(err) {
+            productService.getBins().then(function(data) {
+                for (let i in data.tproductbins) {
+
+                    let binrecordObj = {
+                        binnumber: data.tproductbins[i].BinNumber || ' ',
+                        binlocation: data.tproductbins[i].BinLocation || '',
+                        binclass: data.tproductbins[i].BinClassName || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+                }
+            });
+        });
+
+    };
+
+    templateObject.getClientTypeData = function() {
+        getVS1Data('TClientType').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getClientTypeData().then((data) => {
+
+                    for (let i = 0; i < data.tclienttype.length; i++) {
+                        clientType.push(data.tclienttype[i].fields.TypeName);
+                    }
+                    clientType = _.sortBy(clientType);
+                    templateObject.clienttypeList.set(clientType);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tclienttype;
+                for (let i = 0; i < useData.length; i++) {
+                    clientType.push(useData[i].fields.TypeName)
+                }
+                clientType = _.sortBy(clientType);
+                templateObject.clienttypeList.set(clientType);
+                //$('.customerTypeSelect option:first').prop('selected', false);
+                $(".customerTypeSelect").attr('selectedIndex', 0);
+
+            }
+        }).catch(function(err) {
+            productService.getClientTypeData().then((data) => {
+
+                for (let i = 0; i < data.tclienttype.length; i++) {
+
+                    clientType.push(data.tclienttype[i].fields.TypeName)
+                }
+                clientType = _.sortBy(clientType);
+                templateObject.clienttypeList.set(clientType);
+            });
+        });
+
+    };
+
+    setTimeout(function() {
+        templateObject.getAccountNames();
+        templateObject.getAllTaxCodes();
+        templateObject.getDepartments();
+        templateObject.getBinLocations();
+        templateObject.bindept.set('Default');
+        //templateObject.getClientTypeData();
+    }, 1000);
 
   let isInventory = localStorage.getItem("CloudInventoryModule");
   if (isInventory) {
@@ -876,7 +941,7 @@ Template.productview.onRendered(function () {
                   barcode: data.fields.BARCODE,
                   // data.fields.TotalQtyInStock,
                   totalqtyonorder: data.fields.TotalQtyOnOrder,
-                  //productclass :lineItems,
+                  productclass :data.fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
 
@@ -1065,8 +1130,11 @@ Template.productview.onRendered(function () {
                   // useData[i].fields.TotalQtyInStock,
                   totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
                   //productclass :lineItems,
+                  productclass :useData[i].fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
+
+                console.log(productrecord.productclass.DefaultbinNumber);
 
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
@@ -3245,141 +3313,144 @@ Template.productview.onRendered(function () {
 });
 
 Template.productview.helpers({
-  productrecord: () => {
-    return Template.instance().records.get();
-  },
-  taxraterecords: () => {
-    return Template.instance().taxraterecords.get();
-  },
-  deptrecords: () => {
-    return Template.instance()
-      .deptrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  tserialnumberList: () => {
-    return Template.instance().tserialnumberList.get();
-  },
-  tlotnumberList: () => {
-    return Template.instance().tlotnumberList.get();
-  },
-  recentTrasactions: () => {
-    return Template.instance().recentTrasactions.get();
-  },
-  coggsaccountrecords: () => {
-    return Template.instance()
-      .coggsaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  salesaccountrecords: () => {
-    return Template.instance()
-      .salesaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  inventoryaccountrecords: () => {
-    return Template.instance()
-      .inventoryaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  productqtyrecords: () => {
-    return Template.instance()
-      .productqtyrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  productExtraSell: () => {
-    return Template.instance()
-      .productExtraSell.get()
-      .sort(function (a, b) {
-        if (a.clienttype == "NA") {
-          return 1;
-        } else if (b.clienttype == "NA") {
-          return -1;
-        }
-        return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
-      });
-  },
-  totaldeptquantity: () => {
-    return Template.instance().totaldeptquantity.get();
-  },
-  productsCloudPreferenceRec: () => {
-    return CloudPreference.findOne({
-      userid: localStorage.getItem("mycloudLogonID"),
-      PrefName: "productview",
-    });
-  },
-  isSNTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isSNTrackChecked.get();
-  },
-  isTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isTrackChecked.get();
-  },
-  isExtraSellChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isExtraSellChecked.get();
-  },
-  includeInventory: () => {
-    return Template.instance().includeInventory.get();
-  },
-  clienttypeList: () => {
-    return Template.instance()
-      .clienttypeList.get()
-      .sort(function (a, b) {
-        if (a == "NA") {
-          return 1;
-        } else if (b == "NA") {
-          return -1;
-        }
-        return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
-      });
-  },
-  isMobileDevices: () => {
-    return Template.instance().isMobileDevices.get();
-  },
-  isManufactured: () => {
-    return Template.instance().isManufactured.get();
-  },
-  showBomModal: () => {
-    return Template.instance().isShowBOMModal.get();
-  },
-  productID: () => {
-    return Template.instance().productID.get();
-  },
+
+    productrecord: () => {
+        return Template.instance().records.get();
+    },
+    taxraterecords: () => {
+        return Template.instance().taxraterecords.get();
+    },
+    deptrecords: () => {
+        return Template.instance()
+          .deptrecords.get()
+          .sort(function (a, b) {
+            if (a.department == "NA") {
+              return 1;
+            } else if (b.department == "NA") {
+              return -1;
+            }
+            return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+          });
+    },
+    binrecords: () => {
+        return Template.instance().binrecords.get().sort(function(a, b) {
+            if (a.binnumber == 'NA') {
+                return 1;
+            } else if (b.binnumber == 'NA') {
+                return -1;
+            }
+            return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
+        });
+    },
+    bindept: () => {
+      return Template.instance().bindept.get();
+    },
+    tserialnumberList: () => {
+        return Template.instance().tserialnumberList.get();
+    },
+    tlotnumberList: () => {
+        return Template.instance().tlotnumberList.get();
+    },
+    recentTrasactions: () => {
+        return Template.instance().recentTrasactions.get();
+    },
+    coggsaccountrecords: () => {
+        return Template.instance().coggsaccountrecords.get().sort(function(a, b) {
+            if (a.accountname == 'NA') {
+                return 1;
+            } else if (b.accountname == 'NA') {
+                return -1;
+            }
+            return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    salesaccountrecords: () => {
+        return Template.instance().salesaccountrecords.get().sort(function(a, b) {
+            if (a.accountname == 'NA') {
+                return 1;
+            } else if (b.accountname == 'NA') {
+                return -1;
+            }
+            return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    inventoryaccountrecords: () => {
+        return Template.instance().inventoryaccountrecords.get()
+            .sort(function(a, b) {
+                if (a.accountname == 'NA') {
+                    return 1;
+                } else if (b.accountname == 'NA') {
+                    return -1;
+                }
+                return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+            });
+    },
+    productqtyrecords: () => {
+        return Template.instance().productqtyrecords.get().sort(function(a, b) {
+            if (a.department == 'NA') {
+                return 1;
+            } else if (b.department == 'NA') {
+                return -1;
+            }
+            return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+        });
+    },
+    productExtraSell: () => {
+        return Template.instance().productExtraSell.get().sort(function(a, b) {
+            if (a.clienttype == 'NA') {
+                return 1;
+            } else if (b.clienttype == 'NA') {
+                return -1;
+            }
+            return (a.clienttype.toUpperCase() > b.clienttype.toUpperCase()) ? 1 : -1;
+        });
+    },
+    totaldeptquantity: () => {
+        return Template.instance().totaldeptquantity.get();
+    },
+    productsCloudPreferenceRec: () => {
+        return CloudPreference.findOne({
+            userid: localStorage.getItem('mycloudLogonID'),
+            PrefName: 'productview'
+        });
+    },
+    isSNTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isSNTrackChecked.get();
+    },
+    isTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isTrackChecked.get();
+    },
+    isExtraSellChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isExtraSellChecked.get();
+    },
+    includeInventory: () => {
+        return Template.instance().includeInventory.get();
+    },
+    clienttypeList: () => {
+        return Template.instance().clienttypeList.get().sort(function(a, b) {
+            if (a == 'NA') {
+                return 1;
+            } else if (b == 'NA') {
+                return -1;
+            }
+            return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
+        });
+    },
+    isMobileDevices:()=>{
+        return Template.instance().isMobileDevices.get()
+    },
+    isManufactured:() =>{
+        return Template.instance().isManufactured.get();
+    },
+    showBomModal: ()=>{
+        return Template.instance().isShowBOMModal.get();
+    },
+    productID: () => {
+        return Template.instance().productID.get();
+    },
 });
 
 Template.productview.events({
@@ -3670,6 +3741,56 @@ Template.productview.events({
               isManufactured: getIsManufactured,
             },
           };
+        }
+
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+              console.log(data);
+          });
+        }
+
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+              console.log(data);
+          });
         }
 
         saveBOMStructure();
@@ -5037,6 +5158,12 @@ Template.productview.events({
     //     }
     // }
     $("#BOMSetupModal").modal("toggle");
+  },
+
+  "change .slt_department": function (event) {
+    let templateObject = Template.instance();
+    let dept_name = $(event.target).val();
+    templateObject.bindept.set(dept_name);
   },
 
   "change #chkBOM": function (event) {

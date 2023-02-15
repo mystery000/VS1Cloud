@@ -1110,8 +1110,16 @@
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label style="display: none">Deparment</label>
-                                                <input type="text" class="form-control" value="{{item.department}}" />
+                                                <label style="display: none;">Deparment</label>
+                                                <select type="search" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    {{#each itemt in deptrecords}}
+                                                    {{#if equals itemtt.itemt.id productrecord.productclass.DeptID}}
+                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
+                                                    {{else}}
+                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
+                                                    {{/if}}
+                                                    {{/each}}
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-9">
@@ -1169,16 +1177,17 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
-                                                        <select
-                                                            type="search"
-                                                            class="form-control es-input bin-number"
-                                                            value="No Bin"
-                                                            name="binnumber"
-                                                            style="
-                                                                background-color: rgb(255, 255, 255);
-                                                                cursor: pointer;
-                                                            "
-                                                        ></select>
+                                                        <select type="search" class="form-control slt-bin" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                            {{#each itemtt in binrecords}}
+                                                            {{#if equals itemtt.binclass bindept}}
+                                                            {{#if equals itemtt.binnumber productrecord.productclass.DefaultbinNumber}}
+                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>
+                                                            {{else}}
+                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>
+                                                            {{/if}}
+                                                            {{/if}}
+                                                            {{/each}}
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
