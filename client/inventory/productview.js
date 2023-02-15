@@ -795,7 +795,6 @@ Template.productview.onRendered(function () {
 
 
                 }
-                console.log(binrecords);
 
             }
         }).catch(function(err) {
@@ -1133,8 +1132,6 @@ Template.productview.onRendered(function () {
                   productclass :useData[i].fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
-
-                console.log(productrecord.productclass.DefaultbinNumber);
 
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
@@ -3764,7 +3761,6 @@ Template.productview.events({
           };
 
           productService.saveProductClassData(productClassObj).then(function(data){
-              console.log(data);
           });
         }
 
