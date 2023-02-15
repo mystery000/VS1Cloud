@@ -442,22 +442,23 @@ Template.vatreturn.onRendered(function() {
                     }
                     $('.fullScreenSpin').css('display', 'none');
                 }).catch(function(err) {
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
-                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
-                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
+                    shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
+                    shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
                     // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
@@ -834,22 +835,23 @@ Template.vatreturn.onRendered(function() {
                 }
                 $('.fullScreenSpin').css('display', 'none');
             }).catch(function(err) {
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._21Selected, "tbltaxCodeCheckbox_21");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._22Selected, "tbltaxCodeCheckbox_22");
                 // shareFunctionByName.initTable(data.tvatreturn[i].fields._26Selected, "tbltaxCodeCheckbox_26");
@@ -2509,22 +2511,23 @@ Template.vatreturn.onRendered(function() {
                     }
                 }
 
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_1A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_2A");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_3");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_5");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_7");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_10");
-                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_12");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_14A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_15A");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_16");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_17");
-                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_18");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
             }
 
             $(document).on("click", "#vatreturnCategory1", function(e) {

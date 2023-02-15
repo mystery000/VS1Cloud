@@ -23,12 +23,32 @@ let accSelected = "";
 let uomSelected = "";
 let taxSelected = "";
 let defaultUOM = "Each";
+let currentLineIndex
+let customerLineIndex = 0
 
 const clickSalesAccount = editableService.clickSalesAccount;
 
 const clickTaxCodeSales = editableService.clickTaxCodeSales;
 
 const clickBinNumber = editableService.clickBinNumber;
+
+const applyMarkup = (val) => {  
+  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {    
+    return val * (100 + Number($('.baseEdtMarkup').val())) / 100
+  }
+  return val
+}
+
+const toggleRecentTransaction = () => {
+  $(".fullScreenSpin").css("display", "inline-block");
+  let isShowRecentTrans = $(".product_recent_trans")[0].style.display;
+  if (isShowRecentTrans == "none") {
+    $(".product_recent_trans").show();
+  } else {
+    $(".product_recent_trans").hide();
+  }
+  $(".fullScreenSpin").css("display", "none");
+}
 
 Template.productview.onCreated(() => {
     const templateObject = Template.instance();
@@ -73,7 +93,7 @@ Template.productview.onCreated(() => {
   templateObject.showSubButton = new ReactiveVar(true);
   templateObject.isShowBOMModal = new ReactiveVar(false);
 
-  templateObject.productID = new ReactiveVar();
+  templateObject.productID = new ReactiveVar();  
 });
 
 Template.productview.onRendered(function () {
@@ -123,7 +143,7 @@ Template.productview.onRendered(function () {
   };
 
   templateObject.setEditableSelect = async function (data) {
-    $(document).ready(function () {
+    // $(document).ready(function () {
       $("#slttaxcodepurchase").editableSelect();
       $("#slttaxcodesales").editableSelect();
       $("#sltcogsaccount").editableSelect();
@@ -281,25 +301,34 @@ Template.productview.onRendered(function () {
         $("#accountListModal").modal("toggle");
       });
 
-      $(document).on("click", "#clienttypeList tbody tr", function (e) {
+      $(document).on("click", "#tblClienttypeList tbody tr", function (e) {
         var table = $(this);
-        let custTypeName = table.find(".colClientTypeName").text();
-        $("#sltCustomerType").val(custTypeName);
+        let custTypeName = table.find(".colTypeName").text();
+        $($(".sltCustomerType")[customerLineIndex]).val(custTypeName);
         $("#customerTypeListModal").modal("toggle");
       });
 
       $(document).on("click", "#tblUOMList tbody tr", function (e) {
-        let table = $(this);
-        let uomSelected = $("#uomSelected").val()
+        let table = $(this);        
         let uomName = table.find(".colUOMName").text();
-        if (uomSelected == "sales") {
-          $("#sltUomSales").val(uomName);
-        } else if (uomSelected == "purchase") {
-          $("#sltUomPurchases").val(uomName);
-        }
+        $($(".saleRowWrapper")[currentLineIndex]).find('input.sltUomSales').val(uomName)
+        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)        
         $("#UOMListModal").modal("toggle");
       });
-    });
+
+      $(document).on('click', 'div.saleRowWrapper', function() {
+        currentLineIndex = $('div.saleRowWrapper').index(this)    
+      })
+      
+      $(document).on('click', 'div.purchaseRowWrapper', function() {
+        currentLineIndex = $('div.purchaseRowWrapper').index(this)    
+      }) 
+
+      $(document).on('click', 'div.itemExtraSellRow', function() {
+        customerLineIndex = $('div.itemExtraSellRow').index(this)    
+      }) 
+
+    // });
   };
 
   templateObject.getAllBOMProducts = function () {
@@ -3201,7 +3230,7 @@ Template.productview.onRendered(function () {
 
   $(document).ready(function () {
     $(".edtProductName").editableSelect();
-    $("#edtProcess").editableSelect();
+    $("#edtProcess").editableSelect();    
   });
 
   // $(document).on('click', '.new_attachment_btn', function(event) {
@@ -3506,15 +3535,7 @@ Template.productview.events({
     }
   },
   "click #loadrecenttransaction": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    //modified by matthias
-    isShowRecentTrans = $(".product_recent_trans")[0].style.display;
-    if (isShowRecentTrans == "none") {
-      $(".product_recent_trans").show();
-    } else {
-      $(".product_recent_trans").hide();
-    }
-    $(".fullScreenSpin").css("display", "none");
+    toggleRecentTransaction();
   },
   "click #btnSave": async function () {
     playSaveAudio();
@@ -3747,6 +3768,33 @@ Template.productview.events({
           });
         }
 
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+              console.log(data);
+          });
+        }
+
+        saveBOMStructure();
+        return;
         productService
           .saveProductVS1(objDetails)
           .then(function (objDetails) {
@@ -3766,7 +3814,7 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            saveBOMStructure();
+            
             sideBarService
               .getNewProductListVS1(initialBaseDataLoad, 0)
               .then(function (dataReload) {
@@ -4334,7 +4382,6 @@ Template.productview.events({
         let bomObject = templateObject.bomStructure.get();
 
         let bomProducts = templateObject.bomProducts.get() || [];
-
         let existID = -1;
         let existIndex = bomProducts.findIndex((product) => {
           return product.fields.Caption == bomObject.fields.Caption;
@@ -4353,13 +4400,14 @@ Template.productview.events({
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
         temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
+        return
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
             temp.fields.ID = existID;
           }
           productService.saveBOMProduct(temp).then(function () {
             productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
-              addVS1Data("TProcTree", data.tproctree).then(function () {});
+              addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
             });
           });
         } else {
@@ -4368,7 +4416,7 @@ Template.productview.events({
             temp.fields.ProcStepItemRef = "deleted";
             productService.saveBOMProduct(temp).then(function () {
               productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
-                addVS1Data("TProcTree", data.tproctree).then(function () {});
+                addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
               });
             });
           }
@@ -4472,6 +4520,7 @@ Template.productview.events({
   "click #chkSellPrice": function (event) {
     if ($(event.target).is(":checked")) {
       $(".trackCustomerTypeDisc").css("display", "flex");
+      $("#customerTypeListModal").modal("toggle");
     } else {
       $(".trackCustomerTypeDisc").css("display", "none");
     }
@@ -4789,6 +4838,7 @@ Template.productview.events({
 
     var taxTotal = parseFloat(sellPrice) * parseFloat(taxrateamount) || 0;
     sellPriceInc = parseFloat(sellPrice) + taxTotal || 0;
+    sellPriceInc = applyMarkup(sellPriceInc)
     if (!isNaN(sellPriceInc)) {
       $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
     }
@@ -4931,7 +4981,11 @@ Template.productview.events({
     var itemClineID = itemDataClone.clone().prop("id", tokenid);
     itemClineID.find('input[type="text"]').val("");
     itemClineID.find('select[name^="sltCustomerType"]').val("");
+    itemClineID.find('.sltCustomerType').editableSelect();
+    itemClineID.find('.sltCustomerType').editableSelect().on("click.editable-select", editableService.clickCustomerType);
+    customerLineIndex = $(".itemExtraSellRow").length
     itemClineID.insertAfter(".itemExtraSellRow:last");
+    $("#customerTypeListModal").modal("toggle");
     // $('.itemExtraSellRow:first').clone().insertAfter(".itemExtraSellRow:last");
   },
   "click .btnRemove": function (event) {
@@ -5310,6 +5364,7 @@ Template.productview.events({
     var UOMRowClone = $(".uomRow:first");
     let tokenid = Random.id();
     var NewUOMRow = UOMRowClone.clone().prop("id", "UOM" + tokenid);
+    NewUOMRow.addClass('saleRowWrapper')
     NewUOMRow[0].style.display = "flex";
     NewUOMRow.find("#sltsalesacount").editableSelect();
     NewUOMRow.find("#sltsalesacount").val("Sales");
@@ -5325,6 +5380,7 @@ Template.productview.events({
 
     var COGSRowClone = $(".COGSRow:first");
     var NewCOGSRow = COGSRowClone.clone().prop("id", "COGS" + tokenid);
+    NewCOGSRow.addClass('purchaseRowWrapper')
     NewCOGSRow[0].style.display = "flex";
     NewCOGSRow.find("#sltcogsaccount").editableSelect();
     NewCOGSRow.find("#sltcogsaccount").val("Cost of Good Sold");
@@ -5338,7 +5394,9 @@ Template.productview.events({
     NewCOGSRow.find("#sltUomPurchases").val(defaultUOM);
     NewCOGSRow.find("#sltUomPurchases").editableSelect().on("click.editable-select", editableService.clickUomPurchase);
 
-    NewCOGSRow.find("#slttaxcodesales").val(loggedTaxCodeSalesInc);
+    NewCOGSRow.find("#slttaxcodepurchase").editableSelect();
+    NewCOGSRow.find("#slttaxcodepurchase").val(loggedTaxCodeSalesInc);
+    NewCOGSRow.find("#slttaxcodepurchase").editableSelect().on("click.editable-select", editableService.clickTaxCodePurchase);
     NewCOGSRow.insertAfter(".COGSRow:last");
     // itemClineID.find('input[type="text"]').val('');
     // itemClineID.find('select[name^="sltCustomerType"]').val('');
@@ -5426,6 +5484,32 @@ Template.productview.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
+
+  "change #txasalesdescription": function (e) {
+    $("#txapurchasedescription").val($("#txasalesdescription").val());
+  },
+
+  "click input.OnBO": function (event) {
+    toggleRecentTransaction()
+  },
+  "click input.InStock": function (event) {
+    toggleRecentTransaction()
+  },
+  "click input.Available": function (event) {
+    toggleRecentTransaction()
+  },
+
+  "click input.OnSO": function (event) {
+    toggleRecentTransaction()
+  },
+
+  "click input.OnOrder": function (event) {
+    toggleRecentTransaction()
+  },
+
+  // "change .slttaxcodepurchase": function (e) {
+  //   $(".slttaxcodesales").val($(".slttaxcodepurchase").val());
+  // },
 });
 
 Template.registerHelper("equals", function (a, b) {

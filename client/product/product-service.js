@@ -199,12 +199,13 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TProductSalesDetailsReport, options);
     }
 
-    getProductRecentTransactionsAll(productID) {
+    getProductRecentTransactionsAll(productID, deleteFilter) {
         let options = {
             select: productID == "all" ? "" : ("[ProductID]='" + productID + "'") ,
             PropertyList: "TransactionDate,ProductName,FirstColumn,SecondColumn,ThirdColumn,Qty,TotalCost,ProductID,ClassID,TransactionNo,AverageCost,Cost,Available,InStock,so,invbo,pobo,onbuild,building,Price,TotalPrice,ExtraDesc,TranstypeDesc,Deptname",
             OrderBy: "TransactionDate DESC"
         };
+        if (!deleteFilter) options.Search = "Active = true"
         return this.getList(this.ERPObjects.T_VS1_Report_Productmovement, options);
     }
 
@@ -445,6 +446,16 @@ export class ProductService extends BaseService {
                 LimitFrom: parseInt(limitfrom),
                 select: "[ProcStepItemRef]='vs1BOM'",
             };
+        }
+
+        return this.getList(this.ERPObjects.TProcTree, options);
+    }
+
+    getBOMListByName(productname) {
+        let options = {
+            ListType: 'Detail',
+            // LimitCount: 1,
+            select: "[Caption] f7like '"+productname+"' and [ProcStepItemRef]='vs1BOM'"
         }
         return this.getList(this.ERPObjects.TProcTree, options);
     }

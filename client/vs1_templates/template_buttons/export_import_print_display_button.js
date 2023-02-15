@@ -25,6 +25,31 @@ Template.export_import_print_display_button.events({
     },
     'click .btnImportModal': async function (event, template) {
        $('.importTemplateModal').modal('toggle');
+    },
+
+    'click .exportbtn': function(event) {
+      let templateObject = Template.instance();
+      event.preventDefault();
+      event.stopPropagation();
+      if(templateObject.data.tablename) {
+        let tablename = templateObject.data.tablename;
+        $('.fullScreenSpin').css('display','inline-block');
+        // jQuery('#'+tablename+'_wrapper .dt-buttons .btntabletocsv').trigger('click');
+        jQuery('#'+tablename+'_wrapper .dt-buttons .btntabletoexcel').click();
+        $('.fullScreenSpin').css('display','none');
+      }
+    },
+
+    'click .printConfirm': function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      let templateObject = Template.instance();
+      let tablename = templateObject.data.tablename || '';
+      if(tablename != '') {
+        $('.fullScreenSpin').css('display','inline-block');
+        jQuery('#' + tablename + '_wrapper .dt-buttons .btntabletopdf').click();
+        $('.fullScreenSpin').css('display','none');
+      }
     }
 });
 

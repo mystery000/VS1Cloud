@@ -48,44 +48,6 @@ Template.newprofitandloss.onCreated(function () {
 });
 
 
-
-function buildPositions() {
-  const sortfields = $(".pSortItems");
-
-  // Level 0 Sorting
-  let counter = 1;
-  for (let i = 0; i <= sortfields.length; i++) {
-    $(sortfields[i]).attr("position", counter );
-    counter++;
-  }
-  // Level 1 Sorting
-  const cSortItems = $(".cSortItems");
-  counter = 1;
-  for (let i = 0; i <= cSortItems.length; i++) {
-    $(cSortItems[i]).attr("position", counter );
-    counter++;
-  }
-  // Level 2 Sorting
-  const scSortItems = $(".scSortItems");
-  counter = 1;
-  for (let i = 0; i <= scSortItems.length; i++) {
-    $(scSortItems[i]).attr("position", counter );
-    counter++;
-  }
-}
-
-function buildSubAccountJson( $sortContainer ){
-  return Array.from($sortContainer.map(function(){
-    return {
-      "accountId": $(this).attr('plid'),
-      "position": $(this).attr('position'),
-      "accountType": $(this).data('group'),
-      "employeeId": employeeId,
-      "subAccounts": ( $(this).find('ol li').length > 0 )? buildSubAccountJson( $(this).find('ol li') ) : []
-    }
-  }))
-}
-
 Template.newprofitandloss.onRendered(function () {
   const templateObject = Template.instance();
   const deptrecords = [];
@@ -125,7 +87,7 @@ Template.newprofitandloss.onRendered(function () {
       $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
       $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     }, 100);
-    
+
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
   };
@@ -329,7 +291,7 @@ Template.newprofitandloss.onRendered(function () {
             options.threcords = [];
             if (data.tprofitandlossperiodcomparereport) {
               let accountData = data.tprofitandlossperiodcomparereport;
-              
+
               let accountType = "";
               var dataList = "";
               for (let i = 0; i < accountData.length; i++) {
@@ -429,7 +391,7 @@ Template.newprofitandloss.onRendered(function () {
           // data = data.response;
 
           //let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          
+
         } catch (err) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -555,7 +517,7 @@ Template.newprofitandloss.onRendered(function () {
           });
 
           // data = data.response;
-          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );          
+          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
         } catch (error) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -697,7 +659,8 @@ Template.newprofitandloss.onRendered(function () {
       profitLossLayoutApi.collectionNames.TProfitLossLayout
     );
     // Fetch a default layout
-    // reportService.getProfitLossLayout();
+    reportService.getProfitLossLayout().then(function(data){
+    });
     // return false
 
     profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
@@ -707,8 +670,9 @@ Template.newprofitandloss.onRendered(function () {
       let profitLossLayouts = [];
       let jsonResponse = await profitLossLayoutEndResponse.json();
       const profitLossLists = ProfitLossLayout.fromList(
-        jsonResponse.tprofitlosslayout
+        jsonResponse.tprofitandlossreport
       );
+
       // Save default list
       templateObject.profitlosslayoutfields.set(profitLossLists);
 
@@ -1070,11 +1034,11 @@ Template.newprofitandloss.events({
   },
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block');
-    
+
     playPrintAudio();
     setTimeout( async function(){
       let targetElement = document.getElementsByClassName('printReport')[0];
-    
+
       targetElement.style.display = "block";
       targetElement.style.width = "210mm";
       targetElement.style.backgroundColor = "#ffffff";
@@ -1149,7 +1113,7 @@ Template.newprofitandloss.events({
 
       async function checkBasedOnType() {
         return new Promise(async(resolve, reject)=>{
-          
+
           let values = [];
           let basedOnTypeStorages = Object.keys(localStorage);
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1191,7 +1155,7 @@ Template.newprofitandloss.events({
             }
             if(j == values.length -1) {resolve()}
           }
-          
+
         })
       }
       await checkBasedOnType();
@@ -1209,7 +1173,7 @@ Template.newprofitandloss.events({
       targetElement.style.padding = "0px";
       targetElement.style.fontSize = "1rem";
 
-    
+
     }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
@@ -1402,7 +1366,7 @@ Template.newprofitandloss.events({
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $("#tblDepartmentCheckbox .chkServiceCard").each(function () {
-      if ($(this).is(":checked")) {        
+      if ($(this).is(":checked")) {
         let dpt = $(this).closest("tr").find(".colDeptName").text();
         departments.push(dpt);
       }
@@ -2222,6 +2186,42 @@ Template.newprofitandloss.events({
         });
         $("#newGroupName").val("");
         templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
+
+        let jsonObj = {
+            type: "VS1_PNLAddGroup",
+            fields: {
+              "LayoutID": 3,
+              "GropuName": groupName,
+              // "Destination": 83,
+            }
+            // type: "VS1_PNLAddGroup",
+            // fields: {
+            //     AccMethod: accMethod,
+            //     Active: true,
+            //     AllClass: allClass,
+            //     ClassID: classID,
+            //     VatSheetDesc: description,
+            //     Done: false,
+            //     HasTab1: hasTab1,
+            //     Tab1_Type: tab1_type,
+            // }
+        }
+
+        reportService.savePNLNewGroup(jsonObj).then(function(res){
+        }).catch(function(err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+                    // Meteor._reload.reload();
+                } else if (result.dismiss === 'cancel') {}
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
       } else {
         let updateLayouts = profitlosslayoutfields.filter(function (
           item,
@@ -2268,78 +2268,8 @@ Template.newprofitandloss.events({
         $("#newGroupName").val("");
         templateObject.profitlosslayoutrecords.set(updateLayouts);
       }
-
       $("#nplAddGroupScreen").modal("hide");
     }
-  },
-  "click .saveProfitLossLayouts": async function () {
-
-    $('.fullScreenSpin').css('display', 'block');
-    buildPositions();
-
-    const profitLossLayoutApis = new ProfitLossLayoutApi();
-
-    // make post request to save layout data
-    const apiEndpoint = profitLossLayoutApis.collection.findByName(
-      profitLossLayoutApis.collectionNames.TProfitLossLayout
-    );
-
-    const pSortfields = $(".pSortItems");
-    const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-    let pSortList = [];
-    pSortfields.each(function(){
-      let Position = $(this).attr('position');
-      let accountType = $(this).data('group');
-      pSortList.push({
-        "position": Position,
-        "accountType": accountType,
-        "employeeId": employeeId,
-        "subAccounts": buildSubAccountJson( $(this).find('ol li') )
-      });
-    });
-
-    /**
-     *
-     * Update all layout fields index DB
-     */
-    let name = $("#nplLayoutName").val();
-    let description = $("#nplLayoutDescr").val();
-    let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
-    let profitLossLayoutData = {
-      "type": "TProfitLossLayout",
-      "action": "save",
-      "layout": pSortList
-    }
-
-    try {
-      const ApiResponse = await apiEndpoint.fetch(null, {
-          method: "POST",
-          headers: ApiService.getPostHeaders(),
-          body: JSON.stringify(profitLossLayoutData),
-      });
-
-      if (ApiResponse.ok == true) {
-          const jsonResponse = await ApiResponse.json();
-          LoadingOverlay.hide();
-      }else{
-          LoadingOverlay.hide();
-      }
-  } catch (error) {
-      LoadingOverlay.hide();
-  }
-
-    // "type": "TProfitLossLayout",
-    // "action": "save",
-    // "layout": [
-
-    // let layoutLists = {
-    //   Name: name,
-    //   Description: description,
-    //   Isdefault: isdefault,
-    //   EmployeeID: employeeID,
-    //   LayoutLists: profitlosslayoutfields,
-    // };
-    // await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
   },
   ...FxGlobalFunctions.getEvents(),
 });

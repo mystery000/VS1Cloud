@@ -36,8 +36,9 @@ Template.copyfrequencypop.events({
             document.getElementById('edtWeeklyStartDate').value = today;
 
             var finishdate = new Date();
+            finishdate.setMonth(finishdate.getMonth() + 1);
             var dd = String(finishdate.getDate()).padStart(2, '0');
-            var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
+            var mm = String(finishdate.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = finishdate.getFullYear();
 
             finishdate = dd + '/' + mm + '/' + yyyy;
@@ -55,8 +56,9 @@ Template.copyfrequencypop.events({
             $("#dailyEveryDay").click();
 
             var finishdate = new Date();
+            finishdate.setMonth(finishdate.getMonth() + 1);
             var dd = String(finishdate.getDate()).padStart(2, '0');
-            var mm = String(finishdate.getMonth() + 2).padStart(2, '0'); //January is 0!
+            var mm = String(finishdate.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = finishdate.getFullYear();
 
             finishdate = dd + '/' + mm + '/' + yyyy;
