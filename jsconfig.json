@@ -1,22 +1,10 @@
 {
   "compilerOptions": {
-    "checkJs": true,
-    "allowJs": true,
-    "jsx": "react",
-    "baseUrl": ".",
-    "paths": {
-      "/*": [
-        "./*"
-      ]
-    }
-  },
-  "typeAcquisition": {
-    "include": [
-      "meteor"
-    ]
+    "target": "es6",
+    "module": "commonjs",
   },
   "exclude": [
     "node_modules",
-    ".meteor"
+    "bower_components"
   ]
 }
