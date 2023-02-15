@@ -363,12 +363,11 @@ Template.taskDetailModal.events({
             $(".fullScreenSpin").css("display", "inline-block");
 
             crmService.saveNewTask(objDetails).then(function(data) {
-                $(".fullScreenSpin").css("display", "none");
                 $(".btnRefresh").addClass('btnSearchAlert');
-
                 crmService.getAllTaskList().then(async function(data) {
                     if (data.tprojecttasks && data.tprojecttasks.length > 0) {
                         await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                        $(".fullScreenSpin").css("display", "none");
                         if($("#btnRefreshList") != undefined){
                             $("#btnRefreshList").trigger("click");
                         }
@@ -415,12 +414,9 @@ Template.taskDetailModal.events({
                         // recalculate count here
                         $(".fullScreenSpin").css("display", "none");
                         crmService.getAllTaskList().then(async function(data) {
-                            if (data.tprojecttasks && data.tprojecttasks.length > 0) {
-                                await addVS1Data("TCRMTaskList", JSON.stringify(data));
-                                if($("#btnRefreshList") != undefined){
-                                    $("#btnRefreshList").trigger("click");
-                                }
-                                // Meteor._reload.reload();
+                            await addVS1Data("TCRMTaskList", JSON.stringify(data));
+                            if($("#btnRefreshList") != undefined){
+                                $("#btnRefreshList").trigger("click");
                             }
                         }).catch(function(err) {
                             $(".fullScreenSpin").css("display", "none");

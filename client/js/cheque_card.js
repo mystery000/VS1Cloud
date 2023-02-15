@@ -73,7 +73,7 @@ Template.chequecard.onCreated(() => {
 
 });
 Template.chequecard.onRendered(() => {
-  
+
   let templateObject = Template.instance();
   templateObject.hasFollowings = async function() {
     var currentDate = new Date();
@@ -7341,7 +7341,7 @@ Template.chequecard.events({
     let utilityService = new UtilityService();
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectDeleteLineID").val(targetID);
-    
+
     if(targetID != undefined){
       times++;
       if (times == 1) {
@@ -7512,7 +7512,7 @@ Template.chequecard.events({
             var result = await purchaseService.saveChequeEx(objDetails);
           }
         }
-        
+
         $("#deletecheckmarkwrapper").removeClass('hide');
         $('.modal-backdrop').css('display', 'none');
         $("#deleteprogressbar").modal('hide');
@@ -8908,15 +8908,6 @@ Template.chequecard.events({
   // add to custom field
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
-  },
-
-
-  "click #chkEFT": function (event) {
-    if ($("#chkEFT").is(":checked")) {
-      $("#eftExportModal").modal("show");
-    } else {
-      $("#eftExportModal").modal("hide");
-    }
   },
 });
 

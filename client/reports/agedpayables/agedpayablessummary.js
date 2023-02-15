@@ -1,6 +1,7 @@
 import {ReportService} from "../report-service";
 import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
+import { SideBarService } from "../../js/sidebar-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
@@ -11,10 +12,12 @@ import erpObject from "../../lib/global/erp-objects";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import './agedpayablessummary.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 const reportService = new ReportService();
 const utilityService = new UtilityService();
 const taxRateService = new TaxRateService();
+const sideBarService = new SideBarService();
 
 let defaultCurrencyCode = CountryAbbr;
 
@@ -27,7 +30,7 @@ Template.agedpayablessummary.onCreated(() => {
   // templateObject.departments = new ReactiveVar();
   templateObject.departments = new ReactiveVar();
   templateObject.agedpayablessummaryth = new ReactiveVar([]);
-
+  templateObject.agedpayablesth = new ReactiveVar();
 
   // Currency related vars //
   FxGlobalFunctions.initVars(templateObject);
@@ -88,7 +91,7 @@ Template.agedpayablessummary.onRendered(() => {
 
   // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
 
-    let currenctURL = FlowRouter.current().queryParams;
+    let currenctURL = FlowRouter.current().queryParams || '';
     let contactName = FlowRouter.current().queryParams.contact ||'';
     let contactID = FlowRouter.current().queryParams.contactid ||'';
 

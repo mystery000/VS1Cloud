@@ -23,24 +23,45 @@ let accSelected = "";
 let uomSelected = "";
 let taxSelected = "";
 let defaultUOM = "Each";
+let currentLineIndex
+let customerLineIndex = 0
 
 const clickSalesAccount = editableService.clickSalesAccount;
-
-const clickUomSales = editableService.clickUomSales;
 
 const clickTaxCodeSales = editableService.clickTaxCodeSales;
 
 const clickBinNumber = editableService.clickBinNumber;
 
+const applyMarkup = (val) => {  
+  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {    
+    return val * (100 + Number($('.baseEdtMarkup').val())) / 100
+  }
+  return val
+}
+
+const toggleRecentTransaction = () => {
+  $(".fullScreenSpin").css("display", "inline-block");
+  let isShowRecentTrans = $(".product_recent_trans")[0].style.display;
+  if (isShowRecentTrans == "none") {
+    $(".product_recent_trans").show();
+  } else {
+    $(".product_recent_trans").hide();
+  }
+  $(".fullScreenSpin").css("display", "none");
+}
+
 Template.productview.onCreated(() => {
-  const templateObject = Template.instance();
-  templateObject.bomProducts = new ReactiveVar([]);
-  templateObject.records = new ReactiveVar();
-  templateObject.taxraterecords = new ReactiveVar([]);
-  templateObject.deptrecords = new ReactiveVar();
-  templateObject.tserialnumberList = new ReactiveVar();
-  templateObject.tlotnumberList = new ReactiveVar();
-  templateObject.recentTrasactions = new ReactiveVar([]);
+    const templateObject = Template.instance();
+    templateObject.bomProducts = new ReactiveVar([]);
+    templateObject.records = new ReactiveVar();
+    templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.deptrecords = new ReactiveVar();
+    templateObject.binrecords = new ReactiveVar();
+    templateObject.bindept = new ReactiveVar();
+    templateObject.tserialnumberList = new ReactiveVar();
+    templateObject.tlotnumberList = new ReactiveVar();
+    templateObject.recentTrasactions = new ReactiveVar([]);
+
 
   templateObject.coggsaccountrecords = new ReactiveVar();
   templateObject.salesaccountrecords = new ReactiveVar();
@@ -72,7 +93,7 @@ Template.productview.onCreated(() => {
   templateObject.showSubButton = new ReactiveVar(true);
   templateObject.isShowBOMModal = new ReactiveVar(false);
 
-  templateObject.productID = new ReactiveVar();
+  templateObject.productID = new ReactiveVar();  
 });
 
 Template.productview.onRendered(function () {
@@ -81,11 +102,13 @@ Template.productview.onRendered(function () {
   // $('.newProcessModal')[0].removeChild($('.newProcessModal')[0].children[1]);
   let templateObject = Template.instance();
 
-  let purchaseService = new PurchaseBoardService();
-  let taxRateService = new TaxRateService();
-  const records = [];
-  const taxCodesList = [];
-  const deptrecords = [];
+    let purchaseService = new PurchaseBoardService();
+    let taxRateService = new TaxRateService();
+    const records = [];
+    const taxCodesList = [];
+    const deptrecords = [];
+    const binrecords = [];
+    const bindept = 'Default';
 
   const coggsaccountrecords = [];
   const salesaccountrecords = [];
@@ -120,12 +143,13 @@ Template.productview.onRendered(function () {
   };
 
   templateObject.setEditableSelect = async function (data) {
-    $(document).ready(function () {
+    // $(document).ready(function () {
       $("#slttaxcodepurchase").editableSelect();
       $("#slttaxcodesales").editableSelect();
       $("#sltcogsaccount").editableSelect();
       $("#sltsalesacount").editableSelect();
       $("#sltUomSales").editableSelect();
+      $("#sltUomPurchases").editableSelect();
       $("#sltinventoryacount").editableSelect();
       $("#sltCustomerType").editableSelect();
       $("#newProcessModal #edtCOGS").editableSelect();
@@ -149,6 +173,8 @@ Template.productview.onRendered(function () {
       $("#slttaxcodesales").editableSelect().on("click.editable-select", editableService.clickTaxCodeSales);
 
       $("#newProcessModal #edtCOGS").editableSelect().on("click.editable-select", editableService.clickEdtCogsAccount);
+
+      $("#sltUomPurchases").editableSelect().on("click.editable-select", editableService.clickUomPurchase)
 
       $("#newProcessModal #edtExpenseAccount")
         .editableSelect()
@@ -253,7 +279,7 @@ Template.productview.onRendered(function () {
 
       $(document).on("click", "#tblAccount tbody tr", function (e) {
         var table = $(this);
-        let accountsName = table.find(".productName").text();
+        let accountsName = table.find(".colAccountName").text();
         accSelected = $("#accSelected").val();
         if (accSelected == "cogs") {
           $("#sltcogsaccount").val(accountsName);
@@ -275,13 +301,34 @@ Template.productview.onRendered(function () {
         $("#accountListModal").modal("toggle");
       });
 
-      $(document).on("click", "#clienttypeList tbody tr", function (e) {
+      $(document).on("click", "#tblClienttypeList tbody tr", function (e) {
         var table = $(this);
-        let custTypeName = table.find(".colClientTypeName").text();
-        $("#sltCustomerType").val(custTypeName);
+        let custTypeName = table.find(".colTypeName").text();
+        $($(".sltCustomerType")[customerLineIndex]).val(custTypeName);
         $("#customerTypeListModal").modal("toggle");
       });
-    });
+
+      $(document).on("click", "#tblUOMList tbody tr", function (e) {
+        let table = $(this);        
+        let uomName = table.find(".colUOMName").text();
+        $($(".saleRowWrapper")[currentLineIndex]).find('input.sltUomSales').val(uomName)
+        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)        
+        $("#UOMListModal").modal("toggle");
+      });
+
+      $(document).on('click', 'div.saleRowWrapper', function() {
+        currentLineIndex = $('div.saleRowWrapper').index(this)    
+      })
+      
+      $(document).on('click', 'div.purchaseRowWrapper', function() {
+        currentLineIndex = $('div.purchaseRowWrapper').index(this)    
+      }) 
+
+      $(document).on('click', 'div.itemExtraSellRow', function() {
+        customerLineIndex = $('div.itemExtraSellRow').index(this)    
+      }) 
+
+    // });
   };
 
   templateObject.getAllBOMProducts = function () {
@@ -715,46 +762,106 @@ Template.productview.onRendered(function () {
       });
   };
 
-  templateObject.getClientTypeData = function () {
-    getVS1Data("TClientType")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          productService.getClientTypeData().then((data) => {
-            for (let i = 0; i < data.tclienttype.length; i++) {
-              clientType.push(data.tclienttype[i].fields.TypeName);
-            }
-            clientType = _.sortBy(clientType);
-            templateObject.clienttypeList.set(clientType);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tclienttype;
-          for (let i = 0; i < useData.length; i++) {
-            clientType.push(useData[i].fields.TypeName);
-          }
-          clientType = _.sortBy(clientType);
-          templateObject.clienttypeList.set(clientType);
-          //$('.customerTypeSelect option:first').prop('selected', false);
-          $(".customerTypeSelect").attr("selectedIndex", 0);
-        }
-      })
-      .catch(function (err) {
-        productService.getClientTypeData().then((data) => {
-          for (let i = 0; i < data.tclienttype.length; i++) {
-            clientType.push(data.tclienttype[i].fields.TypeName);
-          }
-          clientType = _.sortBy(clientType);
-          templateObject.clienttypeList.set(clientType);
-        });
-      });
-  };
+    templateObject.getBinLocations = function() {
+        getVS1Data('TProductBin').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(function(data) {
+                    for (let i in data.tproductbin) {
 
-  setTimeout(function () {
-    templateObject.getAccountNames();
-    templateObject.getAllTaxCodes();
-    templateObject.getDepartments();
-    //templateObject.getClientTypeData();
-  }, 1000);
+                        let binrecordObj = {
+                            binnumber: data.tproductbin[i].BinNumber || ' ',
+                            binlocation: data.tproductbins[i].BinLocation || '',
+                            binclass: data.tproductbin[i].BinClassName || ' ',
+                        };
+
+                        binrecords.push(binrecordObj);
+                        templateObject.binrecords.set(binrecords);
+
+                    }
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductbin;
+                for (let i in useData) {
+
+                    let binrecordObj = {
+                        binnumber: useData[i].BinNumber || ' ',
+                        binlocation: useData[i].BinLocation || '',
+                        binclass: useData[i].BinClassName || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+
+                }
+                console.log(binrecords);
+
+            }
+        }).catch(function(err) {
+            productService.getBins().then(function(data) {
+                for (let i in data.tproductbins) {
+
+                    let binrecordObj = {
+                        binnumber: data.tproductbins[i].BinNumber || ' ',
+                        binlocation: data.tproductbins[i].BinLocation || '',
+                        binclass: data.tproductbins[i].BinClassName || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+                }
+            });
+        });
+
+    };
+
+    templateObject.getClientTypeData = function() {
+        getVS1Data('TClientType').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getClientTypeData().then((data) => {
+
+                    for (let i = 0; i < data.tclienttype.length; i++) {
+                        clientType.push(data.tclienttype[i].fields.TypeName);
+                    }
+                    clientType = _.sortBy(clientType);
+                    templateObject.clienttypeList.set(clientType);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tclienttype;
+                for (let i = 0; i < useData.length; i++) {
+                    clientType.push(useData[i].fields.TypeName)
+                }
+                clientType = _.sortBy(clientType);
+                templateObject.clienttypeList.set(clientType);
+                //$('.customerTypeSelect option:first').prop('selected', false);
+                $(".customerTypeSelect").attr('selectedIndex', 0);
+
+            }
+        }).catch(function(err) {
+            productService.getClientTypeData().then((data) => {
+
+                for (let i = 0; i < data.tclienttype.length; i++) {
+
+                    clientType.push(data.tclienttype[i].fields.TypeName)
+                }
+                clientType = _.sortBy(clientType);
+                templateObject.clienttypeList.set(clientType);
+            });
+        });
+
+    };
+
+    setTimeout(function() {
+        templateObject.getAccountNames();
+        templateObject.getAllTaxCodes();
+        templateObject.getDepartments();
+        templateObject.getBinLocations();
+        templateObject.bindept.set('Default');
+        //templateObject.getClientTypeData();
+    }, 1000);
 
   let isInventory = localStorage.getItem("CloudInventoryModule");
   if (isInventory) {
@@ -834,7 +941,7 @@ Template.productview.onRendered(function () {
                   barcode: data.fields.BARCODE,
                   // data.fields.TotalQtyInStock,
                   totalqtyonorder: data.fields.TotalQtyOnOrder,
-                  //productclass :lineItems,
+                  productclass :data.fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
 
@@ -1023,8 +1130,11 @@ Template.productview.onRendered(function () {
                   // useData[i].fields.TotalQtyInStock,
                   totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
                   //productclass :lineItems,
+                  productclass :useData[i].fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
+
+                console.log(productrecord.productclass.DefaultbinNumber);
 
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
@@ -3120,7 +3230,7 @@ Template.productview.onRendered(function () {
 
   $(document).ready(function () {
     $(".edtProductName").editableSelect();
-    $("#edtProcess").editableSelect();
+    $("#edtProcess").editableSelect();    
   });
 
   // $(document).on('click', '.new_attachment_btn', function(event) {
@@ -3203,141 +3313,144 @@ Template.productview.onRendered(function () {
 });
 
 Template.productview.helpers({
-  productrecord: () => {
-    return Template.instance().records.get();
-  },
-  taxraterecords: () => {
-    return Template.instance().taxraterecords.get();
-  },
-  deptrecords: () => {
-    return Template.instance()
-      .deptrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  tserialnumberList: () => {
-    return Template.instance().tserialnumberList.get();
-  },
-  tlotnumberList: () => {
-    return Template.instance().tlotnumberList.get();
-  },
-  recentTrasactions: () => {
-    return Template.instance().recentTrasactions.get();
-  },
-  coggsaccountrecords: () => {
-    return Template.instance()
-      .coggsaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  salesaccountrecords: () => {
-    return Template.instance()
-      .salesaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  inventoryaccountrecords: () => {
-    return Template.instance()
-      .inventoryaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  productqtyrecords: () => {
-    return Template.instance()
-      .productqtyrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  productExtraSell: () => {
-    return Template.instance()
-      .productExtraSell.get()
-      .sort(function (a, b) {
-        if (a.clienttype == "NA") {
-          return 1;
-        } else if (b.clienttype == "NA") {
-          return -1;
-        }
-        return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
-      });
-  },
-  totaldeptquantity: () => {
-    return Template.instance().totaldeptquantity.get();
-  },
-  productsCloudPreferenceRec: () => {
-    return CloudPreference.findOne({
-      userid: localStorage.getItem("mycloudLogonID"),
-      PrefName: "productview",
-    });
-  },
-  isSNTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isSNTrackChecked.get();
-  },
-  isTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isTrackChecked.get();
-  },
-  isExtraSellChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isExtraSellChecked.get();
-  },
-  includeInventory: () => {
-    return Template.instance().includeInventory.get();
-  },
-  clienttypeList: () => {
-    return Template.instance()
-      .clienttypeList.get()
-      .sort(function (a, b) {
-        if (a == "NA") {
-          return 1;
-        } else if (b == "NA") {
-          return -1;
-        }
-        return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
-      });
-  },
-  isMobileDevices: () => {
-    return Template.instance().isMobileDevices.get();
-  },
-  isManufactured: () => {
-    return Template.instance().isManufactured.get();
-  },
-  showBomModal: () => {
-    return Template.instance().isShowBOMModal.get();
-  },
-  productID: () => {
-    return Template.instance().productID.get();
-  },
+
+    productrecord: () => {
+        return Template.instance().records.get();
+    },
+    taxraterecords: () => {
+        return Template.instance().taxraterecords.get();
+    },
+    deptrecords: () => {
+        return Template.instance()
+          .deptrecords.get()
+          .sort(function (a, b) {
+            if (a.department == "NA") {
+              return 1;
+            } else if (b.department == "NA") {
+              return -1;
+            }
+            return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+          });
+    },
+    binrecords: () => {
+        return Template.instance().binrecords.get().sort(function(a, b) {
+            if (a.binnumber == 'NA') {
+                return 1;
+            } else if (b.binnumber == 'NA') {
+                return -1;
+            }
+            return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
+        });
+    },
+    bindept: () => {
+      return Template.instance().bindept.get();
+    },
+    tserialnumberList: () => {
+        return Template.instance().tserialnumberList.get();
+    },
+    tlotnumberList: () => {
+        return Template.instance().tlotnumberList.get();
+    },
+    recentTrasactions: () => {
+        return Template.instance().recentTrasactions.get();
+    },
+    coggsaccountrecords: () => {
+        return Template.instance().coggsaccountrecords.get().sort(function(a, b) {
+            if (a.accountname == 'NA') {
+                return 1;
+            } else if (b.accountname == 'NA') {
+                return -1;
+            }
+            return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    salesaccountrecords: () => {
+        return Template.instance().salesaccountrecords.get().sort(function(a, b) {
+            if (a.accountname == 'NA') {
+                return 1;
+            } else if (b.accountname == 'NA') {
+                return -1;
+            }
+            return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    inventoryaccountrecords: () => {
+        return Template.instance().inventoryaccountrecords.get()
+            .sort(function(a, b) {
+                if (a.accountname == 'NA') {
+                    return 1;
+                } else if (b.accountname == 'NA') {
+                    return -1;
+                }
+                return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+            });
+    },
+    productqtyrecords: () => {
+        return Template.instance().productqtyrecords.get().sort(function(a, b) {
+            if (a.department == 'NA') {
+                return 1;
+            } else if (b.department == 'NA') {
+                return -1;
+            }
+            return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+        });
+    },
+    productExtraSell: () => {
+        return Template.instance().productExtraSell.get().sort(function(a, b) {
+            if (a.clienttype == 'NA') {
+                return 1;
+            } else if (b.clienttype == 'NA') {
+                return -1;
+            }
+            return (a.clienttype.toUpperCase() > b.clienttype.toUpperCase()) ? 1 : -1;
+        });
+    },
+    totaldeptquantity: () => {
+        return Template.instance().totaldeptquantity.get();
+    },
+    productsCloudPreferenceRec: () => {
+        return CloudPreference.findOne({
+            userid: localStorage.getItem('mycloudLogonID'),
+            PrefName: 'productview'
+        });
+    },
+    isSNTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isSNTrackChecked.get();
+    },
+    isTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isTrackChecked.get();
+    },
+    isExtraSellChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isExtraSellChecked.get();
+    },
+    includeInventory: () => {
+        return Template.instance().includeInventory.get();
+    },
+    clienttypeList: () => {
+        return Template.instance().clienttypeList.get().sort(function(a, b) {
+            if (a == 'NA') {
+                return 1;
+            } else if (b == 'NA') {
+                return -1;
+            }
+            return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
+        });
+    },
+    isMobileDevices:()=>{
+        return Template.instance().isMobileDevices.get()
+    },
+    isManufactured:() =>{
+        return Template.instance().isManufactured.get();
+    },
+    showBomModal: ()=>{
+        return Template.instance().isShowBOMModal.get();
+    },
+    productID: () => {
+        return Template.instance().productID.get();
+    },
 });
 
 Template.productview.events({
@@ -3422,15 +3535,7 @@ Template.productview.events({
     }
   },
   "click #loadrecenttransaction": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    //modified by matthias
-    isShowRecentTrans = $(".product_recent_trans")[0].style.display;
-    if (isShowRecentTrans == "none") {
-      $(".product_recent_trans").show();
-    } else {
-      $(".product_recent_trans").hide();
-    }
-    $(".fullScreenSpin").css("display", "none");
+    toggleRecentTransaction();
   },
   "click #btnSave": async function () {
     playSaveAudio();
@@ -3638,6 +3743,58 @@ Template.productview.events({
           };
         }
 
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+              console.log(data);
+          });
+        }
+
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+              console.log(data);
+          });
+        }
+
+        saveBOMStructure();
+        return;
         productService
           .saveProductVS1(objDetails)
           .then(function (objDetails) {
@@ -3657,7 +3814,7 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            saveBOMStructure();
+            
             sideBarService
               .getNewProductListVS1(initialBaseDataLoad, 0)
               .then(function (dataReload) {
@@ -4225,7 +4382,6 @@ Template.productview.events({
         let bomObject = templateObject.bomStructure.get();
 
         let bomProducts = templateObject.bomProducts.get() || [];
-
         let existID = -1;
         let existIndex = bomProducts.findIndex((product) => {
           return product.fields.Caption == bomObject.fields.Caption;
@@ -4244,13 +4400,14 @@ Template.productview.events({
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
         temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
+        return
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
             temp.fields.ID = existID;
           }
           productService.saveBOMProduct(temp).then(function () {
             productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
-              addVS1Data("TProcTree", data.tproctree).then(function () {});
+              addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
             });
           });
         } else {
@@ -4259,7 +4416,7 @@ Template.productview.events({
             temp.fields.ProcStepItemRef = "deleted";
             productService.saveBOMProduct(temp).then(function () {
               productService.getAllBOMProducts(initialDatatableLoad, 0).then(function (data) {
-                addVS1Data("TProcTree", data.tproctree).then(function () {});
+                addVS1Data("TProcTree", JSON.stringify(data)).then(function () {});
               });
             });
           }
@@ -4334,9 +4491,9 @@ Template.productview.events({
     const isCheckedSNTrack = $("#chkSNTrack").prop("checked");
     if (FlowRouter.current().queryParams.id) {
       if (isCheckedSNTrack) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let templateObject = Template.instance();
-        templateObject.getSerialNumberList();
+        // $(".fullScreenSpin").css("display", "inline-block");
+        // let templateObject = Template.instance();
+        // templateObject.getSerialNumberList();
         $("#SerialNumberModal").modal("show");
       } else {
         swal("You are not Tracking Serial numbers for this product.", "", "info");
@@ -4349,9 +4506,9 @@ Template.productview.events({
     const isCheckedLotTrack = $("#chkLotTrack").prop("checked");
     if (FlowRouter.current().queryParams.id) {
       if (isCheckedLotTrack) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let templateObject = Template.instance();
-        templateObject.getLotNumberList();
+        // $(".fullScreenSpin").css("display", "inline-block");
+        // let templateObject = Template.instance();
+        // templateObject.getLotNumberList();
         $("#LotNumberModal").modal("show");
       } else {
         swal("You are not Tracking Lot Numbers for this product.", "", "info");
@@ -4363,6 +4520,7 @@ Template.productview.events({
   "click #chkSellPrice": function (event) {
     if ($(event.target).is(":checked")) {
       $(".trackCustomerTypeDisc").css("display", "flex");
+      $("#customerTypeListModal").modal("toggle");
     } else {
       $(".trackCustomerTypeDisc").css("display", "none");
     }
@@ -4680,6 +4838,7 @@ Template.productview.events({
 
     var taxTotal = parseFloat(sellPrice) * parseFloat(taxrateamount) || 0;
     sellPriceInc = parseFloat(sellPrice) + taxTotal || 0;
+    sellPriceInc = applyMarkup(sellPriceInc)
     if (!isNaN(sellPriceInc)) {
       $("#edtsellqty1priceInc").val(utilityService.modifynegativeCurrencyFormat(sellPriceInc));
     }
@@ -4822,7 +4981,11 @@ Template.productview.events({
     var itemClineID = itemDataClone.clone().prop("id", tokenid);
     itemClineID.find('input[type="text"]').val("");
     itemClineID.find('select[name^="sltCustomerType"]').val("");
+    itemClineID.find('.sltCustomerType').editableSelect();
+    itemClineID.find('.sltCustomerType').editableSelect().on("click.editable-select", editableService.clickCustomerType);
+    customerLineIndex = $(".itemExtraSellRow").length
     itemClineID.insertAfter(".itemExtraSellRow:last");
+    $("#customerTypeListModal").modal("toggle");
     // $('.itemExtraSellRow:first').clone().insertAfter(".itemExtraSellRow:last");
   },
   "click .btnRemove": function (event) {
@@ -4995,6 +5158,12 @@ Template.productview.events({
     //     }
     // }
     $("#BOMSetupModal").modal("toggle");
+  },
+
+  "change .slt_department": function (event) {
+    let templateObject = Template.instance();
+    let dept_name = $(event.target).val();
+    templateObject.bindept.set(dept_name);
   },
 
   "change #chkBOM": function (event) {
@@ -5195,6 +5364,7 @@ Template.productview.events({
     var UOMRowClone = $(".uomRow:first");
     let tokenid = Random.id();
     var NewUOMRow = UOMRowClone.clone().prop("id", "UOM" + tokenid);
+    NewUOMRow.addClass('saleRowWrapper')
     NewUOMRow[0].style.display = "flex";
     NewUOMRow.find("#sltsalesacount").editableSelect();
     NewUOMRow.find("#sltsalesacount").val("Sales");
@@ -5210,7 +5380,11 @@ Template.productview.events({
 
     var COGSRowClone = $(".COGSRow:first");
     var NewCOGSRow = COGSRowClone.clone().prop("id", "COGS" + tokenid);
+    NewCOGSRow.addClass('purchaseRowWrapper')
     NewCOGSRow[0].style.display = "flex";
+    NewCOGSRow.find("#sltcogsaccount").editableSelect();
+    NewCOGSRow.find("#sltcogsaccount").val("Cost of Good Sold");
+    NewCOGSRow.find("#sltcogsaccount").editableSelect().on("click.editable-select", editableService.clickCogsAccount);
     NewCOGSRow.find("#slttaxcodesales").editableSelect();
     NewCOGSRow.find("#slttaxcodesales")
       .editableSelect()
@@ -5218,9 +5392,11 @@ Template.productview.events({
 
     NewCOGSRow.find("#sltUomPurchases").editableSelect();
     NewCOGSRow.find("#sltUomPurchases").val(defaultUOM);
-    NewCOGSRow.find("#sltUomPurchases").editableSelect().on("click.editable-select", clickUomSales);
+    NewCOGSRow.find("#sltUomPurchases").editableSelect().on("click.editable-select", editableService.clickUomPurchase);
 
-    NewCOGSRow.find("#slttaxcodesales").val(loggedTaxCodeSalesInc);
+    NewCOGSRow.find("#slttaxcodepurchase").editableSelect();
+    NewCOGSRow.find("#slttaxcodepurchase").val(loggedTaxCodeSalesInc);
+    NewCOGSRow.find("#slttaxcodepurchase").editableSelect().on("click.editable-select", editableService.clickTaxCodePurchase);
     NewCOGSRow.insertAfter(".COGSRow:last");
     // itemClineID.find('input[type="text"]').val('');
     // itemClineID.find('select[name^="sltCustomerType"]').val('');
@@ -5308,6 +5484,32 @@ Template.productview.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
+
+  "change #txasalesdescription": function (e) {
+    $("#txapurchasedescription").val($("#txasalesdescription").val());
+  },
+
+  "click input.OnBO": function (event) {
+    toggleRecentTransaction()
+  },
+  "click input.InStock": function (event) {
+    toggleRecentTransaction()
+  },
+  "click input.Available": function (event) {
+    toggleRecentTransaction()
+  },
+
+  "click input.OnSO": function (event) {
+    toggleRecentTransaction()
+  },
+
+  "click input.OnOrder": function (event) {
+    toggleRecentTransaction()
+  },
+
+  // "change .slttaxcodepurchase": function (e) {
+  //   $(".slttaxcodesales").val($(".slttaxcodepurchase").val());
+  // },
 });
 
 Template.registerHelper("equals", function (a, b) {

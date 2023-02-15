@@ -152,6 +152,7 @@ const erpObject = {
     TBankAccounts: "TBankAccounts",
     TBankAccountReport: "TBankAccountReport",
     TCustomerVS1: "TCustomerVS1",
+    TCustomerVS1List: "TCustomerVS1List",
     TJobVS1: "TJobVS1",
     TOtherContactVS1: "TOtherContactVS1",
     TProspectVS1: "TProspectVS1",
@@ -306,6 +307,7 @@ const erpObject = {
     TleaveAccruals: "TleaveAccruals",
     TPNLLayout: "TPNLLayout",
     VS1_PNLGetLayout: "VS1_PNLGetLayout",
+    VS1_PNLAddGroup: "VS1_PNLAddGroup",
     TSupplierVS1List: "TSupplierVS1List",
     TleaveAccruals: "TleaveAccruals",
     TProspectList: "TProspectList",
@@ -314,6 +316,9 @@ const erpObject = {
     TProjectTasksList: "TProjectTasksList",
     TVS1Workorder: "TVS1Workorder",
     TCostTypes: "TCostTypes",
+    TProductBatches: "TProductBatches",
+    TStockMovement:"TStockMovement",
+    TPreference: "TPreference"
 };
 
 export default erpObject;

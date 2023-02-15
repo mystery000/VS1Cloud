@@ -43,7 +43,7 @@
                         <input type="text" class="form-control" id="description" name="description" value="">
                     </div>
                 </div>
-                <div class="col-12 col-md-8" style="padding-top: 40px;">
+                <div class="col-12 col-md-9" style="padding-top: 40px;">
                     <div style="float:left">
                         <label>Enable: </label>
                     </div>
@@ -63,50 +63,8 @@
                         <input class="custom-control-input" type="checkbox" name="basreturnCategory4" id="basreturnCategory4" style="cursor: pointer;" value="2">
                         <label class="custom-control-label" for="basreturnCategory4" style="cursor: pointer;">Wine And Luxury</label>
                     </div>
-                </div>
-                <div class="col-12 col-md-1">
                     <div class="form-group">
-                        <a role="button" data-toggle="modal" href="#basoptionmodal" class="btn btn-primary" id="selBasOption" style="margin-top: 32px; float:right" autocomplete="off">Option</a>
-                    </div>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="basoptionmodal">
-                        <div class="modal-dialog modal-center" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header" style="padding-bottom: 8px;">
-                                    <h4>BAS Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Department</label>
-                                        <div>
-                                            <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="float:left; width:80%; background-color:rgb(255, 255, 255); cursor: pointer;">
-                                            </select>
-                                            <input type="hidden" id="sltDepartmentID" name="sltDepartmentID"/>
-                                            <div class="custom-control custom-switch" style="width:65px; float:right; margin-top:14px;">
-                                                <input class="custom-control-input" type="checkbox" name="allDepart" id="allDepart" checked="checked" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="allDepart" style="cursor: pointer;">All</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin-top:60px">
-                                        <label>Accounting Method</label>
-                                        <div style="padding-left:25px;">
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod1" checked style="cursor: pointer;">
-                                                <label class="custom-control-label" for="accountingmethod1" style="cursor: pointer;">Accrual</label>
-                                            </div>
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input" type="radio" name="accountingmethod" id="accountingmethod2" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="accountingmethod2" style="cursor: pointer;">Cash</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer" style="padding: 6px;">
-                                    <button type="button" class="btn btn-primary" id="loadBasOption">OK</button>
-                                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
+                        <a role="button" data-toggle="modal" href="#basoptionmodal" class="btn btn-primary" id="selBasOption" style="margin-top: -7px; float:right" autocomplete="off">BAS Options</a>
                     </div>
                 </div>
             </div>
@@ -1129,14 +1087,6 @@
                 </div>
             </div>
 
-            <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
-                {{> departmentpop}}
-            </div>
-
-            <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
-                {{> newdepartmentpop}}
-            </div>
-
             <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
                     <button class="btn btn-success btnSave btn-auto-save" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
@@ -2127,6 +2077,18 @@
             </div>
 
         {{/if}}
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="basoptionmodal">
+            {{> departmentOptionModal}}
+        </div>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+            {{> departmentpop}}
+        </div>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+            {{> newdepartmentpop}}
+        </div>
 
         <!-- Modal print-button -modal -->
         <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">

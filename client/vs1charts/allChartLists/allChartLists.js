@@ -100,7 +100,7 @@ let chartsPlaceList = {
 
     "CRM_Overview": [
         "crmleadchart",
-        "resalescomparision"
+        // "resalescomparision"
     ],
 
     "All_Charts" :[
@@ -498,6 +498,17 @@ Template.allChartLists.onRendered(function() {
                     }
                 };
                 chartList.push(myBankAccountschart);
+
+                let crmOverviewchart = {
+                    fields: {
+                        Active: true,
+                        ChartGroup: "CRM",
+                        ChartName: "CRM Overview",
+                        ID: 1010,
+                        _chartSlug: "crm__crm_overview"
+                    }
+                };
+                chartList.push(crmOverviewchart);
             }
         }
 

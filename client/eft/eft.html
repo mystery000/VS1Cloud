@@ -1,55 +1,286 @@
 <template name="eft_export">
-  <div class="container-fluid" style="padding-left: 0; padding-right: 0;">
-    <div class="fullScreenSpin" style="display:none;">sss
-      <div class="spinner"></div>
-    </div>
-    <header class="pt-2 pb-2 d-flex align-items-center"
-      style="padding-top: 0px !important; padding-bottom: 0px !important;">
-      <!-- <h2 class="mr-1">Electronic Funds Transfer</h2>
-      <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
-        <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
-      </a> -->
-
-      <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-        <div class="modal-dialog modal-sm" role="document">
-          <div class="modal-content">
-            <div class="modal-header" style="padding-bottom: 8px;">
-              <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                  aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-              <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
-                  class="btn btn-primary helpModal">View Help Video</a></p>
-              <p class="text-center text-muted"><a href="https://vs1forum.com/viewforum.php?f=6" target="_blank"
-                  class="btn btn-primary">Download Help File</a></p>
-                  {{> helpadvisor}}
-                  {{> helpgotoforum}}
-            </div>
-            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
-                type="button">Close</button></div>
-          </div>
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px">
+        <div class="fullScreenSpin" style="display: none">
+            <div class="spinner"></div>
         </div>
-      </div>
+        <div style="margin-top: -24px">
+            <header style="padding: 16px; padding-bottom: 0px; background-color: #ededed">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <h1 style="margin: 16px; margin-bottom: 0px">Electronic Funds Transfer {{> crm_help_modal}}</h1>
+                    </div>
+                    <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+                </div>
+            </header>
+            <input type="text" class="d-none" id="eftaccountid">
+            <div
+                class="row d-xl-flex flex-row justify-content-xl-center"
+                style="padding: 0px 20px; background-color: #ededed"
+            >
+                <div class="row col-9">
+                    <div class="col-12 row">
+                        <div class="col-4">
+                            <div class="form-group m-4">
+                                <label>Account</label>
+                                <select
+                                    type="search"
+                                    class="form-control"
+                                    id="sltBankAccountName"
+                                    name="sltBankAccountName"
+                                    style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                ></select>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group m-4">
+                                <label>Bank Name</label>
+                                <!-- <input type="text" class="form-control" id="edtBankName" name="edtBankName"> -->
+                                <select
+                                    type="search"
+                                    class="form-control pointer"
+                                    id="sltBankName"
+                                    name="sltBankName"
+                                ></select>
+                            </div>
+                        </div>
+                        <div
+                            class="col-4"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="Date format: YYYY-MM-DD"
+                        >
+                            <div class="form-group m-4">
+                                <label>Processing Date</label>
+                                <div class="input-group date">
+                                    <input
+                                        type="text"
+                                        class="form-control eftProcessingDate"
+                                        id="eftProcessingDate"
+                                        autocomplete="off"
+                                    />
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    </header>
+                    <div class="col-12 row">
+                        <div class="col-4">
+                            <div class="form-group m-4">
+                                <label>Name of User</label>
+                                <input type="text" class="form-control" id="eftUserName" name="eftUserName" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group m-4">
+                                <label>Number of User</label>
+                                <input type="text" class="form-control" id="eftNumberUser" name="eftNumberUser" />
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group m-4">
+                                <label>Transaction Description</label>
+                                <select
+                                    type="search"
+                                    class="form-control pointer"
+                                    id="sltTransactionDescription"
+                                    name="sltTransactionDescription"
+                                ></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="card-body p-0 rounded">
+                <div class="col-3 d-flex flex-column align-items-end">
+                    <button
+                        class="btn btn-success btnDoEftExport float-right"
+                        type="button"
+                        style="margin: 14px; width: 100px"
+                    >
+                        <i class="fas fa-file-export" style="padding-right: 5px"></i>Export
+                    </button>
+                    <button
+                        class="btn btn-danger btnCancelEftExport float-right"
+                        type="button"
+                        style="margin: 14px; width: 100px"
+                    >
+                        <i class="fa fa-close" style="margin-right: 5px"></i>Cancel
+                    </button>
+                    <button
+                        class="btn btn-primary btnOptionsEft float-right"
+                        type="button"
+                        style="margin: 14px; width: 100px"
+                    >
+                        Options
+                    </button>
+                    <button
+                        class="btn btn-primary btnSelectAllEft float-right"
+                        type="button"
+                        style="margin: 14px; width: 100px"
+                    >
+                        Select All
+                    </button>
+                    <!-- <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal"
+                        href="#tblEftExport_Modal" style="margin: 14px;"><i
+                            class="icon ion-android-more-horizontal"></i></a> -->
+                </div>
+            </div>
 
-      {{>eftExportModal}}
-
+            <div class="card-body p-3 rounded" style="margin: 0px 16px">
+                {{> internal_transaction_list_with_switchbox tablename="tblEftExportCheckbox"}}
+                <!-- <div class="row">
+                    <div class="table-responsive eftExportTableContainer" style="overflow-y: auto !important">
+                        <table
+                            id="eftExportTable"
+                            name="eftExportTable"
+                            class="dataTable table table-hover table-striped table-bordered eftExportTable"
+                        >
+                            <thead>
+                                <tr class="dasnd-moved">
+                                    <th class="th colApply">Apply?</th>
+                                    <th class="th colAccountName">Account Name</th>
+                                    <th class="th colBsb">BSB</th>
+                                    <th class="th colAccountNo">Account No</th>
+                                    <th class="th colTransactionCode">Transaction Code</th>
+                                    <th class="th colLodgement">Lodgement References</th>
+                                    <th class="th colAmount">Amount</th>
+                                    <th class="th colFromBsb">From BSB</th>
+                                    <th class="th colFromAccountNo">From Account No</th>
+                                    <th class="th colIdx" style="width: 25px">
+                                        <i class="fa fa-close btnRemoveAll"></i>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="eftExportTableBody">
+                                {{#each item in tabadetailrecordList}}
+                                <tr id="{{eftRowId}}">
+                                    <td class="colApply">
+                                        <div
+                                            class="custom-control custom-switch chkBox pointer"
+                                            style="width: 15px"
+                                        >
+                                            <input
+                                                name="pointer"
+                                                class="custom-control-input chkBox pointer"
+                                                type="checkbox"
+                                                id="formCheck-{{item.ID}}"
+                                                checked
+                                            /><label
+                                                class="custom-control-label chkBox pointer"
+                                                for="formCheck-{{item.ID}}"
+                                            ></label>
+                                        </div>
+                                    </td>
+                                    <td class="colAccountName">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputAccountName"
+                                            value="{{item.AccountName}}"
+                                        />
+                                    </td>
+                                    <td class="colBsb">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputBsb"
+                                            value="{{item.BSB}}"
+                                            placeholder="___-___"
+                                        />
+                                    </td>
+                                    <td class="colAccountNo">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputAccountNo"
+                                            value="{{item.CreditDebitAccountNumber}}"
+                                        />
+                                    </td>
+                                    <td class="colTransactionCode">
+                                        <select
+                                            class="form-control pointer sltTranslactionCode"
+                                            value="{{item.TransactionCode}}"
+                                        >
+                                            <option value="{{item.TransactionCode}}">{{item.TransCodeDesc}}</option>
+                                            <option value="13">Debit Items</option>
+                                            <option value="50">Credit Items</option>
+                                            <option value="51">Australian Govt. Security Interest</option>
+                                            <option value="52">Basic Family Payments/Additional Family Payment</option>
+                                            <option value="53">Pay</option>
+                                            <option value="54">Pension</option>
+                                            <option value="55">Allotment</option>
+                                            <option value="56">Dividend</option>
+                                            <option value="57">Debenture/Note Interest</option>
+                                        </select>
+                                    </td>
+                                    <td class="colLodgement">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputTransactionCode"
+                                            value="{{item.LodgementReferences}}"
+                                        />
+                                    </td>
+                                    <td class="colAmount">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputAmount text-right"
+                                            value="{{item.Amount}}"
+                                        />
+                                    </td>
+                                    <td class="colFromBsb">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputFromBsb"
+                                            placeholder="___-___"
+                                            value="{{item.UsersBSB}}"
+                                        />
+                                    </td>
+                                    <td class="colFromAccountNo">
+                                        <input
+                                            type="text"
+                                            class="form-control eftInput eftInputFromAccountNo"
+                                            value="{{item.UsersAccountNumber}}"
+                                        />
+                                    </td>
+                                    <td class="colIdx addNewRow" style="width: 25px">
+                                        <span class="table-remove btnEftRemove"
+                                            ><button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                                                <i class="fa fa-remove"></i></button
+                                        ></span>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                            <tr>
+                                <td class="border-none"></td>
+                                <td class="border-none"></td>
+                                <td class="border-none"></td>
+                                <td class="border-none"></td>
+                                <td class="border-none"></td>
+                                <td class="border-none"></td>
+                                <td class="border-none text-right">
+                                    <span id="totalAmount">0</span>
+                                </td>
+                                <td class="border-none"></td>
+                                <td class="border-none"></td>
+                                <td class="border-none" style="width: 25px"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> -->
+            </div>
+        </div>
     </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-      {{> accountlistpop}}
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">{{> accountlistpop}}</div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">{{> bankNameModal}}</div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="transactionDescriptionModal">
+        {{> transactionDescriptionModal}}
     </div>
-  
-    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
-      {{> addaccountpop}}
-    </div>
+    <!-- {{> addNewEftModal}} -->
+    {{> eftOptionsModal}}
 
-  </div>
-
-  <script>
-    modalDraggable();
-  </script>
-
+    <!-- End Help Video Modal -->
+    <script>
+        modalDraggable();
+    </script>
 </template>

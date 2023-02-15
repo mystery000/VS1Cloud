@@ -6,7 +6,7 @@
             }
         }
         .colChkBox {
-          width: 2% !important;
+          width: 40px !important;
         }
         .colProductName {
           width: 20% !important;
@@ -91,7 +91,7 @@
     <style media="screen">
         .checkRowSelected{
             background-color:#e5f2d9!important;
-            <!-- color:black!important; -->
+            color:black!important;
         }
     </style>
     <div class="table-responsive">
@@ -100,7 +100,11 @@
                 <tr class="dnd-moved">
                     <th data-col-index="0" data-class="colChkBoxAll pointer" style="width:10%!important;">
                         <div class="custom-control custom-switch colChkBoxAll pointer" style="width:15px;">
-                            <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0">
+                            {{#if equals tablename 'tblEftExportCheckbox'}}
+                                <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0" checked>
+                            {{else}}
+                                <input name="pointer" class="custom-control-input colChkBoxAll pointer" type="checkbox" id="colChkBoxAll" value="0">
+                            {{/if}}
                             <label class="custom-control-label colChkBoxAll" for="colChkBoxAll"></label>
                         </div>
                     </th>

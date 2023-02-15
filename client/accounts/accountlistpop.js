@@ -494,7 +494,7 @@ Template.accountlistpop.events({
       $('.isBankAccount').addClass('isNotBankAccount');
       $('.isCreditAccount').addClass('isNotCreditAccount');
     },
-    'click .btnRefreshAccount': function (event) {
+    'click .btnRefreshAccount, click .btnRefreshList': function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         const customerList = [];
@@ -507,7 +507,8 @@ Template.accountlistpop.events({
         const tableHeaderList = [];
         let sideBarService = new SideBarService();
         let accountService = new AccountService();
-        let dataSearchName = $('#tblAccount_filter input').val();
+        // let dataSearchName = $('#tblAccount_filter input').val();
+        let dataSearchName = $('#tblAccountOverview_filter input').val();
         var currentLoc = FlowRouter.current().route.path;
         if (dataSearchName.replace(/\s/g, '') !== '') {
             sideBarService.getAllAccountDataVS1ByName(dataSearchName).then(function (data) {

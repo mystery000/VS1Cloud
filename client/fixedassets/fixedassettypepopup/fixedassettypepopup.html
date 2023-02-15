@@ -31,8 +31,12 @@
                 {{> export_import_print_display_button tablename="tblFixedAssetType"}}
               </div>
             </div>
-            <div>
-              {{> non_transactional_list tablename = "tblFixedAssetType"}}
+            <div class="col-12">
+              <div class="card mb-3">
+                <div class="card-body">
+                  {{> non_transactional_list tablename = "tblFixedAssetType"}}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -42,5 +46,43 @@
       </div>
     </div>
   </div>
-
+  <div class="modal fade" role="dialog" tabindex="-1" id="createAssetType">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
+      <div class="modal-content customerListContent">
+        <div class="modal-header">
+          <h4>Create New Asset Type</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body" style="padding: 32px; padding-top: 0px;">
+          <div class="row" style="margin: 8px 16px 0px 16px;">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-4">
+              <div class="form-group"><label>Asset Type Code</label>
+                <input class="form-control" type="text" id="edtAssetTypeCode" name="edtAssetTypeCode" >
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-4">
+              <div class="form-group"><label>Asset Type Name</label>
+                <input class="form-control" type="text" id="edtAssetTypeName" name="edtAssetTypeName" >
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-4">
+              <div class="form-group"><label>Asset Type Description</label>
+                <input class="form-control" type="text" id="edtAssetTypeDescription" name="edtAssetTypeDescription" >
+              </div>
+            </div>
+          </div>
+          <div>
+            {{> vs1_button
+              color='primary'
+              classes='btnCreateAssetType'
+              type='button'
+              id="btnCreateAssetType"
+              iconName=' la la-lightbulb-o'
+              title='Create'
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

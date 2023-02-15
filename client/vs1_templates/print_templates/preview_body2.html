@@ -23,12 +23,30 @@
         .div-total-value {
             width: 30%;
         }
+
+        table.dataTable {
+            table-layout: fixed;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;  
+        }
+        
+        table.dataTable th {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        table.dataTable td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
     <div class="template-preview-body2">
         <div style="margin: 0px; border: none !important; background-color: rgba(0,0,0,0);">
-            <table class="invoice_print" style="width: 100%;  margin: auto;">
+            <table class="invoice_print table table-sm table-striped table-bordered dataTable ui-resizable" style="width: 100%;  margin: auto;" id="printTemplateTable2">
                 <thead style="color: rgb(251,251,251);">
-                    <tr class="tbl_header" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #000000;">
+                    <tr class="tbl_header table-active tblAvoid customDoubleTableHeading" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #000000;">
                     </tr>
                 </thead>
                 <tbody class="tbl_content" style="color: rgb(0 0 0);">

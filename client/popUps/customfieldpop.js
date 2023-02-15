@@ -383,8 +383,7 @@ Template.customfieldpop.onRendered(() => {
                 $("#newCustomFieldPop").modal("toggle");
                 // }, 200);
               }
-            })
-              .catch(function (err) {
+            }).catch(function (err) {
                 $(".fullScreenSpin").css("display", "inline-block");
                 sideBarService.getAllCustomFields().then(function (data) {
                   for (let i in data.tcustomfieldlist) {
@@ -445,48 +444,97 @@ Template.customfieldpop.onRendered(() => {
     let customFieldCount = 3; // customfield tempcode
     let customData = {};
 
-    sideBarService.getAllCustomFields().then(function (data) {
-      for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-        if (data.tcustomfieldlist[x].fields.ListType == listType) {
-          customData = {
-            active: data.tcustomfieldlist[x].fields.Active || false,
-            id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
-            custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-            datatype: data.tcustomfieldlist[x].fields.DataType || "",
-            isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-            iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-            dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-          };
-          custFields.push(customData);
-        }
-      }
+    getVS1Data("TCustomFieldList").then(function (dataObject) {
+      if (dataObject.length == 0) {
+        sideBarService.getAllCustomFields().then(function (data) {
+          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+            if (data.tcustomfieldlist[x].fields.ListType == listType) {
+              customData = {
+                active: data.tcustomfieldlist[x].fields.Active || false,
+                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                datatype: data.tcustomfieldlist[x].fields.DataType || "",
+                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+              };
+              custFields.push(customData);
+            }
+          }
 
-      if (custFields.length < customFieldCount) {
-        let remainder = customFieldCount - custFields.length;
-        let getRemCustomFields = parseInt(custFields.length);
-        // count = count + remainder;
-        for (let r = 0; r < remainder; r++) {
-          getRemCustomFields++;
-          customData = {
-            active: false,
-            id: "",
-            custfieldlabel: "Custom Field " + getRemCustomFields,
-            datatype: "",
-            isempty: true,
-            iscombo: false,
-          };
-          // count++;
-          custFields.push(customData);
-        }
-      }
+          if (custFields.length < customFieldCount) {
+            let remainder = customFieldCount - custFields.length;
+            let getRemCustomFields = parseInt(custFields.length);
+            // count = count + remainder;
+            for (let r = 0; r < remainder; r++) {
+              getRemCustomFields++;
+              customData = {
+                active: false,
+                id: "",
+                custfieldlabel: "Custom Field " + getRemCustomFields,
+                datatype: "",
+                isempty: true,
+                iscombo: false,
+              };
+              // count++;
+              custFields.push(customData);
+            }
+          }
 
-      templateObject.custfields.set(custFields);
-      if (type == 'init') {
-        templateObject.initCustomFieldsList(custFields);
-      } else {
-        templateObject.drawDropDownListTable(type)
+          templateObject.custfields.set(custFields);
+          if (type == 'init') {
+            templateObject.initCustomFieldsList(custFields);
+          } else {
+            templateObject.drawDropDownListTable(type)
+          }
+        });
+      }else{
+        let data = JSON.parse(dataObject[0].data);
+          for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+            if (data.tcustomfieldlist[x].fields.ListType == listType) {
+              customData = {
+                active: data.tcustomfieldlist[x].fields.Active || false,
+                id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                datatype: data.tcustomfieldlist[x].fields.DataType || "",
+                isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+                iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+                dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+              };
+              custFields.push(customData);
+            }
+          }
+
+          if (custFields.length < customFieldCount) {
+            let remainder = customFieldCount - custFields.length;
+            let getRemCustomFields = parseInt(custFields.length);
+            // count = count + remainder;
+            for (let r = 0; r < remainder; r++) {
+              getRemCustomFields++;
+              customData = {
+                active: false,
+                id: "",
+                custfieldlabel: "Custom Field " + getRemCustomFields,
+                datatype: "",
+                isempty: true,
+                iscombo: false,
+              };
+              // count++;
+              custFields.push(customData);
+            }
+          }
+
+          templateObject.custfields.set(custFields);
+          if (type == 'init') {
+            templateObject.initCustomFieldsList(custFields);
+          } else {
+            templateObject.drawDropDownListTable(type)
+          }
+
       }
-    })
+    });
+
+
   }
 
   templateObject.initCustomFieldsList = function (custFields) {
@@ -1144,13 +1192,32 @@ Template.customfieldpop.onRendered(() => {
     });
   };
 
-  templateObject.getTCustomerExData = function (currentID) {
-    contactService.getOneCustomerDataEx(currentID).then(function (data) {
-      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-    });
+//CustomerData
+  templateObject.getTCustomerExData = async function (currentID) {
+    let dataObject = await getVS1Data('TCustomerVS1')||'';
+    if (dataObject.length > 0){
+      let data = JSON.parse(dataObject[0].data);
+      const customerData = data.tcustomervs1.find((udata) => udata.fields.ID == parseInt(currentID));
+      if(customerData){
+        templateObject.setTCustomerExData(customerData);
+      }else{
+        contactService.getOneCustomerDataEx(currentID).then(function (data) {
+          templateObject.setTCustomerExData(data);
+        });
+      }
+    }else{
+      contactService.getOneCustomerDataEx(currentID).then(function (data) {
+        templateObject.setTCustomerExData(data);
+      });
+    }
   };
+
+  templateObject.setTCustomerExData = async function (data) {
+    $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+    $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+    $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+  };
+  //End CustomerData
 
   templateObject.getTEmployeeExData = function (currentID) {
     contactService.getOneEmployeeDataEx(currentID).then(function (data) {

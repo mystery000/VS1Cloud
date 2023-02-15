@@ -1,3 +1,4 @@
+// @ts-nocheck
 import './employment-settings.html'
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
@@ -29,6 +30,7 @@ Template.wizard_employment.onCreated(() => {
             "data:image/jpeg;base64," + employeeProfile
           );
           $(".cloudEmpImgID").val(data.temployeepicture[i].Id);
+          break;
         }
       }
     });

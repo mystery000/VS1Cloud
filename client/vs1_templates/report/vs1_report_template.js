@@ -30,6 +30,9 @@ Template.vs1_report_template.onCreated(function () {
   templateObject.report_displayfields = new ReactiveVar();
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.isAccountingMoreOption = new ReactiveVar();
+  templateObject.isProfitAndLossMoreOption = new ReactiveVar();
+  templateObject.isPeriodSelection = new ReactiveVar();
+  templateObject.isDepartmentSelection = new ReactiveVar();
   templateObject.isTaxCodeOption = new ReactiveVar();
   // templateObject.dateAsAt = new ReactiveVar();
 });
@@ -53,10 +56,18 @@ Template.vs1_report_template.onRendered(function () {
   let currenttablename = "100";
   let displaytablename = "100";
   templateObject.isAccountingMoreOption.set(false);
+  templateObject.isProfitAndLossMoreOption.set(false);
+  templateObject.isPeriodSelection.set(false);
+  templateObject.isDepartmentSelection.set(false);
   templateObject.isTaxCodeOption.set(false);
   if (url.includes("/taxsummaryreport")) {
     templateObject.isAccountingMoreOption.set(true);
     templateObject.isTaxCodeOption.set(true);
+  };
+  if (url.includes("/newprofitandloss")) {
+    templateObject.isProfitAndLossMoreOption.set(true);
+    templateObject.isPeriodSelection.set(true);
+    templateObject.isDepartmentSelection.set(true);
   };
 
   currenttablename = templateObject.data.tablename || "100";
@@ -71,37 +82,37 @@ Template.vs1_report_template.onRendered(function () {
     switch (currenttablename) {
       case "tblgeneralledger":
         reset_data = [
-          { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
+          { index: 1, label: 'Account ID', class: 'colAccountID', active: false, display: true, width: "155" },
           { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "110" },
-          { index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: "140" },
+          { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "85" },
           { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
-          { index: 5, label: 'Amount (Ex)', class: 'colAmountEx', active: false, display: true, width: "120" },
-          { index: 6, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
-          { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
-          { index: 8, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
-          { index: 9, label: 'Class ID', class: 'colClassID', active: true, display: true, width: "85" },
-          { index: 10, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
-          { index: 11, label: 'Credits (Ex)', class: 'colCreditEx', active: false, display: true, width: "120" },
-          { index: 12, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "120" },
-          { index: 13, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
-          { index: 14, label: 'Debits (Ex)', class: 'colDebitsEx', active: false, display: true, width: "120" },
-          { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "120" },
+          { index: 5, label: 'Amount (Inc)', class: 'colAmountInc', active: false, display: true, width: "120" },
+          { index: 6, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
+          { index: 7, label: 'Department', class: 'colDepartment', active: false, display: true, width: "100" },
+          { index: 8, label: 'Class ID', class: 'colClassID', active: false, display: true, width: "85" },
+          { index: 12, label: 'Date', class: 'colDate', active: true, display: true, width: "85" },
+          { index: 9, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "120" },
+          { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+          { index: 10, label: 'Credits ', class: 'colCreditEx', active: true, display: true, width: "85" },
+          { index: 11, label: 'Credits (Inc)', class: 'colCreditInc', active: false, display: true, width: "85" },
+          { index: 13, label: 'Debits ', class: 'colDebitsEx', active: true, display: true, width: "85" },
+          { index: 14, label: 'Amount ', class: 'colAmountEx', active: true, display: true, width: "85" },
+          { index: 15, label: 'Debits (Inc)', class: 'colDebitsInc', active: false, display: true, width: "85" },
           { index: 16, label: 'Details', class: 'colDetails', active: false, display: true, width: "85" },
           { index: 17, label: 'FixedAsset ID', class: 'colFixedAssetID', active: false, display: true, width: "85" },
-          { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: true, display: true, width: "85" },
+          { index: 18, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "85" },
           { index: 19, label: 'ID', class: 'colID', active: false, display: true, width: "50" },
           { index: 20, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
           { index: 21, label: 'Payment ID', class: 'colPaymentID', active: false, display: true, width: "85" },
           { index: 22, label: 'PrepaymentID', class: 'colPrepaymentID', active: false, display: true, width: "85" },
-          { index: 23, label: 'Product Description', class: 'colCredit', active: true, display: true, width: "150" },
+          { index: 23, label: 'Product Description', class: 'colCredit', active: false, display: true, width: "150" },
           { index: 24, label: 'Product ID', class: 'colProductID', active: false, display: true, width: "120" },
-          { index: 25, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: true, display: true, width: "150" },
+          { index: 25, label: 'Purchase Order ID', class: 'colPurchaseOrderID', active: false, display: true, width: "150" },
           { index: 26, label: 'Ref No', class: 'colRefNo', active: false, display: true, width: "85" },
-          { index: 27, label: 'Rep Name', class: 'colRepName', active: true, display: true, width: "85" },
+          { index: 27, label: 'Rep Name', class: 'colRepName', active: false, display: true, width: "85" },
           { index: 28, label: 'Sale ID', class: 'colSaleID', active: false, display: true, width: "85" },
           { index: 29, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "150" },
-          { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" },
-          { index: 31, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
+          { index: 30, label: 'Tax Rate', class: 'colTaxRate', active: false, display: true, width: "85" }
         ];
         break;
       case "taxSummary":
@@ -130,7 +141,7 @@ Template.vs1_report_template.onRendered(function () {
           { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
           { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
           { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
-      ]
+        ]
         break;
       case "transactionjournallist":
         reset_data = [
@@ -761,16 +772,13 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "binlocationslist":
         reset_data = [
-          { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
-          { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "100" },
-          { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "100" },
-          { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "100" },
-          { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "100" },
-          { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "100" },
+          { index: 1, label: 'Rack', class: 'colRack', active: true, display: true, width: "100" },
+          { index: 2, label: 'Bin #', class: 'colBinNumber', active: true, display: true, width: "100" },
+          { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+          { index: 4, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "100" },
+          { index: 5, label: 'Sales Description', class: 'colSalesDescription', active: true, display: true, width: "100" },
+          { index: 6, label: 'In Stock', class: 'colInStock', active: true, display: true, width: "100" },
           { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "100" },
-          { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "100" },
-          { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "100" },
-          { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "100" },
         ]
         break;
       case "stockmovementreport":
@@ -982,6 +990,15 @@ Template.vs1_report_template.onRendered(function () {
           { index: 11, label: 'Edited Flag', class: 'colEditedFlag', active: false, display: true, width: "100" },
         ]
         break;
+      case "tblprofitandloss":  
+        reset_data = [
+          { index: 1, label: 'Account ID', class: 'colAccountID', active: false, display: true, width: "155" },
+          { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "190" },
+          { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "190" },
+          { index: 4, label: 'Percent', class: 'plAmountPercentage', active: true, display: true, width: "190" },
+          { index: 8, label: 'Total', class: 'tglTotal', active: true, display: true, width: "190" },        
+        ];
+        break;
       default:
         break;
     }
@@ -1067,7 +1084,6 @@ Template.vs1_report_template.events({
       var colthClass = $tblrow.attr('data-class') || "";
       $('.rngRange' + colthClass).val(colWidth);
     });
-    console.log("mytablename:" + templateObject.data.tablename)
     $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
   },
   "blur .divcolumn": async function (event) {
@@ -1172,6 +1188,15 @@ Template.vs1_report_template.helpers({
   },
   isAccountingMoreOption: () => {
     return Template.instance().isAccountingMoreOption.get();;
+  },
+  isProfitAndLossMoreOption: () => {
+    return Template.instance().isProfitAndLossMoreOption.get();;
+  },
+  isPeriodSelection: () => {
+    return Template.instance().isPeriodSelection.get();;
+  },
+  isDepartmentSelection: () => {
+    return Template.instance().isDepartmentSelection.get();
   },
   companyname: () => {
     return loggedCompany;

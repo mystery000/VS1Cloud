@@ -1,5 +1,5 @@
 <!-- Customer Payment Transaction Header -->
-<!-- Params 
+<!-- Params
 data
 -->
 
@@ -9,7 +9,9 @@ data
           <div class="col-12 col-md-4">
               <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">{{type}} Payment {{data.lid}}
                   {{> helpbutton}}
-                  {{> help_modal}}
+                  <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    {{> help_modal}}
+                  </div>
               </h2>
               <div class="printID" id="{{data.lid}}" style="display: none;">{{data.lid}}</div>
           </div>
