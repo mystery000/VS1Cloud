@@ -1211,19 +1211,19 @@ Template.vatreturn.onRendered(function() {
                                             $("#nav-item5 a").click();
                                         }
                                     }
-                                    document.getElementById("tax1").setAttribute("href", "#");
-                                    document.getElementById("tax1A").setAttribute("href", "#");
-                                    document.getElementById("tax2").setAttribute("href", "#");
-                                    document.getElementById("tax2A").setAttribute("href", "#");
-                                    document.getElementById("tax3").setAttribute("href", "#");
-                                    document.getElementById("tax5").setAttribute("href", "#");
-                                    document.getElementById("tax7").setAttribute("href", "#");
-                                    document.getElementById("tax10").setAttribute("href", "#");
-                                    document.getElementById("tax12").setAttribute("href", "#");
+                                    // document.getElementById("tax1").setAttribute("href", "#");
+                                    // document.getElementById("tax1A").setAttribute("href", "#");
+                                    // document.getElementById("tax2").setAttribute("href", "#");
+                                    // document.getElementById("tax2A").setAttribute("href", "#");
+                                    // document.getElementById("tax3").setAttribute("href", "#");
+                                    // document.getElementById("tax5").setAttribute("href", "#");
+                                    // document.getElementById("tax7").setAttribute("href", "#");
+                                    // document.getElementById("tax10").setAttribute("href", "#");
+                                    // document.getElementById("tax12").setAttribute("href", "#");
 
-                                    $("#tax4cost").attr("disabled", "disabled");
-                                    $("#tax4Acost").attr("disabled", "disabled");
-                                    $("#tax11cost").attr("disabled", "disabled");
+                                    // $("#tax4cost").attr("disabled", "disabled");
+                                    // $("#tax4Acost").attr("disabled", "disabled");
+                                    // $("#tax11cost").attr("disabled", "disabled");
                                 }
 
                                 if (data.tvatreturns[0].fields.HasTab2 == true) {
@@ -1251,13 +1251,13 @@ Template.vatreturn.onRendered(function() {
                                             $("#nav-item5 a").click();
                                         }
                                     }
-                                    document.getElementById("tax14").setAttribute("href", "#");
-                                    document.getElementById("tax14A").setAttribute("href", "#");
-                                    document.getElementById("tax15").setAttribute("href", "#");
-                                    document.getElementById("tax15A").setAttribute("href", "#");
-                                    document.getElementById("tax16").setAttribute("href", "#");
-                                    document.getElementById("tax17").setAttribute("href", "#");
-                                    document.getElementById("tax18").setAttribute("href", "#");
+                                    // document.getElementById("tax14").setAttribute("href", "#");
+                                    // document.getElementById("tax14A").setAttribute("href", "#");
+                                    // document.getElementById("tax15").setAttribute("href", "#");
+                                    // document.getElementById("tax15A").setAttribute("href", "#");
+                                    // document.getElementById("tax16").setAttribute("href", "#");
+                                    // document.getElementById("tax17").setAttribute("href", "#");
+                                    // document.getElementById("tax18").setAttribute("href", "#");
                                 }
 
                                 if (data.tvatreturns[0].fields.HasTab3 == true) {
@@ -1290,18 +1290,18 @@ Template.vatreturn.onRendered(function() {
                                             $("#nav-item5 a").click();
                                         }
                                     }
-                                    document.getElementById("tax21").setAttribute("href", "#");
-                                    document.getElementById("tax22").setAttribute("href", "#");
-                                    document.getElementById("tax23").setAttribute("href", "#");
-                                    document.getElementById("tax26").setAttribute("href", "#");
-                                    document.getElementById("tax27").setAttribute("href", "#");
-                                    document.getElementById("tax28").setAttribute("href", "#");
-                                    document.getElementById("tax30").setAttribute("href", "#");
-                                    document.getElementById("tax31").setAttribute("href", "#");
-                                    document.getElementById("tax32").setAttribute("href", "#");
-                                    document.getElementById("tax34").setAttribute("href", "#");
-                                    document.getElementById("tax35").setAttribute("href", "#");
-                                    document.getElementById("tax36").setAttribute("href", "#");
+                                    // document.getElementById("tax21").setAttribute("href", "#");
+                                    // document.getElementById("tax22").setAttribute("href", "#");
+                                    // document.getElementById("tax23").setAttribute("href", "#");
+                                    // document.getElementById("tax26").setAttribute("href", "#");
+                                    // document.getElementById("tax27").setAttribute("href", "#");
+                                    // document.getElementById("tax28").setAttribute("href", "#");
+                                    // document.getElementById("tax30").setAttribute("href", "#");
+                                    // document.getElementById("tax31").setAttribute("href", "#");
+                                    // document.getElementById("tax32").setAttribute("href", "#");
+                                    // document.getElementById("tax34").setAttribute("href", "#");
+                                    // document.getElementById("tax35").setAttribute("href", "#");
+                                    // document.getElementById("tax36").setAttribute("href", "#");
                                 }
 
                                 if (data.tvatreturns[0].fields.HasTab4 == true) {
@@ -1325,9 +1325,9 @@ Template.vatreturn.onRendered(function() {
                                             $("#nav-item5 a").click();
                                         }
                                     }
-                                    $("#payment_refno").attr("disabled", "disabled");
-                                    $("#payment_period").attr("disabled", "disabled");
-                                    $("#payment_penalty").attr("disabled", "disabled");
+                                    // $("#payment_refno").attr("disabled", "disabled");
+                                    // $("#payment_period").attr("disabled", "disabled");
+                                    // $("#payment_penalty").attr("disabled", "disabled");
                                 }
 
                                 if (data.tvatreturns[0].fields.HasTab5 == true) {
@@ -1350,8 +1350,8 @@ Template.vatreturn.onRendered(function() {
                                             $("#nav-item4 a").click();
                                         }
                                     }
-                                    $("#refund_refno").attr("disabled", "disabled");
-                                    $("#refund_period").attr("disabled", "disabled");
+                                    // $("#refund_refno").attr("disabled", "disabled");
+                                    // $("#refund_period").attr("disabled", "disabled");
                                 }
 
                                 if (data.tvatreturns[0].fields.ClassID > 0) {
@@ -1410,7 +1410,7 @@ Template.vatreturn.onRendered(function() {
                                 $("#prt_tax5cost").html("R" + data.tvatreturns[0].fields.VAT5);
                                 $("#tax5rate").val(data.tvatreturns[0].fields.VAT5Per || 60);
                                 $("#prt_tax5rate").html(data.tvatreturns[0].fields.VAT5Per || 60);
-                                var tax6cost = parseFloat(data.tvatreturns[0].fields.VAT5) * parseFloat(data.tvatreturns[0].fields.VAT5Per || 60) / 100;
+                                var tax6cost = parseFloat(data.tvatreturns[0].fields.VAT5) * (parseFloat(data.tvatreturns[0].fields.VAT5Per) || 60) / 100;
                                 $("#tax6cost").val(tax6cost.toFixed(2));
                                 $("#prt_tax6cost").html("R" + tax6cost);
                                 $("#tax7cost").val(data.tvatreturns[0].fields.VAT7);
@@ -1638,19 +1638,19 @@ Template.vatreturn.onRendered(function() {
                                                 $("#nav-item5 a").click();
                                             }
                                         }
-                                        document.getElementById("tax1").setAttribute("href", "#");
-                                        document.getElementById("tax1A").setAttribute("href", "#");
-                                        document.getElementById("tax2").setAttribute("href", "#");
-                                        document.getElementById("tax2A").setAttribute("href", "#");
-                                        document.getElementById("tax3").setAttribute("href", "#");
-                                        document.getElementById("tax5").setAttribute("href", "#");
-                                        document.getElementById("tax7").setAttribute("href", "#");
-                                        document.getElementById("tax10").setAttribute("href", "#");
-                                        document.getElementById("tax12").setAttribute("href", "#");
+                                        // document.getElementById("tax1").setAttribute("href", "#");
+                                        // document.getElementById("tax1A").setAttribute("href", "#");
+                                        // document.getElementById("tax2").setAttribute("href", "#");
+                                        // document.getElementById("tax2A").setAttribute("href", "#");
+                                        // document.getElementById("tax3").setAttribute("href", "#");
+                                        // document.getElementById("tax5").setAttribute("href", "#");
+                                        // document.getElementById("tax7").setAttribute("href", "#");
+                                        // document.getElementById("tax10").setAttribute("href", "#");
+                                        // document.getElementById("tax12").setAttribute("href", "#");
 
-                                        $("#tax4cost").attr("disabled", "disabled");
-                                        $("#tax4Acost").attr("disabled", "disabled");
-                                        $("#tax11cost").attr("disabled", "disabled");
+                                        // $("#tax4cost").attr("disabled", "disabled");
+                                        // $("#tax4Acost").attr("disabled", "disabled");
+                                        // $("#tax11cost").attr("disabled", "disabled");
                                     }
 
                                     if (data.tvatreturns[i].fields.HasTab2 == true) {
@@ -1678,13 +1678,13 @@ Template.vatreturn.onRendered(function() {
                                                 $("#nav-item5 a").click();
                                             }
                                         }
-                                        document.getElementById("tax14").setAttribute("href", "#");
-                                        document.getElementById("tax14A").setAttribute("href", "#");
-                                        document.getElementById("tax15").setAttribute("href", "#");
-                                        document.getElementById("tax15A").setAttribute("href", "#");
-                                        document.getElementById("tax16").setAttribute("href", "#");
-                                        document.getElementById("tax17").setAttribute("href", "#");
-                                        document.getElementById("tax18").setAttribute("href", "#");
+                                        // document.getElementById("tax14").setAttribute("href", "#");
+                                        // document.getElementById("tax14A").setAttribute("href", "#");
+                                        // document.getElementById("tax15").setAttribute("href", "#");
+                                        // document.getElementById("tax15A").setAttribute("href", "#");
+                                        // document.getElementById("tax16").setAttribute("href", "#");
+                                        // document.getElementById("tax17").setAttribute("href", "#");
+                                        // document.getElementById("tax18").setAttribute("href", "#");
                                     }
 
                                     if (data.tvatreturns[i].fields.HasTab3 == true) {
@@ -1717,22 +1717,20 @@ Template.vatreturn.onRendered(function() {
                                                 $("#nav-item5 a").click();
                                             }
                                         }
-                                        document.getElementById("tax21").setAttribute("href", "#");
-                                        document.getElementById("tax22").setAttribute("href", "#");
-                                        document.getElementById("tax23").setAttribute("href", "#");
-                                        document.getElementById("tax26").setAttribute("href", "#");
-                                        document.getElementById("tax27").setAttribute("href", "#");
-                                        document.getElementById("tax28").setAttribute("href", "#");
-                                        document.getElementById("tax30").setAttribute("href", "#");
-                                        document.getElementById("tax31").setAttribute("href", "#");
-                                        document.getElementById("tax32").setAttribute("href", "#");
-                                        document.getElementById("tax34").setAttribute("href", "#");
-                                        document.getElementById("tax35").setAttribute("href", "#");
-                                        document.getElementById("tax36").setAttribute("href", "#");
+                                        // document.getElementById("tax21").setAttribute("href", "#");
+                                        // document.getElementById("tax22").setAttribute("href", "#");
+                                        // document.getElementById("tax23").setAttribute("href", "#");
+                                        // document.getElementById("tax26").setAttribute("href", "#");
+                                        // document.getElementById("tax27").setAttribute("href", "#");
+                                        // document.getElementById("tax28").setAttribute("href", "#");
+                                        // document.getElementById("tax30").setAttribute("href", "#");
+                                        // document.getElementById("tax31").setAttribute("href", "#");
+                                        // document.getElementById("tax32").setAttribute("href", "#");
+                                        // document.getElementById("tax34").setAttribute("href", "#");
+                                        // document.getElementById("tax35").setAttribute("href", "#");
+                                        // document.getElementById("tax36").setAttribute("href", "#");
                                     }
 
-                                    console.log("======", data.tvatreturns[i].fields);
-                                    
                                     if (data.tvatreturns[i].fields.HasTab4 == true) {
                                         $("#nav-item4").show();
                                         $("#payment_refno").removeAttr("disabled");
@@ -1754,9 +1752,9 @@ Template.vatreturn.onRendered(function() {
                                                 $("#nav-item5 a").click();
                                             }
                                         }
-                                        $("#payment_refno").attr("disabled", "disabled");
-                                        $("#payment_period").attr("disabled", "disabled");
-                                        $("#payment_penalty").attr("disabled", "disabled");
+                                        // $("#payment_refno").attr("disabled", "disabled");
+                                        // $("#payment_period").attr("disabled", "disabled");
+                                        // $("#payment_penalty").attr("disabled", "disabled");
                                     }
                                     
                                     if (data.tvatreturns[i].fields.HasTab5 == true) {
@@ -1779,8 +1777,8 @@ Template.vatreturn.onRendered(function() {
                                                 $("#nav-item4 a").click();
                                             }
                                         }
-                                        $("#refund_refno").attr("disabled", "disabled");
-                                        $("#refund_period").attr("disabled", "disabled");
+                                        // $("#refund_refno").attr("disabled", "disabled");
+                                        // $("#refund_period").attr("disabled", "disabled");
                                     }
 
                                     if (data.tvatreturns[i].fields.ClassID > 0) {
@@ -1821,6 +1819,7 @@ Template.vatreturn.onRendered(function() {
                                         tab1endDate = new Date(data.tvatreturns[i].fields.Tab1Year, (parseInt(endMonth)), 0);
                                         tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                                     }
+                                    
                                     $("#endDate").val(tab1endDate);
                                     $("#prt_beginningDate").html(data.tvatreturns[i].fields.Tab1Month + " " + data.tvatreturns[i].fields.Tab1Year);
                                     $("#tax1cost").val(data.tvatreturns[i].fields.VAT1);
@@ -1841,7 +1840,7 @@ Template.vatreturn.onRendered(function() {
                                     $("#prt_tax5cost").html("R" + data.tvatreturns[i].fields.VAT5);
                                     $("#tax5rate").val(data.tvatreturns[i].fields.VAT5Per || 60);
                                     $("#prt_tax5rate").html(data.tvatreturns[i].fields.VAT5Per || 60);
-                                    var tax6cost = parseFloat(data.tvatreturns[i].fields.VAT5) * parseFloat(data.tvatreturns[i].fields.VAT5Per || 60) / 100;
+                                    var tax6cost = parseFloat(data.tvatreturns[i].fields.VAT5) * (parseFloat(data.tvatreturns[i].fields.VAT5Per)||60) / 100;
                                     $("#tax6cost").val(tax6cost.toFixed(2));
                                     $("#prt_tax6cost").html("R" + tax6cost);
                                     $("#tax7cost").val(data.tvatreturns[i].fields.VAT7);
@@ -2072,19 +2071,19 @@ Template.vatreturn.onRendered(function() {
                                         $("#nav-item5 a").click();
                                     }
                                 }
-                                document.getElementById("tax1").setAttribute("href", "#");
-                                document.getElementById("tax1A").setAttribute("href", "#");
-                                document.getElementById("tax2").setAttribute("href", "#");
-                                document.getElementById("tax2A").setAttribute("href", "#");
-                                document.getElementById("tax3").setAttribute("href", "#");
-                                document.getElementById("tax5").setAttribute("href", "#");
-                                document.getElementById("tax7").setAttribute("href", "#");
-                                document.getElementById("tax10").setAttribute("href", "#");
-                                document.getElementById("tax12").setAttribute("href", "#");
+                                // document.getElementById("tax1").setAttribute("href", "#");
+                                // document.getElementById("tax1A").setAttribute("href", "#");
+                                // document.getElementById("tax2").setAttribute("href", "#");
+                                // document.getElementById("tax2A").setAttribute("href", "#");
+                                // document.getElementById("tax3").setAttribute("href", "#");
+                                // document.getElementById("tax5").setAttribute("href", "#");
+                                // document.getElementById("tax7").setAttribute("href", "#");
+                                // document.getElementById("tax10").setAttribute("href", "#");
+                                // document.getElementById("tax12").setAttribute("href", "#");
 
-                                $("#tax4cost").attr("disabled", "disabled");
-                                $("#tax4Acost").attr("disabled", "disabled");
-                                $("#tax11cost").attr("disabled", "disabled");
+                                // $("#tax4cost").attr("disabled", "disabled");
+                                // $("#tax4Acost").attr("disabled", "disabled");
+                                // $("#tax11cost").attr("disabled", "disabled");
                             }
 
                             if (data.tvatreturns[0].fields.HasTab2 == true) {
@@ -2112,13 +2111,13 @@ Template.vatreturn.onRendered(function() {
                                         $("#nav-item5 a").click();
                                     }
                                 }
-                                document.getElementById("tax14").setAttribute("href", "#");
-                                document.getElementById("tax14A").setAttribute("href", "#");
-                                document.getElementById("tax15").setAttribute("href", "#");
-                                document.getElementById("tax15A").setAttribute("href", "#");
-                                document.getElementById("tax16").setAttribute("href", "#");
-                                document.getElementById("tax17").setAttribute("href", "#");
-                                document.getElementById("tax18").setAttribute("href", "#");
+                                // document.getElementById("tax14").setAttribute("href", "#");
+                                // document.getElementById("tax14A").setAttribute("href", "#");
+                                // document.getElementById("tax15").setAttribute("href", "#");
+                                // document.getElementById("tax15A").setAttribute("href", "#");
+                                // document.getElementById("tax16").setAttribute("href", "#");
+                                // document.getElementById("tax17").setAttribute("href", "#");
+                                // document.getElementById("tax18").setAttribute("href", "#");
                             }
 
                             if (data.tvatreturns[0].fields.HasTab3 == true) {
@@ -2151,18 +2150,18 @@ Template.vatreturn.onRendered(function() {
                                         $("#nav-item5 a").click();
                                     }
                                 }
-                                document.getElementById("tax21").setAttribute("href", "#");
-                                document.getElementById("tax22").setAttribute("href", "#");
-                                document.getElementById("tax23").setAttribute("href", "#");
-                                document.getElementById("tax26").setAttribute("href", "#");
-                                document.getElementById("tax27").setAttribute("href", "#");
-                                document.getElementById("tax28").setAttribute("href", "#");
-                                document.getElementById("tax30").setAttribute("href", "#");
-                                document.getElementById("tax31").setAttribute("href", "#");
-                                document.getElementById("tax32").setAttribute("href", "#");
-                                document.getElementById("tax34").setAttribute("href", "#");
-                                document.getElementById("tax35").setAttribute("href", "#");
-                                document.getElementById("tax36").setAttribute("href", "#");
+                                // document.getElementById("tax21").setAttribute("href", "#");
+                                // document.getElementById("tax22").setAttribute("href", "#");
+                                // document.getElementById("tax23").setAttribute("href", "#");
+                                // document.getElementById("tax26").setAttribute("href", "#");
+                                // document.getElementById("tax27").setAttribute("href", "#");
+                                // document.getElementById("tax28").setAttribute("href", "#");
+                                // document.getElementById("tax30").setAttribute("href", "#");
+                                // document.getElementById("tax31").setAttribute("href", "#");
+                                // document.getElementById("tax32").setAttribute("href", "#");
+                                // document.getElementById("tax34").setAttribute("href", "#");
+                                // document.getElementById("tax35").setAttribute("href", "#");
+                                // document.getElementById("tax36").setAttribute("href", "#");
                             }
 
                             if (data.tvatreturns[0].fields.HasTab4 == true) {
@@ -2186,9 +2185,9 @@ Template.vatreturn.onRendered(function() {
                                         $("#nav-item5 a").click();
                                     }
                                 }
-                                $("#payment_refno").attr("disabled", "disabled");
-                                $("#payment_period").attr("disabled", "disabled");
-                                $("#payment_penalty").attr("disabled", "disabled");
+                                // $("#payment_refno").attr("disabled", "disabled");
+                                // $("#payment_period").attr("disabled", "disabled");
+                                // $("#payment_penalty").attr("disabled", "disabled");
                             }
 
                             if (data.tvatreturns[0].fields.HasTab5 == true) {
@@ -2211,8 +2210,8 @@ Template.vatreturn.onRendered(function() {
                                         $("#nav-item4 a").click();
                                     }
                                 }
-                                $("#refund_refno").attr("disabled", "disabled");
-                                $("#refund_period").attr("disabled", "disabled");
+                                // $("#refund_refno").attr("disabled", "disabled");
+                                // $("#refund_period").attr("disabled", "disabled");
                             }
 
                             if (data.tvatreturns[0].fields.ClassID > 0) {
@@ -2272,7 +2271,7 @@ Template.vatreturn.onRendered(function() {
                             $("#prt_tax5cost").html("R" + data.tvatreturns[0].fields.VAT5);
                             $("#tax5rate").val(data.tvatreturns[0].fields.VAT5Per || 60);
                             $("#prt_tax5rate").html(data.tvatreturns[0].fields.VAT5Per || 60);
-                            var tax6cost = parseFloat(data.tvatreturns[0].fields.VAT5) * parseFloat(data.tvatreturns[0].fields.VAT5Per || 60) / 100;
+                            var tax6cost = parseFloat(data.tvatreturns[0].fields.VAT5) * (parseFloat(data.tvatreturns[0].fields.VAT5Per) || 60) / 100;
                             $("#tax6cost").val(tax6cost.toFixed(2));
                             $("#prt_tax6cost").html("R" + tax6cost);
                             $("#tax7cost").val(data.tvatreturns[0].fields.VAT7);
@@ -2567,19 +2566,19 @@ Template.vatreturn.onRendered(function() {
                             $("#nav-item5 a").click();
                         }
                     }
-                    document.getElementById("tax1").setAttribute("href", "#");
-                    document.getElementById("tax1A").setAttribute("href", "#");
-                    document.getElementById("tax2").setAttribute("href", "#");
-                    document.getElementById("tax2A").setAttribute("href", "#");
-                    document.getElementById("tax3").setAttribute("href", "#");
-                    document.getElementById("tax5").setAttribute("href", "#");
-                    document.getElementById("tax7").setAttribute("href", "#");
-                    document.getElementById("tax10").setAttribute("href", "#");
-                    document.getElementById("tax12").setAttribute("href", "#");
+                    // document.getElementById("tax1").setAttribute("href", "#");
+                    // document.getElementById("tax1A").setAttribute("href", "#");
+                    // document.getElementById("tax2").setAttribute("href", "#");
+                    // document.getElementById("tax2A").setAttribute("href", "#");
+                    // document.getElementById("tax3").setAttribute("href", "#");
+                    // document.getElementById("tax5").setAttribute("href", "#");
+                    // document.getElementById("tax7").setAttribute("href", "#");
+                    // document.getElementById("tax10").setAttribute("href", "#");
+                    // document.getElementById("tax12").setAttribute("href", "#");
 
-                    $("#tax4cost").attr("disabled", "disabled");
-                    $("#tax4Acost").attr("disabled", "disabled");
-                    $("#tax11cost").attr("disabled", "disabled");
+                    // $("#tax4cost").attr("disabled", "disabled");
+                    // $("#tax4Acost").attr("disabled", "disabled");
+                    // $("#tax11cost").attr("disabled", "disabled");
                 }
             });
 
@@ -2609,13 +2608,13 @@ Template.vatreturn.onRendered(function() {
                             $("#nav-item5 a").click();
                         }
                     }
-                    document.getElementById("tax14").setAttribute("href", "#");
-                    document.getElementById("tax14A").setAttribute("href", "#");
-                    document.getElementById("tax15").setAttribute("href", "#");
-                    document.getElementById("tax15A").setAttribute("href", "#");
-                    document.getElementById("tax16").setAttribute("href", "#");
-                    document.getElementById("tax17").setAttribute("href", "#");
-                    document.getElementById("tax18").setAttribute("href", "#");
+                    // document.getElementById("tax14").setAttribute("href", "#");
+                    // document.getElementById("tax14A").setAttribute("href", "#");
+                    // document.getElementById("tax15").setAttribute("href", "#");
+                    // document.getElementById("tax15A").setAttribute("href", "#");
+                    // document.getElementById("tax16").setAttribute("href", "#");
+                    // document.getElementById("tax17").setAttribute("href", "#");
+                    // document.getElementById("tax18").setAttribute("href", "#");
                 }
             });
 
@@ -2650,18 +2649,18 @@ Template.vatreturn.onRendered(function() {
                             $("#nav-item5 a").click();
                         }
                     }
-                    document.getElementById("tax21").setAttribute("href", "#");
-                    document.getElementById("tax22").setAttribute("href", "#");
-                    document.getElementById("tax23").setAttribute("href", "#");
-                    document.getElementById("tax26").setAttribute("href", "#");
-                    document.getElementById("tax27").setAttribute("href", "#");
-                    document.getElementById("tax28").setAttribute("href", "#");
-                    document.getElementById("tax30").setAttribute("href", "#");
-                    document.getElementById("tax31").setAttribute("href", "#");
-                    document.getElementById("tax32").setAttribute("href", "#");
-                    document.getElementById("tax34").setAttribute("href", "#");
-                    document.getElementById("tax35").setAttribute("href", "#");
-                    document.getElementById("tax36").setAttribute("href", "#");
+                    // document.getElementById("tax21").setAttribute("href", "#");
+                    // document.getElementById("tax22").setAttribute("href", "#");
+                    // document.getElementById("tax23").setAttribute("href", "#");
+                    // document.getElementById("tax26").setAttribute("href", "#");
+                    // document.getElementById("tax27").setAttribute("href", "#");
+                    // document.getElementById("tax28").setAttribute("href", "#");
+                    // document.getElementById("tax30").setAttribute("href", "#");
+                    // document.getElementById("tax31").setAttribute("href", "#");
+                    // document.getElementById("tax32").setAttribute("href", "#");
+                    // document.getElementById("tax34").setAttribute("href", "#");
+                    // document.getElementById("tax35").setAttribute("href", "#");
+                    // document.getElementById("tax36").setAttribute("href", "#");
                 }
             });
 
@@ -2687,9 +2686,9 @@ Template.vatreturn.onRendered(function() {
                             $("#nav-item5 a").click();
                         }
                     }
-                    $("#payment_refno").attr("disabled", "disabled");
-                    $("#payment_period").attr("disabled", "disabled");
-                    $("#payment_penalty").attr("disabled", "disabled");
+                    // $("#payment_refno").attr("disabled", "disabled");
+                    // $("#payment_period").attr("disabled", "disabled");
+                    // $("#payment_penalty").attr("disabled", "disabled");
                 }
             });
 
@@ -2714,8 +2713,8 @@ Template.vatreturn.onRendered(function() {
                             $("#nav-item4 a").click();
                         }
                     }
-                    $("#refund_refno").attr("disabled", "disabled");
-                    $("#refund_period").attr("disabled", "disabled");
+                    // $("#refund_refno").attr("disabled", "disabled");
+                    // $("#refund_period").attr("disabled", "disabled");
                 }
             });
         });
