@@ -622,8 +622,6 @@ import './reports/transactionjournal/transactionjournal.js';
 import './vs1_templates/template_buttons/spreadsheet_link.js';
 /* Scott */
 
-import './inventory/binlocations/binlocations.js';
-
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
