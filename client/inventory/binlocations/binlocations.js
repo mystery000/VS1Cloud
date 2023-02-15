@@ -659,7 +659,6 @@ Template.binlocationslist.events({
         let inventoryData = [];
         if (data.tproductbin.length > 0) {
           for (let i = 0; i < data.tproductbin.length; i++) {
-            console.log(data.tproductbin[i]);
             var dataList = [
               data.tproductbin[i].Id || "",
               data.tproductbin[i].BinLocation || "-",
@@ -1119,8 +1118,8 @@ Template.binlocationslist.events({
       $('.fullScreenSpin').css('display','inline-block');
 
       var binId = $('#editBinId').val();
-      var editbinname = $('#editBinRack').val();
-      var editbinnum = $('#editBinNum').val();
+      // var editbinname = $('#editBinRack').val();
+      // var editbinnum = $('#editBinNum').val();
 
       let data = '';
 

@@ -2821,11 +2821,7 @@ Template.non_transactional_list.onRendered(function() {
                 productsData = data.tproductvs1;
             }
         });
-
-        console.log("ttt", productsData);
-
-        
-        
+      
         for (let i = 0; i < data.tproductbin.length; i++) {
             let linestatus = '';
             let productDetail;
@@ -2840,7 +2836,6 @@ Template.non_transactional_list.onRendered(function() {
             };
 
             for (let j = 0; j < productsData.length ; j++ ){
-                console.log(productsData[j].fields.ProductClass);
                 if(productsData[j].fields.ProductClass[0].fields.DefaultbinLocation == data.tproductbin[i].BinLocation && productsData[j].fields.ProductClass[0].fields.DefaultbinNumber == data.tproductbin[i].BinNumber) {
                     productDetail = productsData[j].fields;
                     productname = productsData[j].fields.ProductName;
