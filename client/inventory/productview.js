@@ -32,8 +32,8 @@ const clickTaxCodeSales = editableService.clickTaxCodeSales;
 
 const clickBinNumber = editableService.clickBinNumber;
 
-const applyMarkup = (val) => {  
-  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {    
+const applyMarkup = (val) => {
+  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {
     return val * (100 + Number($('.baseEdtMarkup').val())) / 100
   }
   return val
@@ -93,7 +93,7 @@ Template.productview.onCreated(() => {
   templateObject.showSubButton = new ReactiveVar(true);
   templateObject.isShowBOMModal = new ReactiveVar(false);
 
-  templateObject.productID = new ReactiveVar();  
+  templateObject.productID = new ReactiveVar();
 });
 
 Template.productview.onRendered(function () {
@@ -309,24 +309,24 @@ Template.productview.onRendered(function () {
       });
 
       $(document).on("click", "#tblUOMList tbody tr", function (e) {
-        let table = $(this);        
+        let table = $(this);
         let uomName = table.find(".colUOMName").text();
         $($(".saleRowWrapper")[currentLineIndex]).find('input.sltUomSales').val(uomName)
-        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)        
+        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)
         $("#UOMListModal").modal("toggle");
       });
 
       $(document).on('click', 'div.saleRowWrapper', function() {
-        currentLineIndex = $('div.saleRowWrapper').index(this)    
+        currentLineIndex = $('div.saleRowWrapper').index(this)
       })
-      
+
       $(document).on('click', 'div.purchaseRowWrapper', function() {
-        currentLineIndex = $('div.purchaseRowWrapper').index(this)    
-      }) 
+        currentLineIndex = $('div.purchaseRowWrapper').index(this)
+      })
 
       $(document).on('click', 'div.itemExtraSellRow', function() {
-        customerLineIndex = $('div.itemExtraSellRow').index(this)    
-      }) 
+        customerLineIndex = $('div.itemExtraSellRow').index(this)
+      })
 
     // });
   };
@@ -3230,7 +3230,7 @@ Template.productview.onRendered(function () {
 
   $(document).ready(function () {
     $(".edtProductName").editableSelect();
-    $("#edtProcess").editableSelect();    
+    $("#edtProcess").editableSelect();
   });
 
   // $(document).on('click', '.new_attachment_btn', function(event) {
@@ -3768,31 +3768,6 @@ Template.productview.events({
           });
         }
 
-        let checkTracked = templateObject.isTrackChecked.get();
-        if(checkTracked == true){
-          let productClassData = templateObject.records.get();
-          let productBinNumber =  $(".slt-bin").val();
-          let productBinLocation =  $(".slt-bin option:selected").data('location');
-          let ProductDept = $(".slt_department option:selected").data('tag');
-          let ProductDeptName = $(".slt_department").val();
-
-          let productClassObj = {
-              type: "TProductClass",
-              fields: {
-                ID: productClassData.productclass.ID,
-                DefaultbinLocation: productBinLocation.toString(),
-                DefaultbinNumber: productBinNumber.toString(),
-                ProductID: parseInt(currentID),
-                DeptID: ProductDept,
-                DeptName: ProductDeptName
-              }
-          };
-
-          productService.saveProductClassData(productClassObj).then(function(data){
-              console.log(data);
-          });
-        }
-
         saveBOMStructure();
         return;
         productService
@@ -3814,7 +3789,7 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            
+
             sideBarService
               .getNewProductListVS1(initialBaseDataLoad, 0)
               .then(function (dataReload) {
