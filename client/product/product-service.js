@@ -394,10 +394,6 @@ export class ProductService extends BaseService {
         return this.POST(this.ERPObjects.TClientType, data);
     }
 
-    saveProductClassData(data) {
-        return this.POST(this.ERPObjects.TProductClass, data);
-    }
-    
     getAllProductList1() {
         let options = {
             PropertyList: "ID,TaxCodePurchase,TaxCodeSales",
@@ -485,57 +481,7 @@ export class ProductService extends BaseService {
 
     getBins() {
         let options = {
-            PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-        };
-        return this.getList(this.ERPObjects.TProductBin, options);
-    }
-
-    getAllBinProductVS1(limitcount, limitfrom, deleteFilter) {
-        let options = "";
-        if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
-          if (limitcount == "All") {
-            options = {
-                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-              IgnoreDates:true,
-              orderby: '"BinLocation asc"',
-              Search: "Active = true",
-            };
-          } else {
-            options = {
-                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-              IgnoreDates:true,
-              orderby: '"BinLocation asc"',
-              Search: "Active = true",
-              LimitCount: parseInt(limitcount),
-              LimitFrom: parseInt(limitfrom),
-            };
-          }
-        }else{
-          if (limitcount == "All") {
-            options = {
-                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-              orderby: '"BinLocation asc"',
-              IgnoreDates:true,
-            };
-          } else {
-            options = {
-                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-              IgnoreDates:true,
-              orderby: '"BinLocation asc"',
-              LimitCount: parseInt(limitcount),
-              LimitFrom: parseInt(limitfrom),
-            };
-          }
-        }
-    
-        return this.getList(this.ERPObjects.TProductBin, options);
-      }
-
-    getNewBinListBySearch(dataSearchName) {
-        let options = "";
-        options = {
-          PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
-          search: 'BinLocation="'+ dataSearchName+ '" OR BinNumber="' + dataSearchName + '"',
+            PropertyList: "ID, BinLocation, BinNumber, BinClassName"
         };
         return this.getList(this.ERPObjects.TProductBin, options);
     }

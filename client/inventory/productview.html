@@ -1119,13 +1119,9 @@
                                         <div class="col-3">
                                             <div class="form-group">
                                                 <label style="display: none;">Deparment</label>
-                                                <select type="search" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                <select type="search" value="{{item.department}}" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                     {{#each itemt in deptrecords}}
-                                                    {{#if equals itemtt.itemt.id productrecord.productclass.DeptID}}
-                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
-                                                    {{else}}
-                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
-                                                    {{/if}}
+                                                    <option value="{{itemt.department}}" mytag="{{itemt.id}}" >{{itemt.department}}</option>
                                                     {{/each}}
                                                 </select>
                                             </div>
@@ -1185,15 +1181,9 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
-                                                        <select type="search" class="form-control slt-bin" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                        <select type="search" value="" class="form-control" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                                             {{#each itemtt in binrecords}}
-                                                            {{#if equals itemtt.binclass bindept}}
-                                                            {{#if equals itemtt.binnumber productrecord.productclass.DefaultbinNumber}}
-                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>
-                                                            {{else}}
-                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>
-                                                            {{/if}}
-                                                            {{/if}}
+                                                            <option value="{{itemtt.binnumber}}" >{{itemtt.binnumber}}</option>
                                                             {{/each}}
                                                         </select>
                                                     </div>
