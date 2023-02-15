@@ -94,7 +94,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 6, label: "Amount (Inc)", class: "DebitEx", width: "120", active: true, display: true },
                 { index: 7, label: "Department", class: "Department", width: "80", active: true, display: true },
                 { index: 8, label: "Chq Ref No", class: "chqrefno", width: "110", active: false, display: true },
-                { index: 9, label: "Status", class: "Status", width: "100", active: true, display: true },
+                { index: 9, label: "Status", class: "Status", width: "100", active: false, display: true },
                 { index: 10, label: "Comments", class: "Notes", width: "", active: true, display: true },
             ];
         }else if(currenttablename === "tblPayRunHistory"){
@@ -347,6 +347,8 @@ Template.transaction_list.onRendered(function() {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TBankAccountReport').then(function(dataObject) {
+            console.log(dataObject);
+
             $('#dateFrom').attr('readonly', false);
             $('#dateTo').attr('readonly', false);
 
@@ -746,10 +748,9 @@ Template.transaction_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbankaccountreport;
-
                 let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
                 let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoreDate;
                 if(urlParametersDateFrom){
                     if(urlParametersIgnoreDate == true){
                         $('#dateFrom').attr('readonly', true);
@@ -823,7 +824,7 @@ Template.transaction_list.onRendered(function() {
                         lineID = useData[i].TransID;
                     }
 
-                    if(useData[i].Active == false)
+                    // if(useData[i].Active == false)
                     var dataList = [
                         useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
                         '<span style="display:none;">' + (useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date).toString() + '</span>' +
@@ -851,9 +852,7 @@ Template.transaction_list.onRendered(function() {
                     if (useData[i].Type.replace(/\s/g, '') != "") {
                         dataTableList.push(dataList);
                     }
-
                 }
-
 
                 //awaitingpaymentCount
                 templateObject.datatablerecords.set(dataTableList);
