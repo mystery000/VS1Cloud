@@ -19,6 +19,7 @@ Template.binlocationslist.onCreated(function () {
   const templateObject = Template.instance();
 
   templateObject.deptrecords = new ReactiveVar();
+  templateObject.productrecords = new ReactiveVar([]);
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.datatablebackuprecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -41,6 +42,7 @@ Template.binlocationslist.onRendered(function () {
   let productService = new ProductService();
 
   const deptrecords = [];
+  const productrecords = [];
   const dataTableList = [];
   const tableHeaderList = [];
   const taxCodesList = [];
@@ -54,726 +56,10 @@ Template.binlocationslist.onRendered(function () {
   var splashArrayProd = new Array();
   var splashArrayProdDept = new Array();
 
-  templateObject.getAllProductClassDeptData = function () {
-    productService.getProductClassData().then(function (data) {
-
-      let deptprodlineItemObj = {};
-
-
-      for (let j in data.tproductvs1class) {
-        deptprodlineItemObj = {
-          department: data.tproductvs1class[j].DeptName || '',
-          productid: data.tproductvs1class[j].ProductID || 0,
-        }
-        // totaldeptquantity += data.tproductvs1class[j].InStockQty;
-        deptprodlineItems.push(deptprodlineItemObj);
-        //splashArrayProdDept.push(deptprodlineItemObj);
-      }
-      // $('#edttotalqtyinstock').val(totaldeptquantity);
-      templateObject.productdeptrecords.set(deptprodlineItems);
-
-      // templateObject.totaldeptquantity.set(totaldeptquantity);
-      templateObject.getAllProductData('All');
-    }).catch(function (err) {
-      swal({
-        title: 'Oooops...',
-        text: err,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Try Again'
-      }).then((result) => {
-        if (result.value) {
-          Meteor._reload.reload();
-        } else if (result.dismiss === 'cancel') {
-
-        }
-      });
-      $('.fullScreenSpin').css('display', 'none');
-    });
-
-  }
-
   templateObject.resetData = function (dataVal) {
     window.open('/binlocationslist?page=last', '_self');
   }
 
-  templateObject.getAllProductData = function (deptname) {
-    getVS1Data('TProductBin').then(function (dataObject) {
-      
-      if (dataObject.length == 0) {
-        productService.getBin().then(function (data) {
-          
-          addVS1Data('TProductBin', JSON.stringify(data));
-          // addVS1Data('TProductVS1',JSON.stringify(data));
-          //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
-          let lineItems = [];
-          let lineItemObj = {};
-          let departmentData = '';
-          let departmentDataLoad = '';
-          let prodQtyData = 0;
-          let prodQtyDataLoad = 0;
-          let deptStatus = '';
-          //let getDepartmentData = templateObject.productdeptrecords.get();
-          var dataList = {};
-          //if((deptname == 'undefined') || (deptname == 'All')){
-          departmentData = 'All';
-          for (let i = 0; i < data.tproductvs1.length; i++) {
-            var dataList = [
-              data.tproductvs1[i].fields.ID || '',
-              data.tproductvs1[i].fields.ProductName || '-',
-              data.tproductvs1[i].fields.SalesDescription || '',
-              data.tproductvs1[i].fields.BARCODE || '',
-              departmentData,
-              utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-              utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-              data.tproductvs1[i].fields.TotalQtyInStock,
-
-              data.tproductvs1[i].fields.PurchaseDescription || '',
-              data.tproductvs1[i].fields.CUSTFLD1 || '',
-              data.tproductvs1[i].fields.CUSTFLD2 || '',
-              // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
-            ];
-            splashArrayProductList.push(dataList);
-          }
-
-          templateObject.datatablerecords.set(dataTableList);
-          templateObject.datatablebackuprecords.set(dataTableList);
-          function MakeNegative() {
-            $('td').each(function () {
-              if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-            });
-          };
-          // localStorage.setItem('VS1ProductList', splashArrayProd);
-
-          if (templateObject.datatablerecords.get()) {
-
-            Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblInventory', function (error, result) {
-              if (error) {
-
-              } else {
-                if (result) {
-                  for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    let columnindex = customcolumn[i].index + 1;
-
-                    if (hiddenColumn == true) {
-
-                      $("." + columnClass + "").addClass('hiddenColumn');
-                      $("." + columnClass + "").removeClass('showColumn');
-                    } else if (hiddenColumn == false) {
-                      $("." + columnClass + "").removeClass('hiddenColumn');
-                      $("." + columnClass + "").addClass('showColumn');
-                    }
-
-                  }
-                }
-
-              }
-            });
-
-
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
-          }
-
-          $('.fullScreenSpin').css('display', 'none');
-          setTimeout(function () {
-            $('#tblInventory').dataTable({
-              data: splashArrayProductList,
-              select: true,
-              destroy: true,
-              columnDefs: [
-                {
-                  className: "colProductID",
-                  "targets": [0]
-                }, {
-                  className: "colProductName",
-                  "targets": [1]
-                }, {
-                  className: "colSalesDescription",
-                  "targets": [2]
-                }, {
-                  className: "colBarcode",
-                  "targets": [3]
-                }, {
-                  className: "colDepartment",
-                  "targets": [4]
-                }, {
-                  className: "colCostPrice text-right",
-                  "targets": [5]
-                }, {
-                  className: "colSalePrice text-right",
-                  "targets": [6]
-                }, {
-                  className: "colQuantity text-right",
-                  "targets": [7]
-                }, {
-                  className: "colPurchaseDescription hiddenColumn",
-                  "targets": [8]
-                }, {
-                  className: "colProdCustField1 hiddenColumn",
-                  "targets": [9]
-                }, {
-                  className: "colProdCustField2 hiddenColumn",
-                  "targets": [10]
-                }
-              ],
-              select: true,
-              destroy: true,
-              colReorder: true,
-              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-              buttons: [
-                {
-                  extend: 'excelHtml5',
-                  text: '',
-                  download: 'open',
-                  className: "btntabletocsv hiddenColumn",
-                  filename: "inventory_" + moment().format(),
-                  orientation: 'portrait',
-                  exportOptions: {
-                    columns: ':visible'
-                  }
-                }, {
-                  extend: 'print',
-                  download: 'open',
-                  className: "btntabletopdf hiddenColumn",
-                  text: '',
-                  title: 'Inventory List',
-                  filename: "inventory_" + moment().format(),
-                  exportOptions: {
-                    columns: ':visible'
-                  }
-                }],
-              // bStateSave: true,
-              // rowId: 0,
-              // paging: false,
-              // "scrollY": "800px",
-              // "scrollCollapse": true,
-              pageLength: initialBaseDataLoad,
-              lengthMenu: [[initialBaseDataLoad, -1], [initialBaseDataLoad, "All"]],
-              info: true,
-              responsive: true,
-              "order": [[1, "asc"]],
-              action: function () {
-                $('#tblInventory').DataTable().ajax.reload();
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-              },
-              "fnDrawCallback": function (oSettings) {
-                $('.paginate_button.page-item').removeClass('disabled');
-                $('#tblInventory_ellipsis').addClass('disabled');
-                if (oSettings._iDisplayLength == -1) {
-                  if (oSettings.fnRecordsDisplay() > 150) {
-
-                  }
-                } else {
-
-                }
-                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                  $('.paginate_button.page-item.next').addClass('disabled');
-                }
-
-                $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                  .on('click', function () {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = oSettings._iDisplayLength;
-                    let customerSearch = $('#tblInventory_filter input').val();
-
-                    sideBarService.getNewProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                      for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-
-                        var dataListDupp = [
-                          dataObjectnew.tproductvs1[i].fields.ID || '',
-                          dataObjectnew.tproductvs1[i].fields.ProductName || '-',
-                          dataObjectnew.tproductvs1[i].fields.SalesDescription || '',
-                          dataObjectnew.tproductvs1[i].fields.BARCODE || '',
-                          departmentData,
-                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-
-                          dataObjectnew.tproductvs1[i].fields.PurchaseDescription || '',
-                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || '',
-                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || '',
-                        ];
-                        splashArrayProductList.push(dataListDupp);
-
-                      }
-
-                      let uniqueChars = [...new Set(splashArrayProductList)];
-                      var datatable = $('#tblInventory').DataTable();
-                      datatable.clear();
-                      datatable.rows.add(uniqueChars);
-                      datatable.draw(false);
-                      setTimeout(function () {
-                        $("#tblInventory").dataTable().fnPageChange('last');
-                      }, 400);
-
-                      $('.fullScreenSpin').css('display', 'none');
-
-
-                    }).catch(function (err) {
-                      $('.fullScreenSpin').css('display', 'none');
-                    });
-
-                  });
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              },
-              language: { search: "", searchPlaceholder: "Search List..." },
-              "fnInitComplete": function () {
-                $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
-              }
-
-            }).on('length.dt', function (e, settings, len) {
-              $('.fullScreenSpin').css('display', 'inline-block');
-              let dataLenght = settings._iDisplayLength;
-              // splashArrayProductList = [];
-              if (dataLenght == -1) {
-                $('.fullScreenSpin').css('display', 'none');
-              } else {
-                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                  $('.fullScreenSpin').css('display', 'none');
-                } else {
-
-                  $('.fullScreenSpin').css('display', 'none');
-                }
-
-              }
-
-            });
-
-            $('.fullScreenSpin').css('display', 'none');
-            $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          }, 0);
-
-
-        }).catch(function (err) {
-          // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $('.fullScreenSpin').css('display', 'none');
-          // Meteor._reload.reload();
-        });
-      } else {
-
-        let data = JSON.parse(dataObject[0].data);
-        
-        for (let i = 0; i < data.tproductbin.length; i++) {
-          var dataList = [
-            data.tproductbin[i].BinLocation || '',
-            data.tproductbin[i].BinNumber || '',
-            data.tproductbin[i].BinClassName || '',
-            data.tproductbin[i].ID || '',
-            data.tproductbin[i].ID || '',
-            data.tproductbin[i].ID || '',
-            data.tproductbin[i].ID || '',
-          ];
-          splashArrayProductList.push(dataList);
-        }
-
-        function MakeNegative() {
-          $('td').each(function () {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-          });
-        };
-
-        $('.fullScreenSpin').css('display', 'none');
-        setTimeout(function () {
-          $('#tblInventory').dataTable({
-            data: splashArrayProductList,
-            select: true,
-            destroy: true,
-            columnDefs: [
-              {
-                className: "colRack",
-                "targets": [0]
-              }, {
-                className: "colBinNumber",
-                "targets": [1]
-              }, {
-                className: "colDepartment",
-                "targets": [2]
-              }, {
-                className: "colProductName",
-                "targets": [3]
-              }, {
-                className: "colSalesDescription",
-                "targets": [4]
-              }, {
-                className: "colInStock text-right",
-                "targets": [5]
-              }, {
-                className: "colActive text-right",
-                "targets": [6]
-              }
-            ],
-            select: true,
-            destroy: true,
-            colReorder: true,
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [
-              {
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "inventory_" + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                  columns: ':visible'
-                }
-              }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Inventory List',
-                filename: "inventory_" + moment().format(),
-                exportOptions: {
-                  columns: ':visible'
-                }
-              }],
-            // bStateSave: true,
-            // rowId: 0,
-            // paging: false,
-            // "scrollY": "800px",
-            // "scrollCollapse": true,
-            pageLength: initialBaseDataLoad,
-            lengthMenu: [[initialBaseDataLoad, -1], [initialBaseDataLoad, "All"]],
-            info: true,
-            responsive: true,
-            "order": [[1, "asc"]],
-            action: function () {
-              $('#tblInventory').DataTable().ajax.reload();
-              let draftRecord = templateObject.datatablerecords.get();
-              templateObject.datatablerecords.set(draftRecord);
-            },
-            "fnDrawCallback": function (oSettings) {
-              $('.paginate_button.page-item').removeClass('disabled');
-              $('#tblInventory_ellipsis').addClass('disabled');
-              if (oSettings._iDisplayLength == -1) {
-                if (oSettings.fnRecordsDisplay() > 150) {
-
-                }
-              } else {
-
-              }
-              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                $('.paginate_button.page-item.next').addClass('disabled');
-              }
-
-              $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                .on('click', function () {
-                  $('.fullScreenSpin').css('display', 'inline-block');
-                  let dataLenght = oSettings._iDisplayLength;
-                  let customerSearch = $('#tblInventory_filter input').val();
-
-                  sideBarService.getNewProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                    for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-
-                      var dataListDupp = [
-                        dataObjectnew.tproductvs1[i].fields.ID || '',
-                        dataObjectnew.tproductvs1[i].fields.ProductName || '-',
-                        dataObjectnew.tproductvs1[i].fields.SalesDescription || '',
-                        dataObjectnew.tproductvs1[i].fields.BARCODE || '',
-                        departmentData,
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-
-                        dataObjectnew.tproductvs1[i].fields.PurchaseDescription || '',
-                        dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || '',
-                        dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || '',
-                      ];
-                      splashArrayProductList.push(dataListDupp);
-
-                    }
-
-                    let uniqueChars = [...new Set(splashArrayProductList)];
-                    var datatable = $('#tblInventory').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(uniqueChars);
-                    datatable.draw(false);
-                    setTimeout(function () {
-                      $("#tblInventory").dataTable().fnPageChange('last');
-                    }, 400);
-
-                    $('.fullScreenSpin').css('display', 'none');
-
-
-                  }).catch(function (err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                  });
-
-                });
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
-            },
-            language: { search: "", searchPlaceholder: "Search List..." },
-            "fnInitComplete": function () {
-              $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
-            }
-
-          }).on('length.dt', function (e, settings, len) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let dataLenght = settings._iDisplayLength;
-            // splashArrayProductList = [];
-            if (dataLenght == -1) {
-              $('.fullScreenSpin').css('display', 'none');
-            } else {
-              if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                $('.fullScreenSpin').css('display', 'none');
-              } else {
-
-                $('.fullScreenSpin').css('display', 'none');
-              }
-
-            }
-
-          });
-
-          $('.fullScreenSpin').css('display', 'none');
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        }, 0);
-
-      }
-    }).catch(function (err) {
-
-      productService.getBins().then(function (data) {
-        addVS1Data('TProductBin', JSON.stringify(data));
-        let lineItems = [];
-        let lineItemObj = {};
-        let departmentData = '';
-        let departmentDataLoad = '';
-        let prodQtyData = 0;
-        let prodQtyDataLoad = 0;
-        let deptStatus = '';
-        //let getDepartmentData = templateObject.productdeptrecords.get();
-        var dataList = {};
-        //if((deptname == 'undefined') || (deptname == 'All')){
-        departmentData = 'All';
-
-        for (let i = 0; i < data.tproductbin.length; i++) {
-          console.log(data.tproductbin[i].ID);
-          var dataList = [
-            data.tproductbin[i].BinLocation || '',
-            data.tproductbin[i].BinNumber || '',
-            data.tproductbin[i].BinClassName || '',
-            data.tproductbin[i].ID || '',
-            data.tproductbin[i].ID || '',
-            data.tproductbin[i].ID || '',
-            data.tproductbin[i].ID || '',
-            
-            // data.tproductbin[i].fields.ProductName || '-',
-            // data.tproductbin[i].fields.SalesDescription || '',
-            // data.tproductbin[i].fields.BARCODE || '',
-            // departmentData,
-            // utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-            // utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-            // data.tproductvs1[i].fields.TotalQtyInStock,
-
-            // data.tproductvs1[i].fields.PurchaseDescription || '',
-            // data.tproductvs1[i].fields.CUSTFLD1 || '',
-            // data.tproductvs1[i].fields.CUSTFLD2 || '',
-            // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
-          ];
-          splashArrayProductList.push(dataList);
-        }
-
-        templateObject.datatablerecords.set(dataTableList);
-        templateObject.datatablebackuprecords.set(dataTableList);
-        function MakeNegative() {
-          $('td').each(function () {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-          });
-        };
-        // localStorage.setItem('VS1ProductList', splashArrayProd);
-
-        if (templateObject.datatablerecords.get()) {
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        }
-
-        $('.fullScreenSpin').css('display', 'none');
-        setTimeout(function () {
-          $('#tblInventory').dataTable({
-            data: splashArrayProductList,
-            select: true,
-            destroy: true,
-            columnDefs: [
-              {
-                className: "colRack",
-                "targets": [0]
-              }, {
-                className: "colBinNumber",
-                "targets": [1]
-              }, {
-                className: "colDepartment",
-                "targets": [2]
-              }, {
-                className: "colProductName",
-                "targets": [3]
-              }, {
-                className: "colSalesDescription",
-                "targets": [4]
-              }, {
-                className: "colInStock text-right",
-                "targets": [5]
-              }, {
-                className: "colActive text-right",
-                "targets": [6]
-              }
-            ],
-            select: true,
-            destroy: true,
-            colReorder: true,
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [
-              {
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "inventory_" + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                  columns: ':visible'
-                }
-              }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Inventory List',
-                filename: "inventory_" + moment().format(),
-                exportOptions: {
-                  columns: ':visible'
-                }
-              }],
-            // bStateSave: true,
-            // rowId: 0,
-            // paging: false,
-            // "scrollY": "800px",
-            // "scrollCollapse": true,
-            pageLength: initialBaseDataLoad,
-            lengthMenu: [[initialBaseDataLoad, -1], [initialBaseDataLoad, "All"]],
-            info: true,
-            responsive: true,
-            "order": [[1, "asc"]],
-            action: function () {
-              $('#tblInventory').DataTable().ajax.reload();
-              let draftRecord = templateObject.datatablerecords.get();
-              templateObject.datatablerecords.set(draftRecord);
-            },
-            "fnDrawCallback": function (oSettings) {
-              $('.paginate_button.page-item').removeClass('disabled');
-              $('#tblInventory_ellipsis').addClass('disabled');
-              if (oSettings._iDisplayLength == -1) {
-                if (oSettings.fnRecordsDisplay() > 150) {
-
-                }
-              } else {
-
-              }
-              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                $('.paginate_button.page-item.next').addClass('disabled');
-              }
-
-              $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                .on('click', function () {
-                  $('.fullScreenSpin').css('display', 'inline-block');
-                  let dataLenght = oSettings._iDisplayLength;
-                  let customerSearch = $('#tblInventory_filter input').val();
-
-                  sideBarService.getNewProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                    for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
-
-                      var dataListDupp = [
-                        dataObjectnew.tproductvs1[i].fields.ID || '',
-                        dataObjectnew.tproductvs1[i].fields.ProductName || '-',
-                        dataObjectnew.tproductvs1[i].fields.SalesDescription || '',
-                        dataObjectnew.tproductvs1[i].fields.BARCODE || '',
-                        departmentData,
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
-
-                        dataObjectnew.tproductvs1[i].fields.PurchaseDescription || '',
-                        dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || '',
-                        dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || '',
-
-                      ];
-                      splashArrayProductList.push(dataListDupp);
-
-                    }
-
-                    let uniqueChars = [...new Set(splashArrayProductList)];
-                    var datatable = $('#tblInventory').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(uniqueChars);
-                    datatable.draw(false);
-                    setTimeout(function () {
-                      $("#tblInventory").dataTable().fnPageChange('last');
-                    }, 400);
-
-                    $('.fullScreenSpin').css('display', 'none');
-
-
-                  }).catch(function (err) {
-                    $('.fullScreenSpin').css('display', 'none');
-                  });
-
-                });
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
-            },
-            language: { search: "", searchPlaceholder: "Search List..." },
-            "fnInitComplete": function () {
-              $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventory_filter");
-            }
-
-          }).on('length.dt', function (e, settings, len) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let dataLenght = settings._iDisplayLength;
-            // splashArrayProductList = [];
-            if (dataLenght == -1) {
-              $('.fullScreenSpin').css('display', 'none');
-            } else {
-              if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                $('.fullScreenSpin').css('display', 'none');
-              } else {
-
-                $('.fullScreenSpin').css('display', 'none');
-              }
-
-            }
-
-          });
-
-          $('.fullScreenSpin').css('display', 'none');
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-        }, 0);
-
-
-      }).catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $('.fullScreenSpin').css('display', 'none');
-        // Meteor._reload.reload();
-      });
-    });
-  }
 
   // $('.tblInventory tbody').on( 'click', 'tr', function () {
   //   var listData = $(this).closest('tr').find('.colProductID').text();
@@ -811,10 +97,8 @@ Template.binlocationslist.onRendered(function () {
       }
     });
   }
-  templateObject.getAllProductData('All');
-  templateObject.getDepartments();
-  // templateObject.getAllProductClassDeptData();
 
+  templateObject.getDepartments();
 
   templateObject.getProductClassDeptData = function (deptname) {
     productService.getProductClassDataByDeptName(deptname).then(function (data) {
@@ -1080,6 +364,9 @@ Template.binlocationslist.helpers({
   deptrecords: () => {
     return Template.instance().deptrecords.get();
   },
+  productrecords: () => {
+    return Template.instance().productrecords.get();
+  },
   datatablerecords: () => {
     return Template.instance().datatablerecords.get();
   },
@@ -1288,17 +575,33 @@ Template.binlocationslist.events({
 
   },
 
+  // Open Edit Bin Modal
+  "click td.BinID , click td.Rack, click td.BinNumber ": function (event) {
+    $("#editBinId").val($(event.target).closest("tr").find(".colBinID").text());
+    $("#editBinDepartmentList").val($(event.target).closest("tr").find(".Department").text());
+    $("#editBinRack").val($(event.target).closest("tr").find(".Rack").text());
+    $("#editBinNum").val($(event.target).closest("tr").find(".BinNumber").text());
+    $("#editBinLocationModal").modal('show');
+  },
+
+  // Open Product Detail Link
+  "click td.Department , click td.ProductName, click td.SalesDescription, click td.InStock ": function (event) {
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
+    if (listData) {
+      FlowRouter.go("/productview?id=" + listData);
+    }
+  },
+
+  // Open Disp Setting
   'click .btnOpenSettings': function (event) {
     let templateObject = Template.instance();
-    var columns = $('#tblInventory th');
+    var columns = $('#tblBinLocations th');
 
     const tableHeaderList = [];
-    let sTible = "";
+
     let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
     let columVisible = false;
-    let sClass = "";
+
     $.each(columns, function (i, v) {
       if (v.hidden == false) {
         columVisible = true;
@@ -1320,7 +623,8 @@ Template.binlocationslist.events({
     templateObject.tableheaderrecords.set(tableHeaderList);
   },
 
-  'keyup #tblInventory_filter input': function (event) {
+  // Toggle Search Button Alert on keyup
+  'keyup #tblBinLocations_filter input': function (event) {
     if ($(event.target).val() != '') {
       $(".btnRefreshProduct").addClass('btnSearchAlert');
     } else {
@@ -1330,60 +634,61 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").trigger("click");
     }
   },
-  'blur #tblInventory_filter input': function (event) {
+
+  // Toggle Search Button Alert on blur
+  'blur #tblBinLocations_filter input': function (event) {
     if ($(event.target).val() != '') {
       $(".btnRefreshProduct").addClass('btnSearchAlert');
     } else {
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
-
   },
+  
+  // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
-    let utilityService = new UtilityService();
+    let productService = new ProductService();
     let tableProductList;
     var splashArrayProductList = new Array();
     const lineExtaSellItems = [];
     $('.fullScreenSpin').css('display', 'inline-block');
-    let dataSearchName = $('#tblInventory_filter input').val();
+    let dataSearchName = $('#tblBinLocations_filter input').val();
     if (dataSearchName.replace(/\s/g, '') != '') {
-      sideBarService.getNewProductListVS1ByName(dataSearchName).then(function (data) {
+      productService.getNewBinListBySearch(dataSearchName).then(function (data) {
         let records = [];
-
         let inventoryData = [];
-        if (data.tproductvs1.length > 0) {
-          for (let i = 0; i < data.tproductvs1.length; i++) {
+        if (data.tproductbin.length > 0) {
+          for (let i = 0; i < data.tproductbin.length; i++) {
+            console.log(data.tproductbin[i]);
             var dataList = [
-              data.tproductvs1[i].fields.ID || '',
-              data.tproductvs1[i].fields.ProductName || '-',
-              data.tproductvs1[i].fields.SalesDescription || '',
-              data.tproductvs1[i].fields.BARCODE || '',
-              'All',
-              utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-              utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-              data.tproductvs1[i].fields.TotalQtyInStock,
-              data.tproductvs1[i].fields.PurchaseDescription || '',
-              data.tproductvs1[i].fields.CUSTFLD1 || '',
-              data.tproductvs1[i].fields.CUSTFLD2 || ''
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].BinLocation || "-",
+              data.tproductbin[i].BinNumber || "",
+              data.tproductbin[i].BinClassName || "",
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].Active || "",
             ];
 
             splashArrayProductList.push(dataList);
           }
+
+          
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
-            var datatable = $('#tblInventory').DataTable();
+            var datatable = $('#tblBinLocations').DataTable();
             datatable.clear();
             datatable.rows.add(splashArrayProductList);
             datatable.draw(false);
-
           }
         } else {
           $('.fullScreenSpin').css('display', 'none');
 
           swal({
             title: 'Question',
-            text: "Product does not exist, would you like to create it?",
+            text: "Bin Location does not exist, would you like to create it?",
             type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -1400,22 +705,17 @@ Template.binlocationslist.events({
         $('.fullScreenSpin').css('display', 'none');
       });
     } else {
-      sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function (data) {
-        let records = [];
-        let inventoryData = [];
-        for (let i = 0; i < data.tproductvs1.length; i++) {
+      productService.getBins().then(function (data) {
+        for (let i = 0; i < data.tproductbin.length; i++) {
           var dataList = [
-            data.tproductvs1[i].fields.ID || '',
-            data.tproductvs1[i].fields.ProductName || '-',
-            data.tproductvs1[i].fields.SalesDescription || '',
-            data.tproductvs1[i].fields.BARCODE || '',
-            'All',
-            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-            data.tproductvs1[i].fields.TotalQtyInStock,
-            data.tproductvs1[i].fields.PurchaseDescription || '',
-            data.tproductvs1[i].fields.CUSTFLD1 || '',
-            data.tproductvs1[i].fields.CUSTFLD2 || ''
+            data.tproductbin[i].Id || "",
+              data.tproductbin[i].BinLocation || "-",
+              data.tproductbin[i].BinNumber || "",
+              data.tproductbin[i].BinClassName || "",
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].Id || "",
+              data.tproductbin[i].Active || "",
           ];
 
           splashArrayProductList.push(dataList);
@@ -1424,46 +724,41 @@ Template.binlocationslist.events({
         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
         $('.fullScreenSpin').css('display', 'none');
         if (splashArrayProductList) {
-          var datatable = $('#tblInventory').DataTable();
+          var datatable = $('#tblBinLocations').DataTable();
           datatable.clear();
           datatable.rows.add(splashArrayProductList);
           datatable.draw(false);
-
-
         }
       }).catch(function (err) {
         $('.fullScreenSpin').css('display', 'none');
       });
     }
-
   },
+
+  // Refresh Data
   'click .btnRefresh': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
-    sideBarService.getProductServiceListVS1(initialBaseDataLoad, 0).then(function (data) {
-      addVS1Data('TProductWeb', JSON.stringify(data));
-      sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function (data) {
-        addVS1Data('TProductVS1', JSON.stringify(data)).then(function (datareturn) {
-          Meteor._reload.reload();
+    let productService = new ProductService();
+    productService.getBins().then(function (data) {
+      addVS1Data('TProductBin', JSON.stringify(data)).then(function (datareturn) {
+          window.open("/binlocationslist", "_self");
         }).catch(function (err) {
-          Meteor._reload.reload();
+          window.open("/binlocationslist", "_self");
         });
-      }).catch(function (err) {
-        Meteor._reload.reload();
-      });
     }).catch(function (err) {
-      sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function (data) {
-        addVS1Data('TProductVS1', JSON.stringify(data)).then(function (datareturn) {
-          Meteor._reload.reload();
+      productService.getBins().then(function (data) {
+        addVS1Data('TProductBin', JSON.stringify(data)).then(function (datareturn) {
+          window.open("/binlocationslist", "_self");
         }).catch(function (err) {
-          Meteor._reload.reload();
+          window.open("/binlocationslist", "_self");
         });
       }).catch(function (err) {
-        Meteor._reload.reload();
+        window.open("/binlocationslist", "_self");
       });
     });
-
   },
+
   'click #exportinv_pdf': async function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     exportInventoryToPdf();
@@ -1572,6 +867,7 @@ Template.binlocationslist.events({
       });
     }, delayTimeAfterSound);
   },
+
   'click .chkDepartment': function (event) {
     let templateObject = Template.instance();
     let dataValue = $(event.target).val();
@@ -1716,6 +1012,7 @@ Template.binlocationslist.events({
     //   // templateObject.getProductClassDeptData(dataValue);
     // }
   },
+
   'click .btnSaveSelect': async function () {
     playSaveAudio();
     setTimeout(function () {
@@ -1724,9 +1021,7 @@ Template.binlocationslist.events({
       // templateObject.getAllProductData('All');
     }, delayTimeAfterSound);
   },
-  'click .btnNewProduct': function () {
-    FlowRouter.go('/productview');
-  },
+
   'click .printConfirm': function (event) {
     playPrintAudio();
     setTimeout(function () {
@@ -1735,9 +1030,7 @@ Template.binlocationslist.events({
       $('.fullScreenSpin').css('display', 'none');
     }, delayTimeAfterSound);
   },
-  'click .btnStockAdjustment': function (event) {
-    FlowRouter.go('/stockadjustmentoverview');
-  },
+
   'click .templateDownload': function () {
     let utilityService = new UtilityService();
     let rows = [];
@@ -1816,6 +1109,91 @@ Template.binlocationslist.events({
       }
 
     }
+  },
+
+  // Delete Bin
+  'click .btnSaveDeleteBin': function () {
+    playDeleteAudio();
+    let productService = new ProductService();
+    setTimeout(function(){
+      $('.fullScreenSpin').css('display','inline-block');
+
+      var binId = $('#editBinId').val();
+      var editbinname = $('#editBinRack').val();
+      var editbinnum = $('#editBinNum').val();
+
+      let data = '';
+
+      data = {
+        type: "TProductBin",
+        fields: {
+            ID: binId,
+            Active: false,
+            BinVolume: 0,
+            ISEmpty: true,
+            // BinLocation: editbinname|| '',
+            // BinNumber: editbinnum|| ''
+        }
+      };
+
+      productService.saveBin(data).then(function (data) {
+        productService.getBins().then(function (dataReload) {
+          addVS1Data('TProductBin', JSON.stringify(dataReload)).then(function (datareturn) {
+            window.open('/binlocationslist','_self');
+          }).catch(function (err) {
+            window.open('/binlocationslist','_self');
+          });
+      }).catch(function (err) {
+        window.open('/binlocationslist','_self');
+      });
+       
+      }).catch(function (err) {
+        $('.fullScreenSpin').css('display','none');
+      });
+    }, delayTimeAfterSound);
+  },
+
+  // Update Bin
+  'click .btnSaveEditBin': function () {
+    playSaveAudio();
+    let productService = new ProductService();
+    setTimeout(function(){
+      $('.fullScreenSpin').css('display','inline-block');
+
+      var binId = $('#editBinId').val();
+      var editbinname = $('#editBinRack').val();
+      var editbinnum = $('#editBinNum').val();
+
+      let data = '';
+
+      data = {
+        type: "TProductBin",
+        fields: {
+            ID: binId,
+            ISEmpty: true,
+            BinLocation: editbinname|| '',
+            BinNumber: editbinnum|| '',
+            BinVolume: 0,
+            BinVolumeAvailable: 0,
+            BinVolumeUsed: 0,
+        }
+      };
+
+      productService.saveBin(data).then(function (data) {
+        productService.getBins().then(function (dataReload) {
+          addVS1Data('TProductBin', JSON.stringify(dataReload)).then(function (datareturn) {
+            window.open('/binlocationslist','_self');
+          }).catch(function (err) {
+            window.open('/binlocationslist','_self');
+          });
+      }).catch(function (err) {
+        window.open('/binlocationslist','_self');
+      });
+       
+      }).catch(function (err) {
+        $('.fullScreenSpin').css('display','none');
+      });
+    }, delayTimeAfterSound);
   },
 
   // Save New Bin Location

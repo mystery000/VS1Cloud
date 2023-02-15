@@ -37,6 +37,7 @@ Template.productview.onCreated(() => {
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.deptrecords = new ReactiveVar();
     templateObject.binrecords = new ReactiveVar();
+    templateObject.bindept = new ReactiveVar();
     templateObject.tserialnumberList = new ReactiveVar();
     templateObject.tlotnumberList = new ReactiveVar();
     templateObject.recentTrasactions = new ReactiveVar([]);
@@ -87,6 +88,7 @@ Template.productview.onRendered(function () {
     const taxCodesList = [];
     const deptrecords = [];
     const binrecords = [];
+    const bindept = 'Default';
 
   const coggsaccountrecords = [];
   const salesaccountrecords = [];
@@ -739,6 +741,8 @@ Template.productview.onRendered(function () {
 
                         let binrecordObj = {
                             binnumber: data.tproductbin[i].BinNumber || ' ',
+                            binlocation: data.tproductbins[i].BinLocation || '',
+                            binclass: data.tproductbin[i].BinClassName || ' ',
                         };
 
                         binrecords.push(binrecordObj);
@@ -753,12 +757,16 @@ Template.productview.onRendered(function () {
 
                     let binrecordObj = {
                         binnumber: useData[i].BinNumber || ' ',
+                        binlocation: useData[i].BinLocation || '',
+                        binclass: useData[i].BinClassName || ' ',
                     };
 
                     binrecords.push(binrecordObj);
                     templateObject.binrecords.set(binrecords);
 
+
                 }
+                console.log(binrecords);
 
             }
         }).catch(function(err) {
@@ -767,6 +775,8 @@ Template.productview.onRendered(function () {
 
                     let binrecordObj = {
                         binnumber: data.tproductbins[i].BinNumber || ' ',
+                        binlocation: data.tproductbins[i].BinLocation || '',
+                        binclass: data.tproductbins[i].BinClassName || ' ',
                     };
 
                     binrecords.push(binrecordObj);
@@ -820,6 +830,7 @@ Template.productview.onRendered(function () {
         templateObject.getAllTaxCodes();
         templateObject.getDepartments();
         templateObject.getBinLocations();
+        templateObject.bindept.set('Default');
         //templateObject.getClientTypeData();
     }, 1000);
 
@@ -901,7 +912,7 @@ Template.productview.onRendered(function () {
                   barcode: data.fields.BARCODE,
                   // data.fields.TotalQtyInStock,
                   totalqtyonorder: data.fields.TotalQtyOnOrder,
-                  //productclass :lineItems,
+                  productclass :data.fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
 
@@ -1090,8 +1101,11 @@ Template.productview.onRendered(function () {
                   // useData[i].fields.TotalQtyInStock,
                   totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
                   //productclass :lineItems,
+                  productclass :useData[i].fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
+
+                console.log(productrecord.productclass.DefaultbinNumber);
 
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
@@ -3299,6 +3313,9 @@ Template.productview.helpers({
             return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
         });
     },
+    bindept: () => {
+      return Template.instance().bindept.get();
+    },
     tserialnumberList: () => {
         return Template.instance().tserialnumberList.get();
     },
@@ -3703,6 +3720,31 @@ Template.productview.events({
               isManufactured: getIsManufactured,
             },
           };
+        }
+
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+              console.log(data);
+          });
         }
 
         productService
@@ -5062,6 +5104,12 @@ Template.productview.events({
     //     }
     // }
     $("#BOMSetupModal").modal("toggle");
+  },
+
+  "change .slt_department": function (event) {
+    let templateObject = Template.instance();
+    let dept_name = $(event.target).val();
+    templateObject.bindept.set(dept_name);
   },
 
   "change #chkBOM": function (event) {
