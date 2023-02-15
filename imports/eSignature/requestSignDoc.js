@@ -3,6 +3,7 @@ const signingViaEmail = require('./signingViaEmail');
 const fs = require('fs');
 const path = require('path');
 const prompt = require('prompt-sync')();
+const docuSignConfig = require('./docuSignConfig.json');
 
 const { ProvisioningInformation } = require('docusign-esign');
 const demoDocsPath = path.resolve('D:/demo_documents', '');
@@ -19,8 +20,8 @@ function getConsent() {
 
     // Construct consent URL
     var redirectUri = "https://developers.docusign.com/platform/auth/consent";
-    var consentUrl = `https://account-d.docusign.com/oauth/auth?response_type=code&` +
-        `scope=${urlScopes}&client_id=d3527b29-c43b-4236-97d0-8c6ee0d6eec0&` +
+    var consentUrl = `${docuSignConfig.dsOauthServer}/oauth/auth?response_type=code&` +
+        `scope=${urlScopes}&client_id=${docuSignConfig.dsJWTClientId}&` +
         `redirect_uri=${redirectUri}`;
 
     console.log("Open the following URL in your browser to grant consent to the application:");
@@ -44,8 +45,8 @@ async function authenticate() {
     let rsaKey = fs.readFileSync(keyPath);
 
     try {
-        const results = await dsApi.requestJWTUserToken('d3527b29-c43b-4236-97d0-8c6ee0d6eec0',
-            '40972699-d575-43ce-9f60-5ff444842777', SCOPES, rsaKey,
+        const results = await dsApi.requestJWTUserToken(docuSignConfig.dsJWTClientId,
+            docuSignConfig.impersonatedUserGuid, SCOPES, rsaKey,
             jwtLifeSec);
         const accessToken = results.body.access_token;
 
