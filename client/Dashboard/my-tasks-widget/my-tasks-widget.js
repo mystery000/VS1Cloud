@@ -24,6 +24,7 @@ Template.myTasksWidget.onCreated(function() {
 
 Template.myTasksWidget.onRendered(function() {
     let templateObject = Template.instance();
+    
     templateObject.getInitialAllTaskList = function() {
         getVS1Data("TCRMTaskList").then(function(dataObject) {
             if (dataObject.length == 0) {

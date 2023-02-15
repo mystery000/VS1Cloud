@@ -167,40 +167,50 @@
             padding-bottom: 12px;
         }
     </style>
-    <div class="row no-gutters">
-<!--        <div class="col-md-2">-->
-<!--            <h5 class="font-weight-bold text-center"></h5>-->
-<!--        </div>-->
-        <div class="col-md-3">
-            <h5 class="font-weight-bold">Date</h5>
-        </div>
-        <div class="col-md-3">
-            <h5 class="font-weight-bold">Priority</h5>
-        </div>
-        <div class="col-md-6">
-            <h5 class="font-weight-bold">Subject</h5>
-        </div>
+
+    <div class="table-responsive" style="overflow-x: hidden!important;">
+        <table id="" style="width:100%" class="dataTable table table-striped table-bordered tblSubtaskDatatable">
+            <thead>
+                <tr class="dnd-moved">
+                    <th class="th colReconId hiddenColumn">ID</th>
+                    <th class="th colReconAccountName" style="width:80px;">Date</th>
+                    <th class="th colReconBalance" style="width:80px;">Priority</th>
+                    <th class="th colNotReconcilied" style="width:140px;">Subject</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{#if todayTasks}}
+                {{#each item in todayTasks}}
+                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                        <td contenteditable="false" class="colReconId hiddenColumn">{{item.id}}</td>
+                        <td contenteditable="false" class="colReconAccountName">{{item.dueDate}}</td>
+                        <td contenteditable="false" class="colNotReconcilied">{{item.priority}}</td>
+                        <td contenteditable="false" class="colReconDate">{{item.taskName}}</td>
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr class="dnd-moved">
+                    <td colspan="3">No tasks found.</td>
+                </tr>
+            {{/if}}
+            </tbody>
+        </table>
+
+        <style media="screen">
+            .colReconDate{
+                width:80px!Important;
+            }
+            .colNotReconcilied{
+                width:100px!Important;
+            }
+            .colReconBalance{
+                width:80px!Important;
+            }
+            .colReconAccountName{
+                width:120px!Important;
+            }
+        </style>
     </div>
-    {{#if todayTasks}}
-        {{#each item in todayTasks}}
-        <div class="row no-gutters mb-1 align-items-center taskline" style="font-size: 16px; cursor: pointer;" taskid="{{item.id}}">
-<!--            <div class="col-md-2 no-gutters text-center">-->
-<!--                <a class="mb-0" href="crmoverview?taskid={{item.id}}">View</a>-->
-<!--            </div>-->
-            <div class="col-md-3 no-gutters">
-                <p class="mb-0">{{item.dueDate}}</p>
-            </div>
-            <div class="col-md-3 no-gutters">
-                <p class="mb-0">{{item.priority}}</p>
-            </div>
-            <div class="col-md-3 no-gutters">
-                <p class="mb-0">{{item.taskName}}</p>
-            </div>
-        </div>
-        {{/each}}
-    {{else}}
-    <div class="text-center mt-2"><i>No tasks found.</i></div>
-    {{/if}}
 
     {{> taskDetailModal}}
     {{> newTaskModal}}
