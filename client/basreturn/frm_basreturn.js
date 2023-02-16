@@ -1693,17 +1693,17 @@ Template.basreturn.onRendered(function() {
                                         }
                                     }
 
-                                    document.getElementById("gstG1").setAttribute("href", "#");
-                                    document.getElementById("gstG2").setAttribute("href", "#");
-                                    document.getElementById("gstG3").setAttribute("href", "#");
-                                    document.getElementById("gstG4").setAttribute("href", "#");
-                                    document.getElementById("gstG7").setAttribute("href", "#");
-                                    document.getElementById("gstG10").setAttribute("href", "#");
-                                    document.getElementById("gstG11").setAttribute("href", "#");
-                                    document.getElementById("gstG13").setAttribute("href", "#");
-                                    document.getElementById("gstG14").setAttribute("href", "#");
-                                    document.getElementById("gstG15").setAttribute("href", "#");
-                                    document.getElementById("gstG18").setAttribute("href", "#");
+                                    // document.getElementById("gstG1").setAttribute("href", "#");
+                                    // document.getElementById("gstG2").setAttribute("href", "#");
+                                    // document.getElementById("gstG3").setAttribute("href", "#");
+                                    // document.getElementById("gstG4").setAttribute("href", "#");
+                                    // document.getElementById("gstG7").setAttribute("href", "#");
+                                    // document.getElementById("gstG10").setAttribute("href", "#");
+                                    // document.getElementById("gstG11").setAttribute("href", "#");
+                                    // document.getElementById("gstG13").setAttribute("href", "#");
+                                    // document.getElementById("gstG14").setAttribute("href", "#");
+                                    // document.getElementById("gstG15").setAttribute("href", "#");
+                                    // document.getElementById("gstG18").setAttribute("href", "#");
                                 }
                                 if (data.tbasreturn[0].fields.HasTab2 == true) {
                                     $("#nav-item2").show();
@@ -1727,10 +1727,10 @@ Template.basreturn.onRendered(function() {
                                             $("#nav-item4 a").click();
                                         }
                                     }
-                                    document.getElementById("accountsW1").setAttribute("href", "#");
-                                    document.getElementById("accountsW2").setAttribute("href", "#");
-                                    document.getElementById("accountsW3_").setAttribute("href", "#");
-                                    document.getElementById("accountsW4").setAttribute("href", "#");
+                                    // document.getElementById("accountsW1").setAttribute("href", "#");
+                                    // document.getElementById("accountsW2").setAttribute("href", "#");
+                                    // document.getElementById("accountsW3_").setAttribute("href", "#");
+                                    // document.getElementById("accountsW4").setAttribute("href", "#");
                                 }
                                 if (data.tbasreturn[0].fields.HasTab3 == true) {
                                     $("#nav-item2").show();
@@ -1758,14 +1758,14 @@ Template.basreturn.onRendered(function() {
                                         }
                                     }
 
-                                    document.getElementById("accountsT1").setAttribute("href", "#");
-                                    $("#accountsT2cost").attr("disabled", "disabled");
-                                    $("#accountsT3cost").attr("disabled", "disabled");
-                                    $("#reasonT4").attr("disabled", "disabled");
-                                    $("#accountsF1cost").attr("disabled", "disabled");
-                                    $("#accountsF2cost").attr("disabled", "disabled");
-                                    $("#accountsF3cost").attr("disabled", "disabled");
-                                    $("#reasonF4").attr("disabled", "disabled");
+                                    // document.getElementById("accountsT1").setAttribute("href", "#");
+                                    // $("#accountsT2cost").attr("disabled", "disabled");
+                                    // $("#accountsT3cost").attr("disabled", "disabled");
+                                    // $("#reasonT4").attr("disabled", "disabled");
+                                    // $("#accountsF1cost").attr("disabled", "disabled");
+                                    // $("#accountsF2cost").attr("disabled", "disabled");
+                                    // $("#accountsF3cost").attr("disabled", "disabled");
+                                    // $("#reasonF4").attr("disabled", "disabled");
                                 }
                                 if (data.tbasreturn[0].fields.HasTab4 == true) {
                                     $("#nav-item3").show();
@@ -1789,12 +1789,12 @@ Template.basreturn.onRendered(function() {
                                         }
                                     }
 
-                                    document.getElementById("gst1C").setAttribute("href", "#");
-                                    document.getElementById("gst1E").setAttribute("href", "#");
-                                    document.getElementById("gst1D").setAttribute("href", "#");
-                                    document.getElementById("gst1F").setAttribute("href", "#");
-                                    document.getElementById("gst1G").setAttribute("href", "#");
-                                    document.getElementById("accounts7D").setAttribute("href", "#");
+                                    // document.getElementById("gst1C").setAttribute("href", "#");
+                                    // document.getElementById("gst1E").setAttribute("href", "#");
+                                    // document.getElementById("gst1D").setAttribute("href", "#");
+                                    // document.getElementById("gst1F").setAttribute("href", "#");
+                                    // document.getElementById("gst1G").setAttribute("href", "#");
+                                    // document.getElementById("accounts7D").setAttribute("href", "#");
                                 }
                                 if (data.tbasreturn[0].fields.ClassID > 0) {
                                     for (var i = 0; i < deptrecords.length; i++) {
@@ -2069,17 +2069,17 @@ Template.basreturn.onRendered(function() {
                                             }
                                         }
 
-                                        document.getElementById("gstG1").setAttribute("href", "#");
-                                        document.getElementById("gstG2").setAttribute("href", "#");
-                                        document.getElementById("gstG3").setAttribute("href", "#");
-                                        document.getElementById("gstG4").setAttribute("href", "#");
-                                        document.getElementById("gstG7").setAttribute("href", "#");
-                                        document.getElementById("gstG10").setAttribute("href", "#");
-                                        document.getElementById("gstG11").setAttribute("href", "#");
-                                        document.getElementById("gstG13").setAttribute("href", "#");
-                                        document.getElementById("gstG14").setAttribute("href", "#");
-                                        document.getElementById("gstG15").setAttribute("href", "#");
-                                        document.getElementById("gstG18").setAttribute("href", "#");
+                                        // document.getElementById("gstG1").setAttribute("href", "#");
+                                        // document.getElementById("gstG2").setAttribute("href", "#");
+                                        // document.getElementById("gstG3").setAttribute("href", "#");
+                                        // document.getElementById("gstG4").setAttribute("href", "#");
+                                        // document.getElementById("gstG7").setAttribute("href", "#");
+                                        // document.getElementById("gstG10").setAttribute("href", "#");
+                                        // document.getElementById("gstG11").setAttribute("href", "#");
+                                        // document.getElementById("gstG13").setAttribute("href", "#");
+                                        // document.getElementById("gstG14").setAttribute("href", "#");
+                                        // document.getElementById("gstG15").setAttribute("href", "#");
+                                        // document.getElementById("gstG18").setAttribute("href", "#");
                                     }
                                     if (data.tbasreturn[i].fields.HasTab2 == true) {
                                         $("#nav-item2").show();
@@ -2103,10 +2103,10 @@ Template.basreturn.onRendered(function() {
                                                 $("#nav-item4 a").click();
                                             }
                                         }
-                                        document.getElementById("accountsW1").setAttribute("href", "#");
-                                        document.getElementById("accountsW2").setAttribute("href", "#");
-                                        document.getElementById("accountsW3_").setAttribute("href", "#");
-                                        document.getElementById("accountsW4").setAttribute("href", "#");
+                                        // document.getElementById("accountsW1").setAttribute("href", "#");
+                                        // document.getElementById("accountsW2").setAttribute("href", "#");
+                                        // document.getElementById("accountsW3_").setAttribute("href", "#");
+                                        // document.getElementById("accountsW4").setAttribute("href", "#");
                                     }
                                     if (data.tbasreturn[i].fields.HasTab3 == true) {
                                         $("#nav-item2").show();
@@ -2134,14 +2134,14 @@ Template.basreturn.onRendered(function() {
                                             }
                                         }
 
-                                        document.getElementById("accountsT1").setAttribute("href", "#");
-                                        $("#accountsT2cost").attr("disabled", "disabled");
-                                        $("#accountsT3cost").attr("disabled", "disabled");
-                                        $("#reasonT4").attr("disabled", "disabled");
-                                        $("#accountsF1cost").attr("disabled", "disabled");
-                                        $("#accountsF2cost").attr("disabled", "disabled");
-                                        $("#accountsF3cost").attr("disabled", "disabled");
-                                        $("#reasonF4").attr("disabled", "disabled");
+                                        // document.getElementById("accountsT1").setAttribute("href", "#");
+                                        // $("#accountsT2cost").attr("disabled", "disabled");
+                                        // $("#accountsT3cost").attr("disabled", "disabled");
+                                        // $("#reasonT4").attr("disabled", "disabled");
+                                        // $("#accountsF1cost").attr("disabled", "disabled");
+                                        // $("#accountsF2cost").attr("disabled", "disabled");
+                                        // $("#accountsF3cost").attr("disabled", "disabled");
+                                        // $("#reasonF4").attr("disabled", "disabled");
                                     }
                                     if (data.tbasreturn[i].fields.HasTab4 == true) {
                                         $("#nav-item3").show();
@@ -2165,12 +2165,12 @@ Template.basreturn.onRendered(function() {
                                             }
                                         }
 
-                                        document.getElementById("gst1C").setAttribute("href", "#");
-                                        document.getElementById("gst1E").setAttribute("href", "#");
-                                        document.getElementById("gst1D").setAttribute("href", "#");
-                                        document.getElementById("gst1F").setAttribute("href", "#");
-                                        document.getElementById("gst1G").setAttribute("href", "#");
-                                        document.getElementById("accounts7D").setAttribute("href", "#");
+                                        // document.getElementById("gst1C").setAttribute("href", "#");
+                                        // document.getElementById("gst1E").setAttribute("href", "#");
+                                        // document.getElementById("gst1D").setAttribute("href", "#");
+                                        // document.getElementById("gst1F").setAttribute("href", "#");
+                                        // document.getElementById("gst1G").setAttribute("href", "#");
+                                        // document.getElementById("accounts7D").setAttribute("href", "#");
                                     }
                                     if (data.tbasreturn[i].fields.ClassID > 0) {
                                         for (var j = 0; j < deptrecords.length; j++) {
@@ -2448,17 +2448,17 @@ Template.basreturn.onRendered(function() {
                                     }
                                 }
 
-                                document.getElementById("gstG1").setAttribute("href", "#");
-                                document.getElementById("gstG2").setAttribute("href", "#");
-                                document.getElementById("gstG3").setAttribute("href", "#");
-                                document.getElementById("gstG4").setAttribute("href", "#");
-                                document.getElementById("gstG7").setAttribute("href", "#");
-                                document.getElementById("gstG10").setAttribute("href", "#");
-                                document.getElementById("gstG11").setAttribute("href", "#");
-                                document.getElementById("gstG13").setAttribute("href", "#");
-                                document.getElementById("gstG14").setAttribute("href", "#");
-                                document.getElementById("gstG15").setAttribute("href", "#");
-                                document.getElementById("gstG18").setAttribute("href", "#");
+                                // document.getElementById("gstG1").setAttribute("href", "#");
+                                // document.getElementById("gstG2").setAttribute("href", "#");
+                                // document.getElementById("gstG3").setAttribute("href", "#");
+                                // document.getElementById("gstG4").setAttribute("href", "#");
+                                // document.getElementById("gstG7").setAttribute("href", "#");
+                                // document.getElementById("gstG10").setAttribute("href", "#");
+                                // document.getElementById("gstG11").setAttribute("href", "#");
+                                // document.getElementById("gstG13").setAttribute("href", "#");
+                                // document.getElementById("gstG14").setAttribute("href", "#");
+                                // document.getElementById("gstG15").setAttribute("href", "#");
+                                // document.getElementById("gstG18").setAttribute("href", "#");
                             }
                             if (data.tbasreturn[0].fields.HasTab2 == true) {
                                 $("#nav-item2").show();
@@ -2482,10 +2482,10 @@ Template.basreturn.onRendered(function() {
                                         $("#nav-item4 a").click();
                                     }
                                 }
-                                document.getElementById("accountsW1").setAttribute("href", "#");
-                                document.getElementById("accountsW2").setAttribute("href", "#");
-                                document.getElementById("accountsW3_").setAttribute("href", "#");
-                                document.getElementById("accountsW4").setAttribute("href", "#");
+                                // document.getElementById("accountsW1").setAttribute("href", "#");
+                                // document.getElementById("accountsW2").setAttribute("href", "#");
+                                // document.getElementById("accountsW3_").setAttribute("href", "#");
+                                // document.getElementById("accountsW4").setAttribute("href", "#");
                             }
                             if (data.tbasreturn[0].fields.HasTab3 == true) {
                                 $("#nav-item2").show();
@@ -2513,14 +2513,14 @@ Template.basreturn.onRendered(function() {
                                     }
                                 }
 
-                                document.getElementById("accountsT1").setAttribute("href", "#");
-                                $("#accountsT2cost").attr("disabled", "disabled");
-                                $("#accountsT3cost").attr("disabled", "disabled");
-                                $("#reasonT4").attr("disabled", "disabled");
-                                $("#accountsF1cost").attr("disabled", "disabled");
-                                $("#accountsF2cost").attr("disabled", "disabled");
-                                $("#accountsF3cost").attr("disabled", "disabled");
-                                $("#reasonF4").attr("disabled", "disabled");
+                                // document.getElementById("accountsT1").setAttribute("href", "#");
+                                // $("#accountsT2cost").attr("disabled", "disabled");
+                                // $("#accountsT3cost").attr("disabled", "disabled");
+                                // $("#reasonT4").attr("disabled", "disabled");
+                                // $("#accountsF1cost").attr("disabled", "disabled");
+                                // $("#accountsF2cost").attr("disabled", "disabled");
+                                // $("#accountsF3cost").attr("disabled", "disabled");
+                                // $("#reasonF4").attr("disabled", "disabled");
                             }
                             if (data.tbasreturn[0].fields.HasTab4 == true) {
                                 $("#nav-item3").show();
@@ -2544,12 +2544,12 @@ Template.basreturn.onRendered(function() {
                                     }
                                 }
 
-                                document.getElementById("gst1C").setAttribute("href", "#");
-                                document.getElementById("gst1E").setAttribute("href", "#");
-                                document.getElementById("gst1D").setAttribute("href", "#");
-                                document.getElementById("gst1F").setAttribute("href", "#");
-                                document.getElementById("gst1G").setAttribute("href", "#");
-                                document.getElementById("accounts7D").setAttribute("href", "#");
+                                // document.getElementById("gst1C").setAttribute("href", "#");
+                                // document.getElementById("gst1E").setAttribute("href", "#");
+                                // document.getElementById("gst1D").setAttribute("href", "#");
+                                // document.getElementById("gst1F").setAttribute("href", "#");
+                                // document.getElementById("gst1G").setAttribute("href", "#");
+                                // document.getElementById("accounts7D").setAttribute("href", "#");
                             }
                             if (data.tbasreturn[0].fields.ClassID > 0) {
                                 for (var i = 0; i < deptrecords.length; i++) {
@@ -2891,17 +2891,17 @@ Template.basreturn.onRendered(function() {
                         }
                     }
 
-                    document.getElementById("gstG1").setAttribute("href", "#");
-                    document.getElementById("gstG2").setAttribute("href", "#");
-                    document.getElementById("gstG3").setAttribute("href", "#");
-                    document.getElementById("gstG4").setAttribute("href", "#");
-                    document.getElementById("gstG7").setAttribute("href", "#");
-                    document.getElementById("gstG10").setAttribute("href", "#");
-                    document.getElementById("gstG11").setAttribute("href", "#");
-                    document.getElementById("gstG13").setAttribute("href", "#");
-                    document.getElementById("gstG14").setAttribute("href", "#");
-                    document.getElementById("gstG15").setAttribute("href", "#");
-                    document.getElementById("gstG18").setAttribute("href", "#");
+                    // document.getElementById("gstG1").setAttribute("href", "#");
+                    // document.getElementById("gstG2").setAttribute("href", "#");
+                    // document.getElementById("gstG3").setAttribute("href", "#");
+                    // document.getElementById("gstG4").setAttribute("href", "#");
+                    // document.getElementById("gstG7").setAttribute("href", "#");
+                    // document.getElementById("gstG10").setAttribute("href", "#");
+                    // document.getElementById("gstG11").setAttribute("href", "#");
+                    // document.getElementById("gstG13").setAttribute("href", "#");
+                    // document.getElementById("gstG14").setAttribute("href", "#");
+                    // document.getElementById("gstG15").setAttribute("href", "#");
+                    // document.getElementById("gstG18").setAttribute("href", "#");
                 }
             });
 
@@ -2928,10 +2928,10 @@ Template.basreturn.onRendered(function() {
                         }
                     }
 
-                    document.getElementById("accountsW1").setAttribute("href", "#");
-                    document.getElementById("accountsW2").setAttribute("href", "#");
-                    document.getElementById("accountsW3_").setAttribute("href", "#");
-                    document.getElementById("accountsW4").setAttribute("href", "#");
+                    // document.getElementById("accountsW1").setAttribute("href", "#");
+                    // document.getElementById("accountsW2").setAttribute("href", "#");
+                    // document.getElementById("accountsW3_").setAttribute("href", "#");
+                    // document.getElementById("accountsW4").setAttribute("href", "#");
                 }
             });
 
@@ -2962,14 +2962,14 @@ Template.basreturn.onRendered(function() {
                         }
                     }
 
-                    document.getElementById("accountsT1").setAttribute("href", "#");
-                    $("#accountsT2cost").attr("disabled", "disabled");
-                    $("#accountsT3cost").attr("disabled", "disabled");
-                    $("#reasonT4").attr("disabled", "disabled");
-                    $("#accountsF1cost").attr("disabled", "disabled");
-                    $("#accountsF2cost").attr("disabled", "disabled");
-                    $("#accountsF3cost").attr("disabled", "disabled");
-                    $("#reasonF4").attr("disabled", "disabled");
+                    // document.getElementById("accountsT1").setAttribute("href", "#");
+                    // $("#accountsT2cost").attr("disabled", "disabled");
+                    // $("#accountsT3cost").attr("disabled", "disabled");
+                    // $("#reasonT4").attr("disabled", "disabled");
+                    // $("#accountsF1cost").attr("disabled", "disabled");
+                    // $("#accountsF2cost").attr("disabled", "disabled");
+                    // $("#accountsF3cost").attr("disabled", "disabled");
+                    // $("#reasonF4").attr("disabled", "disabled");
                 }
             });
 
@@ -2996,12 +2996,12 @@ Template.basreturn.onRendered(function() {
                         }
                     }
 
-                    document.getElementById("gst1C").setAttribute("href", "#");
-                    document.getElementById("gst1E").setAttribute("href", "#");
-                    document.getElementById("gst1D").setAttribute("href", "#");
-                    document.getElementById("gst1F").setAttribute("href", "#");
-                    document.getElementById("gst1G").setAttribute("href", "#");
-                    document.getElementById("accounts7D").setAttribute("href", "#");
+                    // document.getElementById("gst1C").setAttribute("href", "#");
+                    // document.getElementById("gst1E").setAttribute("href", "#");
+                    // document.getElementById("gst1D").setAttribute("href", "#");
+                    // document.getElementById("gst1F").setAttribute("href", "#");
+                    // document.getElementById("gst1G").setAttribute("href", "#");
+                    // document.getElementById("accounts7D").setAttribute("href", "#");
                 }
             });
         });
