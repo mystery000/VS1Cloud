@@ -24,7 +24,7 @@ Template.myTasksWidget.onCreated(function() {
 
 Template.myTasksWidget.onRendered(function() {
     let templateObject = Template.instance();
-    
+
     templateObject.getInitialAllTaskList = function() {
         getVS1Data("TCRMTaskList").then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -79,24 +79,26 @@ Template.myTasksWidget.onRendered(function() {
                 dueDate = new Date(dueDate);
                 if (fromDate != "Invalid Date") {
                     if (fromDate <= dueDate && toDate >= dueDate) {
-                        dueDate = moment(dueDate).format('DD/MM/YYYY');
+                        dueDate = moment(dueDate).format('MM/DD/YYYY');
                         const pdata = {
                             id: all_records[i].fields.ID,
                             taskName: all_records[i].fields.TaskName,
                             description: all_records[i].fields.TaskDescription,
                             dueDate: dueDate,
                             priority: strPriority,
+                            priority_id: priority,
                         }
                         task_list.push(pdata);
                     }
                 } else {
-                    dueDate = moment(dueDate).format('DD/MM/YYYY');
+                    dueDate = moment(dueDate).format('MM/DD/YYYY');
                     const pdata = {
                         id: all_records[i].fields.ID,
                         taskName: all_records[i].fields.TaskName,
                         description: all_records[i].fields.TaskDescription,
                         dueDate: dueDate,
                         priority: strPriority,
+                        priority_id: priority,
                     }
                     task_list.push(pdata);
                 }
@@ -107,10 +109,11 @@ Template.myTasksWidget.onRendered(function() {
                 let y = new Date(b["dueDate"]);
                 let px = a["priority"] == "Urgent" ? 3 : (a["priority"] == "High" ? 2 : (a["priority"] == "Normal" ? 1 : 0));
                 let py = b["priority"] == "Urgent" ? 3 : (b["priority"] == "High" ? 2 : (b["priority"] == "Normal" ? 1 : 0));
-                if (a["dueDate"] != b["dueDate"]) {
-                    return y - x;
-                } else {
+
+                if(px != py){
                     return py - px;
+                }else{
+                    return y - x;
                 }
             });
             templateObject.todayTasks.set(task_list.slice(0, 5));
