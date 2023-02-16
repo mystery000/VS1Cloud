@@ -185,6 +185,8 @@ Template.onsuccesswaterfall.onRendered(function () {
 
   let isAppointmentScheduling = localStorage.getItem('CloudAppointmentSchedulingModule');
   let isAllocationLaunch = localStorage.getItem('CloudAppointmentAllocationLaunch');
+  let isAppointmentStartStop = localStorage.getItem('CloudAppointmentStartStopAccessLevel');
+  let isCreateAppointment = localStorage.getItem('CloudAppointmentCreateAppointment');
   let isCurrencyEnable = localStorage.getItem('CloudUseForeignLicence');
   let isAppointmentLaunch = localStorage.getItem('CloudAppointmentAppointmentLaunch');
 
@@ -2185,6 +2187,9 @@ Template.onsuccesswaterfall.onRendered(function () {
         templateObject.dashboardRedirectOnLogin();
       }
       addVS1Data('TAppointment', JSON.stringify(data));
+      addVS1Data('CloudAppointmentStartStopAccessLevel', isAppointmentStartStop);
+      addVS1Data('CloudAppointmentAllocationLaunch', isAllocationLaunch);
+      addVS1Data('CloudAppointmentCreateAppointment', isCreateAppointment);
       $("<span class='process'>Appointments Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
 
@@ -6031,6 +6036,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     */
   };
     // templateObject.dashboardRedirectOnLogin();
+
 });
 
 Template.onsuccesswaterfall.helpers({
