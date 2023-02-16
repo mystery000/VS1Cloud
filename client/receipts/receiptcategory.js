@@ -7,8 +7,10 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './receiptcategory.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { EditableService } from "../editable-service";
 
 let sideBarService = new SideBarService();
+let editableService = new EditableService();
 Template.receiptcategory.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -280,6 +282,14 @@ Template.receiptcategory.onRendered(function() {
             }
         }
     });
+
+    $(document).on('click', '#receiptCategoryModal #edtReceiptCategoryPostAccount', editableService.clickAccount)
+    $(document).on('click', '#tblAccountListPop tbody tr', function(e) {
+        let table = $(this);
+        let accountName = table.find(".colAccountName").text();
+        $("#edtReceiptCategoryPostAccount").val(accountName)
+        $("#accountListModal").modal('hide');
+    })
 });
 
 Template.receiptcategory.events({
@@ -391,13 +401,14 @@ Template.receiptcategory.events({
         
         let receiptCategoryID = $('#edtReceiptCategoryID').val();
         let receiptCategoryName = $('#edtReceiptCategoryName').val();
+        let receiptCategoryPostAccount = $('#edtReceiptCategoryPostAccount').val()
+        let receiptCategoryDesc = $('#edtReceiptCategoryDesc').val();
         if (receiptCategoryName == '') {
             swal('Receipt Category name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display','none');
             return false;
-        }
-        let receiptCategoryDesc = $('#edtReceiptCategoryDesc').val();
-        let objDetails = '';
+        }        
+        let objDetails = {};
         if (receiptCategoryID == "") {
             receiptService.getOneReceiptCategoryDataExByName(receiptCategoryName).then(function (data) {
                 if (data.treceiptcategory.length > 0 ) {
@@ -411,21 +422,14 @@ Template.receiptcategory.events({
                             ID: parseInt(receiptCategoryID)||0,
                             Active: true,
                             CategoryName: receiptCategoryName,
-                            CategoryDesc: receiptCategoryDesc
+                            CategoryDesc: receiptCategoryDesc,
+                            // CategoryPostAccount: receiptCategoryPostAccount                            
                         }
                     };
                     doSaveReceiptCategory(objDetails);
                 }
             }).catch(function (err) {
-                objDetails = {
-                    type: "TReceiptCategory",
-                    fields: {
-                        Active: true,
-                        CategoryName: receiptCategoryName,
-                        CategoryDesc: receiptCategoryDesc
-                    }
-                };
-                // doSaveReceiptCategory(objDetails);
+                
             });
         } else {
             objDetails = {
@@ -434,7 +438,8 @@ Template.receiptcategory.events({
                     ID: parseInt(receiptCategoryID),
                     Active: true,
                     CategoryName: receiptCategoryName,
-                    CategoryDesc: receiptCategoryDesc
+                    CategoryDesc: receiptCategoryDesc,
+                    // CategoryPostAccount: receiptCategoryPostAccount 
                 }
             };
             doSaveReceiptCategory(objDetails);

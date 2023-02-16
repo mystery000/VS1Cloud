@@ -61,13 +61,14 @@ Template.accountlistpop.onRendered(function() {
     let utilityService = new UtilityService();    
     let usedCategories = [];
     const currenttablename = 'tblAccountListPop';
+    const useReceiptClaim = templateObject.data.useReceiptClaim
     
     templateObject.getAccountsOverviewData = async function(deleteFilter = false, typeFilter = 'all') {
         var customerpage = 0;
         getVS1Data('TAccountVS1List').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
-                    if(typeFilter == 'all') {
+            if (dataObject.length == 0 || useReceiptClaim) {
+                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter, useReceiptClaim).then(async function(data) {
+                    if(typeFilter == 'all' && !useReceiptClaim) {
                         await addVS1Data('TAccountVS1List', JSON.stringify(data));
                     }
                     templateObject.displayAccountsOverviewListData(data);
@@ -76,8 +77,8 @@ Template.accountlistpop.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                if(typeFilter != 'all') {
-                    sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                if(typeFilter != 'all' && !useReceiptClaim) {
+                    sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter, useReceiptClaim).then(async function(data) {
                         templateObject.displayAccountsOverviewListData(data);
                     })
                 }else {
@@ -86,7 +87,7 @@ Template.accountlistpop.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
-                if(typeFilter == 'all') {
+                if(typeFilter == 'all' && !useReceiptClaim) {
                     await addVS1Data('TAccountVS1List', JSON.stringify(data));
                 }
                 templateObject.displayAccountsOverviewListData(data);

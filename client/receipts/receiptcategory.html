@@ -104,6 +104,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="row no-gutters">
+                                                                <div class="col d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                                        <label>Post to this Account</label>
+                                                                        <input type="search" class="form-control es-input" id="edtReceiptCategoryPostAccount" name="edtReceiptCategoryPostAccount" style="cursor: pointer; background-color: #fff;">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer" style="background-color: #ededed;">
                                                             <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
@@ -225,6 +233,9 @@
         </div>
     </div>
     <!-- End Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+        {{> accountlistpop useReceiptClaim=true}}
+    </div>
     <script>
         modalDraggable();
     </script>
