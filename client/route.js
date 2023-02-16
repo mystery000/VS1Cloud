@@ -2483,3 +2483,13 @@ authenticatedRoutes.route('/mypayrollleave', {
         });
     }
 });
+
+authenticatedRoutes.route('/manufacturingsettings',  {
+    name: 'manufacturingsettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'manufacturingsettings'
+        })
+    }
+})
+
