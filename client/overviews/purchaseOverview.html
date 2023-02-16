@@ -22,22 +22,28 @@
             top: 5px;
             left: 0;
         }
-        .text-deleted{
-          background-color: #e74a3b !important; color:#fff;
+
+        .text-deleted {
+            background-color: #e74a3b !important;
+            color: #fff;
         }
+
         @media screen and (max-width: 450px) {
             .btnNav {
                 width: 95% !important;
                 margin: 12px 0px !important;
             }
+
             .btnOpenSettingsDesktop {
                 display: none !important;
             }
+
             .btnOpenSettingsMobile {
                 margin: 12px 0px !important;
                 display: block !important;
             }
         }
+
         th {
             background-color: #ededed;
         }
@@ -69,6 +75,7 @@
         input[type=number]::-webkit-outer-spin-button {
             opacity: 1;
         }
+
         .btn-daterange::after {
             display: none;
         }
@@ -90,15 +97,19 @@
         {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
         <!-- All Cards List -->
         <!-- All charts list -->
-        {{> allChartLists  tabGroupID="7" chartGroup="Purchases" currentTemplate="Purchases_Overview"}}
+        {{> allChartLists tabGroupID="7" chartGroup="Purchases" currentTemplate="Purchases_Overview"}}
         <!-- All charts list -->
         <div class="row ">
             <div class="col-6 col-md-8">
-                <button id="btnRefresh" class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px;margin-left:0"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                <button id="btnRefresh" class="btn btnNav btn-primary btnRefresh" type="button"
+                    style="margin: 12px;margin-left:0"><i class="la la-lightbulb-o"
+                        style="margin-right: 5px;"></i>Refresh</button>
 
                 <div class="btn-group btnNav" style="margin: 12px;">
                     <a class="btn btn-primary allList" role="button" href="/purchasesoverview?id=all">All</a>
-                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                        aria-expanded="false" type="button"
+                        style="background-color: #00A3D3; border-color: #00A3D3;"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item newpo" role="presentation" href="/purchaseordercard">+ New Purchase
                             Order</a>
@@ -107,36 +118,55 @@
                     </div>
                 </div>
                 <div class="btn-group btnNav text-nowrap" style="margin: 12px;">
-                    <a class="btn btn-primary purchaseorderList" role="button" href="/purchaseorderlist">Purchase Order</a>
-                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <a class="btn btn-primary purchaseorderList" role="button" href="/purchaseorderlist">Purchase
+                        Order</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                        aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item purchaseorderList" role="presentation" href="/purchaseorderlist">Purchase Order List</a>
-                        <a class="dropdown-item purchaseorderListBO" role="presentation" href="/purchaseorderlistBO">Purchase Order List - BO</a>
-                        <a class="dropdown-item" role="presentation" href="/purchaseordercard" id="newPurchaseorder" name="newPurchaseorder">+ New Purchase Order</a>
+                        <a class="dropdown-item purchaseorderList" role="presentation"
+                            href="/purchaseorderlist">Purchase Order List</a>
+                        <a class="dropdown-item purchaseorderListBO" role="presentation"
+                            href="/purchaseorderlistBO">Purchase Order List - BO</a>
+                        <a class="dropdown-item" role="presentation" href="/purchaseordercard" id="newPurchaseorder"
+                            name="newPurchaseorder">+ New Purchase Order</a>
                     </div>
                 </div>
                 <div class="btn-group btnNav" style="margin: 12px;">
-                    <a class="btn btn-primary billList" role="button" href="/billlist" id="billList" name="billList">Bill</a>
-                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <a class="btn btn-primary billList" role="button" href="/billlist" id="billList"
+                        name="billList">Bill</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                        aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item billList" role="presentation" href="/billlist">Bill List</a>
-                        <a class="dropdown-item" role="presentation" href="/billcard" id="newBill" name="newBill">+ New Bill</a>
+                        <a class="dropdown-item" role="presentation" href="/billcard" id="newBill" name="newBill">+ New
+                            Bill</a>
                     </div>
                 </div>
                 <div class="btn-group btnNav" style="margin: 12px;">
-                    <a class="btn btn-primary creditList" role="button" href="/creditlist" id="creditList" name="creditList">Credit</a>
-                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <a class="btn btn-primary creditList" role="button" href="/creditlist" id="creditList"
+                        name="creditList">Credit</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+                        aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item creditList" role="presentation" href="/creditlist">Credit List</a>
-                        <a class="dropdown-item" role="presentation" href="/creditcard" id="newCredit" name="newCredit">+ New Credit</a>
+                        <a class="dropdown-item" role="presentation" href="/creditcard" id="newCredit"
+                            name="newCredit">+ New Credit</a>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-4">
-                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#tableWodthModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btnNav btn-primary printConfirm float-right" type="button" style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                <button class="btn btnNav btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
-                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#tableWodthModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal"
+                    href="#tableWodthModal" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btnNav btn-primary printConfirm float-right" type="button"
+                    style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
+                        style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+                <button class="btn btnNav btn-primary export float-right" type="button"
+                    style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn"
+                    name="exportbtn"><i class="fas fa-file-export"
+                        style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal"
+                    href="#tableWodthModal" style="margin: 12px; display: none;"><i
+                        class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
 
@@ -147,7 +177,8 @@
                         <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close"><span aria-hidden="true">×</span></button>
                                 </div>
                                 <div class="modal-body">
                                     <div>
@@ -196,16 +227,29 @@
 
                                                 {{#each displayfield in displayfields}}
                                                 {{#if displayfield.display}}
-                                                <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
-                                                  <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                      <input class="custom-control-input chk{{displayfield.class}}" type="checkbox" id="formCheck-0{{displayfield.id}}" checked="{{displayfield.active}}">
-                                                      <label class="custom-control-label" for="formCheck-0{{displayfield.id}}"></label>
-                                                      <div contenteditable="true" class="groove divcolumn" type="text" value="{{displayfield.custfieldlabel}}" valueupdate="{{displayfield.class}}">{{displayfield.custfieldlabel}}</div>
-                                                  </div>
-                                                  <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                      <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
-                                                      <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
-                                                  </div>
+                                                <div class="columnSettings displaySettings"
+                                                    custid="{{displayfield.id}}">
+                                                    <div class="custom-control custom-switch"
+                                                        style="margin: 8px; float:left;">
+                                                        <input class="custom-control-input chk{{displayfield.class}}"
+                                                            type="checkbox" id="formCheck-0{{displayfield.id}}"
+                                                            checked="{{displayfield.active}}">
+                                                        <label class="custom-control-label"
+                                                            for="formCheck-0{{displayfield.id}}"></label>
+                                                        <div contenteditable="true" class="groove divcolumn" type="text"
+                                                            value="{{displayfield.custfieldlabel}}"
+                                                            valueupdate="{{displayfield.class}}">
+                                                            {{displayfield.custfieldlabel}}</div>
+                                                    </div>
+                                                    <div class="d-xl-flex align-items-xl-center divColWidth"
+                                                        style="margin: 8px;">
+                                                        <label class="text-nowrap"
+                                                            style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                        <input
+                                                            class="custom-range widthElement rngRange{{displayfield.class}}"
+                                                            type="number" style="margin: 8px;"
+                                                            value="{{displayfield.width}}" min="0" max="1000">
+                                                    </div>
                                                 </div>
                                                 {{/if}}
                                                 {{/each}}
@@ -214,9 +258,12 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                    <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                    <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save"
+                                            style="margin-right: 5px;"></i>Save</button>
+                                    <button class="btn btn-warning resetTable" type="reset"><i class="fa fa-repeat"
+                                            style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                            class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                 </div>
                             </div>
                         </div>
@@ -229,9 +276,11 @@
                     <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                     </div>
-                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                    <div
+                        class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
                         <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown"
+                                aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
                             {{> daterangedropdownoption}}
                         </div>
                         <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
@@ -243,7 +292,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                        <div class="form-group"
+                            style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
                             <label style="margin-top: 8px; margin-right: 16px;">To</label>
                             <div class="input-group date" style="width: 160px;">
                                 <input type="text" class="form-control" id="dateTo" name="dateTo">
@@ -254,49 +304,77 @@
                         </div>
                     </div>
                 </div>
-                <table id="tblPurchaseOverview" style="width:100%" class="dataTable table table-striped table-bordered tblPurchaseOverview">
+                <table id="tblPurchaseOverview" style="width:100%"
+                    class="dataTable table table-striped table-bordered tblPurchaseOverview">
                     <thead>
                         <tr class="dnd-moved">
                             <th class="th colSortDate hiddenColumn">id</th>
                             {{#each displayfield in displayfields}}
-                              {{#if displayfield.display}}
-                              <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                  {{displayfield.custfieldlabel}}
-                                </th>
-                              {{/if}}
+                            {{#if displayfield.display}}
+                            <th class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}"
+                                style="width:{{displayfield.width}}px">
+                                {{displayfield.custfieldlabel}}
+                            </th>
+                            {{/if}}
                             {{/each}}
                         </tr>
                     </thead>
                     <tbody>
                         {{#if datatablerecords}}
-                            {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class="colSortDate {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class="colOrderDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
-                                    <td contenteditable="false" class="colPurchaseNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">{{item.id}}</td>
-                                    <td contenteditable="false" class="colType {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">{{item.type}}</td>
-                                    <td contenteditable="false" class="colSupplier {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">{{item.suppliername}}</td>
-                                    <td contenteditable="false" class="colAmountEx {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.totalamountex}}
-                                    </td>
-                                    <td contenteditable="false" class="colTax {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.totaltax}}
-                                    </td>
-                                    <td contenteditable="false" class="colAmount {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">
-                                        {{item.totalamount}}
-                                    </td>
-                                    <td contenteditable="false" class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                    <td contenteditable="false" class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="colPurchaseCustField1 {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">
-                                        {{item.Phone}}
-                                    </td>
-                                    <td contenteditable="false" class="colPurchaseCustField2 {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
-                                        {{item.InvoiceNumber}}
-                                    </td>
-                                    <td contenteditable="false" class="colEmployee {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">{{item.employee}}</td>
-                                    <td contenteditable="false" class="colComments {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">{{item.comments}}</td>
-                                </tr>
-                            {{/each}}
+                        {{#each item in datatablerecords}}
+                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                            <td contenteditable="false"
+                                class="colSortDate {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.sortdate}}</td>
+                            <td contenteditable="false"
+                                class="colOrderDate {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}"><span
+                                    style="display:none;">{{item.sortdate}}</span>{{item.orderdate}}</td>
+                            <td contenteditable="false"
+                                class="colPurchaseNo {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.id}}</td>
+                            <td contenteditable="false"
+                                class="colType {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.type}}</td>
+                            <td contenteditable="false"
+                                class="colSupplier {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.suppliername}}</td>
+                            <td contenteditable="false"
+                                class="colAmountEx {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: right!important;">
+                                {{item.totalamountex}}
+                            </td>
+                            <td contenteditable="false"
+                                class="colTax {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: right!important;">
+                                {{item.totaltax}}
+                            </td>
+                            <td contenteditable="false"
+                                class="colAmount {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: right!important;">
+                                {{item.totalamount}}
+                            </td>
+                            <td contenteditable="false"
+                                class="colBalanceOutstanding {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: right!important;">{{item.totaloustanding}}</td>
+                            <td contenteditable="false"
+                                class="colStatus {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.orderstatus}}</td>
+                            <td contenteditable="false"
+                                class="colPurchaseCustField1 {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.Phone}}
+                            </td>
+                            <td contenteditable="false"
+                                class="colPurchaseCustField2 {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.InvoiceNumber}}
+                            </td>
+                            <td contenteditable="false"
+                                class="colEmployee {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.employee}}</td>
+                            <td contenteditable="false"
+                                class="colComments {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">
+                                {{item.comments}}</td>
+                        </tr>
+                        {{/each}}
                         {{/if}}
                     </tbody>
                 </table>
