@@ -430,22 +430,40 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TInvoiceEx, options);
     }
 
-    getAllBOMProducts(limitcount, limitfrom) {
+    getAllBOMProducts(limitcount, limitfrom, deleteFilter=false) {
         let options = "";
-        if (limitcount == "All") {
-            options = {
-                ListType: "Detail",
-                select: "[ProcStepItemRef]='vs1BOM'",
-                // orderby: '"Description asc"',
-            };
+        if (deleteFilter == false) {
+            if (limitcount == "All") {
+                options = {
+                    ListType: "Detail",
+                    select: "[ProcStepItemRef]='vs1BOM'",
+                    // orderby: '"Description asc"',
+                };
+            } else {
+                options = {
+                    // orderby: '"Description asc"',
+                    ListType: "Detail",
+                    LimitCount: parseInt(limitcount),
+                    LimitFrom: parseInt(limitfrom),
+                    select: "[ProcStepItemRef]='vs1BOM'",
+                };
+            }
         } else {
-            options = {
-                // orderby: '"Description asc"',
-                ListType: "Detail",
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
-                select: "[ProcStepItemRef]='vs1BOM'",
-            };
+            if (limitcount == "All") {
+                options = {
+                    ListType: "Detail",
+                    select: "[ProcStepItemRef]='vs1BOM' OR [ProcStepItemRef]='deleted'",
+                    // orderby: '"Description asc"',
+                };
+            } else {
+                options = {
+                    // orderby: '"Description asc"',
+                    ListType: "Detail",
+                    LimitCount: parseInt(limitcount),
+                    LimitFrom: parseInt(limitfrom),
+                    select: "[ProcStepItemRef]='vs1BOM' OR [ProcStepItemRef]='deleted'",
+                };
+            }
         }
 
         return this.getList(this.ERPObjects.TProcTree, options);
