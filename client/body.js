@@ -331,6 +331,7 @@ import './vs1_templates/datatablelist/datatablelist.js'
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
+import './settings/manufacturingsettings/manufacturingsettings.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
