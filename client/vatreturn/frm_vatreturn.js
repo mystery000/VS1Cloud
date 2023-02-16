@@ -262,9 +262,11 @@ Template.vatreturn.onRendered(function() {
             userdata = userdata.tvatreturns || [];
             if (userdata.length == 0) {
                 reportService.getAllVATReturn().then(function(data) {
+                    let accountingmethodflag = false;
                     for (let i = 0; i < data.tvatreturn.length; i++) {
                         if (getid == "") {
-                            if (i == 0) {
+                            if (data.tvatreturn[i].fields.Active == true && !accountingmethodflag) {
+                                accountingmethodflag = true;
                                 if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                     $("#accountingmethod1").prop('checked', true);
                                     $("#accountingmethod2").prop('checked', false);
@@ -322,12 +324,12 @@ Template.vatreturn.onRendered(function() {
                                 shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
                                 shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                             }
-                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate").val(previousStartDate);
                                 $("#previousEndDate").val(previousEndDate);
                                 var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
@@ -341,21 +343,21 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
                                     endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate").val(toDate);
                                 } else {
                                     endMonth = parseInt(fromDate.split("-")[1]);
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate").val(toDate);
                                 }
                             }
-                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t2").val(previousStartDate);
                                 $("#previousEndDate-t2").val(previousEndDate);
                                 var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
@@ -369,21 +371,21 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                     endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t2").val(toDate);
                                 } else {
                                     endMonth = parseInt(fromDate.split("-")[1]);
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t2").val(toDate);
                                 }
                             }
-                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab4_Year + "-" + months[data.tvatreturn[i].fields.Tab4_Month] + "-01";
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab4_Month] + "/" + data.tvatreturn[i].fields.Tab4_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t3").val(previousStartDate);
                                 $("#previousEndDate-t3").val(previousEndDate);
                                 var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
@@ -397,41 +399,41 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                     endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t3").val(toDate);
                                 } else {
                                     endMonth = parseInt(fromDate.split("-")[1]);
                                     var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                    toDate = moment(toDate).format("YYYY-MM-DD");
+                                    toDate = moment(toDate).format("DD/MM/YYYY");
                                     $("#endDate-t3").val(toDate);
                                 }
                             }
                         } else {
                             if (getid > data.tvatreturn[i].fields.ID) {
-                                if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                    let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                                if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                    let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                     let previousEndDate = "";
                                     var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                     previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                     $("#previousStartDate").val(previousStartDate);
                                     $("#previousEndDate").val(previousEndDate);
                                 }
-                                if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                    let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                                if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                    let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                     let previousEndDate = "";
                                     var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                     previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                     $("#previousStartDate-t2").val(previousStartDate);
                                     $("#previousEndDate-t2").val(previousEndDate);
                                 }
-                                if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                    let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                                if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                    let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                                     let previousEndDate = "";
                                     var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                     previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                                    previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                    previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                     $("#previousStartDate-t3").val(previousStartDate);
                                     $("#previousEndDate-t3").val(previousEndDate);
                                 }
@@ -449,6 +451,7 @@ Template.vatreturn.onRendered(function() {
                     shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
                     shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
                     shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+
                     shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
                     shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
                     shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
@@ -468,9 +471,11 @@ Template.vatreturn.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                let accountingmethodflag = false;
                 for (let i = 0; i < data.tvatreturn.length; i++) {
                     if (getid == "") {
-                        if (i == 0) {
+                        if (data.tvatreturn[i].fields.Active == true && !accountingmethodflag) {
+                            accountingmethodflag = true;
                             if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                 $("#accountingmethod1").prop('checked', true);
                                 $("#accountingmethod2").prop('checked', false);
@@ -528,12 +533,12 @@ Template.vatreturn.onRendered(function() {
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                         }
-                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate").val(previousStartDate);
                             $("#previousEndDate").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
@@ -547,21 +552,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t2").val(previousStartDate);
                             $("#previousEndDate-t2").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
@@ -575,21 +580,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t3").val(previousStartDate);
                             $("#previousEndDate-t3").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
@@ -603,41 +608,41 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             }
                         }
                     } else {
                         if (getid > data.tvatreturn[i].fields.ID) {
-                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate").val(previousStartDate);
                                 $("#previousEndDate").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t2").val(previousStartDate);
                                 $("#previousEndDate-t2").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t3").val(previousStartDate);
                                 $("#previousEndDate-t3").val(previousEndDate);
                             }
@@ -650,9 +655,11 @@ Template.vatreturn.onRendered(function() {
             let taxRateList = templateObject.taxRateList.get();
 
             reportService.getAllBASReturn().then(function(data) {
+                let accountingmethodflag = false;
                 for (let i = 0; i < data.tvatreturn.length; i++) {
                     if (getid == "") {
-                        if (i == 0) {
+                        if (data.tvatreturn[i].fields.Active == true && !accountingmethodflag) {
+                            accountingmethodflag = true;
                             if (data.tvatreturn[i].fields.AccMethod == "Accrual") {
                                 $("#accountingmethod1").prop('checked', true);
                                 $("#accountingmethod2").prop('checked', false);
@@ -710,12 +717,12 @@ Template.vatreturn.onRendered(function() {
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT34Selected, "tbltaxCodeCheckbox_34");
                             shareFunctionByName.initTable(data.tvatreturn[i].fields.VAT35Selected, "tbltaxCodeCheckbox_35");
                         }
-                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                        if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate").val(previousStartDate);
                             $("#previousEndDate").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab1_Year, parseInt(endMonth), 1);
@@ -729,21 +736,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                        if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t2").val(previousStartDate);
                             $("#previousEndDate-t2").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab2_Year, parseInt(endMonth), 1);
@@ -757,21 +764,21 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t2").val(toDate);
                             }
                         }
-                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                            let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                        if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                            let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                             let previousEndDate = "";
                             var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                             previousEndDate = new Date(data.tvatreturn[i].fields.Tab4_Year, (parseInt(endMonth)), 0);
-                            previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                            previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                             $("#previousStartDate-t3").val(previousStartDate);
                             $("#previousEndDate-t3").val(previousEndDate);
                             var fromDate = new Date(data.tvatreturn[i].fields.Tab3_Year, parseInt(endMonth), 1);
@@ -785,41 +792,41 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") {
                                 endMonth = Math.ceil(parseInt(fromDate.split("-")[1]) / 3) * 3;
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             } else {
                                 endMonth = parseInt(fromDate.split("-")[1]);
                                 var toDate = new Date(fromDate.split("-")[0], (parseInt(endMonth)), 0);
-                                toDate = moment(toDate).format("YYYY-MM-DD");
+                                toDate = moment(toDate).format("DD/MM/YYYY");
                                 $("#endDate-t3").val(toDate);
                             }
                         }
                     } else {
                         if (getid > data.tvatreturn[i].fields.ID) {
-                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
+                            if ($("#previousStartDate").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab1_Month] + "/" + data.tvatreturn[i].fields.Tab1_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate").val(previousStartDate);
                                 $("#previousEndDate").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
+                            if ($("#previousStartDate-t2").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab2_Month] + "/" + data.tvatreturn[i].fields.Tab2_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t2").val(previousStartDate);
                                 $("#previousEndDate-t2").val(previousEndDate);
                             }
-                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                let previousStartDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
+                            if ($("#previousStartDate-t3").val() == "" && data.tvatreturn[i].fields.Active == true && data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
+                                let previousStartDate = "01/" + months[data.tvatreturn[i].fields.Tab3_Month] + "/" + data.tvatreturn[i].fields.Tab3_Year;
                                 let previousEndDate = "";
                                 var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                 previousEndDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
-                                previousEndDate = moment(previousEndDate).format("YYYY-MM-DD");
+                                previousEndDate = moment(previousEndDate).format("DD/MM/YYYY");
                                 $("#previousStartDate-t3").val(previousStartDate);
                                 $("#previousEndDate-t3").val(previousEndDate);
                             }
@@ -837,6 +844,7 @@ Template.vatreturn.onRendered(function() {
                 shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
                 shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
                 shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+
                 shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
                 shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
                 shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
@@ -1070,6 +1078,7 @@ Template.vatreturn.onRendered(function() {
     };
 
     $('#sltDepartment').editableSelect();
+    $('#departOptionTile').text("VAT Options");
     $('#sltDepartment').val("All");
     $('#sltDepartment').editableSelect()
         .on('click.editable-select', function(e, li) {
@@ -1379,7 +1388,7 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[0].fields.Tab1_Month != "" && data.tvatreturn[0].fields.Tab1_Year > 0) {
                                     var endMonth = (data.tvatreturn[0].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab1_Month]);
                                     tab1endDate = new Date(data.tvatreturn[0].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                    tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                                    tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                                 }
                                 $("#endDate").val(tab1endDate);
                                 $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
@@ -1459,7 +1468,7 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[0].fields.Tab2_Month != "" && data.tvatreturn[0].fields.Tab2_Year > 0) {
                                     var endMonth2 = (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab2_Month]);
                                     tab2endDate = new Date(data.tvatreturn[0].fields.Tab2_Year, (parseInt(endMonth2)), 0);
-                                    tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                                    tab2endDate = moment(tab2endDate).format("DD/MM/YYYY");
                                 }
                                 $("#endDate-t2").val(tab2endDate);
                                 // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
@@ -1496,7 +1505,7 @@ Template.vatreturn.onRendered(function() {
                                 if (data.tvatreturn[0].fields.Tab3_Month != "" && data.tvatreturn[0].fields.Tab3_Year > 0) {
                                     var endMonth3 = (data.tvatreturn[0].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab3_Month]);
                                     tab3endDate = new Date(data.tvatreturn[0].fields.Tab3_Year, (parseInt(endMonth3)), 0);
-                                    tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                                    tab3endDate = moment(tab3endDate).format("DD/MM/YYYY");
                                 }
                                 $("#endDate-t3").val(tab3endDate);
                                 // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
@@ -1806,7 +1815,7 @@ Template.vatreturn.onRendered(function() {
                                     if (data.tvatreturn[i].fields.Tab1_Month != "" && data.tvatreturn[i].fields.Tab1_Year > 0) {
                                         var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
                                         tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                        tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                                        tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                                     }
                                     $("#endDate").val(tab1endDate);
                                     $("#prt_beginningDate").html(data.tvatreturn[i].fields.Tab1_Month + " " + data.tvatreturn[i].fields.Tab1_Year);
@@ -1886,7 +1895,7 @@ Template.vatreturn.onRendered(function() {
                                     if (data.tvatreturn[i].fields.Tab2_Month != "" && data.tvatreturn[i].fields.Tab2_Year > 0) {
                                         var endMonth2 = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
                                         tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth2)), 0);
-                                        tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                                        tab2endDate = moment(tab2endDate).format("DD/MM/YYYY");
                                     }
                                     $("#endDate-t2").val(tab2endDate);
                                     // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
@@ -1924,7 +1933,7 @@ Template.vatreturn.onRendered(function() {
                                     if (data.tvatreturn[i].fields.Tab3_Month != "" && data.tvatreturn[i].fields.Tab3_Year > 0) {
                                         var endMonth3 = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
                                         tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth3)), 0);
-                                        tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                                        tab3endDate = moment(tab3endDate).format("DD/MM/YYYY");
                                     }
                                     $("#endDate-t3").val(tab3endDate);
                                     // $("#prt_beginningDateT3").html(data.tvatreturn[i].fields.Tab4_Month + " " + data.tvatreturn[i].fields.Tab4_Year);
@@ -2236,7 +2245,7 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[0].fields.Tab1_Month != "" && data.tvatreturn[0].fields.Tab1_Year > 0) {
                                 var endMonth = (data.tvatreturn[0].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab1_Month]);
                                 tab1endDate = new Date(data.tvatreturn[0].fields.Tab1_Year, (parseInt(endMonth)), 0);
-                                tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+                                tab1endDate = moment(tab1endDate).format("DD/MM/YYYY");
                             }
                             $("#endDate").val(tab1endDate);
                             $("#prt_beginningDate").html(data.tvatreturn[0].fields.Tab1_Month + " " + data.tvatreturn[0].fields.Tab1_Year);
@@ -2316,7 +2325,7 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[0].fields.Tab2_Month != "" && data.tvatreturn[0].fields.Tab2_Year > 0) {
                                 var endMonth2 = (data.tvatreturn[0].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab2_Month]);
                                 tab2endDate = new Date(data.tvatreturn[0].fields.Tab2_Year, (parseInt(endMonth2)), 0);
-                                tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+                                tab2endDate = moment(tab2endDate).format("DD/MM/YYYY");
                             }
                             $("#endDate-t2").val(tab2endDate);
                             // $("#prt_beginningDateT2").html(data.tvatreturn[0].fields.Tab2_Month + " " + data.tvatreturn[0].fields.Tab2_Year);
@@ -2353,7 +2362,7 @@ Template.vatreturn.onRendered(function() {
                             if (data.tvatreturn[0].fields.Tab3_Month != "" && data.tvatreturn[0].fields.Tab3_Year > 0) {
                                 var endMonth3 = (data.tvatreturn[0].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[0].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[0].fields.Tab3_Month]);
                                 tab3endDate = new Date(data.tvatreturn[0].fields.Tab3_Year, (parseInt(endMonth3)), 0);
-                                tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+                                tab3endDate = moment(tab3endDate).format("DD/MM/YYYY");
                             }
                             $("#endDate-t3").val(tab3endDate);
                             // $("#prt_beginningDateT3").html(data.tvatreturn[0].fields.Tab4_Month + " " + data.tvatreturn[0].fields.Tab4_Year);
@@ -2458,14 +2467,14 @@ Template.vatreturn.onRendered(function() {
                     if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                         var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
                         toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
-                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        toDate = moment(toDate).format("DD/MM/YYYY");
                         $("#endDate").val(toDate);
                     }
                 } else {
                     if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                         var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
                         toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
-                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        toDate = moment(toDate).format("DD/MM/YYYY");
                         $("#endDate").val(toDate);
                     }
                 }
@@ -2474,14 +2483,14 @@ Template.vatreturn.onRendered(function() {
                     if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                         var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
                         toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
-                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        toDate = moment(toDate).format("DD/MM/YYYY");
                         $("#endDate-t2").val(toDate);
                     }
                 } else {
                     if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                         var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
                         toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
-                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        toDate = moment(toDate).format("DD/MM/YYYY");
                         $("#endDate-t2").val(toDate);
                     }
                 }
@@ -2490,17 +2499,35 @@ Template.vatreturn.onRendered(function() {
                     if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                         var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
                         toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
-                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        toDate = moment(toDate).format("DD/MM/YYYY");
                         $("#endDate-t3").val(toDate);
                     }
                 } else {
                     if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                         var endMonth = parseInt(months[$("#beginmonthlydate-t3").val()]);
                         toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
-                        toDate = moment(toDate).format("YYYY-MM-DD");
+                        toDate = moment(toDate).format("DD/MM/YYYY");
                         $("#endDate-t3").val(toDate);
                     }
                 }
+
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_1A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_2A");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_3");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_5");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_7");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_10");
+                shareFunctionByName.initTable("SVAT", "tbltaxCodeCheckbox_12");
+
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_14A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_15A");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_16");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_17");
+                shareFunctionByName.initTable("PVAT", "tbltaxCodeCheckbox_18");
             }
 
             $(document).on("click", "#vatreturnCategory1", function(e) {
@@ -2752,7 +2779,7 @@ Template.vatreturn.helpers({
 });
 
 Template.vatreturn.events({
-    "click #loadVatOption": (e) => {
+    "click #loadOption": (e) => {
         if ($("#allDepart").prop('checked') == false && $('#sltDepartment').val() == "") {
             swal('Department cannot be blank!', '', 'warning');
         } else {
@@ -2788,15 +2815,23 @@ Template.vatreturn.events({
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1-t2, #datemethod1-t3").prop('checked', true);
+                $("#datemethod2-t2, #datemethod2-t3").prop('checked', false);
+                $("#beginmonthlydate-t2, #beginmonthlydate-t3").val($("#beginmonthlydate").val());
+                $("#currentyear-t2, #currentyear-t3").val($("#currentyear").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate").val() != "" && $("#currentyear").val() != "" && $("#beginmonthlydate").val() != null && $("#currentyear").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate").val()]);
                 toDate = new Date($("#currentyear").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1-t2, #datemethod1-t3").prop('checked', false);
+                $("#datemethod2-t2, #datemethod2-t3").prop('checked', true);
+                $("#beginmonthlydate-t2, #beginmonthlydate-t3").val($("#beginmonthlydate").val());
+                $("#currentyear-t2, #currentyear-t3").val($("#currentyear").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2808,15 +2843,23 @@ Template.vatreturn.events({
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t2").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t2").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t3").prop('checked', true);
+                $("#datemethod2, #datemethod2-t3").prop('checked', false);
+                $("#beginmonthlydate, #beginmonthlydate-t3").val($("#beginmonthlydate-t2").val());
+                $("#currentyear, #currentyear-t3").val($("#currentyear-t2").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t2").val() != "" && $("#currentyear-t2").val() != "" && $("#beginmonthlydate-t2").val() != null && $("#currentyear-t2").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate-t2").val()]);
                 toDate = new Date($("#currentyear-t2").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t2").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t3").prop('checked', false);
+                $("#datemethod2, #datemethod2-t3").prop('checked', true);
+                $("#beginmonthlydate, #beginmonthlydate-t3").val($("#beginmonthlydate-t2").val());
+                $("#currentyear, #currentyear-t3").val($("#currentyear-t2").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },
@@ -2828,15 +2871,23 @@ Template.vatreturn.events({
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                 var endMonth = Math.ceil(parseInt(months[$("#beginmonthlydate-t3").val()]) / 3) * 3;
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t3").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t2").prop('checked', true);
+                $("#datemethod2, #datemethod2-t2").prop('checked', false);
+                $("#beginmonthlydate, #beginmonthlydate-t2").val($("#beginmonthlydate-t3").val());
+                $("#currentyear, #currentyear-t2").val($("#currentyear-t3").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         } else {
             if ($("#beginmonthlydate-t3").val() != "" && $("#currentyear-t3").val() != "" && $("#beginmonthlydate-t3").val() != null && $("#currentyear-t3").val() != null) {
                 var endMonth = parseInt(months[$("#beginmonthlydate-t3").val()]);
                 toDate = new Date($("#currentyear-t3").val(), (parseInt(endMonth)), 0);
-                toDate = moment(toDate).format("YYYY-MM-DD");
-                $("#endDate-t3").val(toDate);
+                toDate = moment(toDate).format("DD/MM/YYYY");
+                $("#datemethod1, #datemethod1-t2").prop('checked', false);
+                $("#datemethod2, #datemethod2-t2").prop('checked', true);
+                $("#beginmonthlydate, #beginmonthlydate-t2").val($("#beginmonthlydate-t3").val());
+                $("#currentyear, #currentyear-t2").val($("#currentyear-t3").val());
+                $("#endDate, #endDate-t2, #endDate-t3").val(toDate);
             }
         }
     },

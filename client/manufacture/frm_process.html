@@ -1,28 +1,43 @@
 <template name="new_process">
-    <div class="container-fluid salesmodule" style="padding-right: 0px; padding-left: 0px">
+    <div class="container-fluid salesmodule new_process_module" style="padding-right: 0px; padding-left: 0px">
         <div class="fullScreenSpin" style="display: none;">
             <div class="spinner">
             </div>
         </div>
-        <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: #ededed; z-index: -1;"></div>
+        <div style="position: fixed; top: 0; left: 0; bottom: 0; right: 0; background-color: #ededed; z-index: -1;"></div>
         {{#if processrecord}}
             <form>
                 <header style="padding: 16px; padding-right: 0px; margin-top: -24px;">
-                    <div class="row">
+                    <div class="row align-items-center justify-content-between">
                         <div class="col-12 col-md-4">
                             <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+                                {{#if processrecord.id}}
                                 Edit Process - {{processrecord.id}}
+                                {{/if}}
+                                {{#unless processrecord.id}}
+                                New Process
+                                {{/unless}}
                                 {{> helpbutton}}
                             </h2>
                         </div>
-                        <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
-                        <div class="row">
+                        <div class="col-11 col-md-4">{{> loggedcompanyoverview}}</div>
+                        <div class="col-10 col-md-3"></div>
+                        <div class="col-1 col-md-1">
                             <a class="btn btnSettings" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a>
                         </div>
                     </div>
                 </header>
                 <div class="row" style="padding-top: 30px">
-                    <div class="col-12 col-md-10 col-xl-8 col-xxl-6 mx-auto">
+                    <style>
+                        
+                        @media screen and (min-width: 1600px) {
+                            .new-process-card {
+                                flex: 0 0 43%;
+                                max-width: 43%;
+                            }
+                       }
+                    </style>
+                    <div class="col-12 col-md-8 col-xl-7 mx-auto new-process-card">
                         <div class="card shadow mb-3">
                             <div class="card-header py-3">
                                 <p class="text-primary m-0 font-weight-bold">Process - Resource</p>
@@ -30,104 +45,118 @@
                             <div class="card-body">
                                 <div class="container-fluid">
                                     <div class="row">
-                                        <div class="col-8">
+                                        <div class="col-10">
                                             <div class="form-group">
-                                                <label>Name</label>
-                                                <input type="text" class="form-control edtProcessName" id="edtProcessName" name="edtProcessName"  style="background-color: rgb(255,255,255);" value="{{processrecord.KeyValue}}"/>
+                                                <!-- <label>Name</label>
+                                                <input type="text" class="form-control edtProcessName" id="edtProcessName" name="edtProcessName"  style="background-color: rgb(255,255,255);" value="{{processrecord.KeyValue}}"/> -->
+                                                {{>default_input label='Name' classes='edtProcessName' id="edtProcessName" name="edtProcessName" defaultValue=processrecord.KeyValue type='text'}}
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-2">
                                             <div class="form-group">
-                                                <label>Daily Hours</label>
-                                                <input type="text" class="form-control edtDailyHours" id="edtDailyHours" name="edtDailyHours" style="background-color: rgb(255,255,255);" value="{{processrecord.DailyHours}}"/>
+                                                <!-- <label>Daily Hours</label>
+                                                <input type="text" class="form-control edtDailyHours" id="edtDailyHours" name="edtDailyHours" style="background-color: rgb(255,255,255);" value="{{processrecord.DailyHours}}"/> -->
+                                                {{>default_input label='Daily Hours' classes='edtDailyHours' id='edtDailyHours' name='edtDailyHours' defaultValue='24' type='text' readonly='true'}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-group">
-                                                <label>Description</label>
-                                                <input type="text" class="form-control edtDescription" id="edtDescription" name="edtDescription" style="background-color: #fff;" value="{{processrecord.Description}}"/>
+                                                <!-- <label>Description</label>
+                                                <input type="text" class="form-control edtDescription" id="edtDescription" name="edtDescription" style="background-color: #fff;" value="{{processrecord.Description}}"/> -->
+                                                {{>default_input label='Description' classes='edtDescription' id="edtDescription" name="edtDescription" defaultValue= processrecord.Description type='text'}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row align-items-end">
-                                        <div class="col-4">
+                                        <div class="col-3 ">
                                             <div class="form-group">
-                                                <label>Hourly Labour Cost</label>
+                                                <!-- <label>Hourly Labour Cost</label>
                                                 <div class="input-box">
                                                     <input type="text" class="form-control edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" value="{{processrecord.HourlyLabourCost}}"/>
-                                                </div>
+                                                </div> -->
+                                                {{>default_input label='Hourly Labour Cost' type='text' classes="edtHourlyCost" id="edtHourlyCost" name="edtHourlyCost" defaultValue=processrecord.HourlyLabourCost}}
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label>Cost of Goods Sold</label>
-                                                <select type="search" class="form-control edtCOGS" id="edtCOGS" name="edtCOGS" value="{{processrecord.COGS}}"></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label>Expense Account</label>
-                                                <select type="search" class="form-control edtExpenseAccount" id="edtExpenseAccount" name="edtExpenseAccount" value="{{processrecord.ExpenseAccount}}"></select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row align-items-end">
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label>Hourly Overhead Cost</label>
-                                                <div class="input-box">
-                                                    <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.OHourlyCost}}"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label>Cost of Goods Sold</label>
-                                                <select type="search" class="form-control edtOverheadCOGS" id="edtOverheadCOGS" name="edtOverheadCOGS" value="{{processrecord.OCOGS}}"></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="form-group">
-                                                <label>Expense Account</label>
-                                                <select type="search" class="form-control edtOverheadExpenseAccount" id="edtOverheadExpenseAccount" name="edtOverheadExpenseAccount" value="{{processrecord.OExpense}}"></select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row align-items-end">
-                                        <div class="col-7">
-                                            <div class="row align-items-end">
+                                        <div class="col-9">
+                                            <div class="row">
                                                 <div class="col-6">
                                                     <div class="form-group">
-                                                        <label>Total Hourly Costs</label>
-                                                        <div class="input-box">
-                                                            <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.TotalHourlyCost}}" name="edtTotalHourlyCosts" disabled/>
-                                                        </div>
+                                                        <label>Cost of Goods Sold</label>
+                                                        {{> vs1_dropdown id='edtCOGS' name='edtCOGS' value=processrecord.COGS type='search' classes='edtCOGS'}}
+                                                        <!-- <select type="search" class="form-control edtCOGS" id="edtCOGS" name="edtCOGS" value="{{processrecord.COGS}}"></select> -->
                                                     </div>
                                                 </div>
+                                                <div class="col-6 ">
+                                                    <div class="form-group">
+                                                        <label>Expense Account</label>
+                                                        {{> vs1_dropdown type='search' name="edtExpenseAccount" id="edtExpenseAccount" value=processrecord.ExpenseAccount classes="edtExpenseAccount"}}
+                                                        <!-- <select type="search" class="form-control edtExpenseAccount" id="edtExpenseAccount" name="edtExpenseAccount" value="{{processrecord.ExpenseAccount}}"></select> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-end">
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <!-- <label>Hourly Overhead Cost</label>
+                                                <div class="input-box">
+                                                    <input type="text" class="form-control edtHourlyCost edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" value="{{processrecord.OHourlyCost}}"/>
+                                                </div> -->
+                                                {{>default_input label="Hourly Overhead Cost" type="text" classes="edtHourlyOverheadCost" id="edtHourlyOverheadCost" name="edtHourlyOverheadCost" defaultValue=processrecord.OHourlyCost}}
+                                            </div>
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>Cost of Goods Sold</label>
+                                                        <!-- <select type="search" class="form-control edtOverheadCOGS" id="edtOverheadCOGS" name="edtOverheadCOGS" value="{{processrecord.OCOGS}}"></select> -->
+                                                        {{> vs1_dropdown id='edtOverheadCOGS' name='edtOverheadCOGS' value=processrecord.OCOGS type='search' classes='edtOverheadCOGS'}}
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label>Expense Account</label>
+                                                        <!-- <select type="search" class="form-control edtOverheadExpenseAccount" id="edtOverheadExpenseAccount" name="edtOverheadExpenseAccount" value="{{processrecord.OExpense}}"></select> -->
+                                                        {{> vs1_dropdown id='edtOverheadExpenseAccount' name='edtOverheadExpenseAccount' value=processrecord.OExpense type='search' classes='edtOverheadExpenseAccount'}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-end">
+                                        <div class="col-3">
+                                            <div class="form-group">
+                                                <!-- <label>Total Hourly Costs</label>
+                                                <div class="input-box">
+                                                    <input type="text" class="form-control edtTotalHourlyCosts" id="edtTotalHourlyCosts" value="{{processrecord.TotalHourlyCost}}" name="edtTotalHourlyCosts" disabled/>
+                                                </div> -->
+                                                {{> default_input label='Total Hourly Costs' classes='edtTotalHourlyCosts' id="edtTotalHourlyCosts" name="edtTotalHourlyCosts" readonly=true defaultValue=processrecord.TotalHourlyCost}}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-9">
+                                            <div class="row">
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label>Inventory Asset Wastage</label>
-                                                        <select type="search" class="form-control edtWastage" id="edtWastage" name="edtWastage" value="{{processrecord.Wastage}}"></select>
+                                                        <!-- <select type="search" class="form-control edtWastage" id="edtWastage" name="edtWastage" value="{{processrecord.Wastage}}"></select> -->
+                                                        {{> vs1_dropdown id='edtWastage' name='edtWastage' value=processrecord.Wastage type='search' classes='edtWastage'}}
                                                     </div>
                                                 </div>
+                                               
                                             </div>
                                         </div>
-                                        <div class="col-5" style="margin-bottom: 1rem;">
-                                            <div class="row align-items-end justify-content-end" style="gap: 20px">
-                                                <!-- <button class="btn btn-success btnSave btn-auto-save btnSaveProcess" id="btnSaveProcess" type="button">
-                                                    <i class="fa fa-save" style="margin-right: 5px;"></i>Save
-                                                </button>
-                                                <button class="btn btn-secondary" id="btnCancel" type="button">
-                                                    <i class="fa fa-remove" style="margin-right: 5px;"></i>Cancel
-                                                </button> -->
-                                                {{> template_footer_save_button}}
-                                                {{> template_footer_cancel_button }}
-                                            </div>
-                                        </div>
+                                    </div>
+                                    <div class="row align-items-center justify-content-center my-3" style="gap: 20px;">
+                                        {{> template_footer_save_button}}
+                                        {{> template_footer_remove_button}}
+                                        {{> template_footer_cancel_button }}
                                     </div>
                                 </div>
                             </div>

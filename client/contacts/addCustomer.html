@@ -1,95 +1,93 @@
 <template name="customerscard">
+  <style>
+    .results tr[visible='false'],
+    .no-result {
+      display: none;
+    }
+
+    .results tr[visible='true'] {
+      display: table-row;
+    }
+
+    .counter {
+      padding: 8px;
+      color: #ccc;
+    }
+
+    .sideSearch {
+      /*width: 200px;*/
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+
+    .cardB {
+      /* max-height: 700px; */
+      overflow-y: auto;
+    }
+
+    .cardB420 {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .rowB {
+      overflow-x: auto;
+    }
+
+    .nav-tabs .nav-link.active {
+      color: rgb(0, 163, 211) !important;
+      background-color: #EDEDED !important;
+      border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
+    }
+
+    .nav-tabs .nav-link {
+      background-color: #fff !important;
+      border-color: #00a3d3 !important;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .sideSearch {
+        width: auto;
+      }
+    }
+
+    #btnView {
+      display: none;
+    }
+
+    @media screen and (min-width: 1025px) {
+      .viewList {
+        display: none;
+      }
+
+      .displayList {
+        height: 115vh;
+      }
+
+      .customerCardParent {
+        height: 100%;
+      }
+    }
+
+    .currentSelect {
+      background-color: #ededed99;
+      color: #00a3d3;
+    }
+
+    @media screen and (max-width: 450px) {
+      .sideSearch {
+        height: 400px !important;
+        overflow-y: scroll;
+      }
+    }
+  </style>
   <div>
     <div class="fullScreenSpin" style="display:none;">
       <div class="spinner"></div>
     </div>
     {{#if record}}
     <div style="margin: 16px;">
-      <style>
-        .results tr[visible='false'],
-        .no-result {
-          display: none;
-        }
-
-        .results tr[visible='true'] {
-          display: table-row;
-        }
-
-        .counter {
-          padding: 8px;
-          color: #ccc;
-        }
-
-        .sideSearch {
-          /*width: 200px;*/
-          overflow-x: hidden;
-          overflow-y: hidden;
-        }
-
-        .cardB {
-          /* max-height: 700px; */
-          overflow-y: auto;
-        }
-
-        .cardB420 {
-          max-height: 300px;
-          overflow-y: auto;
-        }
-
-        .rowB {
-          overflow-x: auto;
-        }
-
-        .nav-tabs .nav-link.active {
-          color: rgb(0, 163, 211) !important;
-          background-color: #EDEDED !important;
-          border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
-        }
-
-        .nav-tabs .nav-link {
-          background-color: #fff !important;
-          border-color: #00a3d3 !important;
-        }
-
-        @media only screen and (max-width: 600px) {
-          .sideSearch {
-            width: auto;
-          }
-        }
-
-        #btnView {
-          display: none;
-        }
-
-        @media screen and (min-width: 1025px) {
-          .viewList {
-            display: none;
-          }
-
-          .displayList {
-            height: 115vh;
-          }
-
-          .customerCardParent {
-            height: 100%;
-          }
-        }
-
-        .currentSelect {
-          background-color: #ededed99;
-          color: #00a3d3;
-        }
-
-        @media screen and (max-width: 450px) {
-          .sideSearch {
-            height: 400px !important;
-            overflow-y: scroll;
-          }
-        }
-      </style>
-      {{#if isModal}}
-
-      {{else}}
+      {{#unless isModal}}
       <div class="row">
         <div class="col-12 col-md-4">
           <h2 class="text-dark mb-0">Customer Overview Dashboard
@@ -98,19 +96,16 @@
         </div>
         <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
       </div>
-      
-      {{/if}}
+      {{/unless}}
       <div class="row">
-        {{#if isModal}}
-
-        {{else}}
+        {{#unless isModal}}
         <div class="col-12 col-md-4 col-lg-2 displayList" id="displayList">
           <div class="card shadow mb-4 customerCardParent" style="margin: 8px;">
             <div class="card-header d-flex justify-content-between align-items-center">
               <h6 class="text-primary font-weight-bold m-0">Customers</h6>
               <div class="dropdown no-arrow">
-                <button 
-                  class="btn btn-link dropdown-toggle" 
+                <button
+                  class="btn btn-link dropdown-toggle"
                   data-toggle="dropdown"
                   aria-expanded="false"
                   type="button">
@@ -128,16 +123,16 @@
               <div class="sideSearch">
                 <div class="row">
                   <div class="col-12" style="display: inline-flex;">
-                    <input 
-                      type="text" 
-                      class="search form-control txtSearchCustomers" 
+                    <input
+                      type="text"
+                      class="search form-control txtSearchCustomers"
                       placeholder="Search..."
                       style="width: 80%;">
-                    <button 
-                      class="btn btn-primary btnRefreshCustomers" 
-                      type="button" 
+                    <button
+                      class="btn btn-primary btnRefreshCustomers"
+                      type="button"
                       id="btnRefreshCustomers"
-                      style="padding: 4px 10px; font-size: 16px; margin-left: 12px !important;" 
+                      style="padding: 4px 10px; font-size: 16px; margin-left: 12px !important;"
                       autocomplete="off">
                       <i class="fas fa-search-plus"></i>
                     </button>
@@ -174,7 +169,7 @@
             </div>
           </div>
         </div>
-        {{/if}}
+        {{/unless}}
         <div class="{{#if isModal}}{{else}}col-12 col-md-8 col-lg-10 displayInfo{{/if}}" id="displayInfo"
           style="padding-top: 8px; width: 100%;">
           <!-- All Cards List -->
@@ -278,29 +273,29 @@
                           <div class="col-12 col-md-6" style="padding: 0;">
                             <div class="form-group" style="margin: 4px;">
                               <label>Company Name</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
+                              <input
+                                type="text"
+                                class="form-control"
                                 id="edtJobCustomerCompany"
-                                name="edtJobCustomerCompany" 
-                                value="{{record.jobcompany}}" 
+                                name="edtJobCustomerCompany"
+                                value="{{record.jobcompany}}"
                                 readonly>
                               <input
-                                type="hidden" 
-                                class="form-control" 
+                                type="hidden"
+                                class="form-control"
                                 id="edtParentJobCustomerCompany"
-                                name="edtParentCustomerCompany" 
+                                name="edtParentCustomerCompany"
                                 value="{{record.jobCompanyParent}}">
                             </div>
                           </div>
                           <div class="col-12 col-md-6" style="padding: 0;">
                             <div class="form-group" style="margin: 4px;">
                               <label>Email</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
+                              <input
+                                type="text"
+                                class="form-control"
                                 id="edtJobCustomerEmail"
-                                name="edtJobCustomerEmail" 
+                                name="edtJobCustomerEmail"
                                 value="{{record.jobemail}}">
                             </div>
                           </div>
@@ -308,10 +303,10 @@
                         <div class="row">
                           <div class="col-6 col-md-1" style="padding: 0;">
                             <div class="form-group" style="margin: 4px;"><label class="text-nowrap">Title</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
-                                id="edtJobTitle" 
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="edtJobTitle"
                                 name="edtJobTitle"
                                 value="{{record.jobtitle}}">
                             </div>
@@ -321,9 +316,9 @@
                               <label class="text-nowrap">
                                 First Name
                               </label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
+                              <input
+                                type="text"
+                                class="form-control"
                                 id="edtJobFirstName"
                                 name="edtJobFirstName"
                                 value="{{record.jobfirstname}}">
@@ -332,10 +327,10 @@
                           <div class="col-6 col-md-3" style="padding: 0;">
                             <div class="form-group flex-grow-1" style="margin: 4px;">
                               <label class="text-nowrap">Middle Name</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
-                                id="edtJobMiddleName" 
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="edtJobMiddleName"
                                 name="edtJobMiddleName"
                                 value="{{record.jobmiddlename}}">
                             </div>
@@ -343,10 +338,10 @@
                           <div class="col-6 col-md-4" style="padding: 0;">
                             <div class="form-group flex-grow-1" style="margin: 4px;">
                               <label class="text-nowrap">Last Name</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
-                                id="edtJobLastName" 
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="edtJobLastName"
                                 name="edtJobLastName"
                                 value="{{record.joblastname}}">
                             </div>
@@ -357,23 +352,23 @@
                           <div class="col-8 col-md-8" style="padding: 0;">
                             <div class="form-group flex-grow-1" style="margin: 4px;">
                               <label class="text-nowrap">Job Name</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
-                                id="edtJobName" 
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="edtJobName"
                                 name="edtJobName"
-                                value="{{record.jobName}}" 
+                                value="{{record.jobName}}"
                                 readonly>
                             </div>
                           </div>
                           <div class="col-4 col-md-4" style="padding: 0;">
                             <div class="form-group flex-grow-1" style="margin: 4px;">
                               <label class="text-nowrap">Job Number</label>
-                              <input 
-                                type="text" 
-                                class="form-control" 
+                              <input
+                                type="text"
+                                class="form-control"
                                 id="edtJobNumber"
-                                name="edtJobNumber" 
+                                name="edtJobNumber"
                                 value="{{record.jobNumber}}">
                             </div>
                           </div>
@@ -1063,8 +1058,8 @@
                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab"
                                 data-toggle="tab" data-target="#tab-6">Invoicing</a></li>
                             {{#if record.issupplier}}
-                            <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab"
-                                data-toggle="tab" data-target="#tab-7">Billing</a></li>
+                            <!-- <li class="nav-item" style="cursor: pointer;"><a class="nav-link bilingTab" role="tab"
+                                data-toggle="tab" data-target="#tab-7">Billing</a></li> -->
                             {{/if}}
                             <li class="nav-item attachmentTab" style="cursor: pointer;"><a class="nav-link" role="tab"
                                 data-toggle="tab" data-target="#tab-8">{{#if attachmentCount}}<span
@@ -1381,6 +1376,7 @@
                                 </div>
                               </div>
                             </div>
+                            <!--
                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-7"
                               style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                               <div class="row" style="margin: 6px;">
@@ -1479,7 +1475,7 @@
 
                               </div>
                             </div>
-
+                            -->
                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-8"
                               style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                               <div class="row no-gutters" style="margin: 12px;">
@@ -1670,8 +1666,8 @@
                                           application/vnd.apple.numbers,application/zip,application/rar,
                                           application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
 
-                                  <button 
-                                    class="btn btn-primary btnUploadFile new_attachment_btn" 
+                                  <button
+                                    class="btn btn-primary btnUploadFile new_attachment_btn"
                                     type="button"
                                     style="margin: 4px;">
                                     <i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>
@@ -1709,44 +1705,48 @@
                               </div>
                             </div>
                             <!-- End View File attachment -->
-                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9"
-                              style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                               <div class="row no-gutters" style="margin: 14px;">
                                 <div class="col d-xl-flex align-items-xl-center">
-                                  <div class="form-group flex-grow-1 checkbox1div"
-                                    style="margin: 4px;padding-right:4px;">
-                                    <label class="lblCustomField1">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[0].label}}
-                                      {{else}}Custom
-                                      Field 1{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField1" name="edtCustomField1"
-                                      value="{{record.custfield1}}">
+                                  <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;padding-right:4px;">
+                                    <label class="lblCustomField1">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[0].label}}
+                                      {{else}}
+                                        Custom Field 1
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField1" name="edtCustomField1" value="{{record.custfield1}}">
                                   </div>
                                   <div class="form-group flex-grow-1 checkbox2div" style="margin: 4px;">
-                                    <label class="lblCustomField2">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[1].label}}
-                                      {{else}}Custom
-                                      Field 2{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField2" name="edtCustomField2"
-                                      value="{{record.custfield2}}">
+                                    <label class="lblCustomField2">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[1].label}}
+                                      {{else}}
+                                        Custom Field 2
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField2" name="edtCustomField2" value="{{record.custfield2}}">
                                   </div>
-                                  <div class="form-group flex-grow-1 checkbox3div"
-                                    style="margin: 4px;padding-left:4px;">
-                                    <label class="lblCustomField3">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[2].label}}
-                                      {{else}}Custom
-                                      Field 3{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField3" name="edtCustomField3"
-                                      value="{{record.custfield3}}">
+                                  <div class="form-group flex-grow-1 checkbox3div" style="margin: 4px;padding-left:4px;">
+                                    <label class="lblCustomField3">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[2].label}}
+                                      {{else}}
+                                        Custom Field 3
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField3" name="edtCustomField3" value="{{record.custfield3}}">
                                   </div>
-                                  <div class="form-group flex-grow-1 checkbox4div"
-                                    style="margin: 4px;padding-left:4px;">
-                                    <label class="lblCustomField4">{{#if
-                                      contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[3].label}}
-                                      {{else}}Custom
-                                      Field 4{{/if}}</label>
-                                    <input type="text" class="form-control" id="edtCustomField4" name="edtCustomField4"
-                                      value="{{record.custfield4}}">
+                                  <div class="form-group flex-grow-1 checkbox4div" style="margin: 4px;padding-left:4px;">
+                                    <label class="lblCustomField4">
+                                      {{#if contactCloudPreferenceRec}}
+                                        {{contactCloudPreferenceRec.customFields.[3].label}}
+                                      {{else}}
+                                        Custom Field 4
+                                      {{/if}}
+                                    </label>
+                                    <input type="text" class="form-control" id="edtCustomField4" name="edtCustomField4" value="{{record.custfield4}}">
                                   </div>
                                 </div>
                               </div>
@@ -2734,7 +2734,7 @@
                       </div>
                       <div style="width: 154px;">
                         {{> toggle_button className="chkGlobalSettings" id="customer_transctionList_sales_orders_toggle"
-                        width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales Orders" isChecked=checkedSalesOrders}}
+                        width="131px" for="customer_transctionList_sales_orders_toggle" displayName="Sales" isChecked=checkedSalesOrders}}
                       </div>
                     </div>
                     <div class="row rowB mt-2" style="margin: 14px; margin-top: 0">
@@ -2761,6 +2761,7 @@
     </div>
     {{/if}}
   </div>
+
   <div class="modal fade" role="dialog" tabindex="-1" id="referenceLetterModal">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -2774,12 +2775,12 @@
         <div class="modal-body p-3" style="display: flex; flex-direction: column; align-items: stretch; gap: 20px">
           {{#each correspondence in correspondences}}
           <div>
-            <input 
-              type="radio" 
-              name="refTemp" 
-              value="{{correspondence.Ref_Type}}" 
+            <input
+              type="radio"
+              name="refTemp"
+              value="{{correspondence.Ref_Type}}"
               id="{{correspondence.Ref_Type}}"
-              data-subject="{{correspondence.ReferenceTxt}}" 
+              data-subject="{{correspondence.ReferenceTxt}}"
               data-memo="{{correspondence.MessageAsString}}">
             <label for="{{correspondence.label}}">
               {{correspondence.Ref_Type}}
@@ -2793,7 +2794,7 @@
               color='success'
               classes='float-right btnSaveLetterTemp'
               type='button'
-              id="save-correspondence" 
+              id="save-correspondence"
               iconName='save'
               title='Save'
             }}
@@ -2801,7 +2802,7 @@
               color='secondary'
               classes='float-right btnSaveLetterTemp'
               type='button'
-              id="save-correspondence" 
+              id="save-correspondence"
               iconName='close'
               title='Close'
             }}
@@ -2856,8 +2857,6 @@
   <div class="modal fade" role="dialog" tabindex="-1" id="clienttypeListModal">
     {{> clienttypepopup}}
   </div>
-
-  {{> clienttypemodal}}
 
   <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
     {{> taxratelistpop}}
@@ -2945,6 +2944,7 @@
   </div>
 
   {{> projectListPop}}
+
   <input type="hidden" id="assignedID" />
   <input type="hidden" id="contactID" />
   <input type="hidden" id="contactType" />

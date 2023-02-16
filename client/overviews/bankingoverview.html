@@ -121,14 +121,14 @@
                     <button id="btnEft" class="btn btn-primary btnEft" type="button"><i class="fas fa-ruler-combined" style="margin-right: 5px;"></i>EFT</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item btnBankRule pointer" id="btnBankRuleList">Bank Rule List</a>
-                        <a class="dropdown-item btnNewBankRule pointer" id="btnNewBankRule">+ New Bank Rule</a>
+                        <a class="dropdown-item btnBankRule pointer" id="btnEFTBankRuleList">EFT Bank Rules List</a>
+                        <a class="dropdown-item btnNewBankRule pointer" id="btnNewEFTBankRule">+ New EFT Bank Rule</a>
                     </div>
                 </div>
             </div>
             <div class="col-4 d-xl-flex justify-content-xl-end align-items-end">
-                {{> spreadsheet_link templateName="Banking Overview report result"}}
-                {{> export_import_print_display_button Import="hiddenButton" displayHref="tblBankingOverview_Modal"}}
+                {{> spreadsheet_link templateName="Banking Overview Report Result"}}
+                {{> export_import_print_display_button Import="hiddenButton" tablename="tblBankingOverview"}}
             </div>
         </div>
         <div class="row">
@@ -138,37 +138,8 @@
                         <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                         </div>
-<!--                        <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">-->
-<!--                            <div class="dropdown" style="margin: 8px; margin-top: 0px;">-->
-<!--                                <style>-->
-<!--                                    .dropdown-toggle::after {-->
-<!--                                        display: none;-->
-<!--                                    }-->
-<!--                                </style>-->
-<!--                                <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>-->
-<!--                                {{> daterangedropdownoption}}-->
-<!--                            </div>-->
-<!--                            <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">-->
-<!--                                <label style="margin-top: 8px; margin-right: 16px;">From</label>-->
-<!--                                <div class="input-group date" style="width: 160px;">-->
-<!--                                    <input type="text" class="form-control" id="dateFrom" name="dateFrom" >-->
-<!--                                    <div class="input-group-addon">-->
-<!--                                        <span class="glyphicon glyphicon-th"></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">-->
-<!--                                <label style="margin-top: 8px; margin-right: 16px;">To</label>-->
-<!--                                <div class="input-group date" style="width: 160px;">-->
-<!--                                    <input type="text" class="form-control" id="dateTo" name="dateTo" >-->
-<!--                                    <div class="input-group-addon">-->
-<!--                                        <span class="glyphicon glyphicon-th"></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
-                    {{> transaction_list tablename = "tblBankingOverview" }}
+                    {{> transaction_list tablename="tblBankingOverview" }}
                 </div>
             </div>
         </div>

@@ -178,12 +178,6 @@ Template.supplierlist.events({
         $('.fullScreenSpin').css('display', 'none');
 
     },
-    "click .btnSpreadSheetLink": function () {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let utilityService = new UtilityService();
-        const filename = "Supplier List result" + ".xlsx";
-        utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
-    },
     'click .exportbtnExcel': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblSupplierlist_wrapper .dt-buttons .btntabletoexcel').click();

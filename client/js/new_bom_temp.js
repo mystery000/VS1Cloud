@@ -712,6 +712,8 @@ Template.bom_template.events({
         let processName = $(event.target).closest('tr').find('.colName').text();
         let selEle = templateObject.selectedProcessField.get();
         selEle.val(processName);
+        let hoursEle = $(selEle).closest('.productRow').find('.colDuration .edtDuration');
+        $(hoursEle).css('display', 'block')
         $('#processListModal').modal('toggle')
     },
 
@@ -741,21 +743,23 @@ Template.bom_template.events({
         let colProduct = row.find('.colProduct');
         let colQty = row.find('.colQty');
         let colProcess = row.find('.colProcess');
+        let colHours = row.find('.colDuration');
         let colNote = row.find('.colNote');
         let colAttachment = row.find('.colAttachment');
         let colDelete = row.find('.colDelete');
         $(colProduct).prepend("<div style='width: 29%'></div><select class='edtProductName edtRaw form-control' id='edtRaw' type='search' style='width: 70%'></select>")
         $(event.target).remove()
         $(colProduct).find('.edtProductName').editableSelect()
-        $(colQty).append("<input type='text' class='form-control edtQuantity w-100' type='number' step='.00001'/>");
+        $(colQty).append("<input class='form-control edtQuantity w-100' value='1' min='1' type='number' step='.00001'/>");
         // $(colProduct).append("<button type='button' class='btnShowSub btn btn-primary'>Show Sub</button>");
         $(colProcess).append("<select class='edtProcessName form-control w-100' type='search' ></select>")
         $(colProcess).find('.edtProcessName').editableSelect();
+        $(colHours).append("<input class='w-100 form-control edtDuration' type='text' style='display: none'/>")
         $(colNote).append("<input class='w-100 form-control edtProcessNote' type='text'/>");
-        $(colDelete).addClass('d-flex align-items-center justify-content-center')
+        $(colDelete).addClass('d-flex align-items-center justify-content-start')
         $(colDelete).append("<button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw no-print'><i class='fa fa-remove'></i></button>")
 
-
+        $(colProduct).find('.edtProductName').trigger('click');
 
         grandParent.append("<div class='product-content'><div class='d-flex productRow'>" +
                         "<div class='colProduct  d-flex form-group'>" +

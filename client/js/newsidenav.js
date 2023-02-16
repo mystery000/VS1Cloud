@@ -135,7 +135,7 @@ Template.newsidenav.onCreated(function () {
   templateObject.isSerialNumberList = new ReactiveVar();
   templateObject.isSerialNumberList.set(false);
   sideBarService.getVS1MenuConfig().then((data) => {
-    if (data.tpreference && !!data.tpreference.length) {
+    if (data.tpreference && data.tpreference.length > 0) {
       const latestAction = data.tpreference[data.tpreference.length - 1];
       const menuItem = JSON.parse(latestAction.fields.PrefValue);
       if (menuItem.Location === "TopMenu") {
@@ -154,6 +154,7 @@ Template.newsidenav.onCreated(function () {
       $('#sidebar').removeClass('top');
       $('#bodyContainer').removeClass('top');
       $('#sidebarToggleBtn .text').text('Top');
+      localStorage.setItem('TPreferenceMenuID', 0);
     }
   });
   $(document).ready(function () {
@@ -588,7 +589,7 @@ Template.newsidenav.onRendered(function () {
       (currentLoc == "/stockadjustmentcard") ||
       (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
       (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
-      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist") || (currentLoc == "/binlocationslist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -1226,7 +1227,7 @@ Template.newsidenav.events({
           }]
         }
       };
-      sideBarService.updateVS1MenuConfig('SideMenu',employeeId)
+      sideBarService.updateVS1MenuConfig('SideMenu',employeeId);
       $('#sidebar').removeClass('top');
       $('#bodyContainer').removeClass('top');
       $('#sidebarToggleBtn .text').text('Top');
@@ -1241,28 +1242,28 @@ Template.newsidenav.events({
           }]
         }
       };
-      sideBarService.updateVS1MenuConfig('TopMenu',employeeId)
+      sideBarService.updateVS1MenuConfig('TopMenu',employeeId);
       $('#sidebar').addClass('top');
       $('#bodyContainer').addClass('top');
       $('#sidebarToggleBtn .text').text('Side');
     }
-    var erpGet = erpDb();
-    var oPost = new XMLHttpRequest();
+    // var erpGet = erpDb();
+    // var oPost = new XMLHttpRequest();
 
-    oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_EmployeeAccess"', true);
-    oPost.setRequestHeader("database", erpGet.ERPDatabase);
-    oPost.setRequestHeader("username", erpGet.ERPUsername);
-    oPost.setRequestHeader("password", erpGet.ERPPassword);
-    oPost.setRequestHeader("Accept", "application/json");
-    oPost.setRequestHeader("Accept", "application/html");
-    oPost.setRequestHeader("Content-type", "application/json");
-    var myString = '"JsonIn"' + ':' + JSON.stringify(payload);
-    oPost.send(myString);
-    oPost.onreadystatechange = function () {
-      if (oPost.readyState == 4 && oPost.status == 200) {
+    // oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_EmployeeAccess"', true);
+    // oPost.setRequestHeader("database", erpGet.ERPDatabase);
+    // oPost.setRequestHeader("username", erpGet.ERPUsername);
+    // oPost.setRequestHeader("password", erpGet.ERPPassword);
+    // oPost.setRequestHeader("Accept", "application/json");
+    // oPost.setRequestHeader("Accept", "application/html");
+    // oPost.setRequestHeader("Content-type", "application/json");
+    // var myString = '"JsonIn"' + ':' + JSON.stringify(payload);
+    // oPost.send(myString);
+    // oPost.onreadystatechange = function () {
+    //   if (oPost.readyState == 4 && oPost.status == 200) {
 
-      }
-    }
+    //   }
+    // }
   },
   'click #sidenavaccessLevel': function (event) {
     window.open('#', '_self');
@@ -2363,6 +2364,12 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+  'click #sidenavmobileapp': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/mobileapp');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
   'click #sidenavnewworkorder': function (event) {
     event.preventDefault();
     FlowRouter.go('/workordercard');
@@ -2625,6 +2632,12 @@ Template.newsidenav.events({
   'click #sidenavstocktransfer': function (event) {
     event.preventDefault();
     FlowRouter.go('/stocktransferlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavbinlocationlist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/binlocationslist');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },

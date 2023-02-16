@@ -644,31 +644,13 @@ Template.crmoverview.events({
 
     // open new task modal
     "click .btnNewTask": function(e) {
-        $("#editProjectID").val("");
-        $("#txtCrmSubTaskID").val("");
-
-        $(".addTaskModalProjectName").html("All Tasks");
-        $(".lblAddTaskSchedule").html("Schedule");
-
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
-        $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
-
-        // uncheck all labels
-        $(".chkAddLabel").prop("checked", false);
-
         // for add modal
         let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         let employeeName = localStorage.getItem("mySessionEmployee");
-        $('#add_assigned_name').val(employeeName);
+        $("#frmEditTaskModal")[0].reset();
+        $('#crmEditSelectEmployeeList').val(employeeName);
         $('#assignedID').val(employeeID)
-
-        $('#contactID').val('');
-        $('#contactType').val('')
-        $('#add_contact_name').val('')
-
-        $("#newTaskModal").modal("toggle");
+        $("#taskDetailModal").modal("toggle");
     },
 
     "click .detail_label": function(e) {
@@ -752,14 +734,15 @@ Template.crmoverview.events({
 
     "click .btnRefresh": function() {
         $(".fullScreenSpin").css("display", "inline-block");
-
+        let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
         crmService.getAllTaskList().then(function(data) {
             addVS1Data("TCRMTaskList", JSON.stringify(data));
             crmService.getTProjectList().then(function(data) {
                 addVS1Data("TCRMProjectList", JSON.stringify(data));
+                $(".fullScreenSpin").css("display", "none");
                 crmService.getAllLabels().then(function(data) {
                     addVS1Data("TCRMLabelList", JSON.stringify(data));
-
+                    
                     crmService.getAllLeads(dateFrom).then(function(data) {
                         let bar_records = [];
                         let pie_records = [];

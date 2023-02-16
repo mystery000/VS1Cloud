@@ -575,6 +575,16 @@
                     <a href="#inventorySubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader inventoryLiHeader"><i class="fas fa-box-open faHeader"></i> Inventory</a>
                     <div class="submenuItem collapse" id="inventorySubmenu">
                         <ul class="list-unstyled">
+                            {{#if isSNTrackChecked}}
+                            <li>
+                                <a id="sidenavbinlocationlist" name="sidenavbinlocationlist" class="text-left">
+                                    <i class="fas fa-box"></i> Bin Location List
+                                </a>
+                            </li>
+                            <li>
+                                <a id="sidenavelotnumberlist" name="sidenavelotnumberlist" class="text-left"><i class="fa fa-list-ul"></i> Lot Number List</a>
+                            </li>
+                            {{/if}}
                             {{#if isProductList}}
                             <li>
                                 <a id="sidenaveproductlist" name="sidenaveproductlist" class="text-left"><i class="fa fa-product-hunt"></i> Product List</a>
@@ -583,9 +593,6 @@
                             {{#if equals isSNTrackChecked true}}
                             <li>
                                 <a id="sidenaveserialnumberlist" name="sidenaveserialnumberlist" class="text-left"><i class="fa fa-list-alt"></i> Serial Number List</a>
-                            </li>
-                            <li>
-                                <a id="sidenavelotnumberlist" name="sidenavelotnumberlist" class="text-left"><i class="fa fa-list-ul"></i> Lot Number List</a>
                             </li>
                             {{/if}}
                             {{#if includeStockAdjustment}}
@@ -601,6 +608,7 @@
                                 </a>
                             </li>
                             {{/if}}
+                            
                             {{#if isNewProduct}}
                             <li>
                                 <a id="sidenavnewinventory" name="sidenavnewinventory" class="text-left"><i class="fas fa-plus"></i> New Product</a>
@@ -1047,10 +1055,6 @@
                                 </li>
 
                                 <li>
-                                    <a id="leadstatussettings" name="leadstatussettings" class="text-left"><i class="fas fa-cog"></i> Lead Status</a>
-                                </li>
-
-                                <li>
                                     <a id="sidenavdepartmentSettings" name="sidenavdepartmentSettings" class="text-left">
                                         <i class="fas fa-cog"></i> Department
                                     </a>
@@ -1072,6 +1076,10 @@
                                     <a id="sidenavInventorySettings" name="sidenavInventorySettings" class="text-left">
                                         <i class="fas fa-cog"></i> Inventory Settings
                                     </a>
+                                </li>
+
+                                <li>
+                                    <a id="leadstatussettings" name="leadstatussettings" class="text-left"><i class="fas fa-cog"></i> Lead Status</a>
                                 </li>
 
                                 <li>

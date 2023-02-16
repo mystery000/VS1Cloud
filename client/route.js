@@ -210,6 +210,7 @@ FlowRouter.triggers.enter([
                     localStorage.setItem("enteredURL", context.path);
                     $(document).find(".btn-auto-save").click();
                     // FlowRouter.go(previous_url);
+                    FlowRouter.reload();
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
                     // Meteor._reload.reload();
@@ -2300,6 +2301,15 @@ authenticatedRoutes.route('/workorderlist', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'workorderlist'
+        })
+    }
+})
+
+authenticatedRoutes.route('/mobileapp', {
+    name: 'mobileapp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'mobileapp'
         })
     }
 })

@@ -97,8 +97,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary saveTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-warning resetTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                    <button class="btn btn-primary saveTable savePrintTable" type="button" style='margin: 14px !important;'><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-warning resetTable resetPrintTable" type="reset" style='margin: 14px !important;'><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button" style='margin: 14px !important;'><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>
@@ -213,16 +213,18 @@
                 pos3 = e.clientX;
                 pos4 = e.clientY;
                 // set the element's new position:
-                if (pos3 < 1200 && pos4 < 430) {
+                // if (pos3 < 1200 && pos4 < 430) {
                     elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
                     elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                }
+                    elmnt.style.border = "1px solid blue";
+                // }
             }
 
             function closeDragElement() {
                 /* stop moving when mouse button is released:*/
                 document.onmouseup = null;
                 document.onmousemove = null;
+                elmnt.style.border = "";
             }
         }
 

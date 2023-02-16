@@ -30,6 +30,9 @@ Template.vs1_report_template.onCreated(function () {
   templateObject.report_displayfields = new ReactiveVar();
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.isAccountingMoreOption = new ReactiveVar();
+  templateObject.isProfitAndLossMoreOption = new ReactiveVar();
+  templateObject.isPeriodSelection = new ReactiveVar();
+  templateObject.isDepartmentSelection = new ReactiveVar();
   templateObject.isTaxCodeOption = new ReactiveVar();
   // templateObject.dateAsAt = new ReactiveVar();
 });
@@ -53,10 +56,18 @@ Template.vs1_report_template.onRendered(function () {
   let currenttablename = "100";
   let displaytablename = "100";
   templateObject.isAccountingMoreOption.set(false);
+  templateObject.isProfitAndLossMoreOption.set(false);
+  templateObject.isPeriodSelection.set(false);
+  templateObject.isDepartmentSelection.set(false);
   templateObject.isTaxCodeOption.set(false);
   if (url.includes("/taxsummaryreport")) {
     templateObject.isAccountingMoreOption.set(true);
     templateObject.isTaxCodeOption.set(true);
+  };
+  if (url.includes("/newprofitandloss")) {
+    templateObject.isProfitAndLossMoreOption.set(true);
+    templateObject.isPeriodSelection.set(true);
+    templateObject.isDepartmentSelection.set(true);
   };
 
   currenttablename = templateObject.data.tablename || "100";
@@ -761,16 +772,13 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "binlocationslist":
         reset_data = [
-          { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
-          { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "100" },
-          { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "100" },
-          { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "100" },
-          { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "100" },
-          { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "100" },
+          { index: 1, label: 'Rack', class: 'colRack', active: true, display: true, width: "100" },
+          { index: 2, label: 'Bin #', class: 'colBinNumber', active: true, display: true, width: "100" },
+          { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+          { index: 4, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "100" },
+          { index: 5, label: 'Sales Description', class: 'colSalesDescription', active: true, display: true, width: "100" },
+          { index: 6, label: 'In Stock', class: 'colInStock', active: true, display: true, width: "100" },
           { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "100" },
-          { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "100" },
-          { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "100" },
-          { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "100" },
         ]
         break;
       case "stockmovementreport":
@@ -982,6 +990,15 @@ Template.vs1_report_template.onRendered(function () {
           { index: 11, label: 'Edited Flag', class: 'colEditedFlag', active: false, display: true, width: "100" },
         ]
         break;
+      case "tblprofitandloss":  
+        reset_data = [
+          { index: 1, label: 'Account ID', class: 'colAccountID', active: false, display: true, width: "155" },
+          { index: 2, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "190" },
+          { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "190" },
+          { index: 4, label: 'Percent', class: 'plAmountPercentage', active: true, display: true, width: "190" },
+          { index: 8, label: 'Total', class: 'tglTotal', active: true, display: true, width: "190" },        
+        ];
+        break;
       default:
         break;
     }
@@ -1171,6 +1188,15 @@ Template.vs1_report_template.helpers({
   },
   isAccountingMoreOption: () => {
     return Template.instance().isAccountingMoreOption.get();;
+  },
+  isProfitAndLossMoreOption: () => {
+    return Template.instance().isProfitAndLossMoreOption.get();;
+  },
+  isPeriodSelection: () => {
+    return Template.instance().isPeriodSelection.get();;
+  },
+  isDepartmentSelection: () => {
+    return Template.instance().isDepartmentSelection.get();
   },
   companyname: () => {
     return loggedCompany;

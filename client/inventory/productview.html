@@ -9,9 +9,6 @@
             }
         }
 
-        .inventorynottracking {
-        }
-
         .custom-control-label {
             position: absolute;
         }
@@ -190,8 +187,7 @@
             <div class="row">
                 <div class="col-12 col-md-4">
                     <h1 style="margin: 16px" id="productcardbodyname">
-                        {{productrecord.lib}} {{#if notEquals productrecord.id ''}} {{productrecord.id}}{{/if}} {{>
-                        helpbutton}}
+                        {{productrecord.lib}} {{> helpbutton}}
 
                         <!-- Start Help View Modal -->
                         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -237,7 +233,7 @@
                 class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
                 style="width: 100%"
             >
-                <div class="col-lg-9 col-md-12 col-sm-12 productCard" id="productCard">
+                <div class="col-lg-7 col-md-12 col-sm-12 productCard" id="productCard">
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div style="display: flex; justify-content: space-between; width: 100%; margin-right: 25px">
@@ -259,7 +255,7 @@
                                 ></a>
                                 <!-- Start {{> optionCustomFiled}} -->
 
-                                {{> customfieldDroppop}} {{> customfieldpop}}
+
 
                                 <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                                     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -413,7 +409,7 @@
 
                         <div class="card-body" style="background-color: #ededed; padding: 2em">
                             <div class="row">
-                                <div class="col-6 col-md-6 colProductName" id="colProductName">
+                                <div class="col-6 col-md-7 colProductName" id="colProductName">
                                     <div class="form-group">
                                         <label>Product Name</label>
                                         <input
@@ -453,7 +449,7 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="col-6 col-md-3 trackItemvisible colTotalQty"
+                                    class="col-6 col-md-2 trackItemvisible colTotalQty"
                                     id="colTotalQty"
                                     style="{{#if isTrackChecked}}visibility: visible;{{else}}visibility: hidden;{{/if}}"
                                 >
@@ -486,7 +482,7 @@
                     </div>
                     <div class="card shadow mb-4">
                         <div class="card-body" style="background-color: #ededed; padding: 2em"> -->
-                            <div class="row" style="float: right; margin: 10px 0 0 0">
+                            <div class="row  justify-content-xl-end" style="width: 100%;margin: 10px 0 0 0">
                                 <button class="btn btn-primary btnAddUOM btn-mg" type="button" id="addNewUOM">
                                     <i class="fas fa-plus" style="margin-right: 8px; font-size: 14px !important"></i>Add
                                     UOM
@@ -497,8 +493,8 @@
                             </div>
                             <div id="UOMRows"></div>
 
-                            <div class="row w-100 m-0">
-                                <div class="colSalesAccount pr-4" id="colSalesAccount" style="width: 26%">
+                            <div class="row saleRowWrapper">
+                                <div class="col-6 col-md-3 colSalesAccount" id="colSalesAccount">
                                     <div class="form-group">
                                         <label>Sales Account</label>
                                         <select
@@ -510,19 +506,19 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="colUOM pr-4" id="colUOM" style="width: 13%">
+                                <div class="col-6 col-md-2 colUOM" id="colUOM">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomSales"
                                             id="sltUomSales"
                                             name="sltUomSales"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="colTaxCode pr-4" id="colTaxCode" style="width: 13%">
+                                <div class="col-6 col-md-2 colTaxCode" id="colTaxCode">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -534,21 +530,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="colMarkup pr-4" id="colMarkup" style="width: 6.5%">
-                                    <div class="form-group">
-                                        <label>Markup</label>
-                                        <div style="display: flex">
-                                            <input
-                                                type="text"
-                                                class="form-control highlightInput"
-                                                id="edtmarkup"
-                                                name="edtmarkup"
-                                                value="40"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="colPrice pr-4" id="colPrice" style="width: 13%">
+                                <div class="col-6 col-md-2 colPrice" id="colPrice">
                                     <div class="form-group">
                                         <label class="lblPriceEx hiddenColumn"
                                             >Price (Ex Tax) <i class="fas fa-random"></i
@@ -574,30 +556,39 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="colBarcode pr-4" id="colBarcode" style="width: 28.5%">
+                                <div class="col-6 col-md-1 colMarkup" id="colMarkup">
+                                    <div class="form-group">
+                                        <label>Markup</label>
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput baseEdtMarkup"
+                                                id="edtmarkup"
+                                                name="edtmarkup"
+                                                value="40"
+                                            />
+                                            <!-- <div class="input-group-append">
+                                                <span class="input-group-text" style="z-index: 0;">%</span>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 col-md-2 colBarcode" id="colBarcode">
                                     <div class="form-group">
                                         <label>Barcode</label>
-                                        <div style="display: flex">
                                             <input
                                                 type="text"
                                                 class="form-control highlightInput"
                                                 id="edtbarcode"
                                                 name="edtbarcode"
                                             />
-                                            <span class="table-remove btnRemoveUOM pl-4 invisible"
-                                                ><button
-                                                    type="button"
-                                                    class="btn btn-danger btn-rounded btn-sm"
-                                                    autocomplete="off"
-                                                >
-                                                    <i class="fa fa-remove"></i></button
-                                            ></span>
-                                        </div>
                                     </div>
                                 </div>
+
                             </div>
-                            <div class="row uomRow m-0 w-100" style="display: none" id="uomRow_0">
-                                <div class="pr-4 colSalesAccount" id="colSalesAccount" style="width: 26%">
+                            <div class="row uomRow" style="display: none" id="uomRow_0">
+                                <div class="col-6 col-md-3 colSalesAccount" id="colSalesAccount">
                                     <div class="form-group">
                                         <label>Sales Account</label>
                                         <select
@@ -609,19 +600,19 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="pr-4 colUOM" id="colUOM" style="width: 13%">
+                                <div class="col-6 col-md-2 colUOM" id="colUOM">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomSales"
                                             id="sltUomSales"
                                             name="sltUomSales"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="pr-4 colTaxCode" id="colTaxCode" style="width: 13%">
+                                <div class="col-6 col-md-2 colTaxCode" id="colTaxCode">
                                     <div class="form-group">
                                         <label>Tax Code</label>
                                         <select
@@ -633,21 +624,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="pr-4 colMarkup" id="colMarkup" style="width: 6.5%">
-                                    <div class="form-group">
-                                        <label>Markup</label>
-                                        <div style="display: flex">
-                                            <input
-                                                type="text"
-                                                class="form-control highlightInput"
-                                                id="edtmarkup"
-                                                name="edtmarkup"
-                                                value="40"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="pr-4 colPrice" id="colPrice" style="width: 13%">
+                                <div class="col-6 col-md-2 colPrice" id="colPrice">
                                     <div class="form-group">
                                         <label class="lblPriceEx hiddenColumn"
                                             >Price (Ex Tax) <i class="fas fa-random"></i
@@ -674,7 +651,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="pr-4 colBarcode" id="colBarcode" style="width: 28.5%">
+                                <div class="col-6 col-md-1 colMarkup" id="colMarkup">
+                                    <div class="form-group">
+                                        <label>Markup</label>
+
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control highlightInput baseEdtMarkup"
+                                                id="edtmarkup"
+                                                name="edtmarkup"
+                                                value="40"
+
+                                            />
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-6 col-md-2 colBarcode" id="colBarcode">
                                     <div class="form-group">
                                         <label>Barcode</label>
                                         <div style="display: flex">
@@ -683,9 +680,9 @@
                                                 class="form-control highlightInput"
                                                 id="edtbarcode"
                                                 name="edtbarcode"
-                                                value="{{productrecord.barcode}}"
+                                                style="border-top-right-radius: 5px!important;border-bottom-right-radius: 5px!important;"
                                             />
-                                            <span class="table-remove btnRemoveUOM pl-4"
+                                            <span class="table-remove btnRemoveUOM pl-3"
                                                 ><button
                                                     type="button"
                                                     class="btn btn-danger btn-rounded btn-sm"
@@ -693,11 +690,13 @@
                                                 >
                                                     <i class="fa fa-remove"></i></button
                                             ></span>
-                                        </div>
                                     </div>
+                                      </div>
                                 </div>
+
                             </div>
                             <div class="row">
+
                                 <div
                                     class="col-6 col-md-3 checkbox1div colCustom1"
                                     id="colCustom1"
@@ -798,8 +797,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6 col-md-4 colCOGSaccount" id="colCOGSaccount">
+                            <div class="row purchaseRowWrapper">
+                                <div class="col-6 col-md-3 colCOGSaccount" id="colCOGSaccount" >
                                     <div class="form-group">
                                         <label>COGS Account</label>
                                         <select
@@ -812,12 +811,12 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                <div class="col-6 col-md-2 colUOM" id="colUOM">
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomPurchases"
                                             id="sltUomPurchases"
                                             name="sltUomPurchases"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -837,7 +836,7 @@
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colCost" id="colCost">
+                                <div class="col-6 col-md-3 colCost" id="colCost" style="width: 13%">
                                     <div class="form-group">
                                         <label class="lblCostEx hiddenColumn"
                                             >Cost (Ex Tax) <i class="fas fa-random"></i
@@ -862,22 +861,14 @@
                                                 name="edtbuyqty1costInc"
                                                 value="{{productrecord.buyqty1costinc}}"
                                             />
-                                            <span class="table-remove btnRemoveCOGS invisible" style="margin-left: 10px"
-                                                ><button
-                                                    type="button"
-                                                    class="btn btn-danger btn-rounded btn-sm"
-                                                    autocomplete="off"
-                                                >
-                                                    <i class="fa fa-remove"></i></button
-                                            ></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row COGSRow" style="display: none" id="COGSRow_0">
-                                <div class="col-6 col-md-4 colCOGS" id="colCOGS">
+                                <div class="col-6 col-md-3 colCOGS" id="colCOGS">
                                     <div class="form-group">
-                                        <label>Cost of Goods Sold</label>
+                                        <label>COGS Account</label>
                                         <input
                                             class="form-control"
                                             id="sltcogsaccount"
@@ -886,12 +877,12 @@
                                         />
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colUOM" id="colUOM">
+                                <div class="col-6 col-md-2 colUOM" id="colUOM" >
                                     <div class="form-group">
                                         <label>Unit of Measure</label>
                                         <select
                                             type="search"
-                                            class="form-control"
+                                            class="form-control sltUomPurchases"
                                             id="sltUomPurchases"
                                             name="sltUomPurchases"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -904,13 +895,13 @@
                                         <select
                                             type="search"
                                             class="form-control"
-                                            id="slttaxcodesales"
-                                            name="slttaxcodesales"
+                                            id="slttaxcodepurchase"
+                                            name="slttaxcodepurchase"
                                             style="background-color: rgb(255, 255, 255); cursor: pointer"
                                         ></select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-3 colCost" id="colCost">
+                                <div class="col-6 col-md-3 colCost" id="colCost"  >
                                     <div class="form-group">
                                         <label class="lblCostEx hiddenColumn"
                                             >Cost (Ex Tax) <i class="fas fa-random"></i
@@ -933,18 +924,15 @@
                                                 class="form-control highlightInput edtsellqty1costIncCheck"
                                                 id="edtsellqty1costInc"
                                                 name="edtsellqty1costInc"
-                                                value=""
+                                                value="{{productrecord.sellqty1priceinc}}"
                                             />
-                                            <span class="table-remove btnRemoveCOGS" style="margin-left: 10px"
-                                                ><button
-                                                    type="button"
-                                                    class="btn btn-danger btn-rounded btn-sm"
-                                                    autocomplete="off"
-                                                >
-                                                    <i class="fa fa-remove"></i></button
-                                            ></span>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="mt-4 d-flex align-items-center">
+                                    <span class="table-remove btnRemoveCOGS"><button type="button"
+                                            class="btn btn-danger btn-rounded btn-sm" autocomplete="off">
+                                            <i class="fa fa-remove"></i></button></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -1046,7 +1034,7 @@
                                 {{/if}}
                             </div>
                             <div class="row">
-                                <div class="col-12 col-md-4" id="trackdiv">
+                                <div class="col-12 col-md-3" id="trackdiv">
                                     <div
                                         class="trackItem"
                                         style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
@@ -1118,8 +1106,16 @@
                                     <div class="row">
                                         <div class="col-3">
                                             <div class="form-group">
-                                                <label style="display: none">Deparment</label>
-                                                <input type="text" class="form-control" value="{{item.department}}" />
+                                                <label style="display: none;">Deparment</label>
+                                                <select type="search" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    {{#each itemt in deptrecords}}
+                                                    {{#if equals itemtt.itemt.id productrecord.productclass.DeptID}}
+                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
+                                                    {{else}}
+                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
+                                                    {{/if}}
+                                                    {{/each}}
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-9">
@@ -1129,7 +1125,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd Available"
                                                             value="{{item.availableqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1139,7 +1135,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd OnSO"
                                                             value="{{item.onsoqty}} "
                                                             style="text-align: center"
                                                         />
@@ -1149,7 +1145,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd OnBO"
                                                             value="{{item.onboqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1159,7 +1155,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd InStock"
                                                             value="{{item.instockqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1169,7 +1165,7 @@
                                                     <div class="form-group">
                                                         <input
                                                             type="text"
-                                                            class="form-control trackProd"
+                                                            class="form-control trackProd OnOrder"
                                                             value="{{item.onorderqty}}"
                                                             style="text-align: center"
                                                         />
@@ -1177,16 +1173,17 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
-                                                        <select
-                                                            type="search"
-                                                            class="form-control es-input bin-number"
-                                                            value="No Bin"
-                                                            name="binnumber"
-                                                            style="
-                                                                background-color: rgb(255, 255, 255);
-                                                                cursor: pointer;
-                                                            "
-                                                        ></select>
+                                                        <select type="search" class="form-control slt-bin" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                            {{#each itemtt in binrecords}}
+                                                            {{#if equals itemtt.binclass bindept}}
+                                                            {{#if equals itemtt.binnumber productrecord.productclass.DefaultbinNumber}}
+                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>
+                                                            {{else}}
+                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>
+                                                            {{/if}}
+                                                            {{/if}}
+                                                            {{/each}}
+                                                        </select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1284,7 +1281,7 @@
                                             <div class="form-group">
                                                 <select
                                                     type="search"
-                                                    class="form-control"
+                                                    class="form-control sltCustomerType"
                                                     id="sltCustomerType"
                                                     name="sltCustomerType"
                                                     style="background-color: rgb(255, 255, 255); cursor: pointer"
@@ -1341,7 +1338,7 @@
                                         style="float: right"
                                         autocomplete="off"
                                     >
-                                        + Add New Entry
+                                        + Add New Discount
                                     </button>
                                 </div>
                             </div>
@@ -1353,7 +1350,7 @@
 
                             <!-- End Sell Price1111 -->
                             <div class="row recenttrasaction">
-                                <div class="col-12">
+                                <div class="col-8">
                                     <button
                                         class="btn btn-primary loadrecenttransaction"
                                         type="button"
@@ -1362,6 +1359,18 @@
                                     >
                                         Recent Transactions
                                     </button>
+                                </div>
+                                <div class="col-4 d-flex justify-content-end">
+                                    {{#if isManufactured}}
+                                    <button
+                                        class="btn btn-primary showBOMBtn"
+                                        type="button"
+                                        id="showBOMBtn"
+                                        name="showBOMBtn"
+                                    >
+                                        Show BOM
+                                    </button>
+                                    {{/if}}
                                 </div>
                                 <div class="col-12 product_recent_trans mt-5" style="display: none;">
                                     <header class="row">
@@ -1610,19 +1619,8 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-4">
-                                    {{#if isManufactured}}
-                                    <button
-                                        class="btn btn-primary showBOMBtn"
-                                        type="button"
-                                        id="showBOMBtn"
-                                        name="showBOMBtn"
-                                    >
-                                        Show BOM
-                                    </button>
-                                    {{/if}}
-                                </div>
-                                <div class="col-8 justify-content-xl-end" style="padding-right: 0px; padding-left: 0px">
+
+                                <div class="col-12 justify-content-xl-end" style="padding-right: 0px; padding-left: 0px">
                                     <div class="d-xl-flex justify-content-xl-end">
                                         <button
                                             class="btn btn-success"
@@ -2154,6 +2152,9 @@
     <div class="modal fade" id="newUomModal" tabindex="-1" role="dialog" aria-hidden="true">
         {{> adduompop}}
     </div>
+
+    {{> customfieldDroppop}}
+    {{> customfieldpop}}
 
     <script>
         modalDraggable();

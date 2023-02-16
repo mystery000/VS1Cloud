@@ -158,14 +158,10 @@ Template.contactoverview.onRendered(function() {
               linestatus,
           ];
 
-
-
-          //if (data.terpcombinedcontactsvs1[i].name.replace(/\s/g, "") !== "") {
           splashArrayContactOverview.push(dataList);
           templateObject.transactiondatatablerecords.set(splashArrayContactOverview);
 
       }
-
 
       if (templateObject.transactiondatatablerecords.get()) {
           setTimeout(function() {
@@ -328,9 +324,7 @@ Template.contactoverview.onRendered(function() {
               ],
               info: true,
               responsive: true,
-              "order": [
-                  [1, "asc"]
-              ],
+              "order": [[2, "asc"]],
               // "autoWidth": false,
               action: function() {
                   $('#' + currenttablename).DataTable().ajax.reload();
@@ -674,24 +668,6 @@ Template.contactoverview.events({
                         };
 
                         var dataList = [
-                            // data.terpcombinedcontactsvs1[i].ID || "",
-                            // data.terpcombinedcontactsvs1[i].name || "",
-                            // clienttype || "",
-                            // data.terpcombinedcontactsvs1[i].phone || "",
-                            // data.terpcombinedcontactsvs1[i].mobile || "",
-                            // arBalance || 0.0,
-                            // creditBalance || 0.0,
-                            // balance || 0.0,
-                            // creditLimit || 0.0,
-                            // salesOrderBalance || 0.0,
-                            // data.terpcombinedcontactsvs1[i].email || "",
-                            // data.terpcombinedcontactsvs1[i].CUSTFLD1 || "",
-                            // data.terpcombinedcontactsvs1[i].CUSTFLD2 || "",
-                            // data.terpcombinedcontactsvs1[i].street || "",
-                            // data.terpcombinedcontactsvs1[i].suburb || "",
-                            // data.terpcombinedcontactsvs1[i].state || "",
-                            // data.terpcombinedcontactsvs1[i].postcode || "",
-                            // "",
                             '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.terpcombinedcontactsvs1[i].ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.terpcombinedcontactsvs1[i].ID + '-' + clienttype + '"></label></div>',
                             data.terpcombinedcontactsvs1[i].ID || "",
                             data.terpcombinedcontactsvs1[i].name || "",
@@ -1124,7 +1100,21 @@ Template.contactoverview.events({
 
             }
         });
-    }
+    },
+    "click .btnViewDeleted": async function(e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        const templateObject = Template.instance();
+        await clearData('TERPCombinedContactsVS1');
+        templateObject.getContactOverviewData(true);
+    },
+    "click .btnHideDeleted": async function(e) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        e.stopImmediatePropagation();
+        let templateObject = Template.instance();
+        await clearData('TERPCombinedContactsVS1');
+        templateObject.getContactOverviewData(false);
+    },
 });
 
 Template.contactoverview.helpers({

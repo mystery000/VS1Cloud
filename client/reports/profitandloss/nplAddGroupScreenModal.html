@@ -1,0 +1,85 @@
+<template name="npladdgroupscreen">    
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="title-header">Group Accounts</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="mb-10 ml-2">Choose a name and position for these accounts:</h6>
+
+                <div class="form-group-sm d-flex flex-column">
+                    <div class="m-1 pr-2">
+                        <label for="nplGroupName" class="p-1 mb-0">Group Name:</label>
+                        <input type="text" class="form-control" id="newGroupName" name="cnplGroupName" autocomplete="off">
+                    </div>
+                    <div class="m-1 pr-2">
+                        <label for="nplGroupName" class="p-1 mb-0">Place in:</label>
+                        <select class="form-control" id="nplPlaceInMoveSelection">
+                            <option value="none">None</option>
+                            {{#each item in profitlosslayoutrecords }}
+                                <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="p-1 m-1">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="summarySwitchAG" checked="">
+                            <label style="width: 275px;" class="custom-control-label" for="summarySwitchAG">Show
+                                summary only</label>
+                        </div>
+                    </div>
+                    <div class="p-1 m-1">
+                        <div class="">
+                            <a id="nplAddGroupDefTag" href="" onclick="$('#nplAddGroupDefTag').hide();$('#defineGrouping').show();  return false;">
+                                Define how accounts are grouped </a>
+                            <div class="m-0 p-0" id="defineGrouping" style="display:none;">
+                                <h6>Place in:</h6>
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-7" style="padding-top:10px">
+                                        <div class="custom-control custom-switch">
+                                            <input type="radio" class="custom-control-input" id="accCodeCheck1" name="accCodeCheck" checked="checked">
+                                            <label class="custom-control-label" for="accCodeCheck">Account code begins with:</label>                                    
+                                        </div>
+                                    </div>
+                                    <div class="col-5" style="padding:5px">
+                                        <input type="text" class="form-control" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-7" style="padding-top:10px">
+                                        <div class="custom-control custom-switch">
+                                            <input type="radio" class="custom-control-input" id="accCodeCheck2" name="accCodeCheck">
+                                            <label class="custom-control-label" for="accCodeCheck">Account code is within range:</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-5" style="padding:5px">
+                                        <input type="text" class="form-control mr-1" id="accCodeFrom" name="accCodeFrom" autocomplete="off" style="float:left; max-width:80px;">
+                                        <span style="float:left; line-height:36px">to</span>
+                                        <input type="text" class="form-control ml-1" id="accCodeTo" name="accCodeTo" autocomplete="off" style="float:left; max-width:80px;">
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-right:10px">
+                                    <div class="col-12" style="padding-top:10px">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="accBlockAddition">
+                                            <label class="custom-control-label" for="accBlockAddition">Do not automatically add
+                                                accounts to this group</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success saveTable" id="savePnLFieldsLayout" type="button" style="margin: 14px;" autocomplete="off">
+                    <i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" style="margin: 14px;" id="btnApplyLayout">
+                    <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</template>

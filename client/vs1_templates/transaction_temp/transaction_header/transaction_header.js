@@ -13,17 +13,28 @@ import "./transaction_header.html"
 
 Template.transaction_header.helpers({
   getUserLabel: () => {
-    const cardType = Template.instance().data.cardType;
+    const cardType = Template.instance().data.cardType.toLowerCase();
     switch(cardType){
-      case "Invoice":
-      case "Sales Order":
+      case "invoice":
+      case "sales order":
         return "Customer";
-      case "Bill":
-      case "PO":
+      case "bill":
+      case "po":
       case "credit": 
         return "Supplier";
       default:
         return "Customer"
+    }
+  },
+  getCustomerID: () => {
+    const cardType = Template.instance().data.cardType.toLowerCase();
+    switch(cardType) {
+      case 'bill':
+      case "po" :
+      case "credit":
+        return "edtSupplierName";
+      default:
+        return "edtCustomerName"
     }
   },
   getDateInputLabel: () => {
