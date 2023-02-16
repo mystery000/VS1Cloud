@@ -110,10 +110,10 @@ Template.myTasksWidget.onRendered(function() {
                 let px = a["priority"] == "Urgent" ? 3 : (a["priority"] == "High" ? 2 : (a["priority"] == "Normal" ? 1 : 0));
                 let py = b["priority"] == "Urgent" ? 3 : (b["priority"] == "High" ? 2 : (b["priority"] == "Normal" ? 1 : 0));
 
-                if(px != py){
-                    return py - px;
-                }else{
+                if (a["dueDate"] != b["dueDate"]) {
                     return y - x;
+                } else {
+                    return py - px;
                 }
             });
             templateObject.todayTasks.set(task_list.slice(0, 5));
