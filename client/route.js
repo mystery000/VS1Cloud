@@ -2055,10 +2055,10 @@ authenticatedRoutes.route('/leaveaccruedreport', {
 });
 
 authenticatedRoutes.route('/fxhistorylist', {
-    name: 'fxhistorylist',
+    name: 'FxCurrencyHistory',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'fxhistorylist'
+            yield: 'FxCurrencyHistory'
         });
     }
 });

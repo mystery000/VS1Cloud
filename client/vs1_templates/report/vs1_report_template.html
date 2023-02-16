@@ -247,13 +247,19 @@
                             </div>
                             <div class="row no-gutters">
                                 <style>
-                                    /* .totalhr {
+                                    .text-center0 {
+                                        text-align: right !important;
+                                    }
+                                    .text-bold {
+                                        font-weight: 800;
+                                    }
+                                    .totalhr {
                                         border-top: 2px #858999 solid;
                                     }
                                     .grandtotal {
                                         border-top: 2px #858999 solid;
                                         border-bottom: 2px #858999 solid;
-                                    } */
+                                    }
                                     .tableExportDetailDiv th,
                                     .tableExportDetailDiv td {
                                         white-space: nowrap;
@@ -297,6 +303,9 @@
                                     }
                                     .swal2-popup.swal2-modal {
                                         padding-bottom: 25px !important;
+                                    }
+                                    table.dataTable {
+                                        border-collapse: collapse !important;
                                     }
                                 </style>
                                 {{> Template.contentBlock}}
@@ -430,7 +439,8 @@
 
         .JColResizer>tbody>tr>td,
         .JColResizer>tbody>tr>th {
-            padding: .75rem !important;
+            padding: 5px !important;
+            padding-left: 6px !important;
         }
 
         .hiddenColumn {
