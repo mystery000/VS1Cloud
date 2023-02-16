@@ -874,6 +874,13 @@ Template.inventorylist.events({
     }
     var fromDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
     let prevMonth11Date = moment().subtract(6, "months").format("YYYY-MM-DD");
+
+    sideBarService.getAllProductClassQtyData().then(function (data) {
+      addVS1Data('TProductClassQuantity', JSON.stringify(data));
+    }).catch(function (err) {
+
+    });
+
     sideBarService
       .getProductStocknSaleReportData(prevMonth11Date, fromDate)
       .then(function (data) {
