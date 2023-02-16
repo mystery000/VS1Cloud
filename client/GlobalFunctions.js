@@ -80,7 +80,7 @@ export default class GlobalFunctions {
     }
   }
   static covert2Comma(number){
-    return (number- 0).toLocaleString('en-US', {minimumFractionDigits:2});
+    return (number- 0).toLocaleString('en-US', {maximumFractionDigits:2, minimumFractionDigits:2});
   }
   static showCurrency(number){
     if(number >= 0) return '$' + this.covert2Comma(number - 0);
