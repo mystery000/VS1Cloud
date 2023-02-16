@@ -347,7 +347,7 @@ export class ProductService extends BaseService {
 
     getOneProductClassQtyData(productID) {
         let options = {
-            PropertyList: "ID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
+            PropertyList: "ID,ProductID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
             select: "[ProductID]=" + productID
         };
         return this.getList(this.ERPObjects.TProductClassQuantity, options);
@@ -398,7 +398,7 @@ export class ProductService extends BaseService {
     saveProductClassData(data) {
         return this.POST(this.ERPObjects.TProductClass, data);
     }
-    
+
     getAllProductList1() {
         let options = {
             PropertyList: "ID,TaxCodePurchase,TaxCodeSales",
@@ -556,7 +556,7 @@ export class ProductService extends BaseService {
             };
           }
         }
-    
+
         return this.getList(this.ERPObjects.TProductBin, options);
       }
 
