@@ -137,7 +137,7 @@ Template.newsidenav.onCreated(function () {
   sideBarService.getVS1MenuConfig().then((data) => {
     if (data.tpreference && data.tpreference.length > 0) {
       const latestAction = data.tpreference[data.tpreference.length - 1];
-      const menuItem = JSON.parse(latestAction.PrefValue);
+      const menuItem = JSON.parse(latestAction.fields.PrefValue);
       if (menuItem.Location === "TopMenu") {
         templateObject.sideBarPositionClass.set('top');
         $('#sidebar').addClass('top');
@@ -589,7 +589,7 @@ Template.newsidenav.onRendered(function () {
       (currentLoc == "/stockadjustmentcard") ||
       (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
       (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
-      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist") || (currentLoc == "/binlocationslist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -2632,6 +2632,12 @@ Template.newsidenav.events({
   'click #sidenavstocktransfer': function (event) {
     event.preventDefault();
     FlowRouter.go('/stocktransferlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavbinlocationlist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/binlocationslist');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },

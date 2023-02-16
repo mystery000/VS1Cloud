@@ -17,6 +17,9 @@ import TableHandler from '../../js/Table/TableHandler';
 import { Template } from 'meteor/templating';
 import './non_transactional_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { ReceiptService } from "../../receipts/receipt-service.js";
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -27,6 +30,7 @@ let reportService = new ReportService();
 let fixedAssetService = new FixedAssetService();
 const taxRateService = new TaxRateService();
 let stockTransferService = new StockTransferService();
+let receiptService = new ReceiptService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
@@ -48,241 +52,6 @@ Template.non_transactional_list.onCreated(function() {
     templateObject.tablename = new ReactiveVar();
     templateObject.currentproductID = new ReactiveVar();
     templateObject.currenttype = new ReactiveVar();
-
-    templateObject.autorun(() => {
-        // /*added by sobura
-        const curdata = Template.currentData();
-        let currentProductID = curdata.productID || "";
-        templateObject.currentproductID.set(currentProductID);
-        let currenttype = curdata.type || "";
-        templateObject.currenttype.set(currenttype);
-
-        templateObject.getAllProductRecentTransactions = async function(deptname) {
-        // templateObject.initCustomFieldDisplaySettings("", currenttablename);
-            getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
-                let need_API = true;
-                if(dataObject.length > 0)
-                {
-                    let data = JSON.parse(dataObject[0].data);
-                    for(let i=0;i<data.t_vs1_report_productmovement.length;i++){
-                        let data_productID = data.t_vs1_report_productmovement[i].ProductID;
-
-                        if(parseInt(currentProductID) == data_productID){
-                            need_API = false;
-                            break;
-                        }
-                    }
-                }
-                if(currentProductID){
-                    if(need_API){
-                        productService.getProductRecentTransactionsAll(currentProductID).then(function(data) {
-                        addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
-                        templateObject.displayAllProductRecentTransactions(data,deptname)
-                    });
-                    }
-                    else
-                    {
-                        let data = JSON.parse(dataObject[0].data);
-                        templateObject.displayAllProductRecentTransactions(data,deptname);
-                    }
-                }
-            });
-        };
-        templateObject.displayAllProductRecentTransactions = function(data,deptname) {
-                let currentProductID = templateObject.currentproductID.get();
-                let recentTransList = new Array();
-                for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
-                    // let recentTranObject = {
-                    //     date: data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                    //     type: data.t_vs1_report_productmovement[i].TranstypeDesc,
-                    //     transactionno: data.t_vs1_report_productmovement[i].TransactionNo,
-                    //     reference: data.t_vs1_report_productmovement[i].TransactionNo,
-                    //     quantity: data.t_vs1_report_productmovement[i].Qty,
-                    //     unitPrice: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                    //     total: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-                    // };
-                    if(parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID && (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)){
-                        let recentTranObject = [
-                            data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                            data.t_vs1_report_productmovement[i].TranstypeDesc,
-                            data.t_vs1_report_productmovement[i].TransactionNo,
-                            data.t_vs1_report_productmovement[i].Qty,
-                            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                            utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-                        ];
-                        recentTransList.push(recentTranObject);
-                    }
-                }
-                let columnData = [];
-                let displayfields = templateObject.non_trans_displayfields.get();
-                if( displayfields.length > 0 ){
-                    displayfields.forEach(function( item ){
-                        columnData.push({
-                            className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
-                            targets: [item.id],
-                        })
-                    });
-                }
-                templateObject.transactiondatatablerecords.set(recentTransList);
-                let currenttablename = templateObject.tablename.get();
-                setTimeout(function() {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    $('#' + currenttablename).DataTable({
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        data:recentTransList,
-                        columnDefs: columnData,
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [[0, "desc"],[3, "desc"]],
-                        action: function() {
-                            $('#productrecentlist').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                            //if(checkurlIgnoreDate == 'true'){
-
-                            //}else{
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblPaymentOverview_ellipsis').addClass('disabled');
-
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-                                    $('.paginate_button.page-item.previous').addClass('disabled');
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                            } else {}
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function() {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    let dataLenght = oSettings._iDisplayLength;
-
-                                    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                                    let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                    let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                    if(data.Params.IgnoreDates == true){
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                if (dataObjectold.length == 0) {} else {
-                                                    let dataOld = JSON.parse(dataObjectold[0].data);
-                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                    let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tpaymentlist: thirdaryData
-                                                    }
-
-                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                        templateObject.resetData(objCombineData);
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    });
-
-                                                }
-                                            }).catch(function(err) {});
-
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-                                    } else {
-                                        sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                            getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                                if (dataObjectold.length == 0) {} else {
-                                                    let dataOld = JSON.parse(dataObjectold[0].data);
-                                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                    let objCombineData = {
-                                                        Params: dataOld.Params,
-                                                        tpaymentlist: thirdaryData
-                                                    }
-
-                                                    addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                        templateObject.resetData(objCombineData);
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    }).catch(function(err) {
-                                                        $('.fullScreenSpin').css('display', 'none');
-                                                    });
-
-                                                }
-                                            }).catch(function(err) {});
-
-                                        }).catch(function(err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-
-                                    }
-
-                                });
-
-                            //}
-                            setTimeout(function() {
-                                // MakeNegative();
-                            }, 100);
-                        },
-
-                    }).on('page', function() {}).on('column-reorder', function() {});
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-
-                $('#productrecentlist tbody').on('click', 'tr', function() {
-                    var listData = $(this).closest('tr').attr('id');
-                    var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-                    if ((listData) && (transactiontype)) {
-                        if (transactiontype === 'Quote') {
-                            window.open('/quotecard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Sales Order') {
-                            window.open('/salesordercard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Invoice') {
-                            window.open('/invoicecard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Purchase Order') {
-                            window.open('/purchaseordercard?id=' + listData, '_self');
-                        } else if (transactiontype === 'Bill') {
-                            //window.open('/billcard?id=' + listData,'_self');
-                        } else if (transactiontype === 'Credit') {
-                            //window.open('/creditcard?id=' + listData,'_self');
-                        }
-
-                    }
-                });
-
-                // $('.product_recent_trans').css('display', 'block');
-                // $([document.documentElement, document.body]).animate({
-                //     scrollTop: $(".product_recent_trans").offset().top
-                // }, 2000);
-                $('.fullScreenSpin').css('display', 'none');
-            // }).catch(function(err) {
-
-            //     $('.fullScreenSpin').css('display', 'none');
-            //     $('.product_recent_trans').css('display', 'block');
-            //     $([document.documentElement, document.body]).animate({
-            //         scrollTop: $(".product_recent_trans").offset().top
-            //     }, 2000);
-
-            //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
-            // });
-        // });
-            // Meteor.render(Template.non_transactional_list);
-            // templateObject.getAllProductRecentTransactions(currenttype);
-
-        }
-        templateObject.getAllProductRecentTransactions(currenttype);
-        //added by sobura*/
-    });
 });
 
 Template.non_transactional_list.onRendered(function() {
@@ -421,12 +190,12 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
                 { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
             ];
-        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
+        } else if (currenttablename == "tblAccountOverview" || currenttablename == "tblAccountListPop" || currenttablename == "tblDashboardAccountChartList" || currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
             let bsbname = "Branch Code";
             if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
                 bsbname = "BSB";
             }
-            if (currenttablename == "tblAccountOverview" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
+            if (currenttablename == "tblAccountOverview" || currenttablename == "tblAccountListPop" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
                     { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
@@ -554,7 +323,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 13, label: 'Width', class: 'colUOMWidth', active: false, display: true, width: "100" },
                 { index: 14, label: 'Length', class: 'colUOMLength', active: false, display: true, width: "100" },
                 { index: 15, label: 'Volume', class: 'colUOMVolume', active: false, display: true, width: "100" },
-                { index: 16, label: 'Status', class: 'colStatus', active: false, display: true, width: "100" },
+                { index: 16, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
                 { index: 17, label: 'Qty in Sales', class: 'colQtyinSales', active: false, display: true, width: "150" },
             ];
         } else if (currenttablename == "tblBOMList") { //Do Something Here
@@ -795,26 +564,16 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
                 { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
             ]
-        } else if(currenttablename === "productrecentlist"){
-            reset_data = [
-                { index: 0, label: "Date", class: "Date", active: true, display: true, width: "80" },
-                { index: 1, label: "Type", class: "Type", active: true, display: true, width: "130" },
-                { index: 2, label: "Ref", class: "Ref", active: true, display: true, width: "30" },
-                { index: 3, label: "Qty", class: "Qty", active: true, display: true, width: "30" },
-                { index: 4, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
-                { index: 5, label: "Total", class: "Total", active: true, display: true, width: "80" },
-            ]
         } else if(currenttablename === "tblInventoryOverview"){
-
             reset_data = [
                 { index: 0, label: "#ID", class: "ProductID", width: "10", active: false, display: true },
-                { index: 1, label: "Product Name", class: "ProductName", width: "100", active: true, display: true },
-                { index: 2, label: "Sales Description", class: "SalesDescription", width: "150", active: true, display: true },
-                { index: 3, label: "Available", class: "Available", width: "100", active: true, display: true },
-                { index: 4, label: "On SO", class: "OnSO", width: "60", active: true, display: true },
-                { index: 5, label: "On BO", class: "OnBO", width: "60", active: true, display: true },
-                { index: 6, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
-                { index: 7, label: "On Order", class: "OnOrder", width: "72", active: true, display: true },
+                { index: 1, label: "Product Name", class: "ProductName", width: "150", active: true, display: true },
+                { index: 2, label: "Sales Description", class: "SalesDescription", width: "300", active: true, display: true },
+                { index: 3, label: "Available", class: "Available", width: "80", active: true, display: true },
+                { index: 4, label: "On SO", class: "OnSO", width: "80", active: true, display: true },
+                { index: 5, label: "On BO", class: "OnBO", width: "80", active: true, display: true },
+                { index: 6, label: "In Stock", class: "InStock", width: "80", active: true, display: true },
+                { index: 7, label: "On Order", class: "OnOrder", width: "80", active: true, display: true },
                 { index: 8, label: "Cost Price (Ex)", class: "CostPrice", width: "135", active: false, display: true },
                 { index: 9, label: "Cost Price (Inc)", class: "CostPriceInc", width: "135", active: true, display: true },
                 { index: 10, label: "Sale Price (Ex)", class: "SalePrice", width: "135", active: false, display: true },
@@ -822,10 +581,39 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
                 { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
                 { index: 14, label: "Department", class: "Departmentth", width: "100", active: false, display: true },
-                { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "", active: false, display: true },
-                { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "", active: false, display: true },
-                { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "", active: false, display: true },
+                { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "80", active: false, display: true },
+                { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "80", active: false, display: true },
+                { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "80", active: false, display: true },
+                { index: 18, label: "Status", class: "colStatus", width: "150", active: true, display: true },
               ];
+
+        } else if(currenttablename === "tblBinLocations"){
+
+            reset_data = [
+                { index: 0, label: "#ID", class: "BinID", width: "10", active: false, display: true },
+                { index: 1, label: "Rack", class: "Rack", width: "100", active: true, display: true },
+                { index: 2, label: "Bin #", class: "BinNumber", width: "150", active: true, display: true },
+                { index: 3, label: "Department", class: "Department", width: "100", active: true, display: true },
+                { index: 4, label: "Product ID", class: "ProductID", width: "60", active: false, display: true },
+                { index: 5, label: "Product Name", class: "ProductName", width: "60", active: true, display: true },
+                { index: 6, label: "Sales Description", class: "SalesDescription", width: "60", active: true, display: true },
+                { index: 7, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
+                { index: 8, label: "Active", class: "Status", width: "72", active: true, display: true },
+                ];
+
+        } else if(currenttablename === "tblBinLocations"){
+
+            reset_data = [
+                { index: 0, label: "#ID", class: "BinID", width: "10", active: false, display: true },
+                { index: 1, label: "Rack", class: "Rack", width: "100", active: true, display: true },
+                { index: 2, label: "Bin #", class: "BinNumber", width: "150", active: true, display: true },
+                { index: 3, label: "Department", class: "Department", width: "100", active: true, display: true },
+                { index: 4, label: "Product ID", class: "ProductID", width: "60", active: false, display: true },
+                { index: 5, label: "Product Name", class: "ProductName", width: "60", active: true, display: true },
+                { index: 6, label: "Sales Description", class: "SalesDescription", width: "60", active: true, display: true },
+                { index: 7, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
+                { index: 8, label: "Active", class: "Status", width: "72", active: true, display: true },
+                ];
 
         } else if(currenttablename === "tblBASReturnList"){
             reset_data = [
@@ -1162,6 +950,14 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
                 { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblReceiptCategoryList") {
+            reset_data = [
+                { index: 0, label: 'Id', class: 'colId', active: false, display: true, width: "" },
+                { index: 1, label: 'Category Name', class: 'colName', active: true, display: true, width: "" },
+                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+                { index: 3, label: 'Post Account', class: 'colPostAccount', active: true, display: true, width: "" },
+                { index: 4, label: '', class: 'colDelete', active: true, display: true, width: "" }
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -1169,8 +965,6 @@ Template.non_transactional_list.onRendered(function() {
 
     // set initial table rest_data
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
-        //function initCustomFieldDisplaySettings(data, listType) {
-        let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
 
@@ -2410,23 +2204,25 @@ Template.non_transactional_list.onRendered(function() {
 
     //Do Something Here
     //InventoryOverview Data
-    templateObject.getAllProductData = async function(deptname) {
-        await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
-        getVS1Data("TProductList").then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
-                            addVS1Data("TProductList", JSON.stringify(data));
-                            templateObject.displayAllProductData(data,deptname);
-                        });
-
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    templateObject.displayAllProductData(data,deptname);
-                }
-            });
+    templateObject.getAllProductData = async function(deleteFilter=false) {
+        // await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
+        getVS1Data("TProductList").then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService
+                .getProductListVS1(initialBaseDataLoad, 0, deleteFilter)
+                .then(async function (data) {
+                    await addVS1Data("TProductList", JSON.stringify(data));
+                    templateObject.displayAllProductData(data);
+                })
+                .catch(function (err) {});
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayAllProductData(data);
+            }
+        });
     };
 
-    templateObject.displayAllProductData = async function(data,deptname) {
+    templateObject.displayAllProductData = async function(data) {
         let dataTableList = new Array();
         let splashArrayProductList = new Array();
 
@@ -2464,6 +2260,241 @@ Template.non_transactional_list.onRendered(function() {
                 data.tproductlist[i].PURCHASEDESC || "",
                 data.tproductlist[i].CUSTFLD1 || "",
                 data.tproductlist[i].CUSTFLD2 || "",
+                data.tproductlist[i].Active ? "" : "In-Active"
+            ];
+            splashArrayProductList.push(dataList);
+            dataTableList.push(dataList);
+        }
+
+
+        templateObject.transactiondatatablerecords.set(dataTableList);
+
+        $(".fullScreenSpin").css("display", "none");
+        setTimeout(function() {
+            let columnData = [];
+            let displayfields = templateObject.non_trans_displayfields.get();
+            if( displayfields.length > 0 ){
+                displayfields.forEach(function( item ){
+                    columnData.push({
+                        className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                        targets: item.id,
+                        width: `${item.width}px`
+                    })
+                });
+            }                       
+            $("#" + currenttablename).dataTable({
+                data: splashArrayProductList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: columnData,
+                  select: true,
+                  destroy: true,
+                  colReorder: true,    
+                  "autoWidth": false,            
+                  buttons: [{
+                          extend: "excelHtml5",
+                          text: "",
+                          download: "open",
+                          className: "btntabletocsv hiddenColumn",
+                          filename: "inventory_" + moment().format(),
+                          orientation: "portrait",
+                          exportOptions: {
+                              columns: ":visible",
+                          },
+                      },
+                      {
+                          extend: "print",
+                          download: "open",
+                          className: "btntabletopdf hiddenColumn",
+                          text: "",
+                          title: "Inventory List",
+                          filename: "inventory_" + moment().format(),
+                          exportOptions: {
+                              columns: ":visible",
+                          },
+                      },
+                  ],
+                  pageLength: initialBaseDataLoad,
+                  lengthMenu: [
+                      [initialBaseDataLoad, -1],
+                      [initialBaseDataLoad, "All"],
+                  ],
+                  info: true,
+                  responsive: false,
+                  order: [
+                      [1, "asc"] // modified by matthias
+                  ],
+                  action: function() {
+                      $("#tblInventoryOverview").DataTable().ajax.reload();
+                  },
+                  fnDrawCallback: function(oSettings) {
+                      $(".paginate_button.page-item").removeClass("disabled");
+                      $("#tblInventoryOverview_ellipsis").addClass("disabled");
+                      if (oSettings._iDisplayLength == -1) {
+                          if (oSettings.fnRecordsDisplay() > 150) {}
+                          $(".fullScreenSpin").css("display", "inline-block");
+                          setTimeout(function() {
+                              $(".fullScreenSpin").css("display", "none");
+                          }, 100);
+                      } else {}
+                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                          $(".paginate_button.page-item.next").addClass("disabled");
+                      }
+
+                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
+                          $(".fullScreenSpin").css("display", "inline-block");
+                          sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                            getVS1Data("TProductList").then(function (dataObjectold) {
+                                if (dataObjectold.length == 0) {
+                                } else {
+                                  let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                  let objCombineData = {
+                                    Params: dataOld.Params,
+                                    tproductlist: thirdaryData,
+                                  };
+
+                                  addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                      templateObject.resetData(objCombineData);
+                                      $(".fullScreenSpin").css("display", "none");
+                                    }).catch(function (err) {
+                                      $(".fullScreenSpin").css("display", "none");
+                                    });
+                                }
+                            }).catch(function (err) {});
+
+                          }).catch(function(err) {
+                              $(".fullScreenSpin").css("display", "none");
+                          });
+                         });
+                      setTimeout(function() {
+                          MakeNegative();
+                      }, 100);
+                  },
+                  language: { search: "",searchPlaceholder: "Search List..." },
+                  fnInitComplete: function() {
+                    let urlParametersPage = FlowRouter.current().queryParams.page;
+                    if (urlParametersPage) {
+                      this.fnPageChange("last");
+                    };
+                    if (data.Params.Search.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                      $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                      ).insertAfter("#tblInventoryOverview_filter");
+                  },
+                  "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                      return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                  },
+              }).on("length.dt", function(e, settings, len) {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = settings._iDisplayLength;
+                  // splashArrayProductList = [];
+                  if (dataLenght == -1) {
+                      $(".fullScreenSpin").css("display", "none");
+                  } else {
+                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                          $(".fullScreenSpin").css("display", "none");
+                      } else {
+                          $(".fullScreenSpin").css("display", "none");
+                      }
+                  }
+              });
+
+            $(".fullScreenSpin").css("display", "none");
+            $("div.dataTables_filter input").addClass(
+                "form-control form-control-sm"
+            );
+        }, 0);
+        $(".fullScreenSpin").css("display", "none");
+    };
+
+    // Bin Locations All Data
+    templateObject.getAllProductBinData = async function(deptname, deleteFilter = false) {
+        await templateObject.initCustomFieldDisplaySettings("", "tblBinLocations");
+        getVS1Data("TProductBin").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(function(data) {
+                        addVS1Data("TProductBin", JSON.stringify(data));
+                        templateObject.displayAllProductBinData(data, deptname);
+                    });
+
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayAllProductBinData(data, deptname);
+            }
+        }).catch(function(err) {
+            productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                await addVS1Data('TProductBin', JSON.stringify(data));
+                templateObject.displayAllProductBinData(data, dpetname, );
+            }).catch(function(err) {
+    
+            });
+        });
+    };
+
+    templateObject.displayAllProductBinData = async function(data,deptname) {
+
+        let dataTableList = new Array();
+        let splashArrayProductList = new Array();
+
+        let deleteFilter = false;
+        let departmentData = "";
+        var dataList = {};
+        departmentData = "All";
+
+        let productsData = [];
+
+        await getVS1Data("TProductVS1").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+                    productData = data.tproductvs1;
+                    addVS1Data('TProductVS1',JSON.stringify(data));
+                });
+
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                productsData = data.tproductvs1;
+            }
+        });
+      
+        for (let i = 0; i < data.tproductbin.length; i++) {
+            let linestatus = '';
+            let productDetail;
+            let productname = "N/A";
+            let productsalesdescription = '';
+            let productinstock = '';
+            let productId = '';
+            if (data.tproductbin[i].Active == true) {
+                linestatus = "";
+            } else if (data.tproductbin[i].Active == false) {
+                linestatus = "In-Active";
+            };
+
+            for (let j = 0; j < productsData.length ; j++ ){
+                if(productsData[j].fields.ProductClass[0].fields.DefaultbinLocation == data.tproductbin[i].BinLocation && productsData[j].fields.ProductClass[0].fields.DefaultbinNumber == data.tproductbin[i].BinNumber) {
+                    productDetail = productsData[j].fields;
+                    productname = productsData[j].fields.ProductName;
+                    productsalesdescription = productsData[j].fields.SalesDescription;
+                    productinstock = productsData[j].fields.ProductClass[0].fields.OnOrderQuantity;
+                    productId = productsData[j].fields.ID;
+                }
+            }
+
+            var dataList = [
+                data.tproductbin[i].Id || "",
+                data.tproductbin[i].BinLocation || "-",
+                data.tproductbin[i].BinNumber || "",
+                data.tproductbin[i].BinClassName || "",
+                productId || "",
+                productname || "",
+                productsalesdescription || "",
+                productinstock || "",
+                linestatus,
             ];
             splashArrayProductList.push(dataList);
             dataTableList.push(dataList);
@@ -2525,11 +2556,11 @@ Template.non_transactional_list.onRendered(function() {
                       [1, "asc"] // modified by matthias
                   ],
                   action: function() {
-                      $("#tblInventoryOverview").DataTable().ajax.reload();
+                      $("#tblBinLocations").DataTable().ajax.reload();
                   },
                   fnDrawCallback: function(oSettings) {
                       $(".paginate_button.page-item").removeClass("disabled");
-                      $("#tblInventoryOverview_ellipsis").addClass("disabled");
+                      $("#tblBinLocations_ellipsis").addClass("disabled");
                       if (oSettings._iDisplayLength == -1) {
                           if (oSettings.fnRecordsDisplay() > 150) {}
                           $(".fullScreenSpin").css("display", "inline-block");
@@ -2543,19 +2574,19 @@ Template.non_transactional_list.onRendered(function() {
 
                       $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                           $(".fullScreenSpin").css("display", "inline-block");
-                          sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                            getVS1Data("TProductList").then(function (dataObjectold) {
+                          productService.getBins().then(function(dataObjectnew) {
+                            getVS1Data("TProductBin").then(function (dataObjectold) {
                                 if (dataObjectold.length == 0) {
                                 } else {
                                   let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductbin),dataOld.tproductbin);
                                   let objCombineData = {
                                     Params: dataOld.Params,
-                                    tproductlist: thirdaryData,
+                                    tproductbin: thirdaryData,
                                   };
 
-                                  addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                  addVS1Data("TProductBin",JSON.stringify(objCombineData)).then(function (datareturn) {
                                       templateObject.resetData(objCombineData);
                                       $(".fullScreenSpin").css("display", "none");
                                     }).catch(function (err) {
@@ -2573,16 +2604,21 @@ Template.non_transactional_list.onRendered(function() {
                       }, 100);
                   },
                   language: { search: "",searchPlaceholder: "Search List..." },
-                  fnInitComplete: function() {
+                  fnInitComplete: function(oSettings) {
                     let urlParametersPage = FlowRouter.current().queryParams.page;
                     if (urlParametersPage) {
                       this.fnPageChange("last");
                     };
+                    if (deleteFilter) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
                       $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                      ).insertAfter("#tblInventoryOverview_filter");
+                      ).insertAfter("#tblBinLocations_filter");
                   },
                   "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = splashArrayProductList.length || 0; //get count from API data
 
                       return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
                   },
@@ -2608,411 +2644,6 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
         $(".fullScreenSpin").css("display", "none");
     };
-
-    //Recent Transaction All Data
-    templateObject.getAllProductRecentTransactions = async function(deptname) {
-        // templateObject.initCustomFieldDisplaySettings("", currenttablename);
-            getVS1Data('T_VS1_Report_Productmovement').then(function(dataObject) {
-                let need_API = true;
-                if(dataObject.length > 0)
-                {
-                    let data = JSON.parse(dataObject[0].data);
-                    for(let i=0;i<data.t_vs1_report_productmovement.length;i++){
-                        let data_productID = data.t_vs1_report_productmovement[i].ProductID;
-
-                        if(parseInt(currentProductID) == data_productID){
-                            need_API = false;
-                            break;
-                        }
-                    }
-                }
-                if(currentProductID){
-                    if(need_API){
-                        productService.getProductRecentTransactionsAll(currentProductID).then(function(data) {
-                        addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
-                        templateObject.displayAllProductRecentTransactions(data,deptname)
-                    });
-                    }
-                    else
-                    {
-                        let data = JSON.parse(dataObject[0].data);
-                        templateObject.displayAllProductRecentTransactions(data,deptname);
-                    }
-                }
-            });
-        };
-    templateObject.displayAllProductRecentTransactions = function(data,deptname) {
-            let currentProductID = templateObject.currentproductID.get();
-            let recentTransList = new Array();
-            for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
-                // let recentTranObject = {
-                //     date: data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                //     type: data.t_vs1_report_productmovement[i].TranstypeDesc,
-                //     transactionno: data.t_vs1_report_productmovement[i].TransactionNo,
-                //     reference: data.t_vs1_report_productmovement[i].TransactionNo,
-                //     quantity: data.t_vs1_report_productmovement[i].Qty,
-                //     unitPrice: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                //     total: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-                // };
-                if(parseInt(currentProductID) == data.t_vs1_report_productmovement[i].ProductID && (deptname === "all" || deptname === data.t_vs1_report_productmovement[i].TranstypeDesc)){
-                    let recentTranObject = [
-                        data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                        data.t_vs1_report_productmovement[i].TranstypeDesc,
-                        data.t_vs1_report_productmovement[i].TransactionNo,
-                        data.t_vs1_report_productmovement[i].Qty,
-                        utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                        utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-                    ];
-                    recentTransList.push(recentTranObject);
-                }
-            }
-            let columnData = [];
-            let displayfields = templateObject.non_trans_displayfields.get();
-            if( displayfields.length > 0 ){
-                displayfields.forEach(function( item ){
-                    columnData.push({
-                        className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
-                        targets: [item.id],
-                    })
-                });
-            }
-            templateObject.transactiondatatablerecords.set(recentTransList);
-            let currenttablename = templateObject.tablename.get();
-            setTimeout(function() {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                $('#' + currenttablename).DataTable({
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    data:recentTransList,
-                    columnDefs: columnData,
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    // bStateSave: true,
-                    // rowId: 0,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [
-                        [initialDatatableLoad, -1],
-                        [initialDatatableLoad, "All"]
-                    ],
-                    info: true,
-                    responsive: true,
-                    "order": [[0, "desc"],[3, "desc"]],
-                    action: function() {
-                        $('#productrecentlist').DataTable().ajax.reload();
-                    },
-                    "fnDrawCallback": function(oSettings) {
-                        let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                        //if(checkurlIgnoreDate == 'true'){
-
-                        //}else{
-                        $('.paginate_button.page-item').removeClass('disabled');
-                        $('#tblPaymentOverview_ellipsis').addClass('disabled');
-
-                        if (oSettings._iDisplayLength == -1) {
-                            if (oSettings.fnRecordsDisplay() > 150) {
-                                $('.paginate_button.page-item.previous').addClass('disabled');
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                        } else {}
-                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                            $('.paginate_button.page-item.next').addClass('disabled');
-                        }
-                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            .on('click', function() {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                let dataLenght = oSettings._iDisplayLength;
-
-                                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                if(data.Params.IgnoreDates == true){
-                                    sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                        getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                            if (dataObjectold.length == 0) {} else {
-                                                let dataOld = JSON.parse(dataObjectold[0].data);
-                                                var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                let objCombineData = {
-                                                    Params: dataOld.Params,
-                                                    tpaymentlist: thirdaryData
-                                                }
-
-                                                addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                    templateObject.resetData(objCombineData);
-                                                    $('.fullScreenSpin').css('display', 'none');
-                                                }).catch(function(err) {
-                                                    $('.fullScreenSpin').css('display', 'none');
-                                                });
-
-                                            }
-                                        }).catch(function(err) {});
-
-                                    }).catch(function(err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                } else {
-                                    sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                        getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                            if (dataObjectold.length == 0) {} else {
-                                                let dataOld = JSON.parse(dataObjectold[0].data);
-                                                var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                                let objCombineData = {
-                                                    Params: dataOld.Params,
-                                                    tpaymentlist: thirdaryData
-                                                }
-
-                                                addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                    templateObject.resetData(objCombineData);
-                                                    $('.fullScreenSpin').css('display', 'none');
-                                                }).catch(function(err) {
-                                                    $('.fullScreenSpin').css('display', 'none');
-                                                });
-
-                                            }
-                                        }).catch(function(err) {});
-
-                                    }).catch(function(err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-
-                                }
-
-                            });
-
-                        //}
-                        setTimeout(function() {
-                            // MakeNegative();
-                        }, 100);
-                    },
-
-                }).on('page', function() {}).on('column-reorder', function() {});
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('.fullScreenSpin').css('display', 'none');
-            }, 0);
-
-            $('#productrecentlist tbody').on('click', 'tr', function() {
-                var listData = $(this).closest('tr').attr('id');
-                var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-                if ((listData) && (transactiontype)) {
-                    if (transactiontype === 'Quote') {
-                        window.open('/quotecard?id=' + listData, '_self');
-                    } else if (transactiontype === 'Sales Order') {
-                        window.open('/salesordercard?id=' + listData, '_self');
-                    } else if (transactiontype === 'Invoice') {
-                        window.open('/invoicecard?id=' + listData, '_self');
-                    } else if (transactiontype === 'Purchase Order') {
-                        window.open('/purchaseordercard?id=' + listData, '_self');
-                    } else if (transactiontype === 'Bill') {
-                        //window.open('/billcard?id=' + listData,'_self');
-                    } else if (transactiontype === 'Credit') {
-                        //window.open('/creditcard?id=' + listData,'_self');
-                    }
-
-                }
-            });
-
-            // $('.product_recent_trans').css('display', 'block');
-            // $([document.documentElement, document.body]).animate({
-            //     scrollTop: $(".product_recent_trans").offset().top
-            // }, 2000);
-            $('.fullScreenSpin').css('display', 'none');
-        // }).catch(function(err) {
-
-        //     $('.fullScreenSpin').css('display', 'none');
-        //     $('.product_recent_trans').css('display', 'block');
-        //     $([document.documentElement, document.body]).animate({
-        //         scrollTop: $(".product_recent_trans").offset().top
-        //     }, 2000);
-
-        //     //Bert.alert('<strong>' + err + '</strong>!', 'deleting products failed');
-        // });
-    // });
-        // Meteor.render(Template.non_transactional_list);
-        // templateObject.getAllProductRecentTransactions(currenttype);
-
-    }
-
-    //Recent Sales Order Data
-    templateObject.getAllSOListData = async function() {
-        templateObject.initCustomFieldDisplaySettings("",currenttablename);
-        getVS1Data("TSalesOrderList").then(function(dataObject) {
-
-                if (dataObject.length == 0) {
-                    sideBarService.getProductRecentTransactionsAll(initialBaseDataLoad, 0).then(function(data) {
-                            addVS1Data("TSalesOrderList", JSON.stringify(data));
-                            templateObject.displayAllSOListData(data);
-
-                        });
-
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    templateObject.displayAllSOListData(data);
-                }
-            });
-    }
-    templateObject.displayAllSOListData = async function(data) {
-        let recentTransList = [];
-        for (let i = 0; i < data.t_vs1_report_productmovement.length; i++) {
-            let recentTranObject = {
-                date: data.t_vs1_report_productmovement[i].TransactionDate != '' ? moment(data.t_vs1_report_productmovement[i].TransactionDate).format("DD/MM/YYYY") : data.t_vs1_report_productmovement[i].TransactionDate,
-                type: data.t_vs1_report_productmovement[i].TranstypeDesc,
-                transactionno: data.t_vs1_report_productmovement[i].TransactionNo,
-                reference: data.t_vs1_report_productmovement[i].TransactionNo,
-                quantity: data.t_vs1_report_productmovement[i].Qty,
-                unitPrice: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
-                total: utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice)
-            };
-            recentTransList.push(recentTranObject);
-        }
-
-        setTimeout(function() {
-            $('#productrecentlist').DataTable({
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                data : data,
-                select: true,
-                destroy: true,
-                colReorder: true,
-                // bStateSave: true,
-                // rowId: 0,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
-                info: true,
-                responsive: true,
-                "order": [[0, "desc"],[3, "desc"]],
-                action: function() {
-                    $('#productrecentlist').DataTable().ajax.reload();
-                },
-                "fnDrawCallback": function(oSettings) {
-                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                    //if(checkurlIgnoreDate == 'true'){
-
-                    //}else{
-                    $('.paginate_button.page-item').removeClass('disabled');
-                    $('#tblPaymentOverview_ellipsis').addClass('disabled');
-
-                    if (oSettings._iDisplayLength == -1) {
-                        if (oSettings.fnRecordsDisplay() > 150) {
-                            $('.paginate_button.page-item.previous').addClass('disabled');
-                            $('.paginate_button.page-item.next').addClass('disabled');
-                        }
-                    } else {}
-                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $('.paginate_button.page-item.next').addClass('disabled');
-                    }
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                        .on('click', function() {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            let dataLenght = oSettings._iDisplayLength;
-
-                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                            if(data.Params.IgnoreDates == true){
-                                sideBarService.getTPaymentList(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                    getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                        if (dataObjectold.length == 0) {} else {
-                                            let dataOld = JSON.parse(dataObjectold[0].data);
-                                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                            let objCombineData = {
-                                                Params: dataOld.Params,
-                                                tpaymentlist: thirdaryData
-                                            }
-
-                                            addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                templateObject.resetData(objCombineData);
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            }).catch(function(err) {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            });
-
-                                        }
-                                    }).catch(function(err) {});
-
-                                }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            } else {
-                                sideBarService.getTPaymentList(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay(),viewdeleted).then(function(dataObjectnew) {
-                                    getVS1Data('TPaymentList').then(function(dataObjectold) {
-                                        if (dataObjectold.length == 0) {} else {
-                                            let dataOld = JSON.parse(dataObjectold[0].data);
-                                            var thirdaryData = $.merge($.merge([], dataObjectnew.tpaymentlist), dataOld.tpaymentlist);
-                                            let objCombineData = {
-                                                Params: dataOld.Params,
-                                                tpaymentlist: thirdaryData
-                                            }
-
-                                            addVS1Data('TPaymentList', JSON.stringify(objCombineData)).then(function(datareturn) {
-                                                templateObject.resetData(objCombineData);
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            }).catch(function(err) {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            });
-
-                                        }
-                                    }).catch(function(err) {});
-
-                                }).catch(function(err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-
-                            }
-
-                        });
-
-                    //}
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                },
-
-            }).on('page', function() {}).on('column-reorder', function() {});
-            $('div.dataTables_filter input').addClass('form-control form-control-sm');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 0);
-
-        $('#productrecentlist tbody').on('click', 'tr', function() {
-            var listData = $(this).closest('tr').attr('id');
-            var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-            if ((listData) && (transactiontype)) {
-                if (transactiontype === 'Quote') {
-                    window.open('/quotecard?id=' + listData, '_self');
-                } else if (transactiontype === 'Sales Order') {
-                    window.open('/salesordercard?id=' + listData, '_self');
-                } else if (transactiontype === 'Invoice') {
-                    window.open('/invoicecard?id=' + listData, '_self');
-                } else if (transactiontype === 'Purchase Order') {
-                    window.open('/purchaseordercard?id=' + listData, '_self');
-                } else if (transactiontype === 'Bill') {
-                    //window.open('/billcard?id=' + listData,'_self');
-                } else if (transactiontype === 'Credit') {
-                    //window.open('/creditcard?id=' + listData,'_self');
-                }
-
-            }
-        });
-
-        $('.product_recent_trans').css('display', 'block');
-        $([document.documentElement, document.body]).animate({
-            scrollTop: $(".product_recent_trans").offset().top
-        }, 2000);
-        $('.fullScreenSpin').css('display', 'none');
-    // }).catch(function(err) {
-
-    //     $('.fullScreenSpin').css('display', 'none');
-    //     $('.product_recent_trans').css('display', 'block');
-    //     $([document.documentElement, document.body]).animate({
-    //         scrollTop: $(".product_recent_trans").offset().top
-    //     }, 2000);
-    }
 
     //Supplier List Data
     templateObject.getSupplierListData = async function(deleteFilter = false) {
@@ -5138,8 +4769,7 @@ Template.non_transactional_list.onRendered(function() {
 
     //UOM List Data
     templateObject.getUOMListData = async function (deleteFilter = false) {
-      //GET Data here from Web API or IndexDB
-      var customerpage = 0;
+      //GET Data here from Web API or IndexDB      
       getVS1Data("TUnitOfMeasureList")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -5198,32 +4828,32 @@ Template.non_transactional_list.onRendered(function() {
         if (currentData.SalesDefault == true) {
           tdSupplierDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '" checked><label class="custom-control-label chkBox" for="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         } else {
           tdSupplierDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"><label class="custom-control-label chkBox" for="swtSalesDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         }
         //Check if Purchase default is checked
         if (currentData.PurchasesDefault == true) {
           tdPurchaseDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         } else {
           tdPurchaseDef =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         }
 
@@ -5231,16 +4861,16 @@ Template.non_transactional_list.onRendered(function() {
         if (currentData.UseforAutoSplitQtyinSales == true) {
           tdUseforAutoSplitQtyinSales =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '" checked><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         } else {
           tdUseforAutoSplitQtyinSales =
             '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"><label class="custom-control-label chkBox" for="swtPurchaseDefault-' +
-            currentData.ID +
+            currentData.UnitID +
             '"></label></div>';
         }
 
@@ -11994,7 +11624,7 @@ Template.non_transactional_list.onRendered(function() {
                 reportService.getAllVATReturn().then(function(data) {
                     addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
                     for (let i = 0; i < data.tvatreturn.length; i++) {
-                        let sort_date = data.tvatreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturn[i].fields.MsTimeStamp;
+                        let sort_date = data.tvatreturns[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturns[i].fields.MsTimeStamp;
                         sort_date = new Date(sort_date);
                         if (sort_date >= fromDate && sort_date <= toDate ) {
                             let tab1startDate = "";
@@ -12003,40 +11633,61 @@ Template.non_transactional_list.onRendered(function() {
                             let tab2endDate = "";
                             let tab3startDate = "";
                             let tab3endDate = "";
-                            if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                                tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
-                                var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
-                                tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                            if (data.tvatreturns[i].fields.Tab1Year > 0 && data.tvatreturns[i].fields.Tab1Month != "") {
+                                tab1startDate = data.tvatreturns[i].fields.Tab1Year + "-" + months[data.tvatreturns[i].fields.Tab1Month] + "-01";
+                                var endMonth = (data.tvatreturns[i].fields.Tab1Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1Month]);
+                                tab1endDate = new Date(data.tvatreturns[i].fields.Tab1Year, (parseInt(endMonth)), 0);
                                 tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
                             }
-                            if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                                tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
-                                var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
-                                tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                            if (data.tvatreturns[i].fields.Tab2Year > 0 && data.tvatreturns[i].fields.Tab2Month != "") {
+                                tab2startDate = data.tvatreturns[i].fields.Tab2Year + "-" + months[data.tvatreturns[i].fields.Tab2Month] + "-01";
+                                var endMonth = (data.tvatreturns[i].fields.Tab2Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2Month]);
+                                tab2endDate = new Date(data.tvatreturns[i].fields.Tab2Year, (parseInt(endMonth)), 0);
                                 tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
                             }
-                            if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                                tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
-                                var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
-                                tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                            if (data.tvatreturns[i].fields.Tab3Year > 0 && data.tvatreturns[i].fields.Tab3Month != "") {
+                                tab3startDate = data.tvatreturns[i].fields.Tab3Year + "-" + months[data.tvatreturns[i].fields.Tab3Month] + "-01";
+                                var endMonth = (data.tvatreturns[i].fields.Tab3Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3Month]);
+                                tab3endDate = new Date(data.tvatreturns[i].fields.Tab3Year, (parseInt(endMonth)), 0);
                                 tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                             }
 
-                            var dataList = {
-                                basnumber: data.tvatreturn[i].fields.ID || '',
-                                description: data.tvatreturn[i].fields.VatSheetDesc || '',
-                                tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
-                                tab1startDate: tab1startDate,
-                                tab1endDate: tab1endDate,
-                                tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
-                                tab2startDate: tab2startDate,
-                                tab2endDate: tab2endDate,
-                                tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
-                                tab3startDate: tab4startDate,
-                                tab3endDate: tab4endDate,
-                                Active: data.tvatreturn[i].fields.Active
-                            };
-                            dataTableList.push(dataList);
+                            if (deleteFilter == false) {
+                                if (data.tvatreturns[i].fields.Active) {
+                                    var dataList = {
+                                        vatnumber: data.tvatreturns[i].fields.ID || '',
+                                        description: data.tvatreturns[i].fields.VATDesc || '',
+                                        tab1datemethod: data.tvatreturns[i].fields.Tab1Type,
+                                        tab1startDate: tab1startDate,
+                                        tab1endDate: tab1endDate,
+                                        tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturns[i].fields.Tab2Type : "",
+                                        tab2startDate: tab2startDate,
+                                        tab2endDate: tab2endDate,
+                                        tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturns[i].fields.Tab3Type : "",
+                                        tab3startDate: tab4startDate,
+                                        tab3endDate: tab4endDate,
+                                        Active: data.tvatreturns[i].fields.Active
+                                    };
+                                    dataTableList.push(dataList);
+                                }
+                            }
+                            else{
+                                var dataList = {
+                                    vatnumber: data.tvatreturns[i].fields.ID || '',
+                                    description: data.tvatreturns[i].fields.VATDesc || '',
+                                    tab1datemethod: data.tvatreturns[i].fields.Tab1Type,
+                                    tab1startDate: tab1startDate,
+                                    tab1endDate: tab1endDate,
+                                    tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturns[i].fields.Tab2Type : "",
+                                    tab2startDate: tab2startDate,
+                                    tab2endDate: tab2endDate,
+                                    tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturns[i].fields.Tab3Type : "",
+                                    tab3startDate: tab4startDate,
+                                    tab3endDate: tab4endDate,
+                                    Active: data.tvatreturns[i].fields.Active
+                                };
+                                dataTableList.push(dataList);
+                            }
                         }
                     }
                     templateObject.displayVatReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
@@ -12046,8 +11697,8 @@ Template.non_transactional_list.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.tvatreturn.length; i++) {
-                    let sort_date = data.tvatreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturn[i].fields.MsTimeStamp;
+                for (let i = 0; i < data.tvatreturns.length; i++) {
+                    let sort_date = data.tvatreturns[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturns[i].fields.MsTimeStamp;
                     sort_date = new Date(sort_date);
                     if (sort_date >= fromDate && sort_date <= toDate ) {
                         let tab1startDate = "";
@@ -12056,39 +11707,61 @@ Template.non_transactional_list.onRendered(function() {
                         let tab2endDate = "";
                         let tab3startDate = "";
                         let tab3endDate = "";
-                        if (data.tvatreturns[i].fields.Tab1_Year > 0 && data.tvatreturns[i].fields.Tab1_Month != "") {
-                            tab1startDate = data.tvatreturns[i].fields.Tab1_Year + "-" + months[data.tvatreturns[i].fields.Tab1_Month] + "-01";
-                            var endMonth = (data.tvatreturns[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1_Month]);
-                            tab1endDate = new Date(data.tvatreturns[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        if (data.tvatreturns[i].fields.Tab1Year > 0 && data.tvatreturns[i].fields.Tab1Month != "") {
+                            tab1startDate = data.tvatreturns[i].fields.Tab1Year + "-" + months[data.tvatreturns[i].fields.Tab1Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab1Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1Month]);
+                            tab1endDate = new Date(data.tvatreturns[i].fields.Tab1Year, (parseInt(endMonth)), 0);
                             tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
                         }
-                        if (data.tvatreturns[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            tab2startDate = data.tvatreturns[i].fields.Tab2_Year + "-" + months[data.tvatreturns[i].fields.Tab2_Month] + "-01";
-                            var endMonth = (data.tvatreturns[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2_Month]);
-                            tab2endDate = new Date(data.tvatreturns[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        if (data.tvatreturns[i].fields.Tab2Year > 0 && data.tvatreturns[i].fields.Tab2Month != "") {
+                            tab2startDate = data.tvatreturns[i].fields.Tab2Year + "-" + months[data.tvatreturns[i].fields.Tab2Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab2Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2Month]);
+                            tab2endDate = new Date(data.tvatreturns[i].fields.Tab2Year, (parseInt(endMonth)), 0);
                             tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
                         }
-                        if (data.tvatreturns[i].fields.Tab3_Year > 0 && data.tvatreturns[i].fields.Tab3_Month != "") {
-                            tab3startDate = data.tvatreturns[i].fields.Tab3_Year + "-" + months[data.tvatreturns[i].fields.Tab3_Month] + "-01";
-                            var endMonth = (data.tvatreturns[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3_Month]);
-                            tab3endDate = new Date(data.tvatreturns[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        if (data.tvatreturns[i].fields.Tab3Year > 0 && data.tvatreturns[i].fields.Tab3Month != "") {
+                            tab3startDate = data.tvatreturns[i].fields.Tab3Year + "-" + months[data.tvatreturns[i].fields.Tab3Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab3Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3Month]);
+                            tab3endDate = new Date(data.tvatreturns[i].fields.Tab3Year, (parseInt(endMonth)), 0);
                             tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                         }
-                        var dataList = {
-                            basnumber: data.tvatreturns[i].fields.ID || '',
-                            description: data.tvatreturns[i].fields.BasSheetDesc || '',
-                            tab1datemethod: data.tvatreturns[i].fields.Tab1_Type,
-                            tab1startDate: tab1startDate,
-                            tab1endDate: tab1endDate,
-                            tab2datemethod: data.tvatreturns[i].fields.Tab2_Type,
-                            tab2startDate: tab2startDate,
-                            tab2endDate: tab2endDate,
-                            tab3datemethod: data.tvatreturns[i].fields.Tab3_Type,
-                            tab3startDate: tab3startDate,
-                            tab3endDate: tab3endDate,
-                            Active: data.tvatreturn[i].fields.Active
-                        };
-                        dataTableList.push(dataList);
+                        
+                        if (deleteFilter == false) {
+                            if (data.tvatreturns[i].fields.Active) {
+                                var dataList = {
+                                    vatnumber: data.tvatreturns[i].fields.ID || '',
+                                    description: data.tvatreturns[i].fields.VATDesc || '',
+                                    tab1datemethod: data.tvatreturns[i].fields.Tab1Type,
+                                    tab1startDate: tab1startDate,
+                                    tab1endDate: tab1endDate,
+                                    tab2datemethod: data.tvatreturns[i].fields.Tab2Type,
+                                    tab2startDate: tab2startDate,
+                                    tab2endDate: tab2endDate,
+                                    tab3datemethod: data.tvatreturns[i].fields.Tab3Type,
+                                    tab3startDate: tab3startDate,
+                                    tab3endDate: tab3endDate,
+                                    Active: data.tvatreturns[i].fields.Active
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        }
+                        else{
+                            var dataList = {
+                                vatnumber: data.tvatreturns[i].fields.ID || '',
+                                description: data.tvatreturns[i].fields.VATDesc || '',
+                                tab1datemethod: data.tvatreturns[i].fields.Tab1Type,
+                                tab1startDate: tab1startDate,
+                                tab1endDate: tab1endDate,
+                                tab2datemethod: data.tvatreturns[i].fields.Tab2Type,
+                                tab2startDate: tab2startDate,
+                                tab2endDate: tab2endDate,
+                                tab3datemethod: data.tvatreturns[i].fields.Tab3Type,
+                                tab3startDate: tab3startDate,
+                                tab3endDate: tab3endDate,
+                                Active: data.tvatreturns[i].fields.Active
+                            };
+                            dataTableList.push(dataList);
+                        }
                     }
                 }
                 templateObject.displayVatReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
@@ -12098,7 +11771,7 @@ Template.non_transactional_list.onRendered(function() {
             reportService.getAllVATReturn().then(function(data) {
                 addVS1Data("TVATReturn", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
                 for (let i = 0; i < data.tvatreturn.length; i++) {
-                    let sort_date = data.tvatreturn[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturn[i].fields.MsTimeStamp;
+                    let sort_date = data.tvatreturns[i].fields.MsTimeStamp == "" ? "1770-01-01" : data.tvatreturns[i].fields.MsTimeStamp;
                     sort_date = new Date(sort_date);
                     if (sort_date >= fromDate && sort_date <= toDate ) {
                         let tab1startDate = "";
@@ -12107,40 +11780,61 @@ Template.non_transactional_list.onRendered(function() {
                         let tab2endDate = "";
                         let tab3startDate = "";
                         let tab3endDate = "";
-                        if (data.tvatreturn[i].fields.Tab1_Year > 0 && data.tvatreturn[i].fields.Tab1_Month != "") {
-                            tab1startDate = data.tvatreturn[i].fields.Tab1_Year + "-" + months[data.tvatreturn[i].fields.Tab1_Month] + "-01";
-                            var endMonth = (data.tvatreturn[i].fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab1_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab1_Month]);
-                            tab1endDate = new Date(data.tvatreturn[i].fields.Tab1_Year, (parseInt(endMonth)), 0);
+                        if (data.tvatreturns[i].fields.Tab1Year > 0 && data.tvatreturns[i].fields.Tab1Month != "") {
+                            tab1startDate = data.tvatreturns[i].fields.Tab1Year + "-" + months[data.tvatreturns[i].fields.Tab1Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab1Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab1Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab1Month]);
+                            tab1endDate = new Date(data.tvatreturns[i].fields.Tab1Year, (parseInt(endMonth)), 0);
                             tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
                         }
-                        if (data.tvatreturn[i].fields.Tab2_Year > 0 && data.tvatreturn[i].fields.Tab2_Month != "") {
-                            tab2startDate = data.tvatreturn[i].fields.Tab2_Year + "-" + months[data.tvatreturn[i].fields.Tab2_Month] + "-01";
-                            var endMonth = (data.tvatreturn[i].fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab2_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab2_Month]);
-                            tab2endDate = new Date(data.tvatreturn[i].fields.Tab2_Year, (parseInt(endMonth)), 0);
+                        if (data.tvatreturns[i].fields.Tab2Year > 0 && data.tvatreturns[i].fields.Tab2Month != "") {
+                            tab2startDate = data.tvatreturns[i].fields.Tab2Year + "-" + months[data.tvatreturns[i].fields.Tab2Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab2Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab2Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab2Month]);
+                            tab2endDate = new Date(data.tvatreturns[i].fields.Tab2Year, (parseInt(endMonth)), 0);
                             tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
                         }
-                        if (data.tvatreturn[i].fields.Tab3_Year > 0 && data.tvatreturn[i].fields.Tab3_Month != "") {
-                            tab3startDate = data.tvatreturn[i].fields.Tab3_Year + "-" + months[data.tvatreturn[i].fields.Tab3_Month] + "-01";
-                            var endMonth = (data.tvatreturn[i].fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturn[i].fields.Tab3_Month]) / 3) * 3) : (months[data.tvatreturn[i].fields.Tab3_Month]);
-                            tab3endDate = new Date(data.tvatreturn[i].fields.Tab3_Year, (parseInt(endMonth)), 0);
+                        if (data.tvatreturns[i].fields.Tab3Year > 0 && data.tvatreturns[i].fields.Tab3Month != "") {
+                            tab3startDate = data.tvatreturns[i].fields.Tab3Year + "-" + months[data.tvatreturns[i].fields.Tab3Month] + "-01";
+                            var endMonth = (data.tvatreturns[i].fields.Tab3Type == "Quarterly") ? (Math.ceil(parseInt(months[data.tvatreturns[i].fields.Tab3Month]) / 3) * 3) : (months[data.tvatreturns[i].fields.Tab3Month]);
+                            tab3endDate = new Date(data.tvatreturns[i].fields.Tab3Year, (parseInt(endMonth)), 0);
                             tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                         }
 
-                        var dataList = {
-                            basnumber: data.tvatreturn[i].fields.ID || '',
-                            description: data.tvatreturn[i].fields.VatSheetDesc || '',
-                            tab1datemethod: data.tvatreturn[i].fields.Tab1_Type,
-                            tab1startDate: tab1startDate,
-                            tab1endDate: tab1endDate,
-                            tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturn[i].fields.Tab2_Type : "",
-                            tab2startDate: tab2startDate,
-                            tab2endDate: tab2endDate,
-                            tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturn[i].fields.Tab3_Type : "",
-                            tab3startDate: tab4startDate,
-                            tab3endDate: tab4endDate,
-                            Active: data.tvatreturn[i].fields.Active
-                        };
-                        dataTableList.push(dataList);
+                        if (deleteFilter == false) {
+                            if (data.tvatreturns[i].fields.Active) {
+                                var dataList = {
+                                    vatnumber: data.tvatreturns[i].fields.ID || '',
+                                    description: data.tvatreturns[i].fields.VATDesc || '',
+                                    tab1datemethod: data.tvatreturns[i].fields.Tab1Type,
+                                    tab1startDate: tab1startDate,
+                                    tab1endDate: tab1endDate,
+                                    tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturns[i].fields.Tab2Type : "",
+                                    tab2startDate: tab2startDate,
+                                    tab2endDate: tab2endDate,
+                                    tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturns[i].fields.Tab3Type : "",
+                                    tab3startDate: tab4startDate,
+                                    tab3endDate: tab4endDate,
+                                    Active: data.tvatreturns[i].fields.Active
+                                };
+                                dataTableList.push(dataList);
+                            }
+                        }
+                        else{
+                            var dataList = {
+                                vatnumber: data.tvatreturns[i].fields.ID || '',
+                                description: data.tvatreturns[i].fields.VATDesc || '',
+                                tab1datemethod: data.tvatreturns[i].fields.Tab1Type,
+                                tab1startDate: tab1startDate,
+                                tab1endDate: tab1endDate,
+                                tab2datemethod: (tab2startDate != "" && tab2endDate != "") ? data.tvatreturns[i].fields.Tab2Type : "",
+                                tab2startDate: tab2startDate,
+                                tab2endDate: tab2endDate,
+                                tab3datemethod: (tab3startDate != "" && tab3endDate != "") ? data.tvatreturns[i].fields.Tab3Type : "",
+                                tab3startDate: tab4startDate,
+                                tab3endDate: tab4endDate,
+                                Active: data.tvatreturns[i].fields.Active
+                            };
+                            dataTableList.push(dataList);
+                        }
                     }
                 }
                 templateObject.displayVatReturnData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
@@ -16359,6 +16053,243 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.getAllReceiptCategoryList = async function (deleteFilter = false) {
+        //GET Data here from Web API or IndexDB      
+        getVS1Data("TReceiptCategory")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+                receiptService.getAllReceiptCategorys(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
+                  await addVS1Data("TReceiptCategory", JSON.stringify(data));
+                  templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
+                })
+                .catch(function (err) {
+  
+                });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
+            }
+          })
+          .catch(function (err) {
+            receiptService.getAllReceiptCategorys(initialBaseDataLoad, 0, deleteFilter).then(async function(data){
+                await addVS1Data("TReceiptCategory", JSON.stringify(data));
+                templateObject.displayAllReceiptCategoryList(data);
+            });
+          });
+      };
+      templateObject.displayAllReceiptCategoryList = async function (data) {
+        let splashArrayList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let deleteFilter = false;
+        if (data.Params && data.Params.Search.replace(/\s/g, "") == "") {
+          deleteFilter = true;
+        } else {
+          deleteFilter = false;
+        }
+
+        for (let i = 0; i < data.treceiptcategory.length; i++) {
+          let mobile = "";
+          let linestatus = "";
+          let currentData = data.treceiptcategory[i]
+          
+          if (currentData.Active == true) {
+            linestatus = "";
+          } else if (currentData.Active == false) {
+            linestatus = "In-Active";
+          }
+
+          let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
+          
+          var dataList = [
+            currentData.Id || "",
+            currentData.CategoryName || "",
+            currentData.CategoryDesc || "",
+            currentData.CategoryPostAccount || "",
+            deleteBtn
+          ];
+          splashArrayList.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayList);
+        }
+        if (templateObject.transactiondatatablerecords.get()) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        }
+        //$('.fullScreenSpin').css('display','none');
+        setTimeout(function () {
+          //$('#'+currenttablename).removeClass('hiddenColumn');
+          $("#" + currenttablename)
+            .DataTable({
+              data: splashArrayList,
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: getColumnDefs(),
+              buttons: [
+                {
+                  extend: "csvHtml5",
+                  text: "",
+                  download: "open",
+                  className: "btntabletocsv hiddenColumn",
+                  filename: "Units of Measure Settings",
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+                {
+                  extend: "print",
+                  download: "open",
+                  className: "btntabletopdf hiddenColumn",
+                  text: "",
+                  title: "Units of Measure Settings",
+                  filename: "Units of Measure Settings",
+                  exportOptions: {
+                    columns: ":visible",
+                    stripHtml: false,
+                  },
+                },
+                {
+                  extend: "excelHtml5",
+                  title: "",
+                  download: "open",
+                  className: "btntabletoexcel hiddenColumn",
+                  filename: "Units of Measure Settings",
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"],
+              ],
+              info: true,
+              responsive: true,
+              order: [[1, "asc"]],
+              action: function () {
+                $("#" + currenttablename)
+                  .DataTable()
+                  .ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#" + currenttablename + "_ellipsis").addClass("disabled");
+                if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+                  }
+                } else {
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+  
+                $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  //var splashArrayCustomerListDupp = new Array();
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $("#" + currenttablename + "_filter input").val();
+                  let linestatus = "";                  
+                  receiptService
+                    .getAllReceiptCategorys(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter)
+                    .then(function (dataObjectnew) {
+                      for (let j = 0; j < dataObjectnew.treceiptcategory.length; j++) {
+                        if (dataObjectnew.treceiptcategory[j].Active == true) {
+                          linestatus = "";
+                        } else if (dataObjectnew.treceiptcategory[j].Active == false) {
+                          linestatus = "In-Active";
+                        }
+                        let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
+                        var dataListDupp = [
+                            dataObjectnew.treceiptcategory[j].Id || "",
+                            dataObjectnew.treceiptcategory[j].CategoryName || "",
+                            dataObjectnew.treceiptcategory[j].CategoryDesc || "",
+                            dataObjectnew.treceiptcategory[j].CategoryPostAccount || "",
+                            deleteBtn
+                        ];
+                        splashArrayList.push(dataListDupp);
+                      }
+  
+                      let uniqueChars = [...new Set(splashArrayList)];
+                      templateObject.transactiondatatablerecords.set(uniqueChars);
+                      var datatable = $("#" + currenttablename).DataTable();
+                      datatable.clear();
+                      datatable.rows.add(uniqueChars);
+                      datatable.draw(false);
+                      setTimeout(function () {
+                        $("#" + currenttablename)
+                          .dataTable()
+                          .fnPageChange("last");
+                      }, 400);
+  
+                      $(".fullScreenSpin").css("display", "none");
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                });
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+              language: { search: "", searchPlaceholder: "Search List..." },
+              fnInitComplete: function (oSettings) {
+                // $(
+                //   "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newUomModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                // ).insertAfter("#" + currenttablename + "_filter");
+                if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                  $(
+                    "<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>"
+                  ).insertAfter("#" + currenttablename + "_filter");
+                } else {
+                  $(
+                    "<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>"
+                  ).insertAfter("#" + currenttablename + "_filter");
+                }
+                $(
+                  "<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                ).insertAfter("#" + currenttablename + "_filter");
+              },
+              fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data?.Params?.Count || 0; //get count from API data
+  
+                return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
+              },
+            })
+            .on("page", function () {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            })
+            .on("column-reorder", function () {})
+            .on("length.dt", function (e, settings, len) {
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else {
+                  $(".fullScreenSpin").css("display", "none");
+                }
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            });
+          $(".fullScreenSpin").css("display", "none");
+        }, 0);
+  
+        setTimeout(function () {
+          $("div.dataTables_filter input").addClass("form-control form-control-sm");
+        }, 0);
+      };
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         //templateObject.getContactOverviewData(); //Tinyiko moved to contactoverview.js
@@ -16368,6 +16299,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDashboardOptions();
     }  else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
         // templateObject.getAccountsOverviewData(); - moved to accountOverview.js
+    } else if (currenttablename == "tblAccountListPop") {
+        
     } else if (currenttablename == 'tblBankAccountsOverview') {
         templateObject.getBankAccountsOverviewData();
     } else if (currenttablename == "tblClienttypeList") {
@@ -16468,10 +16401,10 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getRateTypeListData();
     }else if (currenttablename === "tblOverTimeSheet"){
         templateObject.getOverTimeSheets();
-    }else if( currenttablename === "productrecentlist"){
-        templateObject.getAllProductRecentTransactions(currenttype);
     }else if(currenttablename === "tblInventoryOverview"){
         templateObject.getAllProductData("All");
+    }else if(currenttablename === "tblBinLocations"){
+        templateObject.getAllProductBinData("All");
     }else if(currenttablename === "tblTransactionSOList"){
         templateObject.getAllSOListData();
     } else if (currenttablename == "tblBASReturnList") {
@@ -16481,14 +16414,18 @@ Template.non_transactional_list.onRendered(function() {
         const dateto = $("#dateTo").val();
         templateObject.getBasReturnData(false, datefrom, dateto);
     } else if (currenttablename == "tblVATReturnList") {
-        templateObject.getVatReturnData();
+        $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getVatReturnData(false, datefrom, dateto);
     } else if (currenttablename === "tblCustomerlist" || currenttablename == 'tblSetupCustomerlist'){
         // templateObject.getCustomerList(); - moved to customerlist.js
         $("#dateFrom").val(moment().subtract(2, 'month').format('DD/MM/YYYY'));
         $("#dateTo").val(moment().format('DD/MM/YYYY'));
         const datefrom = $("#dateFrom").val();
         const dateto = $("#dateTo").val();
-        templateObject.getVatReturnData(false, datefrom, dateto);
+        // templateObject.getVatReturnData(false, datefrom, dateto);
     } else if (currenttablename === "tblSubtaskDatatable"){
         templateObject.getSubtaskData(true);
     } else if (currenttablename == "tblServiceLogList") {
@@ -16539,6 +16476,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getSalesListByCustomer()
     } else if(currenttablename === 'tblAllTaskDatatable'){
         templateObject.getAllTasksList(false);
+    } else if(currenttablename === 'tblReceiptCategoryList'){
+        templateObject.getAllReceiptCategoryList();
     }
 
     tableResize();
@@ -16558,6 +16497,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getVatReturnData(false, datefrom, dateto);
         } else if (currenttablename === "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if(currenttablename === 'tblReceiptCategoryList'){
+            templateObject.getAllReceiptCategoryList();
         }
     });
 
@@ -16590,7 +16531,7 @@ Template.non_transactional_list.events({
             templateObject.getSubtaskData(false);
         }, 10);
     },
-    "click .btnViewDeleted111": async function(e) {
+    "click .btnViewDeleted": async function(e) {
         $(".fullScreenSpin").css("display", "inline-block");
         e.stopImmediatePropagation();
         const templateObject = Template.instance();
@@ -16623,7 +16564,7 @@ Template.non_transactional_list.events({
             await clearData('TTermsVS1List');
             templateObject.getTermsData(true);
         } else if (currenttablename == "tblUOMList") {
-            await clearData('TUOMList');
+            await clearData('TUnitOfMeasureList');
             templateObject.getUOMListData(true);
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
             await clearData('TSupplierVS1List');
@@ -16680,10 +16621,7 @@ Template.non_transactional_list.events({
             templateObject.getOverTimeSheets(true);
         }else if(currenttablename === "tblInventoryOverview"){
             await clearData('TProductList');
-            templateObject.getAllProductData();
-        }else if(currenttablename === 'tblTransactionSOList'){
-            await clearData('TSalesOrderList');
-            templateObject.getAllSOListData();
+            templateObject.getAllProductData(true);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
@@ -16714,9 +16652,11 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(true);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(true);
+        } else if(currenttablename === 'tblReceiptCategoryList'){
+            templateObject.getAllReceiptCategoryList(true);
         }
     },
-    "click .btnHideDeleted222": async function(e) {
+    "click .btnHideDeleted": async function(e) {
         $(".fullScreenSpin").css("display", "inline-block");
         e.stopImmediatePropagation();
         let templateObject = Template.instance();
@@ -16747,7 +16687,7 @@ Template.non_transactional_list.events({
             await clearData('TTermsVS1List');
             templateObject.getTermsData(false);
         } else if (currenttablename == "tblUOMList") {
-            await clearData('TUOMList');
+            await clearData('TUnitOfMeasureList');
             templateObject.getUOMListData(false);
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
             await clearData('TSupplierVS1List');
@@ -16798,6 +16738,9 @@ Template.non_transactional_list.events({
             templateObject.getRateTypeListData(false);
         } else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(false);
+        } else if(currenttablename === "tblInventoryOverview"){
+            await clearData('TProductList');
+            templateObject.getAllProductData(false);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();
             const dateto = $("#dateTo").val();
@@ -16828,6 +16771,8 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(false);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if(currenttablename === 'tblReceiptCategoryList'){
+            templateObject.getAllReceiptCategoryList(false);
         }
     },
     'change .custom-range': async function(event) {

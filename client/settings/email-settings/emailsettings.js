@@ -3157,7 +3157,8 @@ Template.emailsettings.onRendered(function () {
     $("#addLetterTemplateModal").modal();
     $("#edtTemplateLbl").val(tempLabel);
     $("#edtTemplateSubject").val(tempSubject);
-    $("#edtTemplateContent").val(tempMemo);
+    // $("#edtTemplateContent").val(tempMemo);
+    tinymce.get("edtTemplateContent").setContent(tempMemo);
   });
 
   $(document).on("click", "#tblCorrespondence tr .btn-remove-raw", function (

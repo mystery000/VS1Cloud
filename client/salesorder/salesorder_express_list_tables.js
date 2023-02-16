@@ -98,19 +98,19 @@ Template.salesorderslist.onCreated(function(){
     { index: 10, label: "Converted", class: "Converted", active: true, display: true, width: "" },
     { index: 11, label: "Comments", class: "Comments", active: true, display: true, width: "" },
     ]
-    
+
 
     // templateObject.loadCustomFields = async() => {
       let custFields = [];
       let customFieldCount = 3; // customfield tempcode
       let customData = {};
       let displayfields = headerStructure;
-  
+
       sideBarService.getAllCustomFields().then(function (data) {
         let custIndex = 0;
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
-            
+
             customData = {
               index: displayfields.length+ custIndex,
               active: data.tcustomfieldlist[x].fields.Active || false,
@@ -121,10 +121,10 @@ Template.salesorderslist.onCreated(function(){
               width: "100"
             };
             custIndex++
-            custFields.push(customData);  
+            custFields.push(customData);
           }
         }
-  
+
         if (custFields.length < customFieldCount) {
           let remainder = customFieldCount - custFields.length;
           let getRemCustomFields = parseInt(custFields.length);
@@ -144,14 +144,13 @@ Template.salesorderslist.onCreated(function(){
             custFields.push(customData);
           }
         }
-        
+
         displayfields = displayfields.concat(custFields);
-        console.log("55555555", displayfields)
         templateObject.custfields.set(custFields);
         // setTimeout(() => {
           templateObject.tableheaderrecords.set(displayfields);
         // }, 500);
-        
+
       })
     // }
 
@@ -159,7 +158,7 @@ Template.salesorderslist.onCreated(function(){
     //   LoadingOverlay.show();
     //    await templateObject.loadCustomFields();
     //   //  templateObject.getAllSalesOrderData();
-      
+
     //   LoadingOverlay.hide();
     // }
     // templateObject.initPage();
@@ -169,7 +168,7 @@ Template.salesorderslist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     templateObject.convertedStatus.set(FlowRouter.current().queryParams.converted == 'true' ? "Converted" : "Unconverted");
-    
+
 
     let accountService = new AccountService();
     let salesService = new SalesBoardService();
@@ -178,7 +177,7 @@ Template.salesorderslist.onRendered(function() {
     var splashArray = new Array();
     const dataTableList = [];
     const tableHeaderList = [];
-   
+
 
     var today = moment().format('DD/MM/YYYY');
     var currentDate = new Date();
@@ -218,7 +217,7 @@ Template.salesorderslist.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    
+
 
     templateObject.resetData = function (dataVal) {
       if(FlowRouter.current().queryParams.converted){
@@ -232,7 +231,7 @@ Template.salesorderslist.onRendered(function() {
       }
     }
 
-    
+
 
 
     // templateObject.getAllSalesOrderData = function () {
@@ -1399,7 +1398,7 @@ Template.salesorderslist.onRendered(function() {
     //   LoadingOverlay.show();
     //    await templateObject.loadCustomFields();
     //   //  templateObject.getAllSalesOrderData();
-      
+
     //   LoadingOverlay.hide();
     // }
     // templateObject.initPage();
@@ -1498,7 +1497,7 @@ Template.salesorderslist.events({
       });
 
   },
-  
+
   // 'click .printConfirm' : function(event){
   //   playPrintAudio();
   //   setTimeout(function(){
