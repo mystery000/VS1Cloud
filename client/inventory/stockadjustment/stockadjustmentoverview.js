@@ -746,6 +746,11 @@ Template.stockadjustmentoverview.onRendered(function() {
 Template.stockadjustmentoverview.events({
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
+        sideBarService.getAllProductClassQtyData().then(function (data) {
+          addVS1Data('TProductClassQuantity', JSON.stringify(data));
+        }).catch(function (err) {
+
+        });
         sideBarService.getAllStockAdjustEntry(initialDataLoad,0).then(function(data) {
             addVS1Data('TStockAdjustEntry',JSON.stringify(data)).then(function (datareturn) {
                 window.open('/stockadjustmentoverview','_self');

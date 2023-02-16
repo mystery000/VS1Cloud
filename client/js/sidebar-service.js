@@ -32,17 +32,45 @@ export class SideBarService extends BaseService {
         return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getAllProductClassQtyData() {
+      let options = {
+          PropertyList: "ID,ProductID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
+      };
+      return this.getList(this.ERPObjects.TProductClassQuantity, options);
+  }
+
+  getAllBOMProducts(limitcount, limitfrom) {
+      let options = "";
+      if (limitcount == "All") {
+          options = {
+              ListType: "Detail",
+              select: "[ProcStepItemRef]='vs1BOM'",
+              // orderby: '"Description asc"',
+          };
+      } else {
+          options = {
+              // orderby: '"Description asc"',
+              ListType: "Detail",
+              LimitCount: parseInt(limitcount),
+              LimitFrom: parseInt(limitfrom),
+              select: "[ProcStepItemRef]='vs1BOM'",
+          };
+      }
+
+      return this.getList(this.ERPObjects.TProcTree, options);
+  }
+
   getProductListVS1(limitcount, limitfrom, deleteFilter) {
-    let options = "";    
+    let options = "";
     if (limitcount == "All") {
       options = {
-        ListType: "Detail",        
+        ListType: "Detail",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
-        ListType: "Detail",        
+        ListType: "Detail",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
