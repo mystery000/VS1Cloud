@@ -772,16 +772,13 @@ Template.vs1_report_template.onRendered(function () {
         break;
       case "binlocationslist":
         reset_data = [
-          { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
-          { index: 2, label: 'Location', class: 'colLocation', active: true, display: true, width: "100" },
-          { index: 3, label: 'Bin Number', class: 'colBinNumber', active: true, display: true, width: "100" },
-          { index: 4, label: 'Volume Total', class: 'colVolumeTotal', active: true, display: true, width: "100" },
-          { index: 5, label: 'Volume Used', class: 'colVolumeUsed', active: true, display: true, width: "100" },
-          { index: 6, label: 'Volume Available', class: 'colVolumeAvailable', active: true, display: true, width: "100" },
+          { index: 1, label: 'Rack', class: 'colRack', active: true, display: true, width: "100" },
+          { index: 2, label: 'Bin #', class: 'colBinNumber', active: true, display: true, width: "100" },
+          { index: 3, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+          { index: 4, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "100" },
+          { index: 5, label: 'Sales Description', class: 'colSalesDescription', active: true, display: true, width: "100" },
+          { index: 6, label: 'In Stock', class: 'colInStock', active: true, display: true, width: "100" },
           { index: 7, label: 'Active', class: 'colActive', active: true, display: true, width: "100" },
-          { index: 8, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "100" },
-          { index: 9, label: 'BinID', class: 'colBinID', active: false, display: true, width: "100" },
-          { index: 10, label: 'ClassID', class: 'colClassID', active: false, display: true, width: "100" },
         ]
         break;
       case "stockmovementreport":

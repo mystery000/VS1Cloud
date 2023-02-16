@@ -589,7 +589,7 @@ Template.newsidenav.onRendered(function () {
       (currentLoc == "/stockadjustmentcard") ||
       (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
       (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
-      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist") || (currentLoc == "/binlocationslist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -2632,6 +2632,12 @@ Template.newsidenav.events({
   'click #sidenavstocktransfer': function (event) {
     event.preventDefault();
     FlowRouter.go('/stocktransferlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavbinlocationlist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/binlocationslist');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
