@@ -48,29 +48,29 @@ Template.agedpayables.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-            { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "80" },
-      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "80" },
-      { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "100" },
-      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "100" },
-      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "110" },
-      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "100" },
-      { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "100" },
-      { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "100" },
-      { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "100" },
-      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "100" },
-      { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "120" },
-      { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "120" },
-      { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "120" },
-      { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "100" },
-      { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "120" },
-      { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "120" },
-      { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "120" },
-      { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "80" },
-      { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "100" },
-      { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "120" },
-      { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "110" },
-      { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "120" },
-      { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "120" },
+        { index: 1, label: 'Contact', class: 'colName', active: true, display: true, width: "150" },
+        { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
+        { index: 3, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
+        { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
+        { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
+        { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
+        { index: 7, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
+        { index: 8, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
+        { index: 9, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
+        { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
+        // { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "120" },
+        // { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "120" },
+        // { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "120" },
+        // { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "100" },
+        // { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "120" },
+        // { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "120" },
+        // { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "120" },
+        // { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "80" },
+        // { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "100" },
+        // { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "120" },
+        // { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "110" },
+        // { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "120" },
+        // { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "120" },
     ];
     templateObject.agedpayablesth.set(reset_data);
   }
@@ -138,173 +138,168 @@ Template.agedpayables.onRendered(() => {
     };
     for (let i = 0; i < data.tapreport.length; i++) {
       var dataList = [
-        data.tapreport[i].ACCOUNTID || "",
-        data.tapreport[i].ACCOUNTNAME || "",
-        data.tapreport[i].ACCOUNTNUMBER || "",
-        data.tapreport[i].ACCOUNTS || "",
-        data.tapreport[i].AMOUNTEX || "",
-        data.tapreport[i].AMOUNTINC || "",
-        data.tapreport[i].CHEQUENUMBER || "",
-        data.tapreport[i].CLASS || "",
-        data.tapreport[i].CLASSID || "",
-        data.tapreport[i]["CLIENT NAME"] || "",
-        data.tapreport[i].CREDITSEX || "",
-        data.tapreport[i].CREDITSINC || "",
-        data.tapreport[i].DATE || "",
-        data.tapreport[i].DEBITSEX || "",
-        data.tapreport[i].DEBITSINC || "",
-        data.tapreport[i].DETAILS || "",
-        data.tapreport[i].FIXEDASSETID || "",
-        data.tapreport[i].GLOBALREF || "",
-        data.tapreport[i].ID || "",
-        data.tapreport[i].MEMO || "",
-        data.tapreport[i].PAYMENTID || "",
-        data.tapreport[i].PREPAYMENTID || "",
-        data.tapreport[i].PRODUCTDESCRIPTION || "",
-        data.tapreport[i].PRODUCTNAME || "",
-        data.tapreport[i].PURCHASEORDERID || "",
-        data.tapreport[i].REFERENCENO || "",
-        data.tapreport[i].REPNAME || "",
-        data.tapreport[i].SALEID || "",
-        data.tapreport[i].TAXCODE || "",
-        data.tapreport[i].TAXRATE || "",
-        data.tapreport[i].TYPE || "",
-
+          data.tapreport[i].Name || "",
+          data.tapreport[i].Type || "",
+          data.tapreport[i].PONumber || "",
+          data.tapreport[i].DueDate || "",
+          data.tapreport[i].AmountDue || 0,
+          data.tapreport[i].Current || 0,
+          data.tapreport[i]["30Days"] || 0,
+          data.tapreport[i]["60Days"] || 0,
+          data.tapreport[i]["90Days"] || 0,
+          data.tapreport[i]["120Days"] || 0,
       ];
       splashArrayAgedPayablesReport.push(dataList);
-      templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
     }
+      splashArrayAgedPayablesReport.sort(GlobalFunctions.sortFunction);
 
-    setTimeout(function () {
+      let start = splashArrayAgedPayablesReport[0][0];
+      let sum, totalSum;
+      sum = new Array(6);
+      totalSum = new Array(6);
+
+      let T_AccountName = splashArrayAgedPayablesReport[0][0];
+      let agedPayableList = [];
+      agedPayableList.push([
+          GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+      ]);
+      let j;
+      for(j = 0 ; j < 6; j ++)  sum[j] = 0, totalSum[j] = 0;
+      for(let i = 0 ; i < splashArrayAgedPayablesReport.length ; i ++){
+          if(start != splashArrayAgedPayablesReport[i][0]) {
+              start = splashArrayAgedPayablesReport[i][0];
+              for(j = 0 ; j < 6; j ++){
+                  totalSum[j] += (sum[j] - 0);
+                  sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold");
+              }
+              agedPayableList.push([
+                  GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
+                  "",
+                  "",
+                  "",
+                  sum[0],
+                  sum[1],
+                  sum[2],
+                  sum[3],
+                  sum[4],
+                  sum[5],
+              ]);
+              agedPayableList.push([
+                  GlobalFunctions.generateSpan(splashArrayAgedPayablesReport[i][0], "table-cells text-bold"),
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+              ]);
+              for(j = 0 ; j < 6; j ++) sum[j] = 0;
+          }
+          T_AccountName = splashArrayAgedPayablesReport[i][0];
+          splashArrayAgedPayablesReport[i][0] = "";
+          splashArrayAgedPayablesReport[i][1] = GlobalFunctions.generateSpan(splashArrayAgedPayablesReport[i][1], 'text-primary');
+          splashArrayAgedPayablesReport[i][2] = GlobalFunctions.generateSpan(splashArrayAgedPayablesReport[i][2], 'text-primary');
+          splashArrayAgedPayablesReport[i][3] = GlobalFunctions.generateSpan(GlobalFunctions.formatDate(splashArrayAgedPayablesReport[i][3]), 'text-primary');
+          let tmp;
+          for(j = 0 ; j < 6; j ++) {
+              tmp = splashArrayAgedPayablesReport[i][4 + j] - 0;
+              splashArrayAgedPayablesReport[i][4 + j] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+              sum[j] += tmp;
+          }
+          agedPayableList.push(splashArrayAgedPayablesReport[i]);
+      }
+      for(j = 0 ; j < 6; j ++){
+          totalSum[j] += sum[j] - 0;
+          sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold");
+      }
+      agedPayableList.push([
+          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold'),
+          "",
+          "",
+          "",
+          sum[0],
+          sum[1],
+          sum[2],
+          sum[3],
+          sum[4],
+          sum[5],
+      ]);
+      for(j = 0 ; j < 6; j ++){
+          totalSum[j] = totalSum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "text-danger text-bold");
+      }
+      agedPayableList.push([
+          GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold'),
+          "",
+          "",
+          "",
+          "",
+          totalSum[0],
+          totalSum[1],
+          totalSum[2],
+          totalSum[3],
+          totalSum[4],
+          totalSum[5],
+      ]);
+      templateObject.transactiondatatablerecords.set(agedPayableList);
+
+      setTimeout(function () {
       $('#tableExport').DataTable({
-        data: splashArrayAgedPayablesReport,
+        data: agedPayableList,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
-          {
-            targets: 0,
-            className: "colAccountID",
-          },
-          {
-            targets: 1,
-            className: "colAccountName"
-          },
-          {
-            targets: 2,
-            className: "colAccountNo"
-          },
-          {
-            targets: 3,
-            className: "colAccounts hiddenColumn",
-          },
-          {
-            targets: 4,
-            className: "colAmountEx hiddenColumn",
-          },
-          {
-            targets: 5,
-            className: "colAmountInc hiddenColumn",
-          },
-          {
-            targets: 6,
-            className: "colChequeNumber hiddenColumn",
-          },
-          {
-            targets: 7,
-            className: "colDepartment",
-          },
-          {
-            targets: 8,
-            className: "colClassID",
-          },
-          {
-            targets: 9,
-            className: "colProductDescription",
-          },
-          {
-            targets: 10,
-            className: "colCreditEx hiddenColumn",
-          },
-          {
-            targets: 11,
-            className: "colCreditInc hiddenColumn",
-          },
-          {
-            targets: 12,
-            className: "colDate",
-          },
-          {
-            targets: 13,
-            className: "colDebitsEx hiddenColumn",
-          },
-          {
-            targets: 14,
-            className: "colDebitsInc hiddenColumn",
-          },
-          {
-            targets: 15,
-            className: "colDetails hiddenColumn",
-          },
-          {
-            targets: 16,
-            className: "colFixedAssetID hiddenColumn",
-          },
-          {
-            targets: 17,
-            className: "colGlobalRef",
-          },
-          {
-            targets: 18,
-            className: "colID hiddenColumn",
-          },
-          {
-            targets: 19,
-            className: "colMemo hiddenColumn",
-          },
-          {
-            targets: 20,
-            className: "colPaymentID hiddenColumn",
-          },
-          {
-            targets: 21,
-            className: "colPrepaymentID hiddenColumn",
-          },
-          {
-            targets: 22,
-            className: "colCredit",
-          },
-          {
-            targets: 23,
-            className: "colProductID hiddenColumn",
-          },
-          {
-            targets: 24,
-            className: "colPurchaseOrderID",
-          },
-          {
-            targets: 25,
-            className: "colRefNo hiddenColumn",
-          },
-          {
-            targets: 26,
-            className: "colRepName",
-          },
-          {
-            targets: 27,
-            className: "colSaleID hiddenColumn",
-          },
-          {
-            targets: 28,
-            className: "colTaxCode hiddenColumn",
-          },
-          {
-            targets: 29,
-            className: "colTaxRate hiddenColumn",
-          },
-          {
-            targets: 30,
-            className: "colType",
-          },
+            {
+                targets: 0,
+                className: "colName",
+            },
+            {
+                targets: 1,
+                className: "colType"
+            },
+            {
+                targets: 2,
+                className: "colPONumber"
+            },
+            {
+                targets: 3,
+                className: "colDueDate",
+            },
+            {
+                targets: 4,
+                className: "colAmoutDue",
+            },
+            {
+                targets: 5,
+                className: "colCurrent",
+            },
+            {
+                targets: 6,
+                className: "col30Days",
+            },
+            {
+                targets: 7,
+                className: "col60Days",
+            },
+            {
+                targets: 8,
+                className: "col90Days",
+            },
+            {
+                targets: 9,
+                className: "col120Days",
+            },
         ],
         select: true,
         destroy: true,
@@ -312,12 +307,18 @@ Template.agedpayables.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
-        responsive: true,
-        "order": [[1, "asc"]],
+        // responsive: true,
+        "order": [],
+        "bsort": false,
         action: function () {
           $('#tableExport').DataTable().ajax.reload();
         },
-
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+              if(aData[0] == GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold'))
+                  $(nRow).addClass("grandtotal");
+              else if(nRow != 0 && aData[6] == "")
+                  $(nRow).addClass("totalhr");
+        },
       }).on('column-reorder', function () {
 
       }).on('length.dt', function (e, settings, len) {

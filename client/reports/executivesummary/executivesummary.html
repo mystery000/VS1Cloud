@@ -1,5 +1,8 @@
 <template name="executivesummaryreport">
-    {{# vs1_report_template tabledisplayname="Executive Summary Report" tablename="tblExecutiveSummary" dateAsAt=dateAsAt}} 
+    {{# vs1_report_template tabledisplayname="Executive Summary Report" tablename="tblExecutiveSummary" dateAsAt=dateAsAt}}
+        <div class="m-auto">
+            <p class="text-center text-primary font-weight-bold" style="margin-bottom: 8px; font-size: 24px;">{{pageDate}}</p>
+        </div>
         <div class="table-responsive">
             <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                 <thead>

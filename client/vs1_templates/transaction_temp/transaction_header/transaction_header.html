@@ -211,32 +211,11 @@
       <div class="row" style="margin: 8px 16px 0px 16px;">
         {{#if showCustomer}}
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-          {{# if equals cardType 'Invoice'}}
-            {{> customer_selector
-              label=getUserLabel
-              value=data.CustomerID
-            }}
-          {{else}}
-          {{# if equals cardType 'Sales Order'}}
-            {{> customer_selector
-              label=getUserLabel
-              value=data.CustomerID
-            }}
-          {{else}}
-          {{#if equals cardType 'Quote'}}
-            {{> customer_selector
-              label=getUserLabel
-              value=data.CustomerID
-            }}
-          {{else}}
           {{> customer_selector
             label=getUserLabel
-            id='edtSupplierName'
+            id=getCustomerID
             value=data.CustomerID
           }}
-          {{/if}}
-          {{/if}}
-          {{/if}}
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-3">
           {{> customer_email_input
@@ -401,7 +380,7 @@
                     id="edtTotalQuantity"
                     name="edtTotalQuantity"
                     defaultValue=data.quantity
-                    readonly=showCompleted
+                    readonly=true
                   }}
                 </div>
               {{/if}}
@@ -445,6 +424,8 @@
           data=data
           showCompleteProcess=showCompleteProcess
           showVendorService=showVendorService
+          showSchedule=showSchedule
+          showUnschedule=showUnschedule
           showTimerStart = showTimerStart
           showTimerPause = showTimerPause
           showTimerResume = showTimerResume

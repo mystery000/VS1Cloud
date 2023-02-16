@@ -210,7 +210,7 @@ Template.new_quote.onCreated(() => {
   templateObject.addAttachment = async(objDetails, stringQuery) => {
     let attachment = [];
     let invoiceId = objDetails.fields.ID;
-    let encodedPdf = await generatePdfForMail(invoiceId);
+    let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
     let base64data = encodedPdf.split(',')[1];
     let pdfObject = {
       filename: 'Quote-' + invoiceId + '.pdf',
@@ -612,7 +612,7 @@ Template.new_quote.onCreated(() => {
       }
     }
     const uploadedItems = templateObject.uploadedFiles.get();
-  
+
     let objDetails = '';
     if (getso_id[1]) {
       currentQuote = parseInt(currentQuote);
@@ -668,12 +668,12 @@ Template.new_quote.onCreated(() => {
         }
       };
     }
+    const erpGet = erpDb();
     let stringQuery = "?";
     for (let l = 0; l < lineItemsForm.length; l++) {
       stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
     }
     stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-    alert("Send EMail")
     await templateObject.addAttachment(objDetails, stringQuery);
   }
 });
@@ -1970,7 +1970,6 @@ Template.new_quote.onRendered(() => {
   templateObject.getAllLeadStatuss();
 
   function getCustomerData(customerID) {
-    alert(customerID)
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
         contactService.getOneCustomerDataEx(customerID).then(function (data) {
@@ -3530,8 +3529,6 @@ Template.new_quote.onRendered(() => {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          console.log("Quote data:", data)
-
           let useData = data.tquoteex;
           let added = false;
           for (let d = 0; d < useData.length; d++) {
@@ -6925,7 +6922,7 @@ Template.new_quote.events({
       }
 
       await templateObject.sendEamil()
-     
+
     }, delayTimeAfterSound);
   },
   'keydown .lineQty, keydown .lineUnitPrice': function (event) {
@@ -7419,7 +7416,7 @@ Template.new_quote.events({
       let surname = $('#edtCustomerEmail').attr('customerlastname');
 
       let termname = $('#sltTerms').val() || '';
-     
+
       if (customername.val() === '') {
         swal({
           title: "Customer has not been selected!",
