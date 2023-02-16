@@ -32,8 +32,8 @@ const clickTaxCodeSales = editableService.clickTaxCodeSales;
 
 const clickBinNumber = editableService.clickBinNumber;
 
-const applyMarkup = (val) => {  
-  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {    
+const applyMarkup = (val) => {
+  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {
     return val * (100 + Number($('.baseEdtMarkup').val())) / 100
   }
   return val
@@ -93,7 +93,7 @@ Template.productview.onCreated(() => {
   templateObject.showSubButton = new ReactiveVar(true);
   templateObject.isShowBOMModal = new ReactiveVar(false);
 
-  templateObject.productID = new ReactiveVar();  
+  templateObject.productID = new ReactiveVar();
 });
 
 Template.productview.onRendered(function () {
@@ -309,24 +309,24 @@ Template.productview.onRendered(function () {
       });
 
       $(document).on("click", "#tblUOMList tbody tr", function (e) {
-        let table = $(this);        
+        let table = $(this);
         let uomName = table.find(".colUOMName").text();
         $($(".saleRowWrapper")[currentLineIndex]).find('input.sltUomSales').val(uomName)
-        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)        
+        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)
         $("#UOMListModal").modal("toggle");
       });
 
       $(document).on('click', 'div.saleRowWrapper', function() {
-        currentLineIndex = $('div.saleRowWrapper').index(this)    
+        currentLineIndex = $('div.saleRowWrapper').index(this)
       })
-      
+
       $(document).on('click', 'div.purchaseRowWrapper', function() {
-        currentLineIndex = $('div.purchaseRowWrapper').index(this)    
-      }) 
+        currentLineIndex = $('div.purchaseRowWrapper').index(this)
+      })
 
       $(document).on('click', 'div.itemExtraSellRow', function() {
-        customerLineIndex = $('div.itemExtraSellRow').index(this)    
-      }) 
+        customerLineIndex = $('div.itemExtraSellRow').index(this)
+      })
 
     // });
   };
@@ -795,7 +795,7 @@ Template.productview.onRendered(function () {
 
 
                 }
-                console.log(binrecords);
+
 
             }
         }).catch(function(err) {
@@ -880,12 +880,9 @@ Template.productview.onRendered(function () {
     currentProductID = parseInt(currentProductID);
 
     templateObject.getProductData = function () {
-      getVS1Data("TProductVS1")
-        .then(function (dataObject) {
+      getVS1Data("TProductVS1").then(function (dataObject) {
           if (dataObject.length == 0) {
-            productService
-              .getOneProductdata(currentProductID)
-              .then(function (data) {
+            productService.getOneProductdata(currentProductID).then(function (data) {
                 $(".fullScreenSpin").css("display", "none");
 
                 // add to custom field
@@ -1134,7 +1131,6 @@ Template.productview.onRendered(function () {
                   isManufactured: isBOMProduct,
                 };
 
-                console.log(productrecord.productclass.DefaultbinNumber);
 
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
@@ -1260,6 +1256,7 @@ Template.productview.onRendered(function () {
               productService
                 .getOneProductdata(currentProductID)
                 .then(function (data) {
+
                   $(".fullScreenSpin").css("display", "none");
                   let lineItems = [];
                   let lineItemObj = {};
@@ -1433,8 +1430,8 @@ Template.productview.onRendered(function () {
                 });
             }
           }
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
+
           productService
             .getOneProductdata(currentProductID)
             .then(function (data) {
@@ -1730,39 +1727,49 @@ Template.productview.onRendered(function () {
 
     templateObject.setBOMModal = () => {};
 
-    templateObject.getProductClassQtyData = function () {
-      productService
-        .getOneProductClassQtyData(currentProductID)
-        .then(function (data) {
-          $(".fullScreenSpin").css("display", "none");
-          let qtylineItems = [];
-          let qtylineItemObj = {};
-          let currencySymbol = Currency;
-          let totaldeptquantity = 0;
-          let backordeQty = 0;
-          for (let j in data.tproductclassquantity) {
-            backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
-            qtylineItemObj = {
-              department: data.tproductclassquantity[j].DepartmentName || "",
-              // quantity: data.tproductclassquantity[j].InStockQty || 0,
-              availableqty:
-                data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
-              onsoqty: data.tproductclassquantity[j].SOQty || 0,
-              onboqty: backordeQty || 0,
-              instockqty: data.tproductclassquantity[j].InStockQty || 0,
-              onorderqty: data.tproductclassquantity[j].OnOrderQty || 0,
-            };
-            totaldeptquantity += data.tproductclassquantity[j].InStockQty;
-            qtylineItems.push(qtylineItemObj);
-          }
-          // $('#edttotalqtyinstock').val(totaldeptquantity);
-          templateObject.productqtyrecords.set(qtylineItems);
-          updateBinNumberSelect();
-          templateObject.totaldeptquantity.set(totaldeptquantity);
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+    templateObject.getProductClassQtyData = async function () {
+
+      let dataObject = await getVS1Data('TProductClassQuantity')||'';
+      if (dataObject.length > 0){
+        let data = JSON.parse(dataObject[0].data);
+        if(data){
+          templateObject.setProductClassQtyData(data);
+        }
+      }else{
+        productService.getOneProductClassQtyData(currentProductID).then(function (data) {
+          templateObject.setProductClassQtyData(data);
         });
+      }
+
+
+    };
+
+    templateObject.setProductClassQtyData = async function (data) {
+      let qtylineItems = [];
+      let qtylineItemObj = {};
+      let currencySymbol = Currency;
+      let totaldeptquantity = 0;
+      let backordeQty = 0;
+      for (let j in data.tproductclassquantity) {
+        if(data.tproductclassquantity[j].ProductID == parseInt(currentProductID)){
+        backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
+        qtylineItemObj = {
+          department: data.tproductclassquantity[j].DepartmentName || "",
+          // quantity: data.tproductclassquantity[j].InStockQty || 0,
+          availableqty:data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
+          onsoqty: data.tproductclassquantity[j].SOQty || 0,
+          onboqty: backordeQty || 0,
+          instockqty: data.tproductclassquantity[j].InStockQty || 0,
+          onorderqty: data.tproductclassquantity[j].OnOrderQty || 0,
+        };
+        totaldeptquantity += data.tproductclassquantity[j].InStockQty;
+        qtylineItems.push(qtylineItemObj);
+      }
+      }
+      // $('#edttotalqtyinstock').val(totaldeptquantity);
+      templateObject.productqtyrecords.set(qtylineItems);
+      updateBinNumberSelect();
+      templateObject.totaldeptquantity.set(totaldeptquantity);
     };
 
     templateObject.getProductClassQtyData();
@@ -2926,9 +2933,7 @@ Template.productview.onRendered(function () {
     };
 
     templateObject.getProductClassQtyData = function () {
-      productService
-        .getOneProductClassQtyData(currentProductID)
-        .then(function (data) {
+      productService.getOneProductClassQtyData(currentProductID).then(function (data) {
           $(".fullScreenSpin").css("display", "none");
           let qtylineItems = [];
           let qtylineItemObj = {};
@@ -3230,7 +3235,7 @@ Template.productview.onRendered(function () {
 
   $(document).ready(function () {
     $(".edtProductName").editableSelect();
-    $("#edtProcess").editableSelect();    
+    $("#edtProcess").editableSelect();
   });
 
   // $(document).on('click', '.new_attachment_btn', function(event) {
@@ -3494,8 +3499,10 @@ Template.productview.events({
     $(event.target).closest(".lblPriceCheckStatus").val("false");
   },
   "click .lblCostEx": function (event) {
-    $(event.target).addClass("hiddenColmn");
-    $(event.target).removeClass("showColumn");
+    // $(event.target).addClass("hiddenColmn");
+    // $(event.target).removeClass("showColumn");
+    $(event.target).closest(".lblCostEx").addClass("hiddenColumn");
+    $(event.target).closest(".lblCostEx").removeClass("showColumn");
     formGroup = $(event.target).closest(".form-group");
     formGroup.find(".lblCostInc").addClass("showColumn");
     formGroup.find(".lblCostInc").removeClass("hiddenColumn");
@@ -3764,32 +3771,7 @@ Template.productview.events({
           };
 
           productService.saveProductClassData(productClassObj).then(function(data){
-              console.log(data);
-          });
-        }
 
-        let checkTracked = templateObject.isTrackChecked.get();
-        if(checkTracked == true){
-          let productClassData = templateObject.records.get();
-          let productBinNumber =  $(".slt-bin").val();
-          let productBinLocation =  $(".slt-bin option:selected").data('location');
-          let ProductDept = $(".slt_department option:selected").data('tag');
-          let ProductDeptName = $(".slt_department").val();
-
-          let productClassObj = {
-              type: "TProductClass",
-              fields: {
-                ID: productClassData.productclass.ID,
-                DefaultbinLocation: productBinLocation.toString(),
-                DefaultbinNumber: productBinNumber.toString(),
-                ProductID: parseInt(currentID),
-                DeptID: ProductDept,
-                DeptName: ProductDeptName
-              }
-          };
-
-          productService.saveProductClassData(productClassObj).then(function(data){
-              console.log(data);
           });
         }
 
@@ -3814,7 +3796,7 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            
+
             sideBarService
               .getNewProductListVS1(initialBaseDataLoad, 0)
               .then(function (dataReload) {
