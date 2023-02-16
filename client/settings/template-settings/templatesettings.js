@@ -1859,41 +1859,41 @@ Template.templatesettings.onRendered(function () {
   function loadDataTable(num) {
     // Adjust any columnDef widths set by the user
     setUserColumnsDefWidths();
-
+    
     table = $('#' + tableId + num).DataTable({
       data: dataSet,
       destroy: true,
-      autoWidth: false,
+      autoWidth: true,
       deferRender: true,
       dom: 't',
-      scrollY: 300,
-      scrollX: true,
-      scrollCollapse: true,
-      scroller: true,
+      // scrollY: 300,
+      // scrollX: true,
+      // scrollCollapse: true,
+      // scroller: true,
       colReorder: true,
-      columnDefs: columnDefs,
+      // columnDefs: columnDefs,
       "order": [[1, "asc"]],
-
       initComplete: function (settings) {
 
         //Add JQueryUI resizable functionality to each th in the ScrollHead table
 
-        $('#' + tableId + num + '_wrapper .dataTables_scrollHead thead th').resizable({
+        // $('#' + tableId + num + '_wrapper .dataTables_scrollHead thead th').resizable({
 
-          handles: "e",
+        //   handles: "e",
 
-          alsoResize: '#' + tableId + num + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
+        //   alsoResize: '#' + tableId + num + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
 
-          stop: function () {
+        //   stop: function () {
 
-            saveColumnSettings();
+        //     saveColumnSettings();
 
-            loadDataTable(num);
-          }
-        });
+        //     loadDataTable(num);
+        //   }
+        // });
       },
     });
-    table.colReorder.move( 0, 1 );
+    // table.colReorder.move( 0, 1 );
+    tableResize();
   }
 
 
@@ -1928,7 +1928,7 @@ Template.templatesettings.onRendered(function () {
   function saveColumnSettings() {
 
     var userColumnDefs = JSON.parse(localStorage.getItem(tableId)) || [];
-
+    
     var width, header, existingSetting;
 
     table.columns().every( function ( targets ) {
@@ -1980,7 +1980,25 @@ Template.templatesettings.onRendered(function () {
 
     // table content
     var tbl_content = $("#templatePreviewModal .tbl_content");
+    // var tbl_header = $("#templatePreviewModal .tbl_header");
     tbl_content.empty();
+    // tbl_header.empty();
+
+    // if ( $.fn.DataTable.isDataTable( '#printTemplateTable1' ) ) {
+    //   table.destroy();
+    // }
+
+    // $(".template-preview-body1 .table-responsive div").html(`
+    //   <table class="invoice_print table table-sm table-striped table-bordered dataTable ui-resizable" style="width: 80%;  margin: auto;" id="printTemplateTable1">
+    //       <thead style="color: rgb(251,251,251);">
+    //           <tr class="tbl_header table-active tblAvoid customDoubleTableHeading" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #000000;">
+    //           </tr>
+    //       </thead>
+    //       <tbody class="tbl_content" style="color: rgb(0 0 0);">
+    //       </tbody>
+    //   </table>
+    // `);
+
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {
       case "Bill":
@@ -2125,6 +2143,19 @@ Template.templatesettings.onRendered(function () {
     var tbl_content = $("#templatePreviewModal .tbl_content");
     tbl_content.empty();
 
+    // var table = $('#printTemplateTable2').DataTable();
+    // table.destroy();
+    // $(".template-preview-body2 .table-responsive div").html(`
+    //   <table class="invoice_print table table-sm table-striped table-bordered dataTable ui-resizable" style="width: 80%;  margin: auto;" id="printTemplateTable2">
+    //       <thead style="color: rgb(251,251,251);">
+    //           <tr class="tbl_header table-active tblAvoid customDoubleTableHeading" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #000000;">
+    //           </tr>
+    //       </thead>
+    //       <tbody class="tbl_content" style="color: rgb(0 0 0);">
+    //       </tbody>
+    //   </table>
+    // `);
+
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {
       case "Bill":
@@ -2257,6 +2288,19 @@ Template.templatesettings.onRendered(function () {
     // table content
     var tbl_content = $("#templatePreviewModal .tbl_content");
     tbl_content.empty();
+
+    // var table = $('#printTemplateTable3').DataTable();
+    // table.destroy();
+    // $(".template-preview-body3 .table-responsive div").html(`
+    //   <table class="invoice_print table table-sm table-striped table-bordered dataTable ui-resizable" style="width: 80%;  margin: auto;" id="printTemplateTable3">
+    //       <thead style="color: rgb(251,251,251);">
+    //           <tr class="tbl_header table-active tblAvoid customDoubleTableHeading" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1); color: #000000;">
+    //           </tr>
+    //       </thead>
+    //       <tbody class="tbl_content" style="color: rgb(0 0 0);">
+    //       </tbody>
+    //   </table>
+    // `);
 
     var left_idx = 0;
     switch (object_invoce[0]["title"]) {

@@ -35,7 +35,7 @@
                         <!-- <a data-toggle="modal" href="#nplGroupAccounts" class="btn btn-primary btnGroupAccounts" role="button" onclick="$('#defineGrouping2').hide();$('#nplGroupAccountDefTag').show();  return false;">Group selected
                             accounts...</a> -->
                     </div>
-                    <!-- <div class="col-12 d-flex justify-content-center">
+                    <div class="col-12 d-flex justify-content-center">
                         <div class="btnTextBlockColumn pointer btnLayoutAction" style="margin: 0px 16px;">
                             <svg xml:space="http://www.w3.org/2000/svg" data-icon-name="text" width="16" height="17" fill="#00A3D3" stroke="#00A3D3" viewBox="0 0 16 17">
                                 <path d="M0 0h16v2H0V0zm7 2h2v13H7V2zM0 2h2v2H0V2zm14 0h2v2h-2V2zM5 15h6v2H5v-2z" fill-rule="evenodd" alt="Text"></path>
@@ -126,7 +126,7 @@
                             </svg>
                             <span class="tooltiptext">Print to PDF</span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
 
@@ -345,7 +345,7 @@
                                                 {{#each item in profitlosslayoutrecords }}
                                                 <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
                                                         <div class="mainHeadingDiv">
-                                                            <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
+                                                            <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.Level1 }}</h1>
                                                         </div>
                                                         <ol class="groupedListNew" parent="{{ item.Level0Order }}">
                                                             {{#each acItem in item.subAccounts }}
@@ -456,13 +456,13 @@
                                 {{/if}}
 
 
-                                <!--
-                                <div class="sortableAccount pageBreakBar">
+                                
+                                <!-- <div class="sortableAccount pageBreakBar">
                                     <div class="draggable" id="pgBreak1">
                                         <label class="col-12 dragAcc" style=" text-align: center; background-color:#00a3d3; border-color: #00a3d3;color:#fff;">Page break (row)</label>
                                     </div>
-                                </div>
--->
+                                </div> -->
+
 
                                 <!--
                                 <div class="sortableAccount">
@@ -687,23 +687,26 @@
                                             report.</p>
                                         <p>When you've finished customising your layout, click 'Save' below.</p>
                                         <a>Get more help on customising report layouts</a>
-
                                     </div>
                                     <div class="container">
                                         <h5>Layout Details</h5>
                                         <hr>
-                                        <label>Layout Name</label><br>
-                                        <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="">
-                                        <label>Layout Description</label><br>
-                                        <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="">
+                                        <div class="form-group">
+                                            <label>Layout Name</label>
+                                            <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="" value="{{layoutinfo.LName}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Layout Description</label>
+                                            <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="" value="{{layoutinfo.Description}}">
+                                        </div>
                                         <div class="custom-control custom-switch mt-3">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting">
+                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting" checked="{{layoutinfo.IsCurrentLayout}}">
                                             <label style="width: 275px;" class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all
                                                 users</label>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="container mb-3 editDefault" style="">
+                                <div class="container mb-3 editDefault" style="">
                                     <h3>Start editing your layout</h3>
                                     <hr class="periodSelectorLine" />
                                     <div>
@@ -1361,7 +1364,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                     </div>

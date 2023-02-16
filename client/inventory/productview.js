@@ -796,6 +796,7 @@ Template.productview.onRendered(function () {
 
                 }
 
+
             }
         }).catch(function(err) {
             productService.getBins().then(function(data) {
@@ -879,12 +880,9 @@ Template.productview.onRendered(function () {
     currentProductID = parseInt(currentProductID);
 
     templateObject.getProductData = function () {
-      getVS1Data("TProductVS1")
-        .then(function (dataObject) {
+      getVS1Data("TProductVS1").then(function (dataObject) {
           if (dataObject.length == 0) {
-            productService
-              .getOneProductdata(currentProductID)
-              .then(function (data) {
+            productService.getOneProductdata(currentProductID).then(function (data) {
                 $(".fullScreenSpin").css("display", "none");
 
                 // add to custom field
@@ -1133,6 +1131,7 @@ Template.productview.onRendered(function () {
                   isManufactured: isBOMProduct,
                 };
 
+
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
                 setTimeout(async function () {
@@ -1257,6 +1256,7 @@ Template.productview.onRendered(function () {
               productService
                 .getOneProductdata(currentProductID)
                 .then(function (data) {
+
                   $(".fullScreenSpin").css("display", "none");
                   let lineItems = [];
                   let lineItemObj = {};
@@ -1430,8 +1430,8 @@ Template.productview.onRendered(function () {
                 });
             }
           }
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
+
           productService
             .getOneProductdata(currentProductID)
             .then(function (data) {
@@ -1727,39 +1727,49 @@ Template.productview.onRendered(function () {
 
     templateObject.setBOMModal = () => {};
 
-    templateObject.getProductClassQtyData = function () {
-      productService
-        .getOneProductClassQtyData(currentProductID)
-        .then(function (data) {
-          $(".fullScreenSpin").css("display", "none");
-          let qtylineItems = [];
-          let qtylineItemObj = {};
-          let currencySymbol = Currency;
-          let totaldeptquantity = 0;
-          let backordeQty = 0;
-          for (let j in data.tproductclassquantity) {
-            backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
-            qtylineItemObj = {
-              department: data.tproductclassquantity[j].DepartmentName || "",
-              // quantity: data.tproductclassquantity[j].InStockQty || 0,
-              availableqty:
-                data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
-              onsoqty: data.tproductclassquantity[j].SOQty || 0,
-              onboqty: backordeQty || 0,
-              instockqty: data.tproductclassquantity[j].InStockQty || 0,
-              onorderqty: data.tproductclassquantity[j].OnOrderQty || 0,
-            };
-            totaldeptquantity += data.tproductclassquantity[j].InStockQty;
-            qtylineItems.push(qtylineItemObj);
-          }
-          // $('#edttotalqtyinstock').val(totaldeptquantity);
-          templateObject.productqtyrecords.set(qtylineItems);
-          updateBinNumberSelect();
-          templateObject.totaldeptquantity.set(totaldeptquantity);
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+    templateObject.getProductClassQtyData = async function () {
+
+      let dataObject = await getVS1Data('TProductClassQuantity')||'';
+      if (dataObject.length > 0){
+        let data = JSON.parse(dataObject[0].data);
+        if(data){
+          templateObject.setProductClassQtyData(data);
+        }
+      }else{
+        productService.getOneProductClassQtyData(currentProductID).then(function (data) {
+          templateObject.setProductClassQtyData(data);
         });
+      }
+
+
+    };
+
+    templateObject.setProductClassQtyData = async function (data) {
+      let qtylineItems = [];
+      let qtylineItemObj = {};
+      let currencySymbol = Currency;
+      let totaldeptquantity = 0;
+      let backordeQty = 0;
+      for (let j in data.tproductclassquantity) {
+        if(data.tproductclassquantity[j].ProductID == parseInt(currentProductID)){
+        backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
+        qtylineItemObj = {
+          department: data.tproductclassquantity[j].DepartmentName || "",
+          // quantity: data.tproductclassquantity[j].InStockQty || 0,
+          availableqty:data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
+          onsoqty: data.tproductclassquantity[j].SOQty || 0,
+          onboqty: backordeQty || 0,
+          instockqty: data.tproductclassquantity[j].InStockQty || 0,
+          onorderqty: data.tproductclassquantity[j].OnOrderQty || 0,
+        };
+        totaldeptquantity += data.tproductclassquantity[j].InStockQty;
+        qtylineItems.push(qtylineItemObj);
+      }
+      }
+      // $('#edttotalqtyinstock').val(totaldeptquantity);
+      templateObject.productqtyrecords.set(qtylineItems);
+      updateBinNumberSelect();
+      templateObject.totaldeptquantity.set(totaldeptquantity);
     };
 
     templateObject.getProductClassQtyData();
@@ -2923,9 +2933,7 @@ Template.productview.onRendered(function () {
     };
 
     templateObject.getProductClassQtyData = function () {
-      productService
-        .getOneProductClassQtyData(currentProductID)
-        .then(function (data) {
+      productService.getOneProductClassQtyData(currentProductID).then(function (data) {
           $(".fullScreenSpin").css("display", "none");
           let qtylineItems = [];
           let qtylineItemObj = {};
@@ -3491,8 +3499,10 @@ Template.productview.events({
     $(event.target).closest(".lblPriceCheckStatus").val("false");
   },
   "click .lblCostEx": function (event) {
-    $(event.target).addClass("hiddenColmn");
-    $(event.target).removeClass("showColumn");
+    // $(event.target).addClass("hiddenColmn");
+    // $(event.target).removeClass("showColumn");
+    $(event.target).closest(".lblCostEx").addClass("hiddenColumn");
+    $(event.target).closest(".lblCostEx").removeClass("showColumn");
     formGroup = $(event.target).closest(".form-group");
     formGroup.find(".lblCostInc").addClass("showColumn");
     formGroup.find(".lblCostInc").removeClass("hiddenColumn");
@@ -3761,6 +3771,7 @@ Template.productview.events({
           };
 
           productService.saveProductClassData(productClassObj).then(function(data){
+
           });
         }
 
