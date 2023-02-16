@@ -295,7 +295,7 @@
         <div class="charts row connectedChartSortable2 connectedSortable2" id="connectedSortable2" data-key="chart"
             data-chartgroup="DashboardExe" data-tabgroup="1" style="min-width: 100%;">
 
-            {{> monthlyprofitandloss md=8 defaultPosition=0 key="dashboard__monthyl_profit_and_loss"}}
+            {{> monthlyprofitandloss md=8 defaultPosition=1 key="dashboard__monthyl_profit_and_loss"}}
             {{> quotedsalesorderinvoicedamounts md=4 defaultPosition=1 key="sales__sales_overview"}}
             {{> accountrevenuestreams md=8 defaultPosition=2 key="accounts__revenue_streams"}}
             {{> profitandlosschart md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}
@@ -311,7 +311,7 @@
             {{> employeecompletedjobs md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
             {{> clockedOnEmployees md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
             {{> monthllyexpenses md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
-            {{> expensebreakdown md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
+            {{> expensebreakdown md=4 defaultPosition=4 key="purchases__expenses_breakdown" }}
             {{> absenteeRate md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
 
             {{#if equals isaccountoverview true}}
@@ -323,7 +323,7 @@
             <!-- position 24, 25 -->
             {{> dashboardSalesCharts}}
 
-            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="31"
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement " data-default-position="30"
                 data-default-class="col-md-6" key="dashboardexe__cash">
                 <div class="minHeight100" id="cashchartparent">
                     <div class="card overflow-hidden shadow mb-2 portlet" id="cashmove">
@@ -546,7 +546,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="32"
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="31"
                 data-default-class="col-md-6" key="dashboardexe__profitability">
                 <div class="minHeight100" id="profitabilitychartparent">
                     <div class="card overflow-hidden shadow mb-2 portlet" id="profitabilitymove">
@@ -770,7 +770,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="33"
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="32"
                 data-default-class="col-md-6" key="dashboardexe__performance">
                 <div class="minHeight100" id="performancechartparent">
                     <div class="card overflow-hidden shadow mb-2 portlet" id="performancemove">
@@ -969,7 +969,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="34"
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="33"
                 data-default-class="col-md-6" key="dashboardexe__balance_sheet">
                 <div class="minHeight100" id="balancesheetchartparent">
                     <div class="card overflow-hidden shadow mb-2 portlet" id="balancesheetmove">
@@ -1168,7 +1168,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="35"
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="34"
                 data-default-class="col-md-6" key="dashboardexe__income">
                 <div class="minHeight100" id="incomechartparent">
                     <div class="card overflow-hidden shadow mb-2 portlet" id="incomemove">
@@ -1366,7 +1366,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="36"
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" data-default-position="35"
                 data-default-class="col-md-6" key="dashboardexe__position">
                 <div class="minHeight100" id="positionchartparent">
                     <div class="card overflow-hidden shadow mb-2 portlet" id="positionmove">
