@@ -292,6 +292,8 @@ Template.newprofitandloss.onRendered(function () {
             if (data.tprofitandlossperiodcomparereport) {
               let accountData = data.tprofitandlossperiodcomparereport;
 
+              console.log("accountData========", accountData);
+
               let accountType = "";
               var dataList = "";
               for (let i = 0; i < accountData.length; i++) {
@@ -2247,7 +2249,7 @@ Template.newprofitandloss.events({
             Params: {
               "LayoutID": 3,
               "GroupName": groupName,
-              "Destination": 83,
+              "Destination": accountName,
             }
         }
         

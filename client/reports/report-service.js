@@ -930,4 +930,20 @@ export class ReportService extends BaseService {
         return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLAddGroup"', data);
     }
 
+    getPNLLayout(layout=3) {
+        let options = {
+            select: "[ID]=" + layout,
+            ListType: "Detail",
+        };
+
+        return this.getList(
+            this.ERPObjects.TPNLLayout,
+            options
+        );
+    }
+
+    savePNLLayout(data) {
+        return this.POST(this.ERPObjects.TPNLLayout, data);
+    }
+
 }

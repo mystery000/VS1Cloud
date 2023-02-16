@@ -2897,6 +2897,7 @@ function openEditTaskModals(id, type) {
                                 "checked",
                                 true
                             );
+                            $(".taskModalActionLableDropdown").css("color", selected_record.TaskLabel.fields.Color);
                         } else {
                             selected_record.TaskLabel.forEach((lbl) => {
                                 taskmodalLabels +=
@@ -2904,9 +2905,13 @@ function openEditTaskModals(id, type) {
                                     lbl.fields.TaskLabelName +
                                     "</a></span> ";
                                 $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                                $(".taskModalActionLableDropdown").css("color", lbl.fields.Color);
                             });
                             taskmodalLabels = taskmodalLabels.slice(0, -2);
                         }
+                    }
+                    else{
+                        $(".taskModalActionLableDropdown").css("color", "#858796");
                     }
                     $("#taskmodalLabels").html(taskmodalLabels);
                     let subtasks = "";

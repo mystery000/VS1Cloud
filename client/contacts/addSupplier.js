@@ -2844,24 +2844,29 @@ function openEditTaskModals(id, type) {
           $(".chkDetailLabel").prop("checked", false);
           if (selected_record.TaskLabel) {
             if (selected_record.TaskLabel.fields != undefined) {
-              taskmodalLabels =
-                `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-                selected_record.TaskLabel.fields.TaskLabelName +
-                "</a></span>";
-              $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-                "checked",
-                true
-              );
+                taskmodalLabels =
+                    `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+                    selected_record.TaskLabel.fields.TaskLabelName +
+                    "</a></span>";
+                $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                    "checked",
+                    true
+                );
+                $(".taskModalActionLableDropdown").css("color", selected_record.TaskLabel.fields.Color);
             } else {
-              selected_record.TaskLabel.forEach((lbl) => {
-                taskmodalLabels +=
-                  `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                  lbl.fields.TaskLabelName +
-                  "</a></span> ";
-                $("#detail_label_" + lbl.fields.ID).prop("checked", true);
-              });
-              taskmodalLabels = taskmodalLabels.slice(0, -2);
+                selected_record.TaskLabel.forEach((lbl) => {
+                    taskmodalLabels +=
+                        `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                        lbl.fields.TaskLabelName +
+                        "</a></span> ";
+                    $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                    $(".taskModalActionLableDropdown").css("color", lbl.fields.Color);
+                });
+                taskmodalLabels = taskmodalLabels.slice(0, -2);
             }
+          }
+          else{
+              $(".taskModalActionLableDropdown").css("color", "#858796");
           }
           $("#taskmodalLabels").html(taskmodalLabels);
           let subtasks = "";
