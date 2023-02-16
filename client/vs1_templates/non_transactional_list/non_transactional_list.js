@@ -17,6 +17,9 @@ import TableHandler from '../../js/Table/TableHandler';
 import { Template } from 'meteor/templating';
 import './non_transactional_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { ReceiptService } from "../../receipts/receipt-service.js";
+
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
@@ -27,6 +30,7 @@ let reportService = new ReportService();
 let fixedAssetService = new FixedAssetService();
 const taxRateService = new TaxRateService();
 let stockTransferService = new StockTransferService();
+let receiptService = new ReceiptService();
 
 import CachedHttp from "../../lib/global/CachedHttp";
 import erpObject from "../../lib/global/erp-objects";
@@ -927,6 +931,14 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "" },
                 { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
                 { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+            ]
+        } else if (currenttablename === "tblReceiptCategoryList") {
+            reset_data = [
+                { index: 0, label: 'Id', class: 'colId', active: false, display: true, width: "" },
+                { index: 1, label: 'Category Name', class: 'colName', active: true, display: true, width: "" },
+                { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+                { index: 3, label: 'Post Account', class: 'colPostAccount', active: true, display: true, width: "" },
+                { index: 4, label: '', class: 'colDelete', active: true, display: true, width: "" }
             ]
         }
         templateObject.reset_data.set(reset_data);
@@ -15770,6 +15782,243 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.getAllReceiptCategoryList = async function (deleteFilter = false) {
+        //GET Data here from Web API or IndexDB      
+        getVS1Data("TReceiptCategory")
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+                receiptService.getAllReceiptCategorys(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
+                  await addVS1Data("TReceiptCategory", JSON.stringify(data));
+                  templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
+                })
+                .catch(function (err) {
+  
+                });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
+            }
+          })
+          .catch(function (err) {
+            receiptService.getAllReceiptCategorys(initialBaseDataLoad, 0, deleteFilter).then(async function(data){
+                await addVS1Data("TReceiptCategory", JSON.stringify(data));
+                templateObject.displayAllReceiptCategoryList(data);
+            });
+          });
+      };
+      templateObject.displayAllReceiptCategoryList = async function (data) {
+        let splashArrayList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let deleteFilter = false;
+        if (data.Params && data.Params.Search.replace(/\s/g, "") == "") {
+          deleteFilter = true;
+        } else {
+          deleteFilter = false;
+        }
+
+        for (let i = 0; i < data.treceiptcategory.length; i++) {
+          let mobile = "";
+          let linestatus = "";
+          let currentData = data.treceiptcategory[i]
+          
+          if (currentData.Active == true) {
+            linestatus = "";
+          } else if (currentData.Active == false) {
+            linestatus = "In-Active";
+          }
+
+          let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
+          
+          var dataList = [
+            currentData.Id || "",
+            currentData.CategoryName || "",
+            currentData.CategoryDesc || "",
+            currentData.CategoryPostAccount || "",
+            deleteBtn
+          ];
+          splashArrayList.push(dataList);
+          templateObject.transactiondatatablerecords.set(splashArrayList);
+        }
+        if (templateObject.transactiondatatablerecords.get()) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        }
+        //$('.fullScreenSpin').css('display','none');
+        setTimeout(function () {
+          //$('#'+currenttablename).removeClass('hiddenColumn');
+          $("#" + currenttablename)
+            .DataTable({
+              data: splashArrayList,
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              columnDefs: getColumnDefs(),
+              buttons: [
+                {
+                  extend: "csvHtml5",
+                  text: "",
+                  download: "open",
+                  className: "btntabletocsv hiddenColumn",
+                  filename: "Units of Measure Settings",
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+                {
+                  extend: "print",
+                  download: "open",
+                  className: "btntabletopdf hiddenColumn",
+                  text: "",
+                  title: "Units of Measure Settings",
+                  filename: "Units of Measure Settings",
+                  exportOptions: {
+                    columns: ":visible",
+                    stripHtml: false,
+                  },
+                },
+                {
+                  extend: "excelHtml5",
+                  title: "",
+                  download: "open",
+                  className: "btntabletoexcel hiddenColumn",
+                  filename: "Units of Measure Settings",
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"],
+              ],
+              info: true,
+              responsive: true,
+              order: [[1, "asc"]],
+              action: function () {
+                $("#" + currenttablename)
+                  .DataTable()
+                  .ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                $(".paginate_button.page-item").removeClass("disabled");
+                $("#" + currenttablename + "_ellipsis").addClass("disabled");
+                if (oSettings._iDisplayLength == -1) {
+                  if (oSettings.fnRecordsDisplay() > 150) {
+                  }
+                } else {
+                }
+                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                  $(".paginate_button.page-item.next").addClass("disabled");
+                }
+  
+                $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  //var splashArrayCustomerListDupp = new Array();
+                  let dataLenght = oSettings._iDisplayLength;
+                  let customerSearch = $("#" + currenttablename + "_filter input").val();
+                  let linestatus = "";                  
+                  receiptService
+                    .getAllReceiptCategorys(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter)
+                    .then(function (dataObjectnew) {
+                      for (let j = 0; j < dataObjectnew.treceiptcategory.length; j++) {
+                        if (dataObjectnew.treceiptcategory[j].Active == true) {
+                          linestatus = "";
+                        } else if (dataObjectnew.treceiptcategory[j].Active == false) {
+                          linestatus = "In-Active";
+                        }
+                        let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
+                        var dataListDupp = [
+                            dataObjectnew.treceiptcategory[j].Id || "",
+                            dataObjectnew.treceiptcategory[j].CategoryName || "",
+                            dataObjectnew.treceiptcategory[j].CategoryDesc || "",
+                            dataObjectnew.treceiptcategory[j].CategoryPostAccount || "",
+                            deleteBtn
+                        ];
+                        splashArrayList.push(dataListDupp);
+                      }
+  
+                      let uniqueChars = [...new Set(splashArrayList)];
+                      templateObject.transactiondatatablerecords.set(uniqueChars);
+                      var datatable = $("#" + currenttablename).DataTable();
+                      datatable.clear();
+                      datatable.rows.add(uniqueChars);
+                      datatable.draw(false);
+                      setTimeout(function () {
+                        $("#" + currenttablename)
+                          .dataTable()
+                          .fnPageChange("last");
+                      }, 400);
+  
+                      $(".fullScreenSpin").css("display", "none");
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                });
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+              language: { search: "", searchPlaceholder: "Search List..." },
+              fnInitComplete: function (oSettings) {
+                // $(
+                //   "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newUomModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                // ).insertAfter("#" + currenttablename + "_filter");
+                if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                  $(
+                    "<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>"
+                  ).insertAfter("#" + currenttablename + "_filter");
+                } else {
+                  $(
+                    "<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>"
+                  ).insertAfter("#" + currenttablename + "_filter");
+                }
+                $(
+                  "<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                ).insertAfter("#" + currenttablename + "_filter");
+              },
+              fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data?.Params?.Count || 0; //get count from API data
+  
+                return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
+              },
+            })
+            .on("page", function () {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            })
+            .on("column-reorder", function () {})
+            .on("length.dt", function (e, settings, len) {
+              $(".fullScreenSpin").css("display", "inline-block");
+              let dataLenght = settings._iDisplayLength;
+              if (dataLenght == -1) {
+                if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                  $(".fullScreenSpin").css("display", "none");
+                } else {
+                  $(".fullScreenSpin").css("display", "none");
+                }
+              } else {
+                $(".fullScreenSpin").css("display", "none");
+              }
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
+            });
+          $(".fullScreenSpin").css("display", "none");
+        }, 0);
+  
+        setTimeout(function () {
+          $("div.dataTables_filter input").addClass("form-control form-control-sm");
+        }, 0);
+      };
+
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
         //templateObject.getContactOverviewData(); //Tinyiko moved to contactoverview.js
@@ -15948,6 +16197,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getSalesListByCustomer()
     } else if(currenttablename === 'tblAllTaskDatatable'){
         templateObject.getAllTasksList(false);
+    } else if(currenttablename === 'tblReceiptCategoryList'){
+        templateObject.getAllReceiptCategoryList();
     }
 
     tableResize();
@@ -15967,6 +16218,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getVatReturnData(false, datefrom, dateto);
         } else if (currenttablename === "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if(currenttablename === 'tblReceiptCategoryList'){
+            templateObject.getAllReceiptCategoryList();
         }
     });
 
@@ -16120,6 +16373,8 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(true);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(true);
+        } else if(currenttablename === 'tblReceiptCategoryList'){
+            templateObject.getAllReceiptCategoryList(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -16237,6 +16492,8 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(false);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if(currenttablename === 'tblReceiptCategoryList'){
+            templateObject.getAllReceiptCategoryList(false);
         }
     },
     'change .custom-range': async function(event) {

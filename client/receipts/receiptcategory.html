@@ -127,38 +127,11 @@
                                             <button class="btn btn-primary btnAddNew" type="button" style="margin: 8px 0px;"><i class="fa fa-plus" style="margin-right: 5px;"></i>Add New Category</button>
                                         </div>
                                     </div>
-                                    <div class="receiptCategoryCard">
-                                        <style>
-                                            .hiddenColumn{
-                                                display:none;
-                                            }
-                                            .showColumn {
-                                                display:table-cell;
-                                                padding:.75rem;
-                                                vertical-align:top;
-                                            }
-                                        </style>
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID"  readonly>
-                                                    <div class="modal-header">
-                                                        <h4>Delete</h4>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Please click "Delete" to deactivate category</p>
 
-                                                        <button class="btn btn-danger float-right btnDelete" type="button">
-                                                            <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <table id="receiptCategoryList" style="width:100%" class="dataTable table table-hover table-striped table-bordered receiptCategoryList">
+
+                                    <div class="receiptCategoryCard">
+                                        {{> non_transactional_list tablename="tblReceiptCategoryList"}}
+                                        <!-- <table id="receiptCategoryList" style="width:100%" class="dataTable table table-hover table-striped table-bordered receiptCategoryList">
                                             <thead>
                                             <tr class="dnd-moved">
                                                 <th class="th colName">Category Name</th>
@@ -177,7 +150,7 @@
                                                 {{/each}}
                                             {{/if}}
                                             </tbody>
-                                        </table>
+                                        </table> -->
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
@@ -208,6 +181,27 @@
                     <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
                         <source src="https://erphelpes.com/vs1videos/departmentsettings.mp4" type="video/mp4">
                     </video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID"  readonly>
+                <div class="modal-header">
+                    <h4>Delete</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Please click "Delete" to deactivate category</p>
+
+                    <button class="btn btn-danger float-right btnDelete" type="button">
+                        <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
+                    </button>
                 </div>
             </div>
         </div>

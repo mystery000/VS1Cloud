@@ -266,7 +266,7 @@ Template.receiptcategory.onRendered(function() {
         $('#deleteLineModal').modal('toggle');
     });
 
-    $('#receiptCategoryList tbody').on( 'click', 'tr .colName, tr .colDescription', function (event) {
+    $('#tblReceiptCategoryList tbody').on( 'click', 'tr .colName, tr .colDescription', function (event) {
         let ID = $(this).closest('tr').attr('id');
         if (ID) {
             $('#add-receiptcategory-title').text('Edit Receipt Category');
@@ -294,7 +294,7 @@ Template.receiptcategory.onRendered(function() {
 
 Template.receiptcategory.events({
     'click .chkDatatable' : function(event){
-        const columns = $('#receiptCategoryList th');
+        const columns = $('#tblReceiptCategoryList th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
         $.each(columns, function(i,v) {
             let className = v.classList;
@@ -312,7 +312,7 @@ Template.receiptcategory.events({
     },
     'click .btnOpenSettings' : function(event){
         let templateObject = Template.instance();
-        const columns = $('#receiptCategoryList th');
+        const columns = $('#tblReceiptCategoryList th');
         const tableHeaderList = [];
         let sTible = "";
         let sWidth = "";
