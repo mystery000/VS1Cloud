@@ -2492,4 +2492,3 @@ authenticatedRoutes.route('/manufacturingsettings',  {
         })
     }
 })
-
