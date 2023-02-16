@@ -43,7 +43,7 @@ Template.workorderlist.onCreated(function() {
       }
 
     let headerStructure = [
-        { index: 0, label: "#ID", class: "SortDate", width: "0", active: false, display: true },
+        { index: 0, label: "#ID", class: "colID", width: "0", active: false, display: true },
         { index: 1, label: "SalesOrderID", class: "colOrderNumber", width: "80", active: true, display: true },
         { index: 2, label: "Customer", class: "colCustomer", width: "80", active: true, display: true },
         { index: 3, label: "PO Number", class: "colPONumber", width: "100", active: true, display: true },

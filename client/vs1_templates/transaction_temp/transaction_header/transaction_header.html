@@ -380,7 +380,7 @@
                     id="edtTotalQuantity"
                     name="edtTotalQuantity"
                     defaultValue=data.quantity
-                    readonly=showCompleted
+                    readonly=true
                   }}
                 </div>
               {{/if}}
@@ -424,6 +424,8 @@
           data=data
           showCompleteProcess=showCompleteProcess
           showVendorService=showVendorService
+          showSchedule=showSchedule
+          showUnschedule=showUnschedule
           showTimerStart = showTimerStart
           showTimerPause = showTimerPause
           showTimerResume = showTimerResume
