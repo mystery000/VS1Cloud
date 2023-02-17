@@ -3,6 +3,32 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="envelopModal">
+            <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+                <div class="modal-content">
+                    <div class="modal-header" >
+                        <h4 class="title-header" >Sign Document</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="signerEmail">Signer Email</label>
+                            <input type="text" class="form-control" placeholder="Signer Email" name="signerEmail" id="signerEmail" />
+                        </div>
+                        <div class="form-group">
+                            <label for="signerName">Signer Name</label>
+                            <input type="text" class="form-control" placeholder="Signer Name" name="signerName" id="signerName"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding: 6px;">
+                        <button class="btn btn-success" type="button" style="margin: 8px;" id="btnSendEnvelop" name="btnSendEnvelop">
+                            <i class="fa fa-save" style="margin-right: 5px;"></i>Save
+                        </button>
+                        <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <header style="padding: 16px;">
             <h2 style="margin: 16px;">
                 <div id="accountant_detail" style="display: inline"></div>

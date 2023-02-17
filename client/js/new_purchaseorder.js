@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {CoreService} from '../js/core-service';
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
@@ -24,6 +23,7 @@ import { getCurrentCurrencySymbol } from '../popUps/currnecypopup';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
 import { saveCurrencyHistory } from '../packages/currency/CurrencyWidget';
 import { convertToForeignAmount } from '../payments/paymentcard/supplierPaymentcard';
+import LoadingOverlay from '../LoadingOverlay';
 
 import { Template } from 'meteor/templating';
 import '../purchase/frm_purchaseorder.html';
@@ -91,17 +91,720 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.assetCostTypes = new ReactiveVar([]);
     templateObject.currentAssetID = new ReactiveVar(0);
     templateObject.currentLineID = new ReactiveVar(0);
+
+    templateObject.generatePdfForMail = async (invoiceId) => {
+        let file = "Purchase Order-" + invoiceId + ".pdf"
+        return new Promise((resolve, reject) => {
+          const source = document.getElementById('html-2-pdfwrapper');
+          const opt = {
+            margin: 0,
+            filename: file,
+            image: {
+              type: 'jpeg',
+              quality: 0.98
+            },
+            html2canvas: {
+              scale: 2
+            },
+            jsPDF: {
+              unit: 'in',
+              format: 'a4',
+              orientation: 'portrait'
+            }
+          };
+          resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+        });
+    }
+    // Send Email functions
+    templateObject.addAttachment = async(objDetails) => {
+        let attachment = [];
+        let invoiceId = objDetails.fields.ID;
+        let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
+        let base64data = encodedPdf.split(',')[1];
+        let pdfObject = {
+            filename: 'Quote-' + invoiceId + '.pdf',
+            content: base64data,
+            encoding: 'base64'
+        };
+        attachment.push(pdfObject);
+        let erpInvoiceId = objDetails.fields.ID;
+
+        let mailFromName = localStorage.getItem('vs1companyName');
+        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+        let customerEmailName = $('#edtSupplierName').val();
+        let checkEmailData = $('#edtSupplierEmail').val();
+
+        let grandtotal = $('#grandTotal').html();
+        let amountDueEmail = $('#totalBalanceDue').html();
+        let emailDueDate = $("#dtDueDate").val();
+        let mailSubject = 'Purchase Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+        let mailBody = "Hi " + customerEmailName + ",\n\n Here's puchase order " + erpInvoiceId + " for  " + grandtotal + "." +
+            "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+        var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+            '    <tr>' +
+            '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+            '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+            '        </td>' +
+            '    </tr>' +
+            '    <tr>' +
+            '        <td style="padding: 40px 30px 40px 30px;">' +
+            '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+            '                <tr>' +
+            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+            '                        Hello there <span>' + customerEmailName + '</span>,' +
+            '                    </td>' +
+            '                </tr>' +
+            '                <tr>' +
+            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+            '                        Please find puchase order <span>' + erpInvoiceId + '</span> attached below.' +
+            '                    </td>' +
+            '                </tr>' +
+            '                <tr>' +
+            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+            '                        The amount outstanding of <span>' + amountDueEmail + '</span> is due on <span>' + emailDueDate + '</span>' +
+            '                    </td>' +
+            '                </tr>' +
+            '                <tr>' +
+            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+            '                        Kind regards,' +
+            '                        <br>' +
+            '                        ' + mailFromName + '' +
+            '                    </td>' +
+            '                </tr>' +
+            '            </table>' +
+            '        </td>' +
+            '    </tr>' +
+            '    <tr>' +
+            '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+            '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+            '                <tr>' +
+            '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+            '                        If you have any question, please do not hesitate to contact us.' +
+            '                    </td>' +
+            '                    <td align="right">' +
+            '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
+            '                    </td>' +
+            '                </tr>' +
+            '            </table>' +
+            '        </td>' +
+            '    </tr>' +
+            '</table>';
+
+        if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: checkEmailData,
+                subject: mailSubject,
+                text: '',
+                html: htmlmailBody,
+                attachments: attachment
+            }, function(error, result) {
+                if (error && error.error === "error") {
+                    if(isBORedirect == true){
+                        // FlowRouter.go('/purchaseorderlistBO?success=true');
+                    }else{
+                        // if(isBORedirect == true){
+                        //     FlowRouter.go('/purchaseorderlistBO?success=true');
+                        // }else{
+                        //     FlowRouter.go('/purchaseorderlist?success=true');
+                        // };
+                    };
+
+
+                } else {
+
+                }
+            });
+
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: mailFrom,
+                subject: mailSubject,
+                text: '',
+                html: htmlmailBody,
+                attachments: attachment
+            }, function(error, result) {
+                if (error && error.error === "error") {
+                    if(isBORedirect == true){
+                        // FlowRouter.go('/purchaseorderlistBO?success=true');
+                    }else{
+                        // FlowRouter.go('/purchaseorderlist?success=true');
+                    };
+                } else {
+                    $('#html-2-pdfwrapper').css('display', 'none');
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Email Sent To Supplier: " + checkEmailData + " and User: " + mailFrom + "",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if(FlowRouter.current().queryParams.trans){
+                                // FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                            }else{
+                                if(isBORedirect == true){
+                                    // FlowRouter.go('/purchaseorderlistBO?success=true');
+                                }else{
+                                    // FlowRouter.go('/purchaseorderlist?success=true');
+                                };
+                            };
+                        } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_')
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.attachments = attachment;
+                if (reportData.BasedOnType.includes("S")) {
+                    if (reportData.FormID == 1) {
+                        let formIds = reportData.FormIDs.split(',');
+                        if (formIds.includes("69")) {
+                            reportData.FormID = 69;
+                            Meteor.call('sendNormalEmail', reportData);
+                        }
+                    } else {
+                        if (reportData.FormID == 69)
+                            Meteor.call('sendNormalEmail', reportData);
+                    }
+                }
+            });
+
+        } else if (($('.chkEmailCopy').is(':checked'))) {
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: checkEmailData,
+                subject: mailSubject,
+                text: '',
+                html: htmlmailBody,
+                attachments: attachment
+            }, function(error, result) {
+                if (error && error.error === "error") {
+                    // if(isBORedirect == true){
+                    //     // FlowRouter.go('/purchaseorderlistBO?success=true');
+                    // }else{
+                    //     // FlowRouter.go('/purchaseorderlist?success=true');
+                    // };
+
+                } else {
+                    $('#html-2-pdfwrapper').css('display', 'none');
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Email Sent To Supplier: " + checkEmailData + " ",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if(FlowRouter.current().queryParams.trans){
+                                // FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                            }else{
+                                // if(isBORedirect == true){
+                                //     FlowRouter.go('/purchaseorderlistBO?success=true');
+                                // }else{
+                                //     FlowRouter.go('/purchaseorderlist?success=true');
+                                // };
+                            };
+                        } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_')
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.attachments = attachment;
+                if (reportData.BasedOnType.includes("S")) {
+                    if (reportData.FormID == 1) {
+                        let formIds = reportData.FormIDs.split(',');
+                        if (formIds.includes("69")) {
+                            reportData.FormID = 69;
+                            Meteor.call('sendNormalEmail', reportData);
+                        }
+                    } else {
+                        if (reportData.FormID == 69)
+                            Meteor.call('sendNormalEmail', reportData);
+                    }
+                }
+            });
+
+        } else if (($('.chkEmailRep').is(':checked'))) {
+            Meteor.call('sendEmail', {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: mailFrom,
+                subject: mailSubject,
+                text: '',
+                html: htmlmailBody,
+                attachments: attachment
+            }, function(error, result) {
+                if (error && error.error === "error") {
+                    if(isBORedirect == true){
+                        // FlowRouter.go('/purchaseorderlistBO?success=true');
+                    }else{
+                        // FlowRouter.go('/purchaseorderlist?success=true');
+                    };
+                } else {
+                    $('#html-2-pdfwrapper').css('display', 'none');
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Email Sent To User: " + mailFrom + " ",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            if(FlowRouter.current().queryParams.trans){
+                                // FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+                            }else{
+                                // if(isBORedirect == true){
+                                //     FlowRouter.go('/purchaseorderlistBO?success=true');
+                                // }else{
+                                //     FlowRouter.go('/purchaseorderlist?success=true');
+                                // };
+                            };
+                        } else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
+
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_')
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.attachments = attachment;
+                if (reportData.BasedOnType.includes("S")) {
+                    if (reportData.FormID == 1) {
+                        let formIds = reportData.FormIDs.split(',');
+                        if (formIds.includes("69")) {
+                            reportData.FormID = 69;
+                            Meteor.call('sendNormalEmail', reportData);
+                        }
+                    } else {
+                        if (reportData.FormID == 69)
+                            Meteor.call('sendNormalEmail', reportData);
+                    }
+                }
+            });
+
+        } else {
+
+
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_')
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                reportData.attachments = attachment;
+                if (reportData.BasedOnType.includes("S")) {
+                    if (reportData.FormID == 1) {
+                        let formIds = reportData.FormIDs.split(',');
+                        if (formIds.includes("69")) {
+                            reportData.FormID = 69;
+                            Meteor.call('sendNormalEmail', reportData);
+                        }
+                    } else {
+                        if (reportData.FormID == 69)
+                            Meteor.call('sendNormalEmail', reportData);
+                    }
+                }
+            });
+
+            if(FlowRouter.current().queryParams.trans){
+                // FlowRouter.go('/customerscard?id='+FlowRouter.current().queryParams.trans+'&transTab=active');
+            }else{
+                // if(isBORedirect == true){
+                //     FlowRouter.go('/purchaseorderlistBO?success=true');
+                // }else{
+                //     FlowRouter.go('/purchaseorderlist?success=true');
+                // };
+            };
+        };
+    }
+
+    templateObject.sendEmailWithAttachment = async() => {
+        let isBORedirect = await templateObject.isbackorderredirect.get() || false;
+        let suppliername = $('#edtSupplierName');
+        let termname = $('#sltTerms').val() || '';
+        if (termname === '') {
+            swal('Terms has not been selected!', '', 'warning');
+            event.preventDefault();
+            return false;
+        }
+
+        if (suppliername.val() === '') {
+            swal('Supplier has not been selected!', '', 'warning');
+            e.preventDefault();
+            return true;
+        }
+            
+        $('.fullScreenSpin').css('display', 'inline-block');
+        var splashLineArray = new Array();
+        let lineItemsForm = [];
+        let lineItemObjForm = {};
+        let checkBackOrder = templateObject.includeBOnShippedQty.get();
+        $('#tblPurchaseOrderLine > tbody > tr').each(function() {
+            var lineID = this.id;
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val()||1;
+            let tdOrderd = $('#' + lineID + " .lineOrdered").val();
+
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdCustomerJob = $('#' + lineID + " .lineCustomerJob").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val()||loggedTaxCodePurchaseInc;
+            let tdlineamt = $('#' + lineID + " .lineAmt").text();
+            let tdSerialNumber = $('#' + lineID + " .colSerialNo").attr('data-serialnumbers');
+            let tdLotNumber = $('#' + lineID + " .colSerialNo").attr('data-lotnumbers');
+            let tdExpiryDates = $('#' + lineID + " .colSerialNo").attr('data-expirydates');
+
+            let tdAssetID = $('#' + lineID + " .colFixedAsset").attr('assetid');
+            let tdCostTypeID = $('#' + lineID + " .colFixedAsset").attr('costtypeid');
+            let tdAssetName = $('#' + lineID + " .colFixedAsset").attr('assetname');
+            let tdCostTypeName = $('#' + lineID + " .colFixedAsset").attr('costtypename');
+
+            if (tdproduct != "") {
+                if ($('input[name="chkCreatePOCredit"]').is(":checked")) {
+                    lineItemObjForm = {
+                        type: "TPurchaseOrderLine",
+                        fields: {
+                            ProductName: tdproduct || '',
+                            ProductDescription: tddescription || '',
+                            UOMQtySold: parseFloat(tdQty) || 0,
+                            UOMQtyShipped: parseFloat(tdQty) || 0,
+                            LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                            CustomerJob: tdCustomerJob || '',
+                            LineTaxCode: tdtaxCode || '',
+                            LineClassName: $('#sltDept').val() || defaultDept,
+                            CustomField1: tdAssetID,
+                            CustomField2: tdCostTypeID,
+                            CustomField3: tdAssetName,
+                            CustomField4: tdCostTypeName
+                        }
+                    };
+                } else {
+                    if (checkBackOrder == true) {
+                        lineItemObjForm = {
+                            type: "TPurchaseOrderLine",
+                            fields: {
+                                ProductName: tdproduct || '',
+                                ProductDescription: tddescription || '',
+                                UOMQtySold: parseFloat(tdOrderd) || 0,
+                                UOMQtyShipped: parseFloat(tdQty) || 0,
+                                LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                                CustomerJob: tdCustomerJob || '',
+                                LineTaxCode: tdtaxCode || '',
+                                LineClassName: $('#sltDept').val() || defaultDept,
+                                CustomField1: tdAssetID,
+                                CustomField2: tdCostTypeID,
+                                CustomField3: tdAssetName,
+                                CustomField4: tdCostTypeName
+                            }
+                        };
+                    } else {
+                        lineItemObjForm = {
+                            type: "TPurchaseOrderLine",
+                            fields: {
+                                ProductName: tdproduct || '',
+                                ProductDescription: tddescription || '',
+                                UOMQtySold: parseFloat(tdQty) || 0,
+                                UOMQtyShipped: parseFloat(tdQty) || 0,
+                                LineCost: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                                CustomerJob: tdCustomerJob || '',
+                                LineTaxCode: tdtaxCode || '',
+                                LineClassName: $('#sltDept').val() || defaultDept,
+                                CustomField1: tdAssetID,
+                                CustomField2: tdCostTypeID,
+                                CustomField3: tdAssetName,
+                                CustomField4: tdCostTypeName
+                            }
+                        };
+
+                    }
+
+                }
+
+                // Feature/ser-lot number tracking: Save Serial Numbers
+                if (tdSerialNumber) {
+                    const serialNumbers = tdSerialNumber.split(',');
+                    let tpqaList = [];
+                    for (let i = 0; i < serialNumbers.length; i++) {
+                        const tpqaObject = {
+                            type: "TPQASN",
+                            fields: {
+                                Active: true,
+                                Qty: 1,
+                                SerialNumber: serialNumbers[i],
+                            }
+                        };
+                        tpqaList.push(tpqaObject);
+                    }
+                    const pqaObject = {
+                        type: "TPQA",
+                        fields: {
+                            Active: true,
+                            PQASN: tpqaList,
+                            Qty: serialNumbers.length,
+                        }
+                    }
+                    lineItemObjForm.fields.PQA = pqaObject;
+                }
+
+                // Feature/ser-lot number tracking: Save Lot Number
+                if (tdLotNumber) {
+                    const lotNumbers = tdLotNumber.split(',');
+                    const expiryDates = tdExpiryDates.split(',');
+                    let tpqaList = [];
+                    for (let i = 0; i < lotNumbers.length; i++) {
+                        const dates = expiryDates[i].split('/');
+                        const tpqaObject = {
+                            type: "PQABatch",
+                            fields: {
+                                Active: true,
+                                BatchExpiryDate: new Date(parseInt(dates[2]), parseInt(dates[1]) - 1, parseInt(dates[0])).toISOString(),
+                                Qty: 1,
+                                BatchNo: lotNumbers[i],
+                            }
+                        };
+                        tpqaList.push(tpqaObject);
+                    }
+                    const pqaObject = {
+                        type: "TPQA",
+                        fields: {
+                            Active: true,
+                            PQABatch: tpqaList,
+                            Qty: lotNumbers.length,
+                        }
+                    }
+                    lineItemObjForm.fields.PQA = pqaObject;
+                }
+
+                lineItemsForm.push(lineItemObjForm);
+                splashLineArray.push(lineItemObjForm);
+            }
+        });
+        let getchkcustomField1 = true;
+        let getchkcustomField2 = true;
+        let getcustomField1 = $('.customField1Text').html();
+        let getcustomField2 = $('.customField2Text').html();
+        if ($('#formCheck-one').is(':checked')) {
+            getchkcustomField1 = false;
+        }
+        if ($('#formCheck-two').is(':checked')) {
+            getchkcustomField2 = false;
+        }
+
+        let supplier = $('#edtSupplierName').val();
+        let supplierEmail = $('#edtSupplierEmail').val();
+        let billingAddress = $('#txabillingAddress').val();
+
+        var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+        var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+        let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+        let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+
+        let poNumber = $('#ponumber').val();
+        let reference = $('#edtRef').val();
+
+        let departement = $('#shipvia').val();
+        let shippingAddress = $('#txaShipingInfo').val();
+        let comments = $('#txaComment').val();
+        let pickingInfrmation = $('#txapickmemo').val();
+
+        let orderStatus = $('#edtStatus').val();
+
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentPurchaseOrder = getso_id[getso_id.length - 1];
+
+        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+        let ForeignExchangeRate = $('#exchange_rate').val()||0;
+        let foreignCurrencyFields = {}
+        if( FxGlobalFunctions.isCurrencyEnabled() ){
+            foreignCurrencyFields = {
+                ForeignExchangeCode: currencyCode,
+                ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            }
+        }
+        var objDetails = '';
+        if ($('#sltDept').val() === '') {
+            swal({
+                title: "Department has not been selected!",
+                text: '',
+                type: 'warning',
+            }).then((result) => {
+                if (result.value) {
+                    $('#sltDept').focus();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+            event.preventDefault();
+            return false;
+        }
+        // tempcode. missed to add customfields here.
+        const uploadedItems = templateObject.uploadedFiles.get();
+        if (getso_id[1]) {
+            currentPurchaseOrder = parseInt(currentPurchaseOrder);
+            if ($('input[name="chkCreatePOCredit"]').is(":checked")) {
+                objDetails = {
+                    type: "TPurchaseOrderEx",
+                    fields: {
+                        SupplierName: supplier,
+                        ...foreignCurrencyFields,
+                        SupplierInvoiceNumber: poNumber || ' ',
+                        Lines: splashLineArray,
+                        OrderTo: billingAddress,
+                        OrderDate: saleDate,
+
+                        SupplierInvoiceDate: saleDate,
+
+                        SaleLineRef: reference,
+                        TermsName: termname,
+                        Shipping: departement,
+                        ShipTo: shippingAddress,
+                        Comments: comments,
+                        SalesComments: pickingInfrmation,
+                        Attachments: uploadedItems,
+                        OrderStatus: $('#sltStatus').val()
+                    }
+                };
+            } else {
+                objDetails = {
+                    type: "TPurchaseOrderEx",
+                    fields: {
+                        ID: currentPurchaseOrder,
+                        SupplierName: supplier,
+                        ...foreignCurrencyFields,
+                        SupplierInvoiceNumber: poNumber || ' ',
+                        Lines: splashLineArray,
+                        OrderTo: billingAddress,
+                        OrderDate: saleDate,
+
+                        SupplierInvoiceDate: saleDate,
+
+                        SaleLineRef: reference,
+                        TermsName: termname,
+                        Shipping: departement,
+                        ShipTo: shippingAddress,
+                        Comments: comments,
+                        SalesComments: pickingInfrmation,
+                        Attachments: uploadedItems,
+                        OrderStatus: $('#sltStatus').val()
+                    }
+                };
+            }
+        } else {
+            objDetails = {
+                type: "TPurchaseOrderEx",
+                fields: {
+                    SupplierName: supplier,
+                    ...foreignCurrencyFields,
+                    SupplierInvoiceNumber: poNumber || ' ',
+                    Lines: splashLineArray,
+                    OrderTo: billingAddress,
+                    OrderDate: saleDate,
+
+                    SupplierInvoiceDate: saleDate,
+
+                    SaleLineRef: reference,
+                    TermsName: termname,
+                    Shipping: departement,
+                    ShipTo: shippingAddress,
+                    Comments: comments,
+
+
+                    SalesComments: pickingInfrmation,
+                    Attachments: uploadedItems,
+                    OrderStatus: $('#sltStatus').val()
+                }
+            };
+
+            if(FlowRouter.current().queryParams.workorderid) {
+                objDetails.fields.CustField3 = FlowRouter.current().queryParams.workorderid
+            }
+        }
+
+        if(splashLineArray.length === 0){
+            swal('Product name has not been selected!', '', 'warning');
+            $('.fullScreenSpin').css('display', 'none');
+            event.preventDefault();
+            return false;
+        }
+
+        await templateObject.addAttachment(objDetails);
+    }
 });
 Template.purchaseordercard.onRendered(() => {
     let templateObject = Template.instance();
     $('#edtFrequencyDetail').css('display', 'none');
-    // $('#onEventSettings').css('display', 'none');
-    // $('#basedOnFrequency').prop('checked', false);
-    // $('#basedOnPrint').prop('checked', false);
-    // $('#basedOnSave').prop('checked', false);
-    // $('#basedOnTransactionDate').prop('checked', false);
-    // $('#basedOnDueDate').prop('checked', false);
-    // $('#basedOnEvent').prop('checked', false);
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -305,9 +1008,9 @@ Template.purchaseordercard.onRendered(() => {
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
 
-        // var customfield1 = $('#edtSaleCustField1').val() || '  ';
-        // var customfield2 = $('#edtSaleCustField2').val() || '  ';
-        // var customfield3 = $('#edtSaleCustField3').val() || '  ';
+        var customfield1 = $('#edtSaleCustField1').val() || '  ';
+        var customfield2 = $('#edtSaleCustField2').val() || '  ';
+        var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -625,10 +1328,6 @@ Template.purchaseordercard.onRendered(() => {
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         var erpGet = erpDb();
-
-        // var customfield1 = $('#edtSaleCustField1').val() || '  ';
-        // var customfield2 = $('#edtSaleCustField2').val() || '  ';
-        // var customfield3 = $('#edtSaleCustField3').val() || '  ';
 
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
@@ -1515,39 +2214,6 @@ Template.purchaseordercard.onRendered(() => {
         yearRange: "-90:+10",
     });
 
-
-    //   jQuery(document).ready(function($) {
-
-    //       if (window.history && window.history.pushState) {
-
-    //   window.history.pushState('forward', null, FlowRouter.current().path);
-
-    //   $(window).on('popstate', function() {
-    //     swal({
-    //              title: 'Save Or Cancel To Continue',
-    //             text: "Do you want to Save or Cancel this transaction?",
-    //             type: 'question',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Save'
-    //         }).then((result) => {
-    //             if (result.value) {
-    //                 $(".btnSave").trigger("click");
-    //             } else if (result.dismiss === 'cancel') {
-    //                 let lastPageVisitUrl = window.location.pathname;
-    //                 if (FlowRouter.current().oldRoute) {
-    //                     lastPageVisitUrl = FlowRouter.current().oldRoute.path;
-    //                 } else {
-    //                     lastPageVisitUrl = window.location.pathname;
-    //                 }
-    //                //FlowRouter.go(lastPageVisitUrl);
-    //                 window.open(lastPageVisitUrl, '_self');
-    //             } else {}
-    //         });
-    //   });
-
-    // }
-    //   });
-
     $(document).ready(function() {
         $('#formCheck-one').click(function() {
             if ($(event.target).is(':checked')) {
@@ -1598,16 +2264,16 @@ Template.purchaseordercard.onRendered(() => {
         for (let i in data.tsuppliervs1) {
             if (data.tsuppliervs1.hasOwnProperty(i)) {
                 let supplierrecordObj = {
-                    supplierid: data.tsuppliervs1[i].Id || ' ',
-                    suppliername: data.tsuppliervs1[i].ClientName || ' ',
-                    supplieremail: data.tsuppliervs1[i].Email || ' ',
-                    street: data.tsuppliervs1[i].Street || ' ',
-                    street2: data.tsuppliervs1[i].Street2 || ' ',
-                    street3: data.tsuppliervs1[i].Street3 || ' ',
-                    suburb: data.tsuppliervs1[i].Suburb || ' ',
-                    statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
-                    country: data.tsuppliervs1[i].Country || ' ',
-                    termsName: data.tsuppliervs1[i].TermsName || ''
+                    supplierid: data.tsuppliervs1[i].fields.ID || ' ',
+                    suppliername: data.tsuppliervs1[i].fields.ClientName || ' ',
+                    supplieremail: data.tsuppliervs1[i].fields.Email || ' ',
+                    street: data.tsuppliervs1[i].fields.Street || ' ',
+                    street2: data.tsuppliervs1[i].fields.Street2 || ' ',
+                    street3: data.tsuppliervs1[i].fields.Street3 || ' ',
+                    suburb: data.tsuppliervs1[i].fields.Suburb || ' ',
+                    statecode: data.tsuppliervs1[i].fields.State + ' ' + data.tsuppliervs1[i].fields.Postcode || ' ',
+                    country: data.tsuppliervs1[i].fields.Country || ' ',
+                    termsName: data.tsuppliervs1[i].fields.TermsName || ''
                 };
                 clientList.push(supplierrecordObj);
             }
@@ -1914,7 +2580,8 @@ Template.purchaseordercard.onRendered(() => {
                                 ispaid: data.fields.IsPaid,
                                 isPartialPaid: isPartialPaid,
                                 department: data.fields.Lines[0].fields.LineClassName || defaultDept,
-                                workorderid: workorderid
+                                workorderid: workorderid,
+                                CustomerID: data.fields.SupplierId
                             };
 
                             let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2164,7 +2831,8 @@ Template.purchaseordercard.onRendered(() => {
                                     ispaid: useData[d].fields.IsPaid,
                                     isPartialPaid: isPartialPaid,
                                     department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept,
-                                    workorderid: workorderid
+                                    workorderid: workorderid,
+                                    CustomerID: useData[d].fields.SupplierId
                                 };
 
                                 let getDepartmentVal = useData[d].fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2397,7 +3065,8 @@ Template.purchaseordercard.onRendered(() => {
                                     ispaid: data.fields.IsPaid,
                                     isPartialPaid: isPartialPaid,
                                     department: data.fields.Lines[0].fields.LineClassName || defaultDept,
-                                    workorderid: workorderid
+                                    workorderid: workorderid,
+                                    CustomerID: data.fields.SupplierId
                                 };
 
                                 let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2625,7 +3294,8 @@ Template.purchaseordercard.onRendered(() => {
                             ispaid: data.fields.IsPaid,
                             isPartialPaid: isPartialPaid,
                             department: data.fields.Lines[0].fields.LineClassName || defaultDept,
-                            workorderid: workorderid
+                            workorderid: workorderid,
+                            CustomerID: data.fields.SupplierId
                         };
 
                         let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -2842,7 +3512,8 @@ Template.purchaseordercard.onRendered(() => {
                     ispaid: data.fields.IsPaid,
                     isPartialPaid: isPartialPaid,
                     department: data.fields.Lines[0].fields.LineClassName || defaultDept,
-                    workorderid: workorderid
+                    workorderid: workorderid,
+                    CustomerID: data.fields.SupplierId
                 };
 
                 let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
@@ -5221,20 +5892,20 @@ Template.purchaseordercard.onRendered(() => {
         // var source = document.getElementById('html-2-pdfwrapper_new');
         var source;
         if (number == 1) {
-            $("#html-2-pdfwrapper_quotes").show();
-            $("#html-2-pdfwrapper_quotes2").hide();
-            $("#html-2-pdfwrapper_quotes3").hide();
-            source = document.getElementById("html-2-pdfwrapper_quotes");
+            $("#html-2-pdfwrapper_purchaseorder").show();
+            $("#html-2-pdfwrapper_purchaseorder2").hide();
+            $("#html-2-pdfwrapper_purchaseorder3").hide();
+            source = document.getElementById("html-2-pdfwrapper_purchaseorder");
         } else if (number == 2) {
-            $("#html-2-pdfwrapper_quotes").hide();
-            $("#html-2-pdfwrapper_quotes2").show();
-            $("#html-2-pdfwrapper_quotes3").hide();
-            source = document.getElementById("html-2-pdfwrapper_quotes2");
+            $("#html-2-pdfwrapper_purchaseorder").hide();
+            $("#html-2-pdfwrapper_purchaseorder2").show();
+            $("#html-2-pdfwrapper_purchaseorder3").hide();
+            source = document.getElementById("html-2-pdfwrapper_purchaseorder2");
         } else {
-            $("#html-2-pdfwrapper_quotes").hide();
-            $("#html-2-pdfwrapper_quotes2").hide();
-            $("#html-2-pdfwrapper_quotes3").show();
-            source = document.getElementById("html-2-pdfwrapper_quotes3");
+            $("#html-2-pdfwrapper_purchaseorder").hide();
+            $("#html-2-pdfwrapper_purchaseorder2").hide();
+            $("#html-2-pdfwrapper_purchaseorder3").show();
+            source = document.getElementById("html-2-pdfwrapper_purchaseorder3");
         }
 
         let file = "Purchase order.pdf";
@@ -7853,6 +8524,7 @@ Template.purchaseordercard.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
+        const templateObject = Template.instance(); 
         setTimeout(async function(){
             var printTemplate = [];
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -8045,44 +8717,11 @@ Template.purchaseordercard.events({
                         var template_number = $('input[name="Purchase Orders"]:checked').val();
                     }
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
-                    if(result == true)
-                    {
-
-                    }
                 }
             }
-            // if ($('.edtCustomerEmail').val() != "") {
-            //     $('.pdfCustomerName').html($('#edtCustomerName').val());
-            //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-            //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-            //     var ponumber = $('#ponumber').val() || '.';
-            //     $('.po').text(ponumber);
-            //     var rowCount = $('.tblInvoiceLine tbody tr').length;
-            // } else {
-            //     swal({
-            //         title: 'Customer Email Required',
-            //         text: 'Please enter customer email',
-            //         type: 'error',
-            //         showCancelButton: false,
-            //         confirmButtonText: 'OK'
-            //     }).then((result) => {
-            //         if (result.value) {}
-            //         else if (result.dismiss === 'cancel') {}
-            //     });
-            // }
+            await templateObject.sendEmailWithAttachment();
         }, delayTimeAfterSound);
     },
-    // 'click .printConfirm': function(event) {
-    //     $('.fullScreenSpin').css('display', 'inline-block');
-    //     $('#html-2-pdfwrapper').css('display', 'block');
-    //     $('.pdfCustomerName').html($('#edtSupplierName').val());
-    //     $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-    //     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-    //     var ponumber = $('#ponumber').val() || '.';
-    //     $('.po').text(ponumber);
-    //     exportSalesToPdf();
-
-    // },
     'keydown .lineQty, keydown .lineUnitPrice,keydown .lineOrdered': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
 

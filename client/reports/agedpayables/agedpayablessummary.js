@@ -44,29 +44,16 @@ Template.agedpayablessummary.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-            { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
-      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
-      { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
-      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
-      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "" },
-      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
-      { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "" },
-      { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "" },
-      { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "" },
-      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
-      { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "" },
-      { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "" },
-      { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "" },
-      { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "" },
-      { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "" },
-      { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "" },
-      { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "" },
-      { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
-      { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "" },
-      { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
-      { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
-      { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
-      { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
+      { index: 1, label: 'Contact', class: 'colName', active: true, display: true, width: "150" },
+      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
+      { index: 3, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
+      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
+      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
+      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
+      { index: 7, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
+      { index: 8, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
+      { index: 9, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
+      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
     ];
     templateObject.agedpayablesth.set(reset_data);
   }
@@ -132,7 +119,7 @@ Template.agedpayablessummary.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-
+    console.log(data);
     for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
       var dataList = [
         data.tcustomersummaryreport[i].ACCOUNTID || "",

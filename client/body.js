@@ -315,10 +315,23 @@ import './js/Table/TableHandler.js';
 /* Rasheed */
 
 /* Jeyhun */
+
+import 'datatables.net';
+import 'datatables.net-buttons';
+import 'pdfmake/build/pdfmake';
+import 'pdfmake/build/vfs_fonts';
+import 'datatables.net-buttons/js/buttons.html5.mjs';
+import 'datatables.net-buttons/js/buttons.flash';
+import 'datatables.net-buttons/js/buttons.print.min.mjs';
+import 'datatables.net-bs4/js/dataTables.bootstrap4.min.mjs';
+import 'datatables.net-responsive/js/dataTables.responsive.min.mjs'
+import 'datatables.net-responsive-bs4/js/responsive.bootstrap4.min.mjs'
+import './vs1_templates/datatablelist/datatablelist.js'
+
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
-import './vs1_templates/datatablelist/datatablelist.js';
+import './settings/manufacturingsettings/manufacturingsettings.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -410,7 +423,6 @@ import './reports/supplierreports/suppliersummary.js';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
-import './reports/binlocations/binlocations.js';
 import './reports/stockreports/stockmovementreport.js';
 import './reports/stockreports/stockquantitybylocation.js';
 import './reports/stockreports/stockvaluereport.js';
@@ -493,6 +505,8 @@ import './contacts/statementlist.js';
 import './reports/balancesheet/balancetransactionlist.js';
 import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
+import './reports/profitandloss/nplEditLayoutScreenModal.js';
+import './reports/profitandloss/nplAddGroupScreenModal.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -607,7 +621,18 @@ import './reports/transactionjournal/transactionjournal.js';
 
 /* Scott */
 import './vs1_templates/template_buttons/spreadsheet_link.js';
+import './reports/executivesummary/executivesummary.js';
+import './reports/exebalancesheet/exebalancesheet.js';
+import './reports/execash/execash.js';
+import './reports/exeincome/exeincome.js';
+import './reports/exeperformance/exeperformance.js';
+import './reports/exeposition/exeposition.js';
+import './reports/exeprofitability/exeprofitability.js';
 /* Scott */
+
+/* Mainstar */
+import './inventory/binlocations/binlocations.js';
+/* Mainstar */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

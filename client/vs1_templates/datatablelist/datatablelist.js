@@ -17,6 +17,17 @@ import { Template } from 'meteor/templating';
 import './datatablelist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { cloneDeep, reject } from "lodash";
+import 'datatables.net';
+import 'datatables.net-buttons';
+import 'pdfmake/build/pdfmake';
+import 'pdfmake/build/vfs_fonts';
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.flash';
+import 'datatables.net-buttons/js/buttons.print';
+import 'jszip';
+
+// let _jsZip = jszip;
+
 
 import '../date_picker/transaction_list_date.html'
 
@@ -37,15 +48,15 @@ Template.datatablelist.onCreated(function () {
     templateObject.datahandler = new ReactiveVar(templateObject.data.datahandler);
     templateObject.tabledata = new ReactiveVar();
     templateObject.apiParams = new ReactiveVar();
+    templateObject.columnDef = new ReactiveVar();
 
     templateObject.autorun(() => {
-        // /*added by sobura
         const curdata = Template.currentData();
         let currentProductID = curdata.productID || "";
         templateObject.currentproductID.set(currentProductID);
         let currenttype = curdata.type || "";
         templateObject.currenttype.set(currenttype);
-        templateObject.apiParams.set(templateObject.data.apiParams);
+        templateObject.apiParams.set(templateObject.data.apiParams || []);
     });
 
 })
@@ -216,14 +227,19 @@ Template.datatablelist.onRendered(async function () {
                                 params[i] = deleteFilter
                             }
                         }
-
-                        templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
-                            addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
-                                resolve(dataReturn)
+                        if(templateObject.data.apiName) {
+                            templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                                addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                                    resolve(dataReturn)
+                                })
+                            }).catch(function (e) {
+                                resolve([])
+                                $('.fullScreenSpin').css('display', 'none');
                             })
-                        }).catch(function (e) {
+                        } else {
+                            resolve([])
                             $('.fullScreenSpin').css('display', 'none');
-                        })
+                        }
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         resolve(data)
@@ -292,8 +308,8 @@ Template.datatablelist.onRendered(async function () {
         })
     }
     templateObject.displayTableData = async function (data, isEx = false) {
-        if (data == [] || data.length == 0) { return }
         var splashDataArray = new Array();
+        if (data != [] && data.length != 0) { 
         let deleteFilter = false;
         if (data.Params) {
             if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -323,18 +339,20 @@ Template.datatablelist.onRendered(async function () {
                 MakeNegative();
             }, 100);
         }
+        } 
 
         let colDef = [];
         let items = [];
 
         const tabledraw = () => {
             $('#' + currenttablename).DataTable({
+                dom: 'BRlfrtip',
                 data: splashDataArray,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 // columns: columns,
                 columnDefs: colDef,
                 buttons: [{
-                    extend: 'csvHtml5',
+                    extend: 'csv',
                     text: '',
                     download: 'open',
                     className: "btntabletocsv hiddenColumn",
@@ -344,7 +362,7 @@ Template.datatablelist.onRendered(async function () {
                         columns: ':visible'
                     }
                 }, {
-                    extend: 'print',
+                    extend: 'pdf',
                     download: 'open',
                     className: "btntabletopdf hiddenColumn",
                     text: '',
@@ -353,7 +371,8 @@ Template.datatablelist.onRendered(async function () {
                     exportOptions: {
                         columns: ':visible',
                         stripHtml: false
-                    }
+                    },
+                   
                 },
                 {
                     extend: 'excelHtml5',
@@ -364,7 +383,42 @@ Template.datatablelist.onRendered(async function () {
                     orientation: 'portrait',
                     exportOptions: {
                         columns: ':visible'
-                    }
+                    },
+                    // available: function () {
+                    //     return window.FileReader !== undefined;
+                    // },
+                    // action: function(e, dt, node, config ) {
+                    //     const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
+                    //         try {
+                    //             return window.self === window.top;
+                    //         } catch {
+                    //             return false;
+                    //         }
+                    //     })();
+            
+                    //     if (supportsFileSystemAccess) {
+                    //         try {
+                    //             const handle = showSaveFilePicker({
+                    //                 suggestedName: config.filename,
+                    //                 type: [{
+                    //                     description: 'XLSX file',
+                    //                     accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
+                    //                 }]
+                    //             });
+                    //             const writable = handle.createWritable();
+                    //             const Excel = fetch('downloads/Template FIles/' + config.filename).then((res) => res.blob())
+                    //             const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
+                    //             const apiData = dt.buttons.exportData();
+                    //             writable.write(apiData);
+                    //             writable.close();
+                    //             return;
+                    //         } catch (err) {
+                    //             if (err.name == 'AbortError') {
+                    //                 return;
+                    //             }
+                    //         }
+                    //     }
+                    // }
     
                 }
                 ],
@@ -485,7 +539,6 @@ Template.datatablelist.onRendered(async function () {
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function () {
-    
             }).on('length.dt', function (e, settings, len) {
     
                 $(".fullScreenSpin").css("display", "inline-block");
@@ -502,10 +555,11 @@ Template.datatablelist.onRendered(async function () {
                 setTimeout(function () {
                     MakeNegative();
                 }, 100);
-            });
+            })
+           
             $(".fullScreenSpin").css("display", "none");
     
-            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); }, 0);
+            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); $('.dataTable').resizable();     }, 0);
         }
 
         function getColDef() {
@@ -522,7 +576,9 @@ Template.datatablelist.onRendered(async function () {
                     };
                     colDef.push(item);
                 }
+                templateObject.columnDef.set(colDef)
                 tabledraw();
+                
             } else {
                 setTimeout(()=>{
                     getColDef();
@@ -580,18 +636,38 @@ Template.datatablelist.events({
             $('.' + columnDataValue).removeClass('showColumn');
         }
     },
-    "click .exportbtn": async function () {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let currenttablename = templateObject.data.tablename || '';
-        jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletocsv').click();
-        $(".fullScreenSpin").css("display", "none");
-    },
-    "click .printConfirm": async function (event) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        let currenttablename = templateObject.data.tablename || '' || '';
-        jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
-        $(".fullScreenSpin").css("display", "none");
-    },
+    // "click .exportbtn": async function () {
+    //     $(".fullScreenSpin").css("display", "inline-block");
+    //     let currenttablename = templateObject.data.tablename || '';
+    //     jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletocsv').click();
+    //     $(".fullScreenSpin").css("display", "none");
+    // },
+    // "click .printConfirm": async function (event) {
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    //     $(".fullScreenSpin").css("display", "inline-block");
+    //     let currenttablename = templateObject.data.tablename || '';
+    //     let colDef = templateObject.columnDef.get();
+    //     let dataArray = templateObject.transactiondatatablerecords.get();
+
+    //     let printTable = "<table id='print-table_"+currenttablename+"_print" + "'class='table-print-area print-table"+currenttablename+"_print" +"d-none'><thead></thead><tbody><tbody></table>"
+    //     $('body').append(printTable);
+    //     $('#print-table_' + currenttablename+'_print').Datatable({
+    //         bom: 'B',
+    //         buttons: ['pdf'],
+    //         columnDefs: colDef,
+    //         data: dataArray
+    //     });
+
+
+
+        
+
+
+
+    //     // jQuery('#' + currenttablename + '_wrapper .dt-buttons .btntabletopdf').click();
+    //     // $(".fullScreenSpin").css("display", "none");
+    // },
 
     'click #ignoreDate': async function () {
         let templateObject = Template.instance();

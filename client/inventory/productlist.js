@@ -10,7 +10,7 @@ import Chart from 'chart.js';
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
- 
+
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
@@ -1566,6 +1566,11 @@ Template.productlist.helpers({
       'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
+        sideBarService.getAllProductClassQtyData().then(function (data) {
+          addVS1Data('TProductClassQuantity', JSON.stringify(data));
+        }).catch(function (err) {
+
+        });
         sideBarService.getProductServiceListVS1(initialBaseDataLoad,0).then(function(data) {
             addVS1Data('TProductWeb',JSON.stringify(data));
             sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function(data) {

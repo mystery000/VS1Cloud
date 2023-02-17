@@ -3,6 +3,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './layout/header.html'
 import './main.html';
 import './container/startbreak.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 var html5QrcodeScannerProdModal = null;
 
@@ -41,8 +42,28 @@ Template.mobileapp.events({
             $("#startBreakContainer").css('display', 'none');
         });
     },
+    'click #phoneVoid': function(e, instance) {
+        $(".mobile-checkin-container").css('display', 'none');
+        $(".mobile-right-btn-containner").css('display', 'flex');
+    },
     'click .mobile-btn-number': function(e, instance) {
         $(".mobile-main-input").val($(".mobile-main-input").val() + e.target.attributes.calcvalue.nodeValue)
+    },
+    'click #phoneQrCodeScan': function(e, instance) {
+        $('#tblPhoneEmployeeListContent').css('display', 'none');
+        if ($.fn.DataTable.isDataTable( '#tblPhoneEmployeeList' ) ) {
+            $("#tblPhoneEmployeeList").DataTable().destroy();
+        }
+        $("#mobile-phone-qr-scan").css('display', 'block');
+        function onScanSuccessProdModal(decodedText, decodedResult) {
+        }
+        html5QrcodeScannerProdModal = new Html5QrcodeScanner(
+            "mobile-phone-qr-scan", {
+                fps: 10,
+                qrbox: 250,
+                rememberLastUsedCamera: true
+            });
+        html5QrcodeScannerProdModal.render(onScanSuccessProdModal);
     },
     'click #mobileBtnQrCobeScan': function(e, instance) {
         $("#qr-reader-productmodal").css('display', 'block');
@@ -56,12 +77,44 @@ Template.mobileapp.events({
             });
         html5QrcodeScannerProdModal.render(onScanSuccessProdModal);
     },
+    'click #mobilePhoneOpenList': function(e, instance) {
+        $('#mobile-phone-qr-scan').css('display', 'none');
+        $('#tblPhoneEmployeeListContent').css('display', 'block');
+        if ($.fn.DataTable.isDataTable( '#tblPhoneEmployeeList' ) ) {
+            $("#tblPhoneEmployeeList").DataTable().destroy();
+        }
+        getVS1Data('TEmployee').then(function (dataObject) {
+            let empdata = JSON.parse(dataObject[0].data);
+            let table = $("#tblPhoneEmployeeList").DataTable({
+                data: empdata.temployee,
+                paging: false,
+                searching: true,
+                dom: 't',
+                scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                scrollCollapse: true,
+                autoWidth: true,
+                sScrollXInner: "100%",
+                columns: [
+                    { title: 'FirstName', mData: 'fields.FirstName' },
+                    { title: 'LastName', mData: 'fields.LastName' },
+                ]
+            })
+            $('#tblPhoneEmployeeList tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                $(".mobile-main-input").val(data.fields.EmployeeName)
+            });
+        });
+    },
     'click #mobileBtnCancel': function(e, instance) {
         $("#qr-reader-productmodal").css('display', 'none');
         html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
         }).catch((err) => console.log(err));
     },
     'click #btnClockIn': function(e, instance) {
+        $(".mobile-checkin-container").css('display', 'block');
+        if (window.screen.width <= 480) {
+            $(".mobile-right-btn-containner").css('display', 'none');
+        }
         $("#btnClockIn").css('background', '#999');
         $("#btnStartJob").css('background', '#00AE00');
         $("#btnStartBreak").css('background', '#00AE00');
@@ -106,6 +159,8 @@ Template.mobileapp.events({
         $("#btnStartJob").css('background', '#00AE00');
         $("#btnStopJob").css('background', '#0084D1');
         $("#btnStartJob").removeAttr('disabled');
+        $('.mobile-stop-job-container').css('display', 'block');
+        $('.mobile-right-btn-containner').css('display', 'none')
     },
     'click #btnStopBreak': function(e, instance) {
         $(".mobile-left-btn-containner").css('display', 'flex');
@@ -118,6 +173,20 @@ Template.mobileapp.events({
         $("#btnOpentList").removeAttr('disabled');
     },
     'click #mobileBtnEnter': function(e, instance) {
-        $("#frmOnHoldModal").modal();
+        $('.mobile-header-status-text').text('Loading employee information.');
+        let empId = $('.mobile-main-input').val();
+        getVS1Data('TEmployee').then(function (dataObject) {
+            let empdata = JSON.parse(dataObject[0].data);
+            for(var i = 0; i < empdata.temployee.length; i ++) {
+                if (empdata.temployee[i].fields.ID == empId) {
+                    FlowRouter.go('/employeescard?id=' + empId);
+                }
+            }
+            $('.mobile-header-status-text').text('Employee information not found.')
+        });
+    },
+    'click #btnSaveClose': function(e, instance) {
+        $('.mobile-stop-job-container').css('display', 'none');
+        $('.mobile-right-btn-containner').css('display', 'flex');
     }
 });

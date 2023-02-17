@@ -34,7 +34,7 @@ Template.uomSettings.onRendered(function () {
   const deptrecords = [];
   let deptprodlineItems = [];
 
-  $("#tblUOMList tbody").on("click", "tr", function () {
+  $("#tblUOMList tbody").on("click", "td.colUOMName, td.colUOMDesc, td.colUOMMultiplier", function () {
     var isSalesDefault = false;
     var isPurchaseDefault = false;
     $("#add-uom-title").text("Edit UOM");
@@ -114,6 +114,20 @@ Template.uomSettings.onRendered(function () {
       );
     }
   });
+  
+  $("#tblUOMList").on('change', ' td.colUOMSalesDefault input', function() {
+    let uomID = $(this).closest("tr").attr("id");
+    if ($(this).is(':checked')){
+      $(`#tblUOMList tr:not(#${uomID}) td.colUOMSalesDefault input`).prop('checked', false);
+    }
+  })
+  
+  $("#tblUOMList").on('change', ' td.colUOMPurchaseDefault input', function() {
+    let uomID = $(this).closest("tr").attr("id");
+    if ($(this).is(':checked')){
+      $(`#tblUOMList tr:not(#${uomID}) td.colUOMPurchaseDefault input`).prop('checked', false);
+    }
+  })  
 });
 
 Template.uomSettings.events({

@@ -199,12 +199,13 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TProductSalesDetailsReport, options);
     }
 
-    getProductRecentTransactionsAll(productID) {
+    getProductRecentTransactionsAll(productID, deleteFilter) {
         let options = {
             select: productID == "all" ? "" : ("[ProductID]='" + productID + "'") ,
             PropertyList: "TransactionDate,ProductName,FirstColumn,SecondColumn,ThirdColumn,Qty,TotalCost,ProductID,ClassID,TransactionNo,AverageCost,Cost,Available,InStock,so,invbo,pobo,onbuild,building,Price,TotalPrice,ExtraDesc,TranstypeDesc,Deptname",
             OrderBy: "TransactionDate DESC"
         };
+        if (!deleteFilter) options.Search = "Active = true"
         return this.getList(this.ERPObjects.T_VS1_Report_Productmovement, options);
     }
 
@@ -346,7 +347,7 @@ export class ProductService extends BaseService {
 
     getOneProductClassQtyData(productID) {
         let options = {
-            PropertyList: "ID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
+            PropertyList: "ID,ProductID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
             select: "[ProductID]=" + productID
         };
         return this.getList(this.ERPObjects.TProductClassQuantity, options);
@@ -394,6 +395,10 @@ export class ProductService extends BaseService {
         return this.POST(this.ERPObjects.TClientType, data);
     }
 
+    saveProductClassData(data) {
+        return this.POST(this.ERPObjects.TProductClass, data);
+    }
+
     getAllProductList1() {
         let options = {
             PropertyList: "ID,TaxCodePurchase,TaxCodeSales",
@@ -425,22 +430,40 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TInvoiceEx, options);
     }
 
-    getAllBOMProducts(limitcount, limitfrom) {
+    getAllBOMProducts(limitcount, limitfrom, deleteFilter=false) {
         let options = "";
-        if (limitcount == "All") {
-            options = {
-                ListType: "Detail",
-                select: "[ProcStepItemRef]='vs1BOM'",
-                // orderby: '"Description asc"',
-            };
+        if (deleteFilter == false) {
+            if (limitcount == "All") {
+                options = {
+                    ListType: "Detail",
+                    select: "[ProcStepItemRef]='vs1BOM'",
+                    // orderby: '"Description asc"',
+                };
+            } else {
+                options = {
+                    // orderby: '"Description asc"',
+                    ListType: "Detail",
+                    LimitCount: parseInt(limitcount),
+                    LimitFrom: parseInt(limitfrom),
+                    select: "[ProcStepItemRef]='vs1BOM'",
+                };
+            }
         } else {
-            options = {
-                // orderby: '"Description asc"',
-                ListType: "Detail",
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
-                select: "[ProcStepItemRef]='vs1BOM'",
-            };
+            if (limitcount == "All") {
+                options = {
+                    ListType: "Detail",
+                    select: "[ProcStepItemRef]='vs1BOM' OR [ProcStepItemRef]='deleted'",
+                    // orderby: '"Description asc"',
+                };
+            } else {
+                options = {
+                    // orderby: '"Description asc"',
+                    ListType: "Detail",
+                    LimitCount: parseInt(limitcount),
+                    LimitFrom: parseInt(limitfrom),
+                    select: "[ProcStepItemRef]='vs1BOM' OR [ProcStepItemRef]='deleted'",
+                };
+            }
         }
 
         return this.getList(this.ERPObjects.TProcTree, options);
@@ -483,5 +506,66 @@ export class ProductService extends BaseService {
             // select: "[ID]="+id+" and [ProcStepItemRef]='vs1BOM'"
         }
         return this.getList(this.ERPObjects.TProductBatches, options)
+    }
+
+    saveBin(data) {
+        return this.POST(this.ERPObjects.TProductBin, data);
+    }
+
+    getBins() {
+        let options = {
+            PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
+        };
+        return this.getList(this.ERPObjects.TProductBin, options);
+    }
+
+    getAllBinProductVS1(limitcount, limitfrom, deleteFilter) {
+        let options = "";
+        if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+          if (limitcount == "All") {
+            options = {
+                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
+              IgnoreDates:true,
+              orderby: '"BinLocation asc"',
+              Search: "Active = true",
+            };
+          } else {
+            options = {
+                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
+              IgnoreDates:true,
+              orderby: '"BinLocation asc"',
+              Search: "Active = true",
+              LimitCount: parseInt(limitcount),
+              LimitFrom: parseInt(limitfrom),
+            };
+          }
+        }else{
+          if (limitcount == "All") {
+            options = {
+                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
+              orderby: '"BinLocation asc"',
+              IgnoreDates:true,
+            };
+          } else {
+            options = {
+                PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
+              IgnoreDates:true,
+              orderby: '"BinLocation asc"',
+              LimitCount: parseInt(limitcount),
+              LimitFrom: parseInt(limitfrom),
+            };
+          }
+        }
+
+        return this.getList(this.ERPObjects.TProductBin, options);
+      }
+
+    getNewBinListBySearch(dataSearchName) {
+        let options = "";
+        options = {
+          PropertyList: "ID, BinLocation, BinNumber, BinClassName, Active",
+          search: 'BinLocation="'+ dataSearchName+ '" OR BinNumber="' + dataSearchName + '"',
+        };
+        return this.getList(this.ERPObjects.TProductBin, options);
     }
 }

@@ -1,27 +1,27 @@
 <template name="trialbalance">
-  {{# vs1_report_template tabledisplayname="Trial Balance" tablename="trialbalance" dateAsAt=dateAsAt sheetname="Trial Balance Report Result"
-  currencyList=currencyList}}
-  <div class="table-responsive">
-    <table class="table tableExportDetailDiv table-sm table-striped table-bordered" id="trialbalance" name="trialbalance">
-      <thead>
-        <tr class="table-active tblAvoid customDoubleTableHeading">
-          {{#each c in trialbalanceth}}
-          {{#if c.display}}
-          <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
-            class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-            style="text-align: left!important; width:{{c.width}}px">
-            {{c.label}}
-          </th>
-          {{/if}}
-          {{/each}}
-        </tr>
-      </thead>
-      <tbody>
-<!-- 
+    {{# vs1_report_template tabledisplayname="Trial Balance" tablename="trialbalance" dateAsAt=dateAsAt sheetname="Trial Balance Report Result"
+                            currencyList=currencyList}}
+        <div class="table-responsive">
+            <table class="table table-sm" id="trialbalance" name="trialbalance">
+                <thead>
+                <tr class="table-active tblAvoid customDoubleTableHeading">
+                    {{#each c in trialbalanceth}}
+                        {{#if c.display}}
+                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
+                                class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                                style="text-align: left; width:{{c.width}}%">
+                                {{c.label}}
+                            </th>
+                        {{/if}}
+                    {{/each}}
+                </tr>
+                </thead>
+                <tbody>
+                <!--
         {{#if records}}
 
-        {{#each record in records}}
-        {{#if record.title}}
+                    {{#each record in records}}
+                        {{#if record.title}}
         <tr class="totalhr">
           <td colspan="5" style="font-weight: 800;">
             <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
@@ -30,9 +30,9 @@
 
         {{/if}}
 
-        {{#if record.entries}}
+                        {{#if record.entries}}
 
-        {{#each entry in record.entries}}
+                            {{#each entry in record.entries}}
 
         <tr class="{{entry.type}}" id="{{entry.Id}}">
           <div style="display:none;">{{entry.AccountName}}</div>
@@ -52,9 +52,9 @@
 
         {{/each}}
 
-        {{/if}}
+                        {{/if}}
 
-        {{#if record.total}}
+                        {{#if record.total}}
 
         <tr class="TotalField">
 
@@ -69,9 +69,9 @@
 
           {{#if isOnlyDefaultActive}}
 
-          {{#if currencyList}}
-          {{#each c in currencyList }}
-          {{# if c.active}}
+                            {{#if currencyList}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
           <td currency="{{c.code}}" currency-id="{{c.id}}"
             class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount record.total.CreditsEx c}} text-danger {{/if}}">
             <span class="table-cells">
@@ -79,10 +79,10 @@
             </span>
           </td>
           {{/if}}
-          {{/each}}
+                                {{/each}}
 
-          {{#each c in currencyList }}
-          {{# if c.active}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
           <td currency="{{c.code}}" currency-id="{{c.id}}"
             class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount record.total.DebitsEx c}} text-danger {{/if}}">
             <span class="table-cells">
@@ -90,10 +90,10 @@
             </span>
           </td>
           {{/if}}
-          {{/each}}
-          {{/if}}
+                                {{/each}}
+                            {{/if}}
 
-          {{else}}
+                        {{else}}
           <td
             class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount subItem}} text-danger {{/if}}">
             <span class="table-cells">
@@ -114,9 +114,9 @@
 
         {{/if}}
 
-        {{/each}}
+                    {{/each}}
 
-        {{#if grandrecords}}
+                    {{#if grandrecords}}
         <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
           <td>{{grandrecords.title}}</td>
           <td></td>
@@ -124,27 +124,27 @@
 
           {{#if isOnlyDefaultActive}}
 
-          {{#if currencyList}}
-          {{#each c in currencyList }}
-          {{#if c.active}}
+                        {{#if currencyList}}
+                            {{#each c in currencyList }}
+                                {{#if c.active}}
           <td class="text-right {{#if isNegativeAmount grandrecords.CreditsEx c}} text-danger {{/if}}"
             currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount grandrecords.CreditsEx c}}</td>
           {{/if}}
-          {{/each}}
+                            {{/each}}
 
-          {{#each c in currencyList }}
-          {{#if c.active}}
+                            {{#each c in currencyList }}
+                                {{#if c.active}}
           <td class="text-right {{#if isNegativeAmount grandrecords.DebitsEx c}} text-danger {{/if}}"
             currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount grandrecords.DebitsEx c}}</td>
           {{/if}}
-          {{/each}}
-          {{/if}}
+                            {{/each}}
+                        {{/if}}
 
-          {{else}}
+                    {{else}}
           <td class=" {{#if isNegativeAmount grandrecords.CreditsEx}} text-danger {{/if}}">{{ formatPrice
-            grandrecords.CreditsEx}}</td>
+                            grandrecords.CreditsEx}}</td>
           <td class=" {{#if isNegativeAmount grandrecords.DebitsEx}} text-danger {{/if}}">{{ formatPrice
-            grandrecords.DebitsEx}}</td>
+                            grandrecords.DebitsEx}}</td>
           {{/if}}
 
 
@@ -152,13 +152,13 @@
         </tr>
         {{/if}}
 
-        {{else}}
+                {{else}}
         <tr class="odd" style="text-align: center;">
           <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
         </tr>
         {{/if}} -->
-      </tbody>
-    </table>
-  </div>
-  {{/vs1_report_template}}
+                </tbody>
+            </table>
+        </div>
+    {{/vs1_report_template}}
 </template>

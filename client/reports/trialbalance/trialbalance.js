@@ -41,19 +41,19 @@ Template.trialbalance.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },
-    { index: 2, label: 'Account', class:'colAccount', active: true, display: true, width: "150" },
-    { index: 3, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "250" },
-    { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
-    { index: 5, label: 'Account Number', class:'colAccountNo', active: true, display: true, width: "150" },
-    { index: 6, label: 'Credits (Ex)', class:'colCreditsEx', active: true, display: true, width: "120" },
-    { index: 7, label: 'Credits (Inc)', class:'colCreditsInc', active: true, display: true, width: "120" },
-    { index: 8, label: 'Debits (Ex)', class:'colDebitsEx', active: true, display: true, width: "120" },
-    { index: 9, label: 'Debits (Inc)', class:'colDebitsInc', active: true, display: true, width: "120" },
-    { index: 10, label: 'Sort ID', class:'colSortID', active: false, display: true, width: "80" },
-    { index: 11, label: 'Sort Order', class:'colSortOrder', active: false, display: true, width: "80" },
-    { index: 12, label: 'Trans ID', class:'colTransID', active: false, display: true, width: "80" },
-  ];
+      // { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },
+      { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "40" },
+      { index: 2, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "15" },
+      { index: 3, label: 'Account', class:'colAccount', active: true, display: true, width: "15" },
+      { index: 4, label: 'Credits (Ex)', class:'colCreditsEx text-center0', active: true, display: true, width: "15" },
+      { index: 5, label: 'Debits (Ex)', class:'colDebitsEx text-center0', active: true, display: true, width: "15" },
+      // { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
+      // { index: 7, label: 'Credits (Inc)', class:'colCreditsInc', active: false, display: true, width: "120" },
+      // { index: 9, label: 'Debits (Inc)', class:'colDebitsInc', active: false, display: true, width: "120" },
+      // { index: 11, label: 'Sort Order', class:'colSortOrder', active: false, display: true, width: "80" },
+      //   { index: 12, label: 'Trans ID', class:'colTransID', active: false, display: true, width: "80" },
+      //   { index: 10, label: 'Sort ID', class:'colSortID', active: false, display: true, width: "80" },
+    ];
     templateObject.trialbalanceth.set(reset_data);
   }
   templateObject.init_reset_data();
@@ -102,9 +102,9 @@ Template.trialbalance.onRendered(() => {
   }
 
   templateObject.getTrialBalanceData(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-    false
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
   );
   templateObject.displayTrialBalanceData = async function (data) {
     var splashArrayTrialBalanceReport = new Array();
@@ -117,77 +117,145 @@ Template.trialbalance.onRendered(() => {
 
     for (let i = 0; i < data.ttrialbalancereport.length; i++) {
       var dataList = [
-        data.ttrialbalancereport[i].ID || "",
-        data.ttrialbalancereport[i].Account || "",
+        // data.ttrialbalancereport[i].ID || "",
         data.ttrialbalancereport[i].AccountName || "",
-        data.ttrialbalancereport[i].AccountNameOnly || "",
         data.ttrialbalancereport[i].AccountNumber || "",
+        data.ttrialbalancereport[i].Account || "",
+        // data.ttrialbalancereport[i].AccountNameOnly || "",
         data.ttrialbalancereport[i].CreditsEx || "",
-        data.ttrialbalancereport[i].CreditsInc || "",
+        // data.ttrialbalancereport[i].CreditsInc || "",
         data.ttrialbalancereport[i].DebitsEx || "",
-        data.ttrialbalancereport[i].DebitsInc || "",
-        data.ttrialbalancereport[i].SortID || "",
-        data.ttrialbalancereport[i].SortOrder || "",
-        data.ttrialbalancereport[i].TransID || "",
+        // data.ttrialbalancereport[i].DebitsInc || "",
+        // data.ttrialbalancereport[i].SortID || "",
+        // data.ttrialbalancereport[i].SortOrder || "",
+        // data.ttrialbalancereport[i].TransID || "",
       ];
       splashArrayTrialBalanceReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayTrialBalanceReport);
     }
 
+
+    let start = splashArrayTrialBalanceReport[0][0], credit = 0, debit = 0, creditSum = 0, debitSum = 0;
+    let T_AccountName = splashArrayTrialBalanceReport[0][0];
+    let trialBalanceReport = [];
+    let symDollar = '$';
+    trialBalanceReport.push([
+      `<span class="table-cells"><strong>${T_AccountName}</strong></span>`,
+      "",
+      "",
+      "",
+      ""
+    ]);
+
+    for(let i = 0 ; i < splashArrayTrialBalanceReport.length ; i ++){
+      if(start != splashArrayTrialBalanceReport[i][0]) {
+        creditSum += (credit - 0), debitSum += (debit - 0);
+        start = splashArrayTrialBalanceReport[i][0];
+        credit = credit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>`;
+        debit = debit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>`;
+        // total = total >= 0 ? `<!--<span class='table-cells'><strong>${showCurrency(total)}</strong></span>-->` : `<span class='text-danger'><strong>${showCurrency(total)}</strong></span>`;
+        trialBalanceReport.push([
+          `<span class="table-cells"><strong>Total ${T_AccountName}</strong></span>`,
+          "",
+          "",
+          credit,
+          debit,
+        ]);
+        trialBalanceReport.push([
+          `<span class="table-cells"><strong>${splashArrayTrialBalanceReport[i][0]}</strong></span>`,
+          "",
+          "",
+          "",
+          ""
+        ]);
+
+        credit = 0, debit = 0;
+      }
+      T_AccountName = splashArrayTrialBalanceReport[i][0];
+      splashArrayTrialBalanceReport[i][0] = "";
+      splashArrayTrialBalanceReport[i][1] = `<span class="text-primary">${splashArrayTrialBalanceReport[i][1]}</span>`;
+      splashArrayTrialBalanceReport[i][2] = `<span class="text-primary">${splashArrayTrialBalanceReport[i][2]}</span>`;
+
+      let tmp;
+      tmp = splashArrayTrialBalanceReport[i][3] - 0;
+      credit += tmp;
+      splashArrayTrialBalanceReport[i][3] = (tmp >= 0) ? `<span class="text-primary">${GlobalFunctions.showCurrency(tmp)}</span>` : `<span class="text-danger">${GlobalFunctions.showCurrency(tmp)}</span>`;
+
+      tmp = splashArrayTrialBalanceReport[i][4] - 0;
+      debit += tmp;
+      splashArrayTrialBalanceReport[i][4] = (tmp >= 0) ? `<span class="text-primary">${GlobalFunctions.showCurrency(tmp)}</span>` : `<span class="text-danger">${GlobalFunctions.showCurrency(tmp)}</span>`;
+      trialBalanceReport.push(splashArrayTrialBalanceReport[i]);
+    }
+    trialBalanceReport.push([
+      `<span class="table-cells"><strong>Total ${T_AccountName}</strong></span>`,
+      "",
+      "",
+      credit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>`,
+      debit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>`,
+    ]);
+    creditSum += (credit - 0), debitSum += (debit - 0);
+    trialBalanceReport.push([
+      `<span class="table-cells"><strong>Grand Total</strong></span>`,
+      "",
+      "",
+      creditSum >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(creditSum)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(creditSum)}</strong></span>`,
+      debitSum >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(debitSum)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(debitSum)}</strong></span>`,
+    ]);
     setTimeout(function () {
       $('#trialbalance').DataTable({
-        data: splashArrayTrialBalanceReport,
+        data: trialBalanceReport,
         searching: false,
+        "bSort" : false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
           {
             targets: 0,
-            className: "colID hiddenColumn",
+            className: "colAccountName",
           },
           {
             targets: 1,
-            className: "colAccount",
-          },
-          {
-            targets: 2,
-            className: "colAccountName"
-          },
-          {
-            targets: 3,
-            className: "colAccountNameOnly hiddenColumn"
-          },
-          {
-            targets: 4,
             className: "colAccountNo",
           },
           {
-            targets: 5,
-            className: "colCreditsEx",
+            targets: 2,
+            className: "colAccount"
           },
           {
-            targets: 6,
-            className: "colCreditsInc",
+            targets: 3,
+            className: "colCreditsEx text-center0"
           },
           {
-            targets: 7,
-            className: "colDebitsEx",
+            targets: 4,
+            className: "colDebitsEx text-center0",
           },
-          {
-            targets: 8,
-            className: "colDebitsInc",
-          },
-          {
-            targets: 9,
-            className: "colSortID hiddenColumn",
-          },
-          {
-            targets: 10,
-            className: "colSortOrder hiddenColumn",
-          },
-          {
-            targets: 11,
-            className: "colTransID hiddenColumn",
-          },
+          // {
+          //   targets: 5,
+          //   className: "colCreditsEx",
+          // },
+          // {
+          //   targets: 6,
+          //   className: "colCreditsInc",
+          // },
+          // {
+          //   targets: 7,
+          //   className: "colDebitsEx",
+          // },
+          // {
+          //   targets: 8,
+          //   className: "colDebitsInc",
+          // },
+          // {
+          //   targets: 9,
+          //   className: "colSortID hiddenColumn",
+          // },
+          // {
+          //   targets: 10,
+          //   className: "colSortOrder hiddenColumn",
+          // },
+          // {
+          //   targets: 11,
+          //   className: "colTransID hiddenColumn",
+          // },
         ],
         select: true,
         destroy: true,
@@ -196,14 +264,14 @@ Template.trialbalance.onRendered(() => {
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
         // responsive: true,
-        "order": [[1, "asc"]],
+        // "order": [[1, "asc"]],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
         },
 
       }).on('page', function () {
         setTimeout(function () {
-          MakeNegative();
+          // MakeNegative();
         }, 100);
       }).on('column-reorder', function () {
 
@@ -950,13 +1018,13 @@ Template.trialbalance.events({
       $('.'+columnDataValue).addClass('hiddenColumn');
       $('.'+columnDataValue).removeClass('showColumn');
     }
-},
-'change .custom-range': async function(event) {
-  //   const tableHandler = new TableHandler();
+  },
+  'change .custom-range': async function(event) {
+    //   const tableHandler = new TableHandler();
     let range = $(event.target).val()||0;
     let colClassName = $(event.target).attr("valueclass");
     await $('.' + colClassName).css('width', range);
-  //   await $('.colAccountTree').css('width', range);
+    //   await $('.colAccountTree').css('width', range);
     $('.dataTable').resizable();
   },
 
@@ -994,7 +1062,7 @@ Template.trialbalance.events({
       });
     } else {
       let _currency = _currencyList.find(
-        (c) => c.code == defaultCurrencyCode
+          (c) => c.code == defaultCurrencyCode
       );
       _currency.active = true;
       _currencySelectedList.push(_currency);
@@ -1005,7 +1073,7 @@ Template.trialbalance.events({
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
         _currencyList[index].active = _currencySelectedList.find(
-          (c) => c.id == _currencyList[index].id
+            (c) => c.id == _currencyList[index].id
         ).active;
       } else {
         _currencyList[index].active = false;
@@ -1034,7 +1102,7 @@ Template.trialbalance.events({
     // let toDate = dateFrom.getFullYear() + "/" + (dateFrom.getMonth()+1) + "/" + dateFrom.getDate();
     // let fromDate = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
     window.open(
-      "/balancetransactionlist?accountName=" +
+        "/balancetransactionlist?accountName=" +
         accountName +
         "&toDate=" +
         toDate +
@@ -1042,7 +1110,7 @@ Template.trialbalance.events({
         fromDate +
         "&isTabItem=" +
         false,
-      "_self"
+        "_self"
     );
   },
 
@@ -1066,32 +1134,32 @@ Template.trialbalance.events({
       let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
       let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
       for (let k = 0; k< targetTds.length; k++) {
-          $(targetTds[k]).attr('style', 'min-width: 0px !important')
-          $(targetTds[k]).attr('style', 'max-width: 130px !important')
+        $(targetTds[k]).attr('style', 'min-width: 0px !important')
+        $(targetTds[k]).attr('style', 'max-width: 130px !important')
       }
       for (let j = 0; j< targetThs.length; j++) {
-          $(targetThs[j]).attr('style', 'min-width: 0px !important')
-          $(targetThs[j]).attr('style', 'max-width: 130px !important')
+        $(targetThs[j]).attr('style', 'min-width: 0px !important')
+        $(targetThs[j]).attr('style', 'max-width: 130px !important')
       }
 
       let docTitle = "Trial Balance.pdf";
 
 
       var opt = {
-          margin: 0,
-          filename: docTitle,
-          image: {
-              type: 'jpeg',
-              quality: 0.98
-          },
-          html2canvas: {
-              scale: 2
-          },
-          jsPDF: {
-              unit: 'in',
-              format: 'a4',
-              orientation: 'portrait'
-          }
+        margin: 0,
+        filename: docTitle,
+        image: {
+          type: 'jpeg',
+          quality: 0.98
+        },
+        html2canvas: {
+          scale: 2
+        },
+        jsPDF: {
+          unit: 'in',
+          format: 'a4',
+          orientation: 'portrait'
+        }
       };
       let source = targetElement;
 
@@ -1119,8 +1187,8 @@ Template.trialbalance.events({
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
             let employeeId = storage.split("_")[2];
             return (
-              storage.includes("BasedOnType_")
-              // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
+                storage.includes("BasedOnType_")
+                // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
             );
           });
           let i = basedOnTypeStorages.length;
@@ -1133,8 +1201,8 @@ Template.trialbalance.events({
             let value = values[j]
             let reportData = JSON.parse(value);
             reportData.HostURL = $(location).attr("protocal")
-              ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-              : "http://" + $(location).attr("hostname");
+                ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+                : "http://" + $(location).attr("hostname");
             if (reportData.BasedOnType.includes("P")) {
               if (reportData.FormID == 1) {
                 let formIds = reportData.FormIDs.split(",");
@@ -1256,17 +1324,17 @@ Template.trialbalance.events({
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
     let formatDateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      (dateFrom.getMonth() + 1) +
-      "-" +
-      dateFrom.getDate();
+        dateFrom.getFullYear() +
+        "-" +
+        (dateFrom.getMonth() + 1) +
+        "-" +
+        dateFrom.getDate();
     let formatDateTo =
-      dateTo.getFullYear() +
-      "-" +
-      (dateTo.getMonth() + 1) +
-      "-" +
-      dateTo.getDate();
+        dateTo.getFullYear() +
+        "-" +
+        (dateTo.getMonth() + 1) +
+        "-" +
+        dateTo.getDate();
 
     const filename = loggedCompany + "-Trial Balance" + ".csv";
     utilityService.exportReportToCsvTable("tableExport", filename, "csv");
@@ -1310,7 +1378,7 @@ Template.trialbalance.events({
 //   },
 
 
- // BEFORE REMOVING THIS, MAKE SURE IT IS WORKING WELL ALREADY
+  // BEFORE REMOVING THIS, MAKE SURE IT IS WORKING WELL ALREADY
 // "click #lastMonth": (e, templateObject) => {
 //     // $(".fullScreenSpin").css("display", "inline-block");
 //     // localStorage.setItem('VS1TrialBalance_Report', '');
@@ -1375,7 +1443,7 @@ Template.trialbalance.events({
 //     // await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
 //     // $(".fullScreenSpin").css("display", "none");
 // },
-"click #ignoreDate":  (e, templateObject) => {
+  "click #ignoreDate":  (e, templateObject) => {
     // $(".fullScreenSpin").css("display", "inline-block");
     // localStorage.setItem('VS1TrialBalance_Report', '');
     // let templateObject = Template.instance();
@@ -1384,11 +1452,11 @@ Template.trialbalance.events({
     // // $(".fullScreenSpin").css("display", "none");
 
     templateObject.loadReport(
-      null,
-      null,
-      true
+        null,
+        null,
+        true
     );
-},
+  },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
     let searchItem = $(event.target).val();
@@ -1447,14 +1515,14 @@ Template.trialbalance.events({
       document.getElementById("selectedDateRange").value = "This Quarter";
     } else if (dateRangeID == "thisFinYear") {
       document.getElementById("selectedDateRange").value =
-        "This Financial Year";
+          "This Financial Year";
     } else if (dateRangeID == "lastMonth") {
       document.getElementById("selectedDateRange").value = "Last Month";
     } else if (dateRangeID == "lastQuarter") {
       document.getElementById("selectedDateRange").value = "Last Quarter";
     } else if (dateRangeID == "lastFinYear") {
       document.getElementById("selectedDateRange").value =
-        "Last Financial Year";
+          "Last Financial Year";
     } else if (dateRangeID == "monthToDate") {
       document.getElementById("selectedDateRange").value = "Month to Date";
     } else if (dateRangeID == "quarterToDate") {
@@ -1464,7 +1532,7 @@ Template.trialbalance.events({
     }
   },
 
- // BEFORE REMOVING THIS, MAKE SURE IT IS WORKING WELL ALREADY
+  // BEFORE REMOVING THIS, MAKE SURE IT IS WORKING WELL ALREADY
   // "click #thisMonth": (e, templateObject) => {
   //   // $(".fullScreenSpin").css("display", "block");
   //   // let templateObject = Template.instance();
@@ -1588,9 +1656,9 @@ Template.trialbalance.events({
    */
   "change #dateTo, change #dateFrom": (e, templateObject) => {
     templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+        false
     );
   },
   ...Datehandler.getDateRangeEvents()
@@ -1615,186 +1683,186 @@ Template.trialbalance.helpers({
   },
   deptrecords: () => {
     return Template.instance()
-      .deptrecords.get()
-      // .sort(function (a, b) {
-      //   if (a.department == "NA") {
-      //     return 1;
-      //   } else if (b.department == "NA") {
-      //     return -1;
-      //   }
-      //   return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      // });
+        .deptrecords.get()
+    // .sort(function (a, b) {
+    //   if (a.department == "NA") {
+    //     return 1;
+    //   } else if (b.department == "NA") {
+    //     return -1;
+    //   }
+    //   return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+    // });
   },
 
 
   formatDate: (date)  => GlobalFunctions.formatDate(date),
 
-    // FX Module //
-    convertAmount: (amount, currencyData) => {
-      let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+  // FX Module //
+  convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-      if(isNaN(amount)) {
-        if (!amount || amount.trim() == "") {
-          return "";
-        }
-        amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+    if(isNaN(amount)) {
+      if (!amount || amount.trim() == "") {
+        return "";
       }
-      // if (currencyData.code == defaultCurrencyCode) {
-      //   // default currency
-      //   return amount;
+      amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+    }
+    // if (currencyData.code == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
+
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // make it positive for now
+
+    // // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
+
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
+
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
+
+
+
+    // Get the selected date
+    let dateTo = $("#dateTo").val();
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+
+
+    // Filter by currency code
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+
+    // Sort by the closest date
+    currencyList = currencyList.sort((a, b) => {
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
+
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
       // }
+      // return -1;
+    });
 
-
-      // Lets remove the minus character
-      const isMinus = amount < 0;
-      if (isMinus == true) amount = amount * -1; // make it positive for now
-
-      // // get default currency symbol
-      // let _defaultCurrency = currencyList.filter(
-      //   (a) => a.Code == defaultCurrencyCode
-      // )[0];
-
-      // amount = amount.replace(_defaultCurrency.symbol, "");
-
-
-      // amount =
-      //   isNaN(amount) == true
-      //     ? parseFloat(amount.substring(1))
-      //     : parseFloat(amount);
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
 
 
 
-      // Get the selected date
-      let dateTo = $("#dateTo").val();
-      const day = dateTo.split("/")[0];
-      const m = dateTo.split("/")[1];
-      const y = dateTo.split("/")[2];
-      dateTo = new Date(y, m, day);
-      dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-
-
-      // Filter by currency code
-      currencyList = currencyList.filter((a) => a.Code == currencyData.code);
-
-      // Sort by the closest date
-      currencyList = currencyList.sort((a, b) => {
-        a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
-        a.setHours(0);
-        a.setMinutes(0);
-        a.setSeconds(0);
-
-        b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
-        b.setHours(0);
-        b.setMinutes(0);
-        b.setSeconds(0);
-
-        var distancea = Math.abs(dateTo - a);
-        var distanceb = Math.abs(dateTo - b);
-        return distancea - distanceb; // sort a before b when the distance is smaller
-
-        // const adate= new Date(a.MsTimeStamp);
-        // const bdate = new Date(b.MsTimeStamp);
-
-        // if(adate < bdate) {
-        //   return 1;
-        // }
-        // return -1;
-      });
-
-      const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-
-
-
-      let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
 
 
 
 
-      amount = parseFloat(amount * rate); // Multiply by the rate
-      amount = Number(amount).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }); // Add commas
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }); // Add commas
 
-      let convertedAmount =
+    let convertedAmount =
         isMinus == true
-          ? `- ${currencyData.symbol}${amount}`
-          : `${currencyData.symbol}${amount}`;
+            ? `- ${currencyData.symbol}${amount}`
+            : `${currencyData.symbol}${amount}`;
 
 
-      return convertedAmount;
-    },
-    count: (array) => {
-      return array.length;
-    },
-    countActive: (array) => {
-      if (array.length == 0) {
-        return 0;
-      }
-      let activeArray = array.filter((c) => c.active == true);
-      return activeArray.length;
-    },
-    currencyList: () => {
-      return Template.instance().currencyList.get();
-    },
-    isNegativeAmount(amount) {
-      if (Math.sign(amount) === -1) {
+    return convertedAmount;
+  },
+  count: (array) => {
+    return array.length;
+  },
+  countActive: (array) => {
+    if (array.length == 0) {
+      return 0;
+    }
+    let activeArray = array.filter((c) => c.active == true);
+    return activeArray.length;
+  },
+  currencyList: () => {
+    return Template.instance().currencyList.get();
+  },
+  isNegativeAmount(amount) {
+    if (Math.sign(amount) === -1) {
 
-        return true;
-      }
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    if (array.length == 0) {
       return false;
-    },
-    isOnlyDefaultActive() {
-      const array = Template.instance().currencyList.get();
-      if (array.length == 0) {
-        return false;
-      }
-      let activeArray = array.filter((c) => c.active == true);
+    }
+    let activeArray = array.filter((c) => c.active == true);
 
-      if (activeArray.length == 1) {
+    if (activeArray.length == 1) {
 
-        if (activeArray[0].code == defaultCurrencyCode) {
-          return !true;
-        } else {
-          return !false;
-        }
+      if (activeArray[0].code == defaultCurrencyCode) {
+        return !true;
       } else {
         return !false;
       }
-    },
-    isCurrencyListActive() {
-      const array = Template.instance().currencyList.get();
-      let activeArray = array.filter((c) => c.active == true);
-
-      return activeArray.length > 0;
-    },
-    isObject(variable) {
-      return typeof variable === "object" && variable !== null;
-    },
-    currency: () => {
-      return Currency;
-    },
-
-    formatPrice( amount){
-
-      let utilityService = new UtilityService();
-      if( isNaN( amount ) ){
-          amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-          amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-      }
-        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
-    },
-    formatTax( amount){
-
-      if( isNaN( amount ) ){
-          amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
-          amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
-      }
-        return amount + "%" || "0.00 %";
-    },
-    trialbalanceth: () => {
-      return Template.instance().trialbalanceth.get();
+    } else {
+      return !false;
     }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
+  isObject(variable) {
+    return typeof variable === "object" && variable !== null;
+  },
+  currency: () => {
+    return Currency;
+  },
+
+  formatPrice( amount){
+
+    let utilityService = new UtilityService();
+    if( isNaN( amount ) ){
+      amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+      amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+  },
+  formatTax( amount){
+
+    if( isNaN( amount ) ){
+      amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+      amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+    }
+    return amount + "%" || "0.00 %";
+  },
+  trialbalanceth: () => {
+    return Template.instance().trialbalanceth.get();
+  }
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;

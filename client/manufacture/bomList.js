@@ -31,7 +31,8 @@ Template.bom_list.onCreated(function(){
         data.fields.TotalQtyOriginal || 0,
         // data.fields.subs || [],
         rawName || '',
-        data.fields.Value == '' ? 'No Attachment' : JSON.parse(data.fields.Value).length.toString() + " attachments"
+        data.fields.Value == '' ? 'No Attachment' : JSON.parse(data.fields.Value).length.toString() + " attachments",
+        data.fields.ProcStepItemRef == 'vs1BOM'? 'Active': 'Deleted'
       ];
       return dataList;
     }
@@ -43,8 +44,9 @@ Template.bom_list.onCreated(function(){
     { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true },
     { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
     { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
-    { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
-    { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
+    { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true },
+    { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true}
   ];
   templateObject.tableheaderrecords.set(headerStructure);
       
@@ -91,7 +93,7 @@ Template.bom_list.events({
   'click #tblBOMList tbody tr': async function(event) {
     let templateObject = Template.instance();
     let productService = new ProductService();
-    let productName = $(event.target).closest('tr').find('td.colProductName').text();
+    let productName = $(event.target).closest('tr').find('td.colName').text();
     let bomProducts = templateObject.bomProducts.get();
     let index = bomProducts.findIndex(product => {
       return product.fields.Caption == productName;
@@ -116,9 +118,17 @@ Template.bom_list.events({
   'click .btnRefresh':  (e, ui) => {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    setTimeout(()=>{
+    let productService = new ProductService();
+    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+      addVS1Data('TProcTree', JSON.stringify(data)).then(function() {
+        window.open('/bomlist','_self');  
+      })
+    }).catch(function(err) {
       window.open('/bomlist','_self');
-    }, 3000)
+    })
+    // setTimeout(()=>{
+    //   window.open('/bomlist','_self');
+    // }, 3000)
 
   },
 'click .templateDownload': function () {

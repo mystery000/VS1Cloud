@@ -198,7 +198,7 @@ Template.transaction_list.onRendered(function() {
                 { index: 4, label: "Total Running", class: "TotalRunning", active: true, display: true, width: "30" },
                 { index: 5, label: "Unit Price", class: "UnitPrice", active: true, display: true, width: "80" },
                 { index: 6, label: "Total", class: "Total", active: true, display: true, width: "80" },
-                { index: 7, label: "Deleted", class: "Deleted", active: true, display: true, width: "30" },
+                { index: 7, label: "Status", class: "Status", active: true, display: true, width: "30" },
             ];
         }
 
@@ -211,48 +211,48 @@ Template.transaction_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
-        // if (listType === "tblBankingOverview" || listType === "tblchequelist") {
-        //     try {
-        //       getVS1Data("VS1_Customize").then(function (dataObject) {
-        //         if (dataObject.length == 0) {
-        //           sideBarService
-        //             .getNewCustomFieldsWithQuery(
-        //               parseInt(
-        //                 localStorage.getItem("mySessionEmployeeLoggedID")
-        //               ),
-        //               listType
-        //             )
-        //             .then(function (data) {
-        //               // reset_data = data.ProcessLog.CustomLayout.Columns;
-        //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-        //               templateObject.showCustomFieldDisplaySettings(reset_data);
-        //             })
-        //             .catch(function (err) {});
-        //         } else {
-        //           let data = JSON.parse(dataObject[0].data);
-        //           if (data.ProcessLog.Obj.CustomLayout.length > 0) {
-        //             for (
-        //               let i = 0;
-        //               i < data.ProcessLog.Obj.CustomLayout.length;
-        //               i++
-        //             ) {
-        //               if (
-        //                 data.ProcessLog.Obj.CustomLayout[i].TableName ==
-        //                 listType
-        //               ) {
-        //                 reset_data =
-        //                   data.ProcessLog.Obj.CustomLayout[i].Columns;
-        //                 templateObject.showCustomFieldDisplaySettings(
-        //                   reset_data
-        //                 );
-        //               }
-        //             }
-        //           }
-        //           // handle process here
-        //         }
-        //       });
-        //     } catch (error) {}
-        // }
+        if (listType === "tblBankingOverview" || listType === "tblchequelist") {
+            try {
+              getVS1Data("VS1_Customize").then(function (dataObject) {
+                if (dataObject.length == 0) {
+                  sideBarService
+                    .getNewCustomFieldsWithQuery(
+                      parseInt(
+                        localStorage.getItem("mySessionEmployeeLoggedID")
+                      ),
+                      listType
+                    )
+                    .then(function (data) {
+                      // reset_data = data.ProcessLog.CustomLayout.Columns;
+                      reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                      templateObject.showCustomFieldDisplaySettings(reset_data);
+                    })
+                    .catch(function (err) {});
+                } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+                    for (
+                      let i = 0;
+                      i < data.ProcessLog.Obj.CustomLayout.length;
+                      i++
+                    ) {
+                      if (
+                        data.ProcessLog.Obj.CustomLayout[i].TableName ==
+                        listType
+                      ) {
+                        reset_data =
+                          data.ProcessLog.Obj.CustomLayout[i].Columns;
+                        templateObject.showCustomFieldDisplaySettings(
+                          reset_data
+                        );
+                      }
+                    }
+                  }
+                  // handle process here
+                }
+              });
+            } catch (error) {}
+        }
     }
 
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
@@ -321,7 +321,7 @@ Template.transaction_list.onRendered(function() {
         }
     });
 
-    $("#dateFrom").val(fromDate);
+    $("#dateFrom").val((moment().subtract(reportsloadMonths, 'months')).format("DD/MM/YYYY"));
     $("#dateTo").val(begunDate);
 
     templateObject.resetData = function(dataVal) {
@@ -347,8 +347,6 @@ Template.transaction_list.onRendered(function() {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TBankAccountReport').then(function(dataObject) {
-            $('#dateFrom').attr('readonly', false);
-            $('#dateTo').attr('readonly', false);
 
             if (dataObject.length == 0) {
                 sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
@@ -416,7 +414,7 @@ Template.transaction_list.onRendered(function() {
                             amountInc || 0.00,
                             useData[i].ClassName || '',
                             useData[i].ChqRefNo || '',
-                            useData[i].Active == true ? '' : "In-Active",
+                            useData[i].Active == true ? '' : "Deleted",
                             useData[i].Notes || '',
                             // creditex: creditEx || 0.00,
                             // customername: useData[i].ClientName || '',
@@ -746,35 +744,16 @@ Template.transaction_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbankaccountreport;
-
-                let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
-                let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                if(urlParametersDateFrom){
-                    if(urlParametersIgnoreDate == true){
-                        $('#dateFrom').attr('readonly', true);
-                        $('#dateTo').attr('readonly', true);
-                    }else
-                    {
-                        if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
-                        else
-                            $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
-                        if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
-                        else
-                            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
-                    }
+                if(data.Params.IgnoreDates == true){
+                    $('#dateFrom').attr('readonly', true);
+                    $('#dateTo').attr('readonly', true);
+                    //FlowRouter.go('/bankingoverview?ignoredate=true');
+                }else{
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
+                    $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                    $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
                 }
-
-                // if(data.Params.IgnoreDates == true){
-                //     $('#dateFrom').attr('readonly', true);
-                //     $('#dateTo').attr('readonly', true);
-                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
-                // }else{
-                //     $('#dateFrom').attr('readonly', false);
-                //     $('#dateTo').attr('readonly', false);
-                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
-                // }
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
@@ -835,7 +814,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
-                        useData[i].Active == true ? '' : "In-Active",
+                        useData[i].Active == true ? '' : "Deleted",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -1223,7 +1202,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
-                        useData[i].Active == true ? '' : "In-Active",
+                        useData[i].Active == true ? '' : "Deleted",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -3142,7 +3121,8 @@ Template.transaction_list.onRendered(function() {
         })
     }
 
-    templateObject.getAllProductRecentTransactions = async function (deptname) {
+    templateObject.getAllProductRecentTransactions = async function (deleteFilter = false) {
+        let deptname = currentType
       getVS1Data("T_VS1_Report_Productmovement").then(function (dataObject) {
         let need_API = true;
         if (dataObject.length > 0) {
@@ -3157,7 +3137,7 @@ Template.transaction_list.onRendered(function() {
         }
         if (currentProductID) {
           if (need_API) {
-            productService.getProductRecentTransactionsAll(currentProductID).then(function (data) {
+            productService.getProductRecentTransactionsAll(currentProductID, deleteFilter).then(function (data) {
               addVS1Data("T_VS1_Report_Productmovement", JSON.stringify(data));
               templateObject.displayAllProductRecentTransactions(data, deptname);
             });
@@ -3186,7 +3166,7 @@ Template.transaction_list.onRendered(function() {
             data.t_vs1_report_productmovement[i].Available || 0,
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].Price),
             utilityService.modifynegativeCurrencyFormat(data.t_vs1_report_productmovement[i].TotalPrice),
-            data.t_vs1_report_productmovement[i].isDeleted || false,
+            data.t_vs1_report_productmovement[i].Active ? "In-Active" : "",
           ];
           recentTransList.push(recentTranObject);
         }
@@ -3348,7 +3328,7 @@ Template.transaction_list.onRendered(function() {
 
               //}
               setTimeout(function () {
-                // MakeNegative();
+                MakeNegative();
               }, 100);
             },
             language: { search: "",searchPlaceholder: "Search List..." },
@@ -3363,8 +3343,19 @@ Template.transaction_list.onRendered(function() {
 
                 $('.myvarFilterForm').appendTo(".colDateFilter");
             },
+            "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+            }
           })
-          .on("page", function () {})
+          .on("page", function () {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.datatablerecords.get();
+            templateObject.datatablerecords.set(draftRecord);
+          })
           .on("column-reorder", function () {});
         $("div.dataTables_filter input").addClass("form-control form-control-sm");
         $(".fullScreenSpin").css("display", "none");
@@ -3446,7 +3437,7 @@ Template.transaction_list.onRendered(function() {
     }else if (currenttablename == 'tblWorkorderList') {
         templateObject.getWorkorderData("");
     } else if (currenttablename === 'productrecentlist') {
-        templateObject.getAllProductRecentTransactions(currentType);
+        templateObject.getAllProductRecentTransactions();
     }
     tableResize();
 
@@ -3532,6 +3523,9 @@ Template.transaction_list.events({
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
             templateObject.getBankingOverviewData(true);
+        } else if (currenttablename === 'productrecentlist') {
+            await clearData('T_VS1_Report_Productmovement')
+            templateObject.getAllProductRecentTransactions(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -3560,8 +3554,9 @@ Template.transaction_list.events({
             templateObject.getTimeSheetListData()
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
+        } else if (currenttablename === 'productrecentlist') {
+            templateObject.getAllProductRecentTransactions(true);
         }
-
     },
     'change .custom-range': async function(event) {
         const tableHandler = new TableHandler();
