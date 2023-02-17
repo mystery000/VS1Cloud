@@ -331,6 +331,7 @@ import './vs1_templates/datatablelist/datatablelist.js'
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
+import './settings/manufacturingsettings/manufacturingsettings.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -620,6 +621,13 @@ import './reports/transactionjournal/transactionjournal.js';
 
 /* Scott */
 import './vs1_templates/template_buttons/spreadsheet_link.js';
+import './reports/executivesummary/executivesummary.js';
+import './reports/exebalancesheet/exebalancesheet.js';
+import './reports/execash/execash.js';
+import './reports/exeincome/exeincome.js';
+import './reports/exeperformance/exeperformance.js';
+import './reports/exeposition/exeposition.js';
+import './reports/exeprofitability/exeprofitability.js';
 /* Scott */
 
 /* Mainstar */

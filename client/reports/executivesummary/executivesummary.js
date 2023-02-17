@@ -7,7 +7,6 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
 import Datehandler from "../../DateHandler";
-
 import { Template } from 'meteor/templating';
 import './executivesummary.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -819,6 +818,13 @@ Template.executivesummaryreport.helpers({
   },
   companyname: () => {
     return loggedCompany;
+  },
+  pageDate: () => {
+    let date = new Date();
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return `For the Month of ${monthNames[date.getMonth()]} ${date.getFullYear()}`
   }
 });
 

@@ -1027,7 +1027,7 @@ Template.appointments.onRendered(function() {
                 bootstrapPlugin,
             ],
             themeSystem: "bootstrap",
-            initialView: "dayGridMonth",
+            initialView: "timeGridWeek",
             hiddenDays: hideDays, // hide Sunday and Saturday
             longPressDelay: 100,
             customButtons: {
@@ -1654,13 +1654,20 @@ Template.appointments.onRendered(function() {
             },
 
             events: templateObject.eventdata.get(),
-            eventDidMount: function(info) {},
+            eventDidMount: function(info) {
+                info.el.children[0].setAttribute("data-toggle", "tooltip");
+                info.el.children[0].setAttribute("title", info.event.extendedProps.description);
+                setTimeout(function() {
+                    $('[data-toggle="tooltip"]').tooltip({ html: true });
+                }, 100);
+            },
             eventContent: function(event) {
                 let title = document.createElement("p");
                 if (event.event.title) {
                     title.innerHTML = event.timeText + " " + event.event.title;
                     title.style.backgroundColor = event.backgroundColor;
                     title.style.color = "#ffffff";
+                    title.style.overflow = "hidden";
                 } else {
                     title.innerHTML = event.timeText + " " + event.event.title;
                 }
@@ -2450,22 +2457,27 @@ Template.appointments.onRendered(function() {
             },
             events: templateObject.eventdata.get(),
             eventDidMount: function(info) {
-                if (
-                    /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                        navigator.userAgent
-                    )
-                ) {
-                    $(".fc-event-main p").css({
-                        "font-size": "12px",
-                    });
-                    //     $(info.el).tooltip({
-                    //         title: info.event.title.replaceAll('<br>', "\n"),
-                    //         placement: "top",
-                    //         trigger: "hover",
-                    //         container: "body"
+                // if (
+                //     /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                //         navigator.userAgent
+                //     )
+                // ) {
+                //     $(".fc-event-main p").css({
+                //         "font-size": "12px",
+                //     });
+                //     //     $(info.el).tooltip({
+                //     //         title: info.event.title.replaceAll('<br>', "\n"),
+                //     //         placement: "top",
+                //     //         trigger: "hover",
+                //     //         container: "body"
 
-                    //     });
-                }
+                //     //     });
+                // }
+                info.el.children[0].setAttribute("data-toggle", "tooltip");
+                info.el.children[0].setAttribute("title", info.event.extendedProps.description);
+                setTimeout(function() {
+                    $('[data-toggle="tooltip"]').tooltip({ html: true });
+                }, 100);
             },
             eventContent: function(event) {
 
@@ -2629,7 +2641,8 @@ Template.appointments.onRendered(function() {
 
         calendar.render();
 
-        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        // $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:160px; float: right; margin:8px 30px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
         new Draggable(draggableEl, {
@@ -2646,12 +2659,19 @@ Template.appointments.onRendered(function() {
                 };
             },
         });
-
+        $("#appointmentDate").css("fontSize", "32px");
+        $("#appointmentDate").css("padding", "0px");
+        $("#appointmentDate").css("border", "0px");
+        $("#appointmentDate").css("margin-left", "30px");
+        $("#appointmentDate").css("height", "40px");
+        $("#appointmentDate").css("cursor", "pointer");
+        $("#appointmentDate").css("background-color", "white");
+        $("#appointmentDate").css("outline", "none");
         $("#appointmentDate").datepicker({
-            showOn: "button",
-            buttonText: "Show Date",
-            buttonImageOnly: true,
-            buttonImage: "/img/imgCal2.png",
+            // showOn: "button",
+            // buttonText: "Show Date",
+            // buttonImageOnly: true,
+            // buttonImage: "/img/imgCal2.png",
             dateFormat: "dd/mm/yy",
             showOtherMonths: true,
             selectOtherMonths: true,
@@ -3827,16 +3847,18 @@ Template.appointments.onRendered(function() {
                                 let zip = data.tappointmentex[i].fields.Postcode || "";
                                 let street = data.tappointmentex[i].fields.Street || "";
                                 let state = data.tappointmentex[i].fields.State || "";
-                                let getAddress =
-                                    data.tappointmentex[i].fields.ClientName +
-                                    "," +
-                                    street +
-                                    "," +
-                                    state +
-                                    "," +
-                                    surbub +
-                                    " " +
-                                    zip;
+                                let country = data.tappointmentex[i].fields.Country || "";
+                                let getAddress = 'Client Name: ' + data.tappointmentex[i].fields.ClientName + '<br /> Address: ' + street + ',' + state + ',' + country + ',' + surbub + " " + zip;
+                                // let getAddress =
+                                //     data.tappointmentex[i].fields.ClientName +
+                                //     "," +
+                                //     street +
+                                //     "," +
+                                //     state +
+                                //     "," +
+                                //     surbub +
+                                //     " " +
+                                //     zip;
                                 var dataList = {
                                     id: data.tappointmentex[i].fields.ID.toString() || "",
                                     title: data.tappointmentex[i].fields.TrainerName +
@@ -5469,7 +5491,29 @@ Template.appointments.onRendered(function() {
                                 },
 
                                 events: [],
-                                eventDidMount: function() {},
+                                eventDidMount: function() {
+                                    info.el.children[0].setAttribute("data-toggle", "tooltip");
+                                    info.el.children[0].setAttribute("title", info.event.extendedProps.description);
+                                    setTimeout(function() {
+                                        $('[data-toggle="tooltip"]').tooltip({ html: true });
+                                    }, 100);
+                                },
+                                eventContent: function(event) {
+                                    let title = document.createElement("p");
+                                    if (event.event.title) {
+                                        title.innerHTML = event.timeText + " " + event.event.title;
+                                        title.style.backgroundColor = event.backgroundColor;
+                                        title.style.color = "#ffffff";
+                                    } else {
+                                        title.innerHTML = event.timeText + " " + event.event.title;
+                                    }
+    
+                                    let arrayOfDomNodes = [title];
+                                    return {
+                                        domNodes: arrayOfDomNodes,
+                                    };
+                                },
+                                
                             });
                             calendar.render();
                             $('.fc-today-button').prop('disabled', false);
@@ -5557,16 +5601,18 @@ Template.appointments.onRendered(function() {
                         let zip = useData[i].fields.Postcode || "";
                         let street = useData[i].fields.Street || "";
                         let state = useData[i].fields.State || "";
-                        let getAddress =
-                            useData[i].fields.ClientName +
-                            "," +
-                            street +
-                            "," +
-                            state +
-                            "," +
-                            surbub +
-                            " " +
-                            zip;
+                        let country = data.tappointmentex[i].fields.Country || "";
+                        let getAddress = 'Client Name: ' + data.tappointmentex[i].fields.ClientName + '<br /> Address: ' + street + ',' + state + ',' + country + ',' + surbub + " " + zip;
+                        // let getAddress =
+                        //     useData[i].fields.ClientName +
+                        //     "," +
+                        //     street +
+                        //     "," +
+                        //     state +
+                        //     "," +
+                        //     surbub +
+                        //     " " +
+                        //     zip;
                         var dataList = {
                             id: useData[i].fields.ID.toString() || "",
                             title: useData[i].fields.TrainerName +
@@ -6645,16 +6691,18 @@ Template.appointments.onRendered(function() {
                             let zip = data.tappointmentex[i].fields.Postcode || "";
                             let street = data.tappointmentex[i].fields.Street || "";
                             let state = data.tappointmentex[i].fields.State || "";
-                            let getAddress =
-                                data.tappointmentex[i].fields.ClientName +
-                                "," +
-                                street +
-                                "," +
-                                state +
-                                "," +
-                                surbub +
-                                " " +
-                                zip;
+                            let country = data.tappointmentex[i].fields.Country || "";
+                            let getAddress = 'Client Name: ' + data.tappointmentex[i].fields.ClientName + '<br /> Address: ' + street + ',' + state + ',' + country + ',' + surbub + " " + zip;
+                            // let getAddress =
+                            //     data.tappointmentex[i].fields.ClientName +
+                            //     "," +
+                            //     street +
+                            //     "," +
+                            //     state +
+                            //     "," +
+                            //     surbub +
+                            //     " " +
+                            //     zip;
                             var dataList = {
                                 id: data.tappointmentex[i].fields.ID.toString() || "",
                                 title: data.tappointmentex[i].fields.TrainerName +
@@ -8168,7 +8216,28 @@ Template.appointments.onRendered(function() {
                             },
 
                             events: [],
-                            eventDidMount: function() {},
+                            eventDidMount: function() {
+                                info.el.children[0].setAttribute("data-toggle", "tooltip");
+                                info.el.children[0].setAttribute("title", info.event.extendedProps.description);
+                                setTimeout(function() {
+                                    $('[data-toggle="tooltip"]').tooltip({ html: true });
+                                }, 100);
+                            },
+                            eventContent: function(event) {
+                                let title = document.createElement("p");
+                                if (event.event.title) {
+                                    title.innerHTML = event.timeText + " " + event.event.title;
+                                    title.style.backgroundColor = event.backgroundColor;
+                                    title.style.color = "#ffffff";
+                                } else {
+                                    title.innerHTML = event.timeText + " " + event.event.title;
+                                }
+
+                                let arrayOfDomNodes = [title];
+                                return {
+                                    domNodes: arrayOfDomNodes,
+                                };
+                            },
                         });
                         calendar.render();
                         $('.fc-today-button').prop('disabled', false);
@@ -11021,7 +11090,13 @@ Template.appointments.onRendered(function() {
                             },
 
                             events: eventData,
-                            eventDidMount: function(event) {},
+                            eventDidMount: function(event) {
+                                info.el.children[0].setAttribute("data-toggle", "tooltip");
+                                info.el.children[0].setAttribute("title", info.event.extendedProps.description);
+                                setTimeout(function() {
+                                    $('[data-toggle="tooltip"]').tooltip({ html: true });
+                                }, 100);
+                            },
                             eventContent: function(event) {
                                 let title = document.createElement("p");
                                 if (event.event.title) {

@@ -1,308 +1,450 @@
 <template name="production_planner_template">
-
-    <style>
-        .productionplannermodule #calendar button, .manufacturingOverviewModule #calendar button {
-            background-color: rgb(0, 163, 211);
-            border-color: #00a3d3;
-        }
-        .productionplannermodule #calendar button:hover, .manufacturingOverviewModule #calendar button:hover {
-            background-color: #00C2EF;
-            border-color: #00a3d3;
-        }
-        
-    </style>
-    <div id="calendar" style="width: 100%; resize: horizontal; overflow: auto;"></div>
-    <div class="eventInfo">
+    <div class="d-flex w-100">
         <style>
-            .eventInfo {
-                display: none;
-                flex-direction: column;
-                align-items: stretch;
-                justify-content: space-around;
-                margin-left: 30px;
-                width: 500px;
+            .productionplannermodule #calendar button, .manufacturingOverviewModule #calendar button {
+                background-color: rgb(0, 163, 211);
+                border-color: #00a3d3;
             }
-            .eventInfo ul {
-                list-style: none;
-                margin-left: 0;
-                padding: 0;
-            }
-
-            .eventInfo ul li {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 15px;
-                text-transform: capitalize;
-            }
-
-            /* .eventInfo button i {
-                padding-right: 0 !important;
-            } */
-
-            .unable-process {
-                position: relative;
-                background-image: url(img/Group-2.png);
-                background-size: 100% 100%                                        
-            }
-
-            .current-progress {
-                position: relative;
-                display: flex;
-                align-items: flex-start;
-                justify-content: center;
-                color: black
-            }
-
-            .current-progress .progress-percentage {
-                position: absolute;
-                top: 0;
-                left: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: rgba(255, 255, 255, 0.7);
-                height: 100%;
-                font-size: 18px;
-                color: black;
-            }
-
-            .process-event {
-                position: relative
+            .productionplannermodule #calendar button:hover, .manufacturingOverviewModule #calendar button:hover {
+                background-color: #00C2EF;
+                border-color: #00a3d3;
             }
             
-            .process-event::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 20px;
-                background: linear-gradient(to right, rgba(255,255,255,0.5) , rgba(255,255,255,0.1));
-                z-index: -1;
-            }
-
-            .productionplannermodule .fc-timeline-events, .productionplannermodule .fc-timeline-event-harness, .productionplannermodule .fc-timeline-event, .productionPlannerTable .fc-event-main,
-            .manufacturingOverviewModule .fc-timeline-events, .manufacturingOverviewModule .fc-timeline-event-harness, .manufacturingOverviewModule .fc-timeline-event
-            {
-                height: 100% !important;
-            }
-
-            .productionplannermodule .fc-timeline-event, .manufacturingOverviewModule .fc-timeline-event {
-                padding: 0 0!important
-            }
-
-            .productionplannermodule .fc-h-event, .manufacturingOverviewModule .fc-h-event{
-                border: 0!important
-            }
-
-            .productionplannermodule .fc-timeline-events, .manufacturingOverviewModule .fc-timeline-events {
-                padding-bottom: 0px !important;
-            }
-
-            .productionplannermodule .fc-timeline-lane-frame, .manufacturingOverviewModule .fc-timeline-lane-frame {
-                height: 60px !important;
-            }
-
-            .productionplannermodule .fc-h-event.highlighted, .manufacturingOverviewModule .fc-h-event.highlighted {
-                box-sizing: border-box!important;
-                -moz-box-sizing: border-box!important;
-                -webkit-box-sizing: border-box!important;
-                border: 2px solid #f00 !important;
-            }
-
-            /* .unable-process::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: calc(50% - 10px);
-                right: 50%;
-                width: 60px;
-                height: 1px;
-                background-color: black;
-                transform: rotate(45deg);
-            }
-
-            .unable-process::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: calc(50% + 10px);
-                width: 60px;
-                height: 1px;
-                background-color: black;
-                transform: rotate(-45deg);
-            } */
-
         </style>
-        {{#if viewInfoData}}
-            <ul class="eventDetail mb-0">
-                <li>
-                    <span class="itemLabel">JOB/SO Number: </span>
-                    <span class="eventDetailItem">{{viewInfoData.JOBNumber}}</span>
-                </li>
-                <li>
-                    <span class="itemLabel">Customer: </span>
-                    <span class="eventDetailItem">{{viewInfoData.Customer}}</span>
-                </li>
-                {{#unless equals viewInfoData.Status 'unscheduled'}}
-                <li>
-                    <span class="itemLabel">Overall Job % completed: </span>
-                    <span class="eventDetailItem">{{viewInfoData.Percentage}}</span>
-                </li>
-                {{/unless}}
-                <li>
-                    <span class="itemLabel">Order Date: </span>
-                    <span class="eventDetailItem">{{viewInfoData.OrderDate}}</span>
-                </li>
-                <li>
-                    <span class="itemLabel">Ship Date: </span>
-                    <span class="eventDetailItem">{{viewInfoData.ShipDate}}</span>
-                </li>
-                <li>
-                    <span class="itemLabel">Job Notes: </span>
-                    <span class="eventDetailItem">{{viewInfoData.JobNotes}}</span>
-                </li>
-                <li>
-                    <span class="itemLabel">Status: </span>
-                    <span class="eventDetailItem">{{viewInfoData.Status}}</span>
-                </li>
-            </ul>
-            <div class="d-flex align-items-center justify-content-center p-1" style="gap: 20px">
-                {{#if equals viewInfoData.Status 'unscheduled'}}
-                    {{> vs1_button
-                        type='button'
-                        classes='btnMarkAsScheduled'
-                        id='btnMarkAsScheduled'
-                        iconName=' fas fa-calendar-plus'
-                        tooltip = 'mark as scheduled'
-                        title="Mark as scheduled"
-                    }}
-                {{/if}}
-
-                {{#if equals viewInfoData.Status 'scheduled'}}
-                    {{> vs1_button
-                        type='button'
-                        classes='btnMarkAsUnscheduled'
-                        id='btnMarkAsUnscheduled'
-                        iconName=' fas fa-calendar-times'
-                        tooltip = 'mark as unscheduled'
-                        title="Mark as unscheduled"
-                    }}
-                {{/if}}
-                {{#if showStartTimer}}
-                    {{ > vs1_button
-                        type="button"
-                        classes="btnStartTimer"
-                        id="btnStartTimer"
-                        iconName=' fas fa-play'
-                        tooltip= 'start timer'
-                        title='Start timer'     
-                    }}
-                {{/if}}
-                {{#if showResumeTimer}}
-                    {{>vs1_button
-                        type="button"
-                        classes="btnResumeTimer"
-                        id="btnResumeTimer"
-                        iconName=' fas fa-play'
-                        tooltip='resume timer'
-                        title='Resume timer'
-                    }}
-                {{/if}}
-                {{#if showPauseTimer}}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnPauseTimer'
-                        id='btnPauseTimer'
-                        iconName= ' fas fa-pause'
-                        tooltip='pause timer'
-                        title='Pause timer'
-                    }}
-                {{/if}}
-                {{#if showStopTimer}}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnStopTimer'
-                        id='btnStopTimer'
-                        iconName= ' fas fa-stop'
-                        tooltip='stop timer'
-                        title='Stop timer'
-                    }}
-                {{/if}}
-
-                {{#if showStartQA}}
-                    {{ > vs1_button
-                        type="button"
-                        classes="btnStartQA"
-                        id="btnStartQA"
-                        iconName=' fas fa-play'
-                        tooltip= 'start QA'
-                        title='Start QA'     
-                    }}
-                {{/if}}
-                {{#if showResumeQA}}
-                    {{>vs1_button
-                        type="button"
-                        classes="btnResumeQA"
-                        id="btnResumeQA"
-                        iconName=' fas fa-play'
-                        tooltip='resume QA'
-                        title='Resume QA'
-                    }}
-                {{/if}}
-                {{#if showPauseQA}}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnPauseQA'
-                        id='btnPauseQA'
-                        iconName= ' fas fa-pause'
-                        tooltip='pause QA'
-                        title='Pause QA'
-                    }}
-                {{/if}}
-                {{#if showStopQA}}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnStopQA'
-                        id='btnStopQA'
-                        iconName= ' fas fa-stop'
-                        tooltip='stop QA'
-                        title='Stop QA'
-                    }}
-                {{/if}}
-                {{#if showMarkAsCompleted}}
-                    {{>vs1_button
-                        type='button'
-                        classes='btnMarkAsComplete'
-                        id='btnMarkAsComplete'
-                        tooltip='Mark as completed'
-                        title='Mark As Completed'
-                    }}
-                {{/if}}
+        <div id="calendar" class="production-planner-calendar" style="width: 100%; resize: horizontal; overflow: auto;"></div>
+        <div class="eventInfo">
+            <style>
+                .eventInfo {
+                    display: none;
+                    flex-direction: column;
+                    align-items: stretch;
+                    justify-content: space-around;
+                    margin-left: 30px;
+                    width: 500px;
+                }
+                .eventInfo ul {
+                    list-style: none;
+                    margin-left: 0;
+                    padding: 0;
+                }
+    
+                .eventInfo ul li {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 15px;
+                    text-transform: capitalize;
+                }
+    
+                /* .eventInfo button i {
+                    padding-right: 0 !important;
+                } */
+    
+                .unable-process {
+                    position: relative;
+                    background-image: url(img/Group-2.png);
+                    background-size: 100% 100%                                        
+                }
+    
+                .current-progress {
+                    position: relative;
+                    display: flex;
+                    align-items: flex-start;
+                    justify-content: center;
+                    color: black
+                }
+    
+                .current-progress .progress-percentage {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: rgba(255, 255, 255, 0.7);
+                    height: 100%;
+                    font-size: 18px;
+                    color: black;
+                }
+    
+                .process-event {
+                    position: relative
+                }
                 
-                </div>
+                .process-event::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 20px;
+                    background: linear-gradient(to right, rgba(255,255,255,0.5) , rgba(255,255,255,0.1));
+                    z-index: -1;
+                }
+    
+                .productionplannermodule .fc-timeline-events, .productionplannermodule .fc-timeline-event-harness, .productionplannermodule .fc-timeline-event, .productionPlannerTable .fc-event-main,
+                .manufacturingOverviewModule .fc-timeline-events, .manufacturingOverviewModule .fc-timeline-event-harness, .manufacturingOverviewModule .fc-timeline-event
+                {
+                    height: 100% !important;
+                }
+    
+                .productionplannermodule .fc-timeline-event, .manufacturingOverviewModule .fc-timeline-event {
+                    padding: 0 0!important
+                }
+    
+                .productionplannermodule .fc-h-event, .manufacturingOverviewModule .fc-h-event{
+                    border: 0!important
+                }
+    
+                .productionplannermodule .fc-timeline-events, .manufacturingOverviewModule .fc-timeline-events {
+                    padding-bottom: 0px !important;
+                }
+    
+                .productionplannermodule .fc-timeline-lane-frame, .manufacturingOverviewModule .fc-timeline-lane-frame {
+                    height: 60px !important;
+                }
+    
+                .productionplannermodule .fc-h-event.highlighted, .manufacturingOverviewModule .fc-h-event.highlighted {
+                    box-sizing: border-box!important;
+                    -moz-box-sizing: border-box!important;
+                    -webkit-box-sizing: border-box!important;
+                    border: 2px solid #f00 !important;
+                }
+                .production-planner-calendar .fc-toolbar-chunk {
+                    background-color: #fff;
+                    padding: 10px 10px;
+                    border-radius: .35rem;
+                    border: 1px solid #e3e6f0;
+                    background-clip: border-box;
+                    box-shadow: 0 0.15rem 1.75rem 0 rgb(58 59 69 / 15%);
+                }
+    
+                .production-planner-calendar .fc-button {
+                    margin: 0 5px!important;
+                    border-radius: 5px !important;
+                }
+    
+                .production-planner-calendar .fc-settingsmodalbutton-button {
+                    margin-left: 5px !important;
+                    border-radius: 0.35rem !important;
+                }
+    
+                .production-planner-calendar .fc-settingsmodalbutton-button:before {
+                    font-family: fontAwesome;
+                    content: "\f141";
+                }
+    
+    
+    
+                /* .unable-process::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: calc(50% - 10px);
+                    right: 50%;
+                    width: 60px;
+                    height: 1px;
+                    background-color: black;
+                    transform: rotate(45deg);
+                }
+    
+                .unable-process::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: calc(50% + 10px);
+                    width: 60px;
+                    height: 1px;
+                    background-color: black;
+                    transform: rotate(-45deg);
+                } */
+    
+            </style>
+            {{#if viewInfoData}}
+                <ul class="eventDetail mb-0">
+                    <li>
+                        <span class="itemLabel">JOB#: </span>
+                        <span class="eventDetailItem">{{viewInfoData.JOBNumber}}</span>
+                    </li>
+                    <li>
+                        <span class="itemLabel">Customer: </span>
+                        <span class="eventDetailItem">{{viewInfoData.Customer}}</span>
+                    </li>
+                    {{#unless equals viewInfoData.Status 'unscheduled'}}
+                    <li>
+                        <span class="itemLabel">Overall Job % completed: </span>
+                        <span class="eventDetailItem">{{viewInfoData.Percentage}}</span>
+                    </li>
+                    {{/unless}}
+                    <li>
+                        <span class="itemLabel">Order Date: </span>
+                        <span class="eventDetailItem">{{viewInfoData.OrderDate}}</span>
+                    </li>
+                    <li>
+                        <span class="itemLabel">Ship Date: </span>
+                        <span class="eventDetailItem">{{viewInfoData.ShipDate}}</span>
+                    </li>
+                    <li>
+                        <span class="itemLabel">Job Notes: </span>
+                        <span class="eventDetailItem">{{viewInfoData.JobNotes}}</span>
+                    </li>
+                    <li>
+                        <span class="itemLabel">Status: </span>
+                        <span class="eventDetailItem">{{viewInfoData.Status}}</span>
+                    </li>
+                </ul>
                 <div class="d-flex align-items-center justify-content-center p-1" style="gap: 20px">
+                    {{#if equals viewInfoData.Status 'unscheduled'}}
+                        {{> vs1_button
+                            type='button'
+                            classes='btnMarkAsScheduled'
+                            id='btnMarkAsScheduled'
+                            iconName=' fas fa-calendar-plus'
+                            tooltip = 'mark as scheduled'
+                            title="Mark as scheduled"
+                        }}
+                    {{/if}}
+    
+                    {{#if equals viewInfoData.Status 'scheduled'}}
+                        {{> vs1_button
+                            type='button'
+                            classes='btnMarkAsUnscheduled'
+                            id='btnMarkAsUnscheduled'
+                            iconName=' fas fa-calendar-times'
+                            tooltip = 'mark as unscheduled'
+                            title="Mark as unscheduled"
+                        }}
+                    {{/if}}
+                    {{#if showStartTimer}}
+                        {{ > vs1_button
+                            type="button"
+                            classes="btnStartTimer"
+                            id="btnStartTimer"
+                            iconName=' fas fa-play'
+                            tooltip= 'start timer'
+                            title='Start timer'     
+                        }}
+                    {{/if}}
+                    {{#if showResumeTimer}}
+                        {{>vs1_button
+                            type="button"
+                            classes="btnResumeTimer"
+                            id="btnResumeTimer"
+                            iconName=' fas fa-play'
+                            tooltip='resume timer'
+                            title='Resume timer'
+                        }}
+                    {{/if}}
+                    {{#if showPauseTimer}}
+                        {{>vs1_button
+                            type='button'
+                            classes='btnPauseTimer'
+                            id='btnPauseTimer'
+                            iconName= ' fas fa-pause'
+                            tooltip='pause timer'
+                            title='Pause timer'
+                        }}
+                    {{/if}}
+                    {{#if showStopTimer}}
+                        {{>vs1_button
+                            type='button'
+                            classes='btnStopTimer'
+                            id='btnStopTimer'
+                            iconName= ' fas fa-stop'
+                            tooltip='stop timer'
+                            title='Stop timer'
+                        }}
+                    {{/if}}
+    
+                    {{#if showStartQA}}
+                        {{ > vs1_button
+                            type="button"
+                            classes="btnStartQA"
+                            id="btnStartQA"
+                            iconName=' fas fa-play'
+                            tooltip= 'start QA'
+                            title='Start QA'     
+                        }}
+                    {{/if}}
+                    {{#if showResumeQA}}
+                        {{>vs1_button
+                            type="button"
+                            classes="btnResumeQA"
+                            id="btnResumeQA"
+                            iconName=' fas fa-play'
+                            tooltip='resume QA'
+                            title='Resume QA'
+                        }}
+                    {{/if}}
+                    {{#if showPauseQA}}
+                        {{>vs1_button
+                            type='button'
+                            classes='btnPauseQA'
+                            id='btnPauseQA'
+                            iconName= ' fas fa-pause'
+                            tooltip='pause QA'
+                            title='Pause QA'
+                        }}
+                    {{/if}}
+                    {{#if showStopQA}}
+                        {{>vs1_button
+                            type='button'
+                            classes='btnStopQA'
+                            id='btnStopQA'
+                            iconName= ' fas fa-stop'
+                            tooltip='stop QA'
+                            title='Stop QA'
+                        }}
+                    {{/if}}
+                    {{#if showMarkAsCompleted}}
+                        {{>vs1_button
+                            type='button'
+                            classes='btnMarkAsComplete'
+                            id='btnMarkAsComplete'
+                            tooltip='Mark as completed'
+                            title='Mark As Completed'
+                        }}
+                    {{/if}}
+                    
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center p-1" style="gap: 20px">
+    
+                    <!-- <button class="btn btn-primary btn-round">Attachments</button> -->
+                    {{>vs1_button
+                        type='button'
+                        classes='btn-show-attachment'
+                        id='btn-show-attachment'
+                        iconName= ' fas fa-paperclip'
+                        tooltip='attachments'
+                        title='Attachments'
+                    }}
+                    {{>vs1_button
+                        type='button'
+                        classes='btn-print-event'
+                        id='btn-print-event'
+                        iconName= ' fas fa-print'
+                        tooltip='print'
+                        title='Print'
+                    }}
+                    <!-- <button class="btn btn-primary btn-round btn-print-event">Print</button> -->
+                </div>
+            {{/if}}
+        </div>
+    </div>
 
-                <!-- <button class="btn btn-primary btn-round">Attachments</button> -->
-                {{>vs1_button
-                    type='button'
-                    classes='btn-show-attachment'
-                    id='btn-show-attachment'
-                    iconName= ' fas fa-paperclip'
-                    tooltip='attachments'
-                    title='Attachments'
-                }}
-                {{>vs1_button
-                    type='button'
-                    classes='btn-print-event'
-                    id='btn-print-event'
-                    iconName= ' fas fa-print'
-                    tooltip='print'
-                    title='Print'
-                }}
-                <!-- <button class="btn btn-primary btn-round btn-print-event">Print</button> -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="settingsModal">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+            <div class="modal-content">
+                <form id="plannerOptions" name="plannerOptions">
+                    <div class="modal-header">
+                        <h4>Production Planner Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body" style="padding: 24px;">
+                        <div class="row">
+                            <div class="col-12">
+                                {{> toggle_button 
+                                    className='toggleShowSat edtManufacturingToggle toggleShowWeekend'
+                                    id='toggleShowSat'
+                                    isChecked=plannerSettings.showSaturday
+                                    for='toggleShowSat'
+                                    displayName='Show Saturday'
+                                    width='200px'
+                                }}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 1em;">
+                            <div class="col-12">
+                                {{> toggle_button 
+                                    className='toggleShowSun edtManufacturingToggle toggleShowWeekend'
+                                    id='toggleShowSun'
+                                    isChecked=plannerSettings.showSunday
+                                    for='toggleShowSun'
+                                    displayName='Show Sunday'
+                                    width='200px'
+                                }}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 1em;">
+                            <div class="col-12">
+                                {{> toggle_button 
+                                    className='toggleShowQA edtManufacturingToggle'
+                                    id='toggleShowQA'
+                                    isChecked=plannerSettings.showQA
+                                    for='toggleShowQA'
+                                    displayName='Show QA'
+                                    width='200px'
+                                }}
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 1em;">
+                            <div class="col-12">
+                                <div class="form-group flex-grow-1" style="margin: 8px 0px 0px 0px;">
+                                    <label style="margin-bottom: 0px;">Show Hours</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                    <label>From</label>
+                                    <input type="time" id="hoursFrom" class="form-control" value={{plannerSettings.startTime}}>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                    <label>To</label>
+                                    <input type="time" id="hoursTo" class="form-control" value={{plannerSettings.endTime}}>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                    <label>Show Time In</label>
+                                    <select id="showTimeIn" class="form-control edtShowTimein">
+                                        <option value="0.5">30 Minutes</option>
+                                        <option value="1">1 Hour</option>
+                                        <option value="2">2 Hours</option>
+                                        <option value="3">3 Hours</option>
+                                        <option value="4">4 Hours</option>
+                                        <option value="6">6 Hours</option>
+                                        <option value="12">12 Hours</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <!-- <button class="btn btn-success btnSaveSettings" style="margin:12px;" type="submit"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                      <button class="btn btn-warning btnResetSettings" style="margin:12px;" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                      <button class="btn btn-secondary" data-dismiss="modal" style="margin:12px;" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button> -->
+                        {{> vs1_button
+                            tooltip="Save manufacturing settings"
+                            color="success"
+                            classes="btnSaveSettings"
+                            iconName="save"
+                            htmlType="button"
+                            title="Save"
+                        }}
+
+                        {{> vs1_button
+                            tooltip="Reset to initial setting"
+                            color="warning"
+                            classes="btnResetSettings"
+                            iconName="repeat"
+                            htmlType="button"
+                            title="Reset"
+                        }}
+
+                        {{> vs1_button
+                            tooltip="Cancel"
+                            color="secondary"
+                            classes="btnCancelSettings"
+                            iconName="close"
+                            htmlType="button"
+                            title="Cancel"
+                        }}
+                    </div>
+                </form>
             </div>
-        {{/if}}
+        </div>
     </div>
 </template>

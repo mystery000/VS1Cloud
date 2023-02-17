@@ -33,61 +33,28 @@ Template.supplierproductreport.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'PO #', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 2, label: 'PO Num', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 3, label: 'Supplier ID', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 4, label: 'Invoice~Number', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 5, label: 'Product ID', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 6, label: 'Description', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 7, label: 'Ex', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 8, label: 'Tax', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 9, label: 'Street', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 10, label: 'Inc', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 11, label: 'Tax Code', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 12, label: 'Ordered', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 13, label: 'Received', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 14, label: 'Back Order', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 15, label: 'ETA~Date', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 16, label: 'Ex', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 17, label: 'Inc', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 18, label: 'Comments', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 19, label: 'Original #', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 20, label: 'Global #', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 21, label: 'Sales~Comments', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 22, label: 'Class Name', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 23, label: 'Account~Number', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 24, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 25, label: 'Product~Type', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 26, label: 'Department', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 27, label: 'Type', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 28, label: 'Manufacturer', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 29, label: 'Deleted', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 30, label: 'Order Date', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 31, label: 'Ex', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 32, label: 'Tax', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 33, label: 'Inc', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 34, label: 'Employee~Name', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 35, label: 'Buy Metre', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 36, label: 'Buy Weight', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 37, label: 'Buy Price / Metre', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 39, label: 'Docket~Number', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 40, label: 'Received~Date', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 41, label: 'Barcode', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 42, label: 'Ex', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 43, label: 'Inc', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 44, label: 'Cogs', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 45, label: 'Asset', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 46, label: 'Income', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 47, label: 'Cogs', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 48, label: 'Asset', class: 'colAccountName', active: true, display: true, width: "100" },
-      { index: 49, label: 'Income', class: 'colAccountName', active: true, display: true, width: "100" },
+      { index: 1, label: 'Supplier', class: 'colSupplier', active: true, display: true, width: "200" },
+      { index: 2, label: 'PO No', class: 'colPoNumber', active: true, display: true, width: "150" },
+      { index: 3, label: 'Trans Type', class: 'colTransType', active: true, display: true, width: "150" },
+      { index: 4, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "150" },
+      { index: 5, label: 'Product Desc', class: 'colProductDesc', active: true, display: true, width: "150" },
+      { index: 6, label: 'Cost (ex)', class: 'colCostEX', active: true, display: true, width: "150" },
+      { index: 7, label: 'Tax', class: 'colTax', active: true, display: true, width: "150" },
+      { index: 8, label: 'Cost (inc)', class: 'colCostINC', active: true, display: true, width: "150" },
+      { index: 9, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "150" },
+      { index: 10, label: 'Qty Ordered', class: 'colOrdered', active: true, display: true, width: "150" },
+      { index: 11, label: 'Qty Received', class: 'colReceived', active: true, display: true, width: "150" },
+      { index: 12, label: 'Qty BO', class: 'colBO', active: true, display: true, width: "150" },
+      { index: 13, label: 'ETA Date', class: 'colETADate', active: true, display: true, width: "150" },
+      { index: 14, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "150" },
+      { index: 15, label: 'Received Date', class: 'colReceivedDate', active: true, display: true, width: "150" },
     ]
 
     templateObject.supplierproductreportth.set(reset_data);
   }
   templateObject.init_reset_data();
 
-  // await reportService.getBalanceSheetReport(dateAOsf) :
+  // await reportService.getcustomerProductReport(dateAOsf) :
 
   // --------------------------------------------------------------------------------------------------
   templateObject.initDate = () => {
@@ -143,183 +110,211 @@ Template.supplierproductreport.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-
-    for (let i = 0; i < data.tgeneralledgerreport.length; i++) {
+    for (let i = 0; i < data.tsupplierproduct.length; i++) {
       var dataList = [
-        data.tgeneralledgerreport[i].ACCOUNTID || "",
-        data.tgeneralledgerreport[i].ACCOUNTNAME || "",
-        data.tgeneralledgerreport[i].ACCOUNTNUMBER || "",
-        data.tgeneralledgerreport[i].ACCOUNTS || "",
-        data.tgeneralledgerreport[i].AMOUNTEX || "",
-        data.tgeneralledgerreport[i].AMOUNTINC || "",
-        data.tgeneralledgerreport[i].CHEQUENUMBER || "",
-        data.tgeneralledgerreport[i].CLASS || "",
-        data.tgeneralledgerreport[i].CLASSID || "",
-        data.tgeneralledgerreport[i]["CLIENT NAME"] || "",
-        data.tgeneralledgerreport[i].CREDITSEX || "",
-        data.tgeneralledgerreport[i].CREDITSINC || "",
-        data.tgeneralledgerreport[i].DATE || "",
-        data.tgeneralledgerreport[i].DEBITSEX || "",
-        data.tgeneralledgerreport[i].DEBITSINC || "",
-        data.tgeneralledgerreport[i].DETAILS || "",
-        data.tgeneralledgerreport[i].FIXEDASSETID || "",
-        data.tgeneralledgerreport[i].GLOBALREF || "",
-        data.tgeneralledgerreport[i].ID || "",
-        data.tgeneralledgerreport[i].MEMO || "",
-        data.tgeneralledgerreport[i].PAYMENTID || "",
-        data.tgeneralledgerreport[i].PREPAYMENTID || "",
-        data.tgeneralledgerreport[i].PRODUCTDESCRIPTION || "",
-        data.tgeneralledgerreport[i].PRODUCTNAME || "",
-        data.tgeneralledgerreport[i].PURCHASEORDERID || "",
-        data.tgeneralledgerreport[i].REFERENCENO || "",
-        data.tgeneralledgerreport[i].REPNAME || "",
-        data.tgeneralledgerreport[i].SALEID || "",
-        data.tgeneralledgerreport[i].TAXCODE || "",
-        data.tgeneralledgerreport[i].TAXRATE || "",
-        data.tgeneralledgerreport[i].TYPE || "",
-
+        data.tsupplierproduct[i]["Supplier Name"] || "",
+        data.tsupplierproduct[i]["Purchase Order Number"] || "",
+        data.tsupplierproduct[i]["Transaction Type"] || "",
+        data.tsupplierproduct[i]["ProductID"] || "",
+        data.tsupplierproduct[i]["Product Description"] || "",
+        data.tsupplierproduct[i]["Line Cost (Ex)"] || "",
+        data.tsupplierproduct[i]["Line Tax"] || "",
+        data.tsupplierproduct[i]["Line Cost (Inc)"] || "",
+        data.tsupplierproduct[i]["Tax Code"] || "",
+        data.tsupplierproduct[i]["Ordered"] || "",
+        data.tsupplierproduct[i]["Shipped"] || "",
+        data.tsupplierproduct[i]["BackOrder"] || "",
+        data.tsupplierproduct[i]["ETADate"] || "",
+        data.tsupplierproduct[i]["Order Date"] || "",
+        data.tsupplierproduct[i]["ReceivedDate"] || "",
       ];
       splashArrayReport.push(dataList);
-      templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
+      // templateObject.transactiondatatablerecords.set(splashArrayReport);
     }
 
+    splashArrayReport.sort(GlobalFunctions.sortFunction);
 
+    let start = splashArrayReport[0][0], costEx = 0, tax = 0, costInc = 0;
+    let T_AccountName = splashArrayReport[0][0];
+    let customerProductReport = [];
+    customerProductReport.push([
+      GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]);
+    for(let i = 0 ; i < splashArrayReport.length ; i ++){
+      if(start != splashArrayReport[i][0]) {
+        start = splashArrayReport[i][0];
+        costEx = costEx >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costEx), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costEx), "table-danger text-bold");
+        tax = tax >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tax), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tax), "table-danger text-bold");
+        costInc = costInc >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costInc), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costInc), "table-danger text-bold");
+        customerProductReport.push([
+          GlobalFunctions.generateSpan(`${T_AccountName} Total`, "table-cells text-bold"),
+          "",
+          "",
+          "",
+          "",
+          costEx,
+          tax,
+          costInc,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+        ]);
+        customerProductReport.push([
+          GlobalFunctions.generateSpan(splashArrayReport[i][0], "table-cells text-bold"),
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]);
+        costEx = 0, tax = 0, costInc = 0;
+      }
+      T_AccountName = splashArrayReport[i][0];
+      splashArrayReport[i][0] = "";
+      let tmpDate = new Date(splashArrayReport[i][2]);
+      splashArrayReport[i][1] = GlobalFunctions.generateSpan(splashArrayReport[i][1], 'text-primary');
+      splashArrayReport[i][2] = GlobalFunctions.generateSpan(splashArrayReport[i][2], 'text-primary');
+      splashArrayReport[i][3] = GlobalFunctions.generateSpan(splashArrayReport[i][3], 'text-primary');
+      splashArrayReport[i][4] = GlobalFunctions.generateSpan(splashArrayReport[i][4], 'text-primary');
+      splashArrayReport[i][8] = GlobalFunctions.generateSpan(splashArrayReport[i][8], 'text-primary');
+      splashArrayReport[i][9] = GlobalFunctions.generateSpan(splashArrayReport[i][9], 'text-primary');
+      splashArrayReport[i][10] = GlobalFunctions.generateSpan(splashArrayReport[i][10], 'text-primary');
+      splashArrayReport[i][11] = GlobalFunctions.generateSpan(splashArrayReport[i][11], 'text-primary');
+      splashArrayReport[i][12] = GlobalFunctions.generateSpan(GlobalFunctions.formatDate(splashArrayReport[i][12]), 'text-primary');
+      splashArrayReport[i][13] = GlobalFunctions.generateSpan(GlobalFunctions.formatDate(splashArrayReport[i][13]), 'text-primary');
+      splashArrayReport[i][14] = GlobalFunctions.generateSpan(GlobalFunctions.formatDate(splashArrayReport[i][14]), 'text-primary');
+      let tmp;
+      tmp = splashArrayReport[i][5] - 0;
+      costEx += tmp; //costEx
+      splashArrayReport[i][5] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-primary') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+
+      tmp = splashArrayReport[i][6] - 0;
+      tax += tmp; //tax
+      splashArrayReport[i][6] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-primary') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+
+      tmp = splashArrayReport[i][7] - 0;
+      costInc += tmp; //costInc
+      splashArrayReport[i][7] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-primary') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+      customerProductReport.push(splashArrayReport[i]);
+    }
+    customerProductReport.push([
+      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold'),
+      "",
+      "",
+      "",
+      "",
+      costEx >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costEx), 'table-cells text-bold') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costEx), 'text-danger text-bold'),
+      tax >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tax), 'table-cells text-bold') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tax), 'text-danger text-bold'),
+      costInc >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costInc), 'table-cells text-bold') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(costInc), 'text-danger text-bold'),
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+    ]);
+
+    templateObject.transactiondatatablerecords.set(customerProductReport);
     if (templateObject.transactiondatatablerecords.get()) {
       setTimeout(function () {
-        MakeNegative();
+        // MakeNegative();
       }, 100);
     }
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tblgeneralledger').DataTable({
-        data: splashArrayReport,
+      $('#tableExport').DataTable({
+        data: customerProductReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
           {
             targets: 0,
-            className: "colAccountID",
+            className: "colSupplier",
           },
           {
             targets: 1,
-            className: "colAccountName"
+            className: "colPoNumber"
           },
           {
             targets: 2,
-            className: "colAccountNo"
+            className: "colTransType"
           },
           {
             targets: 3,
-            className: "colAccounts hiddenColumn",
+            className: "colProductID",
           },
           {
             targets: 4,
-            className: "colAmountEx hiddenColumn",
+            className: "colProductDesc",
           },
           {
             targets: 5,
-            className: "colAmountInc hiddenColumn",
+            className: "colCostEX",
           },
           {
             targets: 6,
-            className: "colChequeNumber hiddenColumn",
+            className: "colTax",
           },
           {
             targets: 7,
-            className: "colDepartment",
+            className: "colCostINC",
           },
           {
             targets: 8,
-            className: "colClassID",
+            className: "colTaxCode",
           },
           {
             targets: 9,
-            className: "colProductDescription",
+            className: "colOrdered",
           },
           {
             targets: 10,
-            className: "colCreditEx hiddenColumn",
+            className: "colReceived",
           },
           {
             targets: 11,
-            className: "colCreditInc hiddenColumn",
+            className: "colBO",
           },
           {
             targets: 12,
-            className: "colDate",
+            className: "colETADate",
           },
           {
             targets: 13,
-            className: "colDebitsEx hiddenColumn",
+            className: "colOrderDate",
           },
           {
             targets: 14,
-            className: "colDebitsInc hiddenColumn",
-          },
-          {
-            targets: 15,
-            className: "colDetails hiddenColumn",
-          },
-          {
-            targets: 16,
-            className: "colFixedAssetID hiddenColumn",
-          },
-          {
-            targets: 17,
-            className: "colGlobalRef",
-          },
-          {
-            targets: 18,
-            className: "colID hiddenColumn",
-          },
-          {
-            targets: 19,
-            className: "colMemo hiddenColumn",
-          },
-          {
-            targets: 20,
-            className: "colPaymentID hiddenColumn",
-          },
-          {
-            targets: 21,
-            className: "colPrepaymentID hiddenColumn",
-          },
-          {
-            targets: 22,
-            className: "colCredit",
-          },
-          {
-            targets: 23,
-            className: "colProductID hiddenColumn",
-          },
-          {
-            targets: 24,
-            className: "colPurchaseOrderID",
-          },
-          {
-            targets: 25,
-            className: "colRefNo hiddenColumn",
-          },
-          {
-            targets: 26,
-            className: "colRepName",
-          },
-          {
-            targets: 27,
-            className: "colSaleID hiddenColumn",
-          },
-          {
-            targets: 28,
-            className: "colTaxCode hiddenColumn",
-          },
-          {
-            targets: 29,
-            className: "colTaxRate hiddenColumn",
-          },
-          {
-            targets: 30,
-            className: "colType",
+            className: "colReceivedDate",
           },
         ],
         select: true,
@@ -328,15 +323,16 @@ Template.supplierproductreport.onRendered(() => {
         pageLength: initialDatatableLoad,
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
+        "bsort": false,
         // responsive: true,
-        "order": [[1, "asc"]],
+        "order": [],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
         },
 
       }).on('page', function () {
         setTimeout(function () {
-          MakeNegative();
+          // MakeNegative();
         }, 100);
       }).on('column-reorder', function () {
 
@@ -354,7 +350,7 @@ Template.supplierproductreport.onRendered(() => {
           $(".fullScreenSpin").css("display", "none");
         }
         setTimeout(function () {
-          MakeNegative();
+          // MakeNegative();
         }, 100);
       });
       $(".fullScreenSpin").css("display", "none");

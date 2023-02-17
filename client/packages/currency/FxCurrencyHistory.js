@@ -13,7 +13,7 @@ import FxGlobalFunctions from "./FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import "./FxCurrencyHistory.html";
 
-
+const reportService = new ReportService();
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
 const taxRateService = new TaxRateService();
@@ -98,6 +98,28 @@ Template.FxCurrencyHistory.onRendered(function () {
         $(this).addClass("text-danger");
     });
   }
+  templateInstance.getCurrencyHistory = async function (dateAsOf, ignoreDate = false) {
+    getVS1Data('TCurrencyRateHistory').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        taxRateService.getCurrencyHistory(dateAsOf).then(async function (data) {
+          await addVS1Data('TCurrencyRateHistory', JSON.stringify(data));
+          templateInstance.displayCurrencyHistoryData(data);
+        }).catch(function (err) {
+
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateInstance.displayCurrencyHistoryData(data);
+      }
+    }).catch(function (err) {
+      taxRateService.getCurrencyHistory(dateAsOf).then(async function (data) {
+        await addVS1Data('TCurrencyRateHistory', JSON.stringify(data));
+        templateInstance.displayCurrencyHistoryData(data);
+      }).catch(function (err) {
+
+      });
+    });
+  }
 
   templateInstance.loadCurrencies  = async () => {
     LoadingOverlay.show();
@@ -112,9 +134,9 @@ Template.FxCurrencyHistory.onRendered(function () {
         return false;
       }
     });
-
-    let result = data.response;
-
+  }
+  templateInstance.displayCurrencyHistoryData  = async (data) => {
+    let result = data;
 
     if(result.tcurrencyratehistory) {
       const data = result.tcurrencyratehistory;
@@ -555,7 +577,7 @@ Template.FxCurrencyHistory.onRendered(function () {
   };
  
 
-  templateInstance.loadCurrencies();
+  templateInstance.getCurrencyHistory();
   templateInstance.getCountryData();
   
   LoadingOverlay.hide();
@@ -949,15 +971,16 @@ Template.FxCurrencyHistory.events({
   // },
   "click #exportbtn": function () {
     LoadingOverlay.show();
-     jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
-
+     // jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
+    const filename = loggedCompany + "-Fx Currency History" + ".csv";
+    utilityService.exportReportToCsvTable("tblFxCurrencyHistory", filename, "csv");
     LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
     playPrintAudio();
     setTimeout(function(){
     LoadingOverlay.show();
-    // jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
+    jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
 
     document.title = 'vs1cloud';
     $("#tblFxCurrencyHistory").print({
