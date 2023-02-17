@@ -678,7 +678,7 @@
 
                             </div>
                             <div class="col-4 editor-Right">
-                                <div class="col-12">
+                                <div class="col-12" style="margin-bottom:25px;">
                                     <div class="container mb-3">
                                         <h2 style="font-size: 1.5rem;">Change the order and grouping of your report
                                         </h2>
@@ -701,8 +701,7 @@
                                         </div>
                                         <div class="custom-control custom-switch mt-3">
                                             <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting" checked="{{layoutinfo.IsCurrentLayout}}">
-                                            <label style="width: 275px;" class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all
-                                                users</label>
+                                            <label class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all users</label>
                                         </div>
                                     </div>
                                 </div>
@@ -771,11 +770,11 @@
                                     </div>
                                 </div>
                                 <div class="container mb-3 editRowGroup" style="">
-                                    <h3>Group</h3>
+                                    <h5>Group</h5>
                                     <hr class="periodSelectorLine" />
                                     <div>
                                         <label>Row Heading</label><br>
-                                        <input id="fullName" type="text" class="form-control" name="nplNewLayoutName" value="" placeholder="">
+                                        <input id="editGroupName" type="text" class="form-control" name="editGroupName" value="" placeholder="">
                                     </div>
                                     <div class="mt-2">
                                         <label style="width:100%;">Display Balance</label>
@@ -1134,9 +1133,7 @@
                                         }
 
                                         .grpTotal-container {
-                                            padding: 1rem;
-                                            margin: 0rem;
-                                            background: #fff;
+                                            margin: 10px;
                                             display: flex;
                                         }
 
@@ -1166,7 +1163,7 @@
                                             color: #000a1e;
                                         }
 
-                                        .editGroup,
+                                        /* .editGroup,
                                         .edlayCalculator,
                                         .groupRow,
                                         .totalSelctor,
@@ -1174,7 +1171,7 @@
                                         .dateColumnTab,
                                         .textBlockColumn, .notesColumn,.scheduleColumn, .editRowGroup,.rowEdLayCalculator,.columnEdLayCalculator,.budgetColumnTab,.varianceColumnTab,.percentageColumnTab,.newDateColumnTab {
                                             padding: 1rem;
-                                        }
+                                        } */
 
                                         .sortableAccountParent .periodSelectorLine {
                                             margin-top: 0.7rem;

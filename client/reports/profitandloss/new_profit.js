@@ -724,7 +724,6 @@ Template.newprofitandloss.onRendered(function () {
         var group = $("ol.nested_with_switch").sortable({
           group: "customSortableDiv",
           exclude: ".noDrag",
-
           afterMove: function (placeholder, container) {
             if (oldContainer != container) {
               if (oldContainer) oldContainer.el.removeClass("active");
@@ -745,6 +744,9 @@ Template.newprofitandloss.onRendered(function () {
             $item.addClass(siblingClass);
             $item.addClass("selected");
           },
+          activate: function ($item, container, _super) {
+            alert(1);
+          }
         });
 
         $(".collepsDiv").click(function () {
