@@ -2570,7 +2570,7 @@ Template.stocktransfercard.onRendered(function() {
 
     });
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
         var table = $(this);
 
         let accountname = table.find(".productName").text();

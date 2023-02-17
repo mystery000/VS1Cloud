@@ -2331,7 +2331,7 @@ Template.chequecard.onRendered(() => {
     }, 1000);
   });
 
-  $(document).on("click", ".chequecard #tblAccount tbody tr", function (e) {
+  $(document).on("click", ".chequecard #tblAccountListPop tbody tr", function (e) {
     $(".colAccountName").removeClass("boldtablealertsborder");
     let selectLineID = $("#selectLineID").val();
     let taxcodeList = templateObject.taxraterecords.get();
@@ -2341,8 +2341,8 @@ Template.chequecard.onRendered(() => {
     let $printrows = $(".cheque_print tbody tr");
 
     if (selectLineID) {
-      let lineProductName = table.find(".productName").text();
-      let lineProductDesc = table.find(".productDesc").text();
+      let lineProductName = table.find(".colAccountName").text();
+      let lineProductDesc = table.find(".colDescription").text();
 
       let lineUnitPrice = "0.00";
       let lineTaxRate = table.find(".taxrate").text();
@@ -2479,7 +2479,7 @@ Template.chequecard.onRendered(() => {
         });
       }
     } else {
-      let accountname = table.find(".productName").text();
+      let accountname = table.find(".colAccountName").text();
       $("#accountListModal").modal("toggle");
       $("#sltChequeBankAccountName").val(accountname);
     }
