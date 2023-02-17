@@ -1485,6 +1485,71 @@ Template.accountant_company.onRendered(() => {
     getLoadDate = getLoadDate[2] + "-" + getLoadDate[1] + "-" + getLoadDate[0];
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);
     templateObject.getBalanceSheetReports(getLoadDate);
+
+    // Alex: Add for Docusign start
+    function dragElement(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id + "header")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+        } else {
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+            let signatures = $('.signdiv');
+            for (var i = 0; i < signatures.length; i++) {
+                if ((elmnt.offsetTop - pos2) < 50) {
+                    signatures[i].style.top = 50;
+                } else if ((elmnt.offsetTop - pos2) > 1050) {
+                    signatures[i].style.top = 1050;
+                } else {
+                    signatures[i].style.top = (elmnt.offsetTop - pos2) + "px";
+                }
+                if ((elmnt.offsetLeft - pos1) < 50) {
+                    signatures[i].style.left = 50;
+                } else if ((elmnt.offsetLeft - pos1) > 550) {
+                    signatures[i].style.left = 1050;
+                } else {
+                    signatures[i].style.left = (elmnt.offsetLeft - pos1) + "px";
+                }
+            }
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+    var signdivs = $('.signdiv');
+    for (var i = 0; i < signdivs.length; i++) {
+        dragElement(signdivs[i]);
+    }
+    // Alex: Add for Docusign end
 });
 
 Template.accountant_company.events({
@@ -2426,10 +2491,10 @@ Template.accountant_company.events({
                 $("#page-4-content-prt").html(elmnt);
             } else if ($("#editorType").val() == "description-1") {
                 $("#page-9-content").html(elmnt);
-                $("#page-9-content-prt").html(elmnt + $("#page-10-content").html());
+                $("#page-9-content-prt").html(elmnt + $("#page-9-content").html());
             } else {
                 $("#page-10-content").html(elmnt);
-                $("#page-9-content-prt").html($("#page-9-content").html() + elmnt);
+                $("#page-10-content-prt").html($("#page-10-content").html() + elmnt);
             }
             $('#editReportModal').modal('toggle');
         }, delayTimeAfterSound);
