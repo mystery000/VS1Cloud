@@ -9,7 +9,7 @@ export default class TableHandler {
     // $(".dataTable").on("DOMSubtreeModified",  () => {
     //   this.refreshDatatableResizable();
     // });
-    this.refreshDatatableResizable();
+    //this.refreshDatatableResizable();
 
     $(".dataTable thead tr th").on("mousedown", () => {
       this.refreshDatatableResizable();
@@ -48,13 +48,9 @@ export default class TableHandler {
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr("id");
-        let tableClassName = table.context.className||'';
-        if (tableClassName.indexOf("transactionLines") >= 0){
+        //let tableClassName = table.context.className||'';
+        if ((tableName != "tblBasReturnList")) {
           this.saveTableColumns(tableName);
-        }else{
-          if ((tableName != "tblBasReturnList") && (tableName != "tblInvoiceLine")) {
-            this.saveTableColumns(tableName);
-          }
         };
 
 
@@ -80,20 +76,24 @@ export default class TableHandler {
     //$(".fullScreenSpin").css("display", "inline-block");
     $(`#${tableName} thead tr th`).each(function (index) {
       var $tblrow = $(this);
-      var fieldID = $tblrow.attr("data-col-index") || 0;
+      var fieldID = $tblrow.attr("data-column-index") || 0;
       var colTitle = $tblrow.text().replace(/^\s+|\s+$/g, "") || "";
       var colWidth = $tblrow.width() || 0;
-      var colthClass = $tblrow.attr("data-class") || "";
-      var colHidden = false;
-      if ($tblrow.attr("data-col-active") == "true") {
-        colHidden = true;
+      var colthClass = $tblrow[0].classList[0]!='th'?$tblrow[0].classList[0]:$tblrow[0].classList[1]||$tblrow.attr("data-class") || "";
+
+       // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
+
+      let allClass = $tblrow[0].className ||$tblrow.attr("data-class") || "";
+      var showCol = true;
+      if (allClass.includes("hiddenColumn")) {
+        showCol = false;
       } else {
-        colHidden = false;
+        showCol = true;
       }
       let lineItemObj = {
         index: parseInt(fieldID),
         label: colTitle,
-        active: colHidden,
+        active: showCol,
         width: parseInt(colWidth),
         class: colthClass,
         display: true
@@ -112,11 +112,6 @@ export default class TableHandler {
         sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem("mySessionEmployeeLoggedID")), "").then(function (dataCustomize) {
           addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
         }).catch(function (err) {});
-        // swal({title: "SUCCESS", text: "Display settings is updated!", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(result => {
-        //   if (result.value) {
-        //     //$(".fullScreenSpin").css("display", "none");
-        //   }
-        // });
       } else {
         // swal("Something went wrong!", "", "error");
       }
