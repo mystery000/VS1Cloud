@@ -293,8 +293,6 @@ Template.newprofitandloss.onRendered(function () {
             if (data.tprofitandlossperiodcomparereport) {
               let accountData = data.tprofitandlossperiodcomparereport;
 
-              console.log("accountData========", accountData);
-
               let accountType = "";
               var dataList = "";
               for (let i = 0; i < accountData.length; i++) {
@@ -663,7 +661,6 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
-      console.log("=", data);
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
@@ -713,7 +710,6 @@ Template.newprofitandloss.onRendered(function () {
           }
         }
       }
-      console.log("=========", newprofitLossLayouts);
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
       // handle Dragging and sorting
@@ -2137,7 +2133,7 @@ Template.newprofitandloss.events({
                   "LayoutID": 3,
                   "Selected": parseInt(templateObject.layoutgroupid.get())
                 }
-              }              
+              }
               reportService.deletePNLNewGroup(jsonObj).then(function(res){
                 templateObject.layoutgroupid.set("");
                 templateObject.getProfitLossLayout();
@@ -2154,8 +2150,8 @@ Template.newprofitandloss.events({
                       } else if (result.dismiss === 'cancel') {}
                   });
                   $('.fullScreenSpin').css('display', 'none');
-              });                
-          } else if (result.dismiss === 'cancel') {            
+              });
+          } else if (result.dismiss === 'cancel') {
           }
       });
     }
@@ -2381,13 +2377,13 @@ Template.newprofitandloss.events({
       //   }
       //   return item;
       // });
-      jsonObj.Params.Destination = accountName;        
+      jsonObj.Params.Destination = accountName;
     }
 
     $('.fullScreenSpin').css('display', 'inline-block');
     reportService.savePNLNewGroup(jsonObj).then(function(res){
       alert(1);
-      templateObject.getProfitLossLayout();    
+      templateObject.getProfitLossLayout();
       $("#newGroupName").val("");
       $("#nplAddGroupScreen").modal("hide");
     }).catch(function(err) {
