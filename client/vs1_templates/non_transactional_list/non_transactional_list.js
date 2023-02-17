@@ -197,7 +197,7 @@ Template.non_transactional_list.onRendered(function() {
             }
             if (currenttablename == "tblAccountOverview" || currenttablename == "tblAccountListPop" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
-                    { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
+                    { index: 0, label: '#ID', class: 'colAccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
                     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
                     { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
