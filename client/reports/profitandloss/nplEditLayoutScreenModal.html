@@ -345,7 +345,7 @@
                                                 {{#each item in profitlosslayoutrecords }}
                                                 <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
                                                         <div class="mainHeadingDiv">
-                                                            <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.Level1 }}</h1>
+                                                            <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                         </div>
                                                         <ol class="groupedListNew" parent="{{ item.Level0Order }}">
                                                             {{#each acItem in item.subAccounts }}

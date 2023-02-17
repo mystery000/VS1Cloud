@@ -244,6 +244,12 @@ Template.npleditlayoutscreen.helpers({
   layoutinfo: () => {
     return Template.instance().layoutinfo.get();
   },
+  isAccount(layout) {
+    if (layout.ID > 1) {
+      return true;
+    }
+    return false;
+  },
 });
 
 Template.registerHelper("equal", function (a, b) {

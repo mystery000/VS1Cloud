@@ -667,15 +667,50 @@ Template.newprofitandloss.onRendered(function () {
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
-          // if(data.ProcessLog.PNLLayout.Lines[i].Parent == 0){
-          //   let jsonObj = {
-          //     ID: data.ProcessLog.PNLLayout.Lines[i].ID
-          //   }
-          // }
-          newprofitLossLayouts.push({
-            ...data.ProcessLog.PNLLayout.Lines[i],
-            subAccounts: [],
-          });
+          if(data.ProcessLog.PNLLayout.Lines[i].Parent == 0){
+            let subAccounts = [];
+            for(var j=0; j<data.ProcessLog.PNLLayout.Lines.length; j++){
+              if(data.ProcessLog.PNLLayout.Lines[i].ID == data.ProcessLog.PNLLayout.Lines[j].Parent){
+                let subAccounts1 = [];
+                for(var k=0; k<data.ProcessLog.PNLLayout.Lines.length; k++){
+                  if(data.ProcessLog.PNLLayout.Lines[j].ID == data.ProcessLog.PNLLayout.Lines[k].Parent){
+                    let subAccounts2 = [];
+                    for(var m=0; m<data.ProcessLog.PNLLayout.Lines.length; m++){
+                      if(data.ProcessLog.PNLLayout.Lines[k].ID == data.ProcessLog.PNLLayout.Lines[m].Parent){
+                        let jsonObj3 = {
+                          ID: data.ProcessLog.PNLLayout.Lines[m].ID,
+                          AccountName: data.ProcessLog.PNLLayout.Lines[m].Level2,
+                          Pos: data.ProcessLog.PNLLayout.Lines[m].Pos,
+                        }
+                        subAccounts2.push(jsonObj3);
+                      }
+                    }
+                    let jsonObj2 = {
+                      ID: data.ProcessLog.PNLLayout.Lines[k].ID,
+                      AccountName: data.ProcessLog.PNLLayout.Lines[k].Level2,
+                      Pos: data.ProcessLog.PNLLayout.Lines[k].Pos,
+                      subAccounts: subAccounts2
+                    }
+                    subAccounts1.push(jsonObj2);
+                  }
+                }
+                let jsonObj1 = {
+                  ID: data.ProcessLog.PNLLayout.Lines[j].ID,
+                  AccountName: data.ProcessLog.PNLLayout.Lines[j].Level2,
+                  Pos: data.ProcessLog.PNLLayout.Lines[j].Pos,
+                  subAccounts: subAccounts1
+                }
+                subAccounts.push(jsonObj1);
+              }
+            }
+            let jsonObj = {
+              ID: data.ProcessLog.PNLLayout.Lines[i].ID,
+              AccountName: data.ProcessLog.PNLLayout.Lines[i].Level1,
+              Pos: data.ProcessLog.PNLLayout.Lines[i].Pos,
+              subAccounts: subAccounts,
+            }
+            newprofitLossLayouts.push(jsonObj);
+          }
         }
       }
       console.log("=========", newprofitLossLayouts);
@@ -2499,12 +2534,6 @@ Template.newprofitandloss.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     return activeArray.length > 0;
-  },
-  isAccount(layout) {
-    if (layout.AccountID > 1) {
-      return true;
-    }
-    return false;
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
