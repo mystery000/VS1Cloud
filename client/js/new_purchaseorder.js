@@ -501,7 +501,7 @@ Template.purchaseordercard.onCreated(() => {
             e.preventDefault();
             return true;
         }
-            
+
         $('.fullScreenSpin').css('display', 'inline-block');
         var splashLineArray = new Array();
         let lineItemsForm = [];
@@ -8524,7 +8524,7 @@ Template.purchaseordercard.events({
     },
     'click .printConfirm':async function (event) {
         playPrintAudio();
-        const templateObject = Template.instance(); 
+        const templateObject = Template.instance();
         setTimeout(async function(){
             var printTemplate = [];
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -9579,18 +9579,18 @@ Template.purchaseordercard.events({
                             let index = workorders.findIndex((order, index)=>{
                                 return order.fields.ID == workorderid
                             })
-                            
+
                             if(index > -1) {
                                 let workorderrecord = cloneDeep(workorders[index].fields);
                                 if(workorderrecord.POStatus == 'not created') {
                                     workorderrecord.POStatus = 'ordered';
-                                }  
+                                }
                                 if (getso_id[1]) {
                                     workorderrecord.PONumber = getso_id[1];
                                 }
                                 if (workorderrecord.POStatus == 'ordered') {
                                     if (splashLineArray[0].fields.UOMQtySold == splashLineArray[0].fields.UOMQtyShipped) {
-                                        workorderrecord.POStatus = 'received'; 
+                                        workorderrecord.POStatus = 'received';
                                     }
                                 }
                                 let object = {

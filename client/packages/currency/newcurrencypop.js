@@ -92,8 +92,7 @@ Template.newcurrencypop.onRendered(function () {
   );
 
   templateObject.getTaxRates = function () {
-    getVS1Data("TCurrency")
-      .then(function (dataObject) {
+    getVS1Data("TCurrency").then(function (dataObject) {
         if (dataObject.length == 0) {
           taxRateService
             .getCurrencies()
@@ -413,8 +412,7 @@ Template.newcurrencypop.onRendered(function () {
             "form-control form-control-sm"
           );
         }
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         taxRateService
           .getCurrencies()
           .then(function (data) {
@@ -597,7 +595,7 @@ Template.newcurrencypop.onRendered(function () {
       });
   };
 
-  templateObject.getTaxRates();
+  // templateObject.getTaxRates();
 
   //   templateObject.getCountryData = function () {
   //     getVS1Data("TCountries")

@@ -325,7 +325,7 @@ Template.accountant_company.onRendered(() => {
                 });
             });
     };
-    templateObject.getCountryData();
+    // templateObject.getCountryData();
 
     templateObject.getAccountLists = function() {
         getVS1Data("TAccountVS1")

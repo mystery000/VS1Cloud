@@ -2203,29 +2203,6 @@ Template.accountsoverview.events({
             });
         } else {}
     },
-    "change #sltAccountType": function(e) {
-        let templateObject = Template.instance();
-        var accountTypeName = $("#sltAccountType").val();
-
-        if (accountTypeName === "BANK") {
-            $(".isBankAccount").removeClass("isNotBankAccount");
-            $(".isCreditAccount").addClass("isNotCreditAccount");
-        } else if (accountTypeName === "CCARD") {
-            $(".isCreditAccount").removeClass("isNotCreditAccount");
-            $(".isBankAccount").addClass("isNotBankAccount");
-        } else {
-            $(".isBankAccount").addClass("isNotBankAccount");
-            $(".isCreditAccount").addClass("isNotCreditAccount");
-        }
-        // $('.file-name').text(filename);
-        // let selectedFile = event.target.files[0];
-        // templateObj.selectedFile.set(selectedFile);
-        // if($('.file-name').text() != ""){
-        //   $(".btnImport").removeAttr("disabled");
-        // }else{
-        //   $(".btnImport").Attr("disabled");
-        // }
-    },
     "click .btnDeleteAccount": function() {
         playDeleteAudio();
         let templateObject = Template.instance();

@@ -101,7 +101,7 @@ Template.eftOptionsModal.events({
   "click .btnCancelEftOptions": (e) => {
     playCancelAudio();
     setTimeout(function () {
-      $('#eftOptionsModal').modal('hide');
+      $('.eftOptionsModal').modal('hide');
     }, delayTimeAfterSound);
   },
 
