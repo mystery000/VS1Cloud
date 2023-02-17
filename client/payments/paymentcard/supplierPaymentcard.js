@@ -2107,7 +2107,7 @@ Template.supplierpaymentcard.onRendered(() => {
     var table = $(this);
 
     let colAccountID = table.find(".colAccountID").text();
-    let accountname = table.find(".productName").text();
+    let accountname = table.find(".colAccountName").text();
     $("#accountListModal").modal("toggle");
 
     $("#edtSelectBankAccountName").val(accountname);
