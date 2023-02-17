@@ -44,6 +44,7 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
   templateObject.daterange = new ReactiveVar();
+  templateObject.layoutgroupid = new ReactiveVar();
   FxGlobalFunctions.initVars(templateObject);
 });
 
@@ -664,11 +665,53 @@ Template.newprofitandloss.onRendered(function () {
     reportService.getProfitLossLayout().then(function(data){
       console.log("=", data);
       let newprofitLossLayouts = [];
-      for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
-        newprofitLossLayouts.push({
-          ...data.ProcessLog.PNLLayout.Lines[i],
-          subAccounts: [],
-        });
+      if(data.ProcessLog.PNLLayout.Lines != undefined){
+        for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
+          if(data.ProcessLog.PNLLayout.Lines[i].Parent == 0){
+            let subAccounts = [];
+            for(var j=0; j<data.ProcessLog.PNLLayout.Lines.length; j++){
+              if(data.ProcessLog.PNLLayout.Lines[i].ID == data.ProcessLog.PNLLayout.Lines[j].Parent){
+                let subAccounts1 = [];
+                for(var k=0; k<data.ProcessLog.PNLLayout.Lines.length; k++){
+                  if(data.ProcessLog.PNLLayout.Lines[j].ID == data.ProcessLog.PNLLayout.Lines[k].Parent){
+                    let subAccounts2 = [];
+                    for(var m=0; m<data.ProcessLog.PNLLayout.Lines.length; m++){
+                      if(data.ProcessLog.PNLLayout.Lines[k].ID == data.ProcessLog.PNLLayout.Lines[m].Parent){
+                        let jsonObj3 = {
+                          ID: data.ProcessLog.PNLLayout.Lines[m].ID,
+                          AccountName: data.ProcessLog.PNLLayout.Lines[m].Level2,
+                          Pos: data.ProcessLog.PNLLayout.Lines[m].Pos,
+                        }
+                        subAccounts2.push(jsonObj3);
+                      }
+                    }
+                    let jsonObj2 = {
+                      ID: data.ProcessLog.PNLLayout.Lines[k].ID,
+                      AccountName: data.ProcessLog.PNLLayout.Lines[k].Level2,
+                      Pos: data.ProcessLog.PNLLayout.Lines[k].Pos,
+                      subAccounts: subAccounts2
+                    }
+                    subAccounts1.push(jsonObj2);
+                  }
+                }
+                let jsonObj1 = {
+                  ID: data.ProcessLog.PNLLayout.Lines[j].ID,
+                  AccountName: data.ProcessLog.PNLLayout.Lines[j].Level2,
+                  Pos: data.ProcessLog.PNLLayout.Lines[j].Pos,
+                  subAccounts: subAccounts1
+                }
+                subAccounts.push(jsonObj1);
+              }
+            }
+            let jsonObj = {
+              ID: data.ProcessLog.PNLLayout.Lines[i].ID,
+              AccountName: data.ProcessLog.PNLLayout.Lines[i].Level1,
+              Pos: data.ProcessLog.PNLLayout.Lines[i].Pos,
+              subAccounts: subAccounts,
+            }
+            newprofitLossLayouts.push(jsonObj);
+          }
+        }
       }
       console.log("=========", newprofitLossLayouts);
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
@@ -681,7 +724,6 @@ Template.newprofitandloss.onRendered(function () {
         var group = $("ol.nested_with_switch").sortable({
           group: "customSortableDiv",
           exclude: ".noDrag",
-
           afterMove: function (placeholder, container) {
             if (oldContainer != container) {
               if (oldContainer) oldContainer.el.removeClass("active");
@@ -701,8 +743,10 @@ Template.newprofitandloss.onRendered(function () {
             $item.removeClass();
             $item.addClass(siblingClass);
             $item.addClass("selected");
-
           },
+          activate: function ($item, container, _super) {
+            alert(1);
+          }
         });
 
         $(".collepsDiv").click(function () {
@@ -715,8 +759,10 @@ Template.newprofitandloss.onRendered(function () {
             .removeClass("selected");
           $(this).parents(".vertical").find(".selected").removeClass("dragged");
           $(this).parent().addClass("selected");
+          templateObject.layoutgroupid.set($(this).parent().attr("plid"));
         });
       }, 1000);
+      $('.fullScreenSpin').css('display', 'none');
     });
     // return false
 
@@ -2073,7 +2119,49 @@ Template.newprofitandloss.events({
   // });
   //   },
   "click .btnDelSelected": function (event) {
-    $(".currSelectedItem:nth-child(n)").remove();
+    let templateObject = Template.instance();
+    if(templateObject.layoutgroupid.get()){
+      swal({
+          title: 'WARNING!',
+          text: 'Are you sure delete the selected group?',
+          type: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+      }).then((result) => {
+          if (result.value) {
+              $('.fullScreenSpin').css('display', 'inline-block');
+              let jsonObj = {
+                "Name": "VS1_PNLDeleteGroup",
+                "Params":{
+                  "LayoutID": 3,
+                  "Selected": parseInt(templateObject.layoutgroupid.get())
+                }
+              }              
+              reportService.deletePNLNewGroup(jsonObj).then(function(res){
+                templateObject.layoutgroupid.set("");
+                templateObject.getProfitLossLayout();
+              }).catch(function(err) {
+                  swal({
+                      title: 'Oooops...',
+                      text: err,
+                      type: 'error',
+                      showCancelButton: false,
+                      confirmButtonText: 'Try Again'
+                  }).then((result) => {
+                      if (result.value) {
+                          // Meteor._reload.reload();
+                      } else if (result.dismiss === 'cancel') {}
+                  });
+                  $('.fullScreenSpin').css('display', 'none');
+              });                
+          } else if (result.dismiss === 'cancel') {            
+          }
+      });
+    }
+    else{
+      swal('WARNING', 'Please select the group you need to delete.', 'error');
+    }
   },
   "click .chkTotal": async function (event) {
     let templateObject = Template.instance();
@@ -2203,119 +2291,119 @@ Template.newprofitandloss.events({
       return false;
     }
     let accountName = $("#nplPlaceInMoveSelection").val();
-    let profitlosslayoutfields = templateObject.profitlosslayoutrecords.get();
-    if (profitlosslayoutfields) {
-      if (accountName == "none") {
-        profitlosslayoutfields.push({
-          Account: "",
-          AccountID: 0,
-          AccountLevel0GroupName: groupName,
-          AccountLevel1GroupName: "",
-          AccountLevel2GroupName: "",
-          AccountName: groupName,
-          Direction: "",
-          GlobalRef: "DEF1",
-          Group: "",
-          ID: 0,
-          ISEmpty: false,
-          IsAccount: false,
-          IsRoot: false,
-          KeyStringFieldName: "",
-          KeyValue: "",
-          LayoutID: 1,
-          LayoutToUse: "",
-          Level: "",
-          Level0Group: "",
-          Level1Group: "",
-          Level2Group: "",
-          Level0Order: 1,
-          Level1Order: 0,
-          Level2Order: 0,
-          Level3Order: 0,
-          MsTimeStamp: "2022-04-06 16:00:23",
-          MsUpdateSiteCode: "DEF",
-          Parent: 0,
-          Pos: "0",
-          Position: 0,
-          Recno: 3,
-          Up: false,
-          subAccounts: [],
-        });
-        $("#newGroupName").val("");
-        templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
-
-        let jsonObj = {
-            Name: "VS1_PNLAddGroup",
-            Params: {
-              "LayoutID": 3,
-              "GroupName": groupName,
-              "Destination": accountName,
-            }
+    let jsonObj = {
+        Name: "VS1_PNLAddGroup",
+        Params: {
+          "LayoutID": 3,
+          "GroupName": groupName,
+          "Destination": 0
         }
-        
-        reportService.savePNLNewGroup(jsonObj).then(function(res){
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {
-                    // Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {}
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        });
-      } else {
-        let updateLayouts = profitlosslayoutfields.filter(function (
-          item,
-          index
-        ) {
-          if (item.AccountName == accountName) {
-            item.subAccounts.push({
-              Account: "",
-              AccountID: 0,
-              AccountLevel0GroupName: item.AccountName,
-              AccountLevel1GroupName: groupName,
-              AccountLevel2GroupName: "",
-              AccountName: groupName,
-              Direction: "",
-              GlobalRef: "DEF1",
-              Group: "",
-              ID: 0,
-              ISEmpty: false,
-              IsAccount: false,
-              IsRoot: false,
-              KeyStringFieldName: "",
-              KeyValue: "",
-              LayoutID: 1,
-              LayoutToUse: "",
-              Level: "",
-              Level0Group: "",
-              Level1Group: "",
-              Level2Group: "",
-              Level0Order: 0,
-              Level1Order: 0,
-              Level2Order: 0,
-              Level3Order: 0,
-              MsTimeStamp: "2022-04-06 16:00:23",
-              MsUpdateSiteCode: "DEF",
-              Parent: item.ID,
-              Pos: "0",
-              Position: 0,
-              Recno: 3,
-              Up: false,
-            });
-          }
-          return item;
-        });
-        $("#newGroupName").val("");
-        templateObject.profitlosslayoutrecords.set(updateLayouts);
-      }
-      $("#nplAddGroupScreen").modal("hide");
     }
+    if (accountName == "none") {
+      // profitlosslayoutfields.push({
+      //   Account: "",
+      //   AccountID: 0,
+      //   AccountLevel0GroupName: groupName,
+      //   AccountLevel1GroupName: "",
+      //   AccountLevel2GroupName: "",
+      //   AccountName: groupName,
+      //   Direction: "",
+      //   GlobalRef: "DEF1",
+      //   Group: "",
+      //   ID: 0,
+      //   ISEmpty: false,
+      //   IsAccount: false,
+      //   IsRoot: false,
+      //   KeyStringFieldName: "",
+      //   KeyValue: "",
+      //   LayoutID: 1,
+      //   LayoutToUse: "",
+      //   Level: "",
+      //   Level0Group: "",
+      //   Level1Group: "",
+      //   Level2Group: "",
+      //   Level0Order: 1,
+      //   Level1Order: 0,
+      //   Level2Order: 0,
+      //   Level3Order: 0,
+      //   MsTimeStamp: "2022-04-06 16:00:23",
+      //   MsUpdateSiteCode: "DEF",
+      //   Parent: 0,
+      //   Pos: "0",
+      //   Position: 0,
+      //   Recno: 3,
+      //   Up: false,
+      //   subAccounts: [],
+      // });
+      // $("#newGroupName").val("");
+      // templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
+      // templateObject.profitlosslayoutrecords.set(updateLayouts);
+    } else {
+      // let updateLayouts = profitlosslayoutfields.filter(function (
+      //   item,
+      //   index
+      // ) {
+      //   if (item.AccountName == accountName) {
+      //     item.subAccounts.push({
+      //       Account: "",
+      //       AccountID: 0,
+      //       AccountLevel0GroupName: item.AccountName,
+      //       AccountLevel1GroupName: groupName,
+      //       AccountLevel2GroupName: "",
+      //       AccountName: groupName,
+      //       Direction: "",
+      //       GlobalRef: "DEF1",
+      //       Group: "",
+      //       ID: 0,
+      //       ISEmpty: false,
+      //       IsAccount: false,
+      //       IsRoot: false,
+      //       KeyStringFieldName: "",
+      //       KeyValue: "",
+      //       LayoutID: 1,
+      //       LayoutToUse: "",
+      //       Level: "",
+      //       Level0Group: "",
+      //       Level1Group: "",
+      //       Level2Group: "",
+      //       Level0Order: 0,
+      //       Level1Order: 0,
+      //       Level2Order: 0,
+      //       Level3Order: 0,
+      //       MsTimeStamp: "2022-04-06 16:00:23",
+      //       MsUpdateSiteCode: "DEF",
+      //       Parent: item.ID,
+      //       Pos: "0",
+      //       Position: 0,
+      //       Recno: 3,
+      //       Up: false,
+      //     });
+      //   }
+      //   return item;
+      // });
+      jsonObj.Params.Destination = accountName;        
+    }
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+    reportService.savePNLNewGroup(jsonObj).then(function(res){
+      alert(1);
+      templateObject.getProfitLossLayout();    
+      $("#newGroupName").val("");
+      $("#nplAddGroupScreen").modal("hide");
+    }).catch(function(err) {
+        swal({
+            title: 'Oooops...',
+            text: err,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Try Again'
+        }).then((result) => {
+            if (result.value) {
+                // Meteor._reload.reload();
+            } else if (result.dismiss === 'cancel') {}
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    });
   },
   ...FxGlobalFunctions.getEvents(),
 });
@@ -2448,12 +2536,6 @@ Template.newprofitandloss.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     return activeArray.length > 0;
-  },
-  isAccount(layout) {
-    if (layout.AccountID > 1) {
-      return true;
-    }
-    return false;
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
