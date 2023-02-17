@@ -1524,15 +1524,15 @@ Template.accountant_company.onRendered(() => {
             for (var i = 0; i < signatures.length; i++) {
                 if ((elmnt.offsetTop - pos2) < 50) {
                     signatures[i].style.top = 50;
-                } else if ((elmnt.offsetTop - pos2) > 1050) {
-                    signatures[i].style.top = 1050;
+                } else if ((elmnt.offsetTop - pos2) > 950) {
+                    signatures[i].style.top = 950;
                 } else {
                     signatures[i].style.top = (elmnt.offsetTop - pos2) + "px";
                 }
                 if ((elmnt.offsetLeft - pos1) < 50) {
                     signatures[i].style.left = 50;
                 } else if ((elmnt.offsetLeft - pos1) > 550) {
-                    signatures[i].style.left = 1050;
+                    signatures[i].style.left = 550;
                 } else {
                     signatures[i].style.left = (elmnt.offsetLeft - pos1) + "px";
                 }
