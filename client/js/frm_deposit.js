@@ -75,7 +75,7 @@ Template.depositcard.onCreated(()=>{
     templateObject.totalDebit.set(Currency+ '0.00');
     templateObject.accountnamerecords = new ReactiveVar();
     templateObject.datatablepaymentlistrecords = new ReactiveVar([]);
-    
+
     templateObject.customerRecord = new ReactiveVar();
 
     setTimeout(function () {
@@ -1527,7 +1527,6 @@ Template.depositcard.onRendered(()=>{
 
     $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
         let selectCustomerLineID = $('#customerSelectLineID').val();
-
         var table = $(this);
         let utilityService = new UtilityService();
 
@@ -4685,12 +4684,13 @@ Template.depositcard.events({
         var offset = $earch.offset();
         $("#edtCustomerPOPID").val("");
         const templateObject = Template.instance();
+        var targetID = $(event.target).closest('tr').attr('id');
+        $('#customerSelectLineID').val(targetID);
             if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
                 // $('#tblDepositEntryLine tbody tr .lineCompany').attr("data-toggle", "modal");
                 // $('#tblDepositEntryLine tbody tr .lineCompany').attr("data-target", "#customerListModal");
                 $("#customerListModal").modal("toggle");
-                var targetID = $(event.target).closest('tr').attr('id');
-                $('#customerSelectLineID').val(targetID);
+
                 setTimeout(function() {
                     $('#tblCustomerlist_filter .form-control-sm').focus();
                 }, 500);
@@ -4940,7 +4940,7 @@ Template.depositcard.events({
                                     let popCustomerType =
                                         data.tcustomervs1[currentCustomerIndex].fields.ClientTypeName || "";
                                     let popCompany = data.tcustomervs1[currentCustomerIndex].fields.Companyname || ''
-                                    
+
                                     let customerRecord = {
                                         id:popCustomerID,
                                         phone:popCustomerPhone,
@@ -5298,7 +5298,7 @@ Template.depositcard.events({
             }
 
 
-      
+
     },
     'click .linePaymentMethod, keydown .linePaymentMethod': function(event) {
         // $('#tblDepositEntryLine tbody tr .colPaymentMethod').attr("data-toggle", "modal");
