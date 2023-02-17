@@ -2028,14 +2028,14 @@ Template.paymentcard.onRendered(() => {
         }, 1000);
     });
 
-    $(document).on("click", "#tblAccount tbody tr", function (e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
         //$(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         var table = $(this);
         let utilityService = new UtilityService();
         let $tblrows = $("#tblStockAdjustmentLine tbody tr");
 
-        let accountname = table.find(".productName").text();
+        let accountname = table.find(".colAccountName").text();
         $('#accountListModal').modal('toggle');
         $('#edtSelectBankAccountName').val(accountname);
         if ($tblrows.find(".lineProductName").val() == '') {

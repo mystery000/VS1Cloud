@@ -215,7 +215,7 @@ Template.newbankrule.onRendered(function () {
     }
   }
 
-  $(document).on("click", ".newbankrule #tblAccount tbody tr", function (e) {
+  $(document).on("click", ".newbankrule #tblAccountListPop tbody tr", function (e) {
     $(".colAccountName").removeClass("boldtablealertsborder");
     $(".colAccount").removeClass("boldtablealertsborder");
     const table = $(this);

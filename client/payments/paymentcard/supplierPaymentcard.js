@@ -2103,7 +2103,7 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
+  $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
     var table = $(this);
 
     let colAccountID = table.find(".colAccountID").text();

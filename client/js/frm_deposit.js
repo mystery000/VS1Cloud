@@ -1477,7 +1477,7 @@ Template.depositcard.onRendered(()=>{
     });
 
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
         var table = $(this);
         let isHeader = table.find(".isHeader").text() == "true";
         if (isHeader) {
@@ -1509,7 +1509,7 @@ Template.depositcard.onRendered(()=>{
 
               $(".colAccount").removeClass('boldtablealertsborder');
         }else{
-          let accountname = table.find(".productName").text();
+          let accountname = table.find(".colAccountName").text();
           $('#accountListModal').modal('toggle');
           $('#sltAccountName').val(accountname);
           if($tblrows.find(".lineAccountName").val() === ''){
@@ -3283,7 +3283,7 @@ Template.depositcard.events({
                   $('#tblAccount_filter .form-control-sm').val('');
                   $('#tblAccount_filter .form-control-sm').trigger("input");
 
-                  var datatable = $('#tblAccount').DataTable();
+                  var datatable = $('#tblAccountListPop').DataTable();
                   datatable.draw();
                   $('#tblAccount_filter .form-control-sm').trigger("input");
 
@@ -3658,7 +3658,7 @@ Template.depositcard.events({
                     $('#tblAccount_filter .form-control-sm').val('');
                     $('#tblAccount_filter .form-control-sm').trigger("input");
 
-                    var datatable = $('#tblAccount').DataTable();
+                    var datatable = $('#tblAccountListPop').DataTable();
                     datatable.draw();
                     $('#tblAccount_filter .form-control-sm').trigger("input");
 
