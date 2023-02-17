@@ -56,7 +56,7 @@ Template.datatablelist.onCreated(function () {
         templateObject.currentproductID.set(currentProductID);
         let currenttype = curdata.type || "";
         templateObject.currenttype.set(currenttype);
-        templateObject.apiParams.set(templateObject.data.apiParams);
+        templateObject.apiParams.set(templateObject.data.apiParams || []);
     });
 
 })
@@ -227,14 +227,19 @@ Template.datatablelist.onRendered(async function () {
                                 params[i] = deleteFilter
                             }
                         }
-
-                        templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
-                            addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
-                                resolve(dataReturn)
+                        if(templateObject.data.apiName) {
+                            templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                                addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                                    resolve(dataReturn)
+                                })
+                            }).catch(function (e) {
+                                resolve([])
+                                $('.fullScreenSpin').css('display', 'none');
                             })
-                        }).catch(function (e) {
+                        } else {
+                            resolve([])
                             $('.fullScreenSpin').css('display', 'none');
-                        })
+                        }
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         resolve(data)
@@ -303,8 +308,8 @@ Template.datatablelist.onRendered(async function () {
         })
     }
     templateObject.displayTableData = async function (data, isEx = false) {
-        if (data == [] || data.length == 0) { return }
         var splashDataArray = new Array();
+        if (data != [] && data.length != 0) { 
         let deleteFilter = false;
         if (data.Params) {
             if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -334,13 +339,14 @@ Template.datatablelist.onRendered(async function () {
                 MakeNegative();
             }, 100);
         }
+        } 
 
         let colDef = [];
         let items = [];
 
         const tabledraw = () => {
             $('#' + currenttablename).DataTable({
-                dom: 'Bfrtip',
+                dom: 'BRlfrtip',
                 data: splashDataArray,
                 // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 // columns: columns,
@@ -533,7 +539,6 @@ Template.datatablelist.onRendered(async function () {
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function () {
-    
             }).on('length.dt', function (e, settings, len) {
     
                 $(".fullScreenSpin").css("display", "inline-block");
@@ -550,11 +555,11 @@ Template.datatablelist.onRendered(async function () {
                 setTimeout(function () {
                     MakeNegative();
                 }, 100);
-            });
+            })
            
             $(".fullScreenSpin").css("display", "none");
     
-            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); }, 0);
+            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); $('.dataTable').resizable();     }, 0);
         }
 
         function getColDef() {
@@ -573,6 +578,7 @@ Template.datatablelist.onRendered(async function () {
                 }
                 templateObject.columnDef.set(colDef)
                 tabledraw();
+                
             } else {
                 setTimeout(()=>{
                     getColDef();

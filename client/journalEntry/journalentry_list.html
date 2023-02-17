@@ -62,76 +62,76 @@
                         <div class="modal-body">
                             <div>
                                 {{#if tableheaderrecords}}
-                                <form class="d-xl-flex align-items-xl-center">
-                                    <div class="flex-grow-1">
-                                        <style>
-                                            .groove {
-                                                border-style: solid;
-                                                border-width: 1px;
-                                                width: 200px;
-                                                padding: 2px;
-                                                border-radius: .35rem;
-                                            }
-                                            .custom-control-label{
-                                                position: absolute;
-                                            }
-                                            .rngRange {
-                                                position: relative;
-                                                display: flex;
-                                                flex-direction: column;
-                                                width: 100%;
-                                                pointer-events: auto;
-                                                background-color: rgb(255, 255, 255);
-                                                background-clip: padding-box;
-                                                border: 1px solid rgb(133, 135, 150);
-                                                border-radius: .3rem;
-                                                border-style: solid;
-                                                border-width: 1px;
-                                                padding: 2px;
-                                                border-radius: .35rem;
-                                                color: rgb(128, 128, 128);
-                                                height:inherit!important;
-                                            }
-                                            @media only screen and (max-width: 480px) {
-                                                .modal.show .modal-dialog{
-                                                    float: inherit!important;
-                                                    left: inherit!important;
-                                                    top: auto!important;
-
+                                    <form class="d-xl-flex align-items-xl-center">
+                                        <div class="flex-grow-1">
+                                            <style>
+                                                .groove {
+                                                    border-style: solid;
+                                                    border-width: 1px;
+                                                    width: 200px;
+                                                    padding: 2px;
+                                                    border-radius: .35rem;
                                                 }
-                                            }
-                                        </style>
-                                        {{#each item in tableheaderrecords}}
-                                        {{#if equals item.sTitle "id"}}
-                                        {{else}}
+                                                .custom-control-label{
+                                                    position: absolute;
+                                                }
+                                                .rngRange {
+                                                    position: relative;
+                                                    display: flex;
+                                                    flex-direction: column;
+                                                    width: 100%;
+                                                    pointer-events: auto;
+                                                    background-color: rgb(255, 255, 255);
+                                                    background-clip: padding-box;
+                                                    border: 1px solid rgb(133, 135, 150);
+                                                    border-radius: .3rem;
+                                                    border-style: solid;
+                                                    border-width: 1px;
+                                                    padding: 2px;
+                                                    border-radius: .35rem;
+                                                    color: rgb(128, 128, 128);
+                                                    height:inherit!important;
+                                                }
+                                                @media only screen and (max-width: 480px) {
+                                                    .modal.show .modal-dialog{
+                                                        float: inherit!important;
+                                                        left: inherit!important;
+                                                        top: auto!important;
 
-                                        <div id="{{item.sIndex}}" class="columnSettings">
-                                            <div class="custom-control custom-switch" style="margin: 12px; float:left;">
-                                                <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
-                                                <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                            </div>
-                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 12px;">
-                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
-                                                <input class="custom-range rngRange" type="number" style="margin: 12px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
-                                            </div>
+                                                    }
+                                                }
+                                            </style>
+                                            {{#each item in tableheaderrecords}}
+                                                {{#if equals item.sTitle "id"}}
+                                                {{else}}
+
+                                                    <div id="{{item.sIndex}}" class="columnSettings">
+                                                        <div class="custom-control custom-switch" style="margin: 12px; float:left;">
+                                                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                                                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                        </div>
+                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 12px;">
+                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
+                                                            <input class="custom-range rngRange" type="number" style="margin: 12px;" value="{{item.sWidth}}" min="0" max="1000">
+                                                            <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
+                                                        </div>
+                                                    </div>
+
+                                                    {{#if equals item.sVisible true}}
+                                                        <script>
+                                                            $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
+                                                        </script>
+                                                    {{else}}
+                                                        <script>
+                                                            $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
+                                                        </script>
+                                                    {{/if}}
+
+                                                {{/if}}
+                                            {{/each}}
                                         </div>
-
-                                        {{#if equals item.sVisible true}}
-                                        <script>
-                                            $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
-                                        </script>
-                                        {{else}}
-                                        <script>
-                                            $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
-                                        </script>
-                                        {{/if}}
-
-                                        {{/if}}
-                                        {{/each}}
-                                    </div>
-                                </form>
+                                    </form>
                                 {{/if}}
                             </div>
                         </div>
@@ -166,7 +166,7 @@
                 <div class="col">
                     <a class="btn btnOpenSettings float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#myModal2" ><i class="icon ion-android-more-horizontal"></i></a>
                     <button class="btn btn-primary printConfirm float-right vs1ButtonMargin" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                        <button  class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                    <button  class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
                     <button class="btn btn-primary export float-right vs1ButtonMargin" type="button"  id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                     {{> spreadsheet_link templateName="Journal Entry List Result"}}
                 </div>
@@ -206,7 +206,7 @@
                                 opacity: 1;
                             }
                             .text-deleted{
-                              background-color: #e74a3b !important; color:#fff;
+                                background-color: #e74a3b !important; color:#fff;
                             }
                         </style>
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
@@ -247,10 +247,10 @@
                         </div>
                         <table id="tblJournalList" name="tblJournalList" class="dataTable table table-hover table-striped table-bordered tblJournalList">
                             <thead>
-                                <tr class="dnd-moved">
-                                    <!-- <th class="th colSortDate hiddenColumn"></th> -->
+                            <tr class="dnd-moved">
+                                <!-- <th class="th colSortDate hiddenColumn"></th> -->
 
-                                    <!-- <th class="th colSortDate hiddenColumn">id</th>
+                                <!-- <th class="th colSortDate hiddenColumn">id</th>
                                     <th class="th colTransactionDate" style="width:105px;">Transaction Date</th>
                                     <th class="th colEntryNo" style="width:80px;">Entry No</th>
                                     <th class="th colAccountName" style="width:200px;">Account Name</th>
@@ -262,16 +262,16 @@
                                     <th class="th colAccountNo hiddenColumn">Account No</th>
                                     <th class="th colEmployee hiddenColumn">Employee</th>
                                     <th class="th colMemo">Memo</th> -->
-                                    {{#each displayfield in displayfields}}
-                                        {{#if displayfield.display}}
+                                {{#each displayfield in displayfields}}
+                                    {{#if displayfield.display}}
                                         <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th {{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}">
                                             {{displayfield.custfieldlabel}}
-                                            </th>
-                                        {{/if}}
-                                    {{/each}}
-                                </tr>
+                                        </th>
+                                    {{/if}}
+                                {{/each}}
+                            </tr>
 
-                                <!-- {{#if isOnlyDefaultActive equal "false" }}
+                            <!-- {{#if isOnlyDefaultActive equal "false" }}
                                     <tr class="table-active tblAvoid customDoubleTableHeading">
                                         <th></th>
                                         <th></th>
@@ -282,27 +282,27 @@
 
 
                                         {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
+                                {{#each c in currencyList }}
+                                    {{# if c.active}}
                                                     <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
                                                 {{/if}}
-                                            {{/each}}
-                                        {{/if}}
+                                {{/each}}
+                            {{/if}}
 
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
+                                {{#if currencyList}}
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
                                                     <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
                                                 {{/if}}
-                                            {{/each}}
-                                        {{/if}}
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
+                                    {{/each}}
+                                {{/if}}
+                                {{#if currencyList}}
+                                    {{#each c in currencyList }}
+                                        {{# if c.active}}
                                                     <th class="text-center" active="{{ c.active }}">{{ c.code }}</th>
                                                 {{/if}}
-                                            {{/each}}
-                                        {{/if}}
+                                    {{/each}}
+                                {{/if}}
 
                                         <th></th>
                                         <th></th>
@@ -312,58 +312,58 @@
                                 {{/if}} -->
                             </thead>
                             <tbody>
-                                {{#if datatablerecords}}
+                            {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                    <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colSortDate">{{item.sortdate}}</td>
-                                    <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colTransactionDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>
-                                    <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
-                                    <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colAccountName">{{item.accountname}}</td>
-                                    <td contenteditable="false" class=" {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colDepartment">{{item.department}}</td>
+                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                        <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colTransactionDate">{{item.transactiondate}}</td>
+                                        <!--                                    <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colEntryNo" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>-->
+                                        <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
+                                        <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colAccountName">{{item.accountname}}</td>
+                                        <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colDepartment">{{item.department}}</td>
 
-                                    {{#if isOnlyDefaultActive }}
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colDebitAmount text-right {{#if isNegativeAmount item.debitamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.debitamount c}}</td>
+                                        {{#if isOnlyDefaultActive }}
+                                            {{#if currencyList}}
+                                                {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colDebitAmount text-right {{#if isNegativeAmount item.debitamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.debitamount c}}</td>
 
 
-                                                {{/if}}
-                                            {{/each}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colCreditAmount text-right {{#if isNegativeAmount item.creditamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.creditamount c}}</td>
+                                                    {{/if}}
+                                                {{/each}}
+                                                {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colCreditAmount text-right {{#if isNegativeAmount item.creditamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.creditamount c}}</td>
 
-                                                {{/if}}
-                                            {{/each}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                     <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colTaxAmount text-right {{#if isNegativeAmount item.taxamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.taxamount c}}</td>
-                                                {{/if}}
-                                            {{/each}}
+                                                    {{/if}}
+                                                {{/each}}
+                                                {{#each c in currencyList }}
+                                                    {{# if c.active}}
+                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colTaxAmount text-right {{#if isNegativeAmount item.taxamount }} text-danger {{else}} text-success {{/if}}" >{{convertAmount item.taxamount c}}</td>
+                                                    {{/if}}
+                                                {{/each}}
+
+
+                                            {{/if}}
+                                        {{else}}
+                                            <td contenteditable="false" class="{{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
+                                            <td contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colCreditAmount" style="text-align: right!important;">{{item.creditamount}}</td>
+                                            <td contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colTaxAmount" style="text-align: right!important;">{{item.taxamount}}</td>
 
 
                                         {{/if}}
-                                    {{else}}
-                                        <td contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
-                                        <td contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colCreditAmount" style="text-align: right!important;">{{item.creditamount}}</td>
-                                        <td contenteditable="false" class="{{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colTaxAmount" style="text-align: right!important;">{{item.taxamount}}</td>
-
-
-                                    {{/if}}
 
 
 
 
 
-                                    <td contenteditable="false" class="{{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
-                                    <td contenteditable="false" class="{{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}} colAccountNo">{{item.accountno}}</td>
-                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee">{{item.employeename}}</td>
+                                        <td contenteditable="false" class="{{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}} colStatus">{{item.orderstatus}}</td>
+                                        <td contenteditable="false" class="{{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}} colMemo">{{item.memo}}</td>
+                                        <!--                                    <td contenteditable="false" class="{{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}} colEmployee">{{item.employeename}}</td>-->
 
-                                    <td contenteditable="false" class="{{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colMemo" >{{item.memo}}</td>
-                                </tr>
+                                        <!--                                    <td contenteditable="false" class="{{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}} colMemo" >{{item.memo}}</td>-->
+                                    </tr>
                                 {{/each}}
-                                {{/if}}
+                            {{/if}}
 
                             </tbody>
                         </table>
@@ -395,7 +395,7 @@
 
     <!-- Start Currency Modal -->
     {{> FxRateModal currencies=currencyList}}
-     <!-- End Currency Modal -->
+    <!-- End Currency Modal -->
 
     <!-- End Help Video Modal -->
     <script>

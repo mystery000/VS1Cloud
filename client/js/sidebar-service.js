@@ -32,17 +32,45 @@ export class SideBarService extends BaseService {
         return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getAllProductClassQtyData() {
+      let options = {
+          PropertyList: "ID,ProductID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
+      };
+      return this.getList(this.ERPObjects.TProductClassQuantity, options);
+  }
+
+  getAllBOMProducts(limitcount, limitfrom) {
+      let options = "";
+      if (limitcount == "All") {
+          options = {
+              ListType: "Detail",
+              select: "[ProcStepItemRef]='vs1BOM'",
+              // orderby: '"Description asc"',
+          };
+      } else {
+          options = {
+              // orderby: '"Description asc"',
+              ListType: "Detail",
+              LimitCount: parseInt(limitcount),
+              LimitFrom: parseInt(limitfrom),
+              select: "[ProcStepItemRef]='vs1BOM'",
+          };
+      }
+
+      return this.getList(this.ERPObjects.TProcTree, options);
+  }
+
   getProductListVS1(limitcount, limitfrom, deleteFilter) {
-    let options = "";    
+    let options = "";
     if (limitcount == "All") {
       options = {
-        ListType: "Detail",        
+        ListType: "Detail",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
-        ListType: "Detail",        
+        ListType: "Detail",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -1106,22 +1134,15 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
-  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, typeFilter = 'all') {
-    let options = "";
+  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, typeFilter = 'all', useReceiptClaim) {
+    let options = {};
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
       if (limitcount == "All") {
         options = {
           IgnoreDates:true,
           orderby: '"AccountName asc"',
           Search: "Active = true",
-        };
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "Active = true and AccountType='" + typeFilter+"'",
-          };
-        }
+        };        
       } else {
         options = {
           IgnoreDates:true,
@@ -1130,47 +1151,35 @@ export class SideBarService extends BaseService {
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
-
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "Active = true and AccountType='" + typeFilter+"'",
-            LimitCount: parseInt(limitcount),
-            LimitFrom: parseInt(limitfrom),
-          };
-        }
       }
-
-    }else{
+      if(typeFilter != 'all') {
+        options.Search = options.Search + ` and AccountType='${typeFilter}'`
+      }
+      if (useReceiptClaim) {
+        options.Search = options.Search + ` and AllowExpenseClaim=true`
+      }
+    } else {
       if (limitcount == "All") {
         options = {
           orderby: '"AccountName asc"',
           IgnoreDates:true,
         };
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "AccountType='" + typeFilter+"'",
-          };
-        }
       } else {
         options = {
           IgnoreDates:true,
           orderby: '"AccountName asc"',
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
-        };
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "AccountType='" + typeFilter+"'",
-            LimitCount: parseInt(limitcount),
-            LimitFrom: parseInt(limitfrom),
-          };
-        }
+        };        
+      }
+      if(typeFilter != 'all') {
+        options.Search = `AccountType='${typeFilter}'`
+      }
+      if (useReceiptClaim) {
+        if (options.Search)
+          options.Search = options.Search + ` and AllowExpenseClaim=true`
+        else
+          options.Search = `AllowExpenseClaim=true`
       }
     }
 

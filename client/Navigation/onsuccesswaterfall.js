@@ -185,6 +185,8 @@ Template.onsuccesswaterfall.onRendered(function () {
 
   let isAppointmentScheduling = localStorage.getItem('CloudAppointmentSchedulingModule');
   let isAllocationLaunch = localStorage.getItem('CloudAppointmentAllocationLaunch');
+  let isAppointmentStartStop = localStorage.getItem('CloudAppointmentStartStopAccessLevel');
+  let isCreateAppointment = localStorage.getItem('CloudAppointmentCreateAppointment');
   let isCurrencyEnable = localStorage.getItem('CloudUseForeignLicence');
   let isAppointmentLaunch = localStorage.getItem('CloudAppointmentAppointmentLaunch');
 
@@ -510,6 +512,55 @@ Template.onsuccesswaterfall.onRendered(function () {
     }).catch(function (err) {
 
     });
+
+    sideBarService.getAllProductClassQtyData().then(function (data) {
+        countObjectTimes++;
+        progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+        $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+        $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+        $(".progressName").text("Product Quanity List ");
+        if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').addClass('headerprogressbarShow');
+            $('.headerprogressbar').removeClass('headerprogressbarHidden');
+          }
+
+        } else if (Math.round(progressPercentage) >= 100) {
+          $('.checkmarkwrapper').removeClass("hide");
+          templateObject.dashboardRedirectOnLogin();
+        }
+        addVS1Data('TProductClassQuantity', JSON.stringify(data));
+        $("<span class='process'>Product Quanity List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+      }).catch(function (err) {
+
+      });
+
+
+      sideBarService.getAllBOMProducts(initialBaseDataLoad, 0).then(function (data) {
+        countObjectTimes++;
+        progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+        $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+        $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+        $(".progressName").text("Proc Tree List ");
+        if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+          if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+            $('.headerprogressbar').removeClass('headerprogressbarHidden');
+          } else {
+            $('.headerprogressbar').addClass('headerprogressbarShow');
+            $('.headerprogressbar').removeClass('headerprogressbarHidden');
+          }
+
+        } else if (Math.round(progressPercentage) >= 100) {
+          $('.checkmarkwrapper').removeClass("hide");
+          templateObject.dashboardRedirectOnLogin();
+        }
+        addVS1Data('TProcTree', JSON.stringify(data));
+        $("<span class='process'>Proc Tree List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+      }).catch(function (err) {
+
+      });
   }
 
   templateObject.getAllRecentTransactions = function () {
@@ -2185,6 +2236,9 @@ Template.onsuccesswaterfall.onRendered(function () {
         templateObject.dashboardRedirectOnLogin();
       }
       addVS1Data('TAppointment', JSON.stringify(data));
+      addVS1Data('CloudAppointmentStartStopAccessLevel', isAppointmentStartStop);
+      addVS1Data('CloudAppointmentAllocationLaunch', isAllocationLaunch);
+      addVS1Data('CloudAppointmentCreateAppointment', isCreateAppointment);
       $("<span class='process'>Appointments Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
 
@@ -5982,7 +6036,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
   setTimeout(function () {
     localStorage.setItem('LoggedUserEventFired', false);
-  }, 2500);
+  }, 3500);
 
 
     templateObject.dashboardRedirectOnLogin = async function() {
@@ -6031,6 +6085,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     */
   };
     // templateObject.dashboardRedirectOnLogin();
+
 });
 
 Template.onsuccesswaterfall.helpers({

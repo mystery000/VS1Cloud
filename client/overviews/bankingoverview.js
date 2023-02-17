@@ -1863,10 +1863,10 @@ Template.bankingoverview.events({
     'click #btnNewReconRule': function(event) {
         FlowRouter.go('/newreconrule');
     },
-    'click #btnBankRuleList': function() {
-        FlowRouter.go('/bankrulelist');
+    'click #btnEFTBankRuleList': function() {
+        FlowRouter.go('/eft');
     },
-    'click #btnNewBankRule': function(event) {
+    'click #btnNewEFTBankRule': function(event) {
         FlowRouter.go('/newbankrule');
     },
 });
