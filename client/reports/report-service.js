@@ -930,6 +930,10 @@ export class ReportService extends BaseService {
         return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLAddGroup"', data);
     }
 
+    deletePNLNewGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLDeleteGroup"', data);
+    }
+
     getPNLLayout(layout=3) {
         let options = {
             select: "[ID]=" + layout,
