@@ -837,7 +837,6 @@ Template.allChartLists.helpers({
     is_available_chart: (current, chart) => {
         if(current == 'All_Charts') return 1;
         return chartsPlaceList[current].includes(chart);
-        // return 1;
     },
 
     is_dashboard_check: (currentTemplate) => {
