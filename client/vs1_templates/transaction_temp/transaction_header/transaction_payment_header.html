@@ -37,9 +37,15 @@ data
               {{/if}}
             </div>
             <div class="col-12 col-lg-6">
+              {{#if equals type "Customer"}}
+              {{> customer_email_input
+              label="Customer"
+              }}
+              {{else}}
               {{> customer_email_input
               label="Supplier"
               }}
+              {{/if}}
             </div>
           </div>
         </div>

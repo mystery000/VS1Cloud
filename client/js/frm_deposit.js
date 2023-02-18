@@ -1499,12 +1499,11 @@ Template.depositcard.onRendered(()=>{
         let $tblrows = $("#tblDepositEntryLine tbody tr");
 
         if(selectLineID){
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
+            let lineaccountname = table.find(".colAccountName").text();
             let lineAccoutNo = table.find(".accountnumber").text();
 
 
-            $('#'+selectLineID+" .lineAccountName").val(lineProductName);
+            $('#'+selectLineID+" .lineAccountName").val(lineaccountname);
             $('#accountListModal').modal('toggle');
 
               $(".colAccount").removeClass('boldtablealertsborder');
@@ -2133,7 +2132,7 @@ Template.depositcard.onRendered(()=>{
     function saveTemplateFields(key, value){
         localStorage.setItem(key, value)
     }
-
+    $(document).ready(function () {
     $('#sltAccountName').editableSelect().on('click.editable-select', function (e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
@@ -2516,7 +2515,7 @@ Template.depositcard.onRendered(()=>{
 
 
     });
-
+    });
     exportSalesToPdf = function(){
         let margins = {
             top: 0,

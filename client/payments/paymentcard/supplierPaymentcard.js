@@ -2186,7 +2186,7 @@ Template.supplierpaymentcard.onRendered(() => {
       LoadingOverlay.hide();
     }, 1000);
   });
-
+$(document).ready(function () {
   $("#sltDepartment").editableSelect();
   $("#sltPaymentMethod").editableSelect();
   $("#edtSelectBankAccountName").editableSelect();
@@ -3418,7 +3418,7 @@ Template.supplierpaymentcard.onRendered(() => {
         }
       }
     });
-
+});
   let url = FlowRouter.current().path;
   if (url.indexOf("?id=") > 0) {
     var getsale_id = url.split("?id=");
