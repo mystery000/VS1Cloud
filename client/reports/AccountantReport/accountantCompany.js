@@ -1520,10 +1520,10 @@ Template.accountant_company.onRendered(() => {
             // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
             // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
 
-            let signatures = $('.signdiv');
+            let signatures = $('.' + elmnt.id);
             for (var i = 0; i < signatures.length; i++) {
-                if ((elmnt.offsetTop - pos2) < 50) {
-                    signatures[i].style.top = 50;
+                if ((elmnt.offsetTop - pos2) < 105) {
+                    signatures[i].style.top = 105;
                 } else if ((elmnt.offsetTop - pos2) > 950) {
                     signatures[i].style.top = 950;
                 } else {
@@ -1549,6 +1549,12 @@ Template.accountant_company.onRendered(() => {
     for (var i = 0; i < signdivs.length; i++) {
         dragElement(signdivs[i]);
     }
+
+    $('.btn-remove-sign').click(function () {
+        let signatureBox = $(this).parent().children('.signdiv')[0];
+        let signatures = $('.' + signatureBox.id);
+        signatures.css('display', 'none');
+    })
     // Alex: Add for Docusign end
 });
 
