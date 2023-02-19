@@ -1477,7 +1477,7 @@ Template.depositcard.onRendered(()=>{
     });
 
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
         var table = $(this);
         let isHeader = table.find(".isHeader").text() == "true";
         if (isHeader) {
@@ -1499,17 +1499,16 @@ Template.depositcard.onRendered(()=>{
         let $tblrows = $("#tblDepositEntryLine tbody tr");
 
         if(selectLineID){
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
+            let lineaccountname = table.find(".colAccountName").text();
             let lineAccoutNo = table.find(".accountnumber").text();
 
 
-            $('#'+selectLineID+" .lineAccountName").val(lineProductName);
+            $('#'+selectLineID+" .lineAccountName").val(lineaccountname);
             $('#accountListModal').modal('toggle');
 
               $(".colAccount").removeClass('boldtablealertsborder');
         }else{
-          let accountname = table.find(".productName").text();
+          let accountname = table.find(".colAccountName").text();
           $('#accountListModal').modal('toggle');
           $('#sltAccountName').val(accountname);
           if($tblrows.find(".lineAccountName").val() === ''){
@@ -2133,7 +2132,7 @@ Template.depositcard.onRendered(()=>{
     function saveTemplateFields(key, value){
         localStorage.setItem(key, value)
     }
-
+    $(document).ready(function () {
     $('#sltAccountName').editableSelect().on('click.editable-select', function (e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
@@ -2516,7 +2515,7 @@ Template.depositcard.onRendered(()=>{
 
 
     });
-
+    });
     exportSalesToPdf = function(){
         let margins = {
             top: 0,
@@ -3282,7 +3281,7 @@ Template.depositcard.events({
                   $('#tblAccount_filter .form-control-sm').val('');
                   $('#tblAccount_filter .form-control-sm').trigger("input");
 
-                  var datatable = $('#tblAccount').DataTable();
+                  var datatable = $('#tblAccountListPop').DataTable();
                   datatable.draw();
                   $('#tblAccount_filter .form-control-sm').trigger("input");
 
@@ -3657,7 +3656,7 @@ Template.depositcard.events({
                     $('#tblAccount_filter .form-control-sm').val('');
                     $('#tblAccount_filter .form-control-sm').trigger("input");
 
-                    var datatable = $('#tblAccount').DataTable();
+                    var datatable = $('#tblAccountListPop').DataTable();
                     datatable.draw();
                     $('#tblAccount_filter .form-control-sm').trigger("input");
 

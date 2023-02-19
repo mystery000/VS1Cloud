@@ -14936,10 +14936,10 @@ Template.payrollrules.onRendered(function() {
 
     });
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
         let selectLineID = $('#selectLineID').val();
         var table = $(this);
-          let accountname = table.find(".productName").text();
+          let accountname = table.find(".colAccountName").text();
           let accountID = table.find(".colAccountID").text()||0;
           $('#accountListModal').modal('toggle');
 
