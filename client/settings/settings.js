@@ -47,6 +47,9 @@ Template.settings.events({
   "click .btnLeadStatus": function (event) {
     FlowRouter.go("/leadstatussettings");
   },
+  "click .btnManufacturingSettings": function(event) {
+    FlowRouter.go('/manufacturingsettings');
+  },
   "click .btncurrenciesSettings": function (event) {
     FlowRouter.go("/currenciessettings");
   },

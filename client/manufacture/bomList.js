@@ -31,7 +31,8 @@ Template.bom_list.onCreated(function(){
         data.fields.TotalQtyOriginal || 0,
         // data.fields.subs || [],
         rawName || '',
-        data.fields.Value == '' ? 'No Attachment' : JSON.parse(data.fields.Value).length.toString() + " attachments"
+        data.fields.Value == '' ? 'No Attachment' : JSON.parse(data.fields.Value).length.toString() + " attachments",
+        data.fields.ProcStepItemRef == 'vs1BOM'? 'Active': 'Deleted'
       ];
       return dataList;
     }
@@ -43,8 +44,9 @@ Template.bom_list.onCreated(function(){
     { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true },
     { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
     { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
-    { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
-    { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
+    { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true },
+    { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true}
   ];
   templateObject.tableheaderrecords.set(headerStructure);
       

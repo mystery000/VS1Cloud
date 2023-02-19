@@ -43,16 +43,19 @@ Template.balancesheetreport.onRendered(() => {
     templateObject.init_reset_data = function () {
         let reset_data = [];
         reset_data = [
-            { index: 1, label: 'ACCNAME', class: 'colACCNAME', active: true, display: true, width: "150" },
-            { index: 2, label: 'Account Tree', class: 'colAccountTree', active: true, display: true, width: "250" },
-            { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
-            { index: 4, label: 'Header-Account-Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "200" },
-            { index: 5, label: 'ID', class: 'colID', active: true, display: true, width: "85" },
-            { index: 6, label: 'SortID', class: 'colSortID', active: true, display: true, width: "85" },
-            { index: 7, label: 'Sub-Account-Totals', class: 'colSubAccountTotals', active: true, display: true, width: "200" },
-            { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
-            { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
-            { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "150" },
+            // { index: 1, label: 'ACCNAME', class: 'colACCNAME', active: true, display: true, width: "85" },
+            // { index: 2, label: 'Account Tree', class: 'colAccountTree', active: true, display: true, width: "250" },
+            // { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
+            // { index: 4, label: 'Header-Account-Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "200" },
+            // { index: 5, label: 'ID', class: 'colID', active: true, display: true, width: "85" },
+            // { index: 6, label: 'SortID', class: 'colSortID', active: true, display: true, width: "85" },
+            // { index: 7, label: 'Sub-Account-Totals', class: 'colSubAccountTotals', active: true, display: true, width: "200" },
+            // { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
+            // { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
+            // { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
+            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "320" },
+            { index: 2, label: 'Sub Account Totals', class: 'colSubAccountTotals', active: true, display: true, width: "" },
+            { index: 3, label: 'Header Account Totals', class: 'colHeaderAccountTotals', active: true, display: true, width: "" },
         ]
         templateObject.currencyRecord.set(reset_data);
     }
@@ -114,6 +117,16 @@ Template.balancesheetreport.onRendered(() => {
         } else {
             deleteFilter = false;
         };
+        function convert2Digit(date){
+            return (date < 10) ? '0' + date : date;
+        }
+        function covert2Comma(number){
+            return (number- 0).toLocaleString('en-US', {minimumFractionDigits:2});
+        }
+        function showCurrency(number){
+            if(number >= 0) return '$' + covert2Comma(number - 0);
+            return '-$' + covert2Comma(-number);
+        }
         for (let i = 0; i < data.balancesheetreport.length; i++) {
             //   if (!isNaN(data.taccountvs1list[i].Balance)) {
             //       accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1list[i].Balance) || 0.0;
@@ -131,17 +144,43 @@ Template.balancesheetreport.onRendered(() => {
             //   };
 
             var dataList = [
-                data.balancesheetreport[i].ACCNAME || "",
+                // data.balancesheetreport[i].ACCNAME || "",
+                // data.balancesheetreport[i]["Account Tree"] || "",
+                // data.balancesheetreport[i].AccountNumber || "",
+                // data.balancesheetreport[i]["Header Account Total"] || "",
+                // data.balancesheetreport[i].ID || "",
+                // data.balancesheetreport[i].TaxCode || '',
+                // data.balancesheetreport[i]["Sub Account Total"] || '',
+                // data.balancesheetreport[i]["Total Asset & Liability"] || '',
+                // data.balancesheetreport[i]["Total Current Asset & Liability"] || '',
+                // data.balancesheetreport[i].TypeID || "",
                 data.balancesheetreport[i]["Account Tree"] || "",
-                data.balancesheetreport[i].AccountNumber || "",
-                data.balancesheetreport[i]["Header Account Total"] || "",
-                data.balancesheetreport[i].ID || "",
-                data.balancesheetreport[i].TaxCode || '',
                 data.balancesheetreport[i]["Sub Account Total"] || '',
-                data.balancesheetreport[i]["Total Asset & Liability"] || '',
-                data.balancesheetreport[i]["Total Current Asset & Liability"] || '',
-                data.balancesheetreport[i].TypeID || "",
+                data.balancesheetreport[i]["Header Account Total"] || "",
             ];
+            let tmp;
+            dataList[0] = dataList[0].replaceAll(' ', '&nbsp');
+            if(!dataList[1] && !dataList[2]) {
+                dataList[0] = `<span class="table-cells text-bold">${dataList[0]}</span>`;
+                if (data.balancesheetreport[i]["Total Current Asset & Liability"]) {
+                    tmp = data.balancesheetreport[i]["Total Current Asset & Liability"];
+                    dataList[2] = (tmp >= 0) ? `<span class="table-cells text-bold">${showCurrency(tmp)}</span>` : `<span class="text-danger text-bold">${showCurrency(tmp)}</span>`;
+                }
+                else if(data.balancesheetreport[i]["Total Asset & Liability"]){
+                    tmp = data.balancesheetreport[i]["Total Asset & Liability"];
+                    dataList[2] = (tmp >= 0) ? `<span class="table-cells text-bold">${showCurrency(tmp)}</span>` : `<span class="text-danger text-bold">${showCurrency(tmp)}</span>`;
+                }
+            }
+            else if(dataList[2]){
+                tmp = dataList[2];
+                dataList[0] = `<span class="text-primary text-bold">${dataList[0]}</span>`;
+                dataList[2] = (tmp >= 0) ? `<span class="text-primary text-bold">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
+            }
+            else if(dataList[1]){
+                tmp = dataList[1];
+                dataList[0] = `<span class="text-primary">${dataList[0]}</span>`;
+                dataList[1] = (tmp >= 0) ? `<span class="text-primary">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
+            }
             splashArrayBalanceSheetReport.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
         }
@@ -157,12 +196,22 @@ Template.balancesheetreport.onRendered(() => {
             $('#tblBalanceSheet').DataTable({
                 data: splashArrayBalanceSheetReport,
                 searching: false,
+                "bSort" : false,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
                         targets: 0,
-                        className: "colACCNAME",
+                        className: "colAccountTree"
                     },
+                    {
+                        targets: 1,
+                        className: "colSubAccountTotals text-center0",
+                    },
+                    {
+                        targets: 2,
+                        className: "colHeaderAccountTotals text-center0",
+                    },
+                    /*
                     {
                         targets: 1,
                         className: "colAccountTree"
@@ -199,6 +248,7 @@ Template.balancesheetreport.onRendered(() => {
                         targets: 9,
                         className: "colTypeID",
                     }
+                    */
                 ],
                 select: true,
                 destroy: true,
@@ -207,7 +257,7 @@ Template.balancesheetreport.onRendered(() => {
                 lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
                 info: true,
                 // responsive: true,
-                "order": [[1, "asc"]],
+                "order": [],
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
@@ -247,7 +297,11 @@ Template.balancesheetreport.onRendered(() => {
 
     LoadingOverlay.hide();
 });
-
+function MakeNegative() {
+    $('td').each(function(){
+        if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+    });
+}
 // function sortByAlfa(a, b) {
 //     return a.currency - b.currency;
 // }
@@ -541,9 +595,9 @@ Template.balancesheetreport.events({
     "click #printButtonBalanceSheet": function () {
         $("#printBalanceSheet").print({
             prepend: "<p style='margin-top: 80px; font-size: 23px;'>" +
-                "<strong>" +
+                "" +
                 loggedCompany +
-                " - Balance Sheet</strong></p></br>",
+                " - Balance Sheet</p></br>",
             title: document.title + " | Balance Sheet | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
         });

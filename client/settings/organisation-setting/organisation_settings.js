@@ -74,35 +74,33 @@ Template.organisationsettings.onRendered(function () {
   let suppliers = [];
   var countryService = new CountryService();
   templateObject.getCountryData = function () {
-    getVS1Data("TCountries")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          countryService.getCountry().then((data) => {
-            for (let i = 0; i < data.tcountries.length; i++) {
-              countries.push(data.tcountries[i].Country);
+    getVS1Data("TCountries").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                countryService.getCountry().then((data) => {
+                    for (let i = 0; i < data.tcountries.length; i++) {
+                        countries.push(data.tcountries[i].Country);
+                    }
+                    countries.sort((a, b) => a.localeCompare(b));
+                    templateObject.countryData.set(countries);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tcountries;
+                for (let i = 0; i < useData.length; i++) {
+                    countries.push(useData[i].Country);
+                }
+                countries.sort((a, b) => a.localeCompare(b));
+                templateObject.countryData.set(countries);
             }
-            countries = _.sortBy(countries);
-            templateObject.countryData.set(countries);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tcountries;
-          for (let i = 0; i < useData.length; i++) {
-            countries.push(useData[i].Country);
-          }
-          countries = _.sortBy(countries);
-          templateObject.countryData.set(countries);
-        }
-      })
-      .catch(function (err) {
-        countryService.getCountry().then((data) => {
-          for (let i = 0; i < data.tcountries.length; i++) {
-            countries.push(data.tcountries[i].Country);
-          }
-          countries = _.sortBy(countries);
-          templateObject.countryData.set(countries);
+        }).catch(function(err) {
+            countryService.getCountry().then((data) => {
+                for (let i = 0; i < data.tcountries.length; i++) {
+                    countries.push(data.tcountries[i].Country);
+                }
+                countries.sort((a, b) => a.localeCompare(b));
+                templateObject.countryData.set(countries);
+            });
         });
-      });
   };
   templateObject.getCountryData();
 

@@ -8,10 +8,13 @@ import { bankNameList } from "../../lib/global/bank-names";
 
 import { Template } from 'meteor/templating';
 import './AddAccountModal.html';
+import { EditableService } from "/client/editable-service";
 
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
 let taxRateService = new TaxRateService();
+let editableService = new EditableService();
+let currentSubAccount
 
 function generate() {
   let id = () => {
@@ -266,6 +269,32 @@ Template.addAccountModal.onRendered(function () {
           currentElement.$(".sltTaxCode").val(lineTaxCode);
           $("#taxRateListModal").modal("toggle");
         });
+
+  $("#addNewAccountModal #edtSubAccount1").editableSelect()
+  $("#addNewAccountModal #edtSubAccount1").editableSelect().on("click.editable-select", (e) => {
+    currentSubAccount = $("#addNewAccountModal #edtSubAccount1")
+    editableService.clickAccount(e)
+  })
+
+  $("#addNewAccountModal #edtSubAccount2").editableSelect()
+  $("#addNewAccountModal #edtSubAccount2").editableSelect().on("click.editable-select", (e) => {
+    currentSubAccount = $("#addNewAccountModal #edtSubAccount2")
+    editableService.clickAccount(e)
+  })
+
+  $("#addNewAccountModal #edtSubAccount3").editableSelect()
+  $("#addNewAccountModal #edtSubAccount3").editableSelect().on("click.editable-select", (e) => {
+    currentSubAccount = $("#addNewAccountModal #edtSubAccount3")
+    editableService.clickAccount(e)
+  })
+
+  $(document).on("click", "#accountListModal #tblAccountListPop tbody tr", (e) => {
+    var table = $(e.currentTarget);
+    let accountName = table.find(".colAccountName").text();
+    currentSubAccount.val(accountName);
+    $("#accountListModal").modal("toggle");
+  });
+
 
   templateObject.getTaxRates = function () {
     getVS1Data("TTaxcodeVS1")
@@ -1621,7 +1650,7 @@ Template.addAccountModal.events({
   },
 
   "click #openEftOptionsModal" : (e) => {
-    $('#eftOptionsModal').modal();
+    $('.eftOptionsModal').modal();
   },
 
 });

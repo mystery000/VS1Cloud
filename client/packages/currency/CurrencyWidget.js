@@ -93,14 +93,14 @@ export const isCurrencyEnable = () => FxGlobalFunctions.isCurrencyEnabled();
 
 
 export const saveCurrencyHistory = async (date = null) => {
-   
+
   if($('#exchange_rate').attr('hand-edited') == true || $('#exchange_rate').attr('hand-edited') == "true" ) {
      const type = $('.currency-js').attr('type');
      const currencyRate = parseFloat($('#exchange_rate').val());
      const currencyCode = $('#sltCurrency').val();
-   
+
      const _currencyObj = await FxGlobalFunctions.loadDefaultCurrency(currencyCode);
-    
+
      const currencyObj = {
        type: "TCurrency",
        fields: {
@@ -114,8 +114,8 @@ export const saveCurrencyHistory = async (date = null) => {
          SellRate: type == "sell" ? currencyRate : _currencyObj.SellRate,
        }
      };
-   
-   
+
+
      return await (new TaxRateService()).saveCurrency(currencyObj);
   }
 

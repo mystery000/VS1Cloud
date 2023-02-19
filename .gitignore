@@ -7,3 +7,5 @@ package-lock.json
 
 start-dev.sh
 server/vs1cloud.tar.gz
+
+jsconfig.json

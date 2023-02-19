@@ -1,0 +1,166 @@
+<template name="manufacturingsettings">
+    <div class="container-fluid">
+      <div class="fullScreenSpin" style="display: none">
+        <div class="spinner"></div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <h3 class="text-dark mb-4">Manufacturing Settings</h3>
+        </div>
+        <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+      </div>
+      <div class="row justify-content-center mb-3">
+        <div class="col-12 col-md-6">
+          <div class="card shadow mb-3">
+            <div class="card-header py-3" style="background-color: rgb(248, 249, 252)">
+              <div align="left">
+                <p class="text-primary m-0 font-weight-bold">Manufacturing Settings {{> helpbutton}}</p>
+                <div class="modal fade" id="helpViewModal" tabindex="-1" role="dialog" aria-hidden="true">
+                  {{> help_modal}}
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <form class="form-inline">
+                <style>
+                    .edtManufacturingToggle + label {
+                        justify-content: flex-start;
+                    }
+                </style>
+                <div class="row">
+                  <div class="form-group col py-3 px-5 justify-content-between">
+                        {{> toggle_button 
+                            className='toggleShowSat edtManufacturingToggle toggleShowWeekend'
+                            id='toggleShowSat'
+                            isChecked=initialRecords.showSaturday
+                            for='toggleShowSat'
+                            displayName='Show Saturday'
+                            width='200px'
+                        }}
+                    </div>
+                  <div class="form-group col py-3 px-5 justify-content-between">
+                    {{> toggle_button 
+                        className='toggleShowSun edtManufacturingToggle toggleShowWeekend'
+                        id='toggleShowSun'
+                        isChecked=initialRecords.showSunday
+                        for='toggleShowSun'
+                        displayName='Show Sunday'
+                        width='200px'
+                    }}
+                    
+                  </div>
+                  <div class="form-group col py-3 px-5 justify-content-between">
+                    {{> toggle_button 
+                        className='toggleShowQA edtManufacturingToggle'
+                        id='toggleShowQA'
+                        isChecked=initialRecords.showQA
+                        for='toggleShowQA'
+                        displayName='Show QA'
+                        width='200px'
+                    }}
+                  
+                  </div>
+                  <div class="form-group col py-3 px-5 justify-content-between">
+                        <div class="form-group d-flex flex-column align-items-start mt-3">
+                            <label style="margin-bottom: 0px;">Show Hours</label>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end" style="gap: 1rem">
+                            <div class="form-group d-flex flex-column align-items-start">
+                                <label>From</label>
+                                <input type="time" id="hoursFrom" class="form-control" value={{initialRecords.startTime}}>
+                            </div>
+                            <div class="form-group d-flex flex-column align-items-start">
+                                <label>To</label>
+                                <input type="time" id="hoursTo" class="form-control" value={{initialRecords.endTime}}>
+                            </div>
+                        </div>
+                  </div>
+                  <div class="form-group col py-3 px-5 justify-content-between">
+                        <label>Show Time In</label>
+                        <select
+                          class="form-control edtShowTimein"
+                          id="edtShowTimein"
+                          name="edtShowTimein"
+                          style="background-color: rgb(255, 255, 255); cursor: pointer"
+                        >
+                            <option value="0.5">30 Minutes</option>
+                            <option value="1" selected>1 Hour</option>
+                            <option value="2">2 Hours</option>
+                            <option value="3">3 Hours</option>
+                            <option value="4">4 Hours</option>
+                            <option value="6">6 Hours</option>
+                            <option value="12">12 Hours</option>
+                        </select>
+                  </div>
+                </div>
+                <div class="justify-content-around my-2 row w-100">
+                    {{> vs1_button
+                        tooltip="Save manufacturing settings"
+                        color="success"
+                        classes="btnSaveSettings"
+                        iconName="save"
+                        htmlType="button"
+                        title="Save"
+                    }}
+
+                    {{> vs1_button
+                        tooltip="Reset to initial setting"
+                        color="warning"
+                        classes="btnResetSettings"
+                        iconName="repeat"
+                        htmlType="button"
+                        title="Reset"
+                    }}
+                 
+                  {{> vs1_button
+                    tooltip="Cancel"
+                    color="secondary"
+                    classes="btnCancelSettings"
+                    iconName="close"
+                    htmlType="button"
+                    title="Cancel"
+                  }}
+                 
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+      <div class="modal-dialog" role="document" style="max-width: 670px !important">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="title-header">Inventory Settings</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+            <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
+            <video
+              preload="none"
+              id="myVideo"
+              width="640"
+              height="360"
+              controls=""
+              name="media"
+              style="border: solid 5px #999999f0; height: auto; outline: none"
+            >
+              <source src="https://erphelpes.com/vs1videos/organizationdetails.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">{{> addaccountpop}}</div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">{{> accountlistpop}}</div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">{{> taxratelistpop}}</div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">{{> newtaxratepop}}</div>
+  </template>
+  

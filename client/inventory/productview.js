@@ -277,7 +277,7 @@ Template.productview.onRendered(function () {
         $("#taxRateListModal").modal("toggle");
       });
 
-      $(document).on("click", "#tblAccount tbody tr", function (e) {
+      $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
         var table = $(this);
         let accountsName = table.find(".colAccountName").text();
         accSelected = $("#accSelected").val();
@@ -901,10 +901,12 @@ Template.productview.onRendered(function () {
 
                 if (bomIndex > -1) {
                   isBOMProduct = true;
+                  templateObject.bomStructure.set(bomProducts[bomIndex]);
                 } else {
                   productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
                     if (data.tproctree.length > -1) {
                       isBOMProduct = true;
+                      templateObject.bomStructure.set(data.tproctree[0])
                     }
                   });
                 }
@@ -1093,10 +1095,12 @@ Template.productview.onRendered(function () {
 
                 if (bomIndex > -1) {
                   isBOMProduct = true;
+                  templateObject.bomStructure.set(bomProducts[bomIndex])
                 } else {
                   productService.getOneBOMProductByName(useData[i].fields.ProductName).then(function (data) {
                     if (data.tproctree.length > -1) {
                       isBOMProduct = true;
+                      templateObject.bomStructure.set(data.tproctree[0])
                     }
                   });
                 }
@@ -1271,10 +1275,12 @@ Template.productview.onRendered(function () {
 
                   if (bomIndex > -1) {
                     isBOMProduct = true;
+                    templateObject.bomStructure.set(bomProducts[bomIndex])
                   } else {
                     productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
                       if (data.tproctree.length > -1) {
                         isBOMProduct = true;
+                        templateObject.bomStructure.set(data.tproctree[0])
                       }
                     });
                   }
@@ -1449,10 +1455,12 @@ Template.productview.onRendered(function () {
 
               if (bomIndex > -1) {
                 isBOMProduct = true;
+                templateObject.bomStructure.set(bomProducts[bomIndex])
               } else {
                 productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
                   if (data.tproctree.length > -1) {
                     isBOMProduct = true;
+                    templateObject.bomStructure.set(data.tproctree[0])
                   }
                 });
               }
@@ -3776,7 +3784,6 @@ Template.productview.events({
         }
 
         saveBOMStructure();
-        return;
         productService
           .saveProductVS1(objDetails)
           .then(function (objDetails) {
@@ -4382,7 +4389,7 @@ Template.productview.events({
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
         temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
-        return
+
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
             temp.fields.ID = existID;

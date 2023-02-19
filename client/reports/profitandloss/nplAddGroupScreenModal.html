@@ -18,7 +18,17 @@
                         <select class="form-control" id="nplPlaceInMoveSelection">
                             <option value="none">None</option>
                             {{#each item in profitlosslayoutrecords }}
-                                <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
+                                <option value="{{ item.ID }}">{{ item.AccountName }}</option>
+                                {{#if item.subAccounts}}
+                                    {{#each acItem in item.subAccounts }}
+                                        <option value="{{ acItem.ID }}">__{{ acItem.AccountName }}</option>
+                                        {{#if acItem.subAccounts}}
+                                            {{#each subacItem in acItem.subAccounts }}
+                                                <option value="{{ subacItem.ID }}">__{{ subacItem.AccountName }}</option>
+                                            {{/each}}
+                                        {{/if}}
+                                    {{/each}}
+                                {{/if}}
                             {{/each}}
                         </select>
                     </div>

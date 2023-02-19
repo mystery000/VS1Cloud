@@ -44,6 +44,7 @@ Template.npleditlayoutscreen.onCreated(function () {
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
   templateObject.daterange = new ReactiveVar();
+  templateObject.layoutinfo = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
 });
 
@@ -86,34 +87,72 @@ function buildSubAccountJson( $sortContainer ){
 
 Template.npleditlayoutscreen.onRendered(function () {
   const templateObject = Template.instance();
+
+  templateObject.getPNLLayout = async () => {    
+    getVS1Data("TPNLLayout")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          reportService.getPNLLayout(3).then(function(data) {
+            addVS1Data("TPNLLayout", JSON.stringify(data));
+            if(data.tpnllayout.length > 0){
+              templateObject.layoutinfo.set(data.tpnllayout[0].fields);
+            }
+          });          
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.tpnllayout.length > 0){
+            templateObject.layoutinfo.set(data.tpnllayout[0].fields);
+          }
+        }
+      })
+      .catch(function (err) {
+        reportService.getPNLLayout(3).then(function(data) {
+          addVS1Data("TPNLLayout", JSON.stringify(data));
+          if(data.tpnllayout.length > 0){
+            templateObject.layoutinfo.set(data.tpnllayout[0].fields);
+          }
+        });
+      });
+    
+  }
+
+  templateObject.getPNLLayout();
+
+  $(document).on("click", "ol.nested_with_switch div.mainHeadingDiv, ol.nested_with_switch span.childInner", function(e) {
+    let groupID = $(this).closest("li").attr("plid");
+    let groupName = $(this).closest("li").attr("data-group");
+    $(".editDefault").hide();
+    $(".editRowGroup").show();
+    $("#editGroupName").val(groupName);
+  });
 });
 
 Template.npleditlayoutscreen.events({
   "click .saveProfitLossLayouts": async function () {
 
     $('.fullScreenSpin').css('display', 'block');
-    buildPositions();
+    // buildPositions();
 
-    const profitLossLayoutApis = new ProfitLossLayoutApi();
+    // const profitLossLayoutApis = new ProfitLossLayoutApi();
 
-    // make post request to save layout data
-    const apiEndpoint = profitLossLayoutApis.collection.findByName(
-      profitLossLayoutApis.collectionNames.TProfitLossLayout
-    );
+    // // make post request to save layout data
+    // const apiEndpoint = profitLossLayoutApis.collection.findByName(
+    //   profitLossLayoutApis.collectionNames.TProfitLossLayout
+    // );
 
-    const pSortfields = $(".pSortItems");
-    const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-    let pSortList = [];
-    pSortfields.each(function(){
-      let Position = $(this).attr('position');
-      let accountType = $(this).data('group');
-      pSortList.push({
-        "position": Position,
-        "accountType": accountType,
-        "employeeId": employeeId,
-        "subAccounts": buildSubAccountJson( $(this).find('ol li') )
-      });
-    });
+    // const pSortfields = $(".pSortItems");
+    // const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
+    // let pSortList = [];
+    // pSortfields.each(function(){
+    //   let Position = $(this).attr('position');
+    //   let accountType = $(this).data('group');
+    //   pSortList.push({
+    //     "position": Position,
+    //     "accountType": accountType,
+    //     "employeeId": employeeId,
+    //     "subAccounts": buildSubAccountJson( $(this).find('ol li') )
+    //   });
+    // });
 
     /**
      *
@@ -122,28 +161,63 @@ Template.npleditlayoutscreen.events({
     let name = $("#nplLayoutName").val();
     let description = $("#nplLayoutDescr").val();
     let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
-    let profitLossLayoutData = {
-      "type": "TProfitLossLayout",
-      "action": "save",
-      "layout": pSortList
+
+    let jsonObj = {
+      type: "TPNLLayout",
+      fields: {
+        "ID": 3,
+        "LName": name,
+        "Description": description,
+        "IsCurrentLayout": isdefault
+      }
     }
 
-    try {
-      const ApiResponse = await apiEndpoint.fetch(null, {
-          method: "POST",
-          headers: ApiService.getPostHeaders(),
-          body: JSON.stringify(profitLossLayoutData),
-      });
+    reportService.savePNLLayout(jsonObj).then(function(res) {
+      reportService.getPNLLayout(3).then(function(data) {
+        addVS1Data("TPNLLayout", JSON.stringify(data)).then(function(datareturn) {
+            $("#nplEditLayoutScreen").modal("toggle");
+        }).catch(function(err) {
+            $("#nplEditLayoutScreen").modal("toggle");
+        });
+        $('.fullScreenSpin').css('display', 'none');
+      });        
+    }).catch(function(err) {
+        swal({
+            title: 'Oooops...',
+            text: err,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Try Again'
+        }).then((result) => {
+            if (result.value) {
+                // Meteor._reload.reload();
+            } else if (result.dismiss === 'cancel') {}
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    });
 
-      if (ApiResponse.ok == true) {
-          const jsonResponse = await ApiResponse.json();
-          LoadingOverlay.hide();
-      }else{
-          LoadingOverlay.hide();
-      }
-  } catch (error) {
-      LoadingOverlay.hide();
-  }
+    // let profitLossLayoutData = {
+    //   "type": "TProfitLossLayout",
+    //   "action": "save",
+    //   "layout": pSortList
+    // }
+
+    // try {
+    //   const ApiResponse = await apiEndpoint.fetch(null, {
+    //       method: "POST",
+    //       headers: ApiService.getPostHeaders(),
+    //       body: JSON.stringify(profitLossLayoutData),
+    //   });
+
+    //   if (ApiResponse.ok == true) {
+    //       const jsonResponse = await ApiResponse.json();
+    //       LoadingOverlay.hide();
+    //   }else{
+    //       LoadingOverlay.hide();
+    //   }
+    // } catch (error) {
+    //     LoadingOverlay.hide();
+    // }
 
     // "type": "TProfitLossLayout",
     // "action": "save",
@@ -169,10 +243,20 @@ Template.npleditlayoutscreen.helpers({
     return templateObject.data.dateAsAt || "";
   },
   profitlosslayoutrecords() {
-    return Template.instance().profitlosslayoutrecords.get();
+    const templateObject = Template.instance();
+    return templateObject.data.profitlosslayoutrecords || [];
   },
   recordslayout: () => {
     return Template.instance().recordslayout.get();
+  },
+  layoutinfo: () => {
+    return Template.instance().layoutinfo.get();
+  },
+  isAccount(layout) {
+    if (layout.ID > 1) {
+      return true;
+    }
+    return false;
   },
 });
 
