@@ -1524,13 +1524,13 @@ Template.accountant_company.onRendered(() => {
             for (var i = 0; i < signatures.length; i++) {
                 if ((elmnt.offsetTop - pos2) < 105) {
                     signatures[i].style.top = 105;
-                } else if ((elmnt.offsetTop - pos2) > 950) {
-                    signatures[i].style.top = 950;
+                } else if ((elmnt.offsetTop - pos2) > 970) {
+                    signatures[i].style.top = 970;
                 } else {
                     signatures[i].style.top = (elmnt.offsetTop - pos2) + "px";
                 }
-                if ((elmnt.offsetLeft - pos1) < 50) {
-                    signatures[i].style.left = 50;
+                if ((elmnt.offsetLeft - pos1) < 20) {
+                    signatures[i].style.left = 20;
                 } else if ((elmnt.offsetLeft - pos1) > 550) {
                     signatures[i].style.left = 550;
                 } else {
@@ -1551,9 +1551,15 @@ Template.accountant_company.onRendered(() => {
     }
 
     $('.btn-remove-sign').click(function () {
-        let signatureBox = $(this).parent().children('.signdiv')[0];
+        let signatureBox = $(this).parents('.card-body').children('.signdiv')[0];
         let signatures = $('.' + signatureBox.id);
-        signatures.css('display', 'none');
+        if ($(this).text().trim() == 'Remove Signature') {
+            signatures.css('display', 'none');
+            $(this).text('Add Signature')
+        } else {
+            signatures.css('display', 'block');
+            $(this).text('Remove Signature')
+        }
     })
     // Alex: Add for Docusign end
 });
