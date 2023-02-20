@@ -1184,12 +1184,33 @@ Template.customfieldpop.onRendered(() => {
     })
   };
 
-  templateObject.getTSupplierExData = function (currentID) {
-    contactService.getOneSupplierDataEx(currentID).then(function (data) {
+  templateObject.getTSupplierExData = async function (currentID) {
+
+    let dataObject = await getVS1Data('TSupplierVS1')||'';
+    if (dataObject.length > 0){
+      let data = JSON.parse(dataObject[0].data);
+      const supplierData = data.tsuppliervs1.find((udata) => udata.fields.ID == parseInt(currentID));
+      if(supplierData){
+        templateObject.setSupplierExData(supplierData);
+      }else{
+        contactService.getOneSupplierDataEx(currentID).then(function (data) {
+          templateObject.setSupplierExData(data);
+        });
+      }
+    }else{
+      contactService.getOneSupplierDataEx(currentID).then(function (data) {
+        templateObject.setSupplierExData(data);
+      });
+    }
+
+  };
+
+
+  templateObject.setSupplierExData = function (currentID) {
+
       $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
       $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
       $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-    });
   };
 
 //CustomerData
@@ -1218,14 +1239,32 @@ Template.customfieldpop.onRendered(() => {
     $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
   };
   //End CustomerData
+//EmployeeData
+  templateObject.getTEmployeeExData = async function (currentID) {
+    let dataObject = await getVS1Data('TEmployee')||'';
+    if (dataObject.length > 0){
+      let data = JSON.parse(dataObject[0].data);
+      const employeeData = data.temployee.find((udata) => udata.fields.ID == parseInt(currentID));
+      if(employeeData){
+        templateObject.setEmployeeExData(employeeData);
+      }else{
+        contactService.getOneEmployeeDataEx(currentID).then(function (data) {
+          templateObject.setEmployeeExData(data);
+        });
+      }
+    }else{
+      contactService.getOneEmployeeDataEx(currentID).then(function (data) {
+        templateObject.setEmployeeExData(data);
+      });
+    }
+  };
 
-  templateObject.getTEmployeeExData = function (currentID) {
-    contactService.getOneEmployeeDataEx(currentID).then(function (data) {
+  templateObject.setEmployeeExData = function (currentID) {
       $('#edtSaleCustField1').val(data.fields.CustFld1);
       $('#edtSaleCustField2').val(data.fields.CustFld2);
       $('#edtSaleCustField3').val(data.fields.CustFld3);
-    });
   };
+//End EmployeeData
 
   templateObject.getTLeadExData = function (currentID) {
     contactService.getOneLeadDataEx(currentID).then(function (data) {
@@ -1236,13 +1275,31 @@ Template.customfieldpop.onRendered(() => {
 
   };
 
-  templateObject.getTProductExData = function (currentID) {
-    productService.getOneProductdatavs1(currentID).then(function (data) {
+  templateObject.getTProductExData = async function (currentID) {
+
+    let dataObject = await getVS1Data('TProductVS1')||'';
+    if (dataObject.length > 0){
+      let data = JSON.parse(dataObject[0].data);
+      const productData = data.tproductvs1.find((udata) => udata.fields.ID == parseInt(currentID));
+      if(productData){
+        templateObject.setTProductExData(productData);
+      }else{
+        productService.getOneProductdatavs1(currentID).then(function (data) {
+          templateObject.setTProductExData(data);
+        });
+      }
+    }else{
+      productService.getOneProductdatavs1(currentID).then(function (data) {
+        templateObject.setTProductExData(data);
+      });
+    }
+
+  };
+
+  templateObject.setTProductExData = function (data) {
       $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
       $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
       $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-    });
-
   };
 
   // tempcode ltOrder type is not ready on backend

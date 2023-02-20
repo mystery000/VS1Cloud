@@ -122,7 +122,6 @@ Template.customerdetailsreport.onRendered(() => {
     // } else {
     //   deleteFilter = false;
     // };
-    // console.log(data);
 
     for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
       var dataList = [
@@ -161,7 +160,7 @@ Template.customerdetailsreport.onRendered(() => {
       ];
       splashArrayCustomerDetailsReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayCustomerDetailsReport);
-      // console.log(splashArrayCustomerDetailsReport);
+  
     }
 
 

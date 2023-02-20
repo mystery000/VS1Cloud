@@ -275,7 +275,7 @@ Template.eft_export.onRendered(function () {
             }
         });
 
-    $(document).on('click', '#tblAccount tbody tr', function (e) {
+    $(document).on('click', '#tblAccountListPop tbody tr', function (e) {
         $('.colAccount').removeClass('boldtablealertsborder');
         var table = $(this);
         let colAccountID = table.find('.colAccountId').text();

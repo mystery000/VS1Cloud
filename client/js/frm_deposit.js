@@ -75,7 +75,7 @@ Template.depositcard.onCreated(()=>{
     templateObject.totalDebit.set(Currency+ '0.00');
     templateObject.accountnamerecords = new ReactiveVar();
     templateObject.datatablepaymentlistrecords = new ReactiveVar([]);
-    
+
     templateObject.customerRecord = new ReactiveVar();
 
     setTimeout(function () {
@@ -1477,7 +1477,7 @@ Template.depositcard.onRendered(()=>{
     });
 
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
         var table = $(this);
         let isHeader = table.find(".isHeader").text() == "true";
         if (isHeader) {
@@ -1499,17 +1499,16 @@ Template.depositcard.onRendered(()=>{
         let $tblrows = $("#tblDepositEntryLine tbody tr");
 
         if(selectLineID){
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
+            let lineaccountname = table.find(".colAccountName").text();
             let lineAccoutNo = table.find(".accountnumber").text();
 
 
-            $('#'+selectLineID+" .lineAccountName").val(lineProductName);
+            $('#'+selectLineID+" .lineAccountName").val(lineaccountname);
             $('#accountListModal').modal('toggle');
 
               $(".colAccount").removeClass('boldtablealertsborder');
         }else{
-          let accountname = table.find(".productName").text();
+          let accountname = table.find(".colAccountName").text();
           $('#accountListModal').modal('toggle');
           $('#sltAccountName').val(accountname);
           if($tblrows.find(".lineAccountName").val() === ''){
@@ -1527,7 +1526,6 @@ Template.depositcard.onRendered(()=>{
 
     $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
         let selectCustomerLineID = $('#customerSelectLineID').val();
-
         var table = $(this);
         let utilityService = new UtilityService();
 
@@ -2134,7 +2132,7 @@ Template.depositcard.onRendered(()=>{
     function saveTemplateFields(key, value){
         localStorage.setItem(key, value)
     }
-
+    $(document).ready(function () {
     $('#sltAccountName').editableSelect().on('click.editable-select', function (e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
@@ -2517,7 +2515,7 @@ Template.depositcard.onRendered(()=>{
 
 
     });
-
+    });
     exportSalesToPdf = function(){
         let margins = {
             top: 0,
@@ -3283,7 +3281,7 @@ Template.depositcard.events({
                   $('#tblAccount_filter .form-control-sm').val('');
                   $('#tblAccount_filter .form-control-sm').trigger("input");
 
-                  var datatable = $('#tblAccount').DataTable();
+                  var datatable = $('#tblAccountListPop').DataTable();
                   datatable.draw();
                   $('#tblAccount_filter .form-control-sm').trigger("input");
 
@@ -3658,7 +3656,7 @@ Template.depositcard.events({
                     $('#tblAccount_filter .form-control-sm').val('');
                     $('#tblAccount_filter .form-control-sm').trigger("input");
 
-                    var datatable = $('#tblAccount').DataTable();
+                    var datatable = $('#tblAccountListPop').DataTable();
                     datatable.draw();
                     $('#tblAccount_filter .form-control-sm').trigger("input");
 
@@ -4685,12 +4683,13 @@ Template.depositcard.events({
         var offset = $earch.offset();
         $("#edtCustomerPOPID").val("");
         const templateObject = Template.instance();
+        var targetID = $(event.target).closest('tr').attr('id');
+        $('#customerSelectLineID').val(targetID);
             if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
                 // $('#tblDepositEntryLine tbody tr .lineCompany').attr("data-toggle", "modal");
                 // $('#tblDepositEntryLine tbody tr .lineCompany').attr("data-target", "#customerListModal");
                 $("#customerListModal").modal("toggle");
-                var targetID = $(event.target).closest('tr').attr('id');
-                $('#customerSelectLineID').val(targetID);
+
                 setTimeout(function() {
                     $('#tblCustomerlist_filter .form-control-sm').focus();
                 }, 500);
@@ -4940,7 +4939,7 @@ Template.depositcard.events({
                                     let popCustomerType =
                                         data.tcustomervs1[currentCustomerIndex].fields.ClientTypeName || "";
                                     let popCompany = data.tcustomervs1[currentCustomerIndex].fields.Companyname || ''
-                                    
+
                                     let customerRecord = {
                                         id:popCustomerID,
                                         phone:popCustomerPhone,
@@ -5298,7 +5297,7 @@ Template.depositcard.events({
             }
 
 
-      
+
     },
     'click .linePaymentMethod, keydown .linePaymentMethod': function(event) {
         // $('#tblDepositEntryLine tbody tr .colPaymentMethod').attr("data-toggle", "modal");

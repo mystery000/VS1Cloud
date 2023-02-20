@@ -58,11 +58,11 @@ Template.accountlistpop.onCreated(() => {
 Template.accountlistpop.onRendered(function() {
     let templateObject = Template.instance();
     let sideBarService = new SideBarService();
-    let utilityService = new UtilityService();    
+    let utilityService = new UtilityService();
     let usedCategories = [];
     const currenttablename = 'tblAccountListPop';
     const useReceiptClaim = templateObject.data.useReceiptClaim
-    
+
     templateObject.getAccountsOverviewData = async function(deleteFilter = false, typeFilter = 'all') {
         var customerpage = 0;
         getVS1Data('TAccountVS1List').then(function(dataObject) {
@@ -462,6 +462,7 @@ Template.accountlistpop.onRendered(function() {
     templateObject.getAccountsOverviewData();
 
   // tempcode
+  $(document).ready(function () {
   $("#sltBankCodes").editableSelect();
   $("#sltBankCodes")
     .editableSelect()
@@ -482,7 +483,7 @@ Template.accountlistpop.onRendered(function() {
         }
       }
     });
-
+});
   $(document).on("click", "#tblBankCode tbody tr", function (e) {
     var table = $(this);
     let bankCode = table.find(".bankCode").text();

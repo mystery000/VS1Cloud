@@ -2277,7 +2277,7 @@ Template.receiptsoverview.events({
         $('#currencyModal_').modal('toggle');
     },
     'click #tblAccountReceipt tbody tr': function (e) {
-        let accountName = $(e.target).closest('tr').find(".productName").text() || '';
+        let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
         let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
 
