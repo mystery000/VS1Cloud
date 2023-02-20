@@ -139,7 +139,22 @@
 
                         </div>
                     </div>
-                    {{> transaction_list tablename="tblBankingOverview" }}
+<!--                    {{> transaction_list tablename="tblBankingOverview" }}-->
+                    {{>datatablelist
+                            tablename="tblBankingOverview"
+                            apiName= apiFunction
+                            service = service
+                            indexeddbname = 'TBankAccountReport'
+                            datahandler = datahandler
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Bank Account Report List'
+                            istransaction = true
+                            apiParams=apiParams
+                            lowercaseDataName='tbankaccountreport'
+                            exIndexDBName = 'tbankaccountreport'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                 </div>
             </div>
         </div>
