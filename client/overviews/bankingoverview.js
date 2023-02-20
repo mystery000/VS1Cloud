@@ -11,6 +11,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './bankingoverview.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -30,6 +31,93 @@ Template.bankingoverview.onCreated(function() {
 
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let lineID = "LineID";
+        let accountType = data.Type || '';
+        let amount = utilityService.modifynegativeCurrencyFormat(data.Amount) || 0.00;
+        let amountInc = utilityService.modifynegativeCurrencyFormat(data.Amountinc) || 0.00;
+        let creditEx = utilityService.modifynegativeCurrencyFormat(data.TotalCreditInc) || 0.00;
+        let openningBalance = utilityService.modifynegativeCurrencyFormat(data.OpeningBalanceInc) || 0.00;
+        let closingBalance = utilityService.modifynegativeCurrencyFormat(data.ClosingBalanceInc) || 0.00;
+
+        if (data.Type == "Un-Invoiced PO") {
+            lineID = data.PurchaseOrderID;
+        } else if (data.Type == "PO") {
+            lineID = data.PurchaseOrderID;
+        } else if (data.Type == "Invoice") {
+            lineID = data.SaleID;
+        } else if (data.Type == "Credit") {
+            lineID = data.PurchaseOrderID;
+        } else if (data.Type == "Supplier Payment") {
+            lineID = data.PaymentID;
+        } else if (data.Type == "Bill") {
+            lineID = data.PurchaseOrderID;
+        } else if (data.Type == "Customer Payment") {
+            lineID = data.PaymentID;
+        } else if (data.Type == "Journal Entry") {
+            lineID = data.SaleID;
+        } else if (data.Type == "UnInvoiced SO") {
+            lineID = data.SaleID;
+        } else if (data.Type == "Cheque") {
+            if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
+                accountType = "Cheque";
+            } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
+                accountType = "Check";
+            } else {
+                accountType = "Cheque";
+            }
+
+            lineID = data.PurchaseOrderID;
+        } else if (data.Type == "Check") {
+            lineID = data.PurchaseOrderID;
+        }else {
+            lineID = data.TransID;
+        }
+
+        var dataList = [
+            data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date,
+            '<span style="display:none;">' + (data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date).toString() + '</span>' +
+            (data.Date != '' ? moment(data.Date).format("DD/MM/YYYY") : data.Date).toString(),
+            lineID || '',
+            data.AccountName || '',
+            accountType || '',
+            amount || 0.00,
+            amountInc || 0.00,
+            data.ClassName || '',
+            data.ChqRefNo || '',
+            data.Active == true ? '' : "Deleted",
+            data.Notes || '',
+            // creditex: creditEx || 0.00,
+            // customername: data.ClientName || '',
+            // openingbalance: openningBalance || 0.00,
+            // closingbalance: closingBalance || 0.00,
+            // accountnumber: data.AccountNumber || '',
+            // accounttype: data.AccountType || '',
+            // balance: balance || 0.00,
+            // receiptno: data.ReceiptNo || '',
+            // jobname: data.jobname || '',
+            // paymentmethod: data.PaymentMethod || '',
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        {index: 0, label: "#ID", class: "colSortDate", width: "0", active: false, display: false},
+        {index: 1, label: "Date", class: "colPaymentDate", width: "80", active: true, display: true},
+        {index: 2, label: "Trans ID", class: "colAccountId", width: "80", active: true, display: true},
+        {index: 3, label: "Account", class: "colBankAccount", width: "100", active: true, display: true},
+        {index: 4, label: "Type", class: "colType", width: "120", active: true, display: true},
+        {index: 5, label: "Amount", class: "colPaymentAmount", width: "80", active: true, display: true},
+        {index: 6, label: "Amount (Inc)", class: "colDebitEx", width: "120", active: true, display: true},
+        {index: 7, label: "Department", class: "colDepartment", width: "80", active: true, display: true},
+        {index: 8, label: "#ChqRefNo", class: "colChqRefNo", width: "110", active: false, display: true},
+        {index: 9, label: "Status", class: "colStatus", width: "100", active: true, display: true},
+        {index: 10, label: "Comments", class: "colNotes", width: "", active: true, display: true},
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.bankingoverview.onRendered(function() {
@@ -364,35 +452,35 @@ Template.bankingoverview.onRendered(function() {
                     let lineItemObj = {};
                     let lineID = "";
                     for (let i = 0; i < data.tbankaccountreport.length; i++) {
-                        let amount = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amount) || 0.00;
-                        let amountInc = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amountinc) || 0.00;
-                        let creditEx = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalCreditInc) || 0.00;
-                        let openningBalance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].OpeningBalanceInc) || 0.00;
-                        let closingBalance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].ClosingBalanceInc) || 0.00;
-                        let accountType = data.tbankaccountreport[i].Type || '';
-                        // Currency+''+data.tbankaccountreport[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                        // let balance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Balance)|| 0.00;
-                        // let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalPaid)|| 0.00;
-                        // let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalBalance)|| 0.00;
-                        if (data.tbankaccountreport[i].Type == "Un-Invoiced PO") {
-                            lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                        } else if (data.tbankaccountreport[i].Type == "PO") {
-                            lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                        } else if (data.tbankaccountreport[i].Type == "Invoice") {
-                            lineID = data.tbankaccountreport[i].SaleID;
-                        } else if (data.tbankaccountreport[i].Type == "Credit") {
-                            lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                        } else if (data.tbankaccountreport[i].Type == "Supplier Payment") {
-                            lineID = data.tbankaccountreport[i].PaymentID;
-                        } else if (data.tbankaccountreport[i].Type == "Bill") {
-                            lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                        } else if (data.tbankaccountreport[i].Type == "Customer Payment") {
-                            lineID = data.tbankaccountreport[i].PaymentID;
-                        } else if (data.tbankaccountreport[i].Type == "Journal Entry") {
-                            lineID = data.tbankaccountreport[i].SaleID;
-                        } else if (data.tbankaccountreport[i].Type == "UnInvoiced SO") {
-                            lineID = data.tbankaccountreport[i].SaleID;
-                        } else if (data.tbankaccountreport[i].Type == "Cheque") {
+                        let amount = utilityService.modifynegativeCurrencyFormat(data.Amount) || 0.00;
+                        let amountInc = utilityService.modifynegativeCurrencyFormat(data.Amountinc) || 0.00;
+                        let creditEx = utilityService.modifynegativeCurrencyFormat(data.TotalCreditInc) || 0.00;
+                        let openningBalance = utilityService.modifynegativeCurrencyFormat(data.OpeningBalanceInc) || 0.00;
+                        let closingBalance = utilityService.modifynegativeCurrencyFormat(data.ClosingBalanceInc) || 0.00;
+                        let accountType = data.Type || '';
+                        // Currency+''+data.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                        // let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+                        // let totalPaid = utilityService.modifynegativeCurrencyFormat(data.TotalPaid)|| 0.00;
+                        // let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.TotalBalance)|| 0.00;
+                        if (data.Type == "Un-Invoiced PO") {
+                            lineID = data.PurchaseOrderID;
+                        } else if (data.Type == "PO") {
+                            lineID = data.PurchaseOrderID;
+                        } else if (data.Type == "Invoice") {
+                            lineID = data.SaleID;
+                        } else if (data.Type == "Credit") {
+                            lineID = data.PurchaseOrderID;
+                        } else if (data.Type == "Supplier Payment") {
+                            lineID = data.PaymentID;
+                        } else if (data.Type == "Bill") {
+                            lineID = data.PurchaseOrderID;
+                        } else if (data.Type == "Customer Payment") {
+                            lineID = data.PaymentID;
+                        } else if (data.Type == "Journal Entry") {
+                            lineID = data.SaleID;
+                        } else if (data.Type == "UnInvoiced SO") {
+                            lineID = data.SaleID;
+                        } else if (data.Type == "Cheque") {
                             if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                                 accountType = "Cheque";
                             } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
@@ -401,37 +489,37 @@ Template.bankingoverview.onRendered(function() {
                                 accountType = "Cheque";
                             }
 
-                            lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                        } else if (data.tbankaccountreport[i].Type == "Check") {
-                            lineID = data.tbankaccountreport[i].PurchaseOrderID;
+                            lineID = data.PurchaseOrderID;
+                        } else if (data.Type == "Check") {
+                            lineID = data.PurchaseOrderID;
                         }else {
-                            lineID = data.tbankaccountreport[i].TransID;
+                            lineID = data.TransID;
                         }
 
 
                         var dataList = {
                             id: lineID || '',
-                            sortdate: data.tbankaccountreport[i].Date != '' ? moment(data.tbankaccountreport[i].Date).format("YYYY/MM/DD") : data.tbankaccountreport[i].Date,
-                            paymentdate: data.tbankaccountreport[i].Date != '' ? moment(data.tbankaccountreport[i].Date).format("DD/MM/YYYY") : data.tbankaccountreport[i].Date,
-                            customername: data.tbankaccountreport[i].ClientName || '',
+                            sortdate: data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date,
+                            paymentdate: data.Date != '' ? moment(data.Date).format("DD/MM/YYYY") : data.Date,
+                            customername: data.ClientName || '',
                             paymentamount: amount || 0.00,
                             amountinc: amountInc || 0.00,
                             creditex: creditEx || 0.00,
                             openingbalance: openningBalance || 0.00,
                             closingbalance: closingBalance || 0.00,
-                            accountnumber: data.tbankaccountreport[i].AccountNumber || '',
-                            accounttype: data.tbankaccountreport[i].AccountType || '',
+                            accountnumber: data.AccountNumber || '',
+                            accounttype: data.AccountType || '',
                             // balance: balance || 0.00,
-                            bankaccount: data.tbankaccountreport[i].AccountName || '',
-                            department: data.tbankaccountreport[i].ClassName || '',
-                            chqrefno: data.tbankaccountreport[i].ChqRefNo || '',
-                            receiptno: data.tbankaccountreport[i].ReceiptNo || '',
-                            jobname: data.tbankaccountreport[i].jobname || '',
-                            paymentmethod: data.tbankaccountreport[i].PaymentMethod || '',
+                            bankaccount: data.AccountName || '',
+                            department: data.ClassName || '',
+                            chqrefno: data.ChqRefNo || '',
+                            receiptno: data.ReceiptNo || '',
+                            jobname: data.jobname || '',
+                            paymentmethod: data.PaymentMethod || '',
                             type: accountType || '',
-                            notes: data.tbankaccountreport[i].Notes || ''
+                            notes: data.Notes || ''
                         };
-                        if (data.tbankaccountreport[i].Type.replace(/\s/g, '') != "") {
+                        if (data.Type.replace(/\s/g, '') != "") {
                             dataTableList.push(dataList);
                         }
 
@@ -700,35 +788,35 @@ Template.bankingoverview.onRendered(function() {
                 let lineItemObj = {};
                 let lineID = "";
                 for (let i = 0; i < useData.length; i++) {
-                    let amount = utilityService.modifynegativeCurrencyFormat(useData[i].Amount) || 0.00;
-                    let amountInc = utilityService.modifynegativeCurrencyFormat(useData[i].Amountinc) || 0.00;
-                    let creditEx = utilityService.modifynegativeCurrencyFormat(useData[i].TotalCreditInc) || 0.00;
-                    let openningBalance = utilityService.modifynegativeCurrencyFormat(useData[i].OpeningBalanceInc) || 0.00;
-                    let closingBalance = utilityService.modifynegativeCurrencyFormat(useData[i].ClosingBalanceInc) || 0.00;
-                    let accountType = useData[i].Type || '';
-                    // Currency+''+data.tbankaccountreport[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    // let balance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Balance)|| 0.00;
-                    // let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalPaid)|| 0.00;
-                    // let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalBalance)|| 0.00;
-                    if (useData[i].Type == "Un-Invoiced PO") {
-                        lineID = useData[i].PurchaseOrderID;
-                    } else if (useData[i].Type == "PO") {
-                        lineID = useData[i].PurchaseOrderID;
-                    } else if (useData[i].Type == "Invoice") {
-                        lineID = useData[i].SaleID;
-                    } else if (useData[i].Type == "Credit") {
-                        lineID = useData[i].PurchaseOrderID;
-                    } else if (useData[i].Type == "Supplier Payment") {
-                        lineID = useData[i].PaymentID;
-                    } else if (useData[i].Type == "Bill") {
-                        lineID = useData[i].PurchaseOrderID;
-                    } else if (useData[i].Type == "Customer Payment") {
-                        lineID = useData[i].PaymentID;
-                    } else if (useData[i].Type == "Journal Entry") {
-                        lineID = useData[i].SaleID;
-                    } else if (useData[i].Type == "UnInvoiced SO") {
-                        lineID = useData[i].SaleID;
-                    } else if (data.tbankaccountreport[i].Type == "Cheque") {
+                    let amount = utilityService.modifynegativeCurrencyFormat(data.Amount) || 0.00;
+                    let amountInc = utilityService.modifynegativeCurrencyFormat(data.Amountinc) || 0.00;
+                    let creditEx = utilityService.modifynegativeCurrencyFormat(data.TotalCreditInc) || 0.00;
+                    let openningBalance = utilityService.modifynegativeCurrencyFormat(data.OpeningBalanceInc) || 0.00;
+                    let closingBalance = utilityService.modifynegativeCurrencyFormat(data.ClosingBalanceInc) || 0.00;
+                    let accountType = data.Type || '';
+                    // Currency+''+data.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    // let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+                    // let totalPaid = utilityService.modifynegativeCurrencyFormat(data.TotalPaid)|| 0.00;
+                    // let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.TotalBalance)|| 0.00;
+                    if (data.Type == "Un-Invoiced PO") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "PO") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Invoice") {
+                        lineID = data.SaleID;
+                    } else if (data.Type == "Credit") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Supplier Payment") {
+                        lineID = data.PaymentID;
+                    } else if (data.Type == "Bill") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Customer Payment") {
+                        lineID = data.PaymentID;
+                    } else if (data.Type == "Journal Entry") {
+                        lineID = data.SaleID;
+                    } else if (data.Type == "UnInvoiced SO") {
+                        lineID = data.SaleID;
+                    } else if (data.Type == "Cheque") {
                         if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                             accountType = "Cheque";
                         } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
@@ -737,37 +825,37 @@ Template.bankingoverview.onRendered(function() {
                             accountType = "Cheque";
                         }
 
-                        lineID = useData[i].PurchaseOrderID;
-                    } else if (useData[i].Type == "Check") {
-                        lineID = useData[i].PurchaseOrderID;
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Check") {
+                        lineID = data.PurchaseOrderID;
                     }else {
-                        lineID = useData[i].TransID;
+                        lineID = data.TransID;
                     }
 
 
                     var dataList = {
                         id: lineID || '',
-                        sortdate: useData[i].Date != '' ? moment(useData[i].Date).format("YYYY/MM/DD") : useData[i].Date,
-                        paymentdate: useData[i].Date != '' ? moment(useData[i].Date).format("DD/MM/YYYY") : useData[i].Date,
-                        customername: useData[i].ClientName || '',
+                        sortdate: data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date,
+                        paymentdate: data.Date != '' ? moment(data.Date).format("DD/MM/YYYY") : data.Date,
+                        customername: data.ClientName || '',
                         paymentamount: amount || 0.00,
                         amountinc: amountInc || 0.00,
                         creditex: creditEx || 0.00,
                         openingbalance: openningBalance || 0.00,
                         closingbalance: closingBalance || 0.00,
-                        accountnumber: useData[i].AccountNumber || '',
-                        accounttype: useData[i].AccountType || '',
+                        accountnumber: data.AccountNumber || '',
+                        accounttype: data.AccountType || '',
                         // balance: balance || 0.00,
-                        bankaccount: useData[i].AccountName || '',
-                        department: useData[i].ClassName || '',
-                        chqrefno: useData[i].ChqRefNo || '',
-                        receiptno: useData[i].ReceiptNo || '',
-                        jobname: useData[i].jobname || '',
-                        paymentmethod: useData[i].PaymentMethod || '',
+                        bankaccount: data.AccountName || '',
+                        department: data.ClassName || '',
+                        chqrefno: data.ChqRefNo || '',
+                        receiptno: data.ReceiptNo || '',
+                        jobname: data.jobname || '',
+                        paymentmethod: data.PaymentMethod || '',
                         type: accountType || '',
-                        notes: useData[i].Notes || ''
+                        notes: data.Notes || ''
                     };
-                    if (useData[i].Type.replace(/\s/g, '') != "") {
+                    if (data.Type.replace(/\s/g, '') != "") {
                         dataTableList.push(dataList);
                     }
 
@@ -1021,35 +1109,35 @@ Template.bankingoverview.onRendered(function() {
                 let lineItemObj = {};
                 let lineID = "";
                 for (let i = 0; i < data.tbankaccountreport.length; i++) {
-                    let amount = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amount) || 0.00;
-                    let amountInc = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Amountinc) || 0.00;
-                    let creditEx = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalCreditInc) || 0.00;
-                    let openningBalance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].OpeningBalanceInc) || 0.00;
-                    let closingBalance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].ClosingBalanceInc) || 0.00;
-                    let accountType = data.tbankaccountreport[i].Type || '';
-                    // Currency+''+data.tbankaccountreport[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    // let balance = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].Balance)|| 0.00;
-                    // let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalPaid)|| 0.00;
-                    // let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbankaccountreport[i].TotalBalance)|| 0.00;
-                    if (data.tbankaccountreport[i].Type == "Un-Invoiced PO") {
-                        lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                    } else if (data.tbankaccountreport[i].Type == "PO") {
-                        lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                    } else if (data.tbankaccountreport[i].Type == "Invoice") {
-                        lineID = data.tbankaccountreport[i].SaleID;
-                    } else if (data.tbankaccountreport[i].Type == "Credit") {
-                        lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                    } else if (data.tbankaccountreport[i].Type == "Supplier Payment") {
-                        lineID = data.tbankaccountreport[i].PaymentID;
-                    } else if (data.tbankaccountreport[i].Type == "Bill") {
-                        lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                    } else if (data.tbankaccountreport[i].Type == "Customer Payment") {
-                        lineID = data.tbankaccountreport[i].PaymentID;
-                    } else if (data.tbankaccountreport[i].Type == "Journal Entry") {
-                        lineID = data.tbankaccountreport[i].SaleID;
-                    } else if (data.tbankaccountreport[i].Type == "UnInvoiced SO") {
-                        lineID = data.tbankaccountreport[i].SaleID;
-                    } else if (data.tbankaccountreport[i].Type == "Cheque") {
+                    let amount = utilityService.modifynegativeCurrencyFormat(data.Amount) || 0.00;
+                    let amountInc = utilityService.modifynegativeCurrencyFormat(data.Amountinc) || 0.00;
+                    let creditEx = utilityService.modifynegativeCurrencyFormat(data.TotalCreditInc) || 0.00;
+                    let openningBalance = utilityService.modifynegativeCurrencyFormat(data.OpeningBalanceInc) || 0.00;
+                    let closingBalance = utilityService.modifynegativeCurrencyFormat(data.ClosingBalanceInc) || 0.00;
+                    let accountType = data.Type || '';
+                    // Currency+''+data.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    // let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+                    // let totalPaid = utilityService.modifynegativeCurrencyFormat(data.TotalPaid)|| 0.00;
+                    // let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.TotalBalance)|| 0.00;
+                    if (data.Type == "Un-Invoiced PO") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "PO") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Invoice") {
+                        lineID = data.SaleID;
+                    } else if (data.Type == "Credit") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Supplier Payment") {
+                        lineID = data.PaymentID;
+                    } else if (data.Type == "Bill") {
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Customer Payment") {
+                        lineID = data.PaymentID;
+                    } else if (data.Type == "Journal Entry") {
+                        lineID = data.SaleID;
+                    } else if (data.Type == "UnInvoiced SO") {
+                        lineID = data.SaleID;
+                    } else if (data.Type == "Cheque") {
                         if (localStorage.getItem('ERPLoggedCountry') == "Australia") {
                             accountType = "Cheque";
                         } else if (localStorage.getItem('ERPLoggedCountry') == "United States of America") {
@@ -1058,37 +1146,37 @@ Template.bankingoverview.onRendered(function() {
                             accountType = "Cheque";
                         }
 
-                        lineID = data.tbankaccountreport[i].PurchaseOrderID;
-                    } else if (data.tbankaccountreport[i].Type == "Check") {
-                        lineID = data.tbankaccountreport[i].PurchaseOrderID;
+                        lineID = data.PurchaseOrderID;
+                    } else if (data.Type == "Check") {
+                        lineID = data.PurchaseOrderID;
                     }else {
-                        lineID = data.tbankaccountreport[i].TransID;
+                        lineID = data.TransID;
                     }
 
 
                     var dataList = {
                         id: lineID || '',
-                        sortdate: data.tbankaccountreport[i].Date != '' ? moment(data.tbankaccountreport[i].Date).format("YYYY/MM/DD") : data.tbankaccountreport[i].Date,
-                        paymentdate: data.tbankaccountreport[i].Date != '' ? moment(data.tbankaccountreport[i].Date).format("DD/MM/YYYY") : data.tbankaccountreport[i].Date,
-                        customername: data.tbankaccountreport[i].ClientName || '',
+                        sortdate: data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date,
+                        paymentdate: data.Date != '' ? moment(data.Date).format("DD/MM/YYYY") : data.Date,
+                        customername: data.ClientName || '',
                         paymentamount: amount || 0.00,
                         amountinc: amountInc || 0.00,
                         creditex: creditEx || 0.00,
                         openingbalance: openningBalance || 0.00,
                         closingbalance: closingBalance || 0.00,
-                        accountnumber: data.tbankaccountreport[i].AccountNumber || '',
-                        accounttype: data.tbankaccountreport[i].AccountType || '',
+                        accountnumber: data.AccountNumber || '',
+                        accounttype: data.AccountType || '',
                         // balance: balance || 0.00,
-                        bankaccount: data.tbankaccountreport[i].AccountName || '',
-                        department: data.tbankaccountreport[i].ClassName || '',
-                        chqrefno: data.tbankaccountreport[i].ChqRefNo || '',
-                        receiptno: data.tbankaccountreport[i].ReceiptNo || '',
-                        jobname: data.tbankaccountreport[i].jobname || '',
-                        paymentmethod: data.tbankaccountreport[i].PaymentMethod || '',
+                        bankaccount: data.AccountName || '',
+                        department: data.ClassName || '',
+                        chqrefno: data.ChqRefNo || '',
+                        receiptno: data.ReceiptNo || '',
+                        jobname: data.jobname || '',
+                        paymentmethod: data.PaymentMethod || '',
                         type: accountType || '',
-                        notes: data.tbankaccountreport[i].Notes || ''
+                        notes: data.Notes || ''
                     };
-                    if (data.tbankaccountreport[i].Type.replace(/\s/g, '') != "") {
+                    if (data.Type.replace(/\s/g, '') != "") {
                         dataTableList.push(dataList);
                     }
 
@@ -1380,6 +1468,39 @@ Template.bankingoverview.onRendered(function() {
 });
 
 Template.bankingoverview.events({
+    'click #tblBankingOverview tbody tr': function (event) {
+        var listData = $(event.target).closest('tr').attr('id');
+        var transactiontype = $(event.target).closest("tr").find(".colType").text();
+        if ((listData) && (transactiontype)) {
+            if (transactiontype == "Un-Invoiced PO") {
+                FlowRouter.go('/purchaseordercard?id=' + listData);
+            } else if (transactiontype == "PO") {
+                FlowRouter.go('/purchaseordercard?id=' + listData);
+            } else if (transactiontype == "Invoice") {
+                FlowRouter.go('/invoicecard?id=' + listData);
+            } else if (transactiontype == "Credit") {
+                FlowRouter.go('/creditcard?id=' + listData);
+            } else if (transactiontype == "Supplier Payment") {
+                FlowRouter.go('/supplierpaymentcard?id=' + listData);
+            } else if (transactiontype == "Bill") {
+                FlowRouter.go('/billcard?id=' + listData);
+            } else if (transactiontype == "Customer Payment") {
+                FlowRouter.go('/paymentcard?id=' + listData);
+            } else if (transactiontype == "Journal Entry") {
+                FlowRouter.go('/journalentrycard?id=' + listData);
+            } else if (transactiontype == "UnInvoiced SO") {
+                FlowRouter.go('/salesordercard?id=' + listData);
+            } else if (transactiontype == "Cheque") {
+                FlowRouter.go('/chequecard?id=' + listData);
+            } else if (transactiontype == "Check") {
+                FlowRouter.go('/chequecard?id=' + listData);
+            } else if (transactiontype == "Deposit Entry") {
+                FlowRouter.go('/depositcard?id=' + listData);
+            } else {
+                FlowRouter.go('/chequelist');
+            }
+        }
+    },
     'click .btnEft': function() {
       FlowRouter.go('/eft');
     },
@@ -1871,19 +1992,17 @@ Template.bankingoverview.events({
     },
 });
 Template.bankingoverview.helpers({
-    datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b) {
-            if (a.paymentdate === 'NA') {
-                return 1;
-            } else if (b.paymentdate === 'NA') {
-                return -1;
-            }
-            return (a.paymentdate.toUpperCase() > b.paymentdate.toUpperCase()) ? 1 : -1;
-        });
-    },
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
-    },
+    // datatablerecords: () => {
+    //     return Template.instance().datatablerecords.get().sort(function(a, b) {
+    //         if (a.paymentdate === 'NA') {
+    //             return 1;
+    //         } else if (b.paymentdate === 'NA') {
+    //             return -1;
+    //         }
+    //         return (a.paymentdate.toUpperCase() > b.paymentdate.toUpperCase()) ? 1 : -1;
+    //     });
+    // },
+
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblBankingOverview' });
     },
@@ -1899,6 +2018,51 @@ Template.bankingoverview.helpers({
     // custom field displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
+    },
+
+    datatablerecords : () => {
+        return Template.instance().datatablerecords.get();
+    },
+    selectedInventoryAssetAccount: () => {
+        return Template.instance().selectedInventoryAssetAccount.get();
+    },
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllBankAccountDetails;
+    },
+
+    searchAPI: function() {
+        return sideBarService.searchAllBankAccountDetails;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+      return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
     },
 });
 

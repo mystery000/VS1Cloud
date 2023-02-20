@@ -124,6 +124,7 @@ Template.npleditlayoutscreen.onRendered(function () {
     $(".editDefault").hide();
     $(".editRowGroup").show();
     $("#editGroupName").val(groupName);
+    $("#editGroupID").val(groupID);
   });
 });
 
