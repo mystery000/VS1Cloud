@@ -331,7 +331,8 @@
                                     .collapsTogls ~ ol.groupedListNew {
                                         display: none;
                                     }
-                                    .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv {
+                                    /* .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv { */
+                                    li .mainHeadingDiv > .mainHeading > .collepsDiv {
                                         pointer-events: unset !important;
                                         cursor: pointer;
                                         opacity: 1;
@@ -361,10 +362,10 @@
                                                                             {{#each subacItem in acItem.subAccounts }}
                                                                                 {{#if isAccount subacItem }}
                                                                                 <li class="subChild scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
-                                                                                        <span class="childInner">
-                                                                                            <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
-                                                                                        </span>
-                                                                                    </li>
+                                                                                    <span class="childInner">
+                                                                                        <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
+                                                                                    </span>
+                                                                                </li>
                                                                                 {{else}}
                                                                                 <li class="subChild noDrag scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                         <ol class="ddllkk"></ol>
@@ -775,6 +776,7 @@
                                     <div>
                                         <label>Row Heading</label><br>
                                         <input id="editGroupName" type="text" class="form-control" name="editGroupName" value="" placeholder="">
+                                        <input id="editGroupID" type="hidden" class="form-control" name="editGroupID">
                                     </div>
                                     <div class="mt-2">
                                         <label style="width:100%;">Display Balance</label>
