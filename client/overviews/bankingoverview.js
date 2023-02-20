@@ -12,7 +12,6 @@ import { Template } from 'meteor/templating';
 import './bankingoverview.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import moment from "moment";
-import {ManufacturingService} from "../manufacture/manufacturing-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -77,7 +76,7 @@ Template.bankingoverview.onCreated(function() {
         }else {
             lineID = data.TransID;
         }
-        
+
         var dataList = [
             data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date,
             '<span style="display:none;">' + (data.Date != '' ? moment(data.Date).format("YYYY/MM/DD") : data.Date).toString() + '</span>' +
@@ -2037,8 +2036,7 @@ Template.bankingoverview.helpers({
     },
 
     searchAPI: function() {
-        let manufacturingService = new ManufacturingService();
-        return manufacturingService.getProcessByName;
+        return sideBarService.searchAllBankAccountDetails;
     },
 
     service: ()=>{
@@ -2063,9 +2061,9 @@ Template.bankingoverview.helpers({
         }
     },
 
-    apiParams: ()=>{
-        return ['limitCount', 'limitFrom', 'deleteFilter']
-    }
+    apiParams: function() {
+      return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });
 
 Template.registerHelper('equals', function(a, b) {

@@ -333,8 +333,8 @@ Template.datatablelist.onRendered(async function () {
     }
     templateObject.displayTableData = async function (data, isEx = false) {
         var splashDataArray = new Array();
-        if (data != [] && data.length != 0) {
         let deleteFilter = false;
+        if (data != [] && data.length != 0) {
         if (data.Params) {
             if (data.Params.Search.replace(/\s/g, "") == "") {
                 deleteFilter = false
@@ -594,11 +594,7 @@ Template.datatablelist.onRendered(async function () {
                         className: items[i].label.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
                         // className: items[i].class,
                         title: items[i].label,
-                        width: items[i].width,
-                        createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[2]);
-                            $(td).closest("tr").addClass("dnd-moved");
-                        }
+                        width: items[i].width
                     };
                     colDef.push(item);
                 }
