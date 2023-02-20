@@ -1469,7 +1469,7 @@ Template.bankingoverview.onRendered(function() {
 
 Template.bankingoverview.events({
     'click #tblBankingOverview tbody tr': function (event) {
-        var listData = $(event.target).closest('tr').attr('id');
+        var listData = $(event.target).closest('tr').find('.colAccountId').text();
         var transactiontype = $(event.target).closest("tr").find(".colType").text();
         if ((listData) && (transactiontype)) {
             if (transactiontype == "Un-Invoiced PO") {
