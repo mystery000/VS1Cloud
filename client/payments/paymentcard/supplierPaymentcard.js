@@ -2103,11 +2103,11 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
+  $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
     var table = $(this);
 
     let colAccountID = table.find(".colAccountID").text();
-    let accountname = table.find(".productName").text();
+    let accountname = table.find(".colAccountName").text();
     $("#accountListModal").modal("toggle");
 
     $("#edtSelectBankAccountName").val(accountname);
@@ -2186,7 +2186,7 @@ Template.supplierpaymentcard.onRendered(() => {
       LoadingOverlay.hide();
     }, 1000);
   });
-
+$(document).ready(function () {
   $("#sltDepartment").editableSelect();
   $("#sltPaymentMethod").editableSelect();
   $("#edtSelectBankAccountName").editableSelect();
@@ -3418,7 +3418,7 @@ Template.supplierpaymentcard.onRendered(() => {
         }
       }
     });
-
+});
   let url = FlowRouter.current().path;
   if (url.indexOf("?id=") > 0) {
     var getsale_id = url.split("?id=");

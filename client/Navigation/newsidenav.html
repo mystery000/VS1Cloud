@@ -582,7 +582,12 @@
                     <a href="#inventorySubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader inventoryLiHeader"><i class="fas fa-box-open faHeader"></i> Inventory</a>
                     <div class="submenuItem collapse" id="inventorySubmenu">
                         <ul class="list-unstyled">
-                            {{#if equals isSNTrackChecked true}}
+                            {{#if isSNTrackChecked}}
+                            <li>
+                                <a id="sidenavbinlocationlist" name="sidenavbinlocationlist" class="text-left">
+                                    <i class="fas fa-box"></i> Bin Location List
+                                </a>
+                            </li>
                             <li>
                                 <a id="sidenavelotnumberlist" name="sidenavelotnumberlist" class="text-left"><i class="fa fa-list-ul"></i> Lot Number List</a>
                             </li>

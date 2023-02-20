@@ -2486,7 +2486,6 @@ Template.accounttypepop.events({
     'change #sltAccountType': function (e) {
         let templateObject = Template.instance();
         var accountTypeName = $('#sltAccountType').val();
-
         if ((accountTypeName === "BANK")) {
              $('.isBankAccount').removeClass('isNotBankAccount');
              $('.isCreditAccount').addClass('isNotCreditAccount');

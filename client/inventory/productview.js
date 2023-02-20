@@ -32,8 +32,8 @@ const clickTaxCodeSales = editableService.clickTaxCodeSales;
 
 const clickBinNumber = editableService.clickBinNumber;
 
-const applyMarkup = (val) => {  
-  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {    
+const applyMarkup = (val) => {
+  if ($('.baseEdtMarkup') && $('.baseEdtMarkup').val() && !isNaN(Number($('.baseEdtMarkup').val()))) {
     return val * (100 + Number($('.baseEdtMarkup').val())) / 100
   }
   return val
@@ -51,14 +51,17 @@ const toggleRecentTransaction = () => {
 }
 
 Template.productview.onCreated(() => {
-  const templateObject = Template.instance();
-  templateObject.bomProducts = new ReactiveVar([]);
-  templateObject.records = new ReactiveVar();
-  templateObject.taxraterecords = new ReactiveVar([]);
-  templateObject.deptrecords = new ReactiveVar();
-  templateObject.tserialnumberList = new ReactiveVar();
-  templateObject.tlotnumberList = new ReactiveVar();
-  templateObject.recentTrasactions = new ReactiveVar([]);
+    const templateObject = Template.instance();
+    templateObject.bomProducts = new ReactiveVar([]);
+    templateObject.records = new ReactiveVar();
+    templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.deptrecords = new ReactiveVar();
+    templateObject.binrecords = new ReactiveVar();
+    templateObject.bindept = new ReactiveVar();
+    templateObject.tserialnumberList = new ReactiveVar();
+    templateObject.tlotnumberList = new ReactiveVar();
+    templateObject.recentTrasactions = new ReactiveVar([]);
+
 
   templateObject.coggsaccountrecords = new ReactiveVar();
   templateObject.salesaccountrecords = new ReactiveVar();
@@ -90,7 +93,7 @@ Template.productview.onCreated(() => {
   templateObject.showSubButton = new ReactiveVar(true);
   templateObject.isShowBOMModal = new ReactiveVar(false);
 
-  templateObject.productID = new ReactiveVar();  
+  templateObject.productID = new ReactiveVar();
 });
 
 Template.productview.onRendered(function () {
@@ -99,11 +102,13 @@ Template.productview.onRendered(function () {
   // $('.newProcessModal')[0].removeChild($('.newProcessModal')[0].children[1]);
   let templateObject = Template.instance();
 
-  let purchaseService = new PurchaseBoardService();
-  let taxRateService = new TaxRateService();
-  const records = [];
-  const taxCodesList = [];
-  const deptrecords = [];
+    let purchaseService = new PurchaseBoardService();
+    let taxRateService = new TaxRateService();
+    const records = [];
+    const taxCodesList = [];
+    const deptrecords = [];
+    const binrecords = [];
+    const bindept = 'Default';
 
   const coggsaccountrecords = [];
   const salesaccountrecords = [];
@@ -272,7 +277,7 @@ Template.productview.onRendered(function () {
         $("#taxRateListModal").modal("toggle");
       });
 
-      $(document).on("click", "#tblAccount tbody tr", function (e) {
+      $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
         var table = $(this);
         let accountsName = table.find(".colAccountName").text();
         accSelected = $("#accSelected").val();
@@ -304,24 +309,24 @@ Template.productview.onRendered(function () {
       });
 
       $(document).on("click", "#tblUOMList tbody tr", function (e) {
-        let table = $(this);        
+        let table = $(this);
         let uomName = table.find(".colUOMName").text();
         $($(".saleRowWrapper")[currentLineIndex]).find('input.sltUomSales').val(uomName)
-        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)        
+        $($(".purchaseRowWrapper")[currentLineIndex]).find('input.sltUomPurchases').val(uomName)
         $("#UOMListModal").modal("toggle");
       });
 
       $(document).on('click', 'div.saleRowWrapper', function() {
-        currentLineIndex = $('div.saleRowWrapper').index(this)    
+        currentLineIndex = $('div.saleRowWrapper').index(this)
       })
-      
+
       $(document).on('click', 'div.purchaseRowWrapper', function() {
-        currentLineIndex = $('div.purchaseRowWrapper').index(this)    
-      }) 
+        currentLineIndex = $('div.purchaseRowWrapper').index(this)
+      })
 
       $(document).on('click', 'div.itemExtraSellRow', function() {
-        customerLineIndex = $('div.itemExtraSellRow').index(this)    
-      }) 
+        customerLineIndex = $('div.itemExtraSellRow').index(this)
+      })
 
     // });
   };
@@ -757,46 +762,106 @@ Template.productview.onRendered(function () {
       });
   };
 
-  templateObject.getClientTypeData = function () {
-    getVS1Data("TClientType")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          productService.getClientTypeData().then((data) => {
-            for (let i = 0; i < data.tclienttype.length; i++) {
-              clientType.push(data.tclienttype[i].fields.TypeName);
-            }
-            clientType = _.sortBy(clientType);
-            templateObject.clienttypeList.set(clientType);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tclienttype;
-          for (let i = 0; i < useData.length; i++) {
-            clientType.push(useData[i].fields.TypeName);
-          }
-          clientType = _.sortBy(clientType);
-          templateObject.clienttypeList.set(clientType);
-          //$('.customerTypeSelect option:first').prop('selected', false);
-          $(".customerTypeSelect").attr("selectedIndex", 0);
-        }
-      })
-      .catch(function (err) {
-        productService.getClientTypeData().then((data) => {
-          for (let i = 0; i < data.tclienttype.length; i++) {
-            clientType.push(data.tclienttype[i].fields.TypeName);
-          }
-          clientType = _.sortBy(clientType);
-          templateObject.clienttypeList.set(clientType);
-        });
-      });
-  };
+    templateObject.getBinLocations = function() {
+        getVS1Data('TProductBin').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(function(data) {
+                    for (let i in data.tproductbin) {
 
-  setTimeout(function () {
-    templateObject.getAccountNames();
-    templateObject.getAllTaxCodes();
-    templateObject.getDepartments();
-    //templateObject.getClientTypeData();
-  }, 1000);
+                        let binrecordObj = {
+                            binnumber: data.tproductbin[i].BinNumber || ' ',
+                            binlocation: data.tproductbins[i].BinLocation || '',
+                            binclass: data.tproductbin[i].BinClassName || ' ',
+                        };
+
+                        binrecords.push(binrecordObj);
+                        templateObject.binrecords.set(binrecords);
+
+                    }
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductbin;
+                for (let i in useData) {
+
+                    let binrecordObj = {
+                        binnumber: useData[i].BinNumber || ' ',
+                        binlocation: useData[i].BinLocation || '',
+                        binclass: useData[i].BinClassName || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+
+                }
+
+
+            }
+        }).catch(function(err) {
+            productService.getBins().then(function(data) {
+                for (let i in data.tproductbins) {
+
+                    let binrecordObj = {
+                        binnumber: data.tproductbins[i].BinNumber || ' ',
+                        binlocation: data.tproductbins[i].BinLocation || '',
+                        binclass: data.tproductbins[i].BinClassName || ' ',
+                    };
+
+                    binrecords.push(binrecordObj);
+                    templateObject.binrecords.set(binrecords);
+
+                }
+            });
+        });
+
+    };
+
+    templateObject.getClientTypeData = function() {
+        getVS1Data('TClientType').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getClientTypeData().then((data) => {
+
+                    for (let i = 0; i < data.tclienttype.length; i++) {
+                        clientType.push(data.tclienttype[i].fields.TypeName);
+                    }
+                    clientType = _.sortBy(clientType);
+                    templateObject.clienttypeList.set(clientType);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tclienttype;
+                for (let i = 0; i < useData.length; i++) {
+                    clientType.push(useData[i].fields.TypeName)
+                }
+                clientType = _.sortBy(clientType);
+                templateObject.clienttypeList.set(clientType);
+                //$('.customerTypeSelect option:first').prop('selected', false);
+                $(".customerTypeSelect").attr('selectedIndex', 0);
+
+            }
+        }).catch(function(err) {
+            productService.getClientTypeData().then((data) => {
+
+                for (let i = 0; i < data.tclienttype.length; i++) {
+
+                    clientType.push(data.tclienttype[i].fields.TypeName)
+                }
+                clientType = _.sortBy(clientType);
+                templateObject.clienttypeList.set(clientType);
+            });
+        });
+
+    };
+
+    setTimeout(function() {
+        templateObject.getAccountNames();
+        templateObject.getAllTaxCodes();
+        templateObject.getDepartments();
+        templateObject.getBinLocations();
+        templateObject.bindept.set('Default');
+        //templateObject.getClientTypeData();
+    }, 1000);
 
   let isInventory = localStorage.getItem("CloudInventoryModule");
   if (isInventory) {
@@ -815,12 +880,9 @@ Template.productview.onRendered(function () {
     currentProductID = parseInt(currentProductID);
 
     templateObject.getProductData = function () {
-      getVS1Data("TProductVS1")
-        .then(function (dataObject) {
+      getVS1Data("TProductVS1").then(function (dataObject) {
           if (dataObject.length == 0) {
-            productService
-              .getOneProductdata(currentProductID)
-              .then(function (data) {
+            productService.getOneProductdata(currentProductID).then(function (data) {
                 $(".fullScreenSpin").css("display", "none");
 
                 // add to custom field
@@ -839,10 +901,12 @@ Template.productview.onRendered(function () {
 
                 if (bomIndex > -1) {
                   isBOMProduct = true;
+                  templateObject.bomStructure.set(bomProducts[bomIndex]);
                 } else {
                   productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
                     if (data.tproctree.length > -1) {
                       isBOMProduct = true;
+                      templateObject.bomStructure.set(data.tproctree[0])
                     }
                   });
                 }
@@ -876,7 +940,7 @@ Template.productview.onRendered(function () {
                   barcode: data.fields.BARCODE,
                   // data.fields.TotalQtyInStock,
                   totalqtyonorder: data.fields.TotalQtyOnOrder,
-                  //productclass :lineItems,
+                  productclass :data.fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
 
@@ -1031,10 +1095,12 @@ Template.productview.onRendered(function () {
 
                 if (bomIndex > -1) {
                   isBOMProduct = true;
+                  templateObject.bomStructure.set(bomProducts[bomIndex])
                 } else {
                   productService.getOneBOMProductByName(useData[i].fields.ProductName).then(function (data) {
                     if (data.tproctree.length > -1) {
                       isBOMProduct = true;
+                      templateObject.bomStructure.set(data.tproctree[0])
                     }
                   });
                 }
@@ -1065,8 +1131,10 @@ Template.productview.onRendered(function () {
                   // useData[i].fields.TotalQtyInStock,
                   totalqtyonorder: useData[i].fields.TotalQtyOnOrder,
                   //productclass :lineItems,
+                  productclass :useData[i].fields.ProductClass[0].fields,
                   isManufactured: isBOMProduct,
                 };
+
 
                 templateObject.isManufactured.set(productrecord.isManufactured);
 
@@ -1192,6 +1260,7 @@ Template.productview.onRendered(function () {
               productService
                 .getOneProductdata(currentProductID)
                 .then(function (data) {
+
                   $(".fullScreenSpin").css("display", "none");
                   let lineItems = [];
                   let lineItemObj = {};
@@ -1206,10 +1275,12 @@ Template.productview.onRendered(function () {
 
                   if (bomIndex > -1) {
                     isBOMProduct = true;
+                    templateObject.bomStructure.set(bomProducts[bomIndex])
                   } else {
                     productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
                       if (data.tproctree.length > -1) {
                         isBOMProduct = true;
+                        templateObject.bomStructure.set(data.tproctree[0])
                       }
                     });
                   }
@@ -1365,8 +1436,8 @@ Template.productview.onRendered(function () {
                 });
             }
           }
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
+
           productService
             .getOneProductdata(currentProductID)
             .then(function (data) {
@@ -1384,10 +1455,12 @@ Template.productview.onRendered(function () {
 
               if (bomIndex > -1) {
                 isBOMProduct = true;
+                templateObject.bomStructure.set(bomProducts[bomIndex])
               } else {
                 productService.getOneBOMProductByName(data.fields.ProductName).then(function (data) {
                   if (data.tproctree.length > -1) {
                     isBOMProduct = true;
+                    templateObject.bomStructure.set(data.tproctree[0])
                   }
                 });
               }
@@ -1662,39 +1735,49 @@ Template.productview.onRendered(function () {
 
     templateObject.setBOMModal = () => {};
 
-    templateObject.getProductClassQtyData = function () {
-      productService
-        .getOneProductClassQtyData(currentProductID)
-        .then(function (data) {
-          $(".fullScreenSpin").css("display", "none");
-          let qtylineItems = [];
-          let qtylineItemObj = {};
-          let currencySymbol = Currency;
-          let totaldeptquantity = 0;
-          let backordeQty = 0;
-          for (let j in data.tproductclassquantity) {
-            backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
-            qtylineItemObj = {
-              department: data.tproductclassquantity[j].DepartmentName || "",
-              // quantity: data.tproductclassquantity[j].InStockQty || 0,
-              availableqty:
-                data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
-              onsoqty: data.tproductclassquantity[j].SOQty || 0,
-              onboqty: backordeQty || 0,
-              instockqty: data.tproductclassquantity[j].InStockQty || 0,
-              onorderqty: data.tproductclassquantity[j].OnOrderQty || 0,
-            };
-            totaldeptquantity += data.tproductclassquantity[j].InStockQty;
-            qtylineItems.push(qtylineItemObj);
-          }
-          // $('#edttotalqtyinstock').val(totaldeptquantity);
-          templateObject.productqtyrecords.set(qtylineItems);
-          updateBinNumberSelect();
-          templateObject.totaldeptquantity.set(totaldeptquantity);
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
+    templateObject.getProductClassQtyData = async function () {
+
+      let dataObject = await getVS1Data('TProductClassQuantity')||'';
+      if (dataObject.length > 0){
+        let data = JSON.parse(dataObject[0].data);
+        if(data){
+          templateObject.setProductClassQtyData(data);
+        }
+      }else{
+        productService.getOneProductClassQtyData(currentProductID).then(function (data) {
+          templateObject.setProductClassQtyData(data);
         });
+      }
+
+
+    };
+
+    templateObject.setProductClassQtyData = async function (data) {
+      let qtylineItems = [];
+      let qtylineItemObj = {};
+      let currencySymbol = Currency;
+      let totaldeptquantity = 0;
+      let backordeQty = 0;
+      for (let j in data.tproductclassquantity) {
+        if(data.tproductclassquantity[j].ProductID == parseInt(currentProductID)){
+        backordeQty = data.tproductclassquantity[j].POBOQty + data.tproductclassquantity[j].SOBOQty;
+        qtylineItemObj = {
+          department: data.tproductclassquantity[j].DepartmentName || "",
+          // quantity: data.tproductclassquantity[j].InStockQty || 0,
+          availableqty:data.tproductclassquantity[j].InStockQty - backordeQty - data.tproductclassquantity[j].SOQty || 0,
+          onsoqty: data.tproductclassquantity[j].SOQty || 0,
+          onboqty: backordeQty || 0,
+          instockqty: data.tproductclassquantity[j].InStockQty || 0,
+          onorderqty: data.tproductclassquantity[j].OnOrderQty || 0,
+        };
+        totaldeptquantity += data.tproductclassquantity[j].InStockQty;
+        qtylineItems.push(qtylineItemObj);
+      }
+      }
+      // $('#edttotalqtyinstock').val(totaldeptquantity);
+      templateObject.productqtyrecords.set(qtylineItems);
+      updateBinNumberSelect();
+      templateObject.totaldeptquantity.set(totaldeptquantity);
     };
 
     templateObject.getProductClassQtyData();
@@ -2858,9 +2941,7 @@ Template.productview.onRendered(function () {
     };
 
     templateObject.getProductClassQtyData = function () {
-      productService
-        .getOneProductClassQtyData(currentProductID)
-        .then(function (data) {
+      productService.getOneProductClassQtyData(currentProductID).then(function (data) {
           $(".fullScreenSpin").css("display", "none");
           let qtylineItems = [];
           let qtylineItemObj = {};
@@ -3162,7 +3243,7 @@ Template.productview.onRendered(function () {
 
   $(document).ready(function () {
     $(".edtProductName").editableSelect();
-    $("#edtProcess").editableSelect();    
+    $("#edtProcess").editableSelect();
   });
 
   // $(document).on('click', '.new_attachment_btn', function(event) {
@@ -3245,141 +3326,144 @@ Template.productview.onRendered(function () {
 });
 
 Template.productview.helpers({
-  productrecord: () => {
-    return Template.instance().records.get();
-  },
-  taxraterecords: () => {
-    return Template.instance().taxraterecords.get();
-  },
-  deptrecords: () => {
-    return Template.instance()
-      .deptrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  tserialnumberList: () => {
-    return Template.instance().tserialnumberList.get();
-  },
-  tlotnumberList: () => {
-    return Template.instance().tlotnumberList.get();
-  },
-  recentTrasactions: () => {
-    return Template.instance().recentTrasactions.get();
-  },
-  coggsaccountrecords: () => {
-    return Template.instance()
-      .coggsaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  salesaccountrecords: () => {
-    return Template.instance()
-      .salesaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  inventoryaccountrecords: () => {
-    return Template.instance()
-      .inventoryaccountrecords.get()
-      .sort(function (a, b) {
-        if (a.accountname == "NA") {
-          return 1;
-        } else if (b.accountname == "NA") {
-          return -1;
-        }
-        return a.accountname.toUpperCase() > b.accountname.toUpperCase() ? 1 : -1;
-      });
-  },
-  productqtyrecords: () => {
-    return Template.instance()
-      .productqtyrecords.get()
-      .sort(function (a, b) {
-        if (a.department == "NA") {
-          return 1;
-        } else if (b.department == "NA") {
-          return -1;
-        }
-        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-      });
-  },
-  productExtraSell: () => {
-    return Template.instance()
-      .productExtraSell.get()
-      .sort(function (a, b) {
-        if (a.clienttype == "NA") {
-          return 1;
-        } else if (b.clienttype == "NA") {
-          return -1;
-        }
-        return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
-      });
-  },
-  totaldeptquantity: () => {
-    return Template.instance().totaldeptquantity.get();
-  },
-  productsCloudPreferenceRec: () => {
-    return CloudPreference.findOne({
-      userid: localStorage.getItem("mycloudLogonID"),
-      PrefName: "productview",
-    });
-  },
-  isSNTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isSNTrackChecked.get();
-  },
-  isTrackChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isTrackChecked.get();
-  },
-  isExtraSellChecked: () => {
-    let templateObj = Template.instance();
-    return templateObj.isExtraSellChecked.get();
-  },
-  includeInventory: () => {
-    return Template.instance().includeInventory.get();
-  },
-  clienttypeList: () => {
-    return Template.instance()
-      .clienttypeList.get()
-      .sort(function (a, b) {
-        if (a == "NA") {
-          return 1;
-        } else if (b == "NA") {
-          return -1;
-        }
-        return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
-      });
-  },
-  isMobileDevices: () => {
-    return Template.instance().isMobileDevices.get();
-  },
-  isManufactured: () => {
-    return Template.instance().isManufactured.get();
-  },
-  showBomModal: () => {
-    return Template.instance().isShowBOMModal.get();
-  },
-  productID: () => {
-    return Template.instance().productID.get();
-  },
+
+    productrecord: () => {
+        return Template.instance().records.get();
+    },
+    taxraterecords: () => {
+        return Template.instance().taxraterecords.get();
+    },
+    deptrecords: () => {
+        return Template.instance()
+          .deptrecords.get()
+          .sort(function (a, b) {
+            if (a.department == "NA") {
+              return 1;
+            } else if (b.department == "NA") {
+              return -1;
+            }
+            return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+          });
+    },
+    binrecords: () => {
+        return Template.instance().binrecords.get().sort(function(a, b) {
+            if (a.binnumber == 'NA') {
+                return 1;
+            } else if (b.binnumber == 'NA') {
+                return -1;
+            }
+            return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
+        });
+    },
+    bindept: () => {
+      return Template.instance().bindept.get();
+    },
+    tserialnumberList: () => {
+        return Template.instance().tserialnumberList.get();
+    },
+    tlotnumberList: () => {
+        return Template.instance().tlotnumberList.get();
+    },
+    recentTrasactions: () => {
+        return Template.instance().recentTrasactions.get();
+    },
+    coggsaccountrecords: () => {
+        return Template.instance().coggsaccountrecords.get().sort(function(a, b) {
+            if (a.accountname == 'NA') {
+                return 1;
+            } else if (b.accountname == 'NA') {
+                return -1;
+            }
+            return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    salesaccountrecords: () => {
+        return Template.instance().salesaccountrecords.get().sort(function(a, b) {
+            if (a.accountname == 'NA') {
+                return 1;
+            } else if (b.accountname == 'NA') {
+                return -1;
+            }
+            return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    inventoryaccountrecords: () => {
+        return Template.instance().inventoryaccountrecords.get()
+            .sort(function(a, b) {
+                if (a.accountname == 'NA') {
+                    return 1;
+                } else if (b.accountname == 'NA') {
+                    return -1;
+                }
+                return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
+            });
+    },
+    productqtyrecords: () => {
+        return Template.instance().productqtyrecords.get().sort(function(a, b) {
+            if (a.department == 'NA') {
+                return 1;
+            } else if (b.department == 'NA') {
+                return -1;
+            }
+            return (a.department.toUpperCase() > b.department.toUpperCase()) ? 1 : -1;
+        });
+    },
+    productExtraSell: () => {
+        return Template.instance().productExtraSell.get().sort(function(a, b) {
+            if (a.clienttype == 'NA') {
+                return 1;
+            } else if (b.clienttype == 'NA') {
+                return -1;
+            }
+            return (a.clienttype.toUpperCase() > b.clienttype.toUpperCase()) ? 1 : -1;
+        });
+    },
+    totaldeptquantity: () => {
+        return Template.instance().totaldeptquantity.get();
+    },
+    productsCloudPreferenceRec: () => {
+        return CloudPreference.findOne({
+            userid: localStorage.getItem('mycloudLogonID'),
+            PrefName: 'productview'
+        });
+    },
+    isSNTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isSNTrackChecked.get();
+    },
+    isTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isTrackChecked.get();
+    },
+    isExtraSellChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isExtraSellChecked.get();
+    },
+    includeInventory: () => {
+        return Template.instance().includeInventory.get();
+    },
+    clienttypeList: () => {
+        return Template.instance().clienttypeList.get().sort(function(a, b) {
+            if (a == 'NA') {
+                return 1;
+            } else if (b == 'NA') {
+                return -1;
+            }
+            return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
+        });
+    },
+    isMobileDevices:()=>{
+        return Template.instance().isMobileDevices.get()
+    },
+    isManufactured:() =>{
+        return Template.instance().isManufactured.get();
+    },
+    showBomModal: ()=>{
+        return Template.instance().isShowBOMModal.get();
+    },
+    productID: () => {
+        return Template.instance().productID.get();
+    },
 });
 
 Template.productview.events({
@@ -3423,8 +3507,10 @@ Template.productview.events({
     $(event.target).closest(".lblPriceCheckStatus").val("false");
   },
   "click .lblCostEx": function (event) {
-    $(event.target).addClass("hiddenColmn");
-    $(event.target).removeClass("showColumn");
+    // $(event.target).addClass("hiddenColmn");
+    // $(event.target).removeClass("showColumn");
+    $(event.target).closest(".lblCostEx").addClass("hiddenColumn");
+    $(event.target).closest(".lblCostEx").removeClass("showColumn");
     formGroup = $(event.target).closest(".form-group");
     formGroup.find(".lblCostInc").addClass("showColumn");
     formGroup.find(".lblCostInc").removeClass("hiddenColumn");
@@ -3672,8 +3758,32 @@ Template.productview.events({
           };
         }
 
+        let checkTracked = templateObject.isTrackChecked.get();
+        if(checkTracked == true){
+          let productClassData = templateObject.records.get();
+          let productBinNumber =  $(".slt-bin").val();
+          let productBinLocation =  $(".slt-bin option:selected").data('location');
+          let ProductDept = $(".slt_department option:selected").data('tag');
+          let ProductDeptName = $(".slt_department").val();
+
+          let productClassObj = {
+              type: "TProductClass",
+              fields: {
+                ID: productClassData.productclass.ID,
+                DefaultbinLocation: productBinLocation.toString(),
+                DefaultbinNumber: productBinNumber.toString(),
+                ProductID: parseInt(currentID),
+                DeptID: ProductDept,
+                DeptName: ProductDeptName
+              }
+          };
+
+          productService.saveProductClassData(productClassObj).then(function(data){
+
+          });
+        }
+
         saveBOMStructure();
-        return;
         productService
           .saveProductVS1(objDetails)
           .then(function (objDetails) {
@@ -3693,7 +3803,7 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            
+
             sideBarService
               .getNewProductListVS1(initialBaseDataLoad, 0)
               .then(function (dataReload) {
@@ -4279,7 +4389,7 @@ Template.productview.events({
         let temp = cloneDeep(bomObject);
         temp.fields.Description = templateObject.records.get().salesdescription;
         temp.fields.TotalQtyOriginal = templateObject.records.get().totalqtyinstock;
-        return
+
         if (templateObject.isManufactured.get() == true) {
           if (existID != -1) {
             temp.fields.ID = existID;
@@ -5037,6 +5147,12 @@ Template.productview.events({
     //     }
     // }
     $("#BOMSetupModal").modal("toggle");
+  },
+
+  "change .slt_department": function (event) {
+    let templateObject = Template.instance();
+    let dept_name = $(event.target).val();
+    templateObject.bindept.set(dept_name);
   },
 
   "change #chkBOM": function (event) {

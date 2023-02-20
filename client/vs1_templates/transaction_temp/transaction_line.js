@@ -218,11 +218,108 @@ Template.transaction_line.events({
         });
        $('.'+currenttranstablename+'_Modal').modal('toggle');
     },
-    "click .btnResetGridSettings": async function(event) {
+    "click .btnResetGridSettings": function(event) {
         let templateObject = Template.instance();
         let currenttranstablename = templateObject.data.tablename||"";
-        let reset_data = await templateObject.reset_data.get();
-        reset_data = reset_data.filter(redata => redata.display);
+        let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID')||0;
+        //let reset_data = await templateObject.reset_data.get();
+        //reset_data = reset_data.filter(redata => redata.display);
+        $('.fullScreenSpin').css('display', 'inline-block');
+        //Rasheed Add Reset Function (API)
+        var erpGet = erpDb();
+        let objResetData = {
+            Name:"VS1_Customize",
+            Params:
+            {
+                EmployeeID:parseInt(loggedEmpID)||0,
+                TableName:currenttranstablename,
+                Columns:[
+                   {
+                     "Width":"0"
+                 }
+                ],
+                Reset:true
+            }
+        }
+
+        var oPost = new XMLHttpRequest();
+        oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_Customize"', true);
+        oPost.setRequestHeader("database", erpGet.ERPDatabase);
+        oPost.setRequestHeader("username", erpGet.ERPUsername);
+        oPost.setRequestHeader("password", erpGet.ERPPassword);
+        oPost.setRequestHeader("Accept", "application/json");
+        oPost.setRequestHeader("Accept", "application/html");
+        oPost.setRequestHeader("Content-type", "application/json");
+        var myString = JSON.stringify(objResetData);
+
+         oPost.send(myString);
+
+        oPost.onreadystatechange = function() {
+        if(oPost.readyState == 4 && oPost.status == 200) {
+
+              var myArrResponse = JSON.parse(oPost.responseText);
+              if(myArrResponse.ProcessLog.Error){
+                $('.fullScreenSpin').css('display','none');
+                swal('Oooops...', myArrResponse.ProcessLog.Error, 'error');
+              }else{
+                sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(async function(dataCustomize) {
+                    await addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+                    templateObject.init_reset_data();
+                    templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
+                    $('#myModal2').modal('hide');
+                    $('.modal-backdrop').css('display','none');
+                    $('.fullScreenSpin').css('display','none');
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Display settings is updated!",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+
+                    });
+                }).catch(function (err) {
+                  $('.fullScreenSpin').css('display','none');
+                });
+
+
+              }
+
+          }else if(oPost.readyState == 4 && oPost.status == 403){
+              $('.fullScreenSpin').css('display','none');
+              swal({
+              title: 'Oooops...',
+              text: oPost.getResponseHeader('errormessage'),
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Try Again'
+              }).then((result) => {
+              if (result.value) {
+
+              } else if (result.dismiss === 'cancel') {
+
+              }
+              });
+          }else if(oPost.readyState == 4 && oPost.status == 406){
+            $('.fullScreenSpin').css('display','none');
+            var ErrorResponse = oPost.getResponseHeader('errormessage');
+            var segError = ErrorResponse.split(':');
+
+          if((segError[1]) == ' "Unable to lock object'){
+
+            swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
+          }else{
+
+            swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
+          }
+
+          }else if(oPost.readyState == '') {
+            $('.fullScreenSpin').css('display','none');
+            swal('Connection Failed', oPost.getResponseHeader('errormessage') +' Please try again!', 'error');
+          }
+        }
+
+        /*
         $(`.${currenttranstablename}_Modal .displaySettings`).each(function(index) {
             let $tblrow = $(this);
             $tblrow.find(".divcolumn").text(reset_data[index].label);
@@ -245,6 +342,8 @@ Template.transaction_line.events({
             $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
             $(".col" + reset_data[index].class).css('width', reset_data[index].width);
         });
+        */
+
     },
     "click .btnSaveGridSettings" : async function(event) {
         playSaveAudio();
@@ -298,6 +397,7 @@ Template.transaction_line.events({
                     }).then((result) => {
                         if (result.value) {
                             $('#myModal2').modal('hide');
+                            $('.modal-backdrop').css('display','none');
                         }
                     });
                 } else {

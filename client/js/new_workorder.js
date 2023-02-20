@@ -107,8 +107,6 @@ Template.new_workorder.onRendered(async function(){
     templateObject.workOrderRecords.set(temp);
 
     templateObject.getWorkorderRecord = function() {
-
-
         if(FlowRouter.current().queryParams.id) {
             $('.fullScreenSpin').css('display', 'inline-block')
             let orderid = FlowRouter.current().queryParams.id
@@ -141,6 +139,8 @@ Template.new_workorder.onRendered(async function(){
                 isStarted: workorder.fields.InProgress,
                 poStatus: workorder.fields.POStatus,
                 status: workorder.fields.Status,
+                showSchedule: isCompleted == false && workorder.fields.Status == 'unscheduled'? true: false,
+                showUnschedule: isCompleted == false && workorder.fields.Status == 'scheduled'? true: false,
                 showTimerStart: isCompleted == false &&  workorder.fields.Status == 'scheduled' ? true : false,
                 showTimerPause: isCompleted == false &&  (workorder.fields.Status == 'started' || workorder.fields.Status == 'resumed') ? true: false,
                 showTimerStop: isCompleted == false &&  (workorder.fields.Status == 'started' || workorder.fields.Status == 'resumed' || workorder.fields.Status =='paused') ? true: false,
@@ -199,6 +199,8 @@ Template.new_workorder.onRendered(async function(){
                                 shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
                                 poStatus: 'not created',
                                 status: "unscheduled",
+                                showSchedule: false,
+                                showUnschedule: false,
                                 showTimerStart: false,
                                 showTimerPause: false,
                                 showTimerStop: false,
@@ -257,6 +259,8 @@ Template.new_workorder.onRendered(async function(){
                                     shipDate: useData[d].fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
                                     poStatus: 'not created',
                                     status: 'unscheduled',
+                                    showSchedule: false,
+                                    showUnschedule: false,
                                     showTimerStart: false,
                                     showTimerStop: false,
                                     showTimerPause: false,
@@ -317,6 +321,8 @@ Template.new_workorder.onRendered(async function(){
                                 shipDate: data.fields.Lines[templateObject.workOrderLineId.get()].fields.ShipDate || "",
                                 poStatus: 'not created',
                                 status: 'unscheduled',
+                                showSchedule: false,
+                                showUnschedule: false,
                                 showTimerStart: false,
                                 showTimerStop: false,
                                 showTimerPause: false,
@@ -410,6 +416,15 @@ Template.new_workorder.onRendered(async function(){
             let pausedTimes = tempOrder.fields.PausedTimes!= ''? JSON.parse(tempOrder.fields.PausedTimes): [];
             let record = templateObject.workorderrecord.get();
             tempOrder.fields.Status = status;
+            if(status == 'scheduled') {
+                record.showSchedule = false
+                record.showTimerStart = true;
+                record.showUnschedule = true
+            }
+            if(status == 'unscheduled') {
+                record.showSchedule = true;
+                record.showUnschedule = false;
+            }
             if(status == 'started' || status == 'resumed' || status == 'QAStarted' || status == 'QAResumed') {
                 if(status == 'started') {
                     tempOrder.fields.StartTime = new Date();
@@ -418,6 +433,15 @@ Template.new_workorder.onRendered(async function(){
                 startedTimes.push(new Date());
                 tempOrder.fields.StartedTimes = JSON.stringify(startedTimes)
                 record.startedTimes = startedTimes;
+                // if(status == 'scheduled') {
+                //     record.showSchedule = false
+                //     record.showTimerStart = true;
+                //     record.showUnschedule = true
+                // }
+                // if(status == 'unscheduled') {
+                //     record.showSchedule = true;
+                //     record.showUnschedule = false;
+                // }
                 if(status == 'started' ||  status == 'resumed') {
                     record.showTimerPause = true;
                     record.showTimerStop = true;
@@ -1214,7 +1238,7 @@ Template.new_workorder.events({
         }
     },
 
-    'click #tblWorkOrderLine tbody tr': function(event) {
+    'click #tblWorkOrderLine tbody tr td.colProductName': function(event) {
         event.preventDefault();
         event.stopPropagation();
         let templateObject = Template.instance();
@@ -1227,6 +1251,9 @@ Template.new_workorder.events({
         let value = $(event.target).val();
         value = parseFloat(value).toFixed(5);
         $(event.target).val(value);
+        let record = JSON.parse(JSON.stringify(templateObject.workorderrecord.get()))
+        record.quantity = parseFloat(value)
+        templateObject.workorderrecord.set(record);
     },
 
     'click #btnVendorService': async function(event) {
@@ -1388,47 +1415,23 @@ Template.new_workorder.events({
         }
     },
 
+    'click #btnScheduleOrder': async function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('scheduled')
+    },
+    'click #btnUnscheduleOrder': async function(event) {
+        let templateObject = Template.instance();
+        templateObject.changeWorkorderStatus('unscheduled');
+    },
+
     'click #btnStartTimer': async function(event) {
         let templateObject = Template.instance();
-        // let workorders = templateObject.workorderRecords.get();
-        // let tempOrders  = cloneDeep(workorders);
-        // let id = FlowRouter.current().queryParams.id;
-        // if(!id) {return}
-        // let orderIndex = tempOrders.findIndex(order => {
-        //     return order.fields.ID == id;
-        // })
-        // if(orderIndex > -1) {
-        //     let tempOrder = tempOrders[orderIndex];
-        //     tempOrder.fields.StartTime = new Date();
-        //     tempOrder.fields.Status = 'started';
-        //     let record = templateObject.workorderrecord.get();
-        //     record.status = 'started';
-        //     templateObject.workorderrecord.set(record);
-        //     tempOrders.splice(orderIndex, 1, tempOrder);
-        //     templateObject.workorderRecords.set(tempOrders);
-        //     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
-        // } else {return}
         templateObject.changeWorkorderStatus('started')
     },
 
     'click #btnPauseTimer': async function(event) {
         let templateObject = Template.instance();
-        // let workorders = templateObject.workorderRecords.get();
-        // let tempOrders = cloneDeep(workorders);
-        // let id = FlowRouter.current.queryParams.id;
-        // if(!id) {return}
-        // let orderIndex = tempOrders.findIndex(order=> {
-        //     return order.fields.ID == id
-        // })
-        // if(orderIndex > -1) {
-        //     let tempOrder = tempOrders[orderIndex];
-        //     tempOrder.fields.Status = 'paused';
-        //     let record = templateObject.workorderrecord.get();
-        //     record.stauts = 'paused';
-        //     templateObject.workorderrecord.set(record);
-        //     tempOrders.splice(orderIndex, 1, tempOrder);
-        //     templateObject.workorderRecords.set(tempOrders)
-        // }else{return}
+
         templateObject.changeWorkorderStatus('paused')
     },
 
@@ -1488,8 +1491,7 @@ Template.new_workorder.helpers({
 
     isSaved: () => {
         return Template.instance().isSaved.get();
-    }
-
+    },
 })
 
 Template.new_workorder.events({
@@ -1707,9 +1709,7 @@ Template.new_workorder.events({
     'keyup #edtTotalQuantity': function(event) {
         event.preventDefault();
         let templateObject = Template.instance();
-        let record = JSON.parse(JSON.stringify(templateObject.workorderrecord.get()))
-        record.quantity = parseFloat($(event.target).val())
-        templateObject.workorderrecord.set(record);
+
     },
 
     'click #btnCompleteProcess': async function(event) {

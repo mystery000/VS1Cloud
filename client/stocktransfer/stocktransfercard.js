@@ -2570,10 +2570,10 @@ Template.stocktransfercard.onRendered(function() {
 
     });
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
         var table = $(this);
 
-        let accountname = table.find(".productName").text();
+        let accountname = table.find(".colAccountName").text();
         $('#accountListModal').modal('toggle');
         $('#sltBankAccountName').val(accountname);
 

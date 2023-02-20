@@ -4754,7 +4754,7 @@ Template.refundcard.onRendered(() => {
       LoadingOverlay.hide();
     }, 1000);
   }
-
+$(document).ready(function () {
   $("#sltTerms")
       .editableSelect()
       .on("click.editable-select", function (e, li) {
@@ -5131,6 +5131,106 @@ Template.refundcard.onRendered(() => {
         }
       });
 
+      $("#sltPaymentMethod")
+          .editableSelect()
+          .on("click.editable-select", function (e, li) {
+            var $earch = $(this);
+            var offset = $earch.offset();
+            var paymentDataName = e.target.value || "";
+            $("#edtPaymentMethodID").val("");
+            if (e.pageX > offset.left + $earch.width() - 8) {
+              // X button 16px wide?
+              $("#paymentMethodModal").modal("toggle");
+            } else {
+              if (paymentDataName.replace(/\s/g, "") != "") {
+                $("#paymentMethodHeader").text("Edit Payment Method");
+                getVS1Data("TPaymentMethod")
+                  .then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                      LoadingOverlay.show();
+                      sideBarService.getPaymentMethodDataVS1().then(function (data) {
+                        for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+                          if (
+                              data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
+                              paymentDataName
+                          ) {
+                            $("#edtPaymentMethodID").val(
+                                data.tpaymentmethodvs1[i].fields.ID
+                            );
+                            $("#edtPaymentMethodName").val(
+                                data.tpaymentmethodvs1[i].fields.PaymentMethodName
+                            );
+                            if (
+                                data.tpaymentmethodvs1[i].fields.IsCreditCard === true
+                            ) {
+                              $("#isformcreditcard").prop("checked", true);
+                            } else {
+                              $("#isformcreditcard").prop("checked", false);
+                            }
+                          }
+                        }
+                        setTimeout(function () {
+                          LoadingOverlay.hide();
+                          $("#newPaymentMethodModal").modal("toggle");
+                        }, 200);
+                      });
+                    } else {
+                      let data = JSON.parse(dataObject[0].data);
+                      for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+                        if (
+                            data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
+                            paymentDataName
+                        ) {
+                          $("#edtPaymentMethodID").val(
+                              data.tpaymentmethodvs1[i].fields.ID
+                          );
+                          $("#edtPaymentMethodName").val(
+                              data.tpaymentmethodvs1[i].fields.PaymentMethodName
+                          );
+                          if (
+                              data.tpaymentmethodvs1[i].fields.IsCreditCard === true
+                          ) {
+                            $("#isformcreditcard").prop("checked", true);
+                          } else {
+                            $("#isformcreditcard").prop("checked", false);
+                          }
+                        }
+                      }
+                      LoadingOverlay.hide();
+                      $("#newPaymentMethodModal").modal("toggle");
+                    }
+                  })
+                  .catch(function (err) {
+                    LoadingOverlay.show();
+                    sideBarService.getPaymentMethodDataVS1().then(function (data) {
+                      for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+                        if ( data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName ) {
+                          $("#edtPaymentMethodID").val( data.tpaymentmethodvs1[i].fields.ID );
+                          $("#edtPaymentMethodName").val( data.tpaymentmethodvs1[i].fields.PaymentMethodName );
+                          if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
+                            $("#isformcreditcard").prop("checked", true);
+                          } else {
+                            $("#isformcreditcard").prop("checked", false);
+                          }
+                          break;
+                        }
+                      }
+                      LoadingOverlay.hide();
+                      $("#newPaymentMethodModal").modal("toggle");
+                    });
+                  });
+              } else {
+                $("#paymentMethodModal").modal();
+                $("#paymentmethodList_filter .form-control-sm").focus();
+                $("#paymentmethodList_filter .form-control-sm").val("");
+                $("#paymentmethodList_filter .form-control-sm").trigger("input");
+                var datatable = $("#paymentmethodList").DataTable();
+                datatable.draw();
+                $("#paymentmethodList_filter .form-control-sm").trigger("input");
+              }
+            }
+          });
+});
   $(document).on('click', '#edtCustomerName', function(e, li) {
     var $earch = $(this);
     var offset = $earch.offset();
@@ -5698,105 +5798,6 @@ Template.refundcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $("#sltPaymentMethod")
-      .editableSelect()
-      .on("click.editable-select", function (e, li) {
-        var $earch = $(this);
-        var offset = $earch.offset();
-        var paymentDataName = e.target.value || "";
-        $("#edtPaymentMethodID").val("");
-        if (e.pageX > offset.left + $earch.width() - 8) {
-          // X button 16px wide?
-          $("#paymentMethodModal").modal("toggle");
-        } else {
-          if (paymentDataName.replace(/\s/g, "") != "") {
-            $("#paymentMethodHeader").text("Edit Payment Method");
-            getVS1Data("TPaymentMethod")
-              .then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  LoadingOverlay.show();
-                  sideBarService.getPaymentMethodDataVS1().then(function (data) {
-                    for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                      if (
-                          data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
-                          paymentDataName
-                      ) {
-                        $("#edtPaymentMethodID").val(
-                            data.tpaymentmethodvs1[i].fields.ID
-                        );
-                        $("#edtPaymentMethodName").val(
-                            data.tpaymentmethodvs1[i].fields.PaymentMethodName
-                        );
-                        if (
-                            data.tpaymentmethodvs1[i].fields.IsCreditCard === true
-                        ) {
-                          $("#isformcreditcard").prop("checked", true);
-                        } else {
-                          $("#isformcreditcard").prop("checked", false);
-                        }
-                      }
-                    }
-                    setTimeout(function () {
-                      LoadingOverlay.hide();
-                      $("#newPaymentMethodModal").modal("toggle");
-                    }, 200);
-                  });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if (
-                        data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
-                        paymentDataName
-                    ) {
-                      $("#edtPaymentMethodID").val(
-                          data.tpaymentmethodvs1[i].fields.ID
-                      );
-                      $("#edtPaymentMethodName").val(
-                          data.tpaymentmethodvs1[i].fields.PaymentMethodName
-                      );
-                      if (
-                          data.tpaymentmethodvs1[i].fields.IsCreditCard === true
-                      ) {
-                        $("#isformcreditcard").prop("checked", true);
-                      } else {
-                        $("#isformcreditcard").prop("checked", false);
-                      }
-                    }
-                  }
-                  LoadingOverlay.hide();
-                  $("#newPaymentMethodModal").modal("toggle");
-                }
-              })
-              .catch(function (err) {
-                LoadingOverlay.show();
-                sideBarService.getPaymentMethodDataVS1().then(function (data) {
-                  for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if ( data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName ) {
-                      $("#edtPaymentMethodID").val( data.tpaymentmethodvs1[i].fields.ID );
-                      $("#edtPaymentMethodName").val( data.tpaymentmethodvs1[i].fields.PaymentMethodName );
-                      if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                        $("#isformcreditcard").prop("checked", true);
-                      } else {
-                        $("#isformcreditcard").prop("checked", false);
-                      }
-                      break;
-                    }
-                  }
-                  LoadingOverlay.hide();
-                  $("#newPaymentMethodModal").modal("toggle");
-                });
-              });
-          } else {
-            $("#paymentMethodModal").modal();
-            $("#paymentmethodList_filter .form-control-sm").focus();
-            $("#paymentmethodList_filter .form-control-sm").val("");
-            $("#paymentmethodList_filter .form-control-sm").trigger("input");
-            var datatable = $("#paymentmethodList").DataTable();
-            datatable.draw();
-            $("#paymentmethodList_filter .form-control-sm").trigger("input");
-          }
-        }
-      });
 
   exportSalesToPdf1 = function () {
     let invoice_data = templateObject.invoicerecord.get();

@@ -6,42 +6,51 @@
             height: 50px;
             width: 50px;
         }
+
         .ui-sortable .card.hovered {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
             cursor: move;
             transition-duration: 300ms;
 
         }
+
         .ui-widget.ui-widget-content {
             border: 1px solid #e3e6f0;
         }
+
         .responsive-chart {
             position: relative;
             height: 100%;
             width: 100%;
         }
+
         .canvasHeight100 {
             height: 100% !important;
         }
+
         .canvasParentDiv {
             display: inline-block;
             width: 100%;
             height: calc(100% - 44px);
             position: relative;
         }
+
         .canvasParentDiv canvas {
             height: 100% !important;
             object-fit: contain;
         }
+
         .minHeight100 {
             height: 100% !important;
             position: relative;
         }
+
         .minHeight100 .canvasHeight100 {
             position: relative;
             min-height: 110px;
             max-height: 100%;
         }
+
         .col-md-3 .minHeight100 .canvasParentDiv.canvasHeight100,
         .col-md-4 .minHeight100 .canvasParentDiv.canvasHeight100,
         .col-md-5 .minHeight100 .canvasParentDiv.canvasHeight100,
@@ -52,6 +61,7 @@
             float: left;
             width: 100%;
         }
+
         .col-md-3 .minHeight100 .portlet.card,
         .col-md-4 .minHeight100 .portlet.card,
         .col-md-5 .minHeight100 .portlet.card,
@@ -60,6 +70,7 @@
         .col-md-12 .minHeight100 .portlet.card {
             height: 100% !important;
         }
+
         .col-md-3 .minHeight100 .canvasParentDiv,
         .col-md-4 .minHeight100 .canvasParentDiv,
         .col-md-5 .minHeight100 .canvasParentDiv,
@@ -70,9 +81,11 @@
             position: relative;
             max-height: 100%;
         }
+
         .ui-resizable-handle {
             opacity: 0;
         }
+
         /* .resizeAfterChart {
             margin: .75rem !important;
             padding: 0px !important;
@@ -84,15 +97,19 @@
             display: inline-block;
             width: 100%;
         }
+
         .sortable-chart-widget-js {
             margin-bottom: 30px !important;
         }
+
         .minHeight100 .card.mb-4 {
             margin: 0 !important;
         }
+
         .resizeAfterChart .card {
             max-width: 100%;
         }
+
         .sortable-chart-widget-js .minHeight100 .card canvas,
         .sortable-chart-widget-js .minHeight100 .card .chartjs-size-monitor,
         .sortable-chart-widget-js .minHeight100 .card .canvasParentDiv,
@@ -103,6 +120,7 @@
             float: left;
             width: 100%;
         }
+
         /* .col-md-6 .minHeight100 .canvasHeight100 canvas {
             position: absolute;
             left: 0;
@@ -113,210 +131,216 @@
         .on-editor-change-mode i {
             pointer-events: none;
         }
+
         .btn-sm.dropdown-toggle.hideelement,
         .btn-sm.dropdown-toggle.showelement {
-            background-color: #00a3d3!important;
+            background-color: #00a3d3 !important;
         }
 
         .dimmedChart .fa-eye {
             color: #1cc88a;
         }
+
         .dimmedChart .fa-eye-slash {
             color: #e74a3b;
         }
     </style>
-    <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
+    <div class="row no-gutters justify-content-end">
+        <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">
+            <i class="fa fa-save" style="margin-right: 5px;"></i>Save Changes
+        </button>
+        <button class="btn btn-warning float-right hideelement resetchartbtn" id="resetcharts" type="button"
+            style="margin:0 8px 16px;">
+            <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Charts
+        </button>
+        <button class="btn btn-secondary float-right hideelement" id="btnCancel" type="button"
+            style="margin:0 8px 16px;">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
+        </button>
+    </div>
+    <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart"
+        data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
 
-       {{#if is_available_chart currentTemplate "bankaccountschart"}}
-            {{> bankaccountschart
-                    md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
+        {{#if is_available_chart currentTemplate "bankaccountschart"}}
+        {{> bankaccountschart
+        md=6 defaultPosition=0 key="dashboard__bank_accountschart" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "monthlyprofitandloss"}}
-            {{> monthlyprofitandloss
-                    md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
+        {{> monthlyprofitandloss
+        md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "mytaskswidgetchart"}}
-            {{#if is_dashboard_check "dashboardsalesmanager"}}
-                {{> mytaskswidgetchart
-                        md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
+        {{#if is_dashboard_check "dashboardsalesmanager"}}
+        {{> mytaskswidgetchart
+        md=4 defaultPosition=2 key="dsmcharts__my_tasks" }}
 
-            {{else if is_dashboard_check "dashboardsales"}}
-                {{> mytaskswidgetchart
-                        md=4 defaultPosition=2 key="dscharts__my_tasks" }}
+        {{else if is_dashboard_check "dashboardsales"}}
+        {{> mytaskswidgetchart
+        md=4 defaultPosition=2 key="dscharts__my_tasks" }}
 
-            {{else}}
-                {{> mytaskswidgetchart
-                        md=6 defaultPosition=1 key="dashboard__my_tasks" }}
-            {{/if}}
+        {{else}}
+        {{> mytaskswidgetchart
+        md=6 defaultPosition=1 key="dashboard__my_tasks" }}
+        {{/if}}
 
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsmAppointmentsWidget"}}
-            {{> dsmAppointmentsWidget
-                    md=8 defaultPosition=3 key="dsmcharts__appointment_chart" }}
+        {{> dsmAppointmentsWidget
+        md=8 defaultPosition=3 key="dsmcharts__appointment_chart" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "quotedsalesorderinvoicedamounts"}}
-            {{> quotedsalesorderinvoicedamounts
-                    md=4 defaultPosition=1 key="sales__sales_overview" }}
+        {{> quotedsalesorderinvoicedamounts
+        md=4 defaultPosition=1 key="sales__sales_overview" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "accountrevenuestreams"}}
-            {{> accountrevenuestreams
-                    md=8 defaultPosition=2 key="accounts__revenue_streams"}}
+        {{> accountrevenuestreams
+        md=8 defaultPosition=2 key="accounts__revenue_streams"}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "profitandlosschart"}}
-            {{> profitandlosschart
-                    md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}
+        {{> profitandlosschart
+        md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "invstockonhandanddemand"}}
-            {{> invstockonhandanddemand
-                    md=8 defaultPosition=4 key="inventory__stock_on_hand_and_demand" }}
+        {{> invstockonhandanddemand
+        md=8 defaultPosition=4 key="inventory__stock_on_hand_and_demand" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "top10Customers"}}
-            {{> top10Customers
-                    md=4 defaultPosition=11 key="contacts__top_10_customers" }}
+        {{> top10Customers
+        md=4 defaultPosition=11 key="contacts__top_10_customers" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "top10Suppliers"}}
-            {{> top10Suppliers
-                    md=4 defaultPosition=12 key="contacts__top_10_supplies" }}
+        {{> top10Suppliers
+        md=4 defaultPosition=12 key="contacts__top_10_supplies" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "resalescomparision"}}
-            {{#if is_dashboard_check "dashboardsales"}}
-                {{else}}
-                    {{> resalescomparision
-                        md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
-            {{/if}}
+        {{#if is_dashboard_check "dashboardsales"}}
+        {{else}}
+        {{> resalescomparision
+        md=4 defaultPosition=13 key="dashboard__employee_sales_comparison" canvasID="employeeSalesComparisonChart"}}
+        {{/if}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "expenseschart"}}
-            {{> expenseschart
-                    md=8 defaultPosition=14 key="dashboard__expenses" }}
+        {{> expenseschart
+        md=8 defaultPosition=14 key="dashboard__expenses" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "monthlyearnings"}}
-            {{> monthlyearnings
-                    md=6 defaultPosition=15 key="dashboard__monthly_earnings" }}
+        {{> monthlyearnings
+        md=6 defaultPosition=15 key="dashboard__monthly_earnings" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "quotedinvoicedamounts"}}
-            {{> quotedinvoicedamounts
-                    md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
+        {{> quotedinvoicedamounts
+        md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "activeEmployees"}}
-            {{> activeEmployees
-                    md=4 defaultPosition=17 key="contacts__active_employees" }}
+        {{> activeEmployees
+        md=4 defaultPosition=17 key="contacts__active_employees" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "employeecompletedjobs"}}
-            {{> employeecompletedjobs
-                    md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
+        {{> employeecompletedjobs
+        md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "clockedOnEmployees"}}
-            {{> clockedOnEmployees
-                    md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+        {{> clockedOnEmployees
+        md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "monthllyexpenses"}}
-            {{> monthllyexpenses
-                    md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
+        {{> monthllyexpenses
+        md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "expensebreakdown"}}
-            {{> expensebreakdown
-                    md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
+        {{> expensebreakdown
+        md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "absenteeRate"}}
-            {{> absenteeRate
-                    md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
+        {{> absenteeRate
+        md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
         {{/if}}
-        
+
         {{#if is_available_chart currentTemplate "dashboardManagerCharts"}}
-            <!-- position 17 to 18, 24 -->
-            {{> dashboardManagerCharts}}
+        <!-- position 17 to 18, 24 -->
+        {{> dashboardManagerCharts}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsmTop10Customers"}}
-            {{> dsmTop10Customers
-                    md=4 defaultPosition=24 key="dsmcharts__top_10_customers" }}
+        {{> dsmTop10Customers
+        md=4 defaultPosition=24 key="dsmcharts__top_10_customers" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "resalescomparision"}}
-            {{#if is_dashboard_check "dashboardsalesmanager"}}
-                {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison" canvasID="dsm_employeeSalesComparisonChart"}}
-            {{/if}}
+        {{#if is_dashboard_check "dashboardsalesmanager"}}
+        {{> resalescomparision md=4 defaultPosition=25 key="dsmcharts__employee_sales_comparison"
+        canvasID="dsm_employeeSalesComparisonChart"}}
+        {{/if}}
         {{/if}}
 
         {{#if equals isaccountoverview true}}
-            {{> accountslistchart
-                    md=12 defaultPosition=29 key="dashboard__account_list" }}
+        {{> accountslistchart
+        md=12 defaultPosition=29 key="dashboard__account_list" }}
         {{else}}
-
 
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsAppointmentsWidget"}}
-            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="27" data-default-class="col-md-8" key="dscharts__appointment_chart">
-                {{> dsAppointmentsWidget}}
-            </div>
+        <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" data-default-position="27"
+            data-default-class="col-md-8" key="dscharts__appointment_chart">
+            {{> dsAppointmentsWidget}}
+        </div>
         {{/if}}
 
         {{#if is_available_chart currentTemplate "opportunitiesStatus"}}
-            {{> opportunitiesStatus md=4 defaultPosition=30 key="dsmcharts__opportunities_status" }}
+        {{> opportunitiesStatus md=4 defaultPosition=30 key="dsmcharts__opportunities_status" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsmleadlistchart"}}
-            {{> dsmleadlistchart md=12 defaultPosition=31 key="dsmcharts__lead_list" }}
+        {{> dsmleadlistchart md=12 defaultPosition=31 key="dsmcharts__lead_list" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dashboardSalesCharts"}}
-            {{> dashboardSalesCharts}}
+        {{> dashboardSalesCharts}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "dsleadlistchart"}}
-            {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
-        {{/if}} 
-        
+        {{> dsleadlistchart md=12 defaultPosition=33 key="dscharts__lead_list" }}
+        {{/if}}
+
         {{#if is_available_chart currentTemplate "employeeDaysAbsent"}}
-            {{> employeeAbsentDays
-                    md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+        {{> employeeAbsentDays
+        md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "employeesOnLeave"}}
-            {{> employeeLeave
-                    md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
+        {{> employeeLeave
+        md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "crmleadchart"}}
-            {{> crmleadchart md=6 defaultPosition=0 key="crm__crm_overview" }}
+        {{> crmleadchart md=6 defaultPosition=0 key="crm__crm_overview" }}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "productionplannerChart"}}
-            {{> mfgPlannerChart md=12 defaultPosition=34 key="manufacturing__manufacturing_overview" }}
+        {{> mfgPlannerChart md=12 defaultPosition=34 key="manufacturing__manufacturing_overview" }}
         {{/if}}
 
 
-    </div>
-    <div class="row no-gutters justify-content-center">
-        <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">
-            <i class="fa fa-save" style="margin-right: 5px;"></i>Save Changes
-        </button>
-        <button class="btn btn-warning float-right hideelement resetchartbtn" id="resetcharts" type="button" style="margin:0 8px 16px;">
-            <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Charts
-        </button>
-        <button class="btn btn-secondary float-right hideelement" id="btnCancel" type="button" style="margin:0 8px 16px;">
-            <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
-        </button>
     </div>
 </template>
