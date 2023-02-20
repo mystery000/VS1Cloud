@@ -26,6 +26,43 @@
         .isNotCreditAccount {
             display: none !important;
         }
+
+        .sign-box-close {
+            position: absolute;
+            right: 0px;
+            top: -3px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            box-shadow: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+        #context-menu {
+            position: fixed;
+            z-index: 10000;
+            width: 150px;
+            background: #00a3d3;
+            border-radius: 5px;
+            transform: scale(0);
+            transform-origin: top left;
+        }
+
+        #context-menu.visible {
+            transform: scale(1);
+            transition: transform 200ms ease-in-out;
+        }
+
+        #context-menu .item {
+            padding: 8px 10px;
+            font-size: 15px;
+            color: #eee;
+            cursor: pointer;
+            border-radius: inherit;
+        }
+
+        #context-menu .item:hover {
+            background: #00C2EF;
+        }
     </style>
     {{> accountant_header}}
     <div id="editReportsAccountant" style="display: block; padding: 0px 100px 0 40px">
@@ -37,6 +74,11 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-1" id="signdiv-1" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                                     </div>
                                     <div class="row">
@@ -51,14 +93,6 @@
                                             >
                                                 <i class="fa fa-edit" style="margin-right: 5px;"></i>
                                                 Edit
-                                            </a>
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
                                             </a>
                                         </div>
                                     </div>
@@ -79,6 +113,11 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-2" id="signdiv-2" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                                     </div>
                                     <div class="row" id="page_edit_2">
@@ -93,14 +132,6 @@
                                             >
                                                 <i class="fa fa-edit" style="margin-right: 5px;"></i>
                                                 Edit
-                                            </a>
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
                                             </a>
                                         </div>
                                     </div>
@@ -155,6 +186,11 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-3" id="signdiv-3" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                                     </div>
                                     <div class="row" id="page_edit_3">
@@ -169,14 +205,6 @@
                                             >
                                                 <i class="fa fa-edit" style="margin-right: 5px;"></i>
                                                 Edit
-                                            </a>
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
                                             </a>
                                         </div>
                                     </div>
@@ -233,6 +261,11 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-4" id="signdiv-4" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                                     </div>
                                     <div class="row" id="page_edit_4">
@@ -247,14 +280,6 @@
                                             >
                                                 <i class="fa fa-edit" style="margin-right: 5px;"></i>
                                                 Edit
-                                            </a>
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
                                             </a>
                                         </div>
                                     </div>
@@ -300,19 +325,12 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-5" id="signdiv-5" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
-                                            </a>
-                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col" style="margin-bottom:20px">
@@ -384,19 +402,12 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-6" id="signdiv-6" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
-                                            </a>
-                                        </div>
                                     </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
@@ -582,19 +593,12 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-7" id="signdiv-7" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <a
-                                                    class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                    role="button"
-                                                    href="javascript:;"
-                                                    style="margin: 8px;"
-                                            >
-                                                Remove Signature
-                                            </a>
-                                        </div>
                                     </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
@@ -691,19 +695,12 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-8" id="signdiv-8" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
-                                            </a>
-                                        </div>
                                     </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
@@ -754,6 +751,11 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-9" id="signdiv-9" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                                     </div>
                                     <div class="row">
@@ -768,14 +770,6 @@
                                             >
                                                 <i class="fa fa-edit" style="margin-right: 5px;"></i>
                                                 Edit
-                                            </a>
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
                                             </a>
                                         </div>
                                     </div>
@@ -870,6 +864,11 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-10" id="signdiv-10" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                                     </div>
                                     <div class="row">
@@ -884,14 +883,6 @@
                                             >
                                                 <i class="fa fa-edit" style="margin-right: 5px;"></i>
                                                 Edit
-                                            </a>
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
                                             </a>
                                         </div>
                                     </div>
@@ -1000,19 +991,12 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-11" id="signdiv-11" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
-                                            </a>
-                                        </div>
                                     </div>
                                     {{#each pan in accountPanList}}
                                     <div class="row" style="font-size:13px">
@@ -1076,19 +1060,12 @@
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
                                     <div class="signdiv signdiv-12" id="signdiv-12" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
                                         <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <a
-                                                class="btn btnNav btn-danger float-right btn-remove-sign"
-                                                role="button"
-                                                href="javascript:;"
-                                                style="margin: 8px;"
-                                            >
-                                                Remove Signature
-                                            </a>
-                                        </div>
                                     </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
@@ -1922,21 +1899,26 @@
             </div>
         </div>
     </div>
-    <script>        
+    <div id="context-menu">
+        <div class="item" data-action="copy">Copy</div>
+        <div class="item" data-action="paste">Paste</div>
+        <div class="item" data-action="delete">Delete</div>
+    </div>
+    <script>
         let pageNum = 1;
         function go_page(action){
             if(action == "prev"){
                 if(pageNum > 1){
                     for(var i=1; i<=12; i++){
-                        $("#pageNum-"+pageNum).removeClass("active"); 
-                        $("#page-"+pageNum).css("display", "none"); 
+                        $("#pageNum-"+pageNum).removeClass("active");
+                        $("#page-"+pageNum).css("display", "none");
                     }
                     $("#pageNum-"+(pageNum-1)).addClass("active");
                     $("#page-"+(pageNum-1)).css("display", "block");
                     $("#nextPage").removeClass("disabled");
-    
+
                     pageNum = pageNum - 1;
-    
+
                     if(pageNum == 1){
                         $("#prevPage").addClass("disabled");
                     }
@@ -1945,15 +1927,15 @@
             else if(action == "next"){
                 if(pageNum < 12){
                     for(var i=1; i<=12; i++){
-                        $("#pageNum-"+pageNum).removeClass("active"); 
-                        $("#page-"+pageNum).css("display", "none"); 
+                        $("#pageNum-"+pageNum).removeClass("active");
+                        $("#page-"+pageNum).css("display", "none");
                     }
                     $("#pageNum-"+(pageNum+1)).addClass("active");
                     $("#page-"+(pageNum+1)).css("display", "block");
                     $("#prevPage").removeClass("disabled");
-    
+
                     pageNum = pageNum + 1;
-    
+
                     if(pageNum == 12){
                         $("#nextPage").addClass("disabled");
                     }
@@ -1961,8 +1943,8 @@
             }
             else{
                 for(var i=1; i<=12; i++){
-                    $("#pageNum-"+i).removeClass("active"); 
-                    $("#page-"+i).css("display", "none"); 
+                    $("#pageNum-"+i).removeClass("active");
+                    $("#page-"+i).css("display", "none");
                 }
                 $("#pageNum-"+action).addClass("active");
                 $("#page-"+action).css("display", "block");
@@ -1983,6 +1965,116 @@
                     $("#nextPage").removeClass("disabled");
                 }
             }
+            initContextMenu();
         }
+
+        // Alex : Add for docusign start
+        var copiedSignature = null;
+        const contextMenu = document.getElementById("context-menu");
+        var item = $(".context-menu .item");
+
+        function initContextMenu() {
+            const scope = $("#page-" + pageNum + " .card-body")[0];
+
+            const normalizePozition = (mouseX, mouseY) => {
+                // ? compute what is the mouse position relative to the container element (scope)
+                let {
+                    left: scopeOffsetX,
+                    top: scopeOffsetY,
+                } = scope.getBoundingClientRect();
+
+                scopeOffsetX = scopeOffsetX < 0 ? 0 : scopeOffsetX;
+                scopeOffsetY = scopeOffsetY < 0 ? 0 : scopeOffsetY;
+
+                const scopeX = mouseX - scopeOffsetX;
+                const scopeY = mouseY - scopeOffsetY;
+
+                // ? check if the element will go out of bounds
+                const outOfBoundsOnX =
+                        scopeX + contextMenu.clientWidth > scope.clientWidth;
+
+                const outOfBoundsOnY =
+                        scopeY + contextMenu.clientHeight > scope.clientHeight;
+
+                let normalizedX = mouseX;
+                let normalizedY = mouseY;
+
+                // ? normalize on X
+                if (outOfBoundsOnX) {
+                    normalizedX =
+                            scopeOffsetX + scope.clientWidth - contextMenu.clientWidth;
+                }
+
+                // ? normalize on Y
+                if (outOfBoundsOnY) {
+                    normalizedY =
+                            scopeOffsetY + scope.clientHeight - contextMenu.clientHeight;
+                }
+
+                return {normalizedX, normalizedY};
+            };
+
+            $(scope).unbind("contextmenu");
+            $(scope).bind("contextmenu", (event) => {
+                event.preventDefault();
+                if ($(event.target).parents('.signdiv').length != 1) {
+                    $(contextMenu).children(".item").hide();
+                    $(contextMenu).children("[data-action=paste]").show();
+                } else {
+                    $(contextMenu).children(".item").show();
+                }
+
+                const {clientX: mouseX, clientY: mouseY} = event;
+
+                const {normalizedX, normalizedY} = normalizePozition(mouseX, mouseY);
+
+                contextMenu.classList.remove("visible");
+
+                contextMenu.style.top = `${normalizedY}px`;
+                contextMenu.style.left = `${normalizedX}px`;
+
+                setTimeout(() => {
+                    contextMenu.classList.add("visible");
+                });
+            });
+            $('body').unbind("click");
+            $('body').bind("click", (e) => {
+                // ? close the menu if the user clicks outside of it
+                if (e.target.offsetParent != contextMenu) {
+                    contextMenu.classList.remove("visible");
+                } else {
+                    console.log('action: ' + $(e.target).attr('data-action'))
+                    if ($(e.target).attr('data-action') == 'copy') {
+                        copiedSignature = pageNum;
+                        console.log('copySIgnature page=' + pageNum);
+                    } else if ($(e.target).attr('data-action') == 'paste') {
+                        if (copiedSignature != null
+                            && $("#page-" + pageNum + " .signdiv").css('display') == 'none') {
+                            copiedSignature = null;
+                            console.log('pasteSignature page=' + pageNum);
+                            let signatureBox = $("#page-" + pageNum + " .signdiv")[0];
+                            let signatures = $('.' + signatureBox.id);
+                            signatures.css('display', 'block');
+                            signatures.css('top', '105px');
+                            signatures.css('left', '20px');
+                        }
+                    } else if ($(e.target).attr('data-action') == 'delete') {
+                        console.log('deleteSignature page=' + pageNum);
+                        let signatureBox = $("#page-" + pageNum + " .signdiv")[0];
+                        let signatures = $('.' + signatureBox.id);
+                        signatures.css('display', 'none');
+                        signatures.css('top', '105px');
+                        signatures.css('left', '20px');
+                    }
+                    contextMenu.classList.remove("visible");
+                }
+            });
+        }
+
+        initContextMenu();
+
+
+        // Alex Add for docusign end
+
     </script>
 </template>

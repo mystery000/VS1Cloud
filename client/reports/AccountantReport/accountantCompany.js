@@ -1550,17 +1550,14 @@ Template.accountant_company.onRendered(() => {
         dragElement(signdivs[i]);
     }
 
-    $('.btn-remove-sign').click(function () {
-        let signatureBox = $(this).parents('.card-body').children('.signdiv')[0];
+    $('.sign-box-close').click(function () {
+        let signatureBox = $(this).parents('.signdiv')[0];
         let signatures = $('.' + signatureBox.id);
-        if ($(this).text().trim() == 'Remove Signature') {
-            signatures.css('display', 'none');
-            $(this).text('Add Signature')
-        } else {
-            signatures.css('display', 'block');
-            $(this).text('Remove Signature')
-        }
-    })
+        signatures.css('display', 'none');
+        signatures.css('top', '105px');
+        signatures.css('left', '20px');
+    });
+
     // Alex: Add for Docusign end
 });
 
