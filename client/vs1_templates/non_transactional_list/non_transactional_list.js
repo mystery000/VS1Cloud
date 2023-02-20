@@ -9052,6 +9052,7 @@ Template.non_transactional_list.onRendered(function() {
 
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
         let dataTableList = [];
+        if (FlowRouter.current().path === "/customerscard") return templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
         let customerName = $('#edtCustomerCompany').val() || "";
         if(customerName == ""){
             customerName = $('#edtJobCustomerCompany').val() || "";
