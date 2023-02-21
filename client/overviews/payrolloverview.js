@@ -86,7 +86,7 @@ Template.payrolloverview.onRendered(function () {
 
   templateObject.loadPayRuns = async (refresh = false) => {
 
-    let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
+    let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
       return await payRunHandler.loadFromLocal();
     }, {
       forceOverride: refresh,
@@ -107,6 +107,7 @@ Template.payrolloverview.onRendered(function () {
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
 
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
+    console.log("===>", payRunsHistory)
 
     await templateObject.draftPayRunRecords.set(payRunsHistory);
 
@@ -4159,7 +4160,7 @@ Template.payrolloverview.onRendered(function () {
   templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
     await templateObject.loadPayRuns();
-
+    
     // Timesheet
     await templateObject.loadTimeSheet(refresh);
 
@@ -6157,36 +6158,36 @@ Template.payrolloverview.events({
       }
     });
   },
-  "click .btnOpenSettings": function (event) {
-    let templateObject = Template.instance();
-    var columns = $("#tblPayHistorylist th");
+  // "click .btnOpenSettings": function (event) {
+  //   let templateObject = Template.instance();
+  //   var columns = $("#tblPayHistorylist th");
 
-    const tableHeaderList = [];
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecords.set(tableHeaderList);
-  },
+  //   const tableHeaderList = [];
+  //   let sTible = "";
+  //   let sWidth = "";
+  //   let sIndex = "";
+  //   let sVisible = "";
+  //   let columVisible = false;
+  //   let sClass = "";
+  //   $.each(columns, function (i, v) {
+  //     if (v.hidden == false) {
+  //       columVisible = true;
+  //     }
+  //     if (v.className.includes("hiddenColumn")) {
+  //       columVisible = false;
+  //     }
+  //     sWidth = v.style.width.replace("px", "");
+  //     let datatablerecordObj = {
+  //       sTitle: v.innerText || "",
+  //       sWidth: sWidth || "",
+  //       sIndex: v.cellIndex || "",
+  //       sVisible: columVisible || false,
+  //       sClass: v.className || "",
+  //     };
+  //     tableHeaderList.push(datatablerecordObj);
+  //   });
+  //   templateObject.tableheaderrecords.set(tableHeaderList);
+  // },
   "click #btnHold": function (event) {
     $("#frmOnHoldModal").modal("show");
   },
