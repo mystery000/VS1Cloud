@@ -1142,7 +1142,7 @@ export class SideBarService extends BaseService {
           IgnoreDates:true,
           orderby: '"AccountName asc"',
           Search: "Active = true",
-        };        
+        };
       } else {
         options = {
           IgnoreDates:true,
@@ -1170,7 +1170,7 @@ export class SideBarService extends BaseService {
           orderby: '"AccountName asc"',
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
-        };        
+        };
       }
       if(typeFilter != 'all') {
         options.Search = `AccountType='${typeFilter}'`
@@ -3358,7 +3358,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         //IncludedataPriorToClosingDate:true,
-        Search: "Deleted != true",
+        Search: "Active != true",
         OrderBy: "Date desc",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
@@ -3367,7 +3367,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         //IncludedataPriorToClosingDate:true,
-        Search: "Deleted != true",
+        Search: "Active != true",
         OrderBy: "Date desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -3398,6 +3398,16 @@ export class SideBarService extends BaseService {
         };
       }
     }
+    return this.getList(this.ERPObjects.TBankAccountReport, options);
+  }
+
+  searchAllBankAccountDetails(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: '"name asc"',
+      IgnoreDates:true,
+      search: 'AccountName='+ dataSearchName+ ' OR Type="' + dataSearchName + '" OR TransID="' + dataSearchName + '" OR ClassName="' + dataSearchName + '" OR Notes="' + dataSearchName + '"',
+    };
     return this.getList(this.ERPObjects.TBankAccountReport, options);
   }
 
