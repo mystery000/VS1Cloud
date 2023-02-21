@@ -3738,22 +3738,22 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllTimeSheetData();
           });
 
-          // getVS1Data('TPayRun').then(function(dataObject) {
-          //     if (dataObject.length == 0) {
-          //         templateObject.getAllPayRunData();
-          //     } else {
-          //         let getTimeStamp = dataObject[0].timestamp.split(' ');
-          //         if (getTimeStamp) {
-          //             if (JSON.parse(loggedUserEventFired)) {
-          //                 if (getTimeStamp[0] != currenctTodayDate) {
-          //                     templateObject.getAllPayRunData();
-          //                 }
-          //             }
-          //         }
-          //     }
-          // }).catch(function(err) {
-          //     templateObject.getAllPayRunData();
-          // });
+          getVS1Data('TPayRun').then(function(dataObject) {
+              if (dataObject.length == 0) {
+                  templateObject.getAllPayRunData();
+              } else {
+                  let getTimeStamp = dataObject[0].timestamp.split(' ');
+                  if (getTimeStamp) {
+                      if (JSON.parse(loggedUserEventFired)) {
+                          if (getTimeStamp[0] != currenctTodayDate) {
+                              templateObject.getAllPayRunData();
+                          }
+                      }
+                  }
+              }
+          }).catch(function(err) {
+              templateObject.getAllPayRunData();
+          });
 
           getVS1Data('TPayHistory').then(function (dataObject) {
             if (dataObject.length == 0) {
