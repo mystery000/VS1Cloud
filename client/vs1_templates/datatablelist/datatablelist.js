@@ -333,8 +333,8 @@ Template.datatablelist.onRendered(async function () {
     }
     templateObject.displayTableData = async function (data, isEx = false) {
         var splashDataArray = new Array();
-        if (data != [] && data.length != 0) {
         let deleteFilter = false;
+        if (data != [] && data.length != 0) {
         if (data.Params) {
             if (data.Params.Search.replace(/\s/g, "") == "") {
                 deleteFilter = false

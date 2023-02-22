@@ -3,6 +3,9 @@ import { Random } from 'meteor/random';
 import { Email } from 'meteor/email';
 import "jquery-validation/dist/jquery.validate.min";
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
+import '../Login/resetpassword.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 Template.resetpassword.helpers({
     getUserEmail: function(){
       var url = FlowRouter.current().path;
