@@ -8641,6 +8641,7 @@ Template.billcard.events({
                     async function addAttachment() {
                         let attachment = [];
                         let invoiceId = objDetails.fields.ID;
+                        FlowRouter.go('/billlist?success=true');
                         let encodedPdf = await generatePdfForMail(invoiceId);
                         let pdfObject = "";
 
@@ -9003,91 +9004,6 @@ Template.billcard.events({
 
                         });
                     }
-
-                    if (supplierID !== " ") {
-                        let supplierEmailData = {
-                            type: "TSupplier",
-                            fields: {
-                                ID: supplierID,
-                                Email: supplierEmail
-                            }
-                        }
-
-                    };
-                    var getcurrentCloudDetails = CloudUser.findOne({
-                        _id: localStorage.getItem('mycloudLogonID'),
-                        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-                    });
-                    if (getcurrentCloudDetails) {
-                        if (getcurrentCloudDetails._id.length > 0) {
-                            var clientID = getcurrentCloudDetails._id;
-                            var clientUsername = getcurrentCloudDetails.cloudUsername;
-                            var clientEmail = getcurrentCloudDetails.cloudEmail;
-                            var checkPrefDetails = CloudPreference.findOne({
-                                userid: clientID,
-                                PrefName: 'billcard'
-                            });
-                            if (checkPrefDetails) {
-                                CloudPreference.update({
-                                    _id: checkPrefDetails._id
-                                }, {
-                                    $set: {
-                                        username: clientUsername,
-                                        useremail: clientEmail,
-                                        PrefGroup: 'purchaseform',
-                                        PrefName: 'billcard',
-                                        published: true,
-                                        customFields: [{
-                                            index: '1',
-                                            label: getcustomField1,
-                                            hidden: getchkcustomField1
-                                        }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }],
-                                        updatedAt: new Date()
-                                    }
-                                }, function (err, idTag) {
-                                    if (err) {
-
-                                    } else {
-
-
-                                    }
-                                });
-                            } else {
-                                CloudPreference.insert({
-                                    userid: clientID,
-                                    username: clientUsername,
-                                    useremail: clientEmail,
-                                    PrefGroup: 'purchaseform',
-                                    PrefName: 'billcard',
-                                    published: true,
-                                    customFields: [{
-                                        index: '1',
-                                        label: getcustomField1,
-                                        hidden: getchkcustomField1
-                                    }, {
-                                        index: '2',
-                                        label: getcustomField2,
-                                        hidden: getchkcustomField2
-                                    }],
-                                    createdAt: new Date()
-                                }, function (err, idTag) {
-                                    if (err) {
-
-                                    } else {
-
-
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-
-                    }
-
                 }).catch(function (err) {
                     swal({
                         title: 'Oooops...',
