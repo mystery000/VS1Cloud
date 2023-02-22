@@ -152,7 +152,7 @@ Template.bom_setup.events({
                     }
                 } else {
                     let bomProductIndex = bomProducts.findIndex(product => {
-                        return product.fields.productName == _name;
+                        return product.productName == _name;
                     })
                     if(bomProductIndex > -1) {
                         let subProduct = bomProducts[bomProductIndex];

@@ -21,6 +21,7 @@ Template.accountant_header.onRendered(function() {
 });
 
 Template.accountant_header.events({
+    // Alex: Add for Docusign start
     'click .btnDocusign': function() {
         $('#signerEmail').val('');
         $('#signerName').val('');
@@ -31,37 +32,36 @@ Template.accountant_header.events({
         let signerName = $('#signerName').val();
 
         $('.fullScreenSpin').css('display', 'inline-block');
-        var opt = {
-            margin: 0.8,
-            filename: 'accountant-company.pdf',
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            },
-            pagebreak: {
-                after: [".pagebreak"]
-            }
-        };
         let element = document.getElementById('printReport');
         let html = `
             <!DOCTYPE html>
             <html>
                 <head>
                   <meta charset="UTF-8">
+                  <style>
+                  
+                  @media print {
+                    *, :after, :before {
+                         box-sizing: border-box; 
+                    }
+                    .row {
+                        display: flex; flex-wrap: wrap; margin-right: -0.75rem; margin-left: -0.75rem;
+                    }
+                    .col {
+                        flex-basis: 0; flex-grow: 1; max-width: 100%; position: relative; width: 100%; padding-right: 1.75rem; padding-left: 0.75rem padding-top: 1.75rem, padding-bottom: 1.75rem;
+                    }
+                    .pagebreak {
+                        padding: 30px;
+                    }
+                  }
+                  </style>
                 </head>
                 <body style="font-family:sans-serif;margin-left:2em;">
                 ${element.innerHTML}
                 </body>
             </html>
           `;
+
         Meteor.call('document.requestSign', signerEmail, signerName, html);
 
         setTimeout(() => {
@@ -69,6 +69,7 @@ Template.accountant_header.events({
             $('#envelopModal').modal('hide');
         }, 2000);
     }
+    // Alex: Add for Docusign end
 });
 
 Template.accountant_header.helpers({

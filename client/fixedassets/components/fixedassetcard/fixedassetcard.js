@@ -337,7 +337,7 @@ Template.fixedassetcard.onRendered(function () {
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
     const templateObject = Template.instance();
-    const depPlans = templateObject.deprecitationPlans.get(), planList = [];
+    const depPlans = templateObject.deprecitationPlans.get(), planList = new Array();
     for (let i = 0; i < depPlans.length; i++) {
       const plan = {
         type: 'TFixedAssetsDepreciationDetails1',
@@ -415,7 +415,7 @@ Template.fixedassetcard.events({
     }
   },
   "click button.btnBack": function() {
-    history.back(1);
+    FlowRouter.go('/fixedassetlist');
   },
   "click button.btnCalculate": function () {
     const templateObject = Template.instance();

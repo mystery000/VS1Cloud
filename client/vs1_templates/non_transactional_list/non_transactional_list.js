@@ -197,7 +197,7 @@ Template.non_transactional_list.onRendered(function() {
             }
             if (currenttablename == "tblAccountOverview" || currenttablename == "tblAccountListPop" ||currenttablename == "tblInventoryAccountList" || currenttablename == "tblExpenseAccountList") {
                 reset_data = [
-                    { index: 0, label: '#ID', class: 'AccountId', active: false, display: true, width: "10" },
+                    { index: 0, label: '#ID', class: 'colAccountId', active: false, display: true, width: "10" },
                     { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
                     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
                     { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
@@ -338,26 +338,16 @@ Template.non_transactional_list.onRendered(function() {
             ];
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') { //Done Something Here
             reset_data = [
-                { index: 0, label: '#ID', class: 'colSupplierID', active: false, display: true, width: "10" },
-                { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-                { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-                { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
-                { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-                { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-                { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "90" },
-                { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-                { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "200" },
-                { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "200" },
-                { index: 10, label: 'Client Number', class: 'colClientNo', active: false, display: true, width: "120" },
-                { index: 11, label: 'Job Title', class: 'colJobTitle', active: false, display: true, width: "120" },
-                { index: 12, label: 'Custom Field 1', class: 'colCustomField1', active: false, display: true, width: "120" },
-                { index: 13, label: 'Custom Field 2', class: 'colCustomField2', active: false, display: true, width: "120" },
-                { index: 14, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
-                { index: 15, label: 'State', class: 'colState', active: false, display: true, width: "120" },
-                { index: 16, label: 'Post Code', class: 'colPostcode', active: false, display: true, width: "80" },
-                { index: 17, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
-                { index: 18, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-                { index: 19, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+                { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+                { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+                { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+                { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+                { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+                { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+                { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+                { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+                { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+                { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
             ];
         } else if (currenttablename == "tblLeadlist") { //Done Something Here
             reset_data = [
@@ -2702,7 +2692,7 @@ Template.non_transactional_list.onRendered(function() {
             let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
 
             var dataList = [
-                data.tsuppliervs1list[i].ClientID || '',
+                // data.tsuppliervs1list[i].ClientID || '',
                 data.tsuppliervs1list[i].Company || '',
                 data.tsuppliervs1list[i].Phone || '',
                 arBalance || 0.00,
@@ -2710,23 +2700,23 @@ Template.non_transactional_list.onRendered(function() {
                 balance || 0.00,
                 creditLimit || 0.00,
                 salesOrderBalance || 0.00,
-                data.tsuppliervs1list[i].Email || '',
-                data.tsuppliervs1list[i].AccountNo || '',
-                data.tsuppliervs1list[i].ClientNo || '',
-                data.tsuppliervs1list[i].JobTitle || '',
-                data.tsuppliervs1list[i].CUSTFLD1 || '',
-                data.tsuppliervs1list[i].CUSTFLD2 || '',
                 data.tsuppliervs1list[i].Suburb || '',
-                data.tsuppliervs1list[i].POState || '',
-                data.tsuppliervs1list[i].Postcode || '',
                 data.tsuppliervs1list[i].Country || '',
-                linestatus,
                 data.tsuppliervs1list[i].Notes || '',
+                //
+                // data.tsuppliervs1list[i].Email || '',
+                // data.tsuppliervs1list[i].AccountNo || '',
+                // data.tsuppliervs1list[i].ClientNo || '',
+                // data.tsuppliervs1list[i].JobTitle || '',
+                // data.tsuppliervs1list[i].CUSTFLD1 || '',
+                // data.tsuppliervs1list[i].CUSTFLD2 || '',
+                // data.tsuppliervs1list[i].POState || '',
+                // data.tsuppliervs1list[i].Postcode || '',
+                // linestatus,
             ];
             splashArraySuppliersList.push(dataList);
             templateObject.transactiondatatablerecords.set(splashArraySuppliersList);
         }
-
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
                 MakeNegative();
@@ -2737,106 +2727,63 @@ Template.non_transactional_list.onRendered(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArraySuppliersList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [{
-                        targets: 0,
-                        className: "colSupplierID colID hiddenColumn",
-                        width: "10px",
-                        createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                        }
-                    },
+                columnDefs: [
+                    // {
+                    //     targets: 0,
+                    //     className: "colSupplierID colID hiddenColumn",
+                    //     width: "10px",
+                    //     createdCell: function(td, cellData, rowData, row, col) {
+                    //         $(td).closest("tr").attr("id", rowData[0]);
+                    //     }
+                    // },
                     {
-                        targets: 1,
+                        targets: 0,
                         className: "colCompany",
                         width: "200px",
                     },
                     {
-                        targets: 2,
+                        targets: 1,
                         className: "colPhone",
                         width: "95px",
                     },
                     {
-                        targets: 3,
+                        targets: 2,
                         className: "colARBalance text-right",
                         width: "90px",
                     },
                     {
-                        targets: 4,
+                        targets: 3,
                         className: "colCreditBalance text-right",
                         width: "110px",
                     },
                     {
-                        targets: 5,
+                        targets: 4,
                         className: "colBalance text-right",
                         width: "80px",
                     },
                     {
-                        targets: 6,
-                        className: "colCreditLimit text-right hiddenColumn",
+                        targets: 5,
+                        className: "colCreditLimit text-right",
                         width: "90px",
                     },
                     {
-                        targets: 7,
+                        targets: 6,
                         className: "colSalesOrderBalance text-right",
+                        width: "120px",
+                    },
+
+                    {
+                        targets: 7,
+                        className: "colSuburb",
                         width: "120px",
                     },
                     {
                         targets: 8,
-                        className: "colEmail hiddenColumn",
+                        className: "colCountry",
                         width: "200px",
                     },
                     {
                         targets: 9,
-                        className: "colAccountNo hiddenColumn",
-                        width: "200px",
-                    },
-                    {
-                        targets: 10,
-                        className: "colClientNo hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 11,
-                        className: "colJobTitle hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 12,
-                        className: "colCustomField1 hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 13,
-                        className: "colCustomField2 hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 14,
-                        className: "colSuburb hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 15,
-                        className: "colState hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 16,
-                        className: "colPostcode hiddenColumn",
-                        width: "80px",
-                    },
-                    {
-                        targets: 17,
-                        className: "colCountry hiddenColumn",
-                        width: "200px",
-                    },
-                    {
-                        targets: 18,
-                        className: "colStatus",
-                        width: "100px",
-                    },
-                    {
-                        targets: 19,
                         className: "colNotes",
                     }
                 ],

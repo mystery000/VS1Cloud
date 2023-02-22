@@ -41,22 +41,26 @@ Template.customerdetailsreport.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Company Name', class:'colCompanyName', active: true, display: true, width: "85" },
-      { index: 2, label: 'Rep', class:'colRep', active: true, display: true, width: "85" },
-      { index: 3, label: 'Discount Type', class:'colDiscountType', active: true, display: true, width: "85" },
-      { index: 4, label: 'Discount', class:'colDiscount', active: true, display: true, width: "85" },
-      { index: 5, label: 'Special Discount', class:'colSpecialDiscount', active: true, display: true, width: "85" },
-      { index: 6, label: 'Orig Price', class:'colOrigPrice', active: true, display: true, width: "85" },
-      { index: 7, label: 'Line Price', class:'colLinePrice', active: true, display: true, width: "85" },
-      { index: 8, label: 'Product ID', class:'colProductID', active: true, display: true, width: "85" },
-      { index: 9, label: 'Description', class:'colDescription', active: true, display: true, width: "85" },
-      { index: 10, label: 'Sub Group', class:'colSubGroup', active: true, display: true, width: "85" },
-      { index: 11, label: 'Type', class:'colType', active: true, display: true, width: "85" },
-      { index: 12, label: 'Dept', class:'colDept', active: true, display: true, width: "85" },
-      { index: 13, label: 'Customer ID', class:'colCustomerID', active: false, display: true, width: "85" },
-      { index: 14, label: 'Password', class:'colPassword', active: false, display: true, width: "85" },
-      { index: 15, label: 'Test', class:'colTest', active: false, display: true, width: "85" },
-      { index: 16, label: 'Birthday', class:'colBirthday', active: false, display: true, width: "85" },
+      { index: 1, label: 'Name', class:'colCompanyName', active: true, display: true, width: "200" },
+      { index: 2, label: 'Phone', class:'colPhone', active: true, display: true, width: "150" },
+      // { index: 2, label: 'Rep', class:'colRep', active: true, display: true, width: "85" },
+      { index: 3, label: 'Type', class:'colType', active: true, display: true, width: "150" },
+      { index: 4, label: 'Total (Ex)', class:'colTotalEx', active: true, display: true, width: "150" },
+      { index: 5, label: 'Total (Inc)', class:'colTotalInc', active: true, display: true, width: "150" },
+      { index: 6, label: 'Gross Profit', class:'colGrossProfit', active: true, display: true, width: "150" },
+      { index: 7, label: 'Margin', class:'colMargin', active: true, display: true, width: "150" },
+      { index: 8, label: 'Address', class:'colAddress', active: true, display: true, width: "150" },
+      { index: 9, label: 'City', class:'colCity', active: true, display: true, width: "150" },
+      { index: 10, label: 'Zip', class:'colZip', active: true, display: true, width: "150" },
+      { index: 11, label: 'State', class:'colState', active: true, display: true, width: "150" },
+      // { index: 8, label: 'Product ID', class:'colProductID', active: true, display: true, width: "85" },
+      // { index: 9, label: 'Description', class:'colDescription', active: true, display: true, width: "85" },
+      // { index: 10, label: 'Sub Group', class:'colSubGroup', active: true, display: true, width: "85" },
+      // { index: 12, label: 'Dept', class:'colDept', active: true, display: true, width: "85" },
+      // { index: 13, label: 'Customer ID', class:'colCustomerID', active: false, display: true, width: "85" },
+      // { index: 14, label: 'Password', class:'colPassword', active: false, display: true, width: "85" },
+      // { index: 15, label: 'Test', class:'colTest', active: false, display: true, width: "85" },
+      // { index: 16, label: 'Birthday', class:'colBirthday', active: false, display: true, width: "85" },
     ];
     templateObject.customerdetailsreportth.set(reset_data);
   }
@@ -84,10 +88,10 @@ Template.customerdetailsreport.onRendered(() => {
   templateObject.getCustomerDetailsData = async function (dateFrom, dateTo, ignoreDate) {
 
     templateObject.setDateAs(dateFrom);
-    getVS1Data('TCustomerDetailsReport').then(function (dataObject) {
+    getVS1Data('CustomerDetailsReport').then(function (dataObject) {
       if (dataObject.length == 0) {
-        reportService.getCustomerDetails(dateFrom, dateTo, ignoreDate).then(async function (data) {
-          await addVS1Data('TCustomerDetailsReport', JSON.stringify(data));
+        reportService.getCustomerDetailReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('CustomerDetailsReport', JSON.stringify(data));
           templateObject.displayCustomerDetailsData(data);
         }).catch(function (err) {
         });
@@ -96,8 +100,8 @@ Template.customerdetailsreport.onRendered(() => {
         templateObject.displayCustomerDetailsData(data);
       }
     }).catch(function (err) {
-      reportService.getCustomerDetails(dateFrom, dateTo, ignoreDate).then(async function (data) {
-        await addVS1Data('TCustomerDetailsReport', JSON.stringify(data));
+      reportService.getCustomerDetailReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('CustomerDetailsReport', JSON.stringify(data));
         templateObject.displayCustomerDetailsData(data);
       }).catch(function (err) {
 
@@ -113,49 +117,50 @@ Template.customerdetailsreport.onRendered(() => {
   templateObject.displayCustomerDetailsData = async function (data) {
     var splashArrayCustomerDetailsReport = new Array();
     let deleteFilter = false;
-    if (data.Params.Search.replace(/\s/g, "") == "") {
-      deleteFilter = true;
-    } else {
-      deleteFilter = false;
-    };
+    // if (data.Params.Search.replace(/\s/g, "") == "") {
+    //   deleteFilter = true;
+    // } else {
+    //   deleteFilter = false;
+    // };
 
     for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
       var dataList = [
-        data.tcustomersummaryreport[i].ACCOUNTID || "",
-        data.tcustomersummaryreport[i].ACCOUNTNAME || "",
-        data.tcustomersummaryreport[i].ACCOUNTNUMBER || "",
-        data.tcustomersummaryreport[i].ACCOUNTS || "",
-        data.tcustomersummaryreport[i].AMOUNTEX || "",
-        data.tcustomersummaryreport[i].AMOUNTINC || "",
-        data.tcustomersummaryreport[i].CHEQUENUMBER || "",
-        data.tcustomersummaryreport[i].CLASS || "",
-        data.tcustomersummaryreport[i].CLASSID || "",
-        data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
-        data.tcustomersummaryreport[i].CREDITSEX || "",
-        data.tcustomersummaryreport[i].CREDITSINC || "",
-        data.tcustomersummaryreport[i].DATE || "",
-        data.tcustomersummaryreport[i].DEBITSEX || "",
-        data.tcustomersummaryreport[i].DEBITSINC || "",
-        data.tcustomersummaryreport[i].DETAILS || "",
-        data.tcustomersummaryreport[i].FIXEDASSETID || "",
-        data.tcustomersummaryreport[i].GLOBALREF || "",
-        data.tcustomersummaryreport[i].ID || "",
-        data.tcustomersummaryreport[i].MEMO || "",
-        data.tcustomersummaryreport[i].PAYMENTID || "",
-        data.tcustomersummaryreport[i].PREPAYMENTID || "",
-        data.tcustomersummaryreport[i].PRODUCTDESCRIPTION || "",
-        data.tcustomersummaryreport[i].PRODUCTNAME || "",
-        data.tcustomersummaryreport[i].PURCHASEORDERID || "",
-        data.tcustomersummaryreport[i].REFERENCENO || "",
-        data.tcustomersummaryreport[i].REPNAME || "",
-        data.tcustomersummaryreport[i].SALEID || "",
-        data.tcustomersummaryreport[i].TAXCODE || "",
-        data.tcustomersummaryreport[i].TAXRATE || "",
-        data.tcustomersummaryreport[i].TYPE || "",
+        data.tcustomersummaryreport[i].Company || "",
+        data.tcustomersummaryreport[i].Phone || "",
+        data.tcustomersummaryreport[i].Type || "",
+        data.tcustomersummaryreport[i]["Total Amount (Ex)"] || "",
+        data.tcustomersummaryreport[i]["Total Amount (Inc)"] || "",
+        data.tcustomersummaryreport[i]["Gross Profit"] || "",
+        "",
+        data.tcustomersummaryreport[i].Address || "",
+        data.tcustomersummaryreport[i]["Address 2"] || "",
+        // data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
+        data.tcustomersummaryreport[i].Postcode || "",
+        data.tcustomersummaryreport[i].State || "",
+        // data.tcustomersummaryreport[i].DATE || "",
+        // data.tcustomersummaryreport[i].DEBITSEX || "",
+        // data.tcustomersummaryreport[i].DEBITSINC || "",
+        // data.tcustomersummaryreport[i].DETAILS || "",
+        // data.tcustomersummaryreport[i].FIXEDASSETID || "",
+        // data.tcustomersummaryreport[i].GLOBALREF || "",
+        // data.tcustomersummaryreport[i].ID || "",
+        // data.tcustomersummaryreport[i].MEMO || "",
+        // data.tcustomersummaryreport[i].PAYMENTID || "",
+        // data.tcustomersummaryreport[i].PREPAYMENTID || "",
+        // data.tcustomersummaryreport[i].PRODUCTDESCRIPTION || "",
+        // data.tcustomersummaryreport[i].PRODUCTNAME || "",
+        // data.tcustomersummaryreport[i].PURCHASEORDERID || "",
+        // data.tcustomersummaryreport[i].REFERENCENO || "",
+        // data.tcustomersummaryreport[i].REPNAME || "",
+        // data.tcustomersummaryreport[i].SALEID || "",
+        // data.tcustomersummaryreport[i].TAXCODE || "",
+        // data.tcustomersummaryreport[i].TAXRATE || "",
+        // data.tcustomersummaryreport[i].TYPE || "",
 
       ];
       splashArrayCustomerDetailsReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayCustomerDetailsReport);
+  
     }
 
 
@@ -169,132 +174,53 @@ Template.customerdetailsreport.onRendered(() => {
     setTimeout(function () {
       $('#tableExport').DataTable({
         data: splashArrayCustomerDetailsReport,
+        "bsort": false,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
           {
             targets: 0,
-            className: "colAccountID",
+            className: "colCompanyName",
           },
           {
             targets: 1,
-            className: "colAccountName"
+            className: "colPhone"
           },
           {
             targets: 2,
-            className: "colAccountNo"
+            className: "colType"
           },
           {
             targets: 3,
-            className: "colAccounts hiddenColumn",
+            className: "colTotalEx",
           },
           {
             targets: 4,
-            className: "colAmountEx hiddenColumn",
+            className: "colTotalInc",
           },
           {
             targets: 5,
-            className: "colAmountInc hiddenColumn",
+            className: "colGrossProfit",
           },
           {
             targets: 6,
-            className: "colChequeNumber hiddenColumn",
+            className: "colMargin",
           },
           {
             targets: 7,
-            className: "colDepartment",
+            className: "colAddress",
           },
           {
             targets: 8,
-            className: "colClassID",
+            className: "colCity",
           },
           {
             targets: 9,
-            className: "colProductDescription",
+            className: "colZip",
           },
           {
             targets: 10,
-            className: "colCreditEx hiddenColumn",
-          },
-          {
-            targets: 11,
-            className: "colCreditInc hiddenColumn",
-          },
-          {
-            targets: 12,
-            className: "colDate",
-          },
-          {
-            targets: 13,
-            className: "colDebitsEx hiddenColumn",
-          },
-          {
-            targets: 14,
-            className: "colDebitsInc hiddenColumn",
-          },
-          {
-            targets: 15,
-            className: "colDetails hiddenColumn",
-          },
-          {
-            targets: 16,
-            className: "colFixedAssetID hiddenColumn",
-          },
-          {
-            targets: 17,
-            className: "colGlobalRef",
-          },
-          {
-            targets: 18,
-            className: "colID hiddenColumn",
-          },
-          {
-            targets: 19,
-            className: "colMemo hiddenColumn",
-          },
-          {
-            targets: 20,
-            className: "colPaymentID hiddenColumn",
-          },
-          {
-            targets: 21,
-            className: "colPrepaymentID hiddenColumn",
-          },
-          {
-            targets: 22,
-            className: "colCredit",
-          },
-          {
-            targets: 23,
-            className: "colProductID hiddenColumn",
-          },
-          {
-            targets: 24,
-            className: "colPurchaseOrderID",
-          },
-          {
-            targets: 25,
-            className: "colRefNo hiddenColumn",
-          },
-          {
-            targets: 26,
-            className: "colRepName",
-          },
-          {
-            targets: 27,
-            className: "colSaleID hiddenColumn",
-          },
-          {
-            targets: 28,
-            className: "colTaxCode hiddenColumn",
-          },
-          {
-            targets: 29,
-            className: "colTaxRate hiddenColumn",
-          },
-          {
-            targets: 30,
-            className: "colType",
+            className: "colState",
           },
         ],
         select: true,
@@ -304,7 +230,7 @@ Template.customerdetailsreport.onRendered(() => {
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
         // responsive: true,
-        "order": [[1, "asc"]],
+        "order": [],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
         },

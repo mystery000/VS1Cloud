@@ -313,7 +313,6 @@ export class ReportService extends BaseService {
     getProfitLossLayout() {
         let options = {
             LayoutID: 3,
-            ListType: "'Detail'"
         };
         return this.getList('VS1_PNLGetLayout', options);
     }
@@ -928,6 +927,18 @@ export class ReportService extends BaseService {
 
     savePNLNewGroup(data) {
         return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLAddGroup"', data);
+    }
+
+    deletePNLGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLDeleteGroup"', data);
+    }
+
+    movePNLGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLMoveAccount"', data);
+    }
+
+    editPNLGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLRenameGroup"', data);
     }
 
     getPNLLayout(layout=3) {

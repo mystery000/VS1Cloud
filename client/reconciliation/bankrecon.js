@@ -1570,7 +1570,7 @@ Template.bankrecon.onRendered(function() {
 
 
 
-    $(document).on("click", ".bankrecon #tblAccount tbody tr", function(e) {
+    $(document).on("click", ".bankrecon #tblAccountListPop tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         let table = $(this);
         let accountname = table.find(".colAccountName").text();

@@ -18,7 +18,6 @@ import { Mongo } from 'meteor/mongo';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
-CloudPreference = new Mongo.Collection("cloudPreference");
 
 Template.newproductpop.onCreated(() => {
   const templateObject = Template.instance();
@@ -1653,7 +1652,7 @@ Template.newproductpop.events({
     playSaveAudio();
     let productService = new ProductService();
     setTimeout(function(){
-    
+
     let productCode = $("#edtproductcode").val();
     let productName = $("#edtproductname").val();
     var objDetails = "";
@@ -3011,7 +3010,7 @@ Template.newproductpop.events({
     let templateObject = Template.instance();
     let productService = new ProductService();
     setTimeout(function(){
-    
+
     swal({
       title: "Delete Product",
       text: "Do you want to delete this Product?",

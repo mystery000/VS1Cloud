@@ -54,17 +54,18 @@ import './js/purchase-service.js';
 // import './js/purchasedb.js';
 import './js/ratetype_service.js';
 import './js/refundcard.js';
-// import './js/register.js';
-// import './js/registerdb.js';
-// import './js/registersts.js';
-// import './js/resetpassword.js';
+import './js/register.js';
+import './js/registerdb.js';
+import './js/registersts.js';
+import './js/resetpassword.js';
 import './js/sales-service.js';
 import './js/sidebar-service.js';
+import '../collections/registerDB.js';
 // import './js/simonpurchasedb.js';
 import './js/sms-settings-service.js';
 // import './js/testLogin.js';
 // import './js/vs1check.js';
-// import './js/vs1greentracklogin.js';
+import './js/vs1greentracklogin.js';
 import './js/header.js';
 import './js/yodlee-service.js';
 import './js/new_bom_setup.js';
@@ -331,6 +332,7 @@ import './vs1_templates/datatablelist/datatablelist.js'
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
+import './settings/manufacturingsettings/manufacturingsettings.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -620,6 +622,13 @@ import './reports/transactionjournal/transactionjournal.js';
 
 /* Scott */
 import './vs1_templates/template_buttons/spreadsheet_link.js';
+import './reports/executivesummary/executivesummary.js';
+import './reports/exebalancesheet/exebalancesheet.js';
+import './reports/execash/execash.js';
+import './reports/exeincome/exeincome.js';
+import './reports/exeperformance/exeperformance.js';
+import './reports/exeposition/exeposition.js';
+import './reports/exeprofitability/exeprofitability.js';
 /* Scott */
 
 /* Mainstar */

@@ -19,8 +19,13 @@ import { Template } from 'meteor/templating';
 import './planner_template.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { cloneDeep } from 'lodash';
+import moment from 'moment/moment';
+import { ContactService } from '../../contacts/contact-service';
 
 let manufacturingService = new ManufacturingService();
+let contactService = new ContactService();
+let appendHtmlOnTitle = '<div><div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="calendarDate" name="calendarDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Jobs</label></div></div>';
+let appendHtmlOnLeft = '<div class="custom-control custom-switch"><input class="custom-control-input toggle-resource-employee" id="toggle-resource-employee" type="checkbox" style="cursor: pointer;"><label class="custom-control-label" style="position:relative;width:200px;cursor: pointer;" for="toggle-resource-employee">Resource / Employee</label></div>'
 Template.production_planner_template.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.resources = new ReactiveVar([]);
@@ -32,12 +37,102 @@ Template.production_planner_template.onCreated(function() {
     templateObject.calendarOptions = new ReactiveVar();
     templateObject.startDate = new ReactiveVar();
     templateObject.selectedEventSalesorderId = new ReactiveVar(-1);
+    templateObject.plannerSettings = new ReactiveVar();
+    templateObject.ignoreDates = new ReactiveVar();
+    templateObject.showStart = new ReactiveVar();
+    templateObject.showEnd = new ReactiveVar();
+    templateObject.slotDuration = new ReactiveVar();
+    templateObject.employees = new ReactiveVar();
+    templateObject.resourceJobs = new ReactiveVar(true)
 })
 
 
 
 Template.production_planner_template.onRendered(async function() {
     const templateObject = Template.instance();
+    templateObject.getSettings = async function() {
+        return new Promise((resolve, reject)=>{
+            getVS1Data('ManufacturingSettings').then(function(dataObject) {
+                if(dataObject.length == 0) {
+                    let records = {
+                        showSaturday: true,
+                        showSunday: true,
+                        showQA: true,
+                        startTime: '08:00',
+                        endTime: '17:00',
+                        showTimein: '1'
+                    }
+                    templateObject.plannerSettings.set(records)
+                    resolve(records)
+                } else {
+                    let records = JSON.parse(dataObject[0].data).fields;
+                    templateObject.plannerSettings.set(records);
+                    let showTimein = records.showTimein;
+                    $('.edtShowTimein').val(showTimein);
+                    resolve(records)
+                }
+            }).catch(function(error) {
+                let records = {
+                    showSaturday: true,
+                    showSunday: true,
+                    showQA: true,
+                    startTime: '08:00',
+                    endTime: '17:00',
+                    showTimein: '1'
+                }
+                templateObject.plannerSettings.set(records)
+                resolve(records)
+            })
+        })
+    }
+
+    let records = await templateObject.getSettings()
+
+    if(records) {
+        if(records.showSaturday == true && records.showSunday == true) {
+            templateObject.ignoreDates.set('')
+        }else if(records.showSaturday == true && records.showSunday == false) {
+            templateObject.ignoreDates.set('0')
+        } else if(records.showSaturday == false && records.showSunday == true) {
+            templateObject.ignoreDates.set('6')
+        } else if(records.showSaturday == false && records.showSunday == false) {
+            templateObject.ignoreDates.set('0, 6')
+        }
+        templateObject.showStart.set(records.startTime)
+        templateObject.showEnd.set(records.endTime);
+        let slotDuration = ''
+        switch(records.showTimein) {
+            case '0.5':
+                slotDuration = '00:30:00'
+                break;
+            case '1':
+                slotDuration = '00:60:00'
+                break;
+            case '2':
+                slotDuration = '02:00:00'
+                break;
+            case '3':
+                slotDuration = '03:00:00'
+                break;
+            case '4':
+                slotDuration = '04:00:00'
+                break;
+            case '6':
+                slotDuration = '06:00:00'
+                break;
+            case '12':
+                slotDuration = '12:00:00'
+                break;
+            default:
+                slotDuration = '00:60:00'
+                break;
+        }
+        templateObject.slotDuration.set(slotDuration);
+        $('.edtShowTimein').val(records.showTimein)
+
+    }
+
+
 
     async function getResources() {
         return new Promise(async(resolve, reject) => {
@@ -83,6 +178,50 @@ Template.production_planner_template.onRendered(async function() {
     }
     let resources = await getResources();
     await templateObject.resources.set(resources);
+
+    templateObject.getEmployees=async function() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data("TEmployee").then(function(dataObject){
+                if(dataObject.length == 0) {
+                    contactService.getAllEmployeeSideData().then(function(data) {
+                        let temp = [];
+                        for(let i = 0; i< data.temployee; i++) {
+                            temp.push({
+                                id: i,
+                                title: data.temployee[i].fields.EmployeeName
+                            })
+                        }
+                        resolve(temp)
+                    })
+                }else{
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.temployee;
+                    let temp = []
+                    for(let i = 0; i< useData.length; i++ ) {
+                        temp.push({
+                            id: i,
+                            title: useData[i].fields.EmployeeName,
+                        })
+                    }
+                    resolve(temp)
+                }
+            }).catch(function (e) {
+                contactService.getAllEmployeeSideData().then(function(data) {
+                    let temp = [];
+                        for(let i = 0; i< data.temployee; i++) {
+                            temp.push({
+                                id: i,
+                                title: data.temployee[i].fields.EmployeeName
+                            })
+                        }
+                    resolve(temp)
+                })
+            })
+        })
+    }
+
+    let employees = await templateObject.getEmployees();
+    templateObject.employees.set(employees)
 
     templateObject.getWorkorders = function() {
         return new Promise(async(resolve, reject)=>{
@@ -204,8 +343,18 @@ Template.production_planner_template.onRendered(async function() {
     let dayIndex = new Date().getDay();
     templateObject.startDate.set(dayIndex);
     let calendarEl = document.getElementById('calendar');
+    const workSpec = [
+        {
+            daysOfWeek: [1, 2, 3, 4, 5],
+            startTime: templateObject.showStart.get(),
+            endTime: templateObject.showEnd.get(),
+        }
+    ]
+    const workMin = workSpec.map(item => item.startTime).sort().shift()
+    const workMax = workSpec.map(item => item.endTime).sort().pop()
 
     let calendarOptions = {
+        
         plugins: [
             resourceTimelinePlugin,
             interactionPlugin,
@@ -214,6 +363,14 @@ Template.production_planner_template.onRendered(async function() {
             listPlugin,
             bootstrapPlugin
         ],
+        customButtons: {
+            settingsmodalbutton: {
+                text: "",
+                click: function() {
+                    $("#settingsModal").modal();
+                }
+            },
+        },
         schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
         timeZone: 'local',
         initialView: 'resourceTimelineWeek',
@@ -222,9 +379,10 @@ Template.production_planner_template.onRendered(async function() {
         aspectRatio: 1.5,
         headerToolbar: {
             left: 'prev,next',
-            center: 'title',
-            right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth'
+            center: '',
+            right: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth,settingsmodalbutton'
         },
+        hiddenDays: templateObject.ignoreDates.get(),
         contentHeight: resources.length * 60 + 80,
         editable: true,
         resourceAreaHeaderContent: 'Resources',
@@ -357,15 +515,7 @@ Template.production_planner_template.onRendered(async function() {
 
 
         },
-        businessHours: [{
-            daysOfWeek: [1, 2, 3, 4],
-            startTime: '10:00',
-            endTime: '18:00'
-        }, {
-            daysOfWeek: [5],
-            startTime: '10:00',
-            endTime: '14:00'
-        }],
+        
 
         eventResizeStop: function(info) {
             let totalEvents = templateObject.events.get();
@@ -421,14 +571,16 @@ Template.production_planner_template.onRendered(async function() {
                 events[targetIndex].start = newStart;
                 events[targetIndex].end = newEnd;
                 templateObject.events.set(events);
+
                 if(calendar) {
-                    calendar.destroy();
-                    let dayIndex = newStart.getDay();
-                    calendar = new Calendar(calendarEl, {
-                        ...calendarOptions,
-                        events: events,
-                    })
-                    calendar.render();
+                    let options = {...calendarOptions, events: events}
+                    templateObject.calendarOptions.set(options)
+                    // calendar = new Calendar(calendarEl, {
+                    //     ...calendarOptions,
+                    //     events: events,
+                    // })
+                    // calendar.render();
+                    calendar.setOption('events', events)
                 }
             }else {
                 let targetIndex = events.findIndex(event => {
@@ -437,12 +589,15 @@ Template.production_planner_template.onRendered(async function() {
                 events[targetIndex].start = newStart;
                 events[targetIndex].end = newEnd;
                 templateObject.events.set(events);
-                calendar.destroy();
-                calendar = new Calendar(calendarEl, {
-                    ...calendarOptions,
-                    events: events
-                })
-                calendar.render()
+                let options = {...calendarOptions, events: events}
+                templateObject.calendarOptions.set(options);
+                calendar.setOption('events', events)
+                // calendar.destroy();
+                // calendar = new Calendar(calendarEl, {
+                //     ...calendarOptions,
+                //     events: events
+                // })
+                // calendar.render()
             }
 
             // calendar.render()
@@ -466,7 +621,7 @@ Template.production_planner_template.onRendered(async function() {
                     JOBNumber: workorders[orderIndex].fields.ID,
                     Customer: workorders[orderIndex].fields.Customer,
                     OrderDate: new Date(workorders[orderIndex].fields.OrderDate).toLocaleDateString(),
-                    ShipDate: workorders[orderIndex].fields.ShipDate,
+                    ShipDate: new Date(workorders[orderIndex].fields.ShipDate).toLocaleDateString(),
                     JobNotes: JSON.parse(workorders[orderIndex].fields.BOMStructure).CustomInputClass || '',
                     Percentage: percentage + '%',
                     Status: workorders[orderIndex].fields.Status
@@ -474,18 +629,27 @@ Template.production_planner_template.onRendered(async function() {
                 templateObject.viewInfoData.set(object);
                 $('.eventInfo').css('display', 'flex')
                 let orderId = info.event.extendedProps.orderId;
-                let salesorderId = orderId.toString().split('000')[0];
+                let salesorderId = orderId.toString().split('_')[0];
                 templateObject.selectedEventSalesorderId.set(salesorderId);
                 let dayIndex = info.event.start.getDay();
-                calendar.destroy();
-                calendar = new Calendar(calendarEl, {
-                    ...calendarOptions,
-                    firstDay: dayIndex,
-                    events: templateObject.events.get()
-                })
-                calendar.render();
+                // calendar.destroy();
+                // calendar = new Calendar(calendarEl, {
+                //     ...calendarOptions,
+                //     firstDay: dayIndex,
+                //     events: templateObject.events.get()
+                // })
+                // calendar.render();
+                let myEvents = templateObject.events.get();
+                let options = {...calendarOptions, firstDay: dayIndex, events:myEvents}
+                templateObject.calendarOptions.set(options);
+                calendar.setOption('firstDay', dayIndex);
+                calendar.setOption('events', myEvents)
             }, 300)
-        }
+        },
+        slotMinTime :workMin,
+        slotMaxTime:workMax,
+        slotDuration: templateObject.slotDuration.get()
+
             // expandRows: true,
             // events: [{"resourceId":"1","title":"event 1","start":"2022-11-14","end":"2022-11-16"},{"resourceId":"2","title":"event 3","start":"2022-11-15T12:00:00+00:00","end":"2022-11-16T06:00:00+00:00"},{"resourceId":"0","title":"event 4","start":"2022-11-15T07:30:00+00:00","end":"2022-11-15T09:30:00+00:00"},{"resourceId":"2","title":"event 5","start":"2022-11-15T10:00:00+00:00","end":"2022-11-15T15:00:00+00:00"},{"resourceId":"1","title":"event 2","start":"2022-11-15T09:00:00+00:00","end":"2022-11-15T14:00:00+00:00"}]
 
@@ -494,6 +658,34 @@ Template.production_planner_template.onRendered(async function() {
     let calendar = new Calendar(calendarEl, calendarOptions);
     templateObject.calendar.set(calendar);
       calendar.render();
+      let leftElement = $("#calendar .fc-header-toolbar .fc-toolbar-chunk:nth-child(1)");
+      let titleElement = $("#calendar .fc-header-toolbar div:nth-child(2)");
+      $(titleElement).css('display', 'flex')
+      $(titleElement).append(appendHtmlOnTitle);
+      $(titleElement).css('gap', '30px')
+      $(leftElement).css('display', 'flex')
+      $(leftElement).css('align-items', 'center')
+      $(leftElement).append(appendHtmlOnLeft);
+      $(leftElement).css('gap', '30px')
+
+      $("#calendarDate").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        dateFormat: "dd/mm/yy",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+        onSelect: function(formated, dates) {
+            let gotoDate = new Date(formated.split("/")[2] + "-" + formated.split("/")[1] + "-" + formated.split("/")[0]);
+            calendar.gotoDate(gotoDate);
+        },
+      });
+    
+      $('#calendarDate').val(moment(new Date()).format('DD/MM/YYYY'))
 
     $(document).ready(function() {
         $('.productionplannermodule .btnApply').on('click', async function(event) {
@@ -516,15 +708,35 @@ Template.production_planner_template.onRendered(async function() {
 
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder:tempOrders})).then(function(){
                 $('.fullScreenSpin').css('display', 'none');
-                    swal({
-                        title: 'Success',
-                        text: 'Production planner has been saved successfully',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Continue',
-                    }).then((result) => {
-                        window.location.reload();
-                    });
+                let showSaturday = $('.toggleShowSat').is(':checked');
+                        let showSunday = $('.toggleShowSun').is(':checked');
+                        let showQA = $('.toggleShowQA').is(':checked');
+                        let showTimein = $('.edtShowTimein').val();
+                        let startTime = templateObject.showStart.get();
+                        let endTime = templateObject.showEnd.get();
+                        let objectDetail = {
+                            type: 'ManufacturingSettings',
+                            fields: {
+                                showSaturday: showSaturday,
+                                showSunday: showSunday,
+                                showQA: showQA,
+                                startTime: startTime,
+                                endTime: endTime,
+                                showTimein: showTimein
+                            }
+                        }
+                        addVS1Data('ManufacturingSettings', JSON.stringify(objectDetail)).then(function(){
+                            swal({
+                                title: 'Success',
+                                text: 'Production planner has been saved successfully',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Continue',
+                            }).then((result) => {
+                                
+                                window.location.reload();
+                            });
+                        })
 
             })
 
@@ -589,13 +801,15 @@ Template.production_planner_template.onRendered(async function() {
             templateObject.events.set(cloneEvents);
             if(templateObject.calendar.get() != null) {
                 let calendar = templateObject.calendar.get();
-                calendar.destroy();
-                // let dayIndex = new Date(events[0].start).getDay();
+                // calendar.destroy();
                 let calendarOptions = templateObject.calendarOptions.get();
                 let calendarEl= document.getElementById('calendar');
-                let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: cloneEvents})
-                newCalendar.render();
-                templateObject.calendar.set(newCalendar)
+                // let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: cloneEvents})
+                // newCalendar.render();
+                let options = {...calendarOptions, events:cloneEvents}
+                templateObject.calendarOptions.set(options)
+                calendar.setOption('events', cloneEvents)
+                templateObject.calendar.set(calendar)
             }
 
         })
@@ -630,22 +844,29 @@ Template.production_planner_template.onRendered(async function() {
                     let eventIndex = events.findIndex(e=>{
                         return e.extendedProps.orderId == event.extendedProps.orderId
                     })
-                    let tempEvent = (JSON.parse(JSON.stringify(events)) )[eventIndex]
+                    let tempEvent = cloneDeep(event) 
                     tempEvent.start = newStart;
                     tempEvent.end = newEnd;
                     events[eventIndex] = tempEvent;
                 }
             }
+
             templateObject.events.set(events);
             if(templateObject.calendar.get() != null) {
                 let calendar = templateObject.calendar.get();
-                calendar.destroy();
-                let dayIndex = new Date(events[0].start).getDay();
+                // calendar.destroy();
+                // let dayIndex = new Date(events[0].start).getDay();
                 let calendarOptions = templateObject.calendarOptions.get();
-                let calendarEl= document.getElementById('calendar');
-                let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: events})
-                newCalendar.render();
-                templateObject.calendar.set(newCalendar)
+                // let calendarEl= document.getElementById('calendar');
+                // let newCalendar = new Calendar(calendarEl, {...calendarOptions, events: events})
+                let options = {...calendarOptions, events: events}
+                templateObject.calendarOptions.set(options)
+                let fEvents = events
+                // newCalendar.render();
+                setTimeout(()=>{
+                    calendar.setOption('events', fEvents)
+                    templateObject.calendar.set(calendar)
+                }, 1000)
             }
 
         })
@@ -798,6 +1019,9 @@ Template.production_planner_template.helpers({
         let templateObject = Template.instance();
         let info = templateObject.viewInfoData.get();
         return info.Status == 'QAStopped'
+    },
+    plannerSettings:() => {
+        return Template.instance().plannerSettings.get()
     }
 })
 
@@ -805,88 +1029,16 @@ Template.production_planner_template.events({
     'click #btnMarkAsScheduled': async function(e) {
         let templateObject = Template.instance();
         templateObject.changeStatus('scheduled')
-        // let orderData = templateObject.viewInfoData.get();
-        // let workorderid = orderData.JOBNumber;
-        // let workorders = await templateObject.getWorkorders();
-        // let events = templateObject.events.get();
-        // let tempEvents = cloneDeep(events);
-        // let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
-        // tempInfoData.Status = 'scheduled';
-        // templateObject.viewInfoData.set(tempInfoData)
-        // let eventIndex = tempEvents.findIndex(event=>{
-        //     return event.extendedProps.orderId == workorderid
-        // })
-        // let event = tempEvents[eventIndex];
-        // let eventStartTime = event.start;
-        // let tempOrders = cloneDeep(workorders)
-        // let workorderIndex = workorders.findIndex(order=> {
-        //     return order.fields.ID == workorderid
-        // })
-        // let targetOrder = workorders[workorderIndex];
-        // let tempOrder = cloneDeep(targetOrder);
-        // tempOrder.fields.StartTime = new Date(eventStartTime);
-        // tempOrder.fields.Status = 'scheduled';
-        // tempOrders.splice(workorderIndex, 1, tempOrder);
-        // addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
-
     },
 
     'click #btnMarkAsUnscheduled': async function (e) {
         let templateObject = Template.instance();
         templateObject.changeStatus('unscheduled')
-        // let orderData = templateObject.viewInfoData.get();
-        // let workorderid = orderData.JOBNumber;
-        // let workorders = await templateObject.getWorkorders();
-        // let events = templateObject.events.get();
-        // let tempEvents = cloneDeep(events);
-        // let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
-        // tempInfoData.Status = 'unscheduled';
-        // templateObject.viewInfoData.set(tempInfoData)
-        // let eventIndex = tempEvents.findIndex(event=>{
-        //     return event.extendedProps.orderId == workorderid
-        // })
-        // let event = tempEvents[eventIndex];
-        // let eventStartTime = event.start;
-        // let tempOrders = cloneDeep(workorders)
-        // let workorderIndex = workorders.findIndex(order=> {
-        //     return order.fields.ID == workorderid
-        // })
-        // let targetOrder = workorders[workorderIndex];
-        // let tempOrder = cloneDeep(targetOrder);
-        // tempOrder.fields.StartTime = new Date(eventStartTime);
-        // tempOrder.fields.Status = 'unscheduled';
-        // tempOrders.splice(workorderIndex, 1, tempOrder);
-        // addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
     },
 
     'click #btnStartTimer': async function(e) {
         let templateObject = Template.instance();
         templateObject.changeStatus('started')
-        // let orderData = templateObject.viewInfoData.get();
-        // let workorderid = orderData.JOBNumber;
-        // let workorders = await templateObject.getWorkorders();
-        // let events = templateObject.events.get();
-        // let tempEvents = cloneDeep(events);
-        // let tempInfoData = cloneDeep(templateObject.viewInfoData.get());
-        // tempInfoData.Status = 'started';
-        // templateObject.viewInfoData.set(tempInfoData)
-        // let eventIndex = tempEvents.findIndex(event=>{
-        //     return event.extendedProps.orderId == workorderid
-        // })
-        // let event = tempEvents[eventIndex];
-        // event.start = new Date();
-        // tempEvents.splice(eventIndex, 1, event);
-        // templateObject.events.set(tempEvents)
-        // let tempOrders = cloneDeep(workorders)
-        // let workorderIndex = workorders.findIndex(order=> {
-        //     return order.fields.ID == workorderid
-        // })
-        // let targetOrder = workorders[workorderIndex];
-        // let tempOrder = cloneDeep(targetOrder);
-        // tempOrder.fields.StartTime = new Date();
-        // tempOrder.fields.Status = 'started';
-        // tempOrders.splice(workorderIndex, 1, tempOrder);
-        // addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: tempOrders})).then(function(){})
     },
 
     'click #btnPauseTimer': async function(e) {
@@ -924,5 +1076,253 @@ Template.production_planner_template.events({
     'click #btnMarkAsComplete': function(e) {
         let templateObject = Template.instance();
         templateObject.changeStatus('Completed')
+    },
+
+    'change .toggleShowWeekend': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        let calendar = templateObject.calendar.get();
+        let calendarOptions= templateObject.calendarOptions.get();
+        let showSaturday = $('.toggleShowSat').is(':checked');
+        let showSunday = $('.toggleShowSun').is(':checked');
+        let hiddenDays = '';
+        if(showSaturday == true && showSunday == false) {
+            hiddenDays = ''
+        } else if (showSaturday == true && showSunday == false ) {
+            hiddenDays = '0'
+        } else if (showSaturday == false && showSunday == true) {
+            hiddenDays = '6'
+        } else if (showSaturday == false && showSunday == false) {
+            hiddenDays = "0, 6"
+        }
+        calendar.setOption('hiddenDays', hiddenDays)
+        let options = {...calendarOptions, hiddenDays: hiddenDays}
+        templateObject.calendarOptions.set(options)
+        templateObject.calendar.set(calendar)
+    },
+
+    'change #hoursFrom': function(event) {
+        let templateObject = Template.instance();
+        let calendar = templateObject.calendar.get();
+        templateObject.showStart.set($(event.target).val())
+        const workSpec = [
+            {
+                daysOfWeek: [1, 2, 3, 4, 5],
+                startTime: $(event.target).val(),
+                endTime: templateObject.showEnd.get(),
+            }
+        ]
+        const workMin = workSpec.map(item => item.startTime).sort().shift()
+        let calendarOptions = templateObject.calendarOptions.get();
+        let options = {...calendarOptions, slotMinTime: workMin}
+        templateObject.calendarOptions.set(options)
+        calendar.setOption('slotMinTime', workMin)
+        templateObject.calendar.set(calendar)
+    },
+
+    'change #hoursTo': function(event) {
+        let templateObject = Template.instance();
+        let calendar = templateObject.calendar.get();
+        templateObject.showEnd.set($(event.target).val())
+        const workSpec = [
+            {
+                daysOfWeek: [1, 2, 3, 4, 5],
+                startTime: $(event.target).val(),
+                endTime: templateObject.showEnd.get(),
+            }
+        ]
+        const workMax = workSpec.map(item => item.endTime).sort().pop()
+        let calendarOptions = templateObject.calendarOptions.get();
+        let options = {...calendarOptions, slotMaxTime: workMax}
+        templateObject.calendarOptions.set(options)
+        calendar.setOption('slotMaxTime', workMax)
+        templateObject.calendar.set(calendar)
+    },
+
+    'change .edtShowTimein': function(event) {
+        event.preventDefault();
+        event.stopPropagation()
+        let templateObject = Template.instance();
+        let calendar = templateObject.calendar.get();
+        let value = $(event.target).val();
+        let slotDuration ='';
+        switch(value) {
+            case '0.5':
+                slotDuration = '00:30:00'
+                break;
+            case '1':
+                slotDuration = '00:60:00'
+                break;
+            case '2':
+                slotDuration = '02:00:00'
+                break;
+            case '3':
+                slotDuration = '03:00:00'
+                break;
+            case '4':
+                slotDuration = '04:00:00'
+                break;
+            case '6':
+                slotDuration = '06:00:00'
+                break;
+            case '12':
+                slotDuration = '12:00:00'
+                break;
+            default:
+                slotDuration = '00:60:00'
+                break;
+        }
+        let calendarOptions = templateObject.calendarOptions.get();
+        let options = {...calendarOptions, slotDuration: slotDuration}
+        templateObject.slotDuration.set(slotDuration)
+        templateObject.calendarOptions.set(options)
+        calendar.setOption('slotDuration', slotDuration)
+        templateObject.calendar.set(calendar)
+    },
+
+    'click .btnSaveSettings': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        let showSaturday = $('.toggleShowSat').is(':checked');
+        let showSunday = $('.toggleShowSun').is(':checked');
+        let showQA = $('.toggleShowQA').is(':checked');
+        let showTimein = $('.edtShowTimein').val();
+        let startTime = templateObject.showStart.get();
+        let endTime = templateObject.showEnd.get();
+        let objectDetail = {
+            type: 'ManufacturingSettings',
+            fields: {
+                showSaturday: showSaturday,
+                showSunday: showSunday,
+                showQA: showQA,
+                startTime: startTime,
+                endTime: endTime,
+                showTimein: showTimein
+            }
+        }
+        addVS1Data('ManufacturingSettings', JSON.stringify(objectDetail)).then(function(){
+            swal({
+                title: 'Success',
+                text: 'Production planner setting has been saved successfully',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'Continue',
+            }).then((result) => {
+                $('#settingsModal').modal('toggle')
+            });
+        })
+    },
+
+    'click .btnResetSettings': function(event) {
+        event.preventDefault()
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        let records = templateObject.plannerSettings.get();
+        let slotDuration = '';
+        switch (records.showTimein) {
+            case '0.5':
+                slotDuration = '00:30:00'
+                break;
+            case '1':
+                slotDuration = '00:60:00'
+                break;
+            case '2':
+                slotDuration = '02:00:00'
+                break;
+            case '3':
+                slotDuration = '03:00:00'
+                break;
+            case '4':
+                slotDuration = '04:00:00'
+                break;
+            case '6':
+                slotDuration = '06:00:00'
+                break;
+            case '12':
+                slotDuration = '12:00:00'
+                break;
+            default:
+                slotDuration = '00:60:00'
+                break;
+        }
+        let calendar = templateObject.calendar.get()
+        $('.toggleShowSat').prop('checked', records.showSaturday);
+        $('.toggleShowSun').prop('checked', records.showSunday);
+        $('.toggleShowQA').prop('checked', records.showQA);
+        $('#hoursFrom').val(records.startTime)
+        $('#hoursTo').val(records.endTime)
+        $('.edtShowTimein').val(records.showTimein);
+
+        let hiddenDays = '';
+        if(records.showSaturday == true && records.showSunday == false) {
+            hiddenDays = ''
+        } else if (records.showSaturday == true && records.showSunday == false ) {
+            hiddenDays = '0'
+        } else if (records.showSaturday == false && records.showSunday == true) {
+            hiddenDays = '6'
+        } else if (records.showSaturday == false && records.showSunday == false) {
+            hiddenDays = "0, 6"
+        }
+
+        const workSpec = [
+            {
+                daysOfWeek: [1, 2, 3, 4, 5],
+                startTime: records.startTime,
+                endTime: records.endTime,
+            }
+        ]
+        const workMin = workSpec.map(item => item.startTime).sort().shift()
+        const workMax = workSpec.map(item => item.endTime).sort().pop()
+        let calendarOptions = templateObject.calendarOptions.get();
+        let options = {
+            ...calendarOptions,
+            hiddenDays: hiddenDays,
+            slotMinTime: workMin,
+            slotMaxTime: workMax,
+            slotDuration: slotDuration,
+        }
+        templateObject.calendarOptions.set(options);
+        calendar.setOption('hiddenDays', hiddenDays)
+        calendar.setOption('slotMinTime', workMin)
+        calendar.setOption('slotMaxTime', workMax)
+        calendar.setOption('slotDuration', slotDuration)
+        templateObject.showStart.set(records.startTime);
+        templateObject.showEnd.set(records.endTime)
+        templateObject.slotDuration.set(slotDuration);
+        $('.edtShowTimein').val(records.showTimein)
+    },
+
+    'click .btnCancelSettings': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $('.btnResetSettings').trigger('click');
+        $('#settingsModal').modal('toggle')
+    },
+
+    'change .toggle-resource-employee': function(event) {
+        let templateObject = Template.instance();
+        let calendar = templateObject.calendar.get()
+        if($(event.target).is(':checked') == true) {
+            let employees = templateObject.employees.get();
+            let calendarOptions = templateObject.calendarOptions.get();
+            let options = {...calendarOptions, resources: employees, events: []}
+            calendar.setOption('resources', employees)
+            calendar.setOption('events', [])
+            templateObject.calendarOptions.set(options)
+            templateObject.calendar.set(calendar)
+            templateObject.resourceJobs.set(false)
+        }else {
+            let resources = templateObject.resources.get();
+            let calendarOptions = templateObject.calendarOptions.get();
+            let options = {...calendarOptions, resources: resources, events: templateObject.events.get()}
+            calendar.setOption('resources', resources)
+            calendar.setOption('events', templateObject.events.get())
+            templateObject.calendarOptions.set(options)
+            templateObject.calendarOptions.set(calendar);
+            templateObject.resourceJobs.set(true)
+        }
     }
+
 })

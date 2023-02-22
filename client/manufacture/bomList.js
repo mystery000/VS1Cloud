@@ -16,23 +16,26 @@ Template.bom_list.onCreated(function(){
     templateObject.bomProducts = new ReactiveVar([]);
 
     templateObject.getDataTableList = function(data){
-      let subs = data.fields.Details != '' ?JSON.parse(data.fields.Details)||[] : [];
+      let subs = data.Details != '' ?JSON.parse(data.Details)||[] : [];
       let rawName = "";
       if(subs.length > 0) {
           for (let j = 0; j < subs.length; j++) {
               if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
           }
       }
+
       var dataList = [
-        data.fields.ID || "1",
-        data.fields.Caption || "", //product name -- should be changed on TProcTree
-        data.fields.Description || "",
-        data.fields.Info || "",
-        data.fields.TotalQtyOriginal || 0,
-        // data.fields.subs || [],
+        data.ID || "1",
+        data.Caption || "", //product name -- should be changed on TProcTree
+        data.Description || "",
+        data.Info || "",
+        data.TotalQtyOriginal || 0,
+        // data.subs || [],
         rawName || '',
-        data.fields.Value == '' ? 'No Attachment' : JSON.parse(data.fields.Value).length.toString() + " attachments"
+        data.Value == '' ? 'No Attachment' : JSON.parse(data.Value).length.toString() + " attachments",
+        data.ProcStepItemRef == 'vs1BOM'? 'Active': 'Deleted'
       ];
+
       return dataList;
     }
 
@@ -43,8 +46,9 @@ Template.bom_list.onCreated(function(){
     { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true },
     { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
     { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
-    { index: 5, label: 'raws', class: 'colRaws', active: true, display: true },
-    { index: 6, label: 'attachments', class: 'colAttachments', active: true, display: true }
+    { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true },
+    { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true}
   ];
   templateObject.tableheaderrecords.set(headerStructure);
       
@@ -94,14 +98,14 @@ Template.bom_list.events({
     let productName = $(event.target).closest('tr').find('td.colName').text();
     let bomProducts = templateObject.bomProducts.get();
     let index = bomProducts.findIndex(product => {
-      return product.fields.Caption == productName;
+      return product.Caption == productName;
     })
     if(index > -1) {
-      FlowRouter.go('/bomsetupcard?id='+ bomProducts[index].fields.ID)
+      FlowRouter.go('/bomsetupcard?id='+ bomProducts[index].ID)
     }else {
       productService.getOneBOMProductByName(productName).then(function(data){
         if(data.tproctree.length > 0) {
-          let id = data.tproctree[0].fields.ID;
+          let id = data.tproctree[0].ID;
           FlowRouter.go('/bomsetupcard?id='+ id)
         }
       })
@@ -276,7 +280,7 @@ Template.bom_list.events({
                                 $('.fullScreenSpin').css('display','none');
                                 let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
                                 let index = bomProducts.findIndex(product => {
-                                  return product.fields.productName == results.data[i+1][0];
+                                  return product.productName == results.data[i+1][0];
                                 })
                                 if(index == -1) {
                                   bomProducts.push(objDetails)

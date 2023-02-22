@@ -347,7 +347,7 @@ export class ProductService extends BaseService {
 
     getOneProductClassQtyData(productID) {
         let options = {
-            PropertyList: "ID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
+            PropertyList: "ID,ProductID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
             select: "[ProductID]=" + productID
         };
         return this.getList(this.ERPObjects.TProductClassQuantity, options);
@@ -398,7 +398,7 @@ export class ProductService extends BaseService {
     saveProductClassData(data) {
         return this.POST(this.ERPObjects.TProductClass, data);
     }
-    
+
     getAllProductList1() {
         let options = {
             PropertyList: "ID,TaxCodePurchase,TaxCodeSales",
@@ -430,22 +430,43 @@ export class ProductService extends BaseService {
         return this.getList(this.ERPObjects.TInvoiceEx, options);
     }
 
-    getAllBOMProducts(limitcount, limitfrom) {
+    getAllBOMProducts(limitcount, limitfrom, deleteFilter=false) {
         let options = "";
-        if (limitcount == "All") {
-            options = {
-                ListType: "Detail",
-                select: "[ProcStepItemRef]='vs1BOM'",
-                // orderby: '"Description asc"',
-            };
+        if (deleteFilter == false) {
+            if (limitcount == "All") {
+                options = {
+                    // ListType: "Detail",
+                    PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+                    select: "[ProcStepItemRef]='vs1BOM'",
+                    // orderby: '"Description asc"',
+                };
+            } else {
+                options = {
+                    // orderby: '"Description asc"',
+                    // ListType: "Detail",
+                    PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+                    LimitCount: parseInt(limitcount),
+                    LimitFrom: parseInt(limitfrom),
+                    select: "[ProcStepItemRef]='vs1BOM'",
+                };
+            }
         } else {
-            options = {
-                // orderby: '"Description asc"',
-                ListType: "Detail",
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
-                select: "[ProcStepItemRef]='vs1BOM'",
-            };
+            if (limitcount == "All") {
+                options = {
+                    PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+                    select: "[ProcStepItemRef]='vs1BOM' OR [ProcStepItemRef]='deleted'",
+                    // orderby: '"Description asc"',
+                };
+            } else {
+                options = {
+                    // orderby: '"Description asc"',
+                    // ListType: "Detail",
+                    PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+                    LimitCount: parseInt(limitcount),
+                    LimitFrom: parseInt(limitfrom),
+                    select: "[ProcStepItemRef]='vs1BOM' OR [ProcStepItemRef]='deleted'",
+                };
+            }
         }
 
         return this.getList(this.ERPObjects.TProcTree, options);
@@ -453,7 +474,8 @@ export class ProductService extends BaseService {
 
     getBOMListByName(productname) {
         let options = {
-            ListType: 'Detail',
+            // ListType: 'Detail',
+            PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
             // LimitCount: 1,
             select: "[Caption] f7like '"+productname+"' and [ProcStepItemRef]='vs1BOM'"
         }
@@ -462,7 +484,8 @@ export class ProductService extends BaseService {
 
     getOneBOMProductByName(productname) {
         let options = {
-            ListType: 'Detail',
+            // ListType: 'Detail',
+            PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
             LimitCount: 1,
             select: "[Caption]='"+productname+"' and [ProcStepItemRef]='vs1BOM'"
         }
@@ -471,7 +494,8 @@ export class ProductService extends BaseService {
 
     getOneBOMProductByID(id) {
         let options = {
-            ListType: 'Detail',
+            // ListType: 'Detail',
+            PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
             LimitCount: 1,
             select: "[ID]="+id+" and [ProcStepItemRef]='vs1BOM'"
         }
@@ -538,7 +562,7 @@ export class ProductService extends BaseService {
             };
           }
         }
-    
+
         return this.getList(this.ERPObjects.TProductBin, options);
       }
 
