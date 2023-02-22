@@ -127,6 +127,7 @@
             <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; background-color: #ededed;">
                 <div class="col float-left flex-grow-1 mb-4">
                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button id="btnConvertSalesorder" name="btnConvertSalesorder" class="btn btn-primary" type="button" style="margin: 12px;"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Convert Sales Order</button>
                     <button id="btnNewWorkorder" name="btnNewWorkorder" class="btn btn-primary" type="button" style="margin: 12px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Work Order</button>
                 </div>
 
@@ -198,7 +199,10 @@
                     }}
                 </div>
             </div>
-
+            <!-- {{/if}} -->
+            <div class="modal fade salesOrderListModal" role="dialog" tabindex="-1" id="salesOrderListModal">
+                {{> salesorderslistpop}}
+            </div>
         </div>
     </div>
 </template>
