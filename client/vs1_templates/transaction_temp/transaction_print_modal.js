@@ -422,16 +422,16 @@ Template.transaction_print_modal.events({
   },
   "click #printModal .printConfirm": async function (event) {
     const checkedPrintOptions = Template.instance().findAll('.chooseTemplateBtn:checked');
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     const templateObject = Template.instance();
     templateObject.fnSendSMS()
     

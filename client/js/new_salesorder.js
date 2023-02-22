@@ -7195,16 +7195,16 @@ Template.new_salesorder.events({
   "click #printModal #btnSendEmail" : async function (event) {
     const templateObject = Template.instance()
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     if ($("#edtCustomerEmail").val() != "") {
       LoadingOverlay.show();
       await templateObject.sendEmailWithAttatchment(true);
