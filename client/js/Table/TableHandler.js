@@ -52,14 +52,14 @@ export default class TableHandler {
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr("id");
-        let tableClassName = $(e.currentTarget.className)||'';
+        let tableClassName = $(e.currentTarget.className)?$(e.currentTarget)[0].className:'';
         if(tableClassName.includes("transactionLines")){
             //this.saveTableColumns(tableName);
         }else{
           if ((tableName != "tblBasReturnList")) {
             this.saveTableColumns(tableName);
           };
-        }
+        };
 
         let tableWidth = [];
         // $("#tblcontactoverview th").each(function () {
