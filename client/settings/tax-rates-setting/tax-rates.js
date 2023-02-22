@@ -73,7 +73,7 @@ Template.taxRatesSettings.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 0, label: 'Id', class: 'colTaxRateId', active: false, display: true },
+        { index: 0, label: '#Id', class: 'colTaxRateId', active: false, display: true },
         { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '80' },
         { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
         { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '100' },
@@ -430,7 +430,7 @@ Template.taxRatesSettings.onRendered(function() {
     });
 
     $('#taxRatesList tbody').on('click', 'tr td.colTaxRateName , tr td.colTaxRateDesc, tr td.colTaxRate', function() {
-        var listData = $(this).closest('tr').find("colTaxRateId").text();
+        var listData = $(this).closest('tr').find(".colTaxRateId").text();
         if (listData) {
             $('#add-tax-title').text('Edit Tax Rate');
             $('#edtTaxName').prop('readonly', true);
