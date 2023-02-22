@@ -15,7 +15,7 @@ import { Template } from 'meteor/templating';
 import '../manufacture/frm_workorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { cloneDeep, template } from 'lodash';
-import '../manufacture/bomlistpop.js';
+// import '../manufacture/bomlistpop.js';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -211,7 +211,7 @@ Template.new_workorder.onRendered(async function(){
                         )
                     })
                 }
-                
+
                 let data = await getRecord();
                 let record = {
                     id: data.fields.ID + "_"+(workordersCount + 1).toString(),
@@ -269,7 +269,7 @@ Template.new_workorder.onRendered(async function(){
                 // setTimeout(()=>{
                     $('.fullScreenSpin').css('display', 'none');
                 // }, 15000)
-                
+
             }else {
                 async function getCustomerData() {
                     return new Promise(async(resolve, reject)=> {
@@ -278,7 +278,7 @@ Template.new_workorder.onRendered(async function(){
                                 contactService.getOneCustomerDataExByName('Workshop').then(function(data){
                                     $('.fullScreenSpin').css('display', 'none')
                                     resolve(data.tcustomer[0].fields)
-                                    
+
                                 }).catch(function(err){
                                     $('.fullScreenSpin').css('display', 'none')
                                     resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
@@ -302,7 +302,7 @@ Template.new_workorder.onRendered(async function(){
                                     }).catch(function(error){
                                         $('.fullScreenSpin').css('display', 'none')
                                         resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                                    })        
+                                    })
                                 }
                             }
                         }).catch(function (e) {
@@ -318,7 +318,7 @@ Template.new_workorder.onRendered(async function(){
                 }
 
                 let customerData = await getCustomerData();
-                let orderAddress = customerData.Companyname + '\n' + customerData.Street+" "+customerData.Street2 + '\n'+ customerData.State+'\n' + customerData.Postcode + ' ' + customerData.Country 
+                let orderAddress = customerData.Companyname + '\n' + customerData.Street+" "+customerData.Street2 + '\n'+ customerData.State+'\n' + customerData.Postcode + ' ' + customerData.Country
                 let record = {
                     id: '',
                     salesorderid: '',
@@ -508,7 +508,7 @@ Template.new_workorder.onRendered(async function(){
 })
 
 Template.new_workorder.events({
-    
+
 
     'click .btnSave': function(event) {
         event.stopPropagation();
@@ -1748,7 +1748,7 @@ Template.new_workorder.events({
 
     // 'click #tblBOMList tbody tr': function(event) {
     //     let templateObject = Template.instance();
-    //     let bomProducts = 
+    //     let bomProducts =
     // }
 
 })
