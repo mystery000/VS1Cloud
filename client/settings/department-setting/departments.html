@@ -161,7 +161,22 @@
                                             </div>
                                         </div>
 
-                                        {{> non_transactional_list tablename="tblDepartmentList"}}
+<!--                                        {{> non_transactional_list tablename="tblDepartmentList"}}-->
+                                        {{>datatablelist
+                                                tablename="tblDepartmentList"
+                                                apiName= apiFunction
+                                                indexeddbname = 'TDeptClassList'
+                                                tableheaderrecords = tableheaderrecords
+                                                exportfilename = 'Department List'
+                                                istransaction = false
+                                                apiParams= apiParams
+                                                datahandler = datahandler
+                                                service=service
+                                                lowercaseDataName='tdeptclasslist'
+                                                exIndexDBName = 'tdeptclasslist'
+                                                exdatahandler = exDataHandler
+                                                searchAPI = searchAPI
+                                        }}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
