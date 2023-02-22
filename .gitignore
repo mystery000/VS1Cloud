@@ -8,3 +8,5 @@ start-dev.sh
 server/vs1cloud.tar.gz
 
 jsconfig.json
+
+start_vs1_cloud.bat

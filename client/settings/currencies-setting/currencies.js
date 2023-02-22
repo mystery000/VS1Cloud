@@ -30,9 +30,9 @@ Template.currenciessettings.onCreated(function () {
 
   templateObject.getDataTableList = function(data) {
     let linestatus = '';
-    if (data.tcurrencylist[i].Active == true) {
+    if (data.Active == true) {
       linestatus = "";
-    } else if (data.tcurrencylist[i].Active == false) {
+    } else if (data.Active == false) {
       linestatus = "In-Active";
     }
     var dataList = [
