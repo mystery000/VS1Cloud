@@ -45,6 +45,43 @@ Template.taxRatesSettings.onCreated(function() {
 
     templateObject.subtaxcodes = new ReactiveVar([]);
     templateObject.subtaxlines = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let taxRate = (data.Rate * 100).toFixed(2) + '%';
+        const id = data.Id || '';
+        const codeName = data.CodeName || '-';
+        const description = data.Description || '-';
+        const rate = taxRate || '-';
+        const purchasesDefault =  `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioP" name="optradioP"
+            id="formCheckP-${id}" value="${codeName}"><label
+            class="custom-control-label" for="formCheckP-${id}"></label></div>`;
+        const salesDefault =  `<div class="custom-control custom-switch"><input type="radio" class="custom-control-input optradioS" name="optradioS"
+            id="formCheckS-${id}" value="${codeName}"><label
+            class="custom-control-label" for="formCheckS-${id}"></label></div>`
+        const dataList = [
+            id,
+            codeName,
+            description,
+            rate,
+            purchasesDefault,
+            salesDefault,
+            `<span class="table-remove"><button type="button"
+                class="btn btn-danger btn-rounded btn-sm my-0"><i
+                  class="fa fa-remove"></i></button></span>`
+        ]
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'Id', class: 'colTaxRateId', active: false, display: true },
+        { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '80' },
+        { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
+        { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '100' },
+        { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '200' },
+        { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '200' },
+        { index: 6, label: '', class: 'colTaxRateDelete', active: true, display: true, width: 60 },
+    ]
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.taxRatesSettings.onRendered(function() {
@@ -393,7 +430,7 @@ Template.taxRatesSettings.onRendered(function() {
     });
 
     $('#taxRatesList tbody').on('click', 'tr td.colTaxRateName , tr td.colTaxRateDesc, tr td.colTaxRate', function() {
-        var listData = $(this).closest('tr').attr('id');
+        var listData = $(this).closest('tr').find("colTaxRateId").text();
         if (listData) {
             $('#add-tax-title').text('Edit Tax Rate');
             $('#edtTaxName').prop('readonly', true);
@@ -1150,13 +1187,6 @@ Template.taxRatesSettings.events({
         $("#selectDeleteLineID").val(targetID);
         $("#deleteLineModal").modal("toggle");
     },
-    'click .btnBack': function(event) {
-        playCancelAudio();
-        event.preventDefault();
-        setTimeout(function() {
-            history.back(1);
-        }, delayTimeAfterSound);
-    }
 });
 
 Template.taxRatesSettings.helpers({
@@ -1196,6 +1226,41 @@ Template.taxRatesSettings.helpers({
     },
     isChkUSRegionTax: () => {
         return Template.instance().isChkUSRegionTax.get();
+    },
+
+    apiFunction:function() {
+        let taxRateService = new TaxRateService();
+        return taxRateService.getTaxRateVS1;
+    },
+
+    searchAPI: function() {
+        return TaxRateService.checkTaxRateByName;
+    },
+
+    service: ()=>{
+        let taxRateService = new TaxRateService();
+        return taxRateService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['regionName', 'activeFlag'];
     },
 });
 

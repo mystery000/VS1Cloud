@@ -40,7 +40,22 @@
 
                                         </div>
                                     </div>
-                                    {{> non_transactional_list tablename="tblLeadStatusList"}}
+<!--                                    {{> non_transactional_list tablename="tblLeadStatusList"}}-->
+                                    {{>datatablelist
+                                            tablename="tblLeadStatusList"
+                                            apiName= apiFunction
+                                            indexeddbname = 'TLeadStatusTypeList'
+                                            tableheaderrecords = tableheaderrecords
+                                            exportfilename = 'Lead Status List'
+                                            istransaction = false
+                                            apiParams= apiParams
+                                            datahandler = datahandler
+                                            service=service
+                                            lowercaseDataName='tleadstatustypelist'
+                                            exIndexDBName = 'tleadstatustypelist'
+                                            exdatahandler = exDataHandler
+                                            searchAPI = searchAPI
+                                    }}
                                 </div>
                                 <div class="row no-gutters">
                                     <div class="col">

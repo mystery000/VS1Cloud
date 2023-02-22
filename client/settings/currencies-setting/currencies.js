@@ -898,7 +898,7 @@ Template.currenciessettings.events({
     // Meteor._reload.reload();
   },
   "click #tblCurrencyList tbody tr": e => {
-    const currency = $(e.currentTarget).find(".colCode").text();
+    const currency = $(e.currentTarget).find(".colCurrencyID").text();
 
     // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
     window.location.href = `/fx-currency-history?currency=${currency}`;
@@ -1583,9 +1583,6 @@ Template.currenciessettings.helpers({
 
   datatablerecords : () => {
     return Template.instance().datatablerecords.get();
-  },
-  selectedInventoryAssetAccount: () => {
-    return Template.instance().selectedInventoryAssetAccount.get();
   },
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();

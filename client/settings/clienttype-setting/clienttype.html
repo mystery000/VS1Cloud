@@ -80,7 +80,22 @@
                       margin: 16px 0px;
                     }
                   </style>
-                  {{> non_transactional_list tablename="tblClienttypeList"}}
+<!--                  {{> non_transactional_list tablename="tblClienttypeList"}}-->
+                    {{>datatablelist
+                            tablename="tblClienttypeList"
+                            apiName= apiFunction
+                            indexeddbname = 'TClientTypeList'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Client Type List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tclienttypelist'
+                            exIndexDBName = 'tclienttypelist'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                 </div>
                 <div class="row no-gutters">
                   <div class="col">
