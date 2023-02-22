@@ -29,9 +29,9 @@ Template.leadstatussettings.onCreated(function() {
             isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
         };
         let linestatus = '';
-        if (data.tleadstatustypelist[i].Active == true) {
+        if (data.Active == true) {
             linestatus = "";
-        } else if (data.tleadstatustypelist[i].Active == false) {
+        } else if (data.Active == false) {
             linestatus = "In-Active";
         };
         let eqpm = Number(data.EQPM);
@@ -402,7 +402,7 @@ Template.leadstatussettings.onRendered(function() {
             }, 5000);
         }
     }
-    templateObject.getLeadStatusData();
+//    templateObject.getLeadStatusData();
 
     $(document).on('click', '.table-remove', function(event) {
         const targetID = $(event.target).closest('tr').attr('id'); // table row ID
