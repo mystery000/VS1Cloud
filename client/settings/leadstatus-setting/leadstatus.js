@@ -49,10 +49,10 @@ Template.leadstatussettings.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "10" },
-        { index: 1, label: 'Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "200" },
+        { index: 1, label: '#Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "200" },
         { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
         { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-        { index: 4, label: 'Is Default', class: 'colIsDefault', active: false, display: true, width: "100" },
+        { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "100" },
         { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "250" },
         { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
