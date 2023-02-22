@@ -3283,11 +3283,11 @@ Template.non_transactional_list.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
-        // if(data.Params.Search.replace(/\s/g, "") == ""){
-        //   deleteFilter = true;
-        // }else{
-        //   deleteFilter = false;
-        // };
+        if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
         for (let i = 0; i < data.tclienttype.length; i++) {
             let mobile = "";
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);

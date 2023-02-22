@@ -182,7 +182,10 @@
   </div>
   <!-- Import Modal -->
   {{> import_template ImportformName="Customer Type Settings"}}  
-  {{> clienttypemodal}}  
+  {{> clienttypemodal}}
+  <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
+    {{> termlistpop}}
+  </div>  
   <script>
     modalDraggable();
   </script>
