@@ -265,6 +265,93 @@ Template.transaction_print_modal.onCreated(async function () {
   const templates = await getTemplates();
   this.templates = new ReactiveVar(templates);
   getSMSSettings();
+
+  this.fnSendSMS = async function(isForced = false){
+    const isCheckedSms = $("#printModal #sms").is(":checked");
+    const customerId = $("#__customer_id").val();
+    const contactService = new ContactService();
+    let contactServiceData = null;
+    if(isForced){
+      LoadingOverlay.show();
+    }
+    if(customerId){
+      contactServiceData = await contactService.getOneCustomerDataEx(
+        customerId
+      );
+    }
+
+    // Send SMS
+    if ((isCheckedSms || isForced) && contactServiceData) {
+      let phoneNumber = contactServiceData.fields.Mobile;
+      // const phoneNumber = "+13374761311"
+      if (phoneNumber == '' || phoneNumber == null) {
+        LoadingOverlay.hide();
+        swal({
+          title: "Oops...",
+          text: "Customer does not have phone number!",
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try again",
+        });
+
+        return;
+      }
+      // phoneNumber = "+13374761311";
+      // Send SMS function here!
+
+      // const companyName = Session.get("vs1companyName");
+      const customerName = $("#edtCustomerName").val();
+      const smsSettings = templateObject.smsSettings.get();
+      let message = smsSettings.headerAppointmentSMSMessage.replace(
+        "[Company Name]",
+        customerName
+      );
+
+      message = `${message} - Hi ${contactServiceData?.fields?.FirstName} ${contactServiceData?.fields?.LastName}`;
+
+      if (phoneNumber) {
+        Meteor.call(
+          "sendSMS",
+          smsSettings.twilioAccountId,
+          smsSettings.twilioAccountToken,
+          smsSettings.twilioTelephoneNumber,
+          phoneNumber,
+          message,
+          function (error, result) {
+            console.log(error, result)
+            LoadingOverlay.hide();
+            if (error || !result.success) {
+              swal({
+                title: "Oops...",
+                text: result.message,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try again",
+              });
+            } else {
+              swal({
+                title: "SMS was sent successfully",
+                text: "SMS was sent successfully",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "Ok",
+              });
+              localStorage.setItem("smsId", result.sid);
+            }
+          }
+        );
+      }
+    } else if ( isCheckedSms && !contactServiceData){
+      swal({
+        title: "Oops...",
+        text: "We can not get Customer data to send SMS!",
+        type: "error",
+        showCancelButton: false,
+        confirmButtonText: "Try again",
+      });
+    }
+    LoadingOverlay.hide();
+  }
 });
 
 Template.transaction_print_modal.onRendered(function () {
@@ -329,95 +416,25 @@ Template.transaction_print_modal.events({
   "click #deliveryDocket": function (event) {
     const checked = event.currentTarget.checked;
   },
-  "click #emailSend": function (event) {
-    $('.chkEmailCopy').prop("checked", $("#emailSend").is(":checked"));
+  "click #printModal #btnSendSMS": function(event) {
+    const templateObject = Template.instance();
+    templateObject.fnSendSMS(true)
   },
   "click #printModal .printConfirm": async function (event) {
-    LoadingOverlay.show();
-    const templateObject = Template.instance();
-    const isCheckedSms = $("#printModal #sms").is(":checked");
-    const customerId = $("#__customer_id").val();
-
-    const contactService = new ContactService();
-
-    let contactServiceData = null;
-    if(customerId){
-      contactServiceData = await contactService.getOneCustomerDataEx(
-        customerId
-      );
-    }
-
-    // Send SMS
-    if (isCheckedSms && contactServiceData) {
-      const phoneNumber = contactServiceData.fields.Mobile;
-      // const phoneNumber = "+13374761311"
-      if (phoneNumber == '' || phoneNumber == null) {
-        LoadingOverlay.hide();
-        swal({
-          title: "Oops...",
-          text: "Customer does not have phone number!",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "Try again",
-        });
-
-        return;
-      }
-      // const phoneNumber = "+13374761311";
-      // Send SMS function here!
-
-      // const companyName = Session.get("vs1companyName");
-      const customerName = $("#edtCustomerName").val();
-      const smsSettings = templateObject.smsSettings.get();
-      let message = smsSettings.headerAppointmentSMSMessage.replace(
-        "[Company Name]",
-        customerName
-      );
-
-      message = `${message} - Hi ${contactServiceData?.fields?.FirstName} ${contactServiceData?.fields?.LastName}`;
-
-      if (phoneNumber) {
-        Meteor.call(
-          "sendSMS",
-          smsSettings.twilioAccountId,
-          smsSettings.twilioAccountToken,
-          smsSettings.twilioTelephoneNumber,
-          phoneNumber,
-          message,
-          function (error, result) {
-            LoadingOverlay.hide();
-            if (error) {
-              swal({
-                title: "Oops...",
-                text: message,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try again",
-              });
-            } else {
-              swal({
-                title: "SMS was sent successfully",
-                text: "SMS was sent successfully",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Ok",
-              });
-              localStorage.setItem("smsId", result.sid);
-            }
-          }
-        );
-      }
-    } else if ( isCheckedSms && !contactServiceData){
-      LoadingOverlay.hide();
+    const checkedPrintOptions = Template.instance().findAll('.chooseTemplateBtn:checked');
+    if(checkedPrintOptions.length == 0){
       swal({
-        title: "Oops...",
-        text: "We can not get Customer data to send SMS!",
-        type: "error",
+        title: 'Oooops....',
+        text: 'You must select one print option at least!',
+        type: 'error',
         showCancelButton: false,
-        confirmButtonText: "Try again",
-      });
+        confirmButtonText: 'Cancel'
+      })
+      return;
     }
-    LoadingOverlay.hide();
+    const templateObject = Template.instance();
+    templateObject.fnSendSMS()
+    
   },
   "click #printModal .chooseTemplateBtn": function (event, key, param) {
     const dataKey = $(event.target).attr("data-id");
@@ -428,15 +445,12 @@ Template.transaction_print_modal.events({
       $(`#${dataKey}-modal`).modal("hide");
     }
   },
-  "click #printModal .btn-check-template": function (event) {
-    const checkboxID = $(event.target).data('id');
-    $("#" + checkboxID).trigger("click");
-  },
   "click #printModal #choosePrintTemplate": function(event) {
     const $selectedPrintOption = $(".chooseTemplateBtn:checked").first()
     const dataKey = $selectedPrintOption.data('id')
     $(`#${dataKey}-modal`).modal("hide");
     $(`#${dataKey}-modal`).modal("show");
+
   },
   "click #printModal .btnPreview": function (event) {
     // const templateObject = Template.instance();
