@@ -723,6 +723,7 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoiceDisable" name="btnCreateInvoiceDisable"><span>Create Invoice</span></button>
                             <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptionsDisable" name="btnCopyOptionsDisable" disabled><span>Copy Appointment</span></button>
@@ -730,7 +731,6 @@
                             <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoice" name="btnCreateInvoice">Create Invoice</button>
                             <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptions" name="btnCopyOptions">Copy Appointment</button>
                         {{/if}}
-                        <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
                             <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->
@@ -2233,5 +2233,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
             </div>
         </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+        {{> copyfrequencypop}}
     </div>
 </template>
