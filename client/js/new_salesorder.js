@@ -1432,7 +1432,7 @@ Template.new_salesorder.onCreated(function () {
       let productName = $(line).find(".lineProductName").val();
       let existBOM = false;
       let index = bomProducts.findIndex((product) => {
-        return product.fields.Caption == productName;
+        return product.Caption == productName;
       });
       if (index > -1) {
         existBOM = true;
@@ -10413,7 +10413,7 @@ Template.new_salesorder.events({
             let isBOMProduct = false;
             let isExisting = false;
             let index = bomProducts.findIndex(product => {
-              return product.fields.Caption == lines[i].item
+              return product.Caption == lines[i].item
             })
             if (index > -1) {
               isBOMProduct = true;

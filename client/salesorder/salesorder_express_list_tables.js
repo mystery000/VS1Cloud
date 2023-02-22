@@ -1465,7 +1465,7 @@ Template.salesorderslist.helpers({
 
 Template.salesorderslist.events({
   'click #tblSalesOrderlist tbody tr': function (event) {
-    var listData = $(event.target).closest('tr').find('td.SalesNo').text();
+    var listData = $(event.target).closest('tr').find('td.colSalesNo').text();
     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
     if(listData){
       if(checkDeleted == "Deleted"){
