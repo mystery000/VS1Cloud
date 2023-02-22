@@ -85,18 +85,18 @@ Template.salesorderslist.onCreated(function(){
       return dataList
     }
 
-    let headerStructure = [ { index: 0, label: '#Sort Date', class:'SortDate', active: false, display: true, width: "" },
-    { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "" },
-    { index: 2, label: "Sales No.", class: "SalesNo", active: true, display: true, width: "" },
-    { index: 3, label: "Due Date", class: "DueDate", active: true, display: true, width: "" },
-    { index: 4, label: "Customer", class: "Customer", active: true, display: true, width: "" },
-    { index: 5, label: "Amount (Ex)", class: "AmountEx", active: true, display: true, width: "" },
-    { index: 6, label: "Tax", class: "Tax", active: true, display: true, width: "" },
-    { index: 7, label: "Amount (Inc)", class: "Amount", active: true, display: true, width: "" },
-    { index: 8, label: "Status", class: "Status", active: true, display: true, width: "" },
-    { index: 9, label: "Employee", class: "Employee", active: true, display: true, width: "" },
-    { index: 10, label: "Converted", class: "Converted", active: true, display: true, width: "" },
-    { index: 11, label: "Comments", class: "Comments", active: true, display: true, width: "" },
+    let headerStructure = [ { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
+    { index: 1, label: "Sale Date", class: "colSaleDate", active: true, display: true, width: "100" },
+    { index: 2, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "100" },
+    { index: 3, label: "Due Date", class: "colDueDate", active: true, display: true, width: "100" },
+    { index: 4, label: "Customer", class: "colCustomer", active: true, display: true, width: "150" },
+    { index: 5, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "100" },
+    { index: 6, label: "Tax", class: "colTax", active: true, display: true, width: "100" },
+    { index: 7, label: "Amount (Inc)", class: "colAmount", active: true, display: true, width: "100" },
+    { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+    { index: 9, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
+    { index: 10, label: "Converted", class: "colConverted", active: true, display: true, width: "100" },
+    { index: 11, label: "Comments", class: "colComments", active: true, display: true, width: "" },
     ]
 
 

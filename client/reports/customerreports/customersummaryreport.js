@@ -115,7 +115,6 @@ Template.customersummaryreport.onRendered(() => {
 
       });
     });
-    // console.log(data);
   }
 
   templateObject.getCustomerSummaryData(

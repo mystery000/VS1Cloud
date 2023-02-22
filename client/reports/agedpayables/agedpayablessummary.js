@@ -119,7 +119,6 @@ Template.agedpayablessummary.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-    console.log(data);
     for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
       var dataList = [
         data.tcustomersummaryreport[i].ACCOUNTID || "",

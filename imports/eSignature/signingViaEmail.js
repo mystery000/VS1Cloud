@@ -50,12 +50,8 @@ function makeEnvelope(args) {
     // args.ccEmail
     // args.ccName
     // args.status
-    // doc2File
-    // doc3File
 
     // document 1 (html) has tag **signature_1**
-    // document 2 (docx) has tag /sn1/
-    // document 3 (pdf) has tag /sn1/
     //
     // The envelope has two recipients.
     // recipient 1 - signer
@@ -63,40 +59,28 @@ function makeEnvelope(args) {
     // The envelope will be sent first to the signer.
     // After it is signed, a copy is sent to the cc person.
 
-    let doc2DocxBytes, doc3PdfBytes;
     // read files from a local directory
     // The reads could raise an exception if the file is not available!
-    // doc2DocxBytes = fs.readFileSync(args.doc2File);
-    // doc3PdfBytes = fs.readFileSync(args.doc3File);
 
     // create the envelope definition
     let env = new docusign.EnvelopeDefinition();
     env.emailSubject = "Please sign this document set";
 
     // add the documents
-    let doc1 = new docusign.Document(),
-        doc1b64 = Buffer.from(args.docFile).toString("base64");
-        // doc2b64 = Buffer.from(doc2DocxBytes).toString("base64"),
-        // doc3b64 = Buffer.from(doc3PdfBytes).toString("base64");
-    doc1.documentBase64 = doc1b64;
-    doc1.name = "Order acknowledgement"; // can be different from actual file name
-    doc1.fileExtension = "html"; // Source data format. Signed docs are always pdf.
-    doc1.documentId = "1"; // a label used to reference the doc
+    // let doc1 = new docusign.Document();
+    let docBytes = fs.readFileSync(args.docFile);
+    let doc1b64 = Buffer.from(docBytes).toString("base64");
+    // doc1.documentBase64 = doc1b64;
+    // doc1.name = "Order acknowledgement"; // can be different from actual file name
+    // doc1.fileExtension = "html"; // Source data format. Signed docs are always pdf.
+    // doc1.documentId = "1"; // a label used to reference the doc
 
-    // Alternate pattern: using constructors for docs 2 and 3...
-    // let doc2 = new docusign.Document.constructFromObject({
-    //     documentBase64: doc2b64,
-    //     name: "Battle Plan", // can be different from actual file name
-    //     fileExtension: "docx",
-    //     documentId: "2",
-    // });
-    //
-    // let doc3 = new docusign.Document.constructFromObject({
-    //     documentBase64: doc3b64,
-    //     name: "Lorem Ipsum", // can be different from actual file name
-    //     fileExtension: "pdf",
-    //     documentId: "3",
-    // });
+    let doc1 = new docusign.Document.constructFromObject({
+        documentBase64: doc1b64,
+        name: "Document", // can be different from actual file name
+        fileExtension: "pdf",
+        documentId: "1",
+    });
 
     // The order in the docs array determines the order in the envelope
     // env.documents = [doc1, doc2, doc3];
@@ -134,16 +118,10 @@ function makeEnvelope(args) {
         anchorYOffset: "10",
         anchorUnits: "pixels",
         anchorXOffset: "20",
-    }),
-    signHere2 = docusign.SignHere.constructFromObject({
-        anchorString: "/sn1/",
-        anchorYOffset: "10",
-        anchorUnits: "pixels",
-        anchorXOffset: "20",
     });
-    // Tabs are set per recipient / signer
+
     let signer1Tabs = docusign.Tabs.constructFromObject({
-        signHereTabs: [signHere1, signHere2],
+        signHereTabs: [signHere1],
     });
     signer1.tabs = signer1Tabs;
 

@@ -10001,9 +10001,9 @@ Template.employeescard.events({
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
   },
-  "click #tblAccount tbody tr": (e, ui) => {
+  "click #tblAccountListPop tbody tr": (e, ui) => {
     const id = $(e.currentTarget).find('.colAccountID').text();
-    const accountName = $(e.currentTarget).find('.productName').text();
+    const accountName = $(e.currentTarget).find('.colAccountName').text();
     $(".paste-expenses").val(accountName);
     $(".paste-expenses").attr('account-id', id);
     $(".paste-expenses").removeClass('paste-expenses')

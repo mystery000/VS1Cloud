@@ -5507,13 +5507,13 @@ Template.appointments.onRendered(function() {
                                     } else {
                                         title.innerHTML = event.timeText + " " + event.event.title;
                                     }
-    
+
                                     let arrayOfDomNodes = [title];
                                     return {
                                         domNodes: arrayOfDomNodes,
                                     };
                                 },
-                                
+
                             });
                             calendar.render();
                             $('.fc-today-button').prop('disabled', false);
@@ -8422,7 +8422,7 @@ Template.appointments.onRendered(function() {
         $("#customer").editableSelect();
         $("#product-list").editableSelect();
         $("#product-list-1").editableSelect();
-    });
+
 
     $("#customer")
         .editableSelect()
@@ -9529,7 +9529,7 @@ Template.appointments.onRendered(function() {
                 }
             }
         });
-
+    });
     $(document).on("click", "#tblEmployeelist tbody tr", function(e) {
         let employeeName = $(this).find(".colEmployeeName").text() || '';
         let employeeID = $(this).find(".colID").text() || '';

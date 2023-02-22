@@ -118,7 +118,6 @@ Template.new_workorder.onRendered(async function(){
             //     templateObject.isCompleted = true;
             // }
             let isCompleted = false
-            console.log("###########", workorder)
             if(workorder.fields.IsCompleted == true) {
                 isCompleted = true;
             }
@@ -1432,7 +1431,7 @@ Template.new_workorder.events({
 
     'click #btnPauseTimer': async function(event) {
         let templateObject = Template.instance();
-        
+
         templateObject.changeWorkorderStatus('paused')
     },
 
@@ -1710,7 +1709,7 @@ Template.new_workorder.events({
     'keyup #edtTotalQuantity': function(event) {
         event.preventDefault();
         let templateObject = Template.instance();
-        
+
     },
 
     'click #btnCompleteProcess': async function(event) {

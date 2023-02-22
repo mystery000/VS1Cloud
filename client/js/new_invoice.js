@@ -3600,11 +3600,9 @@ Template.new_invoice.onRendered(function () {
       $("input.lineUOM").val(uomName);
       $("#UOMListModal").modal("toggle");
     });
-  });
 
-  $("#sltTerms")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
+
+  $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
       var termsDataName = e.target.value || "";
@@ -3884,7 +3882,7 @@ Template.new_invoice.onRendered(function () {
         }
       }
     });
-
+  });
 
   $(document).on('click', '#edtCustomerName', function(e, li) {
     var $earch = $(this);

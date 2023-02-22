@@ -1,14 +1,7 @@
 const docusign = require('docusign-esign');
 const signingViaEmail = require('./signingViaEmail');
-const fs = require('fs');
-const path = require('path');
 const prompt = require('prompt-sync')();
 const docuSignConfig = require('./docuSignConfig.json');
-
-const { ProvisioningInformation } = require('docusign-esign');
-const demoDocsPath = path.resolve('D:/demo_documents', '');
-const doc2File = 'World_Wide_Corp_Battle_Plan_Trafalgar.docx';
-const doc3File = 'World_Wide_Corp_lorem.pdf';
 
 
 const SCOPES = [
@@ -40,9 +33,7 @@ async function authenticate() {
     const jwtLifeSec = 10 * 60, // requested lifetime for the JWT is 10 min
         dsApi = new docusign.ApiClient();
     dsApi.setOAuthBasePath('https://account-d.docusign.com'.replace('https://', '')); // it should be domain only.
-    let rootPath = path.resolve('.').split(path.sep + '.meteor')[0];
-    let keyPath = path.resolve(rootPath + __dirname, './private.key');
-    let rsaKey = fs.readFileSync(keyPath);
+    const rsaKey = Assets.getText('private.key');
 
     try {
         const results = await dsApi.requestJWTUserToken(docuSignConfig.dsJWTClientId,
@@ -56,6 +47,7 @@ async function authenticate() {
         // use the default account
         let userInfo = userInfoResults.accounts.find(account =>
             account.isDefault === "true");
+        console.log('authentication success!');
 
         return {
             accessToken: results.body.access_token,
@@ -79,7 +71,7 @@ async function authenticate() {
     }
 }
 
-function getArgs(apiAccountId, accessToken, basePath, signerEmail, signerName, docfile) {
+function getArgs(apiAccountId, accessToken, basePath, signerEmail, signerName) {
     // signerEmail = prompt("Enter the signer's email address: ");
     // signerName = prompt("Enter the signer's name: ");
     // ccEmail = prompt("Enter the carbon copy's email address: ");
@@ -91,9 +83,8 @@ function getArgs(apiAccountId, accessToken, basePath, signerEmail, signerName, d
         ccEmail: "atlas.follower@proton.me",
         ccName: "Daniel2",
         status: "sent",
-        docFile: docfile,
-        doc2File: path.resolve(demoDocsPath, doc2File),
-        doc3File: path.resolve(demoDocsPath, doc3File)
+        // docFile: docfile,
+        docFile: './tmpDocs/output.pdf',
     };
     const args = {
         accessToken: accessToken,
@@ -106,10 +97,11 @@ function getArgs(apiAccountId, accessToken, basePath, signerEmail, signerName, d
 }
 
 
-const requestSignDocument = async function (signerEmail, signerName, docfile) {
+const requestSignDocument = async function (signerEmail, signerName) {
     let accountInfo = await authenticate();
-    let args = getArgs(accountInfo.apiAccountId, accountInfo.accessToken, accountInfo.basePath, signerEmail, signerName, docfile);
+    let args = getArgs(accountInfo.apiAccountId, accountInfo.accessToken, accountInfo.basePath, signerEmail, signerName);
     let envelopeId = await signingViaEmail.sendEnvelope(args);
+    return envelopeId;
 }
 
 

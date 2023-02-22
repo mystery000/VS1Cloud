@@ -1016,7 +1016,7 @@ Template.journalentrycard.onRendered(() => {
     });
 
 
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
+    $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
       $(".colAccountName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -1025,8 +1025,7 @@ Template.journalentrycard.onRendered(() => {
         let $tblrows = $("#tblJournalEntryLine tbody tr");
 
         if (selectLineID) {
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
+            let lineaccountname = table.find(".colAccountName").text();
             let lineAccoutNo = table.find(".accountnumber").text();
 
             let lineUnitPrice = "0.00";
@@ -1041,8 +1040,7 @@ Template.journalentrycard.onRendered(() => {
                     }
                 }
             }
-            $('#' + selectLineID + " .lineAccountName").val(lineProductName);
-            // $('#' + selectLineID + " .lineMemo").text(lineProductDesc);
+            $('#' + selectLineID + " .lineAccountName").val(lineaccountname);
             $('#' + selectLineID + " .lineCreditEx").val(utilityService.modifynegativeCurrencyFormat(0));
             $('#' + selectLineID + " .lineCreditInc").val(utilityService.modifynegativeCurrencyFormat(0));
             $('#' + selectLineID + " .lineDebitEx").val(utilityService.modifynegativeCurrencyFormat(0));
