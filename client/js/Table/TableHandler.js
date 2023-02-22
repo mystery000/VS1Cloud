@@ -22,6 +22,10 @@ export default class TableHandler {
     $(".dataTable tbody tr td").on("mouseup", () => {
       this.refreshDatatableResizable();
     });
+
+    $(".dataTable tbody tr td").on("mouseover", () => {
+      this.refreshDatatableResizable();
+    });
   }
 
   /**
@@ -48,11 +52,14 @@ export default class TableHandler {
       onResize: e => {
         var table = $(e.currentTarget); //reference to the resized table
         let tableName = table.attr("id");
-        //let tableClassName = table.context.className||'';
-        if ((tableName != "tblBasReturnList")) {
-          this.saveTableColumns(tableName);
+        let tableClassName = $(e.currentTarget.className)?$(e.currentTarget)[0].className:'';
+        if(tableClassName.includes("transactionLines")){
+            //this.saveTableColumns(tableName);
+        }else{
+          if ((tableName != "tblBasReturnList")) {
+            this.saveTableColumns(tableName);
+          };
         };
-
 
         let tableWidth = [];
         // $("#tblcontactoverview th").each(function () {
@@ -80,7 +87,6 @@ export default class TableHandler {
       var colTitle = $tblrow.text().replace(/^\s+|\s+$/g, "") || "";
       var colWidth = $tblrow.width() || 0;
       var colthClass = $tblrow[0].classList[0]!='th'?$tblrow[0].classList[0]:$tblrow[0].classList[1]||$tblrow.attr("data-class") || "";
-
        // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
       let allClass = $tblrow[0].className ||$tblrow.attr("data-class") || "";
@@ -115,6 +121,7 @@ export default class TableHandler {
       } else {
         // swal("Something went wrong!", "", "error");
       }
+
     } catch (error) {
       $(".fullScreenSpin").css("display", "none");
       swal("Something went wrong!", "", "error");

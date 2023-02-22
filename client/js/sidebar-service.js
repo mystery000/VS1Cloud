@@ -43,14 +43,14 @@ export class SideBarService extends BaseService {
       let options = "";
       if (limitcount == "All") {
           options = {
-              ListType: "Detail",
-              select: "[ProcStepItemRef]='vs1BOM'",
+            PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+            select: "[ProcStepItemRef]='vs1BOM'",
               // orderby: '"Description asc"',
           };
       } else {
           options = {
               // orderby: '"Description asc"',
-              ListType: "Detail",
+              PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
               LimitCount: parseInt(limitcount),
               LimitFrom: parseInt(limitfrom),
               select: "[ProcStepItemRef]='vs1BOM'",

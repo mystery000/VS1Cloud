@@ -14,7 +14,7 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display: none" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
-                    <div class="table-responsive">
+                    <!-- <div class="table-responsive">
                         <style>
                              th {
                                 background-color: #ededed;
@@ -90,7 +90,23 @@
                             </tbody>
                         </table>
 
-                    </div>
+                    </div> -->
+                    {{>datatablelist
+                        tablename="tblSalesOrderlist"
+                        apiName= apiFunction
+                        indexeddbname = 'TSalesOrderList'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Sales Order List'
+                        istransaction = true
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tsalesorderlist'
+                        exportfilename='Sales Order List'
+                        exIndexDBName = 'tsalesorderex'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                    }}
                 </div>
             </div>
         </div>

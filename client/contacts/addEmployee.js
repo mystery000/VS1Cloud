@@ -2112,7 +2112,7 @@ Template.employeescard.onRendered(function () {
       }
     });
 
-    $(document).on("click", "#tblDashboardOptions tbody tr", function (e) {
+    $(document).on("click", "#tblDashboardOptions tbody tr td.colOptionsName ", function (e) {
       const tblDashboardOptions = $(this);
       var listData = $(this).closest("tr").attr("id");
       var optionName = $(event.target).closest("tr").find(".colOptionsName").text() || 'All';
@@ -2121,6 +2121,7 @@ Template.employeescard.onRendered(function () {
       $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
       $('#dashboardOptionListModal').modal('toggle');
     });
+
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
       let prevValue = $('#editEmployeeTitle').val();
       let updatedValue = $(this).find(".colTypeName").text();

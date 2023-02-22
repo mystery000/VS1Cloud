@@ -210,20 +210,44 @@
       {{else}}
       <div class="row" style="margin: 8px 16px 0px 16px;">
         {{#if showCustomer}}
-        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-          {{> customer_selector
-            label=getUserLabel
-            id=getCustomerID
-            value=data.CustomerID
-          }}
+          {{#if equals cardName 'WO'}}
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              {{>vs1___dropdown
+                label=getUserLabel
+                id=getCustomerID
+                value=data.CustomerID
+                data=data.ClientName
+                modalId=modal_id
+                list_template_name=getTemplate
+                is_editable=true
+                target_modal_id=getTargetModalID
+                target_template_id=getTargetTemplate
+                colNameForValue=colName
+              }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              {{> customer_email_input
+                label=getUserLabel
+              }}
+            </div>
+          
+          {{else}}
+              <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                {{> customer_selector
+                  label=getUserLabel
+                  id=getCustomerID
+                  value=data.CustomerID
+                }}
+              </div>
+              <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                {{> customer_email_input
+                  label=getUserLabel
+                }}
+              </div>
+          {{/if}}
+        {{/if}}  
+        
         </div>
-        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-          {{> customer_email_input
-            label=getUserLabel
-          }}
-        </div>
-        {{/if}}
-      </div>
       {{/if}}
 
       <div class="row" style="margin: 16px 16px 0px 16px;">
