@@ -353,13 +353,16 @@
 
                     <button id="btnSingleTouchPayroll" name="btnSingleTouchPayroll" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-dollar-sign" style="padding-right: 5px;"></i>ST Payroll</button>
                     <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a>
+                    
+                    <button id="add-tblPayRunHistory" name="add-tblPayRunHistory" class="btn btnNav btn-primary add-tblPayRunHistory" type="button" role="button" style="margin: 12px;"><i class="fas fa-plus-sign" style="padding-right: 5px;"></i>Add Pay Run</button>
+                    <!-- <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a> -->
                 </div>
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                    {{> export_import_print_display_button tablename="tblPayRuns"}}
+                    {{> export_import_print_display_button tablename="tblDraftPayRun"}}
                 </div>
             </div>
 
-            <div class="card-body  px-0 py-2  rounded" style="display: none;">
+            <!-- <div class="card-body  px-0 py-2  rounded">
                 <div class="table-responsive">
                     <table id="tblPayHistorylist" name="tblPayHistorylist" class="dataTable table table-hover table-striped table-bordered tblPayHistorylist">
                         <thead>
@@ -435,19 +438,19 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> -->
             {{/if}}
-            <header style="padding: 16px; background-color: #ffffff;">
+            <!-- <header style="padding: 16px; background-color: #ffffff;">
                 <h1 style="margin: 16px; margin-bottom: 8px;" class="timesheetHeader">Pay Runs
                 </h1>
-            </header>
+            </header> -->
             <div class="row">
                 <div class="col-12" style="margin-bottom: 16px;">
                     <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
 
-                    <div class="table-responsive my-3">
+                    <!-- <div class="table-responsive my-3">
                         {{> non_transactional_list tablename = "tblPayRuns"}}
-                    </div>
+                    </div> -->
                     <div class="table-responsive">
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
@@ -472,10 +475,13 @@
                                     <h4 style="font-weight: 600;">Pay Run History</h4>
                                 </div>
                                 <div class="row no-gutters d-xl-flex align-items-xl-end">
+                                    <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                        {{> export_import_print_display_button tablename="tblPayRunHistory"}}
+                                    </div>
                                     <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                                     </div>
-                                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                                    <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
                                         <div class="dropdown" style="margin: 8px; margin-top: 0px;">
                                             <style>
                                                 .dropdown-toggle::after {
@@ -503,10 +509,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
-                            {{> transaction_list tablename = "tblPayRunHistory" }}
+                            {{> non_transactional_list tablename = "tblPayRunHistory" }}
                         </div>
                     </div>
                 </div>
@@ -873,7 +879,7 @@
             </div>
         </div>
       </div>
-    {{> AddPayRunModal }}
+     {{> AddPayRunModal }} 
     <div class="modal fade" role="dialog" tabindex="-1" id="SelectPayRunModal" style="z-index: 99999999 !important;">
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
           <div class="modal-content">
@@ -1111,7 +1117,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     {{#if payPeriods}}
                                         {{#each pay in payPeriods}}
                                             <tr calendar-id="{{pay.ID }}">
