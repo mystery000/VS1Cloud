@@ -620,23 +620,27 @@ Template.supplierscard.onCreated(function () {
   }
   let supplierID = '';
 
-  if (JSON.stringify(currentId) != '{}') {
-    if (currentId.id === "undefined" || currentId.name === "undefined") {
-      templateObject.setInitialForEmptyCurrentID();
-    } else {
-      if (!isNaN(currentId.id)) {
-        supplierID = currentId.id;
-        templateObject.getEmployeeData(supplierID);
-        templateObject.getReferenceLetters();
-      } else if ((currentId.name)) {
-        supplierID = currentId.name.replace(/%20/g, " ");
-        templateObject.getEmployeeDataByName(supplierID);
-      } else {
-        templateObject.setInitialForEmptyCurrentID();
-      }
-    }
+  if(templateObject.data.record) {
+    templateObject.records.set(templateObject.data.record)
   } else {
-    templateObject.setInitialForEmptyCurrentID();
+    if (JSON.stringify(currentId) != '{}') {
+      if (currentId.id === "undefined" || currentId.name === "undefined") {
+        templateObject.setInitialForEmptyCurrentID();
+      } else {
+        if (!isNaN(currentId.id)) {
+          supplierID = currentId.id;
+          templateObject.getEmployeeData(supplierID);
+          templateObject.getReferenceLetters();
+        } else if ((currentId.name)) {
+          supplierID = currentId.name.replace(/%20/g, " ");
+          templateObject.getEmployeeDataByName(supplierID);
+        } else {
+          templateObject.setInitialForEmptyCurrentID();
+        }
+      }
+    } else {
+      templateObject.setInitialForEmptyCurrentID();
+    }
   }
 
 });
