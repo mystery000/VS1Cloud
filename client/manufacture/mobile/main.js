@@ -202,7 +202,7 @@ Template.mobileapp.events({
         }).catch((err) => console.log(err));
 
         $(".mobile-main-input").val("");
-        $("#tblPhoneEmployeeListContent").css('display','none');
+        $(".mobile-left-employee-list").css('display','none');
 
     },
     'click #btnClockIn': function(e, instance) {
