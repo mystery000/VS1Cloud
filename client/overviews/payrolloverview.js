@@ -85,8 +85,7 @@ Template.payrolloverview.onRendered(function () {
   let clockEntry = [];
 
   templateObject.loadPayRuns = async (refresh = false) => {
-
-    let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
+    let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
       return await payRunHandler.loadFromLocal();
     }, {
       forceOverride: refresh,
@@ -95,9 +94,8 @@ Template.payrolloverview.onRendered(function () {
       }
     });
 
-    data = data.response;
+    data = data.response.tpayrunhistory;
     const payRuns = PayRun.fromList(data);
-
     this.payRuns.set(payRuns)
   }
 
@@ -107,13 +105,12 @@ Template.payrolloverview.onRendered(function () {
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
 
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling == PayRun.STPFilling.draft);
-    console.log("===>", payRunsHistory)
 
     await templateObject.draftPayRunRecords.set(payRunsHistory);
 
     setTimeout(() => {
-      $("#tblPayRunHistory").DataTable({
-        ...TableHandler.getDefaultTableConfiguration("tblPayRunHistory"),
+      $("#tblDraftPayRun").DataTable({
+        ...TableHandler.getDefaultTableConfiguration("tblDraftPayRun"),
         columnDefs: [
           {
             orderable: false,
@@ -178,7 +175,7 @@ Template.payrolloverview.onRendered(function () {
         setTimeout(function () {
           MakeNegative();
         }, 100);
-        let draftRecord = templateObject.datatablerecords.get();
+        let draftRecord = templateObject.draftPayRunRecords.get();
         templateObject.datatablerecords.set(draftRecord);
       }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
         setTimeout(function () {
@@ -191,7 +188,7 @@ Template.payrolloverview.onRendered(function () {
   templateObject.loadPayRunHistory = async () => {
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
  
-    payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.draft);
+    payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.overdue);
 
     templateObject.payRunHistoryRecords.set(payRunsHistory);
 
@@ -263,8 +260,8 @@ Template.payrolloverview.onRendered(function () {
         setTimeout(function () {
           MakeNegative();
         }, 100);
-        let draftRecord = templateObject.datatablerecords.get();
-        templateObject.datatablerecords.set(draftRecord);
+        let historyRecord = templateObject.payRunHistoryRecords.get();
+        templateObject.datatablerecords.set(historyRecord);
       }).on("column-reorder", function () {}).on("length.dt", function (e, settings, len) {
         setTimeout(function () {
           MakeNegative();
@@ -1085,7 +1082,6 @@ Template.payrolloverview.onRendered(function () {
       "form-control form-control-sm"
     );
     $("#tblPayRunHistory tbody").on("click", "tr", function () {
-      console.log("fdfdfffff")
       var listData = $(this).closest("tr").attr("class");
       if (listData) {
         FlowRouter.go("/employeescard?id=" + listData);

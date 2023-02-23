@@ -3,6 +3,7 @@ import moment from "moment";
 import {AccountService} from "../../accounts/account-service";
 import Datehandler from "../../DateHandler";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
+import PayRun from "../../js/Api/Model/PayRun";
 import {OrganisationService} from "../../js/organisation-service";
 import {SideBarService} from "../../js/sidebar-service";
 import CachedHttp from "../../lib/global/CachedHttp";
