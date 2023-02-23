@@ -145,8 +145,8 @@ Template.addAccountModal.onRendered(function () {
       $('#edtBankName').val(BankName);
     });
 
-    $("#sltTaxCode").editableSelect();
-    $("#sltTaxCode")
+    this.$("#sltTaxCode").editableSelect();
+      this.$("#sltTaxCode")
         .editableSelect()
         .on("click.editable-select", function (e, li) {
           var $earch = $(this);
@@ -155,8 +155,8 @@ Template.addAccountModal.onRendered(function () {
           var taxRateDataName = e.target.value || "";
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            $("#taxRateListModal").modal("toggle");
-            // $("#taxRateModal").modal("toggle");
+            // $("#taxRateListModal").modal("toggle");
+            $("#taxRateModal").modal("toggle");
           } else {
             if (taxRateDataName.replace(/\s/g, "") !== "") {
               $(".taxcodepopheader").text("Edit Tax Rate");
