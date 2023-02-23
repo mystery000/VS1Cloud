@@ -3095,7 +3095,7 @@ Template.payrolloverview.onRendered(function () {
       // }
       if (event.pageX > offset.left + $earch.width() - 10) {
         // X button 16px wide?
-        $("#productListModal").modal("toggle");
+        $("#payrollProductlistModal").modal("toggle");
         setTimeout(function () {
           $("#tblInventoryPayrollService_filter .form-control-sm").focus();
           $("#tblInventoryPayrollService_filter .form-control-sm").val("");
@@ -3374,7 +3374,7 @@ Template.payrolloverview.onRendered(function () {
                   $("#edtbuyqty1cost").val(buyqty1cost);
 
                   setTimeout(function () {
-                    $("#newProductModal").modal("show");
+                    $("#payrollProductlistModal").modal("show");
                   }, 500);
                 })
                 .catch(function (err) {
@@ -3462,7 +3462,7 @@ Template.payrolloverview.onRendered(function () {
           //templateObject.getProductClassQtyData();
           //templateObject.getProductData();
         } else {
-          $("#productListModal").modal("toggle");
+          $("#payrollProductlistModal").modal("toggle");
 
           setTimeout(function () {
             $("#tblInventoryPayrollService_filter .form-control-sm").focus();
