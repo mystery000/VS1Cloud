@@ -3374,7 +3374,7 @@ Template.payrolloverview.onRendered(function () {
                   $("#edtbuyqty1cost").val(buyqty1cost);
 
                   setTimeout(function () {
-                    $("#payrollProductlistModal").modal("show");
+                    $("#newProductModal").modal("show");
                   }, 500);
                 })
                 .catch(function (err) {
@@ -4101,7 +4101,7 @@ Template.payrolloverview.onRendered(function () {
     let lineProdCost = tableProductService.find(".costPrice").text() || 0;
     $("#product-list").val(lineProductName);
     $("#edtProductCost").val(lineProdCost);
-    $("#productListModal").modal("toggle");
+    $("#payrollProductlistModal").modal("toggle");
     $("#tblInventoryPayrollService_filter .form-control-sm").val("");
 
     setTimeout(function () {
