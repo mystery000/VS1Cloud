@@ -46,7 +46,22 @@
                             </tbody>
                         </table>
                     </div> -->
-                    {{> non_transactional_list tablename = "tblExpenseAccountList"}}
+<!--                    {{> non_transactional_list tablename = "tblExpenseAccountList"}}-->
+                    {{>datatablelist
+                            tablename="tblExpenseAccountList"
+                            apiName= apiFunction
+                            indexeddbname = 'TAccountVS1'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'AccountVS1 List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='taccountvs1'
+                            exIndexDBName = 'taccountvs1'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                 </div>
             </div>
             <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
