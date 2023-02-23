@@ -1,0 +1,36 @@
+<template name="vs1___dropdown">
+    <label>{{label}}</label>
+    <select 
+        type="search" 
+        class="form-control {{classes}}" 
+        id="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
+        name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" 
+        custid=" " 
+        custtaxcode=" " 
+        disabled = "{{disabled}}"
+        suppid=" "
+        style="background-color:rgb(255, 255, 255); cursor: pointer;">
+    </select>
+    <div class="modal fade vs1_dropdown_modal" id="{{modalId}}">
+        <div class="modal-dialog modal-xl  modal-dialog-scrollable" role="document" style="max-width: 90vw">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>{{modal_title}}</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    {{#if list_template_name}}
+                        {{> list_template_name}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{#if is_editable}}
+        <div class="modal fade {{target_modal_id}}" id="{{target_modal_id}}">
+            {{#if target_template_id}}
+                {{> Template.dynamic template=targetTemp data=edtTemplateParams}}
+            {{/if}}
+        </div>
+    {{/if}}
+</template>
