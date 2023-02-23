@@ -30,11 +30,18 @@ Template.vs1___dropdown.onCreated(function(){
     let templateObject = Template.instance();
     templateObject.edtParam = new ReactiveVar();
     templateObject.targetTemp = new ReactiveVar();
+    templateObject.listTemp = new ReactiveVar();
     let keyword = templateObject.data.data
-    let obj = {name: keyword}
+    let idVal = templateObject.data.value
+    let email = templateObject.data.email
+    let listtemplatename = templateObject.data.list_template_name;
+    if(listtemplatename) {
+        templateObject.listTemp.set(listtemplatename)
+    }
+    let obj = {name: keyword, id: idVal, email: email }
     templateObject.edtParam.set(obj);
     let target = templateObject.data.target_template_id;
-    templateObject.targetTemp.set(target)
+    templateObject.targetTemp.set(target);
 })
 
 Template.vs1___dropdown.onRendered(async function(){
@@ -49,18 +56,36 @@ Template.vs1___dropdown.onRendered(async function(){
     if(templateObject.data.data) {
         $('#'+id).val(templateObject.data.data);
     }
+    if(templateObject.data.email) {
+        let label = templateObject.data.label;
+        let clientEmailInput = 'edtCustomerEmail';
+        if(label == 'Supplier') {
+            clientEmailInput = 'edtSupplierEmail';
+        }
+        let email = templateObject.data.email;
+        $('#'+clientEmailInput).val(email)
+     
+    }
     // $('#'+id).editableSelect().on('click', function(event) {
-        $(document).on('click', '#edtCustomerName', function(event, li) {
-            let value = event.target.value;
-            if (value.replace(/\s/g, '') == '') {
-            // if($(event.target).val() == '') {
-                templateObject.targetTemp.set('')
-                $('#'+popupid).modal('toggle');
-            } else {
-                let edtModalId = templateObject.data.target_modal_id;
-                
-                $('#'+ edtModalId).modal('toggle');
-            }
+        $(document).on('click', '#'+id, function(event, li) {
+            // event.preventDefault();
+            // event.stopPropagation();
+            setTimeout(()=>{
+                let value = event.target.value;
+                if (value.replace(/\s/g, '') == '') {
+                // if($(event.target).val() == '') {
+                    templateObject.targetTemp.set('')
+                    $('#'+popupid).modal('toggle');
+                } else {
+
+                    if(templateObject.data.is_editable == true) {
+                        let edtModalId = templateObject.data.target_modal_id;
+                        $('#'+ edtModalId).modal('toggle');
+                    } else {
+                        $('#'+popupid).modal('toggle');
+                    }
+                }
+            }, 1000)
         })
 
     // })
@@ -72,6 +97,17 @@ Template.vs1___dropdown.helpers({
     },
     targetTemp: () => {
         return Template.instance().targetTemp.get();
+    },
+    listTemp: ()=>{
+        let templateObject = Template.instance();
+        let listempname = templateObject.data.list_template_name;
+        if(!listempname) {
+            if(templateObject.data.label == 'Terms') {
+                return Template.termlistpop
+            }
+        } else {
+            return listempname
+        }
     }
 })
 
@@ -84,9 +120,10 @@ Template.vs1___dropdown.events({
         let modalId = templateObject.data.modalId;
         let label = templateObject.data.label;
         let value = $(event.target).closest('tr').find('.'+colName).text();
-        templateObject.edtParam.set({name: value})
+        let objectId = $(event.target).closest('tr').find('.colID').text();
+        let email = $(event.target).closest('tr').find('.colEmail')?.text();
+        templateObject.edtParam.set({name: value, id: objectId, email: email })
         templateObject.targetTemp.set(templateObject.data.target_template_id)
-        
         $('#'+id).val(value)
         if(label == 'Customer' || label == 'Supplier') {
             let address = '';
@@ -113,5 +150,4 @@ Template.vs1___dropdown.events({
         } 
         $('#'+modalId).modal('toggle');
     },
-
 })

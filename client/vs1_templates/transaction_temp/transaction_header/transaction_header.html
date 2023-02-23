@@ -210,7 +210,7 @@
       {{else}}
       <div class="row" style="margin: 8px 16px 0px 16px;">
         {{#if showCustomer}}
-          {{#if equals cardName 'WO'}}
+          <!-- {{#if equals cardName 'WO'}}
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
               {{>vs1___dropdown
                 label=getUserLabel
@@ -231,12 +231,21 @@
               }}
             </div>
           
-          {{else}}
+          {{else}} -->
               <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                 {{> customer_selector
                   label=getUserLabel
                   id=getCustomerID
                   value=data.CustomerID
+                  data = data.ClientName
+                  email = data.ClientEmail
+                  modalId=modal_id
+                  list_template_name=getTemplate
+                  target_modal_id=getTargetModalID
+                  target_template_id=getTargetTemplate
+                  is_editable=true
+                  colNameForValue=colName
+                  modal_title=getModalTitle
                 }}
               </div>
               <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -244,7 +253,7 @@
                   label=getUserLabel
                 }}
               </div>
-          {{/if}}
+          <!-- {{/if}} -->
         {{/if}}  
         
         </div>
@@ -311,11 +320,23 @@
               {{/if}}
               {{#if showTerms}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-                {{> default_select
+                <!-- {{> default_select
                   label="Terms"
                   id="sltTerms"
                   type="search"
                   name="sltTerms"
+                }} -->
+                {{> vs1___dropdown
+                  type='search'
+                  id='sltTerms'
+                  name='sltTerms'
+                  modalId= 'termsListModal'
+                  modal_title='Terms List'
+                  label = 'Terms'
+                  colNameForValue = 'colName'
+                  target_modal_id='#edtTerm'
+                  target_template_id=''
+                  is_editable=true
                 }}
               </div>
               {{/if}}
