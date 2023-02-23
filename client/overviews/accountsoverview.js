@@ -30,11 +30,9 @@ Template.accountsoverview.onCreated(function() {
     templateObject.isBankAccount.set(false);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
-    templateObject.setupFinished = new ReactiveVar();
-    templateObject.accountList = new ReactiveVar();
-
+    templateObject.setupFinished = new ReactiveVar();    
     templateObject.transactiondatatablerecords = new ReactiveVar([]);
-
+    templateObject.treeColumnHeader = new ReactiveVar([])
 });
 
 Template.accountsoverview.onRendered(function() {
@@ -56,6 +54,32 @@ Template.accountsoverview.onRendered(function() {
     let needAddVehicle = true;
     const templateObject = Template.instance();
     const currenttablename = 'tblAccountOverview';
+    let reset_data = [
+        { index: 0, label: '#ID', class: 'colAccountId', active: false, display: true, width: "10" },
+        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+        { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
+        { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
+        { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
+        { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
+        { index: 9, label: 'BSB', class: 'colBSB', active: true, display: true, width: "95" },
+        { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
+        { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
+        { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
+        { index: 13, label: 'CVC', class: 'colCVC', active: false, display: true, width: "60" },
+        { index: 14, label: 'Swift Code', class: 'colExtra', active: false, display: true, width: "80" },
+        { index: 15, label: 'Routing Number', class: 'colAPCANumber', active: false, display: true, width: "120" },
+        { index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60" },
+        { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60" },
+        { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
+        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 20, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "80" },
+        { index: 21, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "80" },
+        { index: 22, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "80" },
+    ]
+    templateObject.treeColumnHeader.set(reset_data)
     let columnDefs = [
         {
             targets: 0,
@@ -261,9 +285,8 @@ Template.accountsoverview.onRendered(function() {
             });
         });
     }
-    templateObject.displayAccountsOverviewListData = async function(data) {
-        templateObject.accountList.set(data)
-        if ($('#showAsTree').prop('checked') == true) return templateObject.displayAccountsOverviewTreeData(data)
+    templateObject.displayAccountsOverviewListData = async function(data) {        
+        templateObject.displayAccountsOverviewTreeData(data)
         var splashArrayAccountsOverview = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -501,73 +524,188 @@ Template.accountsoverview.onRendered(function() {
             } else if (data.taccountvs1list[i].Active == false) {
                 linestatus = "In-Active";
             };
-            var dataList = [
-                data.taccountvs1list[i].AccountID || "",
-                data.taccountvs1list[i].AccountName || "",
-                data.taccountvs1list[i].Description || "",
-                data.taccountvs1list[i].AccountNumber || "",
-                data.taccountvs1list[i].AccountType || "",
-                accBalance || '',
-                data.taccountvs1list[i].TaxCode || '',
-                data.taccountvs1list[i].BankName || '',
-                data.taccountvs1list[i].BankAccountName || '',
-                data.taccountvs1list[i].BSB || '',
-                data.taccountvs1list[i].BankAccountNumber || "",
-                data.taccountvs1list[i].CarNumber || "",
-                data.taccountvs1list[i].ExpiryDate || "",
-                data.taccountvs1list[i].CVC || "",
-                data.taccountvs1list[i].Extra || "",
-                data.taccountvs1list[i].BankNumber || "",
-                data.taccountvs1list[i].IsHeader || false,
-                data.taccountvs1list[i].AllowExpenseClaim || false,
-                data.taccountvs1list[i].ReceiptCategory || "",
-                linestatus,
-                data.taccountvs1list[i].Level1 || "",
-                data.taccountvs1list[i].Level2 || "",
-                data.taccountvs1list[i].Level3 || "",
-            ];
-
+            var dataList = {
+                id: data.taccountvs1list[i].AccountID || "",
+                name: data.taccountvs1list[i].AccountName || "",
+                description: data.taccountvs1list[i].Description || "",
+                number: data.taccountvs1list[i].AccountNumber || "",
+                type: data.taccountvs1list[i].AccountType || "",
+                balance: accBalance || '',
+                taxcode: data.taccountvs1list[i].TaxCode || '',
+                bankname: data.taccountvs1list[i].BankName || '',
+                bankaccountname: data.taccountvs1list[i].BankAccountName || '',
+                bsb: data.taccountvs1list[i].BSB || '',
+                bankaccountnumber: data.taccountvs1list[i].BankAccountNumber || "",
+                carnumber: data.taccountvs1list[i].CarNumber || "",
+                expirydate: data.taccountvs1list[i].ExpiryDate || "",
+                cvc: data.taccountvs1list[i].CVC || "",
+                extra: data.taccountvs1list[i].Extra || "",
+                banknumber: data.taccountvs1list[i].BankNumber || "",
+                isheader: data.taccountvs1list[i].IsHeader || false,
+                allowexpenseclaim: data.taccountvs1list[i].AllowExpenseClaim || false,
+                receiptcategory: data.taccountvs1list[i].ReceiptCategory || "",
+                linestatus: linestatus,
+                level1: data.taccountvs1list[i].Level1 || "",
+                level2: data.taccountvs1list[i].Level2 || "",
+                level3: data.taccountvs1list[i].Level3 || "",
+            };
             splashArrayAccountsOverview.push(dataList);
-            templateObject.transactiondatatablerecords.set(splashArrayAccountsOverview);
+        }       
 
-        }
-
-        if (templateObject.transactiondatatablerecords.get()) {
-            setTimeout(function() {
-                makeNegativeGlobal();
-            }, 100);
-        }
-        //$('.fullScreenSpin').css('display','none');
-        const fakeData = [
-            {"tt_key": 1, "tt_parent": 0, name: "CEO", salary: 1000000},
-            {"tt_key": 2, "tt_parent": 1, name: "CTO", salary: 110000},
-            {"tt_key": 3, "tt_parent": 2, name: "Front-end developer", salary: 60000},
-            {"tt_key": 4, "tt_parent": 2, name: "Back-end developer", salary: 65000},
-            {"tt_key": 5, "tt_parent": 1, name: "CFO", salary: 100000}
-        ];
-
-        $('#test-table').treeTable({
-            "data": fakeData,
-            "collapsed": false,
-            "columns": [
-                {
-                    "data": "name"
-                },
-                {
-                    "data": "salary",
-                    render: function (data) {
-                        return "£" + data;
-                    }
+        splashArrayAccountsOverview.sort((a,b) => {
+            if (a.type > b.type) return 1
+            else if (a.type < b.type) return -1
+            else {
+                if (a.level1 > b.level1) return 1
+                else if (a.level1 < b.level1) return -1
+                else {
+                    if (a.level2 > b.level2) return 1
+                    else if (a.level2 < b.level2) return -1
+                    else {
+                        if (a.level3 > b.level3) return 1
+                        else if (a.level3 < b.level3) return -1
+                        else {
+                            return 0    
+                        }        
+                    }    
                 }
-            ],
-            "order": [[1, 'desc']]
-        });
+            }
+        })
+        let treeDataArray = []
+        let accountType
+        let parentIndex        
+        let emptyData = {
+            id: "",
+            name: "",
+            description: "",
+            number: "",
+            type: "",
+            balance: '',
+            taxcode: '',
+            bankname: '',
+            bankaccountname: '',
+            bsb: '',
+            bankaccountnumber: "",
+            carnumber: "",
+            expirydate: "",
+            cvc: "",
+            extra: "",
+            banknumber: "",
+            isheader: false,
+            allowexpenseclaim: false,
+            receiptcategory: "",
+            linestatus: "",
+            level1: "",
+            level2: "",
+            level3: "",
+        }
+        for (let index = 0;index < splashArrayAccountsOverview.length; index++) {
+            let item = splashArrayAccountsOverview[index]
+            if (!item.type) {
+                treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: 0})
+                continue
+            }
+            if (!accountType || accountType !== item.type)  {
+                accountType = item.type
+                parentIndex = treeDataArray.length + 1
+                treeDataArray.push({...emptyData, name: accountType, tt_key: parentIndex, tt_parent: 0})
+            }
+            treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: parentIndex})
+        }
 
+        let columns = [
+            {
+                "data": "id"
+            },
+            {
+                "data": "name",                
+            },
+            {
+                "data": "description"
+            },
+            {
+                "data": "number",                
+            },
+            {
+                "data": "type"
+            },
+            {
+                "data": "balance",                
+            },
+            {
+                "data": "taxcode"
+            },
+            {
+                "data": "bankname",                
+            },
+            {
+                "data": "bankaccountname"
+            },
+            {
+                "data": "bsb",                
+            },
+            {
+                "data": "bankaccountnumber"
+            },
+            {
+                "data": "carnumber",                
+            },
+            {
+                "data": "expirydate"
+            },
+            {
+                "data": "cvc",                
+            },
+            {
+                "data": "extra"
+            },
+            {
+                "data": "banknumber",                
+            },
+            {
+                "data": "isheader"
+            },
+            {
+                "data": "allowexpenseclaim",                
+            },
+            {
+                "data": "receiptcategory"
+            },
+            {
+                "data": "linestatus",                
+            },
+            {
+                "data": "level1"
+            },
+            {
+                "data": "level2",                
+            },
+            {
+                "data": "level3"
+            }
+        ]
+
+        // $('.fullScreenSpin').css('display','none');
+        // const fakeData = [
+        //     {tt_key: 1, tt_parent: 0, name: "CEO", salary: 1000000},
+        //     {tt_key: 2, tt_parent: 1, name: "CTO", salary: 110000},
+        //     {tt_key: 3, tt_parent: 2, name: "Front-end developer", salary: 60000},
+        //     {tt_key: 4, tt_parent: 2, name: "Back-end developer", salary: 65000},
+        //     {tt_key: 5, tt_parent: 1, name: "CFO", salary: 100000}
+        // ];
+        // $('#test-table').treeTable({
+        //     "data": treeDataArray,
+        //     "collapsed": false,
+        //     "columns": columns,            
+        //     "order": [[1, 'desc']]
+        // });        
+        
         setTimeout(function() {
-            $('#' + currenttablename).DataTable({
-                data: splashArrayAccountsOverview,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: columnDefs,
+            $('#tblAccountTreeOverview').treeTable({
+                data: treeDataArray,
+                columns: columns,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: columnDefs.map((item) => {return {...item, targets: item.targets + 1}}),
                 buttons: buttons,
                 select: true,
                 destroy: true,
@@ -581,13 +719,10 @@ Template.accountsoverview.onRendered(function() {
                 responsive: true,
                 "order": [
                     [1, "asc"]
-                ],
-                action: function() {
-                    $('#' + currenttablename).DataTable().ajax.reload();
-                },
+                ],                
                 "fnDrawCallback": function(oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    $('#tblAccountTreeOverview_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
 
@@ -648,12 +783,12 @@ Template.accountsoverview.onRendered(function() {
                             }
                             let uniqueChars = [...new Set(splashArrayAccountsOverview)];
                             templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
+                            var datatable = $('#tblAccountTreeOverview').DataTable();
                             datatable.clear();
                             datatable.rows.add(uniqueChars);
                             datatable.draw(false);
                             setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
+                                $('#tblAccountTreeOverview').dataTable().fnPageChange('last');
                             }, 400);
 
                             $('.fullScreenSpin').css('display', 'none');
@@ -670,11 +805,11 @@ Template.accountsoverview.onRendered(function() {
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function(oSettings) {
                     if (data.Params.Search.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#tblAccountTreeOverview_filter');
                     } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#tblAccountTreeOverview_filter');
                     }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#tblAccountTreeOverview_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.Params.Count || 0; //get count from API data
@@ -2771,8 +2906,13 @@ Template.accountsoverview.events({
         templateObject.getAccountsOverviewData(false);
     },
     "change #showAsTree": function(e) {
-        const templateObject = Template.instance();
-        templateObject.displayAccountsOverviewListData(templateObject.accountList.get())
+        if ($('#showAsTree').prop('checked')) {
+            $('#tblAccountTreeOverview').closest('.table-responsive').removeClass('d-none')
+            $('#tblAccountOverview').closest('.table-responsive').addClass('d-none')
+        } else {
+            $('#tblAccountOverview').closest('.table-responsive').removeClass('d-none')
+            $('#tblAccountTreeOverview').closest('.table-responsive').addClass('d-none')
+        }
     }
 });
 
@@ -2855,4 +2995,7 @@ Template.accountsoverview.helpers({
     displayfields: () => {
       return Template.instance().displayfields.get();
     },
+    treeColumnHeader: () => {
+        return Template.instance().treeColumnHeader.get();
+    }
 });
