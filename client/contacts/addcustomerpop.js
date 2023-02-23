@@ -52,7 +52,7 @@ Template.addcustomerpop.onCreated(function() {
     templateObject.currentAttachLineIDJob = new ReactiveVar();
 });
 
-Template.addcustomerpop.onRendered( async function() {
+Template.addcustomerpop.onRendered(function() {
     let templateObject = Template.instance();
     let contactService = new ContactService();
     const countryService = new CountryService();
@@ -389,41 +389,7 @@ Template.addcustomerpop.onRendered( async function() {
                   });
             })
         }
-        async function getCustomerFromID(customerID) {
-            return new Promise((resolve, reject)=> {
-                getVS1Data("TCustomerVS1").then(function (dataObject) {
-                    if (dataObject.length === 0) {
-                        contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                        resolve(data);
-                        });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tcustomervs1;
-                        let added = false;
-                        for (let i = 0; i < useData.length; i++) {
-                        if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
-                                added = true;
-                                resolve(useData[i]);
-                            }
-                        }
-                        if (!added) {
-                        contactService
-                            .getOneCustomerDataEx(customerID)
-                            .then(function (data) {
-                            resolve(data);
-                            });
-                        }
-                    }
-                }).catch(function (err) {
-                    contactService.getOneCustomerDataEx(customerID).then(function (data) {
-                        $(".fullScreenSpin").css("display", "none");
-                        resolve(data);
-                    });
-                });
-            })
-
-        }
-        if(templateObject.data.name != undefined) {
+        if(templateObject.data.name) {
             let data = await getCustomerFromName(templateObject.data.name)
             lineItemObj = {
                 id: data.fields.ID || '',
@@ -511,9 +477,7 @@ Template.addcustomerpop.onRendered( async function() {
                 jobclienttype: data.fields.ClientTypeName || '',
                 ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
           
-            };
-        } else if (templateObject.data.id != undefined) {
-            let data = await getCustomerFromID(templateObject.data.id)
+              };
         }
 
         setTimeout(function() {
@@ -537,7 +501,7 @@ Template.addcustomerpop.onRendered( async function() {
         }, 500);
     }
 
-    await templateObject.getCustomerData();
+    templateObject.getCustomerData();
 
     templateObject.getCustomersList = function() {
         getVS1Data('TCustomerVS1').then(function(dataObject) {

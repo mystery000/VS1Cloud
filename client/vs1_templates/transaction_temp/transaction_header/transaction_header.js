@@ -55,11 +55,6 @@ Template.transaction_header.helpers({
     }
   },
 
-
-  getTemplateFromName:()=>{
-    
-  },
-
   getModalTitle:()=>{
     const cardType = Template.instance().data.cardType.toLowerCase();
     switch(cardType) {
@@ -92,6 +87,7 @@ Template.transaction_header.helpers({
       case "credit":
         return 'addsupplierpop';
       default:
+        console.log("will return ", Template.addcustomerpop)
         return 'addcustomerpop'
     }
   }
