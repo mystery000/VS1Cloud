@@ -1148,26 +1148,31 @@ Template.customerscard.onRendered(function () {
   templateObject.getTaxCodesList();
   templateObject.getCustomersList();
 
-  if (JSON.stringify(currentId) != '{}') {
-    if (currentId.id == "undefined") {
-      templateObject.setInitialForEmptyCurrentID();
-    } else {
-      if (!isNaN(currentId.id)) {
-        customerID = currentId.id;
-        templateObject.getEmployeeData(customerID);
-        templateObject.getReferenceLetters();
-      } else if ((currentId.name)) {
-        customerID = currentId.name.replace(/%20/g, " ");
-        templateObject.getEmployeeDataByName(customerID);
-      } else if (!isNaN(currentId.jobid)) {
-        customerID = currentId.jobid;
-        templateObject.getEmployeeData(customerID);
-      } else {
-        templateObject.setInitialForEmptyCurrentID();
-      }
-    }
+  if(templateObject.data.record) {
+    let temprecord = templateObject.data.record;
+    templateObject.records.set(temprecord)    
   } else {
-    templateObject.setInitialForEmptyCurrentID();
+    if (JSON.stringify(currentId) != '{}') {
+      if (currentId.id == "undefined") {
+        templateObject.setInitialForEmptyCurrentID();
+      } else {
+        if (!isNaN(currentId.id)) {
+          customerID = currentId.id;
+          templateObject.getEmployeeData(customerID);
+          templateObject.getReferenceLetters();
+        } else if ((currentId.name)) {
+          customerID = currentId.name.replace(/%20/g, " ");
+          templateObject.getEmployeeDataByName(customerID);
+        } else if (!isNaN(currentId.jobid)) {
+          customerID = currentId.jobid;
+          templateObject.getEmployeeData(customerID);
+        } else {
+          templateObject.setInitialForEmptyCurrentID();
+        }
+      }
+    } else {
+      templateObject.setInitialForEmptyCurrentID();
+    }
   }
 
   $(document).ready(function () {
