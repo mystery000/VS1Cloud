@@ -7,11 +7,27 @@
   <div class="formgoup">
     <div class="form-group">
       <label>{{label}}</label>
-      {{> vs1_dropdown
+      <!-- {{> vs1_dropdown
         type='search'
         id=id
         name=name
         value=value
+      }} -->
+      {{> vs1___dropdown
+        type='search'
+        id=id
+        name=name
+        value=value
+        modalId= modalId
+        data=data
+        email=email
+        list_template_name=list_template_name
+        modal_title=modal_title
+        label = label
+        colNameForValue = colNameForValue
+        target_modal_id=target_modal_id
+        target_template_id=target_template_id
+        is_editable=true
       }}
       <input type="hidden" name="__customer_id" id="__customer_id" value="{{value}}">
     </div>

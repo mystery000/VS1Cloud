@@ -106,7 +106,7 @@ Template.newprofitandloss.onRendered(function () {
     let groupID = parseInt($("#editGroupID").val());
     let groupName = $("#editGroupName").val();
     
-    if(templateObject.layoutgroupid.get()){
+    if(templateObject.layoutgroupid.get() && groupName != ""){
       $('.fullScreenSpin').css('display', 'inline-block');
       let jsonObj = {
         "Name": "VS1_PNLRenameGroup",
