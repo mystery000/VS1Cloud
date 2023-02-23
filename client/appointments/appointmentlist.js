@@ -2113,6 +2113,8 @@ Template.appointmentlist.onRendered(async function() {
                     hours = duration.asHours();
                 }
 
+                $("#btnCopyOptions").attr("disabled", false);
+
                 document.getElementById("updateID").value = result[0].id || 0;
                 document.getElementById("appID").value = result[0].id;
                 document.getElementById("customer").value = result[0].accountname;
@@ -2268,6 +2270,7 @@ Template.appointmentlist.events({
             // localStorage.setItem("appt_historypage", "appointmentlist");
             // FlowRouter.go('/appointments');
             $("#employeeListModal").modal("toggle");
+            $("#btnCopyOptions").attr("disabled", true);
         };
 
     },
