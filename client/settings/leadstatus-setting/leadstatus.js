@@ -29,9 +29,9 @@ Template.leadstatussettings.onCreated(function() {
             isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
         };
         let linestatus = '';
-        if (data.tleadstatustypelist[i].Active == true) {
+        if (data.Active == true) {
             linestatus = "";
-        } else if (data.tleadstatustypelist[i].Active == false) {
+        } else if (data.Active == false) {
             linestatus = "In-Active";
         };
         let eqpm = Number(data.EQPM);
@@ -49,10 +49,10 @@ Template.leadstatussettings.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "10" },
-        { index: 1, label: 'Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "200" },
+        { index: 1, label: '#Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "200" },
         { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
         { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-        { index: 4, label: 'Is Default', class: 'colIsDefault', active: false, display: true, width: "100" },
+        { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "100" },
         { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "250" },
         { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
@@ -402,7 +402,7 @@ Template.leadstatussettings.onRendered(function() {
             }, 5000);
         }
     }
-    templateObject.getLeadStatusData();
+//    templateObject.getLeadStatusData();
 
     $(document).on('click', '.table-remove', function(event) {
         const targetID = $(event.target).closest('tr').attr('id'); // table row ID

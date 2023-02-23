@@ -7861,8 +7861,8 @@ Template.refundcard.events({
             $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var refundData = await salesService.getRefundSales(currentInvoice);
-            var saleDate = refundData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
+            var creationDate = refundData.fields.CreationDate;
+            var fromDate = creationDate.substring(0, 10);
             var toDate =
                 currentDate.getFullYear() +
                 "-" +

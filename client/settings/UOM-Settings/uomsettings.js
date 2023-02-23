@@ -30,7 +30,6 @@ Template.uomSettings.onCreated(function () {
     let tdCustomerDef = ""; //isSalesdefault
     let tdSupplierDef = ""; //isPurchasedefault
     let tdUseforAutoSplitQtyinSales = ""; //UseforAutoSplitQtyinSales
-    let currentData = data.tunitofmeasurelist[i].fields == undefined ? data.tunitofmeasurelist[i] : data.tunitofmeasurelist[i].fields
     if (data.Active == true) {
       linestatus = "";
     } else if (data.Active == false) {

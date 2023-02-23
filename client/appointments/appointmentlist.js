@@ -1351,46 +1351,64 @@ Template.appointmentlist.events({
             oPost.send(JSON.stringify(selectClient));
 
             oPost.onreadystatechange = function() {
-                    if (oPost.readyState == 4 && oPost.status == 200) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        var myArrResponse = JSON.parse(oPost.responseText);
-                        if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
-                            localStorage.setItem("convertAppointmentID", selectAppointmentID);
-                            let objectDataConverted = {
-                                type: "TAppointmentEx",
-                                fields: {
-                                    Id: parseInt(selectAppointmentID),
-                                    Status: "Converted"
-                                }
-                            };
-                            appointmentService.saveAppointment(objectDataConverted).then(function(data) {
-                                FlowRouter.go('/invoicelist?success=true&apptId=' + parseInt(selectAppointmentID));
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
+                if (oPost.readyState == 4 && oPost.status == 200) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    var myArrResponse = JSON.parse(oPost.responseText);
+                    if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
+                        localStorage.setItem("convertAppointmentID", selectAppointmentID);
+                        let objectDataConverted = {
+                            type: "TAppointmentEx",
+                            fields: {
+                                Id: parseInt(selectAppointmentID),
+                                Status: "Converted"
+                            }
+                        };
+                        appointmentService.saveAppointment(objectDataConverted).then(function(data) {
+                            FlowRouter.go('/invoicelist?success=true&apptId=' + parseInt(selectAppointmentID));
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
 
-                            templateObject.getAllAppointmentDataOnConvert();
+                        templateObject.getAllAppointmentDataOnConvert();
 
 
 
-                        } else {
-                            swal({
-                                title: 'Oooops...',
-                                text: myArrResponse.ProcessLog.ResponseStatus,
-                                type: 'warning',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {
+                    } else {
+                        swal({
+                            title: 'Oooops...',
+                            text: myArrResponse.ProcessLog.ResponseStatus,
+                            type: 'warning',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
 
-                                } else if (result.dismiss === 'cancel') {
+                            } else if (result.dismiss === 'cancel') {
 
-                                }
-                            });
+                            }
+                        });
+                    }
+
+                } else if (oPost.readyState == 4 && oPost.status == 403) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: oPost.getResponseHeader('errormessage'),
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {} else if (result.dismiss === 'cancel') {
+
                         }
+                    });
+                } else if (oPost.readyState == 4 && oPost.status == 406) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    var ErrorResponse = oPost.getResponseHeader('errormessage');
+                    var segError = ErrorResponse.split(':');
 
-                    } else if (oPost.readyState == 4 && oPost.status == 403) {
-                        $('.fullScreenSpin').css('display', 'none');
+                    if ((segError[1]) == ' "Unable to lock object') {
+
                         swal({
                             title: 'Oooops...',
                             text: oPost.getResponseHeader('errormessage'),
@@ -1402,40 +1420,7 @@ Template.appointmentlist.events({
 
                             }
                         });
-                    } else if (oPost.readyState == 4 && oPost.status == 406) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        var ErrorResponse = oPost.getResponseHeader('errormessage');
-                        var segError = ErrorResponse.split(':');
-
-                        if ((segError[1]) == ' "Unable to lock object') {
-
-                            swal({
-                                title: 'Oooops...',
-                                text: oPost.getResponseHeader('errormessage'),
-                                type: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {} else if (result.dismiss === 'cancel') {
-
-                                }
-                            });
-                        } else {
-                            swal({
-                                title: 'Oooops...',
-                                text: oPost.getResponseHeader('errormessage'),
-                                type: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {} else if (result.dismiss === 'cancel') {
-
-                                }
-                            });
-                        }
-
-                    } else if (oPost.readyState == '') {
-                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
                         swal({
                             title: 'Oooops...',
                             text: oPost.getResponseHeader('errormessage'),
@@ -1449,13 +1434,28 @@ Template.appointmentlist.events({
                         });
                     }
 
+                } else if (oPost.readyState == '') {
+                    $('.fullScreenSpin').css('display', 'none');
+                    swal({
+                        title: 'Oooops...',
+                        text: oPost.getResponseHeader('errormessage'),
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {} else if (result.dismiss === 'cancel') {
+
+                        }
+                    });
                 }
-                // appointmentService.appointmentCreateInv(selectClient).then(function (data) {
-                //   //FlowRouter.go('/appointmentlist');
-                //   //window.open('/appointments', '_self');
-                // }).catch(function (err) {
-                //   $('.fullScreenSpin').css('display', 'none');
-                // });
+
+            }
+            // appointmentService.appointmentCreateInv(selectClient).then(function (data) {
+            //   //FlowRouter.go('/appointmentlist');
+            //   //window.open('/appointments', '_self');
+            // }).catch(function (err) {
+            //   $('.fullScreenSpin').css('display', 'none');
+            // });
         }
 
     },
