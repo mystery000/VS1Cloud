@@ -131,7 +131,22 @@
                                             </div>
                                         </div>
 
-                                        {{> non_transactional_list tablename="tblPaymentMethodList"}}
+<!--                                        {{> non_transactional_list tablename="tblPaymentMethodList"}}-->
+                                        {{>datatablelist
+                                                tablename="tblPaymentMethodList"
+                                                apiName= apiFunction
+                                                indexeddbname = 'TPaymentMethodList'
+                                                tableheaderrecords = tableheaderrecords
+                                                exportfilename = 'Payment Method List'
+                                                istransaction = false
+                                                apiParams= apiParams
+                                                datahandler = datahandler
+                                                service=service
+                                                lowercaseDataName='tpaymentmethodlist'
+                                                exIndexDBName = 'tpaymentmethodlist'
+                                                exdatahandler = exDataHandler
+                                                searchAPI = searchAPI
+                                        }}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">

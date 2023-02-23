@@ -345,17 +345,22 @@ Template.datatablelist.onRendered(async function () {
         if (isEx == false) {
             for (let i = 0; i < data[indexDBLowercase].length; i++) {
                 let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
-                splashDataArray.push(dataList);
+                if(dataList.length != 0) {
+                    splashDataArray.push(dataList);
+                }
                 templateObject.transactiondatatablerecords.set(splashDataArray);
             }
         } else {
             let lowercaseData = templateObject.data.exIndexDBName;
             for (let i = 0; i < data[lowercaseData].length; i++) {
                 let dataList = templateObject.data.exdatahandler(data[lowercaseData][i])
-                splashDataArray.push(dataList);
+                if(dataList.length != 0) {
+                    splashDataArray.push(dataList);
+                }
                 templateObject.transactiondatatablerecords.set(splashDataArray);
             }
         }
+
 
 
         if (templateObject.transactiondatatablerecords.get()) {

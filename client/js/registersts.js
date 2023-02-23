@@ -1,5 +1,7 @@
 import { Mongo } from 'meteor/mongo';
-
+import { Template } from 'meteor/templating';
+import '../Login/registersts.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 Template.registersts.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.countryRegion = new ReactiveVar();

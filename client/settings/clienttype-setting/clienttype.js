@@ -20,6 +20,42 @@ Template.clienttypesettings.onCreated(function () {
 
   templateObject.departlist = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.fields.Active == true) {
+      linestatus = "";
+    } else if (data.fields.Active == false) {
+      linestatus = "In-Active";
+    };
+    var dataList = [
+      data.fields.ID || "",
+      data.fields.TypeName || "",
+      data.fields.TypeDescription || "",
+      data.fields.CreditLimit || 0.0,
+      data.fields.DefaultPostAccount || "",
+      data.fields.GracePeriod || "",
+      data.fields.TermsName || "", //need to be replaced with Default Discount
+      data.fields.TermsName || "",
+      data.fields.TermsName || "", // need to be replaced with prefered payment method
+      linestatus,
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
+    { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "200" },
+    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "200" },
+    { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
+    { index: 6, label: 'Default Discount', class: 'colDefaultDiscount', active: true, display: true, width: "200" },
+    { index: 7, label: 'Terms', class: 'colTerms', active: true, display: true, width: "200" },
+    { index: 8, label: 'Preferred Payment Method', class: 'colPreferedPaymentMethod', active: true, display: true, width: "300" },
+    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.clienttypesettings.onRendered(function () {
@@ -41,7 +77,7 @@ Template.clienttypesettings.onRendered(function () {
 
   $("#tblClienttypeList tbody").on("click", "tr", function () {
     $("#add-clienttype-title").text("Edit Customer Type");
-    let targetID = $(event.target).closest("tr").attr("id");
+    let targetID = $(event.target).closest('tr').find(".colClientTypeID").text();
     let typeDescription = $(event.target)
       .closest("tr")
       .find(".colDescription")
@@ -548,5 +584,40 @@ Template.clienttypesettings.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getClientTypeDataList;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getClientTypeDataByName;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 });
