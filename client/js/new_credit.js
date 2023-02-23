@@ -3650,7 +3650,7 @@ Template.creditcard.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
-  $(document).on("click", "#tblAccount tbody tr", function (e) {
+  $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
     $(".colAccountName").removeClass("boldtablealertsborder");
     let selectLineID = $("#selectLineID").val();
     let taxcodeList = templateObject.taxraterecords.get();
@@ -6009,7 +6009,7 @@ Template.creditcard.onRendered(function () {
             );
 
             if (splashArrayProductList) {
-              $("#tblAccount").dataTable({
+              $("#tblAccountListPop").dataTable({
                 data: splashArrayProductList.sort(),
 
                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -6098,7 +6098,7 @@ Template.creditcard.onRendered(function () {
           );
 
           if (splashArrayProductList) {
-            $("#tblAccount").dataTable({
+            $("#tblAccountListPop").dataTable({
               data: splashArrayProductList.sort(),
 
               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -6180,7 +6180,7 @@ Template.creditcard.onRendered(function () {
           );
 
           if (splashArrayProductList) {
-            $("#tblAccount").dataTable({
+            $("#tblAccountListPop").dataTable({
               data: splashArrayProductList.sort(),
 
               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",

@@ -80,6 +80,7 @@ Template.addaccountpop.onRendered(function () {
         yearRange: "-90:+10",
     });
 
+    $(document).ready(function () {
     $("#edtBankName").editableSelect();
     $("#edtBankName")
       .editableSelect()
@@ -100,7 +101,7 @@ Template.addaccountpop.onRendered(function () {
           }
         }
       });
-
+});
       $(document).on("click", "#tblBankName tbody tr", function (e) {
         var table = $(this);
         let BankName = table.find(".bankName").text();

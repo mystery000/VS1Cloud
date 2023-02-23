@@ -54,17 +54,18 @@ import './js/purchase-service.js';
 // import './js/purchasedb.js';
 import './js/ratetype_service.js';
 import './js/refundcard.js';
-// import './js/register.js';
-// import './js/registerdb.js';
-// import './js/registersts.js';
-// import './js/resetpassword.js';
+import './js/register.js';
+import './js/registerdb.js';
+import './js/registersts.js';
+import './js/resetpassword.js';
 import './js/sales-service.js';
 import './js/sidebar-service.js';
+import '../collections/registerDB.js';
 // import './js/simonpurchasedb.js';
 import './js/sms-settings-service.js';
 // import './js/testLogin.js';
 // import './js/vs1check.js';
-// import './js/vs1greentracklogin.js';
+import './js/vs1greentracklogin.js';
 import './js/header.js';
 import './js/yodlee-service.js';
 import './js/new_bom_setup.js';
@@ -277,7 +278,9 @@ import './eft/optionsModal/eftOptionsModal.js';
 import './eft/bankCodesModal/eftBankCodesModal.js';
 import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 import './settings/template-settings/templatesettings.js';
-// import './accesslevel/accesslevel.js';
+import './accesslevel/accesslevel.js';
+import './accesslevel/featureallocation.html';
+import './accounts/chartsofaccounts/chartofaccounts.html';
 // import './accounts/account-service.js';
 // import './packages/currency/CurrencyRate.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
@@ -332,6 +335,7 @@ import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 import './settings/manufacturingsettings/manufacturingsettings.js';
+import './vs1_templates/drop_down/vs1___dropdown.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -443,6 +447,7 @@ import './cheque/cheque_list.js';
 import './settings/paymentmethod-setting/paymentmethods.js';
 import './salesorder/salesorder_express_list_tables.js';
 import './payroll/timesheet/timesheet.js';
+import './overviews/Modal/AddPayRunModal.js';
 /* Alex */
 
 /*Vladyslav*/

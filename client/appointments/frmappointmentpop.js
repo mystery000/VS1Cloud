@@ -4661,6 +4661,7 @@ Template.frmappointmentpop.events({
                 repeatDates = getRepeatDates(sDate2, fDate2, repeatMonths, monthDate);
                 frequency2 = parseInt(monthDate);
             }
+            
             if (days.length > 0) {
                 for (let x = 0; x < days.length; x++) {
                     let dayObj = {

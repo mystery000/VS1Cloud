@@ -41,5 +41,59 @@ Template.transaction_header.helpers({
     const cardType = Template.instance().data.cardType;
     if (cardType === 'Invoice'|| cardType === 'Sales Order' || cardType === 'PO' ) return "Sales Date";
     else return "Order Date";
+  },
+
+  getTemplate:()=>{
+    const cardType = Template.instance().data.cardType.toLowerCase();
+    switch(cardType) {
+      case 'bill':
+      case "po" :
+      case "credit":
+        return Template.supplierlistpop;
+      default:
+        return Template.customerlistpop
+    }
+  },
+
+
+  getTemplateFromName:()=>{
+    
+  },
+
+  getModalTitle:()=>{
+    const cardType = Template.instance().data.cardType.toLowerCase();
+    switch(cardType) {
+      case 'bill':
+      case "po" :
+      case "credit":
+        return 'Supplier List';
+      default:
+        return 'Customer List'
+    }
+  },
+
+  getTargetModalID: ()=> {
+    const cardType = Template.instance().data.cardType.toLowerCase();
+    switch(cardType) {
+      case 'bill':
+      case "po" :
+      case "credit":
+        return 'edtSupplierModal';
+      default:
+        return 'edtCustomerModal'
+    }
+  },
+
+  getTargetTemplate: ()=>{
+    const cardType = Template.instance().data.cardType.toLowerCase();
+    switch(cardType) {
+      case 'bill':
+      case "po" :
+      case "credit":
+        return 'addsupplierpop';
+      default:
+        return 'addcustomerpop'
+    }
   }
+  
 })

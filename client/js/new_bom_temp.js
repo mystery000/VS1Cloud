@@ -140,7 +140,7 @@ Template.bom_template.onRendered(async function() {
                             
                             let isBOM = false;
                             let bomProductIndex = bomProducts.findIndex(object => {
-                                return object.fields.Caption == subs[i].productName;
+                                return object.Caption == subs[i].productName;
                             })
                             if(bomProductIndex > -1) {
                                 isBOM = true
@@ -180,7 +180,7 @@ Template.bom_template.onRendered(async function() {
                 } else {
                         let subIsBOM = false;
                         let bomIndex = bomProducts.findIndex(product=>{
-                            return product.fields.Caption == subs[i].productName
+                            return product.Caption == subs[i].productName
                         })
                         if(bomIndex > -1) {
                             subIsBOM = true
@@ -287,10 +287,10 @@ Template.bom_template.onRendered(async function() {
                 $(quantityElements[0]).val(subs[i].qty || 1)
                 let processElements = $(productContent).find('.edtProcessName')
                 let bomProcessIndex = bomProducts.findIndex(product => {
-                    return product.fields.Caption == subs[i].productName;
+                    return product.Caption == subs[i].productName;
                 })
                 if(bomProcessIndex > -1) {
-                    $(processElements[0]).val(subs[i].process || bomProducts[bomProcessIndex].fields.Info || '')
+                    $(processElements[0]).val(subs[i].process || bomProducts[bomProcessIndex].Info || '')
                     $(productContent).find('.edtProcessNote').val(subs[i].processNote || bomProducts[bomProcessIndex].CustomInputClass || '')
                 } else {
                     await productService.getOneBOMProductByName(subs[i].productName).then(function(data){
@@ -298,7 +298,7 @@ Template.bom_template.onRendered(async function() {
                             $(processElements[0]).val(subs[i].process|| '')
                             $(productContent).find('.edtProcessNote').val(subs[i].processNote || '')
                         } else {
-                            $(processElements[0]).val(subs[i].process || data.tproctree[0].fields.Info || '');
+                            $(processElements[0]).val(subs[i].process || data.tproctree[0].Info || '');
                             $(productContent).find('.edtProcessNote').val(subs[i].processNote || data.tproctree[0].CustomInputClass || '')
                         }
                     })
@@ -334,16 +334,16 @@ Template.bom_template.onRendered(async function() {
                             id = FlowRouter.current().queryParams.id;
                         }
                         let index = bomProducts.findIndex(product=>{
-                            return product.fields.ID == id;
+                            return product.ID == id;
                         })
                         if(index  == -1) {
                             await productService.getOneBOMProductByID(id).then(
                                 function(data){
-                                    objectFields = data.tproctree[0].fields
+                                    objectFields = data.tproctree[0]
                                 }
                             )
                         }else {
-                            objectFields = bomProducts[index].fields
+                            objectFields = bomProducts[index]
                         }
                         // objectFields = bomProducts[id].fields;
                         $('#edtMainProductName').val(objectFields.Caption)
@@ -357,10 +357,10 @@ Template.bom_template.onRendered(async function() {
                     } else if(FlowRouter.current().path.includes('/productview')) {
                         let name = $('#edtproductname').val();
                         let bomIndex = bomProducts.findIndex(product=>{
-                            return product.fields.Caption == name
+                            return product.Caption == name
                         })
                         if(bomIndex> -1) {
-                            objectFields = bomProducts[bomIndex].fields;
+                            objectFields = bomProducts[bomIndex];
                             $('#edtMainProductName').val(objectFields.Caption)
                             $('#edtProcess').editableSelect();
                             $('#edtProcess').val(objectFields.Info);
@@ -371,7 +371,7 @@ Template.bom_template.onRendered(async function() {
                         } else {
                             productService.getOneBOMProductByName(name).then (async function(data){
                                 if(data.tproctree.length > 0) {
-                                    objectFields = data.tproctree[0].fields;
+                                    objectFields = data.tproctree[0];
                                     $('#edtMainProductName').val(objectFields.Caption)
                                     $('#edtProcess').editableSelect();
                                     $('#edtProcess').val(objectFields.Info)
@@ -494,14 +494,14 @@ Template.bom_template.onRendered(async function() {
                         // objectFields.productName = $('.colProductName .edtproductname').val() || '';
                         let prodname = $('#tblWorkOrderLine tr .colProductName .lineProductName').val();
                         let index = bomProducts.findIndex(product=>{
-                            return product.fields.Caption == prodname;
+                            return product.Caption == prodname;
                         })
                         if(index > -1) {
-                            objectFields = bomProducts[index].fields;
+                            objectFields = bomProducts[index];
                         } else {
                             await productService.getOneBOMProductByName(prodname).then(function(data){
                                 if(data.tproctree.length > 0) {
-                                    objectFields = data.tproctree[0].fields
+                                    objectFields = data.tproctree[0]
                                 }
                             })
                         }
@@ -652,7 +652,7 @@ Template.bom_template.events({
             let bomProducts = templateObject.bomProducts.get();
         let isBOM = false;
         let existIndex = bomProducts.findIndex(product => {
-            return product.fields.Caption == productName;
+            return product.Caption == productName;
         })
         if(existIndex > -1) {
             isBOM = true
@@ -672,10 +672,10 @@ Template.bom_template.events({
 
             templateObject.showSubButton.set(true);
             let colProcess = $(selEle).closest('.productRow').find('.edtProcessName');
-            $(colProcess).val(bomProducts[existIndex].fields.Info)
+            $(colProcess).val(bomProducts[existIndex].Info)
             $(colProcess).attr('disabled', 'true');
             let colProcessNote = $(selEle).closest('.productRow').find('.edtProcessNote');
-            $(colProcessNote).val(bomProducts[existIndex].fields.CustomInputClass)
+            $(colProcessNote).val(bomProducts[existIndex].CustomInputClass)
             $(colProcessNote).attr('disabled', 'true');
         }
             $('#productListModal').modal('toggle')
@@ -798,22 +798,22 @@ Template.bom_template.events({
         }
         $(event.target).closest('.productRow').find('.edtProductName').css('width', '70%')
         let bomIndex = bomProducts.findIndex(product=>{
-            return product.fields.Caption == productName
+            return product.Caption == productName
         })
         if(bomIndex > -1) {
             let subIndex = -1;
             let parentBOM = bomProducts.find(product => {
-                return product.fields.Caption == templateObject.initialRecord.get().Caption;
+                return product.Caption == templateObject.initialRecord.get().Caption;
             })
 
             if(parentBOM) {
-                subIndex = JSON.parse(parentBOM.fields.Details).findIndex(sub=>{
+                subIndex = JSON.parse(parentBOM.Details).findIndex(sub=>{
                     return sub.productName == productName;
                 })
             }
 
             if(subIndex > -1) {
-                let subs = parentBOM.fields.subs[subIndex].subs
+                let subs = parentBOM.subs[subIndex].subs
                     $(event.target).remove()
                     if(subs && subs.length) {
                         for (let i = 0; i < subs.length; i++) {
@@ -847,7 +847,7 @@ Template.bom_template.events({
                     }
             } else {
 
-                let subs = JSON.parse(bomProducts[bomIndex].fields.Details)
+                let subs = JSON.parse(bomProducts[bomIndex].Details)
 
                     $(event.target).remove()
                     if(subs && subs.length) {
@@ -1013,22 +1013,22 @@ Template.bom_template.events({
         let quantity = $(event.target).closest('.productRow').find('.edtQuantity').val();
         let bomIndex = bomProducts.findIndex(product=>{
             let pContent = $('#BOMSetupModal').find('.product-content')[0];
-            return product.fields.Caption == $(pContent).find('.edtMainProductName').val()
+            return product.Caption == $(pContent).find('.edtMainProductName').val()
         })
         if(productName == '' || quantity == '') {
             return
         }
 
         if(bomIndex > -1) {
-            let index = JSON.parse(bomProducts[bomIndex].fields.Details).findIndex(product => {
+            let index = JSON.parse(bomProducts[bomIndex].Details).findIndex(product => {
                 return product.productName == productName;
             });
             let subs;
             if(index > -1) {
-                 subs = JSON.parse(bomProducts[bomIndex].fields.Details)[index].subs
+                 subs = JSON.parse(bomProducts[bomIndex].Details)[index].subs
             }else{
-                let subIndex = bomProducts.findIndex(product=>{return product.fields.Caption == productName})
-                subs = JSON.parse(bomProducts[subIndex].fields.Details)
+                let subIndex = bomProducts.findIndex(product=>{return product.Caption == productName})
+                subs = JSON.parse(bomProducts[subIndex].Details)
             }
                 // $(event.target).remove()
                 if(subs && subs.length) {

@@ -1650,7 +1650,7 @@ Template.addAccountModal.events({
   },
 
   "click #openEftOptionsModal" : (e) => {
-    $('#eftOptionsModal').modal();
+    $('.eftOptionsModal').modal();
   },
 
 });

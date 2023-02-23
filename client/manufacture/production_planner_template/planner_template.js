@@ -1220,6 +1220,33 @@ Template.production_planner_template.events({
         event.stopPropagation();
         let templateObject = Template.instance();
         let records = templateObject.plannerSettings.get();
+        let slotDuration = '';
+        switch (records.showTimein) {
+            case '0.5':
+                slotDuration = '00:30:00'
+                break;
+            case '1':
+                slotDuration = '00:60:00'
+                break;
+            case '2':
+                slotDuration = '02:00:00'
+                break;
+            case '3':
+                slotDuration = '03:00:00'
+                break;
+            case '4':
+                slotDuration = '04:00:00'
+                break;
+            case '6':
+                slotDuration = '06:00:00'
+                break;
+            case '12':
+                slotDuration = '12:00:00'
+                break;
+            default:
+                slotDuration = '00:60:00'
+                break;
+        }
         let calendar = templateObject.calendar.get()
         $('.toggleShowSat').prop('checked', records.showSaturday);
         $('.toggleShowSun').prop('checked', records.showSunday);
@@ -1254,16 +1281,16 @@ Template.production_planner_template.events({
             hiddenDays: hiddenDays,
             slotMinTime: workMin,
             slotMaxTime: workMax,
-            slotDuration: records.showTimein,
+            slotDuration: slotDuration,
         }
         templateObject.calendarOptions.set(options);
         calendar.setOption('hiddenDays', hiddenDays)
         calendar.setOption('slotMinTime', workMin)
         calendar.setOption('slotMaxTime', workMax)
-        calendar.setOption('slotDuration', records.showTimein)
+        calendar.setOption('slotDuration', slotDuration)
         templateObject.showStart.set(records.startTime);
         templateObject.showEnd.set(records.endTime)
-        templateObject.slotDuration.set(records.showTimein);
+        templateObject.slotDuration.set(slotDuration);
         $('.edtShowTimein').val(records.showTimein)
     },
 

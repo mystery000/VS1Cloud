@@ -329,7 +329,7 @@ Template.accountant_companyastrustee.onRendered(() => {
                 });
             });
     };
-    templateObject.getCountryData();
+    // templateObject.getCountryData();
 
     templateObject.getAccountLists = function() {
         getVS1Data("TAccountVS1")
@@ -1825,7 +1825,7 @@ Template.accountant_companyastrustee.events({
         let organisationService = new OrganisationService();
         setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
-        
+
         let forTransaction = false;
         let isHeader = false;
         let useReceiptClaim = false;

@@ -1,0 +1,38 @@
+<template name="bomlistpop">
+    <style>
+        @media screen and (max-width: 450px) {
+            .modal-inner-bomlist {
+                max-width: 98vw!important;
+            }
+        }
+    </style>
+    <div class="modal-dialog modal-xl modal-dialog-scrollable modal-inner-bomlist" role="document" style="max-width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>BOM List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="card-body p-1 rounded">
+                    {{>datatablelist 
+                        tablename="tblBOMList"
+                        apiName= apiFunction
+                        service = service
+                        indexeddbname = 'TProcTree'
+                        datahandler = datahandler
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'BOM List'
+                        istransaction = false
+                        apiParams=apiParams
+                        lowercaseDataName='tproctree'
+                        exIndexDBName = 'tproctree'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        modalDraggable();
+    </script>
+</template>

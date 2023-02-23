@@ -117,6 +117,15 @@ Template.npleditlayoutscreen.onRendered(function () {
   }
 
   templateObject.getPNLLayout();
+
+  $(document).on("click", "ol.nested_with_switch div.mainHeadingDiv, ol.nested_with_switch span.childInner", function(e) {
+    let groupID = $(this).closest("li").attr("plid");
+    let groupName = $(this).closest("li").attr("data-group");
+    $(".editDefault").hide();
+    $(".editRowGroup").show();
+    $("#editGroupName").val(groupName);
+    $("#editGroupID").val(groupID);
+  });
 });
 
 Template.npleditlayoutscreen.events({
@@ -243,6 +252,12 @@ Template.npleditlayoutscreen.helpers({
   },
   layoutinfo: () => {
     return Template.instance().layoutinfo.get();
+  },
+  isAccount(layout) {
+    if (layout.ID > 1) {
+      return true;
+    }
+    return false;
   },
 });
 

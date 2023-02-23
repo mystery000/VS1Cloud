@@ -1,12 +1,12 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { ProductService } from "../product/product-service";
 import { Template } from 'meteor/templating';
-import './bom_list.html';
+import './bomlistpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ManufacturingService } from "./manufacturing-service";
 
 // Template.bom_list.inheritsHooksFrom('non_transactional_list');
-Template.bom_list.onCreated(function(){
+Template.bomlistpop.onCreated(function(){
     const templateObject = Template.instance()
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -53,7 +53,7 @@ Template.bom_list.onCreated(function(){
   templateObject.tableheaderrecords.set(headerStructure);
       
 })
-Template.bom_list.onRendered(function(){
+Template.bomlistpop.onRendered(function(){
   const templateObject  = Template.instance();
   const productService = new ProductService();
   if(FlowRouter.current().queryParams.success){
@@ -91,26 +91,7 @@ Template.bom_list.onRendered(function(){
 // templateObject.checkSetupWizardFinished();
   checkSetupFinished();
 })
-Template.bom_list.events({
-  'click #tblBOMList tbody tr': async function(event) {
-    let templateObject = Template.instance();
-    let productService = new ProductService();
-    let productName = $(event.target).closest('tr').find('td.colName').text();
-    let bomProducts = templateObject.bomProducts.get();
-    let index = bomProducts.findIndex(product => {
-      return product.Caption == productName;
-    })
-    if(index > -1) {
-      FlowRouter.go('/bomsetupcard?id='+ bomProducts[index].ID)
-    }else {
-      productService.getOneBOMProductByName(productName).then(function(data){
-        if(data.tproctree.length > 0) {
-          let id = data.tproctree[0].ID;
-          FlowRouter.go('/bomsetupcard?id='+ id)
-        }
-      })
-    }
-  },
+Template.bomlistpop.events({
 
   'click #btnNewBOM': function(event) {
     FlowRouter.go('/bomsetupcard')
@@ -306,7 +287,7 @@ Template.bom_list.events({
 }
   
 })
-Template.bom_list.helpers({
+Template.bomlistpop.helpers({
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblEmployeelist'});
   },
