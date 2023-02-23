@@ -1493,7 +1493,7 @@ Template.customerscard.onRendered(function () {
     }
   });
 
-  $(document).on("click", "#tblTermsList tbody tr", function (e) {
+  $(document).on("click", "#termsList tbody tr", function (e) {
     let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
     $('#' + selectedTermsDropdownID + '').val($(this).find(".colName").text());
     $('#termsListModal').modal('toggle');

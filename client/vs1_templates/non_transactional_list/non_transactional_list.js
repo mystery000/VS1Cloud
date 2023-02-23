@@ -286,7 +286,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "105" },
                 { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
-        } else if (currenttablename == "tblTermsList") { //Do Something Here
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") { //Do Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
@@ -16309,7 +16309,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDepartmentData();
     } else if (currenttablename == "tblPaymentMethodList") {
         templateObject.getPaymentMethodData();
-    } else if (currenttablename == "tblTermsList") {
+    } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
         templateObject.getTermsData();
     } else if (currenttablename == "tblUOMList") {
         templateObject.getUOMListData();
@@ -16558,7 +16558,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblPaymentMethodList") {
             await clearData('TPaymentList');
             templateObject.getPaymentMethodData(true);
-        } else if (currenttablename == "tblTermsList") {
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
             await clearData('TTermsVS1List');
             templateObject.getTermsData(true);
         } else if (currenttablename == "tblUOMList") {
@@ -16681,7 +16681,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblPaymentMethodList") {
             await clearData('TPaymentMethodList');
             templateObject.getPaymentMethodListData(false);
-        } else if (currenttablename == "tblTermsList") {
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
             await clearData('TTermsVS1List');
             templateObject.getTermsData(false);
         } else if (currenttablename == "tblUOMList") {
