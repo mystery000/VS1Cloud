@@ -18951,25 +18951,25 @@ Template.appointments.events({
         templateObject = Template.instance();
         let empID = $(event.currentTarget).attr('id').split("_")[1];
         templateObject.empID.set(empID);
-        swal({
-            title: "Leave Settings",
-            text: "Do you wish to create leave for this employee?",
-            type: "question",
-            showCancelButton: true,
-            confirmButtonText: "Ok",
-            cancelButtonText: "Cancel",
-        }).then((result) => {
-            if (result.value) {
-                setTimeout(function() {
-                    $("#edtEmpID").val(empID);
-                    $('#removeLeaveRequestBtn').hide();
-                    $('#newLeaveRequestModal').modal('show');
-                    $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                        window.open("/appointments", "_self");
-                    });
-                }, 1000);
-            }
-        });
+        // swal({
+        //     title: "Leave Settings",
+        //     text: "Do you wish to create leave for this employee?",
+        //     type: "question",
+        //     showCancelButton: true,
+        //     confirmButtonText: "Ok",
+        //     cancelButtonText: "Cancel",
+        // }).then((result) => {
+        //     if (result.value) {
+        //     }
+        // });
+        setTimeout(function() {
+            $("#edtEmpID").val(empID);
+            $('#removeLeaveRequestBtn').hide();
+            $('#newLeaveRequestModal').modal('show');
+            $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                window.open("/appointments", "_self");
+            });
+        }, 500);
     },
     'click .chkServiceCard': function(event) {
         //  templateObject = Template.instance();
