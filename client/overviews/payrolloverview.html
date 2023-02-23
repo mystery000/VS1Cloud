@@ -879,7 +879,7 @@
             </div>
         </div>
       </div>
-    {{> AddPayRunModal }}
+     {{> AddPayRunModal }} 
     <div class="modal fade" role="dialog" tabindex="-1" id="SelectPayRunModal" style="z-index: 99999999 !important;">
         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
           <div class="modal-content">
@@ -1117,7 +1117,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     {{#if payPeriods}}
                                         {{#each pay in payPeriods}}
                                             <tr calendar-id="{{pay.ID }}">
