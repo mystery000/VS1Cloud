@@ -647,10 +647,10 @@ Template.productlistpop.events({
         //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
         $('.fullScreenSpin').css('display', 'none');
         if (splashArrayProductList) {
-          var datatable = $('#tblInventory').DataTable();
-          datatable.clear();
-          datatable.rows.add(splashArrayProductList);
-          datatable.draw(false);
+          // var datatable = $('#tblInventory').DataTable();
+          // datatable.clear();
+          // datatable.rows.add(splashArrayProductList);
+          // datatable.draw(false);
 
         }
         }else{
