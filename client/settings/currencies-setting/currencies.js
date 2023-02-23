@@ -14,6 +14,7 @@ import XLSX from 'xlsx';
 import { Template } from 'meteor/templating';
 import "./currencies.html";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 
@@ -26,6 +27,52 @@ Template.currenciessettings.onCreated(function () {
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
   templateObject.selectedFile = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    }
+    var dataList = [
+      data.CurrencyID || "",
+      data.Code || "",
+      data.Currency || "",
+      data.CurrencySymbol || "",
+      data.BuyRate || 0.00,
+      data.SellRate || 0.00,
+      data.Country || "",
+      data.RateLastModified || "",
+      data.CurrencyDesc || "",
+      linestatus,
+      data.FixedRate || 0.00,
+      data.UpperVariation || 0.00,
+      data.LowerVariation || 0.00,
+      data.TriggerPriceVariation || 0.00,
+      data.CountryID || ""
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
+    { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
+    { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100" },
+    { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
+    { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
+    { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+    { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
+    { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+    { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 11, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
+    { index: 12, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
+    { index: 13, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150" },
+    { index: 14, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250" },
+    { index: 15, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.currenciessettings.onRendered(function () {
@@ -851,7 +898,7 @@ Template.currenciessettings.events({
     // Meteor._reload.reload();
   },
   "click #tblCurrencyList tbody tr": e => {
-    const currency = $(e.currentTarget).find(".colCode").text();
+    const currency = $(e.currentTarget).find(".colCurrencyID").text();
 
     // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
     window.location.href = `/fx-currency-history?currency=${currency}`;
@@ -1223,61 +1270,7 @@ Template.currenciessettings.events({
     $("#edtSellRate").val(1);
 
   },
-  // "change #sedtCountry": async (e) => {
-  //   LoadingOverlay.show();
 
-  //   let taxRateService = new TaxRateService();
-  //   let selectCountry = $("#sedtCountry").val();
-  //   $("#edtCurrencyID").val("");
-
-  //   $("#currencyCode").val("");
-  //   $("#currencySymbol").val("");
-  //   $("#edtCurrencyName").val("");
-  //   $("#edtCurrencyDesc").val("");
-  //   $("#edtBuyRate").val("");
-  //   $("#edtSellRate").val("");
-
-  //   if (selectCountry != "") {
-  //     const data = await taxRateService.getOneCurrencyByCountry(selectCountry);
-
-  //     if (data) {
-  //       for (let i = 0; i < data.tcurrency.length; i++) {
-
-  //         if (data.tcurrency[i].Country === selectCountry) {
-  //           var currencyid = data.tcurrency[i].Id || "";
-  //           var country = data.tcurrency[i].Country || "";
-  //           var currencyCode = data.tcurrency[i].Code || "";
-  //           var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
-  //           var currencyName = data.tcurrency[i].Currency || "";
-  //           var currencyDesc = data.tcurrency[i].CurrencyDesc;
-  //           var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
-  //           var currencySellRate = data.tcurrency[i].SellRate || 0;
-
-  //           /**
-  //            * Let's call the Fx APis here
-  //            */
-  //           const fxApi = new FxApi();
-  //           let currencyRates = await fxApi.getExchangeRate(currencyCode);
-  //           if (currencyRates) {
-  //             currencyBuyRate = currencyRates.buy;
-  //             currencySellRate = currencyRates.sell;
-  //           }
-
-  //           $("#edtCurrencyID").val(currencyid);
-  //            $('#sedtCountry').val(country);
-
-  //           $("#currencyCode").val(currencyCode);
-  //           $("#currencySymbol").val(currencySymbol);
-  //           $("#edtCurrencyName").val(currencyName);
-  //           $("#edtCurrencyDesc").val(currencyDesc);
-  //           $("#edtBuyRate").val(currencyBuyRate);
-  //           $("#edtSellRate").val(currencySellRate);
-  //         }
-  //       }
-  //     }
-  //   }
-  //   LoadingOverlay.hide();
-  // },
   "click .btnSaveCurrency": e => {
     playSaveAudio();
     let taxRateService = new TaxRateService();
@@ -1578,9 +1571,6 @@ Template.currenciessettings.helpers({
       // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
     });
   },
-  tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
-  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblCurrencyList"});
   },
@@ -1589,7 +1579,49 @@ Template.currenciessettings.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
-  }
+  },
+
+  datatablerecords : () => {
+    return Template.instance().datatablerecords.get();
+  },
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getCurrencyDataList;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getCurrencyDataList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
 });
 
 /**

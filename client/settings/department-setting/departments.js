@@ -21,6 +21,39 @@ Template.departmentSettings.onCreated(function(){
 
     templateObject.departlist = new ReactiveVar([]);
     templateObject.selectedFile = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        var dataList = [
+            data.ClassID || "",
+            data.ClassName || "",
+            data.Description || "",
+            data.ClassGroup || "",
+            data.ClassName,
+            data.Level1 || "",
+            data.SiteCode || "",
+            linestatus
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class: 'colDeptID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Department Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+        { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.departmentSettings.onRendered(function() {
@@ -41,7 +74,7 @@ Template.departmentSettings.onRendered(function() {
 
     $('#tblDepartmentList tbody').on("click", "tr", function () {
         $('#add-dept-title').text('Edit Department');
-        let deptID = $(event.target).closest('tr').attr('id');
+        let deptID = $(event.target).closest("tr").find(".colDeptID").text();
         let deptName = $(event.target).closest('tr').find('.colDeptName').text();
         let deptDesc = $(event.target).closest('tr').find('.colDescription').text();
         let siteCode = $(event.target).closest('tr').find('.colSiteCode').text();
@@ -601,5 +634,40 @@ Template.departmentSettings.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getDepartmentDataList;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getDepartmentDataList;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });
