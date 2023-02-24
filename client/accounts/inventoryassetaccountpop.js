@@ -1,16 +1,19 @@
-import { ReactiveVar } from 'meteor/reactive-var';
+import {ReactiveVar} from 'meteor/reactive-var';
 import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
-import { SideBarService } from '../js/sidebar-service';
+import {SideBarService} from '../js/sidebar-service';
 import {TaxRateService} from '../settings/settings-service';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jquery-editable-select';
-import { Template } from 'meteor/templating';
+import {Template} from 'meteor/templating';
 import './inventoryassetaccountpop.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 
-Template.inventorassetaccountspop.onCreated(function(e) {
+let sideBarService = new SideBarService();
+let utilityService = new UtilityService();
+
+Template.inventorassetaccountspop.onCreated(function (e) {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
@@ -47,9 +50,49 @@ Template.inventorassetaccountspop.onCreated(function(e) {
     templateObject.referenceNumber = new ReactiveVar();
 
     templateObject.statusrecords = new ReactiveVar([]);
+
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function (data) {
+        let accBalance;
+        if (!isNaN(data.fields.Balance)) {
+            accBalance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance) || 0.00;
+        } else {
+            accBalance = Currency + "0.00";
+        }
+        var dataList = [
+            data.fields.ID || '',
+            data.fields.AccountName || '-',
+            data.fields.Description || '',
+            data.fields.AccountNumber || '',
+            accBalance,
+            data.fields.AccountTypeName || '',
+            data.fields.TaxCode || '',
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        {index: 0, label: '#Product ID', class: 'colAccountId', active: false, display: true, width: "10"},
+        {index: 1, label: 'Product Name', class: 'colAccountName', active: true, display: true, width: "200"},
+        {index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true, width: ""},
+        {index: 3, label: 'Account Number', class: 'colAccountNo', active: true, display: true, width: ""},
+        {index: 4, label: 'Sales Price', class: 'colBalance', active: true, display: true, width: "90"},
+        {index: 5, label: 'Production Type', class: 'colType', active: true, display: true, width: "60"},
+        {index: 6, label: 'Tax Rate', class: 'colTaxCode', active: true, display: true, width: "80"},
+    ];
+
+    //                             { className: "productName", "targets": [0] },
+    //                             { className: "productDesc", "targets": [1] },
+    //                             { className: "accountnumber", "targets": [2] },
+    //                             { className: "salePrice", "targets": [3] },
+    //                             { className: "prdqty text-right", "targets": [4] },
+    //                             { className: "taxrate", "targets": [5] },
+    //                             { className: "colAccountID hiddenColumn", "targets": [6] }
+    templateObject.tableheaderrecords.set(headerStructure);
 })
 
-Template.inventorassetaccountspop.onRendered(function() {
+Template.inventorassetaccountspop.onRendered(function () {
     // let tempObj = Template.instance();
     // let sideBarService = new SideBarService();
     // let utilityService = new UtilityService();
@@ -269,5 +312,42 @@ Template.inventorassetaccountspop.onRendered(function() {
 })
 
 Template.inventorassetaccountspop.helpers({
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
 
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAccountListVS1;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAccountListVS1;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return [];
+    },
 })

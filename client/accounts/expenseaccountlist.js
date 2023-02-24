@@ -313,7 +313,7 @@ Template.expenseaccountlistpop.helpers({
     },
 
     searchAPI: function() {
-        return sideBarService.getClientTypeDataByName;
+        return sideBarService.getAccountListVS1;
     },
 
     service: ()=>{
