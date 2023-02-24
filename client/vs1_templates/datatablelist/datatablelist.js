@@ -592,6 +592,44 @@ Template.datatablelist.onRendered(async function () {
         function getColDef() {
             let items = templateObject.data.tableheaderrecords;
 
+            $(".displaySettings").each(function (index) {
+                var $tblrow = $(this);
+                var fieldID = $tblrow.attr("custid") || 0;
+                var colTitle = $tblrow.find(".divcolumn").text() || "";
+                var colWidth = $tblrow.find(".custom-range").val() || 0;
+                var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+                var colHidden = false;
+                if ($tblrow.find(".custom-control-input").is(":checked")) {
+                    colHidden = true;
+                } else {
+                    colHidden = false;
+                }
+                let lineItemObj = {
+                    index: parseInt(fieldID),
+                    label: colTitle,
+                    active: colHidden,
+                    width: parseInt(colWidth),
+                    class: colthClass,
+                    display: true
+                };
+
+                for (let i = 0; i < items.length; i ++) {
+                    let tLabel = items[i].label.indexOf('#') >= 0 ? items[i].label.substr(1) : items[i].label;
+                    let rLabel = lineItemObj.label.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
+                    if (tLabel == rLabel) {
+                        if (lineItemObj.active) {
+                            if (items[i].label.indexOf('#') >= 0) {
+                                items[i].label = items[i].label.substr(1);
+                            }
+                        } else {
+                            if (items[i].label.indexOf('#') < 0) {
+                                items[i].label = '#' + items[i].label;
+                            }
+                        }
+                    }
+                }
+            });
+
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {

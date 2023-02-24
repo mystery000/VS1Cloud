@@ -4104,7 +4104,7 @@ Template.new_invoice.onRendered(function () {
     $("#departmentModal").modal("toggle");
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $("#sltTerms").val($(this).find(".colTermName").text());
+    $("#sltTerms").val($(this).find(".colName").text());
     $("#termsListModal").modal("toggle");
   });
   $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
