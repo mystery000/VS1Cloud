@@ -17,7 +17,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import moment from "moment";
 
 let sideBarService = new SideBarService();
-
+let currencyLoadDisplaySetting = false;
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 // Template.departmentSettings.inheritsHooksFrom('non_transactional_list');
 
@@ -29,6 +29,14 @@ Template.currenciessettings.onCreated(function () {
   templateObject.selectedFile = new ReactiveVar();
 
   templateObject.getDataTableList = function(data) {
+    console.log('currency-setting-get-data-table-list:', data);
+    if (!currencyLoadDisplaySetting) {
+      currencyLoadDisplaySetting = true;
+      loadDisplaySettings();
+      setTimeout(function() {
+        currencyLoadDisplaySetting = false;
+      }, 1000);
+    }
     let linestatus = '';
     if (data.Active == true) {
       linestatus = "";
@@ -63,19 +71,69 @@ Template.currenciessettings.onCreated(function () {
     { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
     { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
     { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-    { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
+    { index: 7, label: '#Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
     { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
     { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-    { index: 10, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
-    { index: 11, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
-    { index: 12, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150" },
-    { index: 13, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250" },
-    { index: 14, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100" },
+    { index: 10, label: '#Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
+    { index: 11, label: '#Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
+    { index: 12, label: '#Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150" },
+    { index: 13, label: '#Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250" },
+    { index: 14, label: '#Country ID', class: 'colCountryID', active: false, display: true, width: "100" },
   ];
+
+  function loadDisplaySettings() {
+    console.log('currency-load-display-settings');
+    $(".displaySettings").each(function (index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("custid") || 0;
+      var colTitle = $tblrow.find(".divcolumn").text() || "";
+      var colWidth = $tblrow.find(".custom-range").val() || 0;
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+      var colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(":checked")) {
+        colHidden = true;
+      } else {
+        colHidden = false;
+      }
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: colHidden,
+        width: parseInt(colWidth),
+        class: colthClass,
+        display: true
+      };
+
+      console.log('==>', lineItemObj);
+
+      for (let i = 0; i < headerStructure.length; i ++) {
+        let tLabel = headerStructure[i].label.indexOf('#') >= 0 ? headerStructure[i].label.substr(1) : headerStructure[i].label;
+        let rLabel = lineItemObj.label.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
+        if (tLabel == rLabel) {
+          if (lineItemObj.active) {
+            if (headerStructure[i].label.indexOf('#') >= 0) {
+              headerStructure[i].label = headerStructure[i].label.substr(1);
+            }
+          } else {
+            if (headerStructure[i].label.indexOf('#') < 0) {
+              headerStructure[i].label = '#' + headerStructure[i].label;
+            }
+          }
+        }
+      }
+
+      templateObject.tableheaderrecords.set(headerStructure);
+    });
+
+  }
+
+
   templateObject.tableheaderrecords.set(headerStructure);
+  loadDisplaySettings();
 });
 
 Template.currenciessettings.onRendered(function () {
+  console.log('currencies-template-on-rendered');
   LoadingOverlay.show();
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
