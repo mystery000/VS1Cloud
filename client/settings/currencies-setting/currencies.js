@@ -3,6 +3,7 @@ import {ReactiveVar} from "meteor/reactive-var";
 import {CoreService} from "../../js/core-service";
 import {CountryService} from "../../js/country-service";
 import {SideBarService} from "../../js/sidebar-service";
+import { UtilityService } from "../../utility-service";
 // import { HTTP } from "meteor/http";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "./FxApi";
@@ -76,7 +77,6 @@ Template.currenciessettings.onCreated(function () {
 });
 
 Template.currenciessettings.onRendered(function () {
-  console.log('currencies-template-on-rendered');
   LoadingOverlay.show();
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
@@ -1409,12 +1409,12 @@ Template.currenciessettings.events({
       let utilityService = new UtilityService();
       let rows = [];
       const filename = 'SampleCurrencySettings' + '.csv';
-      rows[0] = ['Code', 'Currency', 'Symbol', 'BuyRate', 'SellRate', 'Country', 'Description'];
+      rows[0] = ['Code', 'Currency', 'Symbol', 'Buy Rate', 'Sell Rate', 'Country', 'Description'];
       rows[1] = ['ABC', 'Curr', 'A', '1', '1', 'Australia',	'Currency'];
       utilityService.exportToCsv(rows, filename, 'csv');
   },
   'click .templateDownloadXLSX': function(e) {
-      e.preventDefault(); //stop the browser from following
+      //e.preventDefault(); //stop the browser from following
       window.location.href = 'sample_imports/SampleCurrencySettings.xlsx';
   },
   'click .btnUploadFile': function(event) {
@@ -1465,7 +1465,7 @@ Template.currenciessettings.events({
               var result = {};
               workbook.SheetNames.forEach(function(sheetName) {
                   var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-                  var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                  var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                   templateObj.selectedFile.set(sCSV);
 
                   if (roa.length) result[sheetName] = roa;

@@ -1935,7 +1935,7 @@ Template.employeelistpop.events({
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
                         header: 1
                     });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
