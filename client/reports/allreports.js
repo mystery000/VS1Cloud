@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating';
 import "./reports.html"
 
 import { TaxRateService } from "../settings/settings-service"; 
+import { template } from 'lodash';
 
 Template.allreports.onCreated(function() {
     const templateObject = Template.instance();
@@ -131,6 +132,14 @@ Template.allreports.onCreated(function() {
     templateObject.isPositionReport = new ReactiveVar();
     templateObject.isPositionReport.set(false);
     templateObject.accountantList = new ReactiveVar([]);
+
+    templateObject.isBuildProfitability = new ReactiveVar();
+    templateObject.isBuildProfitability.set(false);
+    templateObject.isProductionWorksheet = new ReactiveVar();
+    templateObject.isProductionWorksheet.set(false);
+    templateObject.isWorkOrder = new ReactiveVar();
+    templateObject.isWorkOrder.set(false);
+    
 });
 Template.allreports.onRendered(() => {
     let templateObject = Template.instance();
@@ -754,9 +763,43 @@ Template.allreports.onRendered(() => {
             isPositionReport = JSON.parse(dataObject[0].data);
         }
     });
-    const taxRateService = new TaxRateService();
 
+    //BuildProfitability 
+    let isBuildProfitability;
+    getVS1Data("BuildProfitabilityReport").then(function (dataObject) {
+        if (dataObject.length === 0) {
+            // addVS1Data('PositionReport', JSON.stringify(false));
+            isBuildProfitability = false;
+        } else {
+            isBuildProfitability = JSON.parse(dataObject[0].data);
+        }
+    });
+
+    //ProductionWorkSheet 
+    let isProductionWorkSheet;
+    getVS1Data("ProductionWorksheetReport").then(function (dataObject) {
+        if (dataObject.length === 0) {
+            // addVS1Data('PositionReport', JSON.stringify(false));
+            isProductionWorkSheet = false;
+        } else {
+            isProductionWorkSheet = JSON.parse(dataObject[0].data);
+        }
+    });
+
+    //WorkOrder 
+    let isWorkOrder;
+    getVS1Data("WorkOrderReport").then(function (dataObject) {
+        if (dataObject.length === 0) {
+            // addVS1Data('PositionReport', JSON.stringify(false));
+            isWorkOrder = false;
+        } else {
+            isWorkOrder = JSON.parse(dataObject[0].data);
+        }
+    });
+
+    const taxRateService = new TaxRateService();
     const accountantList = [];
+
     if (isBalanceSheet == true) {
         templateObject.isBalanceSheet.set(true);
     }
@@ -946,6 +989,21 @@ Template.allreports.onRendered(() => {
     if (isPositionReport == true) {
         templateObject.isPositionReport.set(true);
     }
+
+    if(isBuildProfitability == true) {
+        templateObject.isBuildProfitability.set(true);
+    }
+    if(isProductionWorkSheet == true) {
+        templateObject.isProductionWorkSheet.set(true);
+    }
+    if(isWorkOrder == true) {
+        templateObject.isWorkOrder.set(true);
+    }
+
+
+
+
+
     templateObject.getAccountantList = function() {
         getVS1Data('TReportsAccountantsCategory').then(function(dataObject) {
 
@@ -2147,6 +2205,17 @@ Template.allreports.helpers({
     isPositionReport: function() {
         return Template.instance().isPositionReport.get();
     },
+    isBuildProfitability: function() {
+        return Template.instance().isBuildProfitability.get();
+    },
+    isProductionWorkSheet:function() {
+        return Template.instance().isProductionWorkSheet.get();
+    },
+
+    isWorkOrder:function() {
+        return template.instance().isWorkOrder.get();
+    },
+
     isFavorite: function() {
         let isBalanceSheet = Template.instance().isBalanceSheet.get();
         let isProfitLoss = Template.instance().isProfitLoss.get();
@@ -2210,9 +2279,13 @@ Template.allreports.helpers({
         let isBalanceSheetReport = Template.instance().isBalanceSheetReport.get();
         let isIncomeReport = Template.instance().isIncomeReport.get();
         let isPositionReport = Template.instance().isPositionReport.get();
+        let isBuildProfitability = Template.instance().isBuildProfitability.get();
+        let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
+        let isWorkOrder = Template.instance().isWorkOrder.get();
+
         let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary) {
+        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
             isShowFavorite = true;
         }
         return isShowFavorite;
