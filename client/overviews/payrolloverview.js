@@ -94,7 +94,7 @@ Template.payrolloverview.onRendered(function () {
       }
     });
 
-    data = data.response.tpayrunhistory;
+    data = data.response;
     const payRuns = PayRun.fromList(data);
     this.payRuns.set(payRuns)
   }
