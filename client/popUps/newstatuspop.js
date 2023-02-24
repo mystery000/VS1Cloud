@@ -57,6 +57,7 @@ Template.newstatuspop.events({
                     $('#newStatusPopModal').modal('toggle');
                     $('.fullScreenSpin').css('display', 'none');
                     addVS1Data('TLeadStatusType', JSON.stringify(dataUpdate)).then(function(datareturn) {
+                        location.reload(true);
                         $('.fullScreenSpin').css('display', 'none');
                     }).catch(function(err) {});
                 }).catch(function(err) {

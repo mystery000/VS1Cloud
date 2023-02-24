@@ -19,6 +19,7 @@ import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 import './payrundetails.html';
 let utilityService = new UtilityService();
+let contactService = new ContactService();
 let sideBarService = new SideBarService();
 
 let payRunHandler = new PayRunHandler();
@@ -194,27 +195,51 @@ Template.payrundetails.onRendered(function () {
     return payHistoryOfEmployee;
   };
 
-  this.loadEmployees = async () => {
-    let data = await CachedHttp.get(erpObject.TEmployee, async () => {
-      return await sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0);
-    }, {
-      useIndexDb: true,
-      useLocalStorage: false,
-      validate: cachedResponse => {
-        return true;
-      }
-    });
+  this.loadEmployees = async() => {
+    let employees = [];
+    let response = await getVS1Data(erpObject.TEmployee);
+    if(response.length == 0){
+      let data = await CachedHttp.get(erpObject.TEmployee, async () => {
+        return await sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0);
+        }, {
+          useIndexDb: true,
+          useLocalStorage: false,
+          validate: cachedResponse => {
+            return true;
+          }
+        });
 
-    data = data.response;
-
-    let employees = Employee.fromList(data.temployee);
-
-    // await GlobalFunctions.asyncForEach(employees, async (employee, index, array) => {
-    //   employee.PayHistory = await getPayHistoryOfEmployee(false, employee.fields.ID);
-    // });
-
+      data = data.response;
+      employees = Employee.fromList(data);
+      await addVS1Data('TEmployee', JSON.stringify(employees));
+      employees = employees.temployee;
+    }else{
+      let data = JSON.parse(response[0].data);
+      employees = data.temployee;
+    }
     return employees;
   };
+  // this.loadEmployees = async () => {
+  //   let data = await CachedHttp.get(erpObject.TEmployee, async () => {
+  //     return await sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0);
+  //   }, {
+  //     useIndexDb: true,
+  //     useLocalStorage: false,
+  //     validate: cachedResponse => {
+  //       return true;
+  //     }
+  //   });
+
+  //   data = data.response;
+
+  //   let employees = Employee.fromList(data.temployee);
+
+  //   // await GlobalFunctions.asyncForEach(employees, async (employee, index, array) => {
+  //   //   employee.PayHistory = await getPayHistoryOfEmployee(false, employee.fields.ID);
+  //   // });
+
+  //   return employees;
+  // };
 
   /**
      * Supernnuation
@@ -406,29 +431,50 @@ Template.payrundetails.onRendered(function () {
         /**
                  * Load EmployeePayrollApi API
                  */
-        const employeePayrollApi = new EmployeePayrollApi();
+        // const employeePayrollApi = new EmployeePayrollApi();
 
-        const apiEndpoint = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
-        apiEndpoint.url.searchParams.append("ListType", "'Detail'");
-        const ApiResponse = await apiEndpoint.fetch();
+        // const apiEndpoint = employeePayrollApi.collection.findByName(employeePayrollApi.collectionNames.TEmployeepaysettings);
+        // apiEndpoint.url.searchParams.append("ListType", "'Detail'");
+        // const ApiResponse = await apiEndpoint.fetch();
 
-        if (ApiResponse.ok) {
-          const data = await ApiResponse.json();
-          return data.temployeepaysettings;
+        // if (ApiResponse.ok) {
+        //   const data = await ApiResponse.json();
+        //   return data.temployeepaysettings;
+        // }
+        // return null;
+        let employeePaySettings;
+        let response = await getVS1Data(erpObject.TEmployeepaysettings);
+        if(response.length == 0){
+          let data = await CachedHttp.get(erpObject.TEmployeepaysettings, async () => {
+            return await sideBarService.getAllEmployeePaySettings(initialBaseDataLoad, 0);
+            }, {
+              useIndexDb: true,
+              useLocalStorage: false,
+              validate: cachedResponse => {
+                return true;
+              }
+            });
+    
+          data = data.response;
+          employeePaySettings = data.temployeepaysettings;
+          await addVS1Data('TEmployeepaysettings', JSON.stringify(employeePaySettings));
+        }else{
+          let data = JSON.parse(response[0].data);
+          employeePaySettings = data.temployeepaysettings;
         }
-        return null;
+        return employeePaySettings;
       };
       const _taxes = await getAllTaxes();
 
       // Load taxes for all employees
-      await GlobalFunctions.asyncForEach(employees, async (employee, index) => {
-        await employee.getTaxe(_taxes);
-      });
+      // await GlobalFunctions.asyncForEach(employees, async (employee, index) => {
+      //   await employee.getTaxe(_taxes);
+      // });
 
       /**
              * Filter the list depending on the calendar
              */
-      employees = employees.filter(employee => {
+      employees = employees.filter((employee) => {
         if (employee.taxes != null) {
           if (calendar.PayrollCalendarPayPeriod == employee.taxes.Payperiod) {
             return true;
@@ -444,7 +490,7 @@ Template.payrundetails.onRendered(function () {
         await employee.getEarningPayTemplates(); // get their earning templates
         await employee.getEarnings({timesheets: timesheets}); // Get their earnings
         await employee.getSuperAnnuations(); // get their super annuations
-        // await employee.getTaxe(_taxes);
+        await employee.getTaxe(_taxes);
 
         employee.calculateNetPay();
       });
@@ -470,35 +516,35 @@ Template.payrundetails.onRendered(function () {
       // Lets find the matching calendar
       const calendarId = urlParams.get("cid");
 
-      if ((await payRunHandler.isPayRunCalendarAlreadyDrafted(calendarId)) == undefined) {
-        // doesnt exist yet
-        await generateNewDraftPayRun();
-      } else {
-        // Already exist in drafts
-        LoadingOverlay.hide(0);
-        const result = await swal({
-          title: `Cannot create duplicate PayRun`,
-          //text: "Please log out to activate your changes.",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "OK"
-        });
-
-        if (result.value) {
-          redirectToPayRollOverview();
-          return;
-        } else if (result.dismiss === "cancel") {}
-      }
-
-      // if(isDraftAlreadyAvailableByCalendarId(calendarId)) {
-      //   payRunDetails = getDraftedPayunByCalendarId(calendarId);  we search by calendar ID
-      //   payRunDetails.employees = Employee.fromList(payRunDetails.employees);
-      //   payRunDetails.employees.forEach(e => {
-      //     e.selected = true;
-      //   });
-      // } else {
+      // if ((await payRunHandler.isPayRunCalendarAlreadyDrafted(calendarId)) == undefined) {
+      //   // doesnt exist yet
       //   await generateNewDraftPayRun();
+      // } else {
+      //   // Already exist in drafts
+      //   LoadingOverlay.hide(0);
+      //   const result = await swal({
+      //     title: `Cannot create duplicate PayRun`,
+      //     //text: "Please log out to activate your changes.",
+      //     type: "error",
+      //     showCancelButton: false,
+      //     confirmButtonText: "OK"
+      //   });
+
+      //   if (result.value) {
+      //     redirectToPayRollOverview();
+      //     return;
+      //   } else if (result.dismiss === "cancel") {}
       // }
+
+      if(isDraftAlreadyAvailableByCalendarId(calendarId)) {
+        payRunDetails = getDraftedPayunByCalendarId(calendarId);  //we search by calendar ID
+        payRunDetails.employees = Employee.fromList(payRunDetails.employees);
+        payRunDetails.employees.forEach(e => {
+          e.selected = true;
+        });
+      } else {
+        await generateNewDraftPayRun();
+      }
     } else if (urlParams.get("id")) {
       const payRunId = urlParams.get("id");
       payRunDetails = payRunsHistory.find(p => p.id == payRunId);

@@ -1500,7 +1500,7 @@ Template.customerscard.onRendered(function () {
 
   $(document).on("click", "#termsList tbody tr", function (e) {
     let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
-    $('#' + selectedTermsDropdownID + '').val($(this).find(".colTermName").text());
+    $('#' + selectedTermsDropdownID + '').val($(this).find(".colName").text());
     $('#termsListModal').modal('toggle');
   });
   $(document).on("click", "#paymentmethodList tbody tr", function (e) {
@@ -2247,14 +2247,20 @@ Template.customerscard.events({
 
         let customerSaveID = objDetails.fields.ID;
         if (customerSaveID) {
-          sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
-            addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-              window.open('/customerlist', '_self');
-            }).catch(function (err) {
-              window.open('/customerlist', '_self');
-            });
+          sideBarService.getAllTCustomerList(initialBaseDataLoad, 0).then(async function (dataReload) {
+              addVS1Data('TCustomerVS1List', JSON.stringify(dataReload)).then(function() {
+                sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                  addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                    window.open('/customerlist', '_self');
+                  }).catch(function (err) {
+                    swal('Oooops...', err, 'error');
+                  });
+                }).catch(function (err) {
+                  swal('Oooops...', err, 'error');
+                });
+              });              
           }).catch(function (err) {
-            window.open('/customerlist', '_self');
+            swal('Oooops...', err, 'error');
           });
         }
       }).catch(function (err) {
