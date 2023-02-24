@@ -697,47 +697,12 @@ Template.newtermspop.events({
         });
     },
     'click .btnDeleteTerms': function() {
-        playDeleteAudio();
-        let taxRateService = new TaxRateService();
-        setTimeout(function(){
-
-        let termsId = $('#selectDeleteLineID').val();
-
-        let objDetails = {
-            type: "TTerms",
-            fields: {
-                Id: parseInt(termsId),
-                Active: false
-            }
-        };
-
-        taxRateService.saveTerms(objDetails).then(function(objDetails) {
-            sideBarService.getTermsVS1().then(function(dataReload) {
-                addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
-                    Meteor._reload.reload();
-                }).catch(function(err) {
-                    Meteor._reload.reload();
-                });
-            }).catch(function(err) {
-                Meteor._reload.reload();
-            });
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {
-                    Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {
-
-                }
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    }, delayTimeAfterSound);
+        $('.btnActiveTerms').removeClass('d-none')
+        $('.btnDeleteTerms').addClass('d-none')
+    },
+    'click .btnActiveTerms': function() {
+        $('.btnDeleteTerms').removeClass('d-none')
+        $('.btnActiveTerms').addClass('d-none')
     },
     'click .btnSaveTerms': function() {
         playSaveAudio();
@@ -755,7 +720,7 @@ Template.newtermspop.events({
         let isEOM = false;
         let isEOMPlus = false;
         let days = 0;
-
+        let active = $('.btnActiveTerms').hasClass('d-none')
         let isSalesdefault = false;
         let isPurchasedefault = false;
         if (termdays.replace(/\s/g, '') != "") {
@@ -802,7 +767,7 @@ Template.newtermspop.events({
                     type: "TTerms",
                     fields: {
                         ID: parseInt(termsID),
-                        Active: true,
+                        Active: active,
                         //TermsName: termsName,
                         Description: description,
                         IsDays: isDays,
@@ -850,7 +815,7 @@ Template.newtermspop.events({
                 objDetails = {
                     type: "TTerms",
                     fields: {
-                        Active: true,
+                        Active: active,
                         TermsName: termsName,
                         Description: description,
                         IsDays: isDays,
@@ -899,6 +864,7 @@ Template.newtermspop.events({
                 type: "TTerms",
                 fields: {
                     ID: parseInt(termsID),
+                    Active: active,
                     TermsName: termsName,
                     Description: description,
                     IsDays: isDays,
