@@ -3,12 +3,11 @@
         <div class="fullScreenSpin fullScreenSpin_workorder" style="display:none;">
             <div class="spinner"></div>
         </div>
-
-        <!-- {{#if workorderrecord}} -->
-      
-            <form>
+        <form>
+                {{#if workorderrecord}}
                 {{> transaction_header
                     cardType="Sales Order"
+                    cardName='WO'
                     data=workorderrecord
                     uploadedFile=uploadedFile
                     isCurrencyEnable=isCurrencyEnable
@@ -35,9 +34,10 @@
                     showQAResume = workorderrecord.showQAResume
                     showQAPause = workorderrecord.showQAPause
                     showQAStop = workorderrecord.showQAStop
+                    modal_id = 'customerListModal'
+                    colName='colCompany'
                 }}
-              
-
+                {{/if}}
 
                 <div>
                     <div class="card-body rounded" style="padding-bottom: 0px !important;padding-top: 0px !important;">
@@ -541,8 +541,7 @@
                                 .colPaid {
                                     display: block !important;
                                  }
-  
-  
+
                             </style>
   
                             <!-- {{#if displayfields}} -->
@@ -562,11 +561,11 @@
                                       class="es-input highlightSelect lineProductName" type="search" value="{{workorderrecord.productname}}"></td>
                                   <td contenteditable="false"
                                     class="lineProductDesc colDescription ">
-                                    {{workorderrecord.product_description}}</td>
+                                    {{workorderrecord.productDescription}}</td>
                                   <td class="colQty "><input
                                       class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.quantity}}" disabled={{isSaved}}></td>
                                   <style>
-                                    #tblWorkOrderLine td.colShipDate label {
+                                    #tblWorkOrderLine td.colShipDate label, #tblWorkOrderLine td.colShipDate .form-group {
                                         margin-bottom: 0!important;
                                     }
                                   </style>
@@ -676,12 +675,6 @@
 
 
             </form>
-        <!-- {{/if}} -->
-        <div class="modal fade salesOrderListModal" role="dialog" tabindex="-1" id="salesOrderListModal">
-            {{> salesorderslistpop}}
-        </div>
-
-
         <style>
             @media screen and (min-width: 1600px) {
                 #BOMSetupModal .modal-dialog {
@@ -711,7 +704,9 @@
         </div>
         {{/if}}
 
-
+        <div class="modal fade" role="dialog" tabindex="-1" id="bomProductListModal">
+            {{>bomlistpop}}
+        </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
             {{> productlistpop}}
         </div>
@@ -720,8 +715,8 @@
             <!-- {{> statuspop}} -->
         </div>
 
-           <!-- Start Attachemt -->
-           <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
+        <!-- Start Attachemt -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -777,6 +772,11 @@
             </div>
         </div>
         <!-- END Attachments -->
+
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="bomListModal">
+            <!-- {{> bomlistpop}} -->
+        </div>
     </div>
 
     {{> init_form_page_script}}

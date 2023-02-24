@@ -1520,17 +1520,17 @@ Template.accountant_company.onRendered(() => {
             // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
             // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
 
-            let signatures = $('.signdiv');
+            let signatures = $('.' + elmnt.id);
             for (var i = 0; i < signatures.length; i++) {
-                if ((elmnt.offsetTop - pos2) < 50) {
-                    signatures[i].style.top = 50;
-                } else if ((elmnt.offsetTop - pos2) > 950) {
-                    signatures[i].style.top = 950;
+                if ((elmnt.offsetTop - pos2) < 105) {
+                    signatures[i].style.top = 105;
+                } else if ((elmnt.offsetTop - pos2) > 970) {
+                    signatures[i].style.top = 970;
                 } else {
                     signatures[i].style.top = (elmnt.offsetTop - pos2) + "px";
                 }
-                if ((elmnt.offsetLeft - pos1) < 50) {
-                    signatures[i].style.left = 50;
+                if ((elmnt.offsetLeft - pos1) < 20) {
+                    signatures[i].style.left = 20;
                 } else if ((elmnt.offsetLeft - pos1) > 550) {
                     signatures[i].style.left = 550;
                 } else {
@@ -1549,6 +1549,15 @@ Template.accountant_company.onRendered(() => {
     for (var i = 0; i < signdivs.length; i++) {
         dragElement(signdivs[i]);
     }
+
+    $('.sign-box-close').click(function () {
+        let signatureBox = $(this).parents('.signdiv')[0];
+        let signatures = $('.' + signatureBox.id);
+        signatures.css('display', 'none');
+        signatures.css('top', '105px');
+        signatures.css('left', '20px');
+    });
+
     // Alex: Add for Docusign end
 });
 

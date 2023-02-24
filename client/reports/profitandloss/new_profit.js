@@ -102,6 +102,39 @@ Template.newprofitandloss.onRendered(function () {
     }, 100);
   });
 
+  $(document).on("focusout", ".editRowGroup #editGroupName", function(e) {
+    let groupID = parseInt($("#editGroupID").val());
+    let groupName = $("#editGroupName").val();
+    
+    if(templateObject.layoutgroupid.get() && groupName != ""){
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let jsonObj = {
+        "Name": "VS1_PNLRenameGroup",
+        "Params":{
+          "LayoutID": 3,
+          "Selected": parseInt(templateObject.layoutgroupid.get()),
+          "NewName": groupName
+        }
+      }
+      reportService.editPNLGroup(jsonObj).then(function(res){
+        templateObject.getProfitLossLayout();
+      }).catch(function(err) {
+          swal({
+              title: 'Oooops...',
+              text: err,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Try Again'
+          }).then((result) => {
+              if (result.value) {
+                  // Meteor._reload.reload();
+              } else if (result.dismiss === 'cancel') {}
+          });
+          $('.fullScreenSpin').css('display', 'none');
+      });
+    }
+  });
+
   let utilityService = new UtilityService();
   let salesOrderTable;
   var splashArray = new Array();
@@ -661,6 +694,7 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
+      console.log("--------", data);
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
@@ -729,16 +763,47 @@ Template.newprofitandloss.onRendered(function () {
           },
           onDrop: function ($item, container, _super) {
             // On drag removing the dragged classs and colleps
-            if ($item.parents().hasClass("groupedListNew")) {
-            } else {
-              $item.find(".mainHeadingDiv").removeClass("collapsTogls");
-            }
+            // if ($item.parents().hasClass("groupedListNew")) {
+            // } else {
+            //   $item.find(".mainHeadingDiv").removeClass("collapsTogls");
+            // }
             container.el.removeClass("active");
             _super($item, container);
             let siblingClass = $item.siblings().attr("class");
-            $item.removeClass();
+            $item.removeClass("cSortItems");
+            $item.removeClass("scSortItems");
             $item.addClass(siblingClass);
             $item.addClass("selected");
+
+            let groupID = $item.attr("plid");
+            let containerID = container.el.parent().attr("plid") || 0;
+            let containerName = container.el.parent().attr("data-group") || "";
+            
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let jsonObj = {
+              "Name": "VS1_PNLMoveAccount",
+              "Params":{
+                "LayoutID": 3,
+                "Selected": groupID,
+                "Destination": containerID,
+              }
+            }
+            reportService.movePNLGroup(jsonObj).then(function(res){
+              templateObject.getProfitLossLayout();
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        // Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {}
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
           },
           activate: function ($item, container, _super) {
             alert(1);
@@ -1322,17 +1387,17 @@ Template.newprofitandloss.events({
     playSaveAudio();
     let templateObject = Template.instance();
     setTimeout(async function(){
-    let periods = $("#comparisonPeriodNum").val();
-    $(".fullScreenSpin").css("display", "block");
+      let periods = $("#comparisonPeriodNum").val();
+      $(".fullScreenSpin").css("display", "block");
 
-    let defaultOptions = await templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.compPeriod = periods;
-      defaultOptions.departments = [];
-    }
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getProfitandLossReports();
-  }, delayTimeAfterSound);
+      let defaultOptions = await templateObject.reportOptions.get();
+      if (defaultOptions) {
+        defaultOptions.compPeriod = periods;
+        defaultOptions.departments = [];
+      }
+      await templateObject.reportOptions.set(defaultOptions);
+      await templateObject.getProfitandLossReports();
+    }, delayTimeAfterSound);
   },
 
   // Current Month
@@ -2134,9 +2199,13 @@ Template.newprofitandloss.events({
                   "Selected": parseInt(templateObject.layoutgroupid.get())
                 }
               }
-              reportService.deletePNLNewGroup(jsonObj).then(function(res){
+              console.log("=======", jsonObj);
+              reportService.deletePNLGroup(jsonObj).then(function(res){
                 templateObject.layoutgroupid.set("");
                 templateObject.getProfitLossLayout();
+                $(".editRowGroup").hide();
+                $("#editGroupName").val("");
+                $("#editGroupID").val("");
               }).catch(function(err) {
                   swal({
                       title: 'Oooops...',
@@ -2377,12 +2446,11 @@ Template.newprofitandloss.events({
       //   }
       //   return item;
       // });
-      jsonObj.Params.Destination = accountName;
+      jsonObj.Params.Destination = parseInt(accountName);
     }
 
     $('.fullScreenSpin').css('display', 'inline-block');
     reportService.savePNLNewGroup(jsonObj).then(function(res){
-      alert(1);
       templateObject.getProfitLossLayout();
       $("#newGroupName").val("");
       $("#nplAddGroupScreen").modal("hide");

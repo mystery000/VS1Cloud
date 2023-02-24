@@ -280,7 +280,7 @@ Template.newLeaveRequestModal.onRendered(() => {
     };
 
     templateObject.getLeaveRequests = async() => {
-        let data = []
+        let data = [];
         let dataObject = await getVS1Data('TLeavRequest');
         if (dataObject.length == 0) {
             data = await templateObject.saveLeaveRequestLocalDB();
@@ -309,6 +309,8 @@ Template.newLeaveRequestModal.onRendered(() => {
                 ];
                 splashArrayList.push(dataListAllowance);
             }
+        } else {
+            $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
         }
 
         setTimeout(function() {
@@ -473,17 +475,17 @@ Template.newLeaveRequestModal.onRendered(() => {
             changeYear: true,
             yearRange: "-90:+10",
         });
-        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", new Date().getDay+7);
-
-
+        let edate1 = new Date();
+        edate1.setDate(edate1.getDate() + 7);
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate1);
+        $("#edtLeaveTypeofRequest").val('Annual Leave');
+        $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
         $('#edtLeavePayPeriod').editableSelect('add', 'Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Fortnightly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Twice Monthly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Four Weekly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Monthly');
         $('#edtLeavePayPeriod').editableSelect('add', 'Quarterly');
-
-        $('#edtLeavePayPeriod').val('Weekly');
 
         $('#edtLeavePayPeriod').val('Weekly');
 
