@@ -143,7 +143,7 @@ Template.termsettings.onRendered(function () {
   const deptrecords = [];
   let deptprodlineItems = [];
 
-  $("#tblTermsList tbody").on("click", "tr", function () {
+  $("#tblTermsList tbody").on("click", "tr", function (event) {
     //var listData = $(this).closest('tr').attr('id');
     var is7days = false;
     var is30days = false;
@@ -152,12 +152,13 @@ Template.termsettings.onRendered(function () {
     var isSalesDefault = false;
     var isPurchaseDefault = false;
 
-    $("#add-terms-title").text("Edit Term Settings");
-    let termsID = $(this).closest("tr").find(".colTermsID").text() || 0;
+    $("#termModalHeader").text("Edit Term Settings");
+    let termsID = $(this).closest("tr").attr("id") || 0;
     let termsName = $(event.target).closest("tr").find(".colName").text() || "";
     let description =
       $(event.target).closest("tr").find(".colDescription").text() || "";
     let days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
+    let status = $(event.target).closest("tr").find(".colStatus").text();
     if (
       $(event.target).closest("tr").find(".colIsEOM .chkBox").is(":checked")
     ) {
@@ -230,13 +231,11 @@ Template.termsettings.onRendered(function () {
 
     //Make btnDelete "Make Active or In-Active"
     if (status == "In-Active") {
-      $("#view-in-active").html(
-        "<button class='btn btn-success btnActivateTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>"
-      );
+      $('.btnDeleteTerms').addClass('d-none')
+      $('.btnActiveTerms').removeClass('d-none')
     } else {
-      $("#view-in-active").html(
-        "<button class='btn btn-danger btnDeleteTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>"
-      );
+      $('.btnActiveTerms').addClass('d-none')
+      $('.btnDeleteTerms').removeClass('d-none')      
     }
   });
 });
@@ -284,370 +283,7 @@ Template.termsettings.events({
       .catch(function (err) {
         Meteor._reload.reload();
       });
-  },
-  "click .btnDeleteTerms": function () {
-    playDeleteAudio();
-    let taxRateService = new TaxRateService();
-    setTimeout(function () {
-      //$('.fullScreenSpin').css('display', 'inline-block');
-      let termsId = $("#edtTermsID").val();
-      let objDetails = {
-        type: "TTermsVS1",
-        fields: {
-          Id: parseInt(termsId),
-          Active: false,
-        },
-      };
-
-      taxRateService
-        .saveTerms(objDetails)
-        .then(function (objDetails) {
-          sideBarService
-            .getTermsVS1()
-            .then(function (dataReload) {
-              addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                .then(function (datareturn) {
-                  Meteor._reload.reload();
-                })
-                .catch(function (err) {
-                  Meteor._reload.reload();
-                });
-            })
-            .catch(function (err) {
-              Meteor._reload.reload();
-            });
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
-            }
-          });
-          $(".fullScreenSpin").css("display", "none");
-        });
-    }, delayTimeAfterSound);
-  },
-  "click .btnActivateTerms": function () {
-    playSaveAudio();
-    let contactService = new ContactService();
-    setTimeout(function () {
-      $(".fullScreenSpin").css("display", "inline-block");
-      let termsID = $("#edtTermsID").val();
-      let termsName = $("#edtName").val();
-      let description = $("#edtDesc").val();
-      let termdays = $("#edtDays").val();
-
-      let isDays = false;
-      let is30days = false;
-      let isEOM = false;
-      let isEOMPlus = false;
-      let days = 0;
-
-      let isSalesdefault = false;
-      let isPurchasedefault = false;
-      if (termdays.replace(/\s/g, "") != "") {
-        isDays = true;
-      } else {
-        isDays = false;
-      }
-
-      if ($("#isEOM").is(":checked")) {
-        isEOM = true;
-      } else {
-        isEOM = false;
-      }
-
-      if ($("#isEOMPlus").is(":checked")) {
-        isEOMPlus = true;
-      } else {
-        isEOMPlus = false;
-      }
-
-      if ($("#chkCustomerDef").is(":checked")) {
-        isSalesdefault = true;
-      } else {
-        isSalesdefault = false;
-      }
-
-      if ($("#chkSupplierDef").is(":checked")) {
-        isPurchasedefault = true;
-      } else {
-        isPurchasedefault = false;
-      }
-      termsID = data.tterms[0].Id;
-      let objDetails = {
-        type: "TTermsVS1",
-        fields: {
-          ID: parseInt(termsID),
-          TermsName: termsName,
-          Description: description,
-          IsDays: isDays,
-          IsEOM: isEOM,
-          IsEOMPlus: isEOMPlus,
-          isPurchasedefault: isPurchasedefault,
-          isSalesdefault: isSalesdefault,
-          Days: termdays || 0,
-          Active: true,
-        },
-      };
-
-      taxRateService
-        .saveTerms(objDetails)
-        .then(function (objDetails) {
-          sideBarService
-            .getTermsVS1()
-            .then(function (dataReload) {
-              addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                .then(function (datareturn) {
-                  Meteor._reload.reload();
-                })
-                .catch(function (err) {
-                  Meteor._reload.reload();
-                });
-            })
-            .catch(function (err) {
-              Meteor._reload.reload();
-            });
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
-            }
-          });
-          $(".fullScreenSpin").css("display", "none");
-        });
-    }, delayTimeAfterSound);
-  },
-  "click .btnSaveTerms": function () {
-    playSaveAudio();
-    let taxRateService = new TaxRateService();
-    setTimeout(function () {
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      let termsID = $("#edtTermsID").val();
-      let termsName = $("#edtName").val();
-      let description = $("#edtDesc").val();
-      let termdays = $("#edtDays").val();
-
-      let isDays = false;
-      let is30days = false;
-      let isEOM = false;
-      let isEOMPlus = false;
-      let days = 0;
-
-      let isSalesdefault = false;
-      let isPurchasedefault = false;
-      if (termdays.replace(/\s/g, "") != "") {
-        isDays = true;
-      } else {
-        isDays = false;
-      }
-
-      if ($("#isEOM").is(":checked")) {
-        isEOM = true;
-      } else {
-        isEOM = false;
-      }
-
-      if ($("#isEOMPlus").is(":checked")) {
-        isEOMPlus = true;
-      } else {
-        isEOMPlus = false;
-      }
-
-      if ($("#chkCustomerDef").is(":checked")) {
-        isSalesdefault = true;
-      } else {
-        isSalesdefault = false;
-      }
-
-      if ($("#chkSupplierDef").is(":checked")) {
-        isPurchasedefault = true;
-      } else {
-        isPurchasedefault = false;
-      }
-
-      let objDetails = "";
-      if (termsName === "") {
-        $(".fullScreenSpin").css("display", "none");
-        Bert.alert(
-          "<strong>WARNING:</strong> Term Name cannot be blank!",
-          "warning"
-        );
-        e.preventDefault();
-      }
-
-      if (termsID == "") {
-        taxRateService
-          .checkTermByName(termsName)
-          .then(function (data) {
-            termsID = data.tterms[0].Id;
-            objDetails = {
-              type: "TTermsVS1",
-              fields: {
-                ID: parseInt(termsID),
-                TermsName: termsName,
-                Description: description,
-                IsDays: isDays,
-                IsEOM: isEOM,
-                IsEOMPlus: isEOMPlus,
-                isPurchasedefault: isPurchasedefault,
-                isSalesdefault: isSalesdefault,
-                Days: termdays || 0,
-                Active: true,
-              },
-            };
-
-            taxRateService
-              .saveTerms(objDetails)
-              .then(function (objDetails) {
-                sideBarService
-                  .getTermsVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    Meteor._reload.reload();
-                  } else if (result.dismiss === "cancel") {
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              });
-          })
-          .catch(function (err) {
-            objDetails = {
-              type: "TTermsVS1",
-              fields: {
-                TermsName: termsName,
-                Description: description,
-                IsDays: isDays,
-                IsEOM: isEOM,
-                IsEOMPlus: isEOMPlus,
-                Days: termdays || 0,
-                Active: true,
-              },
-            };
-
-            taxRateService
-              .saveTerms(objDetails)
-              .then(function (objDetails) {
-                sideBarService
-                  .getTermsVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    Meteor._reload.reload();
-                  } else if (result.dismiss === "cancel") {
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              });
-          });
-      } else {
-        objDetails = {
-          type: "TTermsVS1",
-          fields: {
-            ID: parseInt(termsID),
-            TermsName: termsName,
-            Description: description,
-            IsDays: isDays,
-            IsEOM: isEOM,
-            isPurchasedefault: isPurchasedefault,
-            isSalesdefault: isSalesdefault,
-            IsEOMPlus: isEOMPlus,
-            Days: termdays || 0,
-            Active: true,
-          },
-        };
-
-        taxRateService
-          .saveTerms(objDetails)
-          .then(function (objDetails) {
-            sideBarService
-              .getTermsVS1()
-              .then(function (dataReload) {
-                addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                  .then(function (datareturn) {
-                    Meteor._reload.reload();
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                Meteor._reload.reload();
-              });
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
-              if (result.value) {
-                Meteor._reload.reload();
-              } else if (result.dismiss === "cancel") {
-              }
-            });
-            $(".fullScreenSpin").css("display", "none");
-          });
-      }
-    }, delayTimeAfterSound);
-  },
+  },  
   "click .btnAddTerms": function () {
     let templateObject = Template.instance();
     $("#add-terms-title").text("Add New Term");

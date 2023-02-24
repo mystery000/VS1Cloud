@@ -17,21 +17,33 @@
                             <input type="text" class="form-control" id="edtClientTypeName" name="edtClientTypeName">
                             <input type="hidden" class="form-control" id="typeID" name="typeID">
                         </div>
-
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Discount</label>
+                            <input type="text" class="form-control" id="edtClientTypeDiscount" name="edtClientTypeDiscount">                            
+                        </div>
                     </div>
                 </div>
                 <div class="row no-gutters">
                     <div class="col d-xl-flex align-items-xl-end">
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
-                            <textarea class="form-control" rows="5" id="txaDescription" name="txaDescription"></textarea>
+                            <textarea class="form-control" rows="3" id="txaDescription" name="txaDescription"></textarea>
                           </div>
                     </div>
                 </div>
-
+                <div class="row no-gutters">
+                    <div class="col d-xl-flex align-items-xl-end">
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Terms</label>
+                            <input type="text" class="form-control es-input pointer bg-white" id="edtClientTypeTerms" name="edtClientTypeTerms">                            
+                        </div>
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Credit Limit</label>
+                            <input type="text" class="form-control" id="edtClientTypeCreditLimit" name="edtClientTypeCreditLimit">                            
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer" style="background-color: #ededed;">
                 <button class="btn btn-primary btnSaveClientType vs1ButtonMargin" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
                 <button class="btn btn-danger btnDeleteClientType vs1ButtonMargin" id="make-in-active" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Make In-Active</button>
+                <button class="btn btn-success btnActiveClientType vs1ButtonMargin d-none" id="make-active" type="button"><i class="fa fa-check-circle" style="padding-right: 8px;"></i>Make Active</button>
                 <button class="btn btn-secondary vs1ButtonMargin" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
             </div>
         </div>

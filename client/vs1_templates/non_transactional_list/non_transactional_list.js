@@ -286,7 +286,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "105" },
                 { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
-        } else if (currenttablename == "tblTermsList") { //Do Something Here
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") { //Do Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
@@ -3283,11 +3283,11 @@ Template.non_transactional_list.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
-        // if(data.Params.Search.replace(/\s/g, "") == ""){
-        //   deleteFilter = true;
-        // }else{
-        //   deleteFilter = false;
-        // };
+        if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
         for (let i = 0; i < data.tclienttype.length; i++) {
             let mobile = "";
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
@@ -9051,18 +9051,16 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
-        let dataTableList = [];
+        let dataTableList = [];        
         let customerName = $('#edtCustomerCompany').val() || "";
         if(customerName == ""){
             customerName = $('#edtJobCustomerCompany').val() || "";
         }
-
         let fromDate = datefrom == "" ? moment(new Date()).subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
-        let toDate = dateto == "" ? moment(new Date()).format("DD/MM/YYYY") : dateto;
-
+        let toDate = dateto == "" ? moment(new Date()).format("DD/MM/YYYY") : dateto;        
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
-
+        if (FlowRouter.current().path === "/customerscard") return templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName().then(async function(data) {
@@ -16311,7 +16309,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDepartmentData();
     } else if (currenttablename == "tblPaymentMethodList") {
         templateObject.getPaymentMethodData();
-    } else if (currenttablename == "tblTermsList") {
+    } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
         templateObject.getTermsData();
     } else if (currenttablename == "tblUOMList") {
         templateObject.getUOMListData();
@@ -16560,7 +16558,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblPaymentMethodList") {
             await clearData('TPaymentList');
             templateObject.getPaymentMethodData(true);
-        } else if (currenttablename == "tblTermsList") {
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
             await clearData('TTermsVS1List');
             templateObject.getTermsData(true);
         } else if (currenttablename == "tblUOMList") {
@@ -16683,7 +16681,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblPaymentMethodList") {
             await clearData('TPaymentMethodList');
             templateObject.getPaymentMethodListData(false);
-        } else if (currenttablename == "tblTermsList") {
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
             await clearData('TTermsVS1List');
             templateObject.getTermsData(false);
         } else if (currenttablename == "tblUOMList") {

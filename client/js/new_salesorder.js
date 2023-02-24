@@ -3602,7 +3602,7 @@ Template.new_salesorder.onRendered(function () {
     $('#departmentModal').modal('toggle');
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $('#sltTerms').val($(this).find(".colTermName").text());
+    $('#sltTerms').val($(this).find(".colName").text());
     $('#termsListModal').modal('toggle');
   });
   $(document).on("click", "#custListType tbody tr", function (e) {

@@ -83,9 +83,17 @@ Template.clienttypesettings.onRendered(function () {
       .find(".colDescription")
       .text();
     let typeName = $(event.target).closest("tr").find(".colTypeName").text();
+    let typeActive = $(event.target).closest("tr").find(".colStatus").text();
     $("#edtClientTypeID").val(targetID);
     $("#edtClientTypeName").val(typeName);
     $("#txaDescription").val(typeDescription);
+    if (typeActive === 'In-Active') {
+      $('.btnDeleteClientType').addClass('d-none')
+      $('.btnActiveClientType').removeClass('d-none')
+    } else {
+      $('.btnActiveClientType').addClass('d-none')
+      $('.btnDeleteClientType').removeClass('d-none')
+    }
     $("#myModalClientType").modal("show");
   });
 });
