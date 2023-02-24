@@ -150,6 +150,7 @@ Template.agedpayables.onRendered(() => {
           data.tapreport[i]["120Days"] || 0,
       ];
       splashArrayAgedPayablesReport.push(dataList);
+      console.log(data.tapreport[i]);
     }
       splashArrayAgedPayablesReport.sort(GlobalFunctions.sortFunction);
 
@@ -244,7 +245,6 @@ Template.agedpayables.onRendered(() => {
           "",
           "",
           "",
-          "",
           totalSum[0],
           totalSum[1],
           totalSum[2],
@@ -255,7 +255,7 @@ Template.agedpayables.onRendered(() => {
       templateObject.transactiondatatablerecords.set(agedPayableList);
 
       setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: agedPayableList,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",

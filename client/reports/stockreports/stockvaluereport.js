@@ -34,9 +34,9 @@ Template.stockvaluereport.onRendered(() => {
     Datehandler.initOneMonth();
 
     let reset_data = [
-      { index: 1, label: 'Department Name', class: 'colDepartmentName', active: true, display: true, width: "200" },
+      { index: 1, label: 'Department', class: 'colDepartmentName', active: true, display: true, width: "200" },
       { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "130" },
-      { index: 3, label: 'Trans Type', class: 'colTransType', active: true, display: true, width: "130" },
+      { index: 3, label: 'Trans', class: 'colTransType', active: true, display: true, width: "130" },
       { index: 4, label: 'Qty', class: 'colQty', active: true, display: true, width: "70" },
       { index: 5, label: 'Running Qty', class: 'colRunningQty', active: true, display: true, width: "130" },
       { index: 6, label: 'Unit Cost~When Posted', class: 'colUnitCostWhenPosted', active: true, display: true, width: "200" },
@@ -121,7 +121,28 @@ Template.stockvaluereport.onRendered(() => {
   templateObject.setDateAs = ( dateFrom = null ) => {
     templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
   };
+  templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate = false) {
+    getVS1Data('StockValueReport').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        reportService.getStockValueReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('StockValueReport', JSON.stringify(data));
+          templateObject.displayReportData(data);
+        }).catch(function (err) {
 
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayReportData(data);
+      }
+    }).catch(function (err) {
+      reportService.getStockValueReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('StockValueReport', JSON.stringify(data));
+        templateObject.displayReportData(data);
+      }).catch(function (err) {
+
+      });
+    });
+  }
   templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
     templateObject.setDateAs(dateFrom);
     LoadingOverlay.show();
@@ -141,7 +162,7 @@ Template.stockvaluereport.onRendered(() => {
     // }
 
     let data = await CachedHttp.get(erpObject.TStockValue, async () => {
-      return await reportService.getStockValueReport( dateFrom, dateTo, ignoreDate);
+      return await reportService.getStockValueReport(dateFrom, dateTo, ignoreDate);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -151,8 +172,9 @@ Template.stockvaluereport.onRendered(() => {
     });
 
     data = data.response;
-
-
+    templateObject.displayReportData(data);
+  }
+  templateObject.displayReportData = async function (data) {
     let reportData = [];
     if( data.tstockvalue.length > 0 ){
       for (const item of data.tstockvalue ) {
@@ -210,7 +232,7 @@ Template.stockvaluereport.onRendered(() => {
 
     LoadingOverlay.hide();
   }
-  templateObject.loadReport(
+  templateObject.getReportData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false

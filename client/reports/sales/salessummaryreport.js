@@ -44,15 +44,15 @@ Template.salessummaryreport.onRendered(() => {
   const templateObject = Template.instance();
 
   let reset_data = [
-    { index: 1, label: 'Weekday', class: 'colWeekday', active: true, display: true, width: "100" },
-    { index: 2, label: 'Cost Amount (Burleigh)', class: 'colCostAmountBurleigh', active: true, display: true, width: "100" },
-    { index: 3, label: 'Sold Amount (Burleigh)', class: 'colSoldAmountBurleigh', active: true, display: true, width: "100" },
-    { index: 4, label: 'Cost Amount (Default)', class: 'colCostAmountDefault', active: true, display: true, width: "100" },
-    { index: 5, label: 'Sold Amount (Default)', class: 'colSoldAmountDefault', active: true, display: true, width: "100" },
-    { index: 6, label: 'Total Cost Amount', class: 'colTotalCostAmount', active: true, display: true, width: "100" },
-    { index: 7, label: 'Total Sold Amount', class: 'colTotalSoldAmount', active: true, display: true, width: "100" },
-    { index: 8, label: 'Sold Amount Ex(Default)', class: 'colSoldAmountExDefault', active: false, display: true, width: "100" },
-    { index: 9, label: 'Sales Tax (Default)', class: 'colSalesTaxDefault', active: false, display: true, width: "100" },
+    { index: 1, label: 'Company', class: 'colWeekday', active: true, display: true, width: "150" },
+    { index: 2, label: 'Type', class: 'colCostAmountBurleigh', active: true, display: true, width: "150" },
+    { index: 3, label: 'Sales No.', class: 'colSoldAmountBurleigh', active: true, display: true, width: "150" },
+    { index: 4, label: 'Sales Date', class: 'colCostAmountDefault', active: true, display: true, width: "150" },
+    { index: 5, label: 'Employee Name', class: 'colSoldAmountDefault', active: true, display: true, width: "150" },
+    { index: 6, label: 'Amount (Ex)', class: 'colTotalCostAmount', active: true, display: true, width: "150" },
+    { index: 7, label: 'Total Tax', class: 'colTotalSoldAmount', active: true, display: true, width: "150" },
+    { index: 8, label: 'Amount (Inc)', class: 'colSoldAmountExDefault', active: true, display: true, width: "150" },
+    { index: 9, label: 'Balance', class: 'colSalesTaxDefault', active: true, display: true, width: "150" },
     { index: 10, label: 'Sold Amount Ex(Hawaii)', class: 'colSoldAmountExHawaii', active: false, display: true, width: "100" },
     { index: 11, label: 'Sales Tax (Hawaii)', class: 'colSalesTaxHawaii', active: false, display: true, width: "100" },
     { index: 12, label: 'Cost Amount (Los Angeles)', class: 'colCostAmountLosAngels', active: false, display: true, width: "100" },
@@ -324,8 +324,8 @@ Template.salessummaryreport.onRendered(() => {
       })
 
 
-      records = _.sortBy(records, 'Company');
-      records = _.groupBy(records, 'Company');
+      //records = _.sortBy(records, 'Company');
+      //records = _.groupBy(records, 'Company');
 
       for (let key in records) {
         // let obj = [{
@@ -352,19 +352,18 @@ Template.salessummaryreport.onRendered(() => {
         let threeMonth = 0;
         let Older = 0;
         const currencyLength = Currency.length;
-
-        record.entries.forEach((entry) => {
+        let entry = record.entries;
+        //record.entries.forEach((entry) => {
           totalAmountEx = totalAmountEx + parseFloat(entry.entries.TotalAmount);
           totalTax = totalTax + parseFloat(entry.entries.TotalTax);
           amountInc = amountInc + parseFloat(entry.entries.TotalAmountinc);
           balance = balance + parseFloat(entry.entries.Balance);
 
-        });
-
+        //});
         var dataList = {
-          id: record.entries[0].SaleId || '',
-          clientid: record.entries[0].ClientId || '',
-          contact: record.title || '',
+          id: record.entries.SaleId || '',
+          clientid: record.entries.ClientId || '',
+          contact: record.entries.Company || '',
           type: '',
           orderno: '',
           orderdate: '',
@@ -374,12 +373,12 @@ Template.salessummaryreport.onRendered(() => {
           totalamount: amountInc || '0.00',
           balance: balance || '0.00'
         };
-        if (record.entries[0].SaleId != '') {
+        if (record.entries.SaleId != '') {
           reportrecords.push(dataList);
         }
 
         record.total = {
-          Title: 'Total ' + record.title,
+          Title: 'Total ' + record.entries.Company,
           AmountEx: totalAmountEx,
           TotalTax: totalTax,
           AmountInc: amountInc,
@@ -514,13 +513,13 @@ Template.salessummaryreport.onRendered(() => {
 
             let lineValue = $(this).first().text()[0];
             if (lineValue != undefined) {
-              if (lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
+              //if (lineValue.indexOf(Currency) >= 0) $(this).addClass('text-right')
             }
 
           });
 
           $('td').each(function () {
-            if ($(this).first().text().indexOf('-' + Currency) >= 0) $(this).addClass('text-right')
+            //if ($(this).first().text().indexOf('-' + Currency) >= 0) $(this).addClass('text-right')
           });
 
           LoadingOverlay.hide();
@@ -539,6 +538,7 @@ Template.salessummaryreport.onRendered(() => {
 
   templateObject.getDepartments = function () {
     reportService.getDepartment().then(function (data) {
+      let deptrecords = [];
       for (let i in data.tdeptclass) {
 
         let deptrecordObj = {
