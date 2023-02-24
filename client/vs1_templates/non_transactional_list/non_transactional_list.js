@@ -16265,6 +16265,20 @@ Template.non_transactional_list.onRendered(function() {
         let chk_complete, completed = "";
         let completed_style = "";
 
+        // sort
+        task_array.sort((a, b) => {
+            let x = new Date(a.fields.due_date);
+            let y = new Date(b.fields.due_date);
+            let px = parseInt(a.fields.priority);
+            let py = parseInt(b.fields.priority);
+
+            if(py != px){
+                return py - px;
+            }else{
+                return y - x;
+            }
+        });
+
         task_array.forEach((item) => {
             if (item.fields.Completed) {
                 completed = "checked";
@@ -16367,19 +16381,6 @@ Template.non_transactional_list.onRendered(function() {
                 item.fields.Completed,
                 projectColor
             ]);
-        });
-
-        splashArrayLeadList.sort((a, b) => {
-            let x = new Date(a["dueDate"]);
-            let y = new Date(b["dueDate"]);
-            let px = a["priority"] == "Urgent" ? 3 : (a["priority"] == "High" ? 2 : (a["priority"] == "Normal" ? 1 : 0));
-            let py = b["priority"] == "Urgent" ? 3 : (b["priority"] == "High" ? 2 : (b["priority"] == "Normal" ? 1 : 0));
-
-            if (a["dueDate"] != b["dueDate"]) {
-                return y - x;
-            } else {
-                return py - px;
-            }
         });
 
         templateObject.transactiondatatablerecords.set(splashArrayLeadList);
@@ -16512,7 +16513,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: true,
                 order: [
-                    [3, "desc"],
+                    // [3, "desc"],
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
