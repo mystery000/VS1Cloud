@@ -2870,7 +2870,9 @@ Template.new_salesorder.onRendered(function () {
                 saleCustField2: data.fields.SaleCustField2,
                 totalPaid: totalPaidAmount,
                 isConverted: data.fields.Converted,
-                CustomerID: data.fields.CustomerID
+                CustomerID: data.fields.CustomerID,
+                ClientName: data.fields.CustomerName,
+                ClientEmail: data.fields.ContactEmail
               };
 
               $('#edtCustomerName').val(data.fields.CustomerName);
@@ -3092,7 +3094,9 @@ Template.new_salesorder.onRendered(function () {
                   saleCustField2: useData[d].fields.SaleCustField2,
                   totalPaid: totalPaidAmount,
                   isConverted: useData[d].fields.Converted,
-                  CustomerID: useData[d].fields.CustomerID
+                  CustomerID: useData[d].fields.CustomerID,
+                  ClientEmail: useData[d].fields.ContactEmail,
+                  ClientName: useData[d].fields.ClientName
                 };
 
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
@@ -3375,7 +3379,9 @@ Template.new_salesorder.onRendered(function () {
               saleCustField2: data.fields.SaleCustField2,
               totalPaid: totalPaidAmount,
               isConverted: data.fields.Converted,
-              CustomerID: data.fields.CustomerID
+              CustomerID: data.fields.CustomerID,
+              ClientName: data.fields.ClientName,
+              ClientEmail: data.fields.ContactEmail
             };
             $('#edtCustomerName').val(data.fields.CustomerName);
             templateObject.CleintName.set(data.fields.CustomerName);
@@ -7408,8 +7414,8 @@ Template.new_salesorder.events({
             $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
-            var saleDate = soData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
+            var creationDate = soData.fields.CreationDate;
+            var fromDate = creationDate.substring(0, 10);
             var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingSOs = await sideBarService.getAllTSalesOrderListData(
               fromDate,
@@ -7682,6 +7688,8 @@ Template.new_salesorder.events({
     }, delayTimeAfterSound);
   },
   'click .btnSave': (event, templateObject) => {
+    event.preventDefault();
+    event.stopPropagation();
     playSaveAudio();
     let salesService = new SalesBoardService();
     let uploadedItems = templateObject.uploadedFiles.get();
@@ -7914,7 +7922,7 @@ Template.new_salesorder.events({
           $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
           var ponumber = $('#ponumber').val() || '.';
           $('.po').text(ponumber);
-          const templateObject = Template.instance();
+          // const templateObject = Template.instance();
 
           templateObject.addAttachment(objDetails);
 
