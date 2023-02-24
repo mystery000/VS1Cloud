@@ -12,7 +12,6 @@ import PayRun from "../../js/Api/Model/PayRun";
 import LoadingOverlay from "../../LoadingOverlay";
 import "../../lib/global/indexdbstorage";
 import GlobalFunctions from "../../GlobalFunctions";
-import Employee from "../../js/Api/Model/Employee";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
 import {Template} from 'meteor/templating';
@@ -470,35 +469,35 @@ Template.payrundetails.onRendered(function () {
       // Lets find the matching calendar
       const calendarId = urlParams.get("cid");
 
-      if ((await payRunHandler.isPayRunCalendarAlreadyDrafted(calendarId)) == undefined) {
-        // doesnt exist yet
-        await generateNewDraftPayRun();
-      } else {
-        // Already exist in drafts
-        LoadingOverlay.hide(0);
-        const result = await swal({
-          title: `Cannot create duplicate PayRun`,
-          //text: "Please log out to activate your changes.",
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "OK"
-        });
-
-        if (result.value) {
-          redirectToPayRollOverview();
-          return;
-        } else if (result.dismiss === "cancel") {}
-      }
-
-      // if(isDraftAlreadyAvailableByCalendarId(calendarId)) {
-      //   payRunDetails = getDraftedPayunByCalendarId(calendarId);  we search by calendar ID
-      //   payRunDetails.employees = Employee.fromList(payRunDetails.employees);
-      //   payRunDetails.employees.forEach(e => {
-      //     e.selected = true;
-      //   });
-      // } else {
+      // if ((await payRunHandler.isPayRunCalendarAlreadyDrafted(calendarId)) == undefined) {
+      //   // doesnt exist yet
       //   await generateNewDraftPayRun();
+      // } else {
+      //   // Already exist in drafts
+      //   LoadingOverlay.hide(0);
+      //   const result = await swal({
+      //     title: `Cannot create duplicate PayRun`,
+      //     //text: "Please log out to activate your changes.",
+      //     type: "error",
+      //     showCancelButton: false,
+      //     confirmButtonText: "OK"
+      //   });
+
+      //   if (result.value) {
+      //     redirectToPayRollOverview();
+      //     return;
+      //   } else if (result.dismiss === "cancel") {}
       // }
+
+      if(isDraftAlreadyAvailableByCalendarId(calendarId)) {
+        payRunDetails = getDraftedPayunByCalendarId(calendarId);  //we search by calendar ID
+        payRunDetails.employees = Employee.fromList(payRunDetails.employees);
+        payRunDetails.employees.forEach(e => {
+          e.selected = true;
+        });
+      } else {
+        await generateNewDraftPayRun();
+      }
     } else if (urlParams.get("id")) {
       const payRunId = urlParams.get("id");
       payRunDetails = payRunsHistory.find(p => p.id == payRunId);
