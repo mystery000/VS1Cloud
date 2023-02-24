@@ -56,7 +56,7 @@ Template.currenciessettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true, width: "10" },
+    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true, width: "30" },
     { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
     { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
     { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100" },
@@ -64,7 +64,7 @@ Template.currenciessettings.onCreated(function () {
     { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
     { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
     { index: 7, label: '#Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
-    { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+    { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
     { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     { index: 10, label: '#Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
     { index: 11, label: '#Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
