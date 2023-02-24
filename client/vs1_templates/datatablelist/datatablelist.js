@@ -144,6 +144,9 @@ Template.datatablelist.onRendered(async function () {
         }
         await templateObject.displayfields.set(custFields);
         $('.dataTable').resizable();
+
+        let tableData = await templateObject.getTableData();
+        await templateObject.displayTableData(tableData);
     }
 
     templateObject.init_reset_data = function () {
@@ -332,6 +335,7 @@ Template.datatablelist.onRendered(async function () {
         })
     }
     templateObject.displayTableData = async function (data, isEx = false) {
+        console.log('data-table-display-table-data');
         var splashDataArray = new Array();
         let deleteFilter = false;
         if (data != [] && data.length != 0) {
@@ -592,8 +596,8 @@ Template.datatablelist.onRendered(async function () {
         function getColDef() {
             let items = templateObject.data.tableheaderrecords;
 
-            $(".displaySettings").each(function (index) {
-                var $tblrow = $(this);
+            for (let i = 0; i < $(".displaySettings").length; i ++) {
+                var $tblrow = $($(".displaySettings")[i]);
                 var fieldID = $tblrow.attr("custid") || 0;
                 var colTitle = $tblrow.find(".divcolumn").text() || "";
                 var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -628,7 +632,7 @@ Template.datatablelist.onRendered(async function () {
                         }
                     }
                 }
-            });
+            }
 
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
@@ -652,10 +656,11 @@ Template.datatablelist.onRendered(async function () {
 
         }
         getColDef();
-    }
 
-    let tableData = await templateObject.getTableData();
-    await templateObject.displayTableData(tableData);
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 1000);
+    }
 
 })
 
@@ -673,6 +678,12 @@ Template.datatablelist.events({
         await clearData(templateObject.data.indexeddbname);
         let tableData = await templateObject.getTableData(true);
         templateObject.displayTableData(tableData)
+    },
+
+    "click .closeDisplaySetting": async function (e) {
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 1000);
     },
 
     "click .btnHideDeleted": async function (e) {
@@ -700,6 +711,10 @@ Template.datatablelist.events({
             $('.' + columnDataValue).addClass('hiddenColumn');
             $('.' + columnDataValue).removeClass('showColumn');
         }
+
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 500);
     },
     // "click .exportbtn": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
