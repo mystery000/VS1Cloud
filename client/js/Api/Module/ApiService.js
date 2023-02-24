@@ -1,4 +1,4 @@
-import { _ERP_BASE_API, _IPADDRESS, _PORT } from "../../../lib/global/erpconnection";
+import { _ERP_BASE_API, _IPADDRESS, _PORT, _USERNAME, _PASSWORD, _DATABASE } from "../../../lib/global/erpconnection";
 
 export default class ApiService {
   constructor() {
@@ -25,7 +25,7 @@ export default class ApiService {
    * @returns {HeadersInit}
    */
   static getHeaders() {
-    var headers = {
+    let headers = {
       database: erpDb().ERPDatabase,
       username: erpDb().ERPUsername,
       password: erpDb().ERPPassword,
@@ -38,7 +38,7 @@ export default class ApiService {
    * @returns {HeadersInit}
    */
   static getPostHeaders() {
-    postHeaders = {
+    let postHeaders = {
       database: erpDb().ERPDatabase,
       username: erpDb().ERPUsername,
       password: erpDb().ERPPassword,
