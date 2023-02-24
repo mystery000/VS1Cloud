@@ -22,7 +22,10 @@ Template.clienttypemodal.onCreated(function () {
 });
 
 Template.clienttypemodal.onRendered(function () {
-
+    $(document).on("click", "#termsList tbody tr", function (e) {        
+        $('#edtClientTypeTerms').val($(this).find(".colName").text());
+        $('#termsListModal').modal('toggle');
+    });
 });
 
 Template.clienttypemodal.events({
@@ -44,40 +47,27 @@ Template.clienttypemodal.events({
         let custType = $('#edtClientTypeName').val() || '';
         let typeDesc = $('#txaDescription').val() || '';
         let id = $('#edtClientTypeID').val() || '';
+        let discount = $('#edtClientTypeDiscount').val() || 0
+        let terms = $('#edtClientTypeDiscount').val() || ''
+        let creditLimit = $('#edtClientTypeCreditLimit').val() || 0
+
         if (custType === '') {
             swal('Client Type name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
         } else {
-            if(id == "") {
             objDetails = {
                 type: "TClientType",
                 fields: {
                     TypeName: custType,
                     TypeDescription: typeDesc,
-                    Active: true
-                }
-            }
-        } else {
-                objDetails = {
-                type: "TClientType",
-                fields: {
-                    Id: id,
-                    TypeName: custType,
-                    TypeDescription: typeDesc,
-                    Active: true
-                }
-
-            }
-            }
-            objDetails = {
-                type: "TClientType",
-                fields: {
-                    TypeName: custType,
-                    TypeDescription: typeDesc,
-                    Active: true
-                }
-            }
+                    // TypeDiscount: discount,
+                    // TypeTerms: terms,
+                    // TypeCreditLimit: creditLimit,
+                    Active: $('.btnActiveClientType').hasClass('d-none'),                    
+                },
+            };
+            if (id != "") objDetails.fields.Id = id
             contactService.saveClientTypeData(objDetails).then(function (objDetails) {
                 sideBarService.getClientTypeData().then(function (dataReload) {
                     addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
@@ -158,7 +148,17 @@ Template.clienttypemodal.events({
     },
     'blur #edtSiteCode': function (event) {
         $(event.target).val($(event.target).val().toUpperCase());
-
+    },
+    'click #edtClientTypeTerms': function(event) {
+        $('#termsListModal').modal('toggle');
+    },
+    'click .btnDeleteClientType': function(event) {
+        $('.btnDeleteClientType').addClass('d-none')
+        $('.btnActiveClientType').removeClass('d-none')
+    },
+    'click .btnActiveClientType': function(event) {
+        $('.btnActiveClientType').addClass('d-none')
+        $('.btnDeleteClientType').removeClass('d-none')
     }
 });
 

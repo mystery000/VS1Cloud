@@ -116,18 +116,18 @@ Template.departmentSettings.events({
             addVS1Data('TDeptClassList', JSON.stringify(dataReload)).then(function(datareturn) {
               sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
                   await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                      Meteor._reload.reload();
+                      window.location.reload();
                   }).catch(function(err) {
-                      Meteor._reload.reload();
+                      window.location.reload();
                   });
               }).catch(function(err) {
-                  Meteor._reload.reload();
+                  window.location.reload();
               });
             }).catch(function(err) {
-                Meteor._reload.reload();
+                window.location.reload();
             });
         }).catch(function(err) {
-            Meteor._reload.reload();
+            window.location.reload();
         });
     },
     'click .btnCloseAddNewDept': function () {
@@ -161,18 +161,18 @@ Template.departmentSettings.events({
                 addVS1Data('TDeptClass', JSON.stringify(dataReload)).then(function(datareturn) {
                   sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
                       await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                          Meteor._reload.reload();
+                          window.location.reload();
                       }).catch(function(err) {
-                          Meteor._reload.reload();
+                          window.location.reload();
                       });
                   }).catch(function(err) {
-                      Meteor._reload.reload();
+                      window.location.reload();
                   });
                 }).catch(function(err) {
-                    Meteor._reload.reload();
+                    window.location.reload();
                 });
             }).catch(function(err) {
-                Meteor._reload.reload();
+                window.location.reload();
             });
 
         }).catch(function (err) {
@@ -184,7 +184,7 @@ Template.departmentSettings.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {
-                    Meteor._reload.reload();
+                    window.location.reload();
                 } else if (result.dismiss === 'cancel') {}
             });
             $('.fullScreenSpin').css('display', 'none');
@@ -215,18 +215,18 @@ Template.departmentSettings.events({
                     addVS1Data('TDeptClass', JSON.stringify(dataReload)).then(function(datareturn) {
                       sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
                           await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                              Meteor._reload.reload();
+                              window.location.reload();
                           }).catch(function(err) {
-                              Meteor._reload.reload();
+                              window.location.reload();
                           });
                       }).catch(function(err) {
-                          Meteor._reload.reload();
+                          window.location.reload();
                       });
                     }).catch(function(err) {
-                        Meteor._reload.reload();
+                        window.location.reload();
                     });
                 }).catch(function(err) {
-                    Meteor._reload.reload();
+                    window.location.reload();
                 });
             }).catch(function(err) {
                     swal({
@@ -237,7 +237,7 @@ Template.departmentSettings.events({
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
                         if (result.value) {
-                            // Meteor._reload.reload();
+                            // window.location.reload();
                         } else if (result.dismiss === 'cancel') {}
                     });
                     $('.fullScreenSpin').css('display', 'none');
@@ -294,18 +294,18 @@ Template.departmentSettings.events({
                   addVS1Data('TDeptClass',JSON.stringify(dataReload)).then(function (datareturn) {
                     sideBarService.getDepartmentDataList(initialBaseDataLoad, 0, false).then(async function(dataDeptList) {
                         await addVS1Data('TDeptClassList', JSON.stringify(dataDeptList)).then(function(datareturn) {
-                            Meteor._reload.reload();
+                            window.location.reload();
                         }).catch(function(err) {
-                            Meteor._reload.reload();
+                            window.location.reload();
                         });
                     }).catch(function(err) {
-                        Meteor._reload.reload();
+                        window.location.reload();
                     });
                   }).catch(function(err) {
-                      Meteor._reload.reload();
+                      window.location.reload();
                   });
               }).catch(function(err) {
-                  Meteor._reload.reload();
+                  window.location.reload();
               });
             }).catch(function (err) {
                 swal({
@@ -316,7 +316,7 @@ Template.departmentSettings.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {
-                        // Meteor._reload.reload();
+                        // window.location.reload();
                     } else if (result.dismiss === 'cancel') {
 
                     }
@@ -483,7 +483,7 @@ Template.departmentSettings.events({
                 var result = {};
                 workbook.SheetNames.forEach(function(sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -538,7 +538,7 @@ Template.departmentSettings.events({
                                 if (results.data[i + 1][1] !== "") {
                                     taxRateService.saveDepartment(objDetails).then(function(data) {
                                         //$('.fullScreenSpin').css('display','none');
-                                        //  Meteor._reload.reload();
+                                        //  window.location.reload();
                                     }).catch(function(err) {
                                         //$('.fullScreenSpin').css('display','none');
                                         swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => {
