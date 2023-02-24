@@ -21,10 +21,12 @@ export default class resizableCharts {
            * Build the positions of the widgets
            */
           if( $(ui.element[0]).parents(".sortable-chart-widget-js").hasClass("editCharts") == false ){
+            $(".fullScreenSpin").css("display", "block");
             ChartHandler.buildPositions();
             await ChartHandler.saveChart(
               $(ui.element[0]).parents(".sortable-chart-widget-js")
             );
+            $(".fullScreenSpin").css("display", "none");
           }
         },
         resize: function (event, ui) {
