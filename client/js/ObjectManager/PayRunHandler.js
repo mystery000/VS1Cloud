@@ -138,11 +138,11 @@ export default class PayRunHandler {
   async saveToLocal() {
     try {
       await addVS1Data(erpObject.TPayRunHistory, JSON.stringify(this.payruns));
-      // let data = {
-      //   type: "TPayRunHistory",
-      //   fields: this.payruns
-      // };
-      // await sideBarService.savePayRunHistory(data);
+      let data = {
+        type: "TPayRunHistory",
+        fields: this.payruns
+      };
+      await sideBarService.savePayRunHistory(data);
     } catch (e) {
       LoadingOverlay.hide(0);
       const result = await swal({
