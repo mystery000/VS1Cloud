@@ -25,6 +25,37 @@ Template.paymentmethodSettings.onCreated(function () {
   templateObject.includeAccountID.set(false);
   templateObject.accountID = new ReactiveVar();
   templateObject.selectedFile = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    };
+    let tdIsCreditCard = '';
+
+    if (data.IsCreditCard == true) {
+      tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '" checked><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>';
+    } else {
+      tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '"><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>';
+    };
+    var dataList = [
+      data.PayMethodID || "",
+      data.Name || "",
+      tdIsCreditCard,
+      linestatus,
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "" },
+    { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "105" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.paymentmethodSettings.onRendered(function () {
@@ -188,7 +219,7 @@ Template.paymentmethodSettings.onRendered(function () {
   });
 
   $("#tblPaymentMethodList tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").attr("id");
+    var listData = $(this).closest("tr").find('.colPayMethodID').text();
     var isCreditcard = false;
     if (listData) {
       $("#add-paymentmethod-title").text("Edit Payment Method");
@@ -772,6 +803,41 @@ Template.paymentmethodSettings.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getPaymentMethodDataList;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getPaymentMethodDataList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 });
 

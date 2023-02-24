@@ -50,6 +50,9 @@ Template.accountant_header.events({
                     .col {
                         flex-basis: 0; flex-grow: 1; max-width: 100%; position: relative; width: 100%; padding-right: 1.75rem; padding-left: 0.75rem padding-top: 1.75rem, padding-bottom: 1.75rem;
                     }
+                    .pagebreak {
+                        padding: 30px;
+                    }
                   }
                   </style>
                 </head>

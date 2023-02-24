@@ -4,6 +4,9 @@ import 'jquery-ui-dist/jquery-ui';
 import 'jquery-ui-dist/jquery-ui.css';
 import {AccessLevelService} from './accesslevel-service';
 import {EmployeeProfileService} from './profile-service';
+import { Template } from 'meteor/templating';
+import '../Login/vs1greentrack_login.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 Template.vs1greentracklogin.onCreated( () => {
    Template.instance().subscribe( 'RegisterUser' );
 });

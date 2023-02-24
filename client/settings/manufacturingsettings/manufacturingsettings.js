@@ -12,7 +12,7 @@ Template.manufacturingsettings.onCreated(function(){
     templateObject.initialRecords = new ReactiveVar();
 })
 
-Template.manufacturingsettings.onRendered(function() {
+Template.manufacturingsettings.onRendered(async function() {
     let templateObject = Template.instance();
     templateObject.getSettings = async function() {
         return new Promise((resolve, reject)=>{
@@ -53,7 +53,7 @@ Template.manufacturingsettings.onRendered(function() {
             })
         })
     }
-  
+    await templateObject.getSettings()
 })
 
 Template.manufacturingsettings.helpers({
@@ -86,7 +86,19 @@ Template.manufacturingsettings.events({
                 showTimein: showTimein
             }
         }
-        addVS1Data('ManufacturingSettings', JSON.stringify(objectDetail)).then(function(){})
+        addVS1Data('ManufacturingSettings', JSON.stringify(objectDetail)).then(function(){
+            getVS1Data('ManufacturingSettings').then(function(dataNew){
+                swal({
+                    title: 'Success',
+                    text: 'Settings has been saved successfully',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Continue',
+                }).then((result) => {
+                    
+                });
+            })
+        })
     },
 
     'click .btnResetSettings': function(event) {
