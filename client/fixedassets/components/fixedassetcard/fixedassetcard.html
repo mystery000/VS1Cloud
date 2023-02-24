@@ -1,5 +1,33 @@
 <template name="fixedassetcard">
-  <style scoped>
+  <style>
+    .results tr[visible='false'],
+    .no-result {
+      display: none;
+    }
+
+    .results tr[visible='true'] {
+      display: table-row;
+    }
+
+    .counter {
+      padding: 8px;
+      color: #ccc;
+    }
+
+    .cardB {
+      /* max-height: 700px; */
+      overflow-y: auto;
+    }
+
+    .cardB420 {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .rowB {
+      overflow-x: auto;
+    }
+
     .nav-tabs .nav-link.active {
       color: rgb(0, 163, 211) !important;
       background-color: #EDEDED !important;
@@ -9,85 +37,114 @@
     .nav-tabs .nav-link {
       background-color: #fff !important;
       border-color: #00a3d3 !important;
-      cursor: pointer;
     }
+
+    #fixedAssetCardContainer {
+      background-color: white;
+    }
+    
+    #fixedAssetCardContainer .tab-pane {
+      background-color: #ededed;
+      border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;
+    }
+
+    #fixedAssetCardContainer .input-tab {
+      margin: 5px;
+      padding: 10px;
+      border: 2px solid grey;
+      border-radius: 5px;
+    }
+    
+    #fixedAssetCardContainer .input-tab > div {
+      padding: 0px;
+    }
+
+    #btnView {
+      display: none;
+    }
+
+    @media screen and (min-width: 1025px) {
+      .viewList {
+        display: none;
+      }
+
+      .displayList {
+        height: 115vh;
+      }
+
+      .customerCardParent {
+        height: 100%;
+      }
+    }
+
+    .currentSelect {
+      background-color: #ededed99;
+      color: #00a3d3;
+    }
+
   </style>
-  <div class="container-fluid purchasesmodule" style="padding-right: 0px;padding-left: 0px;background-color: #ededed;">
+  <div>
     <div class="fullScreenSpin" style="display:none;">
       <div class="spinner"></div>
     </div>
 
  
-      <header
-        style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;" class="row">
-          <div class="col-12 col-md-4">
-              <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">Fixed Asset
+    <!-- <header
+      style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;" class="row">
+        <div class="col-12 col-md-4">
+            <h1 style="margin: 12px;margin-bottom: 0px;" class="heading">Fixed Asset
+                <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="padding-bottom: 8px;">
+                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                                                                      class="btn btn-primary helpModal">View Help Video</a></p>
+                                <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank"
+                                                                      class="btn btn-primary">Download Help File</a></p>
+                                {{> helpadvisor}}
+                                {{> helpgotoforum}}
+                            </div>
+                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                                                                                    type="button">Close</button></div>
+                        </div>
+                    </div>
+                </div>
+            </h1>
+        </div>
+    </header> -->
 
-                  <!-- {{> helpbutton}} -->
-
-                  <!-- Start Help View Modal -->
-                  <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
-                      <div class="modal-dialog modal-sm" role="document">
-                          <div class="modal-content">
-                              <div class="modal-header" style="padding-bottom: 8px;">
-                                  <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                      aria-hidden="true">×</span></button>
-                              </div>
-                              <div class="modal-body">
-                                  <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
-                                                                       class="btn btn-primary helpModal">View Help Video</a></p>
-                                  <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank"
-                                                                       class="btn btn-primary">Download Help File</a></p>
-                                  {{> helpadvisor}}
-                                  {{> helpgotoforum}}
-                              </div>
-                              <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
-                                                                                      type="button">Close</button></div>
-                          </div>
-                      </div>
+    <div class="row">
+      <div class="col-12 col-md-8" id="fixedAssetCardContainer" style="padding: 20px;">
+        <div class="card shadow cardSizing">
+          <div class="card-header d-flex justify-content-between align-items-xl-center">
+            <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 customerInfo" style="color: #00A3D3; font-size: 28px;">
+              {{#if assetID}}
+                {{assetName}} {{assetCode}}
+              {{else}}
+                New FixedAsset
+              {{/if}}
+            </h6>
+            <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action=" ">
+              <div class="input-group">
+                  <input class="bg-light form-control border-2 small txtGlobalSearch alerts-border" type="text" placeholder="Search Global...">
+                  <div class="input-group-append">
+                      <button class="btn btn-primary py-0 btnGlobalSearch" type="button" style="background-color: rgb(0,163,211); border-color: rgb(0,163,211);border-top-right-radius: 0.35rem; border-bottom-right-radius: 0.35rem; height:34px;"><i
+                              class="fas fa-search"></i></button>
                   </div>
-                  <!-- End Help View Modal -->
-
-              </h1>
+                  <a class="btn btn-primary scanBarcodeHeadTop" href="" id="scanBarcodeHeadTop" role="button" style="margin-left: 8px; height:34px;padding-top:4px;"><i class="fas fa-camera"></i></a>
+                  <button type="button" class="btn btn-primary" id="mobileBarcodeScan" data-toggle="modal" data-target="#scanBarcodeModalHeader" style="margin-left: 8px;height:34px; display: none;"><i class="fas fa-camera"></i></button>
+                  <button type="button" class="btn btn-primary" id="btnSearchGuide" style="margin-left: 8px;height:34px;padding-top: 4px;"><i class="far fa-question-circle"></i></button>
+              </div>
+            </form>
           </div>
-      </header>
-
-      <div class="row" style="background-color: #ededed;">
-        <div class="col-12 col-xl-10" id="fixedAssetCardContainer">
-          <div class="row" style="margin: 8px 16px 0px 16px;">
-            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group"><label>Asset Code</label>
-                <input class="form-control" type="text" id="edtAssetCode" name="edtAssetCode" customerid=" ">
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group"><label>Asset Name</label>
-                <input class="form-control" type="text" id="edtAssetName" name="edtAssetName" customerid=" ">
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group"><label>Asset Description</label>
-                <input class="form-control" type="text" id="edtAssetDescription" name="edtAssetDescription"
-                  customerid=" ">
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group">
-                <label>Asset Type</label>
-                <select type="search" class="form-control" id="edtAssetType" name="edtAssetType" suppid=" "
-                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin: 8px 16px 0px 16px;">
-            <ul class="nav nav-tabs nav-justified">
+          <div class="card-body text-nowrap">
+            <ul class="nav nav-tabs nav-fill">
               <li class="nav-item">
                 <a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-asset-info">Asset Info</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-purchase-info">Purchase Info</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-deprec">Depreciation</a>
@@ -98,77 +155,93 @@
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane active border rounded-0 tab-asset-info" role="tabpanel" id="tab-asset-info"
-                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
-                <div class="row" style="margin: 4px 12px;">
-                  
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Brand</label>
-                      <input type="text" class="form-control" id="edtBrand" name="edtBrand">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Model </label>
-                      <input type="text" class="form-control" id="edtModel" name="edtModel">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Numer</label>
-                      <input type="text" class="form-control" id="edtNumber" name="edtNumber">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Registration No</label>
-                      <input type="text" class="form-control" id="edtRegistrationNo" name="edtRegistrationNo">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Type</label>
-                      <input type="text" class="form-control" id="edtType" name="edtType">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Capacity Weight</label>
-                      <input type="text" class="form-control" id="edtCapacityWeight" name="edtCapacityWeight">
-                      </div>
-                  </div> 
-                  
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Capacity Volume</label>
-                      <input type="number" class="form-control" id="edtCapacityVolume" name="edtCapacityVolume">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;">
-                      <label>Supplier</label>
-                      <input type="text" class="form-control" id="edtSupplierName" name="edtSupplierName">
-                      </div>
-                  </div>
-                  <div class="col-3" style="padding: 0;">
-                    <div class="form-group" style="margin: 4px;"><label>Registration Renewal Date</label>
-                      <div class="input-group date" style="cursor: pointer;">
-                        <input type="text" class="form-control" id="edtDateRegisterRenewal" name="edtDateRegisterRenewal">
-                        <div class="input-group-addon">
-                          <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                        </div>
+              <style>
+                .table-responsive {
+                  overflow-x: auto;
+                }
+                @media only screen and (max-width: 1920px) {
+                  .tab-1 {
+                    width: 100%;
+                  }
+                  .tab-2 {
+                    width: 100%;
+                  }
+                  .tab-3 {
+                    width: 100%;
+                  }
+                }
+
+                @media only screen and (max-width: 1600px) {
+                  .tab-1 {
+                    width: 100%;
+                  }
+                  .tab-2 {
+                    width: 100%;
+                  }
+                  .tab-3 {
+                    width: 100%;
+                  }
+                }
+
+                @media only screen and (max-width: 1536px) {
+                  .tab-1 {
+                    width: 100%;
+                  }
+                  .tab-2 {
+                    width: 100%;
+                  }
+                  .tab-3 {
+                    width: 100%;
+                  }
+                }
+
+                @media only screen and (max-width: 1367px) {
+                  .tab-1 {
+                    width: 100%;
+                  }
+                  .tab-2 {
+                    width: 100%;
+                  }
+                  .tab-3 {
+                    width: 100%;
+                  }
+                }
+              </style>
+              <div class="tab-pane active border rounded-0 tab-asset-info" role="tabpanel" id="tab-asset-info">
+                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                  <div class="row input-tab"> 
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Asset Code</label>
+                        <input class="form-control" type="text" id="edtAssetCode" name="edtAssetCode" customerid=" ">
                       </div>
                     </div>
-                  </div>             
-                </div>
-              </div>
-              <div class="tab-pane border rounded-0 tab-purchase-info" role="tabpanel" id="tab-purchase-info"
-                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                <div class="row" style="margin: 4px 12px; padding: 10px;">
-                  <div class="col-4 purchase-info">
-                    <div style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;"><label>Purchased Date</label>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Asset Name</label>
+                        <input class="form-control" type="text" id="edtAssetName" name="edtAssetName" customerid=" ">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Asset Description</label>
+                        <input class="form-control" type="text" id="edtAssetDescription" name="edtAssetDescription"
+                          customerid=" ">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Asset Type</label>
+                        <select type="search" class="form-control" id="edtAssetType" name="edtAssetType" suppid=" "
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row input-tab">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Date of Purchase</label>
                         <div class="input-group date" style="cursor: pointer;">
                           <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
                           <div class="input-group-addon">
@@ -178,8 +251,9 @@
                       </div>
                     </div>
 
-                    <div style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;"><label>Depreciation Start Date</label>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Depreciation Start Date</label>
                         <div class="input-group date" style="cursor: pointer;">
                           <input type="text" class="form-control" id="edtDepreciationStartDate" name="edtDepreciationStartDate">
                           <div class="input-group-addon">
@@ -188,17 +262,82 @@
                         </div>
                       </div>
                     </div>
-                    <div style="padding: 0;">
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Pruchased Cost</label>
                         <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Bought From</label>
+                        <select type="search" class="form-control" id="edtSupplierName" name="edtSupplierName" suppid=" "
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row input-tab">
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Brand</label>
+                        <input type="text" class="form-control" id="edtBrand" name="edtBrand">
                         </div>
                     </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Model </label>
+                        <input type="text" class="form-control" id="edtModel" name="edtModel">
+                        </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Numer</label>
+                        <input type="text" class="form-control" id="edtNumber" name="edtNumber">
+                        </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Registration No</label>
+                        <input type="text" class="form-control" id="edtRegistrationNo" name="edtRegistrationNo">
+                        </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Type</label>
+                        <input type="text" class="form-control" id="edtType" name="edtType">
+                        </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Capacity Weight</label>
+                        <input type="text" class="form-control" id="edtCapacityWeight" name="edtCapacityWeight">
+                        </div>
+                    </div> 
+                    
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Capacity Volume</label>
+                        <input type="number" class="form-control" id="edtCapacityVolume" name="edtCapacityVolume">
+                        </div>
+                    </div>
+                    <div class="col-3" style="padding: 0;">
+                      <div class="form-group" style="margin: 4px;"><label>Registration Renewal Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtDateRegisterRenewal" name="edtDateRegisterRenewal">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>             
                   </div>
                 </div>
               </div>
-              <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec"
-                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+              <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec">
+                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <input type="hidden" id="edtAccountType" />
                   <div class="row" style="margin: 4px 12px;">
                     <div class="col-3" style="padding: 0;">
@@ -334,33 +473,34 @@
                       </button>
                     </div>
                   </div>
-
+                </div>
               </div>
-              <div class="tab-pane border rounded-0 tab-insurance-info" role="tabpanel" id="tab-insurance-info"
-                style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                <div class="row" style="margin: 4px 12px; padding: 10px;">
-                  <div class="col-4 insuranceInfo">
-                    <div style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label>Insuranced By</label>
-                        <input type="text" class="form-control" id="edtInsuranceByName" name="edtInsuranceBy">
+              <div class="tab-pane border rounded-0 tab-insurance-info" role="tabpanel" id="tab-insurance-info">
+                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                  <div class="row" style="margin: 4px 12px; padding: 10px;">
+                    <div class="col-4 insuranceInfo">
+                      <div style="padding: 0;">
+                        <div class="form-group" style="margin: 4px;">
+                          <label>Insuranced By</label>
+                          <input type="text" class="form-control" id="edtInsuranceByName" name="edtInsuranceBy">
+                        </div>
                       </div>
-                    </div>
-                    <div style="padding: 0;">
-                      {{> default_input 
-                        label = 'Insurance Policy'
-                        classes = ''
-                        type = 'text'
-                        id = 'edtInsurancePolicy'
-                        name = 'edtInsurancePolicy'
-                      }}
-                    </div>
-                    <div style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;"><label>Insurance Until</label>
-                        <div class="input-group date" style="cursor: pointer;">
-                          <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate">
-                          <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                      <div style="padding: 0;">
+                        {{> default_input 
+                          label = 'Insurance Policy'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                      <div style="padding: 0;">
+                        <div class="form-group" style="margin: 4px;"><label>Insurance Until</label>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate">
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -371,38 +511,35 @@
             </div>
           </div>
         </div>
-
-        <div class="col-12 col-xl-2">
-
-        </div>
       </div>
+    </div>
 
-      <div class="row" style="margin-top: 24px;">
-        <div class="col-12 col-md-11">
-          <div class="row justify-content-center desktopButtons">
-            <div style="margin:10px">
-              {{> vs1_button
-                color='success'
-                classes='btnSave btnFooter btn-auto-save'
-                type='button'
-                id="btnSave"
-                iconName='save'
-                title='Save'
-              }}
-            </div>
-            <div style="margin:10px">
+    <div class="row" style="margin-top: 24px;">
+      <div class="col-12 col-md-11">
+        <div class="row justify-content-center desktopButtons">
+          <div style="margin:10px">
             {{> vs1_button
-              color=''
-              classes='btnBack btnFooter'
+              color='success'
+              classes='btnSave btnFooter btn-auto-save'
               type='button'
-              id="btnBack"
-              iconName='remove'
-              title='Cancel'
+              id="btnSave"
+              iconName='save'
+              title='Save'
             }}
           </div>
-          </div>
+          <div style="margin:10px">
+          {{> vs1_button
+            color=''
+            classes='btnBack btnFooter'
+            type='button'
+            id="btnBack"
+            iconName='remove'
+            title='Cancel'
+          }}
+        </div>
         </div>
       </div>
+    </div>
 
 
   </div>

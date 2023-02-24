@@ -6,6 +6,7 @@ import { AccountService } from "../../../accounts/account-service";
 import { FixedAssetService } from '../../fixedasset-service';
 import './fixedassetcard.html';
 import { Template } from 'meteor/templating';
+import { template } from 'lodash';
 
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
@@ -14,6 +15,8 @@ let fixedAssetService = new FixedAssetService();
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.currentAssetID = new ReactiveVar(0);
+  templateObject.currentAssetName = new ReactiveVar('');
+  templateObject.currentAssetCode = new ReactiveVar('');
 
   templateObject.allAcounts = new ReactiveVar([]);
   templateObject.edtDepreciationType = new ReactiveVar(0);
@@ -100,14 +103,14 @@ Template.fixedassetcard.onRendered(function () {
   const templateObject = Template.instance();
   $('#edtAssetType').editableSelect();
   $('#edtAssetType').editableSelect().on('click.editable-select', function (e, li) {
-    // $('#selectLineID').val('sltJobTerms');
-    // const $each = $(this);
-    // const offset = $each.offset();
-    // const assetTypeName = e.target.value || '';
-    // editableAssetType(e, $each, offset, assetTypeName);
     $('#fixedAssetTypeListModal').modal('toggle');
   });
 
+  $('#edtSupplierName').editableSelect();
+  $('#edtSupplierName').editableSelect().on('click.editable-select', function (e, li) {
+    $('#supplierListModal').modal('show');
+    $('input#edtSupplierType').val('supplier');
+  });
   // $('#edtBoughtFrom').editableSelect();
   // $('#edtDepartment').editableSelect();
   $('#edtDepreciationType').editableSelect();
@@ -136,34 +139,6 @@ Template.fixedassetcard.onRendered(function () {
         templateObject.deprecitationPlans.set([]);
       }
     });
-
-  // $('#edtCostAssetAccount').editableSelect()
-  //   .on('select.editable-select', function (e, li) {
-  //     if (li) {
-  //       templateObject.edtCostAssetAccount.set(parseInt(li.val() || 0));
-  //     }
-  //   });
-
-  // $('#editBankAccount').editableSelect()
-  //   .on('select.editable-select', function (e, li) {
-  //     if (li) {
-  //       templateObject.editBankAccount.set(parseInt(li.val() || 0));
-  //     }
-  //   });
-
-  // $('#edtDepreciationAssetAccount').editableSelect()
-  //   .on('select.editable-select', function (e, li) {
-  //     if (li) {
-  //       templateObject.edtDepreciationAssetAccount.set(parseInt(li.val() || 0));
-  //     }
-  //   });
-
-  // $('#edtDepreciationExpenseAccount').editableSelect()
-  //   .on('select.editable-select', function (e, li) {
-  //     if (li) {
-  //       templateObject.edtDepreciationExpenseAccount.set(parseInt(li.val() || 0));
-  //     }
-  //   });
 
   $("#date-input,#edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate, #edtInsuranceEndDate").datepicker({
     showOn: 'button',
@@ -258,6 +233,8 @@ Template.fixedassetcard.onRendered(function () {
 
   function initializeCard(assetInfo) {
     const allAccountsData = templateObject.allAcounts.get();
+    templateObject.currentAssetName.set(assetInfo.AssetName);
+    templateObject.currentAssetCode.set(assetInfo.AssetCode);
     $('input#edtAssetCode').val(assetInfo.AssetCode);
     $('input#edtAssetName').val(assetInfo.AssetName);
     $('input#edtAssetDescription').val(assetInfo.Description);
@@ -469,10 +446,10 @@ Template.fixedassetcard.events({
         break;
     }
   },
-  "click input#edtSupplierName": function() {
-    $('#supplierListModal').modal('show');
-    $('input#edtSupplierType').val('supplier');
-  },
+  // "click input#edtSupplierName": function() {
+  //   $('#supplierListModal').modal('show');
+  //   $('input#edtSupplierType').val('supplier');
+  // },
   "click input#edtInsuranceByName": function() {
     $('#supplierListModal').modal('show');
     $('input#edtSupplierType').val('insurance');
@@ -538,5 +515,14 @@ Template.fixedassetcard.helpers({
   },
   deprecitationPlans:() => {
     return Template.instance().deprecitationPlans.get();
+  },
+  assetID: () => {
+    return Template.instance().currentAssetID.get();
+  },
+  assetName: () => {
+    return Template.instance().currentAssetName.get();
+  },
+  assetCode: () => {
+    return Template.instance().currentAssetCode.get();
   }
 });
