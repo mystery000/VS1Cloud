@@ -59,8 +59,7 @@
                               style="margin-right: 14px"
                             ></i
                             >Add New Customer Type<br
-                          /></a>
-                          {{> clienttypemodal}}
+                          /></a>                          
                         </div>
 
                         <div
@@ -197,7 +196,11 @@
     </div>
   </div>
   <!-- Import Modal -->
-  {{> import_template ImportformName="Customer Type Settings"}}
+  {{> import_template ImportformName="Customer Type Settings"}}  
+  {{> clienttypemodal}}
+  <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
+    {{> termlistpop}}
+  </div>  
   <script>
     modalDraggable();
   </script>

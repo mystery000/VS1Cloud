@@ -83,9 +83,17 @@ Template.clienttypesettings.onRendered(function () {
       .find(".colDescription")
       .text();
     let typeName = $(event.target).closest("tr").find(".colTypeName").text();
+    let typeActive = $(event.target).closest("tr").find(".colStatus").text();
     $("#edtClientTypeID").val(targetID);
     $("#edtClientTypeName").val(typeName);
     $("#txaDescription").val(typeDescription);
+    if (typeActive === 'In-Active') {
+      $('.btnDeleteClientType').addClass('d-none')
+      $('.btnActiveClientType').removeClass('d-none')
+    } else {
+      $('.btnActiveClientType').addClass('d-none')
+      $('.btnDeleteClientType').removeClass('d-none')
+    }
     $("#myModalClientType").modal("show");
   });
 });
@@ -408,7 +416,7 @@ Template.clienttypesettings.events({
           var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
             header: 1,
           });
-          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
           templateObj.selectedFile.set(sCSV);
 
           if (roa.length) result[sheetName] = roa;
