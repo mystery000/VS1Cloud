@@ -4312,4 +4312,12 @@ export class SideBarService extends BaseService {
       send_data.fields['ID'] = parseInt(localStorage.getItem('TPreferenceMenuID'));
     return this.POST(this.ERPObjects.TPreference, send_data);
   }
+
+  getAllLeadCharts(){
+    let options = {
+        PropertyList: "ID,CreationDate,SourceName",
+        select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
+  }
 }
