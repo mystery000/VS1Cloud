@@ -737,6 +737,12 @@ Template.crmoverview.events({
     "click .btnRefresh": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
+        crmService.getAllLeadCharts().then(function (dataCRMCharts) {
+          addVS1Data('TCRMLeadChart', JSON.stringify(dataCRMCharts));
+        }).catch(function (err) {
+
+        });
+
         crmService.getAllTaskList().then(function(data) {
             addVS1Data("TCRMTaskList", JSON.stringify(data));
             crmService.getTProjectList().then(function(data) {
