@@ -12,6 +12,7 @@ import {EmployeeProfileService} from "../js/profile-service";
 import { Template } from 'meteor/templating';
 import './invoice_list_bo.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {forEach} from "underscore";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -92,7 +93,7 @@ Template.invoicelistBO.onRendered(function() {
   }
 
   function showCustomFieldDisplaySettings(reset_data) {
-
+    console.log(reset_data);
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
@@ -108,6 +109,7 @@ Template.invoicelistBO.onRendered(function() {
       };
       custFields.push(customData);
     }
+    console.log(custFields);
     templateObject.displayfields.set(custFields);
   }
   templateObject.initCustomFieldDisplaySettings("", "tblInvoicelistBO");
@@ -240,7 +242,7 @@ Template.invoicelistBO.onRendered(function() {
               custFields.push(customData);
             }
           }
-          
+          console.log(displayfields);
           displayfields = displayfields.concat(custFields);
           templateObject.custfields.set(custFields);
           // setTimeout(() => {
@@ -1885,6 +1887,7 @@ Template.invoicelistBO.helpers({
         });
     },
     tableheaderrecords: () => {
+        console.log(Template.instance().tableheaderrecords.get());
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {

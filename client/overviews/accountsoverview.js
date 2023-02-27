@@ -511,7 +511,7 @@ Template.accountsoverview.onRendered(function() {
 
         for (let i = 0; i < data.taccountvs1list.length; i++) {
             if (!isNaN(data.taccountvs1list[i].Balance)) {
-                accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1list[i].Balance) || 0.0;
+                accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1list[i].Balance) || Currency + "0.00";
             } else {
                 accBalance = Currency + "0.00";
             }
@@ -531,6 +531,7 @@ Template.accountsoverview.onRendered(function() {
                 number: data.taccountvs1list[i].AccountNumber || "",
                 type: data.taccountvs1list[i].AccountType || "",
                 balance: accBalance || '',
+                originbalance: data.taccountvs1list[i].Balance || 0,
                 taxcode: data.taccountvs1list[i].TaxCode || '',
                 bankname: data.taccountvs1list[i].BankName || '',
                 bankaccountname: data.taccountvs1list[i].BankAccountName || '',
@@ -599,18 +600,22 @@ Template.accountsoverview.onRendered(function() {
             level2: "",
             level3: "",
         }
+        let totalBalance
         for (let index = 0;index < splashArrayAccountsOverview.length; index++) {
             let item = splashArrayAccountsOverview[index]
             if (!item.type) {
                 treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: 0})
                 continue
             }
-            if (!accountType || accountType !== item.type)  {
+            if (!accountType || accountType !== item.type)  {                                
+                if (parentIndex) treeDataArray[parentIndex - 1].balance = utilityService.modifynegativeCurrencyFormat(totalBalance) || Currency + "0.00"
+                totalBalance = 0
                 accountType = item.type
                 parentIndex = treeDataArray.length + 1
                 treeDataArray.push({...emptyData, name: accountType, tt_key: parentIndex, tt_parent: 0})
             }
             treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: parentIndex})
+            totalBalance += item.originbalance
         }
 
         let columns = [
@@ -800,6 +805,7 @@ Template.accountsoverview.onRendered(function() {
                     });
                     setTimeout(function() {
                         makeNegativeGlobal();
+                        $('#tblAccountTreeOverview tbody td').attr('style', 'padding: 0 12px 0 12px !important')
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },

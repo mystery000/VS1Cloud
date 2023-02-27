@@ -160,7 +160,7 @@ Template.jobsalessummary.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: splashArrayReport,
         searching: false,
         "bsort": false,
