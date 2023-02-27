@@ -587,20 +587,33 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 18, label: "Status", class: "colStatus", width: "150", active: true, display: true },
               ];
 
-        }  else if(currenttablename === "tblBinLocations"){
+        } else if(currenttablename === "tblBinLocations"){
 
             reset_data = [
-                // { index: 0, label: "#ID", class: "BinID", width: "10", active: false, display: true },
-                { index: 0, label: "Rack", class: "Rack", width: "100", active: true, display: true },
-                { index: 1, label: "Bin #", class: "BinNumber", width: "150", active: true, display: true },
-                { index: 2, label: "Department", class: "Department", width: "100", active: true, display: true },
-                { index: 3, label: "Product Name", class: "ProductName", width: "60", active: true, display: true },
-                { index: 4, label: "Sales Description", class: "SalesDescription", width: "60", active: true, display: true },
-                { index: 5, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
-                { index: 6, label: "Active", class: "Status", width: "72", active: true, display: true },
-                { index: 7, label: "Product ID", class: "ProductID", width: "60", active: false, display: true },
+                { index: 0, label: "#ID", class: "BinID", width: "10", active: false, display: true },
+                { index: 1, label: "Rack", class: "Rack", width: "100", active: true, display: true },
+                { index: 2, label: "Bin #", class: "BinNumber", width: "150", active: true, display: true },
+                { index: 3, label: "Department", class: "Department", width: "100", active: true, display: true },
+                { index: 4, label: "Product ID", class: "ProductID", width: "60", active: false, display: true },
+                { index: 5, label: "Product Name", class: "ProductName", width: "60", active: true, display: true },
+                { index: 6, label: "Sales Description", class: "SalesDescription", width: "60", active: true, display: true },
+                { index: 7, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
+                { index: 8, label: "Active", class: "Status", width: "72", active: true, display: true },
+                ];
 
-            ];
+        } else if(currenttablename === "tblBinLocations"){
+
+            reset_data = [
+                { index: 0, label: "#ID", class: "BinID", width: "10", active: false, display: true },
+                { index: 1, label: "Rack", class: "Rack", width: "100", active: true, display: true },
+                { index: 2, label: "Bin #", class: "BinNumber", width: "150", active: true, display: true },
+                { index: 3, label: "Department", class: "Department", width: "100", active: true, display: true },
+                { index: 4, label: "Product ID", class: "ProductID", width: "60", active: false, display: true },
+                { index: 5, label: "Product Name", class: "ProductName", width: "60", active: true, display: true },
+                { index: 6, label: "Sales Description", class: "SalesDescription", width: "60", active: true, display: true },
+                { index: 7, label: "In Stock", class: "InStock", width: "65", active: true, display: true },
+                { index: 8, label: "Active", class: "Status", width: "72", active: true, display: true },
+                ];
 
         } else if(currenttablename === "tblBASReturnList"){
             reset_data = [
@@ -950,6 +963,17 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
                 { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblMyTaskDatatable"){
+            reset_data = [
+                { index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "" },
+                { index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "" },
+                { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "" },
+                { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
+                { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+            ]
         } else if (currenttablename === "tblReceiptCategoryList") {
             reset_data = [
                 { index: 0, label: 'Id', class: 'colId', active: false, display: true, width: "" },
@@ -987,11 +1011,12 @@ Template.non_transactional_list.onRendered(function() {
         //             };
         //         }
         //     });
+
         // } catch (error) {
+
         // }
         // return;
     }
-
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
         //function showCustomFieldDisplaySettings(reset_data) {
         let custFields = [];
@@ -1005,6 +1030,16 @@ Template.non_transactional_list.onRendered(function() {
                 class: reset_data[r].class,
                 display: reset_data[r].display,
                 width: reset_data[r].width ? reset_data[r].width : ''
+            };
+            let currentTable = document.getElementById(currenttablename)
+            if (reset_data[r].active == true) {
+                if(currentTable){
+                    $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
+                }
+            } else if (reset_data[r].active == false) {
+                if(currentTable && reset_data[r].class){
+                    $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
+                }
             };
             custFields.push(customData);
         }
@@ -2218,7 +2253,6 @@ Template.non_transactional_list.onRendered(function() {
         let checkIfSerialorLot = '';
         var dataList = {};
         departmentData = "All";
-        console.log(data);
         for (let i = 0; i < data.tproductlist.length; i++) {
           let availableQty = data.tproductlist[i].AvailableQty||0;
           if(data.tproductlist[i].SNTracking == true){
@@ -2252,7 +2286,6 @@ Template.non_transactional_list.onRendered(function() {
                 data.tproductlist[i].Active ? "" : "In-Active"
             ];
             splashArrayProductList.push(dataList);
-            // console.log(splashArrayProductList);
             dataTableList.push(dataList);
         }
 
@@ -2271,15 +2304,15 @@ Template.non_transactional_list.onRendered(function() {
                         width: `${item.width}px`
                     })
                 });
-            }                       
+            }
             $("#" + currenttablename).dataTable({
                 data: splashArrayProductList,
                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: columnData,
                   select: true,
                   destroy: true,
-                  colReorder: true,    
-                  "autoWidth": false,            
+                  colReorder: true,
+                  "autoWidth": false,
                   buttons: [{
                           extend: "excelHtml5",
                           text: "",
@@ -2329,7 +2362,7 @@ Template.non_transactional_list.onRendered(function() {
                       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                           $(".paginate_button.page-item.next").addClass("disabled");
                       }
-/*
+
                       $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                           $(".fullScreenSpin").css("display", "inline-block");
                           sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
@@ -2357,7 +2390,6 @@ Template.non_transactional_list.onRendered(function() {
                               $(".fullScreenSpin").css("display", "none");
                           });
                          });
-                      */
                       setTimeout(function() {
                           MakeNegative();
                       }, 100);
@@ -2417,22 +2449,18 @@ Template.non_transactional_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 templateObject.displayAllProductBinData(data, deptname);
-                // console.log(1);
-                // console.log(data);
             }
         }).catch(function(err) {
             productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
                 await addVS1Data('TProductBin', JSON.stringify(data));
-                templateObject.displayAllProductBinData(data, deptname, );
+                templateObject.displayAllProductBinData(data, dpetname, );
             }).catch(function(err) {
-    
+
             });
         });
-        // console.log(data);
     };
 
     templateObject.displayAllProductBinData = async function(data,deptname) {
-        console.log(data);
 
         let dataTableList = new Array();
         let splashArrayProductList = new Array();
@@ -2447,70 +2475,53 @@ Template.non_transactional_list.onRendered(function() {
         await getVS1Data("TProductVS1").then(function(dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
-                    productsData = data.tproductvs1;
-                    // console.log(productsData);
+                    productData = data.tproductvs1;
                     addVS1Data('TProductVS1',JSON.stringify(data));
                 });
 
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 productsData = data.tproductvs1;
-                // console.log(2);
-                // console.log(productsData);
             }
         });
-        console.log(productsData);
 
         for (let i = 0; i < data.tproductbin.length; i++) {
-            // console.log(data);
-            // console.log()
-            let flag = 0;
-            // let binLocation = data.tproductbin[i].BinLocation;
-            // let binNumber = data.tproductbin[i].BinNumber;
-            // console.log(5);
-            // console.log("BinLocation = " + data.tproductbin[i].BinLocation);
-            // console.log("BinNumber = " + data.tproductbin[i].BinNumber);
+            let linestatus = '';
+            let productDetail;
+            let productname = "N/A";
+            let productsalesdescription = '';
+            let productinstock = '';
+            let productId = '';
+            if (data.tproductbin[i].Active == true) {
+                linestatus = "";
+            } else if (data.tproductbin[i].Active == false) {
+                linestatus = "In-Active";
+            };
 
             for (let j = 0; j < productsData.length ; j++ ){
-                // console.log("ProductBinLocation = " + productsData[j].fields.ProductClass[0].fields.DefaultbinLocation);
-                if(data.tproductbin[i].BinLocation == productsData[j].fields.ProductClass[0].fields.DefaultbinLocation  && data.tproductbin[i].BinNumber == productsData[j].fields.ProductClass[0].fields.DefaultbinNumber) {
-                    // console.log(i);
-                    // console.log(j);
-                    // console.log(3);
-                    var dataList = [
-                        data.tproductbin[i].BinLocation || "-",
-                        data.tproductbin[i].BinNumber || "-",
-                        productsData[j].fields.ProductClass[0].fields.DeptName || "",
-                        productsData[j].fields.ProductClass[0].fields.ProductName || "",
-                        productsData[j].fields.ProductClass[0].fields.SalesDescription || "",
-                        productsData[j].fields.ProductClass[0].fields.TotalQtyInStock || "",
-                        productsData[j].fields.ProductClass[0].fields.Active || "",
-                        productsData[j].fields.ID || "",
-                    ];
-                    splashArrayProductList.push(dataList);
-                    dataTableList.push(dataList);
-                    flag = 1;
-                    // console.log(productsData[j].fields);
-                    // console.log(dataList);
+                if(productsData[j].fields.ProductClass[0].fields.DefaultbinLocation == data.tproductbin[i].BinLocation && productsData[j].fields.ProductClass[0].fields.DefaultbinNumber == data.tproductbin[i].BinNumber) {
+                    productDetail = productsData[j].fields;
+                    productname = productsData[j].fields.ProductName;
+                    productsalesdescription = productsData[j].fields.SalesDescription;
+                    productinstock = productsData[j].fields.ProductClass[0].fields.OnOrderQuantity;
+                    productId = productsData[j].fields.ID;
                 }
             }
-            if(!flag) {
-                // console.log(4);
-                var dataList = [
-                    data.tproductbin[i].BinLocation || "-",
-                    data.tproductbin[i].BinNumber || "-",
-                    "-",
-                    "-",
-                    "-",
-                    "-",
-                    "-",
-                    "",
-                ];
-                splashArrayProductList.push(dataList);
-                dataTableList.push(dataList);
-            }
+
+            var dataList = [
+                data.tproductbin[i].Id || "",
+                data.tproductbin[i].BinLocation || "-",
+                data.tproductbin[i].BinNumber || "",
+                data.tproductbin[i].BinClassName || "",
+                productId || "",
+                productname || "",
+                productsalesdescription || "",
+                productinstock || "",
+                linestatus,
+            ];
+            splashArrayProductList.push(dataList);
+            dataTableList.push(dataList);
         }
-        // console.log(splashArrayProductList);
 
 
         templateObject.transactiondatatablerecords.set(dataTableList);
@@ -2598,12 +2609,12 @@ Template.non_transactional_list.onRendered(function() {
                                     tproductbin: thirdaryData,
                                   };
 
-                                  // addVS1Data("TProductBin",JSON.stringify(objCombineData)).then(function (datareturn) {
-                                  //     templateObject.resetData(objCombineData);
-                                  //     $(".fullScreenSpin").css("display", "none");
-                                  //   }).catch(function (err) {
-                                  //     $(".fullScreenSpin").css("display", "none");
-                                  //   });
+                                  addVS1Data("TProductBin",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                      templateObject.resetData(objCombineData);
+                                      $(".fullScreenSpin").css("display", "none");
+                                    }).catch(function (err) {
+                                      $(".fullScreenSpin").css("display", "none");
+                                    });
                                 }
                             }).catch(function (err) {});
 
@@ -4781,7 +4792,7 @@ Template.non_transactional_list.onRendered(function() {
 
     //UOM List Data
     templateObject.getUOMListData = async function (deleteFilter = false) {
-      //GET Data here from Web API or IndexDB      
+      //GET Data here from Web API or IndexDB
       getVS1Data("TUnitOfMeasureList")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -11735,7 +11746,7 @@ Template.non_transactional_list.onRendered(function() {
                             tab3endDate = new Date(data.tvatreturns[i].fields.Tab3Year, (parseInt(endMonth)), 0);
                             tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                         }
-                        
+
                         if (deleteFilter == false) {
                             if (data.tvatreturns[i].fields.Active) {
                                 var dataList = {
@@ -15969,6 +15980,192 @@ Template.non_transactional_list.onRendered(function() {
         });
     }
 
+    templateObject.getMyTasksList = async function(deleteFilter = false, dateFilter="all"){
+        var url = FlowRouter.current().path;
+        url = new URL(window.location.href);
+        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+
+        if(!employeeID){
+            employeeID = localStorage.getItem('mySessionEmployee');
+        }
+
+        getVS1Data("TCRMTaskList").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                crmService.getAllTaskList(employeeID).then(function(data) {
+                    if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                        let all_records = data.tprojecttasks;
+                        let today = moment().format("YYYY-MM-DD");
+
+                        if(!deleteFilter){
+                            all_records = all_records.filter((item) => item.fields.Completed == false);
+                        }
+
+                        $(".crm_all_count").text(all_records.length);
+
+                        if(dateFilter == "today"){
+                            all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                            $(".crm_today_count").text(today_records.length);
+                        }
+                        else if(dateFilter == "upcoming"){
+                            upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                            $(".crm_upcoming_count").text(upcoming_records.length);
+                        }
+
+                        setTimeout(() => {
+                            getVS1Data("TCRMProjectList").then(function(dataObject) {
+                                if (dataObject.length == 0) {
+                                    crmService.getTProjectList(employeeID).then(function(data) {
+                                        if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                            let all_projects = data.tprojectlist;
+                                            all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                            templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                        }
+                                        addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                    }).catch(function(err) {});
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                }
+                            }).catch(function(err) {
+                                crmService.getTProjectList(employeeID).then(function(data) {
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                        templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                    addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                }).catch(function(err) {});
+                            });
+                        }, 100);
+                    } else {
+                        $(".crm_all_count").text(0);
+                        $(".crm_today_count").text(0);
+                        $(".crm_upcoming_count").text(0);
+                    }
+                    $(".fullScreenSpin").css("display", "none");
+                }).catch(function(err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let all_records = data.tprojecttasks;
+                let today = moment().format("YYYY-MM-DD");
+
+                if (employeeID) {
+                    all_records = all_records.filter(item => item.fields.EnteredBy == employeeID);
+                }
+                if(!deleteFilter){
+                    all_records = all_records.filter((item) => item.fields.Completed == false);
+                }
+
+                $(".crm_all_count").text(all_records.length);
+
+                if(dateFilter == "today"){
+                    all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                    $(".crm_today_count").text(today_records.length);
+                }
+                else if(dateFilter == "upcoming"){
+                    upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                    $(".crm_upcoming_count").text(upcoming_records.length);
+                }
+
+                setTimeout(() => {
+                    getVS1Data("TCRMProjectList").then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            crmService.getTProjectList(employeeID).then(function(data) {
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                    templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                }
+                                addVS1Data("TCRMProjectList", JSON.stringify(data));
+                            }).catch(function(err) {});
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                let all_projects = data.tprojectlist;
+                                templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                            }
+                        }
+                    }).catch(function(err) {
+                        crmService.getTProjectList(employeeID).then(function(data) {
+                            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                let all_projects = data.tprojectlist;
+                                all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                            }
+                            addVS1Data("TCRMProjectList", JSON.stringify(data));
+                        }).catch(function(err) {});
+                    });
+                }, 100);
+
+                $(".fullScreenSpin").css("display", "none");
+            }
+        }).catch(function(err) {
+            crmService.getAllTaskList(employeeID).then(function(data) {
+                if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                    let all_records = data.tprojecttasks;
+                    let today = moment().format("YYYY-MM-DD");
+
+                    if(!deleteFilter){
+                        all_records = all_records.filter((item) => item.fields.Completed == false);
+                    }
+
+                    $(".crm_all_count").text(all_records.length);
+
+                    if(dateFilter == "today"){
+                        all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                        $(".crm_today_count").text(today_records.length);
+                    }
+                    else if(dateFilter == "upcoming"){
+                        upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                        $(".crm_upcoming_count").text(upcoming_records.length);
+                    }
+
+                    setTimeout(() => {
+                        getVS1Data("TCRMProjectList").then(function(dataObject) {
+                            if (dataObject.length == 0) {
+                                crmService.getTProjectList(employeeID).then(function(data) {
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                        templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                    addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                }).catch(function(err) {});
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                }
+                            }
+                        }).catch(function(err) {
+                            crmService.getTProjectList(employeeID).then(function(data) {
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                    templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                }
+                                addVS1Data("TCRMProjectList", JSON.stringify(data));
+                            }).catch(function(err) {});
+                        });
+                    }, 100);
+                } else {
+                    $(".crm_all_count").text(0);
+                    $(".crm_today_count").text(0);
+                    $(".crm_upcoming_count").text(0);
+                }
+                $(".fullScreenSpin").css("display", "none");
+            }).catch(function(err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+
     templateObject.displayAllTasksList = async function(task_array, deleteFilter = false, project_array){
         var splashArrayLeadList = new Array();
         let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
@@ -16009,7 +16206,7 @@ Template.non_transactional_list.onRendered(function() {
                 td1 = "";
                 td11 = "";
             } else {
-                td11 = moment(item.fields.due_date).format("DD/MM/YYYY");
+                td11 = moment(item.fields.due_date).format("MM/DD/YYYY");
                 td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
 
                 let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
@@ -16277,8 +16474,331 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.displayMyTasksList = async function(task_array, deleteFilter = false, project_array){
+        var splashArrayLeadList = new Array();
+        let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
+            tcontact = "";
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+
+        // sort
+        task_array.sort((a, b) => {
+            let x = new Date(a.fields.due_date);
+            let y = new Date(b.fields.due_date);
+            let px = parseInt(a.fields.priority);
+            let py = parseInt(b.fields.priority);
+
+            if(py != px){
+                return py - px;
+            }else{
+                return y - x;
+            }
+        });
+
+        task_array.forEach((item) => {
+            if (item.fields.Completed) {
+                completed = "checked";
+                chk_complete = "chk_uncomplete";
+            } else {
+                completed = "";
+                chk_complete = "chk_complete";
+            }
+            td0 = `
+                <div class="custom-control custom-checkbox chkBox pointer no-modal "
+                style="width:15px;margin-right: -6px;">
+                <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+                    id="formCheck-${item.fields.ID}" ${completed}>
+                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+                    for="formCheck-${item.fields.ID}"></label>
+                </div>`;
+
+            tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+
+            tcontact = item.fields.ContactName;
+
+            if (item.fields.due_date == "" || item.fields.due_date == null) {
+                td1 = "";
+                td11 = "";
+            } else {
+                td11 = moment(item.fields.due_date).format("MM/DD/YYYY");
+                td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
+
+                let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
+                if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                    color_num = 3; // Red
+                } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                    color_num = 2; // Orange
+                } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                    color_num = 0; // Green
+                }
+
+                td0 = `
+                    <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+                    style="width:15px;margin-right: -6px;${completed_style}">
+                    <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+                        id="formCheck-${item.fields.ID}" ${completed}>
+                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+                        for="formCheck-${item.fields.ID}"></label>
+                    </div>`;
+            }
+
+            td2 = item.fields.TaskName;
+            td3 = item.fields.TaskDescription.length < 80 ? item.fields.TaskDescription : item.fields.TaskDescription.substring(0, 79) + "...";
+
+            if (item.fields.TaskLabel) {
+                if (item.fields.TaskLabel.fields) {
+                    td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
+                        style="margin-right: 5px; color:${item.fields.TaskLabel.fields.Color}" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+                    labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
+                } else {
+                    item.fields.TaskLabel.forEach((lbl) => {
+                        td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
+                            style="margin-right: 5px; color:${lbl.fields.Color}" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+                        labelsForExcel += lbl.fields.TaskLabelName + " ";
+                    });
+                }
+            } else {
+                td4 = "";
+            }
+
+            projectName = item.fields.ProjectName;
+            if (item.fields.ProjectName == "" || item.fields.ProjectName == "Default") {
+                projectName = "";
+            }
+
+            let all_projects = project_array;
+            let projectColor = 'transparent';
+            if (item.fields.ProjectID != 0) {
+                let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
+                if (projects.length && projects[0].fields.ProjectColour) {
+                    projectColor = projects[0].fields.ProjectColour;
+                }
+            }
+
+            td6 = ``;
+            if (item.fields.Active) {
+                td6 = "";
+            } else {
+                td6 = "In-Active";
+            }
+
+            splashArrayLeadList.push([
+                tflag,
+                tcontact,
+                td1,
+                td2,
+                td3,
+                td4,
+                projectName,
+                td6,
+                item.fields.ID,
+                color_num,
+                labelsForExcel,
+                item.fields.Completed,
+                projectColor
+            ]);
+        });
+
+        templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayLeadList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 0,
+                        className: "colPriority openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("data-id", rowData[8]);
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "100px",
+                    },
+                    {
+                        orderable: false,
+                        targets: 1,
+                        className: "colContact openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "200px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colDate openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "120px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colTaskName openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 4,
+                        className: "colTaskDesc openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 5,
+                        className: "colTaskLabels openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 6,
+                        className: "colTaskProjects openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background', rowData[13]);
+                        },
+                    },
+                    {
+                        orderable: false,
+                        targets: 7,
+                        className: "colStatus openEditSubTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                order: [
+                    // [3, "desc"],
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = task_array.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     templateObject.getAllReceiptCategoryList = async function (deleteFilter = false) {
-        //GET Data here from Web API or IndexDB      
+        //GET Data here from Web API or IndexDB
         getVS1Data("TReceiptCategory")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -16287,7 +16807,7 @@ Template.non_transactional_list.onRendered(function() {
                   templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
                 })
                 .catch(function (err) {
-  
+
                 });
             } else {
               let data = JSON.parse(dataObject[0].data);
@@ -16316,7 +16836,7 @@ Template.non_transactional_list.onRendered(function() {
           let mobile = "";
           let linestatus = "";
           let currentData = data.treceiptcategory[i]
-          
+
           if (currentData.Active == true) {
             linestatus = "";
           } else if (currentData.Active == false) {
@@ -16324,7 +16844,7 @@ Template.non_transactional_list.onRendered(function() {
           }
 
           let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
-          
+
           var dataList = [
             currentData.Id || "",
             currentData.CategoryName || "",
@@ -16411,13 +16931,13 @@ Template.non_transactional_list.onRendered(function() {
                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                   $(".paginate_button.page-item.next").addClass("disabled");
                 }
-  
+
                 $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
                   $(".fullScreenSpin").css("display", "inline-block");
                   //var splashArrayCustomerListDupp = new Array();
                   let dataLenght = oSettings._iDisplayLength;
                   let customerSearch = $("#" + currenttablename + "_filter input").val();
-                  let linestatus = "";                  
+                  let linestatus = "";
                   receiptService
                     .getAllReceiptCategorys(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter)
                     .then(function (dataObjectnew) {
@@ -16437,7 +16957,7 @@ Template.non_transactional_list.onRendered(function() {
                         ];
                         splashArrayList.push(dataListDupp);
                       }
-  
+
                       let uniqueChars = [...new Set(splashArrayList)];
                       templateObject.transactiondatatablerecords.set(uniqueChars);
                       var datatable = $("#" + currenttablename).DataTable();
@@ -16449,7 +16969,7 @@ Template.non_transactional_list.onRendered(function() {
                           .dataTable()
                           .fnPageChange("last");
                       }, 400);
-  
+
                       $(".fullScreenSpin").css("display", "none");
                     })
                     .catch(function (err) {
@@ -16480,7 +17000,7 @@ Template.non_transactional_list.onRendered(function() {
               },
               fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 let countTableData = data?.Params?.Count || 0; //get count from API data
-  
+
                 return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
               },
             })
@@ -16508,7 +17028,7 @@ Template.non_transactional_list.onRendered(function() {
             });
           $(".fullScreenSpin").css("display", "none");
         }, 0);
-  
+
         setTimeout(function () {
           $("div.dataTables_filter input").addClass("form-control form-control-sm");
         }, 0);
@@ -16524,7 +17044,7 @@ Template.non_transactional_list.onRendered(function() {
     }  else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
         // templateObject.getAccountsOverviewData(); - moved to accountOverview.js
     } else if (currenttablename == "tblAccountListPop") {
-        
+
     } else if (currenttablename == 'tblBankAccountsOverview') {
         templateObject.getBankAccountsOverviewData();
     } else if (currenttablename == "tblClienttypeList") {
@@ -16703,6 +17223,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getSalesListByCustomer()
     } else if(currenttablename === 'tblAllTaskDatatable'){
         templateObject.getAllTasksList(false);
+    } else if(currenttablename === 'tblMyTaskDatatable'){
+        templateObject.getMyTasksList(false);
     } else if(currenttablename === 'tblReceiptCategoryList'){
         templateObject.getAllReceiptCategoryList();
     }
@@ -16724,6 +17246,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getVatReturnData(false, datefrom, dateto);
         } else if (currenttablename === "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if (currenttablename === "tblMyTaskDatatable") {
+            templateObject.getMyTasksList(false);
         } else if(currenttablename === 'tblReceiptCategoryList'){
             templateObject.getAllReceiptCategoryList();
         }
@@ -16879,6 +17403,8 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(true);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(true);
+        } else if (currenttablename == "tblMyTaskDatatable") {
+            templateObject.getMyTasksList(true);
         } else if(currenttablename === 'tblReceiptCategoryList'){
             templateObject.getAllReceiptCategoryList(true);
         }
@@ -16998,6 +17524,8 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(false);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if (currenttablename == "tblMyTaskDatatable") {
+            templateObject.getMyTasksList(false);
         } else if(currenttablename === 'tblReceiptCategoryList'){
             templateObject.getAllReceiptCategoryList(false);
         }
