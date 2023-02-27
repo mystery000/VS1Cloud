@@ -17,12 +17,8 @@ let _tabGroup = 0;
 
 Template.allCardsLists.onRendered(function () {
     _tabGroup = $(".connectedCardSortable").data("tabgroup");
-    _chartGroup = $(".connectedCardSortable").data("chartgroup");
+    _chartGroup = $(".connectedCardSortable").data("chartgroup"); 
     const templateObject = Template.instance();
-
-    templateObject.deactivateDraggable = () => {
-        draggableCharts.disable();
-    };
 
     templateObject.saveCardsLocalDB = async () => {
         const cardsApis = new ChartsApi();
@@ -67,8 +63,11 @@ Template.allCardsLists.onRendered(function () {
                     }
                 });
             }
+
             if( cardList.length > 0 ){
                 cardList.forEach((card) => {
+                    // console.dir(card.fields.CardKey, card.fields.CardKey])
+                    // console.log(card.fields.Active)
                     $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-id", card.fields.ID);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
@@ -98,7 +97,7 @@ Template.allCardsLists.onRendered(function () {
                     $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
                     $(this).attr("card-active", 'false');
                 })
-                $(`[chartgroup='${_chartGroup}']`).attr("card-active", 'true');
+                $(`[chartgroup='${_chartGroup}']`).attr("card-active", true);
                 $(`[chartgroup='${_chartGroup}']`).removeClass('hideelement');
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
@@ -106,6 +105,10 @@ Template.allCardsLists.onRendered(function () {
         }, 0);
     };
     templateObject.setCardPositions();
+
+    templateObject.deactivateDraggable = () => {
+        draggableCharts.disable();
+    };
 
     templateObject.activateDraggable = () => {
         setTimeout(function(){
@@ -116,11 +119,8 @@ Template.allCardsLists.onRendered(function () {
                 tolerance: 'pointer',
                 stop: async (event, ui) => {
                     if( $(ui.item[0]).hasClass("dimmedChart") == false ){
-                        // Here we rebuild positions tree in html
-                        await ChartHandler.buildCardPositions();
                         // Here we save card list
-                        templateObject.saveCards();
-                        $(".fullScreenSpin").css("display", "none");
+                        templateObject.saveCards();                     
                     }
                 },
             }).disableSelection();
@@ -174,12 +174,12 @@ Template.allCardsLists.onRendered(function () {
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveCardsLocalDB();
-                    $(".fullScreenSpin").css("display", "none");
                 }
             } catch (error) {
                 $(".fullScreenSpin").css("display", "none");
             }
         }
+        $(".fullScreenSpin").css("display", "none");
     };
 });
 
@@ -345,4 +345,8 @@ Template.allCardsLists.events({
         $(".fullScreenSpin").css("display", "none");
         }, delayTimeAfterSound);
     }
+});
+
+Template.registerHelper('equals', function(a, b) {
+    return a === b;
 });
