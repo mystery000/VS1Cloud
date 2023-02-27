@@ -3250,7 +3250,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     let dateTo =
         moment(toDate).format("YYYY-MM-DD") ||
         moment().format("YYYY-MM-DD");
-    reportService.getBinLocationReport(dateFrom, dateTo, false).then(async function (data) {
+    productService.getBins().then(async function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
