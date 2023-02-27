@@ -126,9 +126,8 @@ Template.dashboardoptionspopup.onRendered(function() {
             $(this).closest("tbody").find("input[value='All']").prop('checked', false);
             $(this).closest('tbody').find('td.colLogginDef input[type=radio]').attr('disabled', true);
             $(this).closest('tbody').find("td.colShowDef input[type=checkbox]").map((index, element) => {
-                console.log(index, element)
                 const isChecked = $(element).is(":checked");
-                $(element).parent().find("td.colLogginDef input[type=radio]").attr('disabled', !isChecked).prop('checked', isChecked);
+                $(element).parents("tr").find("td.colLogginDef input[type=radio]").attr('disabled', !isChecked).prop('checked', isChecked);
             })
 
         } else {
