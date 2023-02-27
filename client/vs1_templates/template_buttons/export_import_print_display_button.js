@@ -29,8 +29,8 @@ Template.export_import_print_display_button.events({
 
     'click .exportbtn': function(event) {
       let templateObject = Template.instance();
-      event.preventDefault();
-      event.stopPropagation();
+      //event.preventDefault();
+      //event.stopPropagation();
       if(templateObject.data.tablename) {
         let tablename = templateObject.data.tablename;
         $('.fullScreenSpin').css('display','inline-block');
@@ -41,8 +41,8 @@ Template.export_import_print_display_button.events({
     },
 
     'click .printConfirm': function(event) {
-      event.preventDefault();
-      event.stopPropagation();
+      //event.preventDefault();
+      //event.stopPropagation();
       let templateObject = Template.instance();
       let tablename = templateObject.data.tablename || '';
       if(tablename != '') {

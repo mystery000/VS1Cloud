@@ -139,10 +139,10 @@ Template.customersummaryreport.onRendered(() => {
         GlobalFunctions.generateSpan(data.tcustomersummaryreport[i]["Address 2"] || "", 'text-primary'),
         GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Postcode || "", 'text-primary'),
         GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].State || "", 'text-primary'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Amount (Ex)"] || 0), 'text-success'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Cost"] || 0), 'text-success'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Gross Profit"] || 0), 'text-success'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i].Margin || 0), 'text-primary'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Amount (Ex)"] || 0), 'text-success', 'text-right'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Cost"] || 0), 'text-success', 'text-right'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Gross Profit"] || 0), 'text-success', 'text-right'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i].Margin || 0), 'text-primary', 'text-right'),
       ];
       splashArrayCustomerSummaryReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayCustomerSummaryReport);
@@ -157,7 +157,7 @@ Template.customersummaryreport.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: splashArrayCustomerSummaryReport,
         searching: false,
         "bsort": false,
