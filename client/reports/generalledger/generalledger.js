@@ -779,30 +779,14 @@ Template.generalledger.onRendered(() => {
       // templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
     }
     //Xiao Jang fixed
-    splashArrayBalanceSheetReport.sort(sortFunction);
-    function sortFunction(a, b) {
-      if (a[0] === b[0]) {
-        return 0;
-      } else {
-        return (a[0] < b[0]) ? -1 : 1;
-      }
-    }
-    function convert2Digit(date){
-      return (date < 10) ? '0' + date : date;
-    }
-    function covert2Comma(number){
-      return (number- 0).toLocaleString('en-US', {minimumFractionDigits:2});
-    }
-    function showCurrency(number){
-      if(number >= 0) return '$' + covert2Comma(number - 0);
-      return '-$' + covert2Comma(-number);
-    }
+    splashArrayBalanceSheetReport.sort(GlobalFunctions.sortFunction);
+
     let start = splashArrayBalanceSheetReport[0][0], credit = 0, debit = 0, total = 0, creditSum = 0, debitSum = 0, totalSum = 0;
     let T_AccountName = splashArrayBalanceSheetReport[0][0];
     let balanceSheetReport = [];
     let symDollar = '$';
     balanceSheetReport.push([
-      `<span class="table-cells text-bold">${T_AccountName}</span>`,
+        GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
       "",
       "",
       "",
@@ -815,11 +799,11 @@ Template.generalledger.onRendered(() => {
       if(start != splashArrayBalanceSheetReport[i][0]) {
         creditSum += (credit - 0), debitSum += (debit - 0), totalSum += (total - 0);
         start = splashArrayBalanceSheetReport[i][0];
-        credit = credit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(credit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(credit)}</span>`;
-        debit = debit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(debit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(debit)}</span>`;
-        total = total >= 0 ? `<span class='table-cells text-bold'>${showCurrency(total)}</span>` : `<span class='text-danger text-bold'>${showCurrency(total)}</span>`;
+        credit = credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "text-danger text-bold");
+        debit = debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "text-danger text-bold");
+        total = total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold");
         balanceSheetReport.push([
-          `<span class="table-cells text-bold">Total ${T_AccountName}</span>`,
+          GlobalFunctions.generateSpan('Total' + T_AccountName, "table-cells text-bold"),
           "",
           "",
           "",
@@ -829,7 +813,7 @@ Template.generalledger.onRendered(() => {
           total,
         ]);
         balanceSheetReport.push([
-          `<span class="table-cells text-bold">${splashArrayBalanceSheetReport[i][0]}</span>`,
+          GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][0], "table-cells text-bold"),
           "",
           "",
           "",
@@ -845,48 +829,48 @@ Template.generalledger.onRendered(() => {
       splashArrayBalanceSheetReport[i][0] = "";
       if(splashArrayBalanceSheetReport[i][5] != "" || splashArrayBalanceSheetReport[i][6] != "") {
         let tmpDate = new Date(splashArrayBalanceSheetReport[i][2]);
-        splashArrayBalanceSheetReport[i][2] = `${convert2Digit(tmpDate.getDate())}/${convert2Digit(tmpDate.getMonth() + 1)}/${tmpDate.getFullYear()}`;
+        splashArrayBalanceSheetReport[i][2] = `${GlobalFunctions.convert2Digit(tmpDate.getDate())}/${GlobalFunctions.convert2Digit(tmpDate.getMonth() + 1)}/${tmpDate.getFullYear()}`;
 
-        splashArrayBalanceSheetReport[i][1] = `<span class="text-primary">${splashArrayBalanceSheetReport[i][1]}</span>`;
-        splashArrayBalanceSheetReport[i][2] = `<span class="text-primary">${splashArrayBalanceSheetReport[i][2]}</span>`;
-        splashArrayBalanceSheetReport[i][3] = `<span class="text-primary">${splashArrayBalanceSheetReport[i][3]}</span>`;
-        splashArrayBalanceSheetReport[i][4] = `<span class="text-primary">${splashArrayBalanceSheetReport[i][4]}</span>`;
+        splashArrayBalanceSheetReport[i][1] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][1], "text-primary");
+        splashArrayBalanceSheetReport[i][2] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][2], "text-primary");
+        splashArrayBalanceSheetReport[i][3] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][3], "text-primary");
+        splashArrayBalanceSheetReport[i][4] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][4], "text-primary");
         let tmp;
         tmp = splashArrayBalanceSheetReport[i][5] - 0;
         credit += tmp; //credit
-        splashArrayBalanceSheetReport[i][5] = (tmp >= 0) ? `<span class="text-primary">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
+        splashArrayBalanceSheetReport[i][5] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger");
 
         tmp = splashArrayBalanceSheetReport[i][6] - 0;
         debit += tmp; //debit
-        splashArrayBalanceSheetReport[i][6] = (tmp >= 0) ? `<span class="text-primary">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
+        splashArrayBalanceSheetReport[i][6] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger");
 
         tmp = splashArrayBalanceSheetReport[i][7] - 0;
         total += tmp; //total
-        splashArrayBalanceSheetReport[i][7] = (tmp >= 0) ? `<span class="text-primary">${showCurrency(tmp)}</span>` : `<span class="text-danger">${showCurrency(tmp)}</span>`;
+        splashArrayBalanceSheetReport[i][7] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger");
         balanceSheetReport.push(splashArrayBalanceSheetReport[i]);
       }
     }
     balanceSheetReport.push([
-      `<span class="table-cells">Total ${T_AccountName}</span>`,
+      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells"),
       "",
       "",
       "",
       "",
-      credit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(credit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(credit)}</span>`,
-      debit >= 0 ? `<span class='table-cells text-bold'>${showCurrency(debit)}</span>` : `<span class='text-danger text-bold'>${showCurrency(debit)}</span>`,
-      total >= 0 ? `<span class='table-cells text-bold'>${showCurrency(total)}</span>` : `<span class='text-danger text-bold'>${showCurrency(total)}</span>`,
+      credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "text-danger text-bold"),
+      debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "text-danger text-bold"),
+      total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold"),
     ]);
     creditSum += (credit - 0), debitSum += (debit - 0);
     totalSum = (creditSum - debitSum);
     balanceSheetReport.push([
-      `<span class="table-cells">Grand Total</span>`,
+      GlobalFunctions.generateSpan(`Grand Total`, "table-cells"),
       "",
       "",
       "",
       "",
-      creditSum >= 0 ? `<span class='table-cells text-bold'>${showCurrency(creditSum)}</span>` : `<span class='text-danger text-bold'>${showCurrency(creditSum)}</span>`,
-      debitSum >= 0 ? `<span class='table-cells text-bold'>${showCurrency(debitSum)}</span>` : `<span class='text-danger text-bold'>${showCurrency(debitSum)}</span>`,
-      totalSum >= 0 ? `<span class='table-cells text-bold'>${showCurrency(totalSum)}</span>` : `<span class='text-danger text-bold'>${showCurrency(totalSum)}</span>`,
+      creditSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "text-danger text-bold"),
+      debitSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "text-danger text-bold"),
+      totalSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "text-danger text-bold"),
     ]);
     templateObject.transactiondatatablerecords.set(balanceSheetReport);
     if (templateObject.transactiondatatablerecords.get()) {
@@ -895,7 +879,7 @@ Template.generalledger.onRendered(() => {
       }, 100);
     }
     setTimeout(function () {
-      $('#tblgeneralledger').DataTable({
+      $('#tblgeneralledger1').DataTable({
         data: balanceSheetReport,
         searching: false,
         "bSort" : false,
