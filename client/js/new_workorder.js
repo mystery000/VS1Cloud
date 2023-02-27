@@ -107,6 +107,54 @@ Template.new_workorder.onRendered(async function(){
     let temp = await templateObject.getAllWorkorders()
     templateObject.workOrderRecords.set(temp);
 
+
+    async function getCustomerData(customername = 'Workshop') {
+        return new Promise(async(resolve, reject)=> {
+            getVS1Data('TCustomerVS1').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    contactService.getOneCustomerDataExByName(customername).then(function(data){
+                        $('.fullScreenSpin').css('display', 'none')
+                        resolve(data.tcustomer[0].fields)
+
+                    }).catch(function(err){
+                        $('.fullScreenSpin').css('display', 'none')
+                        resolve({ClientID: '', ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tcustomervs1;
+                    let added = true
+                    for(let i = 0; i< useData.length; i++) {
+                        if(useData[i].fields.ClientName == customername) {
+                            added = false
+                            $('.fullScreenSpin').css('display', 'none')
+                            resolve(useData[i].fields)
+                        }
+                    }
+
+                    if(added == true) {
+                        contactService.getOneCustomerDataExByName(customername).then(function(data){
+                            $('.fullScreenSpin').css('display', 'none')
+                            resolve(data.tcustomer[0].fields)
+                        }).catch(function(error){
+                            $('.fullScreenSpin').css('display', 'none')
+                            resolve({ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                        })
+                    }
+                }
+            }).catch(function (e) {
+                contactService.getOneCustomerDataExByName(customername).then(function(data){
+                    $('.fullScreenSpin').css('display', 'none')
+                    resolve(data.tcustomer[0].fields)
+                }).catch(function(error){
+                    $('.fullScreenSpin').css('display', 'none')
+                    resolve({ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                })
+            })
+        })
+    }
+
+
     templateObject.getWorkorderRecord = async function() {
         if(FlowRouter.current().queryParams.id) {
             $('.fullScreenSpin').css('display', 'inline-block')
@@ -123,12 +171,15 @@ Template.new_workorder.onRendered(async function(){
                 isCompleted = true;
             }
             templateObject.salesOrderId.set(workorder.fields.SaleID)
+            let customerData = await getCustomerData(workorder.fields.Customer);
             let record = {
                 id: orderid,
                 salesorderid: workorder.fields.SaleID,
                 lid: 'Edit Work Order ' + orderid,
                 customer: workorder.fields.Customer || '',
                 ClientName: workorder.fields.Customer || '',
+                CustomerID: customerData.ID,
+                ClientEmail: customerData.Email,
                 invoiceToDesc: workorder.fields.OrderTo || '',
                 custPONumber: workorder.fields.PONumber  || '',
                 saledate: workorder.fields.SaleDate || "",
@@ -201,7 +252,8 @@ Template.new_workorder.onRendered(async function(){
                                 if(added == true) {
                                     accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
                                         resolve(data)
-                                    })
+                                    }).catch (function(e){
+                                    }) 
                                 }
                             }
                         }).catch(
@@ -219,6 +271,8 @@ Template.new_workorder.onRendered(async function(){
                     lid: 'Edit Work Order' + ' ' + data.fields.ID + '_' + (workordersCount+1).toString(),
                     customer: data.fields.CustomerName,
                     ClientName: data.fields.CustomerName || '',
+                    ClientEmail: data.fields.ContactEmail || '',
+                    CustomerID: data.fields.CustomerID,
                     invoiceToDesc: data.fields.InvoiceToDesc,
                     custPONumber: data.fields.CustPONumber,
                     saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
@@ -271,52 +325,7 @@ Template.new_workorder.onRendered(async function(){
                 // }, 15000)
 
             }else {
-                async function getCustomerData() {
-                    return new Promise(async(resolve, reject)=> {
-                        getVS1Data('TCustomerVS1').then(function(dataObject){
-                            if(dataObject.length == 0) {
-                                contactService.getOneCustomerDataExByName('Workshop').then(function(data){
-                                    $('.fullScreenSpin').css('display', 'none')
-                                    resolve(data.tcustomer[0].fields)
-
-                                }).catch(function(err){
-                                    $('.fullScreenSpin').css('display', 'none')
-                                    resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                                })
-                            }else {
-                                let data = JSON.parse(dataObject[0].data);
-                                let useData = data.tcustomervs1;
-                                let added = true
-                                for(let i = 0; i< useData.length; i++) {
-                                    if(useData[i].fields.ClientName == 'Workshop') {
-                                        added = false
-                                        $('.fullScreenSpin').css('display', 'none')
-                                        resolve(useData[i].fields)
-                                    }
-                                }
-
-                                if(added == true) {
-                                    contactService.getOneCustomerDataExByName('Workshop').then(function(data){
-                                        $('.fullScreenSpin').css('display', 'none')
-                                        resolve(data.tcustomer[0].fields)
-                                    }).catch(function(error){
-                                        $('.fullScreenSpin').css('display', 'none')
-                                        resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                                    })
-                                }
-                            }
-                        }).catch(function (e) {
-                            contactService.getOneCustomerDataExByName('Workshop').then(function(data){
-                                $('.fullScreenSpin').css('display', 'none')
-                                resolve(data.tcustomer[0].fields)
-                            }).catch(function(error){
-                                $('.fullScreenSpin').css('display', 'none')
-                                resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                            })
-                        })
-                    })
-                }
-
+                
                 let customerData = await getCustomerData();
                 let orderAddress = customerData.Companyname + '\n' + customerData.Street+" "+customerData.Street2 + '\n'+ customerData.State+'\n' + customerData.Postcode + ' ' + customerData.Country
                 let record = {
@@ -325,6 +334,8 @@ Template.new_workorder.onRendered(async function(){
                     lid: 'New WorkOrder',
                     customer: 'Workshop',
                     ClientName: 'Workshop',
+                    CustomerID: customerData.ID || 2,
+                    ClientEmail: '',
                     invoiceToDesc: orderAddress,
                     custPONumber: '',
                     saledate: moment().format('DD/MM/YYYY'),

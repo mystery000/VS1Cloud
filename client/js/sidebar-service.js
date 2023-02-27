@@ -150,6 +150,11 @@ export class SideBarService extends BaseService {
     return this.POST(this.ERPObjects.TSerialNumberListCurrentReport, data);
   }
 
+  savePayRunHistory(data)
+  {
+    return this.POST(this.ERPObjects.TPayRunHistory, data);
+  }
+
   removeTempateData(data)
   {
     return this.POST(this.ERPObjects.TTemplateSettings,data);

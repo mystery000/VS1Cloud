@@ -318,7 +318,11 @@ const erpObject = {
     TCostTypes: "TCostTypes",
     TProductBatches: "TProductBatches",
     TStockMovement:"TStockMovement",
-    TPreference: "TPreference"
+    TPreference: "TPreference",
+    BuildProfitabilityReport: "BuildProfitabilityReport",
+    ProductionWorksheetReport: "ProductionWorksheetReport",
+    WorkOrderReport: "WorkOrderReport"
+
 };
 
 export default erpObject;

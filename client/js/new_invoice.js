@@ -4107,7 +4107,7 @@ Template.new_invoice.onRendered(function () {
     $("#departmentModal").modal("toggle");
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $("#sltTerms").val($(this).find(".colTermName").text());
+    $("#sltTerms").val($(this).find(".colName").text());
     $("#termsListModal").modal("toggle");
   });
   $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
@@ -8354,8 +8354,8 @@ Template.new_invoice.events({
             $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-            var saleDate = invData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
+            var creationDate = invData.fields.CreationDate;
+            var fromDate = creationDate.substring(0, 10);
             var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingInvoices = await sideBarService.getAllTInvoiceListData(
               fromDate,

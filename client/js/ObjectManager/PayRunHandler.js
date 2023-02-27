@@ -2,6 +2,9 @@ import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 import PayRun from "../Api/Model/PayRun";
 import ObjectManager from "./ObjectManager";
+import {SideBarService} from "../sidebar-service";
+
+let sideBarService = new SideBarService();
 
 /**
  * @property {PayRun[]} payruns
@@ -135,6 +138,11 @@ export default class PayRunHandler {
   async saveToLocal() {
     try {
       await addVS1Data(erpObject.TPayRunHistory, JSON.stringify(this.payruns));
+      let data = {
+        type: "TPayRunHistory",
+        fields: this.payruns
+      };
+      await sideBarService.savePayRunHistory(data);
     } catch (e) {
       LoadingOverlay.hide(0);
       const result = await swal({
@@ -144,9 +152,10 @@ export default class PayRunHandler {
         showCancelButton: true,
         confirmButtonText: "Retry"
       });
-
+      
       if (result.value) {
         await this.saveToLocal();
+        
       }
     }
   }
