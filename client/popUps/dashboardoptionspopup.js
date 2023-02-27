@@ -118,12 +118,19 @@ Template.dashboardoptionspopup.onRendered(function() {
 
 
     let showDashboard = ["All"];
-    $('#tblDashboardOptions tbody').on('change', 'tr input[type=checkbox]', function() {
+    $('#tblDashboardOptions tbody').on('change', 'td.colShowDef input[type=checkbox]', function() {
         // $(this).closest('tr').find(".colOptionsName ").click();
         let dashboardStatus = $(this).closest('tr').find(".colOptionsName").text();
+        alert(dashboardStatus)
         if (dashboardStatus !== 'All') {
             $(this).closest("tbody").find("input[value='All']").prop('checked', false);
             $(this).closest('tbody').find('td.colLogginDef input[type=radio]').attr('disabled', true);
+            $(this).closest('tbody').find("td.colShowDef input[type=checkbox]").map((index, element) => {
+                console.log(index, element)
+                const isChecked = $(element).is(":checked");
+                $(element).parent().find("td.colLogginDef input[type=radio]").attr('disabled', !isChecked).prop('checked', isChecked);
+            })
+
         } else {
             $(this).closest("tbody").find("input[value='Accounts']").prop('checked', false);
             $(this).closest("tbody").find("input[value='Executive']").prop('checked', false);
