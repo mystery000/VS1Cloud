@@ -108,7 +108,6 @@ Template.agedpayablessummary.onRendered(() => {
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
-        console.log(data);
         templateObject.displayAgedPayablesData(data);
       }
     }).catch(function (err) {
@@ -137,15 +136,15 @@ Template.agedpayablessummary.onRendered(() => {
     };
     for (let i = 0; i < data.tapreport.length; i++) {
       var dataList = [
-        data.tcustomersummaryreport[i].Name || "",
-        data.tcustomersummaryreport[i].PONumber || "",
-        data.tcustomersummaryreport[i].DueDate || "",
-        data.tcustomersummaryreport[i].AmountDue || "",
-        data.tcustomersummaryreport[i].Current || "",
-        data.tcustomersummaryreport[i]["30Days"] || "",
-        data.tcustomersummaryreport[i]["60Days"] || "",
-        data.tcustomersummaryreport[i]["90Days"] || "",
-        data.tcustomersummaryreport[i]["120Days"] || "",
+        data.tapreport[i].Name || "",
+        data.tapreport[i].PONumber || "",
+        GlobalFunctions.formatDate(data.tapreport[i].DueDate) || "",
+        data.tapreport[i].AmountDue || "",
+        data.tapreport[i].Current || "",
+        data.tapreport[i]["30Days"] || "",
+        data.tapreport[i]["60Days"] || "",
+        data.tapreport[i]["90Days"] || "",
+        data.tapreport[i]["120Days"] || "",
       ];
       splashArrayAgedPayablesReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
