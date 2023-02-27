@@ -1,7 +1,10 @@
 import { EmployeePayrollService } from '../js/employeepayroll-service';
 import { Template } from 'meteor/templating';
 import './assignLeaveTypePop.html';
+import {SideBarService} from "../js/sidebar-service";
 
+var sideBarService = new SideBarService();
+var employeePayrollService = new EmployeePayrollService();
 Template.assignLeaveTypePop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.custdatatablerecords = new ReactiveVar([]);
@@ -9,34 +12,66 @@ Template.assignLeaveTypePop.onCreated(function () {
     templateObject.leaveTypesList = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
-});
-
-Template.assignLeaveTypePop.onRendered(function () {
-    const templateObject = Template.instance();
     templateObject.currentDrpDownID = new ReactiveVar();
 
 
-    templateObject.getTLeaveTypes = async() => {
-        try { 
-            let data = [];
-            let dataObject = await getVS1Data('TAssignLeaveType')
-            data = JSON.parse(dataObject[0].data);  
-            if (data.tassignleavetype.length > 0) { 
-                let useData = data.tassignleavetype;
-                templateObject.leaveTypesList.set(useData);
-            }
-        } catch (err) {  
-        } 
-    } 
+    templateObject.getDataTableList = function(data) {
+        var dataList = [
+            data.fields.ID || "",
+            data.fields.LeaveType || "",
+            data.fields.LeaveCalcMethod || "",
+            data.fields.HoursAccruedAnnually || 0,
+            data.fields.HoursAccruedAnnuallyFullTimeEmp || 0,
+            data.fields.HoursFullTimeEmpFortnightlyPay || 0,
+            data.fields.HoursLeave || 0,
+            data.fields.OpeningBalance || 0,
+            data.fields.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
+            ""
+        ];
+        return dataList;
+    }
 
-    templateObject.getTLeaveTypes();
+    let headerStructure = [
+        { index: 0, label: '#Assign Leave ID', class: 'colALTypeID', active: false, display: true, width: "50" },
+        { index: 1, label: 'Leave', class: 'colALTypeLeave', active: true, display: true, width: "200" },
+        { index: 2, label: 'Leave Calculation Method', class: 'colALTypeLeaveCalMethod', active: true, display: true, width: "50" },
+        { index: 3, label: 'Hours accrued annually', class: 'colALTypeHoursAccruedAnnually', active: true, display: true, width: "100" },
+        { index: 4, label: 'Hours accrued annually full time employee', class: 'colALTypeHoursAccruedAnnuallyFullTimeEmp', active: true, display: true, width: "150" },
+        { index: 5, label: 'Hours a full-time employee works in a Fortnightly pay Period', class: 'colALTypeHoursFullTimeEmpFortnightlyPay', active: true, display: true, width: "200" },
+        { index: 6, label: 'Hours', class: 'colALTypeHours', active: true, display: true, width: "30" },
+        { index: 7, label: 'Opening Balance', class: 'colALTypeOpeningBalance', active: true, display: true, width: "80" },
+        { index: 8, label: 'On termination Balance', class: 'colALTypeTerminationBalance', active: true, display: true, width: "100" },
+        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+});
+
+Template.assignLeaveTypePop.onRendered(function () {
+    // const templateObject = Template.instance();
+
+    //
+    //
+    // templateObject.getTLeaveTypes = async() => {
+    //     try {
+    //         let data = [];
+    //         let dataObject = await getVS1Data('TAssignLeaveType')
+    //         data = JSON.parse(dataObject[0].data);
+    //         if (data.tassignleavetype.length > 0) {
+    //             let useData = data.tassignleavetype;
+    //             templateObject.leaveTypesList.set(useData);
+    //         }
+    //     } catch (err) {
+    //     }
+    // }
+    //
+    // templateObject.getTLeaveTypes();
 });
 
 Template.assignLeaveTypePop.events({
     "click #tblAssignLeaveTypes tbody tr": (e, ui) => {
-        const id = $(e.currentTarget).attr("leavetype-id");
-        let name = $(e.currentTarget).attr("leave-type-name"); 
-        let Hours = $(e.currentTarget).attr("col-type-balance") ||''; 
+        const id = $(e.currentTarget).closest("tr").find(".colALTypeID").text();
+        let name = $(e.currentTarget).closest("tr").find(".colALTypeLeave").text();
+        let Hours = $(e.currentTarget).closest("tr").find(".colALTypeHours").text() ||'';
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
         $('#edtLeaveTypeofRequest').val(name); 
@@ -243,5 +278,44 @@ Template.assignLeaveTypePop.helpers({
     },
     leaveTypesList: () => { 
         return Template.instance().leaveTypesList.get();
-    },  
+    },
+
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+
+    apiFunction:function() {
+        let employeePayrollService = new EmployeePayrollService();
+        return employeePayrollService.getAssignLeaveType;
+    },
+
+    searchAPI: function() {
+        return employeePayrollService.getAssignLeaveType;
+    },
+
+    service: ()=>{
+        let employeePayrollService = new EmployeePayrollService();
+        return employeePayrollService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom'];
+    },
 });
