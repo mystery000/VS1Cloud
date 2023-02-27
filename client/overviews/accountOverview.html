@@ -225,20 +225,11 @@
                 </div>
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
-        </div>
-        <style>
-        .isNotBankAccount {
-            display: none !important;
-        }
-
-        .isNotCreditAccount {
-            display: none !important;
-        }
-        </style>
+        </div>        
         <div class="card-body p-0 rounded">
             {{> non_transactional_list tablename="tblAccountOverview"}}
             <div class="table-responsive d-none">
-                <table id="tblAccountTreeOverview" class="dataTable table table-striped table-bordered tblAccountTreeOverview">
+                <table id="tblAccountTreeOverview" class="dataTable table table-bordered tblAccountTreeOverview">
                     <thead>
                         <tr class="dnd-moved">
                             {{#each displayfield in treeColumnHeader}}
@@ -255,6 +246,23 @@
                 </table>      
             </div>
         </div>
+        <style>
+            .isNotBankAccount {
+                display: none !important;
+            }
+
+            .isNotCreditAccount {
+                display: none !important;
+            }
+
+            .has-parent {
+                background-color:#ededed !important;
+            }
+
+            .has-child {
+                background-color:#fff !important;
+            }
+        </style>
     </div>
 
 

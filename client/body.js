@@ -336,6 +336,7 @@ import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
+import './manufacture/bomlistpop.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
