@@ -170,51 +170,8 @@
 
     <div class="table-responsive" style="overflow-x: hidden!important;">
 
-<!--        {{>datatablelist-->
-<!--                tablename="tblMyTasksList"-->
-<!--                apiName= apiFunction-->
-<!--                service = service-->
-<!--                indexeddbname = 'TCRMTaskList'-->
-<!--                datahandler = datahandler-->
-<!--                tableheaderrecords = tableheaderrecords-->
-<!--                exportfilename = 'MyTasks List'-->
-<!--                istransaction = false-->
-<!--                apiParams=apiParams-->
-<!--                lowercaseDataName='tprojecttasks'-->
-<!--                exIndexDBName = 'tprojecttasks'-->
-<!--                exdatahandler = exDataHandler-->
-<!--                searchAPI = searchAPI-->
-<!--        }}-->
-
         {{> non_transactional_list tablename = "tblMyTaskDatatable"}}
 
-
-<!--        <table id="" style="width:100%" class="table table-striped table-bordered">-->
-<!--            <thead>-->
-<!--                <tr class="dnd-moved">-->
-<!--                    <th class="th colReconId hiddenColumn">ID</th>-->
-<!--                    <th class="th colReconAccountName" style="width:80px;">Date</th>-->
-<!--                    <th class="th colReconBalance" style="width:80px;">Priority</th>-->
-<!--                    <th class="th colNotReconcilied" style="width:140px;">Subject</th>-->
-<!--                </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            {{#if todayTasks}}-->
-<!--                {{#each item in todayTasks}}-->
-<!--                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">-->
-<!--                        <td contenteditable="false" class="colReconId hiddenColumn">{{item.id}}</td>-->
-<!--                        <td contenteditable="false" class="colReconAccountName">{{item.dueDate}}</td>-->
-<!--                        <td contenteditable="false" class="colNotReconcilied">{{item.priority}}</td>-->
-<!--                        <td contenteditable="false" class="colReconDate">{{item.taskName}}</td>-->
-<!--                    </tr>-->
-<!--                {{/each}}-->
-<!--            {{else}}-->
-<!--                <tr class="dnd-moved">-->
-<!--                    <td colspan="3">No tasks found.</td>-->
-<!--                </tr>-->
-<!--            {{/if}}-->
-<!--            </tbody>-->
-<!--        </table>-->
 
         <style media="screen">
             .colReconDate{
