@@ -87,7 +87,6 @@ Template.transaction_header.helpers({
       case "credit":
         return 'addsupplierpop';
       default:
-        console.log("will return ", Template.addcustomerpop)
         return 'addcustomerpop'
     }
   }
