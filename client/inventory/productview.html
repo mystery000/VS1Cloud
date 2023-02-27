@@ -1105,7 +1105,7 @@
                                 {{#each item in productqtyrecords}}
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-3">
+                                        <div class="col-3 colCOGSaccount" id="colCOGSaccount" >
                                             <div class="form-group">
                                                 <label style="display: none;">Deparment</label>
                                                 <select type="search" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
@@ -1175,14 +1175,8 @@
                                                 <div class="col-2">
                                                     <div class="form-group">
                                                         <select type="search" class="form-control slt-bin" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                            {{#each itemtt in binrecords}}
-                                                            {{#if equals itemtt.binclass bindept}}
-                                                            {{#if equals itemtt.binnumber productrecord.productclass.DefaultbinNumber}}
+                                                            {{#each itemtt in binarray}}
                                                             <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>
-                                                            {{else}}
-                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>
-                                                            {{/if}}
-                                                            {{/if}}
                                                             {{/each}}
                                                         </select>
                                                     </div>
