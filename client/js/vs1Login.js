@@ -2077,9 +2077,11 @@ Template.vs1login.onRendered(function () {
                                   title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
                                   text: '',
                                   type: 'error',
-                                  showCancelButton: true,
+                                  showCancelButton: false,
                                   confirmButtonText: 'Update Payment',
-                                  cancelButtonText: 'Cancel'
+                                  // cancelButtonText: 'Cancel'
+                                  allowOutsideClick: false,
+                                  allowEscapeKey: false,
                               }).then((result) => {
                                   if (result.value) {
                                       //window.open('https://www.payments.vs1cloud.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');
