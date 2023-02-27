@@ -552,7 +552,7 @@
                                   <th class="th colDescription">Description</th>
                                   <th class="th colQty" style="width: 5%;">Qty</th>
                                   <th class="th colShipDate" style="width: 20%;">Ship Date</th>
-                                  <th class="th" style="width: 50px;"></th>
+                                  <th class="th" style="width: 10%"></th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -578,8 +578,13 @@
                                     }}
                                     <!-- {{workorderrecord.shipDate}} -->
                                     </td>
-                                  <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
-                                          class="fa fa-remove"></i></button></span></td>
+                                  <td>{{>vs1_button
+                                    color='primary'
+                                    classes='btnShowBOM'
+                                    type='button'
+                                    id="btnShowBOM"
+                                    iconName='eye'
+                                    title='Show BOM'}}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -705,7 +710,7 @@
         {{/if}}
 
         <div class="modal fade" role="dialog" tabindex="-1" id="bomProductListModal">
-            {{>bomlistpop}}
+            {{> bomlistpop}}
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
             {{> productlistpop}}
@@ -774,9 +779,6 @@
         <!-- END Attachments -->
 
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="bomListModal">
-            <!-- {{> bomlistpop}} -->
-        </div>
     </div>
 
     {{> init_form_page_script}}

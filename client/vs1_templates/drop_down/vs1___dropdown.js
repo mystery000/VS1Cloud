@@ -122,6 +122,7 @@ Template.vs1___dropdown.events({
         let value = $(event.target).closest('tr').find('.'+colName).text();
         let objectId = $(event.target).closest('tr').find('.colID').text();
         let email = $(event.target).closest('tr').find('.colEmail')?.text();
+       
         templateObject.edtParam.set({name: value, id: objectId, email: email })
         templateObject.targetTemp.set(templateObject.data.target_template_id)
         
@@ -144,10 +145,7 @@ Template.vs1___dropdown.events({
                 clientEmailInput = 'edtSupplierEmail';
             }
             let email = $(event.target).closest('tr').find('.colEmail').text();
-            setTimeout(()=>{
-                document.getElementById(clientEmailInput).value = email 
-            },500)
-
+            $('#'+clientEmailInput).val(email)
         } 
         $('#'+modalId).modal('toggle');
     },
