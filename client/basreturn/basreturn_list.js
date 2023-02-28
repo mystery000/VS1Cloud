@@ -44,6 +44,91 @@ Template.basreturnlist.onCreated(function() {
 
     // Currency related vars //
     FxGlobalFunctions.initVars(templateObject);
+
+    templateObject.getDataTableList = function(data) {
+        // const datefrom = $("#dateFrom").val();
+        // const dateto = $("#dateTo").val();
+        //
+        // let fromDate = datefrom == "" ? moment().subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
+        // let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
+        //
+        // fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
+        // toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
+        //
+        // let sort_date = data.fields.MsTimeStamp == "" ? "1770-01-01" : data.fields.MsTimeStamp;
+        // sort_date = new Date(sort_date);
+        // var dataList;
+        // //if (sort_date >= fromDate && sort_date <= toDate )
+        {
+            let tab1startDate = "";
+            let tab1endDate = "";
+            let tab2startDate = "";
+            let tab2endDate = "";
+            let tab3startDate = "";
+            let tab3endDate = "";
+            let tab4startDate = "";
+            let tab4endDate = "";
+            if (data.fields.Tab1_Year > 0 && data.fields.Tab1_Month != "") {
+                tab1startDate = data.fields.Tab1_Year + "-" + months[data.fields.Tab1_Month] + "-01";
+                var endMonth = (data.fields.Tab1_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.fields.Tab1_Month]) / 3) * 3) : (months[data.fields.Tab1_Month]);
+                tab1endDate = new Date(data.fields.Tab1_Year, (parseInt(endMonth)), 0);
+                tab1endDate = moment(tab1endDate).format("YYYY-MM-DD");
+            }
+            if (data.fields.Tab2_Year > 0 && data.fields.Tab2_Month != "") {
+                tab2startDate = data.fields.Tab2_Year + "-" + months[data.fields.Tab2_Month] + "-01";
+                var endMonth = (data.fields.Tab2_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.fields.Tab2_Month]) / 3) * 3) : (months[data.fields.Tab2_Month]);
+                tab2endDate = new Date(data.fields.Tab2_Year, (parseInt(endMonth)), 0);
+                tab2endDate = moment(tab2endDate).format("YYYY-MM-DD");
+            }
+            if (data.fields.Tab3_Year > 0 && data.fields.Tab3_Month != "") {
+                tab3startDate = data.fields.Tab3_Year + "-" + months[data.fields.Tab3_Month] + "-01";
+                var endMonth = (data.fields.Tab3_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.fields.Tab3_Month]) / 3) * 3) : (months[data.fields.Tab3_Month]);
+                tab3endDate = new Date(data.fields.Tab3_Year, (parseInt(endMonth)), 0);
+                tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
+            }
+            if (data.fields.Tab4_Year > 0 && data.fields.Tab4_Month != "") {
+                tab4startDate = data.fields.Tab4_Year + "-" + months[data.fields.Tab4_Month] + "-01";
+                var endMonth = (data.fields.Tab4_Type == "Quarterly") ? (Math.ceil(parseInt(months[data.fields.Tab4_Month]) / 3) * 3) : (months[data.fields.Tab4_Month]);
+                tab4endDate = new Date(data.fields.Tab4_Year, (parseInt(endMonth)), 0);
+                tab4endDate = moment(tab4endDate).format("YYYY-MM-DD");
+            }
+
+            dataList = [
+                    data.fields.ID || '',
+                    data.fields.BasSheetDesc || '',
+                    data.fields.Tab1_Type,
+                    tab1startDate,
+                    tab1endDate,
+                    (tab2startDate != "" && tab2endDate != "") ? data.fields.Tab2_Type : "",
+                    tab2startDate,
+                    tab2endDate,
+                    (tab3startDate != "" && tab3endDate != "") ? data.fields.Tab3_Type : "",
+                    tab3startDate,
+                    tab3endDate,
+                    // (tab4startDate != "" && tab4endDate != "") ? data.fields.Tab4_Type : "",
+                    // tab4startDate,
+                    // tab4endDate,
+                    data.fields.Active ? "" : "In-Active",
+                ];
+        }
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: "BAS Number", class: "colBasNumber", width: "80", active: true, display: true },
+        { index: 1, label: "Description", class: "colBasName", width: "250", active: true, display: true },
+        { index: 2, label: "GST\nPeriod", class: "t1Period", width: "100", active: true, display: true },
+        { index: 3, label: "GST\nFrom", class: "t1From", width: "120", active: true, display: true },
+        { index: 4, label: "GST\nTo", class: "t1To", width: "120", active: true, display: true },
+        { index: 5, label: "Withheld\nPeriod", class: "t2Period", width: "100", active: true, display: true },
+        { index: 6, label: "Withheld\nFrom", class: "t2From", width: "120", active: true, display: true },
+        { index: 7, label: "Withheld\nTo", class: "t2To", width: "120", active: true, display: true },
+        { index: 8, label: "instalment\nPeriod", class: "t3Period", width: "100", active: true, display: true },
+        { index: 9, label: "instalment\nFrom", class: "t3From", width: "120", active: true, display: true },
+        { index: 10, label: "instalment\nTo", class: "t3To", width: "120", active: true, display: true },
+        { index: 11, label: "Active", class: "colStatus", width: "60", active: true, display: true },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.basreturnlist.onRendered(function() {
@@ -69,7 +154,7 @@ Template.basreturnlist.onRendered(function() {
     };
 
     $('#tblBASReturnList tbody').on('click', 'tr', function() {
-        var listData = $(this).closest('tr').attr('id');
+        var listData = $(this).closest('tr').find(".colBasNumber").text();
         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
 
         if (listData) {
@@ -99,28 +184,28 @@ Template.basreturnlist.events({
     "click #btnNewBasReturn": function(event) {
         FlowRouter.go("/basreturn");
     },
-    "click .chkDatatable": function(event) {
-        var columns = $("#tblBASReturnList th");
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(":checked")) {
-                    $("." + replaceClass + "").css("display", "table-cell");
-                    $("." + replaceClass + "").css("padding", ".75rem");
-                    $("." + replaceClass + "").css("vertical-align", "top");
-                } else {
-                    $("." + replaceClass + "").css("display", "none");
-                }
-            }
-        });
-    },
-    "click .btnRefreshBasReturn": function(event) {
-        $(".btnRefresh").trigger("click");
-    },
+    // "click .chkDatatable": function(event) {
+    //     var columns = $("#tblBASReturnList th");
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function(i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(":checked")) {
+    //                 $("." + replaceClass + "").css("display", "table-cell");
+    //                 $("." + replaceClass + "").css("padding", ".75rem");
+    //                 $("." + replaceClass + "").css("vertical-align", "top");
+    //             } else {
+    //                 $("." + replaceClass + "").css("display", "none");
+    //             }
+    //         }
+    //     });
+    // },
+    // "click .btnRefreshBasReturn": function(event) {
+    //     $(".btnRefresh").trigger("click");
+    // },
     "click .resetTable": function(event) {
         Meteor._reload.reload();
     },
@@ -420,5 +505,40 @@ Template.basreturnlist.helpers({
     },
     currency: () => {
         return Currency;
-    }
+    },
+
+    apiFunction:function() {
+        let reportService = new ReportService();
+        return reportService.getAllBASReturn;
+    },
+
+    searchAPI: function() {
+        return reportService.getAllBASReturn;
+    },
+
+    service: ()=>{
+        let reportService = new ReportService();
+        return reportService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["limitCount", "limitFrom", "deleteFilter", "dateFrom", "dateTo", "ignoredate"];
+    },
 });

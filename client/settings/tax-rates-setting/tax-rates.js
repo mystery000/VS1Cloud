@@ -64,10 +64,7 @@ Template.taxRatesSettings.onCreated(function() {
             description,
             rate,
             purchasesDefault,
-            salesDefault,
-            `<span class="table-remove"><button type="button"
-                class="btn btn-danger btn-rounded btn-sm my-0"><i
-                  class="fa fa-remove"></i></button></span>`
+            salesDefault
         ]
         return dataList;
     }
@@ -78,8 +75,7 @@ Template.taxRatesSettings.onCreated(function() {
         { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
         { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '100' },
         { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '200' },
-        { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '200' },
-        { index: 6, label: '', class: 'colTaxRateDelete', active: true, display: true, width: 60 },
+        { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '200' }
     ]
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -466,135 +462,6 @@ Template.taxRatesSettings.onRendered(function() {
 Template.taxRatesSettings.events({
     "click #btnNewInvoice": function(event) {
         // FlowRouter.go('/invoicecard');
-    },
-    "click .chkDatatable": function(event) {
-        var columns = $("#taxRatesList th");
-        let columnDataValue = $(event.target)
-            .closest("div")
-            .find(".divcolumn")
-            .text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(":checked")) {
-                    $("." + replaceClass + "").css("display", "table-cell");
-                    $("." + replaceClass + "").css("padding", ".75rem");
-                    $("." + replaceClass + "").css("vertical-align", "top");
-                } else {
-                    $("." + replaceClass + "").css("display", "none");
-                }
-            }
-        });
-    },
-    "click .resetTable": function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem("mycloudLogonID"),
-            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: "taxRatesList",
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id },
-                        function(err, idTag) {
-                            if (err) {} else {
-                                Meteor._reload.reload();
-                            }
-                        }
-                    );
-                }
-            }
-        }
-    },
-    "click .saveTable": function(event) {
-        let lineItems = [];
-        $(".columnSettings").each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || "";
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(":checked")) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass,
-            };
-
-            lineItems.push(lineItemObj);
-        });
-
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem("mycloudLogonID"),
-            clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: "taxRatesList",
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                            $set: {
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: "salesform",
-                                PrefName: "taxRatesList",
-                                published: true,
-                                customFields: lineItems,
-                                updatedAt: new Date(),
-                            },
-                        },
-                        function(err, idTag) {
-                            if (err) {
-                                $("#myModal2").modal("toggle");
-                            } else {
-                                $("#myModal2").modal("toggle");
-                            }
-                        }
-                    );
-                } else {
-                    CloudPreference.insert({
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: "salesform",
-                            PrefName: "taxRatesList",
-                            published: true,
-                            customFields: lineItems,
-                            createdAt: new Date(),
-                        },
-                        function(err, idTag) {
-                            if (err) {
-                                $("#myModal2").modal("toggle");
-                            } else {
-                                $("#myModal2").modal("toggle");
-                            }
-                        }
-                    );
-                }
-            }
-        }
     },
     "blur .divcolumn": function(event) {
         let columData = $(event.target).text();
