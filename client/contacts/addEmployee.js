@@ -2080,7 +2080,7 @@ Template.employeescard.onRendered(function () {
           $('#edtDashboardOptions').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
-            $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
+            // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
             $('#dashboardOptionListModal').modal('toggle');
           } else {
             $('#dashboardOptionListModal').modal('toggle');

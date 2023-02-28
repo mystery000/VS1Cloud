@@ -36,10 +36,10 @@ Template.dashboard.onCreated(function () {
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
+  templateObject.showChart = new ReactiveVar(false);
 });
 
 Template.dashboard.onRendered(function () {
-
   let templateObject = Template.instance();
   let isDashboard = localStorage.getItem("CloudDashboardModule");
   if (isDashboard) {
