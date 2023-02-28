@@ -1,6 +1,7 @@
 import { BaseService } from "../js/base-service.js";
 import { HTTP } from "meteor/http";
 import { Session } from 'meteor/session';
+import {BankNameList} from "../lib/global/bank-names";
 export class SideBarService extends BaseService {
 
   getRegionalOptionInfo() {
@@ -4312,4 +4313,33 @@ export class SideBarService extends BaseService {
       send_data.fields['ID'] = parseInt(localStorage.getItem('TPreferenceMenuID'));
     return this.POST(this.ERPObjects.TPreference, send_data);
   }
+
+  getAllLeadCharts(){
+    let options = {
+        PropertyList: "ID,CreationDate,SourceName",
+        select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
+  }
+
+  getTitleList() {
+      return this.getManualTitleList();
+
+  }
+  getManualTitleList() {
+      return this.Wow();
+  }
+    Wow() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [
+                [1,"Mr",""],
+                [2,"Mrs",""],
+                [3,"Miss",""],
+                [4,"Ms",""],
+            ];
+            resolve({"ttitlelist" : splashArrayTitleList});
+        });
+        return promise;
+    }
 }

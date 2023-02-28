@@ -3355,6 +3355,23 @@ Template.productview.helpers({
             return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
         });
     },
+    binarray: () =>{
+      let binData = Template.instance().binrecords.get().sort(function(a, b) {
+        if (a.binnumber == 'NA') {
+          return 1;
+        } else if (b.binnumber == 'NA') {
+          return -1;
+        }
+        return (a.binnumber.toUpperCase() > b.binnumber.toUpperCase()) ? 1 : -1;
+      });
+      let retArray = [];
+      binData.forEach(item => {
+        if(retArray.length == 0)  retArray.push(item);
+        else if(retArray[retArray.length - 1].binnumber != item.binnumber)  retArray.push(item);
+      });
+      console.log(retArray);
+      return retArray;
+    },
     bindept: () => {
       return Template.instance().bindept.get();
     },

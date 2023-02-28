@@ -44,16 +44,16 @@ Template.clienttypesettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
-    { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
-    { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "200" },
-    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "200" },
+    { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "40" },
+    { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "90" },
+    { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "150" },
+    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "100" },
     { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
-    { index: 6, label: 'Default Discount', class: 'colDefaultDiscount', active: true, display: true, width: "200" },
-    { index: 7, label: 'Terms', class: 'colTerms', active: true, display: true, width: "200" },
-    { index: 8, label: 'Preferred Payment Method', class: 'colPreferedPaymentMethod', active: true, display: true, width: "300" },
-    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 6, label: 'Default Discount', class: 'colDefaultDiscount', active: true, display: true, width: "150" },
+    { index: 7, label: 'Terms', class: 'colTerms', active: true, display: true, width: "60" },
+    { index: 8, label: 'Preferred Payment Method', class: 'colPreferedPaymentMethod', active: true, display: true, width: "200" },
+    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
