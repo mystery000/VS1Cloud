@@ -1232,7 +1232,7 @@ Template.supplierscard.onRendered(function () {
       });
 
       $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editSupplierTitle').val($(this).find(".colTypeName").text());
+        $('#editSupplierTitle').val($(this).find(".colTitleName").text());
         $('#supplierTitlePopModal').modal('toggle');
       });
 
