@@ -715,6 +715,7 @@ Template.paymentmethodSettings.events({
                   taxRateService
                     .savePaymentMethod(objDetails)
                     .then(function (data) {
+
                     })
                     .catch(function (err) {
                       swal({

@@ -784,7 +784,7 @@ Template.leadstatussettings.events({
                             };
                             if (results.data[i + 1][1]) {
                                 if (results.data[i + 1][1] !== "") {
-                                    contactService.contactService.saveLeadStatusData(objDetails).then(function(data) {
+                                    contactService.saveLeadStatusData(objDetails).then(function(data) {
                                         //$('.fullScreenSpin').css('display','none');
                                         //  Meteor._reload.reload();
                                     }).catch(function(err) {
