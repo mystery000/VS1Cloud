@@ -856,7 +856,6 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
-      console.log("--------", data);
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
@@ -2744,7 +2743,7 @@ Template.newprofitandloss.helpers({
 
     if (activeArray.length == 1) {
 
-      if (activeArray[0].code == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) { 
         return !true;
       } else {
         return !false;
