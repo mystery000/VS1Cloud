@@ -166,4 +166,12 @@ export class CRMService extends BaseService {
         };
         return this.getList(this.ERPObjects.TProspect, options);
     }
+
+    getAllLeadCharts(){
+      let options = {
+          PropertyList: "ID,CreationDate,SourceName",
+          select: "[Active]=true",
+      };
+      return this.getList(this.ERPObjects.TProspect, options);
+    }
 }

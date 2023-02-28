@@ -146,7 +146,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 93;
+  let allDataToLoad = 103;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -715,6 +715,32 @@ Template.onsuccesswaterfall.onRendered(function () {
       }
       //localStorage.setItem('VS1CustomerList', JSON.stringify(data) || '');
       addVS1Data('TProspectEx', JSON.stringify(data));
+      $("<span class='process'>Leads Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+
+
+    sideBarService.getAllLeadCharts().then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Customers "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Leads Chart");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TCRMLeadChart', JSON.stringify(data));
       $("<span class='process'>Leads Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
 
@@ -3250,7 +3276,7 @@ Template.onsuccesswaterfall.onRendered(function () {
     let dateTo =
         moment(toDate).format("YYYY-MM-DD") ||
         moment().format("YYYY-MM-DD");
-    reportService.getBinLocationReport(dateFrom, dateTo, false).then(async function (data) {
+    productService.getBins().then(async function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
