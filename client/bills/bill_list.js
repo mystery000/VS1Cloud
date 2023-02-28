@@ -76,18 +76,18 @@ Template.billlist.onCreated(function () {
     }
 
     let headerStructure = [
-        {index: 0, label: '#Sort Date', class: 'colSortDate', active: false, display: false, width: "0"},
-        {index: 1, label: "Order Date", class: "colOrderDate", active: true, display: true, width: ""},
-        {index: 2, label: "Bill No.", class: "colPurchaseNo", active: true, display: true, width: ""},
-        {index: 3, label: "Supplier", class: "colSupplier", active: true, display: true, width: ""},
-        {index: 4, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: ""},
-        {index: 5, label: "Tax", class: "colTax", active: true, display: true, width: ""},
-        {index: 6, label: "Amount", class: "colAmount", active: true, display: true, width: ""},
-        {index: 7, label: "Paid", class: "colPaid", active: true, display: true, width: ""},
-        {index: 8, label: "#Outstanding", class: "colBalanceOutstanding", active: false, display: true, width: ""},
-        {index: 9, label: "Status", class: "colStatus", active: true, display: true, width: ""},
-        {index: 10, label: "Employee", class: "colEmployee", active: true, display: true, width: ""},
-        {index: 11, label: "#Comments", class: "colComments", active: false, display: true, width: ""},
+        {index: 0, label: '#Sort Date', class: 'colSortDate', active: false, display: false, width: "60"},
+        {index: 1, label: "Order Date", class: "colOrderDate", active: true, display: true, width: "60"},
+        {index: 2, label: "Bill No.", class: "colPurchaseNo", active: true, display: true, width: "60"},
+        {index: 3, label: "Supplier", class: "colSupplier", active: true, display: true, width: "60"},
+        {index: 4, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "60"},
+        {index: 5, label: "Tax", class: "colTax", active: true, display: true, width: "60"},
+        {index: 6, label: "Amount", class: "colAmount", active: true, display: true, width: "60"},
+        {index: 7, label: "Paid", class: "colPaid", active: true, display: true, width: "60"},
+        {index: 8, label: "#Outstanding", class: "colBalanceOutstanding", active: false, display: true, width: "60"},
+        {index: 9, label: "Status", class: "colStatus", active: true, display: true, width: "60"},
+        {index: 10, label: "Employee", class: "colEmployee", active: true, display: true, width: "60"},
+        {index: 11, label: "#Comments", class: "colComments", active: false, display: true, width: "60"},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
