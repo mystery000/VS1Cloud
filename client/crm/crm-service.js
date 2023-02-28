@@ -47,17 +47,7 @@ export class CRMService extends BaseService {
     }
 
     getAllTasks(dateFrom, dateTo, ignoreDate) {
-        var options = {
-            ListType: "Detail",
-            select: "pt.Active=true"
-        };
-        if (ContactName) {
-            options = {
-                ListType: "Detail",
-                select: "pt.Active=true and [ContactName]='" + ContactName + "'"
-            };
-        }
-
+        let options;
         if (ignoreDate == true) {
             options = {
                 ListType: "Detail",

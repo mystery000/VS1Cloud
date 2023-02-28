@@ -645,7 +645,32 @@ Template.supplierscard.onCreated(function () {
   }
 
   templateObject.getDataTableList = function(data) {
-
+    let taskDescription = data.fields.TaskDescription || '';
+    taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+    let taskLabel = data.fields.TaskLabel;
+    let taskLabelArray = [];
+    if (taskLabel !== null) {
+      if (taskLabel.length === undefined || taskLabel.length === 0) {
+        taskLabelArray.push(taskLabel.fields);
+      } else {
+        for (let j = 0; j < taskLabel.length; j++) {
+          taskLabelArray.push(taskLabel[j].fields);
+        }
+      }
+    }
+    const dataList = [
+      data.fields.ID || 0,
+      // data.fields.priority || 0,
+      data.fields.MsTimeStamp !== '' ? moment(data.fields.MsTimeStamp).format("DD/MM/YYYY") : '',
+      data.fields.ProjectID || '',
+      data.fields.TaskName || '',
+      //data.fields.ProjectName || '',
+      taskDescription,
+      JSON.stringify(taskLabelArray),
+      //category: 'Task',
+      data.fields.Completed ? "" : "In-Active",
+      data.fields.due_date ? moment(data.fields.due_date).format("DD/MM/YYYY") : "",
+    ];
     return dataList;
   }
 
@@ -656,7 +681,8 @@ Template.supplierscard.onCreated(function () {
     { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
     { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
     { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-    { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    { index: 7, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 
@@ -2712,16 +2738,16 @@ Template.supplierscard.helpers({
 
   apiFunction:function() {
     let crmService = new CRMService();
-    return crmService.getAllTasksByContactName;
+    return crmService.getAllTasks;
   },
 
   searchAPI: function() {
-    return sideBarService.searchAllBankAccountDetails;
+    return crmService.getAllTasksByContactName;
   },
 
   service: ()=>{
-    let sideBarService = new SideBarService();
-    return sideBarService;
+    let crmService = new CRMService();
+    return crmService;
 
   },
 
@@ -2742,7 +2768,7 @@ Template.supplierscard.helpers({
   },
 
   apiParams: function() {
-    return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+    return ['dateFrom', 'dateTo', 'ignoredate'];
   },
 });
 
