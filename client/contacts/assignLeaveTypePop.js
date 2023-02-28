@@ -33,15 +33,15 @@ Template.assignLeaveTypePop.onCreated(function () {
 
     let headerStructure = [
         { index: 0, label: '#Assign Leave ID', class: 'colALTypeID', active: false, display: true, width: "50" },
-        { index: 1, label: 'Leave', class: 'colALTypeLeave', active: true, display: true, width: "200" },
+        { index: 1, label: 'Leave', class: 'colALTypeLeave', active: true, display: true, width: "50" },
         { index: 2, label: 'Leave Calculation Method', class: 'colALTypeLeaveCalMethod', active: true, display: true, width: "50" },
-        { index: 3, label: 'Hours accrued annually', class: 'colALTypeHoursAccruedAnnually', active: true, display: true, width: "100" },
-        { index: 4, label: 'Hours accrued annually full time employee', class: 'colALTypeHoursAccruedAnnuallyFullTimeEmp', active: true, display: true, width: "150" },
-        { index: 5, label: 'Hours a full-time employee works in a Fortnightly pay Period', class: 'colALTypeHoursFullTimeEmpFortnightlyPay', active: true, display: true, width: "200" },
-        { index: 6, label: 'Hours', class: 'colALTypeHours', active: true, display: true, width: "30" },
-        { index: 7, label: 'Opening Balance', class: 'colALTypeOpeningBalance', active: true, display: true, width: "80" },
-        { index: 8, label: 'On termination Balance', class: 'colALTypeTerminationBalance', active: true, display: true, width: "100" },
-        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+        { index: 3, label: 'Hours accrued annually', class: 'colALTypeHoursAccruedAnnually', active: true, display: true, width: "50" },
+        { index: 4, label: 'Hours accrued annually full time employee', class: 'colALTypeHoursAccruedAnnuallyFullTimeEmp', active: true, display: true, width: "50" },
+        { index: 5, label: 'Hours a full-time employee works in a Fortnightly pay Period', class: 'colALTypeHoursFullTimeEmpFortnightlyPay', active: true, display: true, width: "50" },
+        { index: 6, label: 'Hours', class: 'colALTypeHours', active: true, display: true, width: "50" },
+        { index: 7, label: 'Opening Balance', class: 'colALTypeOpeningBalance', active: true, display: true, width: "50" },
+        { index: 8, label: 'On termination Balance', class: 'colALTypeTerminationBalance', active: true, display: true, width: "50" },
+        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
