@@ -1,6 +1,7 @@
 import { BaseService } from "../js/base-service.js";
 import { HTTP } from "meteor/http";
 import { Session } from 'meteor/session';
+import {BankNameList} from "../lib/global/bank-names";
 export class SideBarService extends BaseService {
 
   getRegionalOptionInfo() {
@@ -3750,14 +3751,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"TypeName asc"',
-            Search: "[Active]=true",
+            orderby: '"TypeDescription asc"',
+            Search: "Active=true",
         };
       } else {
         options = {
-          orderby: '"TypeName asc"',
+          orderby: '"TypeDescription asc"',
           ListType: "Detail",
-          Search: "[Active]=true",
+          Search: "Active=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3766,11 +3767,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"TypeName asc"',
+            orderby: '"TypeDescription asc"',
         };
       } else {
         options = {
-            orderby: '"TypeName asc"',
+            orderby: '"TypeDescription asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3778,7 +3779,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TClientType, options);
+    return this.getList(this.ERPObjects.TClientTypeList, options);
   }
 
   getAllCustomerStatementData(dateFrom, dateTo, ignoreDate) {
@@ -4312,4 +4313,33 @@ export class SideBarService extends BaseService {
       send_data.fields['ID'] = parseInt(localStorage.getItem('TPreferenceMenuID'));
     return this.POST(this.ERPObjects.TPreference, send_data);
   }
+
+  getAllLeadCharts(){
+    let options = {
+        PropertyList: "ID,CreationDate,SourceName",
+        select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
+  }
+
+  getTitleList() {
+      return this.getManualTitleList();
+
+  }
+  getManualTitleList() {
+      return this.Wow();
+  }
+    Wow() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [
+                [1,"Mr",""],
+                [2,"Mrs",""],
+                [3,"Miss",""],
+                [4,"Ms",""],
+            ];
+            resolve({"ttitlelist" : splashArrayTitleList});
+        });
+        return promise;
+    }
 }

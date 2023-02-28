@@ -172,7 +172,7 @@ Template.customerdetailsreport.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: splashArrayCustomerDetailsReport,
         "bsort": false,
         searching: false,

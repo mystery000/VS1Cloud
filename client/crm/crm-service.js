@@ -31,6 +31,7 @@ export class CRMService extends BaseService {
         return this.getList(this.ERPObjects.Tprojecttasks, options);
     }
 
+
     getAllTasksByContactName(ContactName = '') {
         var options = {
             ListType: "Detail",
@@ -40,6 +41,36 @@ export class CRMService extends BaseService {
             options = {
                 ListType: "Detail",
                 select: "pt.Active=true and [ContactName]='" + ContactName + "'"
+            };
+        }
+        return this.getList(this.ERPObjects.Tprojecttasks, options);
+    }
+
+    getAllTasks(dateFrom, dateTo, ignoreDate) {
+        var options = {
+            ListType: "Detail",
+            select: "pt.Active=true"
+        };
+        if (ContactName) {
+            options = {
+                ListType: "Detail",
+                select: "pt.Active=true and [ContactName]='" + ContactName + "'"
+            };
+        }
+
+        if (ignoreDate == true) {
+            options = {
+                ListType: "Detail",
+                select: "pt.Active=true",
+                IgnoreDates: true,
+            };
+        } else {
+            options = {
+                ListType: "Detail",
+                select: "pt.Active=true",
+                IgnoreDates: false,
+                DateFrom: '"' + dateFrom + '"',
+                DateTo: '"' + dateTo + '"',
             };
         }
         return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -165,5 +196,13 @@ export class CRMService extends BaseService {
             select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true and [CreationDate]>'" + fromDate + "'",
         };
         return this.getList(this.ERPObjects.TProspect, options);
+    }
+
+    getAllLeadCharts(){
+      let options = {
+          PropertyList: "ID,CreationDate,SourceName",
+          select: "[Active]=true",
+      };
+      return this.getList(this.ERPObjects.TProspect, options);
     }
 }

@@ -51,6 +51,7 @@ Template.new_workorder.onCreated(function() {
     templateObject.isSaved = new ReactiveVar(false);
     templateObject.updateFromPO = new ReactiveVar(false);
     templateObject.isCompleted = new ReactiveVar(false);
+    templateObject.targetProductField = new ReactiveVar();
 })
 
 Template.new_workorder.onRendered(async function(){
@@ -108,7 +109,7 @@ Template.new_workorder.onRendered(async function(){
     templateObject.workOrderRecords.set(temp);
 
 
-    async function getCustomerData(customername = 'Workshop') {
+    templateObject.getCustomerData = async function(customername = 'Workshop') {
         return new Promise(async(resolve, reject)=> {
             getVS1Data('TCustomerVS1').then(function(dataObject){
                 if(dataObject.length == 0) {
@@ -138,7 +139,7 @@ Template.new_workorder.onRendered(async function(){
                             resolve(data.tcustomer[0].fields)
                         }).catch(function(error){
                             $('.fullScreenSpin').css('display', 'none')
-                            resolve({ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                            resolve({ClientID: '',ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
                         })
                     }
                 }
@@ -148,7 +149,7 @@ Template.new_workorder.onRendered(async function(){
                     resolve(data.tcustomer[0].fields)
                 }).catch(function(error){
                     $('.fullScreenSpin').css('display', 'none')
-                    resolve({ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                    resolve({ClientID: '', ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
                 })
             })
         })
@@ -171,7 +172,7 @@ Template.new_workorder.onRendered(async function(){
                 isCompleted = true;
             }
             templateObject.salesOrderId.set(workorder.fields.SaleID)
-            let customerData = await getCustomerData(workorder.fields.Customer);
+            let customerData = await templateObject.getCustomerData(workorder.fields.Customer);
             let record = {
                 id: orderid,
                 salesorderid: workorder.fields.SaleID,
@@ -326,7 +327,7 @@ Template.new_workorder.onRendered(async function(){
 
             }else {
                 
-                let customerData = await getCustomerData();
+                let customerData = await templateObject.getCustomerData();
                 let orderAddress = customerData.Companyname + '\n' + customerData.Street+" "+customerData.Street2 + '\n'+ customerData.State+'\n' + customerData.Postcode + ' ' + customerData.Country
                 let record = {
                     id: '',
@@ -1008,7 +1009,7 @@ Template.new_workorder.events({
                         ProductName: record.productname,
                         ProductDescription: record.product_description,
                         ShipDate: record.shipDate,
-                        ProductID: record.productid,
+                        // ProductID: record.productid,
                         Quantity: record.quantity || 1,
                         InProgress: record.isStarted,
                         ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
@@ -1083,10 +1084,31 @@ Template.new_workorder.events({
         event.preventDefault();
         event.stopPropagation();
         let templateObject = Template.instance();
+        templateObject.showBOMModal.set(false)
         let productName = $(event.target).closest('tr').find('input.lineProductName').val()
         let tempBOMs = templateObject.bomProducts.get();
+        templateObject.targetProductField.set($(event.target))
+        $('#bomProductListModal').modal('toggle')
+    },
 
-        $('#BOMSetupModal').modal('toggle')
+    'click #bomProductListModal tbody tr': function(event) {
+        event.preventDefault()
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        let productName = $(event.target).closest('tr').find('.colName').text()
+        let description = $(event.target).closest('tr').find('.colDescription').text()
+        let field = templateObject.targetProductField.get();
+        $(field).val(productName)
+        let descriptionField = $(field).closest('tr').find('.colDescription');
+        $(descriptionField).text(description) 
+        let record = templateObject.workorderrecord.get();
+        let tempRecord = cloneDeep(record)
+        tempRecord.productname = productName;
+        tempRecord.productDescription = description;
+        templateObject.workorderrecord.set(tempRecord)
+        $('#bomProductListModal').modal('toggle');
+
+
     },
     'change .edtQuantity' : function(event) {
         let value = $(event.target).val();
@@ -1306,15 +1328,80 @@ Template.new_workorder.events({
         templateObject.changeWorkorderStatus('QAStopped')
     },
 
-    'click #tblBOMList': function(event) {
+    'click #tblBOMList tbody tr': async function(event) {
         let templateObject = Template.instance();
         let productName = $(event.target).closest('tr').find('.colName').text();
         let productDescription = $(event.target).closest('tr').find('.colDescription').text();
         let record = cloneDeep(templateObject.workorderrecord.get())
         record.productname = productName;
         record.productDescription = productDescription;
+        async function getBOMStructure() {
+         getVS1Data('TProcTree').then(function(dataObject){
+            return new Promise(async(resolve, reject) =>{
+                if(dataObject.length == 0) {
+                    productService.getOneBOMProductByName(productName).then(function(data) {
+                        if (data.tproctree.length > -1) {
+                            templateObject.bomStructure.set(data.tproctree[0])
+                            resolve()
+                        }
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tproctree;
+                    let added = false
+                    for(let i=0; i< useData.length; i++){
+                        if(useData[i].Caption == productName) {
+                            added = true;
+                            templateObject.bomStructure.set(useData[i])
+                            resolve()
+                        }
+                    }
+                    if(added == false) {
+                        productService.getOneBOMProductByName(productName).then(function(data) {
+                            if (data.tproctree.length > -1) {
+                                templateObject.bomStructure.set(data.tproctree[0])
+                                resolve()
+                            }
+                        })  
+                    }
+                }
+            })
+            }).catch(function(e){
+                productService.getOneBOMProductByName(productName).then(function(data) {
+                    if (data.tproctree.length > -1) {
+                        templateObject.bomStructure.set(data.tproctree[0])
+                        resolve()
+                    }
+                })
+            })  
+        }
+        await getBOMStructure();
         templateObject.workorderrecord.set(record)
+        templateObject.showBOMModal.set(true)
         $('#bomListModal').modal('toggle')
+    },
+
+    'click #btnShowBOM': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        $('#BOMSetupModal').modal('toggle')
+    },
+
+    'change #edtCustomerName': function(event) {
+        let templateObject = Template.instance();
+        setTimeout(async function(){
+            let customerName = $('#edtCustomerName').val()
+            
+            let record = cloneDeep(templateObject.workorderrecord.get());
+            let customerData = await templateObject.getCustomerData(customerName);
+            record.customer= customerName,
+            record.ClientName= customerName,
+            record.CustomerID= customerData.ID,
+            record.ClientEmail= customerData.Email,
+            templateObject.workorderrecord.set(record);
+
+        }, 1000)
     }
 
 

@@ -43,22 +43,15 @@ Template.stockmovementreport.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
-      { index: 2, label: 'Transaction Type', class: 'colTrType', active: true, display: true, width: "100" },
-      { index: 3, label: 'Transaction No', class: 'colTrNo', active: true, display: true, width: "100" },
-      { index: 4, label: 'Quantity Opening', class: 'colOpening', active: true, display: true, width: "100" },
-      { index: 5, label: 'Quantity Current', class: 'colCurrent', active: true, display: true, width: "100" },
-      { index: 6, label: 'Quantity Running', class: 'colRunning', active: true, display: true, width: "100" },
-      { index: 7, label: 'Average Unit Cost', class: 'colAvUnitCost', active: true, display: true, width: "100" },
-      { index: 8, label: 'Average Total Cost', class: 'colAvTotalCost', active: true, display: true, width: "100" },
-      { index: 9, label: 'Amount(Ex) Unit Cost', class: 'colAmUnitCost', active: true, display: true, width: "100" },
-      { index: 10, label: 'Amount(Ex) Total Cost', class: 'colAmTotalCost', active: true, display: true, width: "100" },
-      { index: 11, label: 'Department Name', class: 'colDepartmentName', active: false, display: true, width: "100" },
-      { index: 12, label: 'TransDate', class: 'colTransDate', active: false, display: true, width: "100" },
-      { index: 13, label: 'Actual Date', class: 'colActualDate', active: false, display: true, width: "100" },
-      { index: 14, label: 'Sub Group', class: 'colSubGroup', active: false, display: true, width: "100" },
-      { index: 15, label: 'Type', class: 'colType', active: false, display: true, width: "100" },
-      { index: 16, label: 'Dept', class: 'colDept', active: false, display: true, width: "100" },
+      { index: 1, label: 'Product', class: 'colProductID', active: true, display: true, width: "200" },
+      { index: 2, label: 'Trans Date', class: 'colTrType', active: true, display: true, width: "100" },
+      { index: 3, label: 'Trans Type', class: 'colTrNo', active: true, display: true, width: "100" },
+      { index: 4, label: 'Trans No', class: 'colOpening', active: true, display: true, width: "100" },
+      { index: 5, label: 'Opening Qty', class: 'colCurrent', active: true, display: true, width: "100" },
+      { index: 6, label: 'Trans Qty', class: 'colRunning', active: true, display: true, width: "100" },
+      { index: 7, label: 'Running Qty', class: 'colAvUnitCost', active: true, display: true, width: "100" },
+      { index: 8, label: 'Unit Cost', class: 'colAvTotalCost', active: true, display: true, width: "100" },
+      { index: 9, label: 'Total Cost', class: 'colAmUnitCost', active: true, display: true, width: "100" },
     ]
     templateObject.stockmovementreportth.set(reset_data);
   }
@@ -113,68 +106,38 @@ Template.stockmovementreport.onRendered(() => {
     false
   );
   templateObject.displayReportData = async function (data) {
+    console.log(data);
     var splashArrayReport = new Array();
     let deleteFilter = false;
-    if (data.Params.Search.replace(/\s/g, "") == "") {
-      deleteFilter = true;
-    } else {
-      deleteFilter = false;
-    };
 
-    for (let i = 0; i < data.tproductmovementlist.length; i++) {
+    for (let i = 0; i < data.tstockmovement.length; i++) {
       var dataList = [
-        data.tjobprofitability[i].CompanyName || "",
-        data.tjobprofitability[i].JobName || "",
-        data.tjobprofitability[i].JobNumber || "",
-        data.tjobprofitability[i].TransactionType || "",
-        data.tjobprofitability[i].TransactionNo || "",
-        data.tjobprofitability[i].CostEx || "",
-        data.tjobprofitability[i].IncomeEx || "",
-        data.tjobprofitability[i].Quotedex || "",
-        data.tjobprofitability[i].DiffIncome_Cost || "",
-        data.tjobprofitability[i].PercentDiffIncomebyCost || "",
-        data.tjobprofitability[i].DiffIncome_Quote || "",
-        data.tjobprofitability[i].PercentDiffIncomebyQuote || "",
-        data.tjobprofitability[i].Backorders || "",
-        data.tjobprofitability[i].AccountName || "",
-        data.tjobprofitability[i].DebitEx || "",
-        data.tjobprofitability[i].CreditEx || "",
-        data.tjobprofitability[i].ProfitPercent || "",
-        data.tjobprofitability[i].Department || "",
-        data.tjobprofitability[i].ProductID || "",
-        data.tjobprofitability[i].ProductName || "",
-        data.tjobprofitability[i].ClientID || "",
-        data.tjobprofitability[i].Details || "",
-        data.tjobprofitability[i].Area || "",
-        data.tjobprofitability[i].LandedCost || "",
-        data.tjobprofitability[i].Latestcost || "",
-        data.tjobprofitability[i].DiffIncome_Landedcost || "",
-        data.tjobprofitability[i].PercentDiffIncomebyLandedcost || "",
-        data.tjobprofitability[i].DiffIncome_Latestcost || "",
-        data.tjobprofitability[i].PercentDiffIncomebyLatestcost || "",
-        data.tjobprofitability[i].QtyOrdered || "",
-        data.tjobprofitability[i].QtyShipped || "",
-        data.tjobprofitability[i].QtyBackOrder || "",
-        data.tjobprofitability[i].CUSTFLD1 || "",
-        data.tjobprofitability[i].CUSTFLD2 || "",
-        data.tjobprofitability[i].CUSTFLD3 || "",
-        data.tjobprofitability[i].CUSTFLD4 || "",
-        data.tjobprofitability[i].CUSTFLD5 || "",
-        data.tjobprofitability[i].CUSTFLD6 || "",
-        data.tjobprofitability[i].CUSTFLD7 || "",
-        data.tjobprofitability[i].CUSTFLD8|| "",
-        data.tjobprofitability[i].CUSTFLD9 || "",
-        data.tjobprofitability[i].CUSTFLD10 || "",
-        data.tjobprofitability[i].CUSTFLD11 || "",
-        data.tjobprofitability[i].CUSTFLD12 || "",
-        data.tjobprofitability[i].CUSTFLD13 || "",
-        data.tjobprofitability[i].CUSTFLD14 || "",
-        data.tjobprofitability[i].CUSTFLD15 || "",
-        data.tjobprofitability[i].ProfitDollars || "",
-        data.tjobprofitability[i].Transdate || "",
-        data.tjobprofitability[i].SupplierName || "",
+        GlobalFunctions.generateSpan(data.tstockmovement[i].fields.Lines[0].fields.ProductName, "table-cells text-bold"),
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
       ];
       splashArrayReport.push(dataList);
+      for (let j = 0; j < 1; j++){
+        let tmp = data.tstockmovement[i].fields.Lines[j].fields.Qty;
+        dataList = [
+          "",
+          GlobalFunctions.generateSpan(GlobalFunctions.formatDate(data.tstockmovement[i].fields.Lines[j].fields.TransDate), "text-primary"),
+          "",
+          "",
+          tmp > 0 ? GlobalFunctions.generateSpan(tmp, "text-primary") : GlobalFunctions.generateSpan(tmp, "text-danger"),
+          tmp > 0 ? GlobalFunctions.generateSpan(tmp, "text-primary") : GlobalFunctions.generateSpan(tmp, "text-danger"),
+          tmp > 0 ? GlobalFunctions.generateSpan(tmp, "text-primary") : GlobalFunctions.generateSpan(tmp, "text-danger"),
+          GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tstockmovement[i].fields.Lines[j].fields.Cost), "text-primary"),
+          GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(""), "text-primary"),
+        ];
+        splashArrayReport.push(dataList);
+      }
       templateObject.records.set(splashArrayReport);
     }
 

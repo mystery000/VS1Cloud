@@ -45,7 +45,7 @@ Template.crmoverview.onRendered(function() {
             $('#allTasks-tab').click();
         }
     }, 1000);
-    
+
     function getCustomerData(customerID) {
         getVS1Data("TCustomerVS1").then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -647,9 +647,11 @@ Template.crmoverview.events({
         // for add modal
         let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
         let employeeName = localStorage.getItem("mySessionEmployee");
+        let employeeEmail = localStorage.getItem("mycloudLogonUserEmail");
         $("#frmEditTaskModal")[0].reset();
         $('#crmEditSelectEmployeeList').val(employeeName);
-        $('#assignedID').val(employeeID)
+        $('#assignedID').val(employeeID);
+        $('#contactEmailUser').val(employeeEmail);
         $("#taskDetailModal").modal("toggle");
     },
 
@@ -735,6 +737,12 @@ Template.crmoverview.events({
     "click .btnRefresh": function() {
         $(".fullScreenSpin").css("display", "inline-block");
         let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
+        crmService.getAllLeadCharts().then(function (dataCRMCharts) {
+          addVS1Data('TCRMLeadChart', JSON.stringify(dataCRMCharts));
+        }).catch(function (err) {
+
+        });
+
         crmService.getAllTaskList().then(function(data) {
             addVS1Data("TCRMTaskList", JSON.stringify(data));
             crmService.getTProjectList().then(function(data) {
@@ -742,7 +750,7 @@ Template.crmoverview.events({
                 $(".fullScreenSpin").css("display", "none");
                 crmService.getAllLabels().then(function(data) {
                     addVS1Data("TCRMLabelList", JSON.stringify(data));
-                    
+
                     crmService.getAllLeads(dateFrom).then(function(data) {
                         let bar_records = [];
                         let pie_records = [];

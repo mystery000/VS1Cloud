@@ -14,6 +14,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let productService = new ProductService();
 
 Template.binlocationslist.onCreated(function () {
   const templateObject = Template.instance();
@@ -60,7 +61,25 @@ Template.binlocationslist.onRendered(function () {
     window.open('/binlocationslist?page=last', '_self');
   }
 
+  templateObject.getProductBinData = async function () {
+    getVS1Data('TProductBin').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        productService.getBins().then(async function (data) {
+          await addVS1Data('TProductBin', JSON.stringify(data));
+        }).catch(function (err) {
 
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+      }
+    }).catch(function (err) {
+      productService.getBins().then(async function (data) {
+        await addVS1Data('TProductBin', JSON.stringify(data));
+      }).catch(function (err) {
+      });
+    });
+  }
+  templateObject.getProductBinData();
   // $('.tblInventory tbody').on( 'click', 'tr', function () {
   //   var listData = $(this).closest('tr').find('.colProductID').text();
   //   if(listData){
@@ -92,6 +111,9 @@ Template.binlocationslist.onRendered(function () {
           department: data.tdeptclass[i].DeptClassName || ' ',
         };
 
+        // alert(1);
+        // console.log(deptrecordObj);
+
         deptrecords.push(deptrecordObj);
         templateObject.deptrecords.set(deptrecords);
       }
@@ -99,6 +121,7 @@ Template.binlocationslist.onRendered(function () {
   }
 
   templateObject.getDepartments();
+  console.log(templateObject.deptrecords.get());
 
   templateObject.getProductClassDeptData = function (deptname) {
     productService.getProductClassDataByDeptName(deptname).then(function (data) {
@@ -1012,14 +1035,14 @@ Template.binlocationslist.events({
     // }
   },
 
-  'click .btnSaveSelect': async function () {
-    playSaveAudio();
-    setTimeout(function () {
-      $('#myModalDepartment').modal('toggle');
-      // let templateObject = Template.instance();
-      // templateObject.getAllProductData('All');
-    }, delayTimeAfterSound);
-  },
+  // 'click .btnSaveSelect': async function () {
+  //   playSaveAudio();
+  //   setTimeout(function () {
+  //     $('#myModalDepartment').modal('toggle');
+  //     // let templateObject = Template.instance();
+  //     // templateObject.getAllProductData('All');
+  //   }, delayTimeAfterSound);
+  // },
 
   'click .printConfirm': function (event) {
     playPrintAudio();

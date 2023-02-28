@@ -25,16 +25,20 @@
                 <h4><div id="add-account-title" name="add-account-title" style="float: left;">Add New Account</div></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body" style="background-color: #ededed;">
-
+                {{#if record}}
                 <input type="hidden" class="form-control" id="edtAccountID" name="edtAccountID" style="display:none;">
                 <input type="hidden" class="form-control" id="accSelected" name="accSelected" style="display:none;">
                 <div>
                     <div class="d-xl-flex align-items-xl-start">
                         <div class="flex-grow-1">
                             <div class="form-group" style="margin: 4px;"><label>Account Type</label>
-                                <select class="form-control pointer" id="sltAccountType" name="sltAccountType">
+                                <select class="form-control pointer" id="sltAccountType" name="sltAccountType" value="{{record.AccountType}}">
                                     {{#each item in accounttyperecords}}
-                                    <option value="{{item.accounttypename}}">{{item.description}}</option>
+                                        {{#if equals item.accounttypename record.AccountType}}
+                                        <option value="{{item.accounttypename}}" selected>{{item.description}}</option>
+                                        {{else}}
+                                        <option value="{{item.accounttypename}}">{{item.description}}</option>
+                                        {{/if}}
                                     {{/each}}
                                 </select>
                             </div>
@@ -42,11 +46,11 @@
 
                         <div class="flex-grow-1">
                             <div class="form-group" style="margin: 4px;"><label>Account Name</label>
-                                <input type="text" class="form-control" id="edtAccountName" name="edtAccountName"></div>
+                                <input type="text" class="form-control" id="edtAccountName" name="edtAccountName" value="{{record.AccountName}}"></div>
                         </div>
                         <div class="flex-grow-1">
                             <div class="form-group" style="margin: 4px;"><label>Account No</label>
-                                <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo"></div>
+                                <input type="text" class="form-control" id="edtAccountNo" name="edtAccountNo" value="{{record.AccountNumber}}"></div>
                         </div>
                         <div class="flex-grow-1">
                             <div class="form-group" style="margin: 4px;"><label>Tax Code</label>
@@ -69,7 +73,7 @@
                             <div class="d-xl-flex align-items-xl-start">
                                 <div class="flex-grow-1">
                                     <div class="form-group d-xl-flex flex-column justify-content-xl-start" style="margin: 4px;"><label>Account Description</label>
-                                        <textarea class="border rounded" rows="3" id="txaAccountDescription" name="txaAccountDescription" style="width: 100%; color: rgb(110, 112, 126);"></textarea>
+                                        <textarea class="border rounded" rows="3" id="txaAccountDescription" name="txaAccountDescription" style="width: 100%; color: rgb(110, 112, 126);">{{record.Description}}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -92,31 +96,31 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="form-group" style="margin: 4px;"><label>Bank Account Name</label>
-                                        <input type="text" class="form-control" id="edtBankAccountName" name="edtBankAccountName">
+                                        <input type="text" class="form-control" id="edtBankAccountName" name="edtBankAccountName" value="{{record.BankAccountName}}">
                                     </div>
                                 </div>
                                 <div class="flex-grow-0">
                                     <div class="form-group" style="margin: 4px; width: 150px;"><label>{{bsbRegionName}}</label>
-                                        <input type="text" class="form-control" id="edtBSB" name="edtBSB">
+                                        <input type="text" class="form-control" id="edtBSB" name="edtBSB" value="{{record.BSB}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="d-xl-flex align-items-xl-start">
                                 <div class="flex-grow-1">
                                     <div class="form-group" style="margin: 4px;"><label>Bank Account No</label>
-                                        <input type="text" class="form-control" id="edtBankAccountNo" name="edtBankAccountNo">
+                                        <input type="text" class="form-control" id="edtBankAccountNo" name="edtBankAccountNo" value="{{record.BankAccountNumber}}">
                                     </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="form-group" style="margin: 4px;">
                                         <label>Swift Code</label>
-                                        <input type="text" class="form-control" id="swiftCode" name="swiftCode">
+                                        <input type="text" class="form-control" id="swiftCode" name="swiftCode" value="{{record.Extra}}">
                                     </div>
                                 </div>
                                 <div class="flex-grow-0">
                                     <div class="form-group" style="margin: 4px; width: 150px;">
                                         <label>Routing Number</label>
-                                        <input type="text" class="form-control" id="routingNo" name="routingNo">
+                                        <input type="text" class="form-control" id="routingNo" name="routingNo" value="{{record.BankCode}}">
                                     </div>
                                 </div>
                             </div>
@@ -125,13 +129,13 @@
                               <div class="flex-grow-1">
                                   <div class="form-group" style="margin: 4px;">
                                     <label>APCA No</label>
-                                    <input type="text" class="form-control" id="apcaNo" name="apcaNo">
+                                    <input type="text" class="form-control" id="apcaNo" name="apcaNo" value="{{record.APCANumber}}">
                                   </div>
                               </div>
                               <div class="flex-grow-1">
                                 <div class="form-group" style="margin: 4px;">
                                   <label>Bank Codes</label>
-                                  <select type="search" class="form-control pointer" id="sltBankCodes" name="sltBankCodes">
+                                  <select type="search" class="form-control pointer" id="sltBankCodes" name="sltBankCodes" value="{{record.BankCode}}">
                                   </select>
                                 </div>
                               </div>
@@ -145,7 +149,7 @@
                             <div class="d-xl-flex align-items-xl-center">
                                 <div class="flex-grow-1">
                                     <div class="custom-control custom-switch" >
-                                        <input type="checkbox" class = "custom-control-input showOnTransactions" id="showOnTransactions"/>
+                                        <input type="checkbox" class = "custom-control-input showOnTransactions" id="showOnTransactions" checked="{{record.Required}}"/>
                                         <label class="custom-control-label" for="showOnTransactions" >Show On Transactions</label>
                                     </div >
                                 </div>
@@ -185,6 +189,7 @@
                     </div>
                     <!-- {{/if}} -->
                 </div>
+                {{/if}}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success btnSaveAccountPOP" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>

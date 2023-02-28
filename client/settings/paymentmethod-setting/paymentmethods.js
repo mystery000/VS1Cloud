@@ -50,10 +50,10 @@ Template.paymentmethodSettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "10" },
-    { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "" },
-    { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "105" },
-    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
+    { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "150" },
+    { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "100" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
