@@ -49,9 +49,9 @@ Template.transaction_header.helpers({
       case 'bill':
       case "po" :
       case "credit":
-        return Template.supplierlistpop;
+        return 'supplierlistpop';
       default:
-        return Template.customerlistpop
+        return 'customerlistpop'
     }
   },
 
