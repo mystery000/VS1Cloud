@@ -3751,14 +3751,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"TypeName asc"',
-            Search: "[Active]=true",
+            orderby: '"TypeDescription asc"',
+            Search: "Active=true",
         };
       } else {
         options = {
-          orderby: '"TypeName asc"',
+          orderby: '"TypeDescription asc"',
           ListType: "Detail",
-          Search: "[Active]=true",
+          Search: "Active=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3767,11 +3767,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"TypeName asc"',
+            orderby: '"TypeDescription asc"',
         };
       } else {
         options = {
-            orderby: '"TypeName asc"',
+            orderby: '"TypeDescription asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3779,7 +3779,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TClientType, options);
+    return this.getList(this.ERPObjects.TClientTypeList, options);
   }
 
   getAllCustomerStatementData(dateFrom, dateTo, ignoreDate) {
