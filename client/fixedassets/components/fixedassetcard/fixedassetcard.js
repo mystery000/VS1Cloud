@@ -140,7 +140,7 @@ Template.fixedassetcard.onRendered(function () {
       }
     });
 
-  $("#date-input,#edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate, #edtInsuranceEndDate").datepicker({
+  $("#date-input,#edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate, #edtInsuranceEndDate, #edtDateLastTest, #edtDateNextTest").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
     buttonImageOnly: true,
@@ -247,13 +247,17 @@ Template.fixedassetcard.onRendered(function () {
     $('input#edtCapacityWeight').val(assetInfo.CUSTFLD4); // CapacityWeight
     $('input#edtCapacityVolume').val(assetInfo.CUSTFLD5); // CapacityVolumn
     $("#edtDateRegisterRenewal").val(getDatePickerForm(assetInfo.CUSTDATE1)); // RegisterRenewal Date
-    templateObject.edtSupplierId.set(assetInfo.SupplierID);
-    $('input#edtSupplierName').val(assetInfo.SupplierName);
 
     // -----------------Purchase Information-----------------
     $("#edtDateofPurchase").val(getDatePickerForm(assetInfo.PurchDate));
     $('input#edtPurchCost').val(assetInfo.PurchCost);
     $("#edtDepreciationStartDate").val(getDatePickerForm(assetInfo.DepreciationStartDate)); // Depeciation Start Date
+    templateObject.edtSupplierId.set(assetInfo.SupplierID);
+    $('input#edtSupplierName').val(assetInfo.SupplierName);
+    // -----------------
+    $('input#edtLocationDescription').val(assetInfo.LocationDescription);
+    $("#edtDateLastTest").val(getDatePickerForm(asset.LastTestDate));
+    $("#edtDateNextTest").val(getDatePickerForm(asset.NextTestDate));
 
     // -----------------Depreciation Information-----------------
     templateObject.edtDepreciationType.set(assetInfo.DepreciationOption); //Depreciation Type
@@ -342,12 +346,17 @@ Template.fixedassetcard.events({
         CUSTFLD4: $('input#edtCapacityWeight').val(),
         CUSTFLD5: $('input#edtCapacityVolume').val(),
         CUSTDATE1: templateObject.getDateStr($("#edtDateRegisterRenewal").datepicker("getDate")),
+        // purcahse info
         DepreciationStartDate: templateObject.getDateStr($("#edtDepreciationStartDate").datepicker("getDate")),
         PurchDate: templateObject.getDateStr($("#edtDateofPurchase").datepicker("getDate")), 
         PurchCost: parseInt($('input#edtPurchCost').val()) || 0, 
         SupplierID: templateObject.edtSupplierId.get(), 
         SupplierName: $('input#edtSupplierName').val(), 
-        
+        //
+        LocationDescription: $('input#edtLocationDescription').val(),
+        LastTestDate: templateObject.getDateStr($("#edtDateLastTest").datepicker("getDate")),
+        NextTestDate: templateObject.getDateStr($("#edtDateNextTest").datepicker("getDate")),
+
         InsuredBy: templateObject.edtInsuranceById.get(),
         CUSTFLD7: $('input#edtInsuranceByName').val(),
         InsurancePolicy: $('input#edtInsurancePolicy').val(),

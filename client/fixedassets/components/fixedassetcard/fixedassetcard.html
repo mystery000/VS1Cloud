@@ -59,6 +59,14 @@
       padding: 0px;
     }
 
+    #fixedAssetCardContainer .input-tab div.input-item{
+      margin: 4px;
+    }
+
+    #fixedAssetCardContainer .input-tab div.input-item .form-group{
+      margin: 0px;
+    }
+
     #btnView {
       display: none;
     }
@@ -145,6 +153,9 @@
             <ul class="nav nav-tabs nav-fill">
               <li class="nav-item">
                 <a class="nav-link active" role="tab" data-toggle="tab" data-target="#tab-asset-info">Asset Info</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-add-info">Add Info</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-deprec">Depreciation</a>
@@ -238,7 +249,11 @@
                       </div>
                     </div>
                   </div>
+
                   <div class="row input-tab">
+                    <div class="col-12">
+                      <label style="color: #00A3D3; font-size: 18px;">Purchase Info</label>
+                    </div>
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Date of Purchase</label>
@@ -265,7 +280,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
-                        <label>Pruchased Cost</label>
+                        <label>Purchase Price</label>
                         <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
                       </div>
                     </div>
@@ -279,6 +294,49 @@
                       </div>
                     </div>
                   </div>
+
+                  <div class="row input-tab">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Room / Location</label>
+                        <input type="text" class="form-control" id="edtLocationDescription" name="edtLocationDescription">
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Department</label>
+                        <select type="search" class="form-control" id="" name=""
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Last Test Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtDateLastTest" name="edtDateLastTest">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Next Test Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="editDateNextTest" name="editDateNextTest">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="row input-tab">
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
@@ -296,7 +354,7 @@
                       <div class="form-group" style="margin: 4px;">
                         <label>Numer</label>
                         <input type="text" class="form-control" id="edtNumber" name="edtNumber">
-                        </div>
+                      </div>
                     </div>
                     <div class="col-3" style="padding: 0;">
                       <div class="form-group" style="margin: 4px;">
@@ -332,7 +390,177 @@
                           </div>
                         </div>
                       </div>
-                    </div>             
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane active border rounded-0 tab-add-info" role="tabpanel" id="tab-add-info">
+                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="input-tab">
+                        <label style="color: #00A3D3; font-size: 18px;">Insurance Info</label>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Insured By </div>
+                          <input class="form-control" type="text" id="edtInsuranceByName" name="edtInsuranceByName" customerid=" ">
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Policy</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Insured Until</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="input-tab">
+                        <label style="color: #00A3D3; font-size: 18px;">Warranty Info</label>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:130px; text-align: right; margin-right: 10px;">Warranty Expires</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:130px; text-align: right; margin-right: 10px;">Warranty Type</div>
+                          <input class="form-control" type="text" id="edtAssetCode" name="edtAssetCode" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row input-tab">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Estimated Value'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Replacement Cost'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Status'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row input-tab">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Manufacture'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div> 
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Brand Name'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Model Number'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Condition'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Color'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Size'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                      <div class="input-item">
+                        {{> default_input 
+                          label = 'Shape'
+                          classes = ''
+                          type = 'text'
+                          id = 'edtInsurancePolicy'
+                          name = 'edtInsurancePolicy'
+                        }}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -471,39 +699,6 @@
                       <button class="btn btn-success btnCalculate" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
                       </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="tab-pane border rounded-0 tab-insurance-info" role="tabpanel" id="tab-insurance-info">
-                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
-                  <div class="row" style="margin: 4px 12px; padding: 10px;">
-                    <div class="col-4 insuranceInfo">
-                      <div style="padding: 0;">
-                        <div class="form-group" style="margin: 4px;">
-                          <label>Insuranced By</label>
-                          <input type="text" class="form-control" id="edtInsuranceByName" name="edtInsuranceBy">
-                        </div>
-                      </div>
-                      <div style="padding: 0;">
-                        {{> default_input 
-                          label = 'Insurance Policy'
-                          classes = ''
-                          type = 'text'
-                          id = 'edtInsurancePolicy'
-                          name = 'edtInsurancePolicy'
-                        }}
-                      </div>
-                      <div style="padding: 0;">
-                        <div class="form-group" style="margin: 4px;"><label>Insurance Until</label>
-                          <div class="input-group date" style="cursor: pointer;">
-                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate">
-                            <div class="input-group-addon">
-                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
