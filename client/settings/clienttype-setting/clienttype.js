@@ -1,6 +1,7 @@
 import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { TaxRateService } from "../settings-service";
+import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import XLSX from "xlsx";
 import { Template } from 'meteor/templating';
