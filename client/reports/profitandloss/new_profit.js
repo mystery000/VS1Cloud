@@ -117,7 +117,10 @@ Template.newprofitandloss.onRendered(function () {
         }
       }
       reportService.editPNLGroup(jsonObj).then(function(res){
-        templateObject.getProfitLossLayout();
+        // templateObject.getProfitLossLayout();
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        templateObject.setReportOptions(3, dateFrom, dateTo);
       }).catch(function(err) {
           swal({
               title: 'Oooops...',
@@ -312,6 +315,7 @@ Template.newprofitandloss.onRendered(function () {
 
   templateObject.getProfitandLossReports = async () => {
     // if (!localStorage.getItem('VS1ProfitAndLoss_Report')) {
+      templateObject.getProfitLossLayout();
       const options = await templateObject.reportOptions.get();
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
@@ -466,7 +470,7 @@ Template.newprofitandloss.onRendered(function () {
                 if(profitandlosslayout[m].subAccounts.length > 0){
                   for (let counter = 1; counter <= compPeriod; counter++) {
                     totalGroupPeriodAmounts[counter-1].decimalAmt = utilityService.modifynegativeCurrencyFormat( totalGroupPeriodAmounts[counter-1].roundAmt ) || 0.0;
-                    totalGroupPeriodAmounts[counter-1].percentage = totalGroupPeriodAmounts[counter-1].percentage + "%";
+                    totalGroupPeriodAmounts[counter-1].percentage = totalGroupPeriodAmounts[counter-1].percentage.toFixed(1) + "%";
                   }
 
                   let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalGroupAmount ) || 0.0;
@@ -576,12 +580,12 @@ Template.newprofitandloss.onRendered(function () {
                       $(this).removeClass("fgrblue");
                     }
                   });
-                }, 100);
+                }, 50);
               }
               setTimeout(function () {
                 $(".pnlTable").show();
                 $(".fullScreenSpin").css("display", "none");
-              }, 300);
+              }, 100);
             }
           });
           // data = data.response;
@@ -627,11 +631,12 @@ Template.newprofitandloss.onRendered(function () {
                   roundAmt: totalRoundAmount,
                   // percentage: Percentage,
                 });
+                
                 if( options.departments.length ){
                   options.departments.forEach(dept => {
-                    totalAmount += accountData[i][dept+"_AmountColumnInc"];
-                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
-                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
+                    totalAmount += accountData[i][dept+"_AmountColumnEx"];
+                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnEx"] ) || 0.0;
+                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnEx"]) || 0;
                     if( i == 0 ){
                       options.threcords.push( dept );
                     }
@@ -641,9 +646,11 @@ Template.newprofitandloss.onRendered(function () {
                     });
                   });
                 }
+
                 if (
                   accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
-                  accountType != ""
+                  accountType != "" &&
+                  accountData[i]["TotalAmountEx"] == ""
                 ) {
                   dataList = {
                     id: accountData[i]["AccountID"] || "",
@@ -705,10 +712,12 @@ Template.newprofitandloss.onRendered(function () {
                       $(this).removeClass("fgrblue");
                     }
                   });
-                }, 100);
+                }, 50);
               }
-              $(".pnlTable").show();
-              $(".fullScreenSpin").css("display", "none");
+              setTimeout(function () {
+                $(".pnlTable").show();
+                $(".fullScreenSpin").css("display", "none");
+              }, 100);
             }
           });
 
@@ -856,7 +865,6 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
-      console.log("--------", data);
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
@@ -937,8 +945,8 @@ Template.newprofitandloss.onRendered(function () {
             $item.addClass(siblingClass);
             $item.addClass("selected");
 
-            let groupID = $item.attr("plid");
-            let containerID = container.el.parent().attr("plid") || 0;
+            let groupID = parseInt($item.attr("plid"));
+            let containerID = parseInt(container.el.parent().attr("plid")) || 0;
             let containerName = container.el.parent().attr("data-group") || "";
             
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -951,7 +959,9 @@ Template.newprofitandloss.onRendered(function () {
               }
             }
             reportService.movePNLGroup(jsonObj).then(function(res){
-              templateObject.getProfitLossLayout();
+              var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+              var dateTo = new Date($("#dateTo").datepicker("getDate"));
+              templateObject.setReportOptions(3, dateFrom, dateTo);
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -981,6 +991,7 @@ Template.newprofitandloss.onRendered(function () {
           $(this).parent().addClass("selected");
           templateObject.layoutgroupid.set($(this).parent().attr("plid"));
         });
+        // $('.fullScreenSpin').css('display', 'none');
       }, 1000);
       // $('.fullScreenSpin').css('display', 'none');
     });
@@ -1109,7 +1120,6 @@ Template.newprofitandloss.onRendered(function () {
     //   // }, 1000);
     // }
   };
-  templateObject.getProfitLossLayout();
 
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
@@ -2360,10 +2370,13 @@ Template.newprofitandloss.events({
               }
               reportService.deletePNLGroup(jsonObj).then(function(res){
                 templateObject.layoutgroupid.set("");
-                templateObject.getProfitLossLayout();
+                // templateObject.getProfitLossLayout();
                 $(".editRowGroup").hide();
                 $("#editGroupName").val("");
                 $("#editGroupID").val("");
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                templateObject.setReportOptions(3, dateFrom, dateTo);
               }).catch(function(err) {
                   swal({
                       title: 'Oooops...',
@@ -2609,9 +2622,12 @@ Template.newprofitandloss.events({
 
     $('.fullScreenSpin').css('display', 'inline-block');
     reportService.savePNLNewGroup(jsonObj).then(function(res){
-      templateObject.getProfitLossLayout();
+      // templateObject.getProfitLossLayout();
       $("#newGroupName").val("");
       $("#nplAddGroupScreen").modal("hide");
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      templateObject.setReportOptions(3, dateFrom, dateTo);
     }).catch(function(err) {
         swal({
             title: 'Oooops...',
