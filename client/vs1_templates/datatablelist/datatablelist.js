@@ -174,57 +174,104 @@ Template.datatablelist.onRendered(async function () {
     };
     //Contact Overview Data
     templateObject.getTableData = async function (deleteFilter = false) {
-
-        if (templateObject.data.istransaction == false) {
-
-            try {
-                let dataObject = await getVS1Data(indexDBName);
-
-                if (dataObject.length == 0) {
+        var customerpage = 0;
+        return new Promise((resolve, reject) => {
+            // resolve(templateObject.data.apiName(initialDatatableLoad, 0, false))
+            if (templateObject.data.istransaction == false) {
+                getVS1Data(indexDBName).then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                        let that = templateObject.data.service;
+                        let params = [initialDatatableLoad, 0, deleteFilter]
+                        templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                            addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                                resolve(dataReturn)
+                            })
+                        })
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        resolve(data)
+                    }
+                }).catch(function (e) {
                     let that = templateObject.data.service;
-                    let params = [initialDatatableLoad, 0, deleteFilter]
-                    let dataReturn = await templateObject.data.apiName.apply(that, params);
-                    await addVS1Data(indexDBName, JSON.stringify(dataReturn));
-                    return dataReturn;
+                    let params = [initialDatatableLoad, 0, deleteFilter];
+                    templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                        addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                            resolve(dataReturn)
+                        })
+                    })
+                })
+            } else {
+                var currentBeginDate = new Date();
+                var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+                let fromDateMonth = (currentBeginDate.getMonth() + 1);
+                let fromDateDay = currentBeginDate.getDate();
+                if ((currentBeginDate.getMonth() + 1) < 10) {
+                    fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
                 } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    return data;
+                    fromDateMonth = (currentBeginDate.getMonth() + 1);
                 }
 
-            } catch (e) {
+                if (currentBeginDate.getDate() < 10) {
+                    fromDateDay = "0" + currentBeginDate.getDate();
+                }
+                var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+                let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+                let params = cloneDeep(templateObject.apiParams.get());
                 let that = templateObject.data.service;
-                let params = [initialDatatableLoad, 0, deleteFilter];
-                let dataReturn = await templateObject.data.apiName.apply(that, params);
-                await addVS1Data(indexDBName, JSON.stringify(dataReturn));
-                return dataReturn;
-            }
-        } else {
-            var currentBeginDate = new Date();
-            var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-            let fromDateMonth = (currentBeginDate.getMonth() + 1);
-            let fromDateDay = currentBeginDate.getDate();
-            if ((currentBeginDate.getMonth() + 1) < 10) {
-                fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-            } else {
-                fromDateMonth = (currentBeginDate.getMonth() + 1);
-            }
-            if (currentBeginDate.getDate() < 10) {
-                fromDateDay = "0" + currentBeginDate.getDate();
-            }
-            var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
-            let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-            let params = cloneDeep(templateObject.apiParams.get());
-            let that = templateObject.data.service;
-
-            try {
-                let dataObject = await getVS1Data(indexDBName);
-                $('#dateFrom').attr('readonly', false);
-                $('#dateTo').attr('readonly', false);
-                if (dataObject.length == 0) {
-                    if (templateObject.data.apiParams == undefined) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        return [];
+                // for (let i = 0; i < params.length; i++) {
+                //     if(params[i] == 'ignoredate') {
+                //         params[i] = true;
+                //     } else if(params[i] == 'dateFrom') {
+                //         params[i] = prevMonth11Date
+                //     } else if(params[i] == 'dateTo') {
+                //         params[i] = toDate
+                //     } else if(params[i] == 'limitFrom') {
+                //         params[i] = 0
+                //     } else if(params[i] == 'limitCount') {
+                //         params[i] = initialReportLoad
+                //     } else if(params[i] == 'deleteFilter') {
+                //         params[i] == deleteFilter
+                //     }
+                // }
+                getVS1Data(indexDBName).then(function (dataObject) {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
+                    if (dataObject.length == 0) {
+                        if (templateObject.data.apiParams == undefined) { $('.fullScreenSpin').css('display', 'none'); resolve([]); }
+                        let params = cloneDeep(templateObject.apiParams.get());
+                        for (let i = 0; i < params.length; i++) {
+                            if (params[i] == 'ignoredate') {
+                                params[i] = true;
+                            } else if (params[i] == 'dateFrom') {
+                                params[i] = prevMonth11Date
+                            } else if (params[i] == 'dateTo') {
+                                params[i] = toDate
+                            } else if (params[i] == 'limitFrom') {
+                                params[i] = 0
+                            } else if (params[i] == 'limitCount') {
+                                params[i] = initialReportLoad
+                            } else if (params[i] == 'deleteFilter') {
+                                params[i] = deleteFilter
+                            }
+                        }
+                        if(templateObject.data.apiName) {
+                            templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                                addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                                    resolve(dataReturn)
+                                })
+                            }).catch(function (e) {
+                                resolve([])
+                                $('.fullScreenSpin').css('display', 'none');
+                            })
+                        } else {
+                            resolve([])
+                            $('.fullScreenSpin').css('display', 'none');
+                        }
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        resolve(data)
                     }
+                }).catch(function (error) {
                     let params = cloneDeep(templateObject.apiParams.get());
                     for (let i = 0; i < params.length; i++) {
                         if (params[i] == 'ignoredate') {
@@ -238,54 +285,20 @@ Template.datatablelist.onRendered(async function () {
                         } else if (params[i] == 'limitCount') {
                             params[i] = initialReportLoad
                         } else if (params[i] == 'deleteFilter') {
-                            params[i] = deleteFilter
+                            params[i] == deleteFilter
                         }
                     }
-                    if(templateObject.data.apiName) {
-
-                        try {
-                            let dataReturn = templateObject.data.apiName.apply(that, params);
-                            await addVS1Data(indexDBName, JSON.stringify(dataReturn));
-                            return dataReturn;
-                        } catch (e1) {
-                            $('.fullScreenSpin').css('display', 'none');
-                            return [];
-                        }
-                    } else {
+                    templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                        addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                            resolve(dataReturn)
+                        })
+                    }).catch(function (error) {
                         $('.fullScreenSpin').css('display', 'none');
-                        return [];
-                    }
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    return data;
-                }
-            } catch (e) {
-                let params = cloneDeep(templateObject.apiParams.get());
-                for (let i = 0; i < params.length; i++) {
-                    if (params[i] == 'ignoredate') {
-                        params[i] = true;
-                    } else if (params[i] == 'dateFrom') {
-                        params[i] = prevMonth11Date
-                    } else if (params[i] == 'dateTo') {
-                        params[i] = toDate
-                    } else if (params[i] == 'limitFrom') {
-                        params[i] = 0
-                    } else if (params[i] == 'limitCount') {
-                        params[i] = initialReportLoad
-                    } else if (params[i] == 'deleteFilter') {
-                        params[i] == deleteFilter
-                    }
-                }
-                try {
-                    let dataReturn = await templateObject.data.apiName.apply(that, params);
-                    await addVS1Data(indexDBName, JSON.stringify(dataReturn));
-                    return dataReturn;
-                } catch (e1) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    return [];
-                }
+                    })
+                })
             }
-        }
+        })
+
     }
 
     templateObject.getFilteredData = async function (params) {

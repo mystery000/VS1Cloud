@@ -115,26 +115,27 @@
       </div>
     </div>
 
-    <div class="col-6 col-md-4">
-      <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right btn-mg" role="button" data-toggle="modal"
-        href="#displaySettingsModal2">
-        <i class="icon ion-android-more-horizontal"></i>
-      </a>
-      <button id="exportbtn" class="btn btnNav btn-primary float-right btn-mg" type="button">
-        <i class="fas fa-file-export" style="margin-right: 5px;"></i>Export
-      </button>
+      {{> export_import_print_display_button tablename = "tblAllTaskDatatable"}}
+<!--    <div class="col-6 col-md-4">-->
+<!--      <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right btn-mg" role="button" data-toggle="modal"-->
+<!--        href="#displaySettingsModal2">-->
+<!--        <i class="icon ion-android-more-horizontal"></i>-->
+<!--      </a>-->
+<!--      <button id="exportbtn" class="btn btnNav btn-primary float-right btn-mg" type="button">-->
+<!--        <i class="fas fa-file-export" style="margin-right: 5px;"></i>Export-->
+<!--      </button>-->
 
-      <button class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importTaskTable"><i
-          class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+<!--      <button class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#importTaskTable"><i-->
+<!--          class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>-->
 
-      <button class="btn btn-primary btnNav printConfirm float-right btn-mg" type="button">
-        <i class="fa fa-print" style="margin-right: 5px;"></i>Print
-      </button>
-      <a class="btn btnOpenSettings btnOpenSettingsMobile float-right btn-mg" role="button" data-toggle="modal"
-        href="#displaySettingsModal2" style="display: none;">
-        <i class="icon ion-android-more-horizontal"></i>
-      </a>
-    </div>
+<!--      <button class="btn btn-primary btnNav printConfirm float-right btn-mg" type="button">-->
+<!--        <i class="fa fa-print" style="margin-right: 5px;"></i>Print-->
+<!--      </button>-->
+<!--      <a class="btn btnOpenSettings btnOpenSettingsMobile float-right btn-mg" role="button" data-toggle="modal"-->
+<!--        href="#displaySettingsModal2" style="display: none;">-->
+<!--        <i class="icon ion-android-more-horizontal"></i>-->
+<!--      </a>-->
+<!--    </div>-->
 
 
     <div class="modal fade" role="dialog" tabindex="-1" id="importTaskTable">

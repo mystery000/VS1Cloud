@@ -17,80 +17,80 @@ Template.crm_top_menu.onRendered(function() {
     let sideBarService = new SideBarService();
 
     // set initial table rest_data
-    templateObject.init_reset_data = function() {
-        let reset_data = [
-            // { index: 0, label: '#ID', class: 'ID', active: false, display: true, width: "" },
-            { index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "35" },
-            { index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "126" },
-            { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
-            { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "200" },
-            { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "" },
-            { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "100" },
-            { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "200" },
-            { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        ];
+    // templateObject.init_reset_data = function() {
+    //     let reset_data = [
+    //         // { index: 0, label: '#ID', class: 'ID', active: false, display: true, width: "" },
+    //         { index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "35" },
+    //         { index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "126" },
+    //         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+    //         { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "200" },
+    //         { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "" },
+    //         { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "100" },
+    //         { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "200" },
+    //         { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    //     ];
+    //
+    //     let templateObject = Template.instance();
+    //     templateObject.reset_data.set(reset_data);
+    // }
+    // templateObject.init_reset_data();
+    // // set initial table rest_data
+    //
+    // // custom field displaysettings
+    // templateObject.initCustomFieldDisplaySettings = function(listType) {
+    //     let reset_data = templateObject.reset_data.get();
+    //     templateObject.showCustomFieldDisplaySettings(reset_data, listType);
+    //
+    //     try {
+    //         getVS1Data("VS1_Customize").then(function(dataObject) {
+    //             if (dataObject.length == 0) {
+    //                 sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
+    //                     reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+    //                     templateObject.showCustomFieldDisplaySettings(reset_data, listType);
+    //                 }).catch(function(err) {});
+    //             } else {
+    //                 let data = JSON.parse(dataObject[0].data);
+    //                 if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+    //                     for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+    //                         if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+    //                             reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+    //                             templateObject.showCustomFieldDisplaySettings(reset_data, listType);
+    //                         }
+    //                     }
+    //                 };
+    //                 // handle process here
+    //             }
+    //         });
+    //     } catch (error) {}
+    //     return;
+    // }
+    //
+    // templateObject.showCustomFieldDisplaySettings = async function(reset_data, currenttablename) {
+    //     let custFields = [];
+    //     let customData = {};
+    //     let customFieldCount = reset_data.length;
+    //     for (let r = 0; r < customFieldCount; r++) {
+    //         customData = {
+    //             active: reset_data[r].active,
+    //             id: reset_data[r].index,
+    //             custfieldlabel: reset_data[r].label,
+    //             class: reset_data[r].class,
+    //             display: reset_data[r].display,
+    //             width: reset_data[r].width ? reset_data[r].width : ''
+    //         };
+    //         if (reset_data[r].class) {
+    //             if (reset_data[r].active == true) {
+    //                 $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
+    //             } else if (reset_data[r].active == false) {
+    //                 $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
+    //             };
+    //         }
+    //         custFields.push(customData);
+    //     }
+    //     templateObject.displayfields.set(custFields);
+    // }
 
-        let templateObject = Template.instance();
-        templateObject.reset_data.set(reset_data);
-    }
-    templateObject.init_reset_data();
-    // set initial table rest_data
-
-    // custom field displaysettings
-    templateObject.initCustomFieldDisplaySettings = function(listType) {
-        let reset_data = templateObject.reset_data.get();
-        templateObject.showCustomFieldDisplaySettings(reset_data, listType);
-
-        try {
-            getVS1Data("VS1_Customize").then(function(dataObject) {
-                if (dataObject.length == 0) {
-                    sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
-                        reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                        templateObject.showCustomFieldDisplaySettings(reset_data, listType);
-                    }).catch(function(err) {});
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    if (data.ProcessLog.Obj.CustomLayout.length > 0) {
-                        for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
-                            if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
-                                reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                                templateObject.showCustomFieldDisplaySettings(reset_data, listType);
-                            }
-                        }
-                    };
-                    // handle process here
-                }
-            });
-        } catch (error) {}
-        return;
-    }
-
-    templateObject.showCustomFieldDisplaySettings = async function(reset_data, currenttablename) {
-        let custFields = [];
-        let customData = {};
-        let customFieldCount = reset_data.length;
-        for (let r = 0; r < customFieldCount; r++) {
-            customData = {
-                active: reset_data[r].active,
-                id: reset_data[r].index,
-                custfieldlabel: reset_data[r].label,
-                class: reset_data[r].class,
-                display: reset_data[r].display,
-                width: reset_data[r].width ? reset_data[r].width : ''
-            };
-            if (reset_data[r].class) {
-                if (reset_data[r].active == true) {
-                    $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
-                } else if (reset_data[r].active == false) {
-                    $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
-                };
-            }
-            custFields.push(customData);
-        }
-        templateObject.displayfields.set(custFields);
-    }
-
-    templateObject.initCustomFieldDisplaySettings("tblAllTaskDatatable");
+    //templateObject.initCustomFieldDisplaySettings("tblAllTaskDatatable");
     // set initial table rest_data  //
 });
 
