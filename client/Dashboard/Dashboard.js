@@ -36,10 +36,30 @@ Template.dashboard.onCreated(function () {
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
+  templateObject.showChart = new ReactiveVar(false);
+
+  const checkIfChartEnabled = async () => {
+    let dashboardOptions = [];
+    try {
+      const data = await getVS1Data("TVS1DashboardOptions");
+      if (!data || data.length === 0) {
+        dashboardOptions = require('../popUps/dashboardoptions.json');
+      } else {
+        dashboardOptions = JSON.parse(data[0].data)
+      }
+    } catch (error) {
+      dashboardOptions = require('../popUps/dashboardoptions.json');
+    }
+    const accountDashboardOption = dashboardOptions.find(option => option.name === 'Accounts');
+    if(!accountDashboardOption) return false;
+    templateObject.showChart.set(accountDashboardOption.isshowdefault);
+    return true;
+  }
+
+  checkIfChartEnabled()
 });
 
 Template.dashboard.onRendered(function () {
-
   let templateObject = Template.instance();
   let isDashboard = localStorage.getItem("CloudDashboardModule");
   if (isDashboard) {
@@ -61,13 +81,16 @@ Template.dashboard.helpers({
   lastBatchUpdate: () => {
     let transactionTableLastUpdated = "";
     var currentDate = new Date();
-    if(localStorage.getItem('VS1TransTableUpdate')){
-       transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
-    }else{
+    if (localStorage.getItem('VS1TransTableUpdate')) {
+      transactionTableLastUpdated = moment(localStorage.getItem('VS1TransTableUpdate')).format("ddd MMM D, YYYY, hh:mm A");
+    } else {
       transactionTableLastUpdated = moment(currentDate).format("ddd MMM D, YYYY, hh:mm A");
     }
     return transactionTableLastUpdated;
   },
+  isShowCharts: () => {
+    return Template.instance().showChart.get();
+  }
 });
 
 // Listen to event to update reactive variable
@@ -88,8 +111,8 @@ Template.dashboard.events({
     $(".progressBarInner").text("Invoices " + valeur + "%");
   },
   'click .btnBatchUpdate': function () {
-    $('.fullScreenSpin').css('display','inline-block');
-      batchUpdateCall();
+    $('.fullScreenSpin').css('display', 'inline-block');
+    batchUpdateCall();
   },
   // "click #hideearnings": function () {
   //   let check = earningschart;
