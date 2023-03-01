@@ -9,37 +9,25 @@
         <input type="hidden" style="width: 100%; display:none;" id="selectBankNameID" name="selectBankNameID" readonly>
         <div class="card-body p-1 rounded">
             <style>
-                th{
-                    width: 50% !important;
+                .colBankName{
+                    width: 10% !important;
                 }
             </style>
             {{>datatablelist
-                    tablename="tblBankName"
-                    apiName= apiFunction
-                    indexeddbname = 'TBankNameList'
-                    tableheaderrecords = tableheaderrecords
-                    exportfilename = 'Bank Name List'
-                    istransaction = false
-                    apiParams= apiParams
-                    datahandler = datahandler
-                    service=service
-                    lowercaseDataName='tbanknamelist'
-                    exIndexDBName = 'tbanknamelist'
-                    exdatahandler = exDataHandler
-                    searchAPI = searchAPI
+                tablename="tblBankName"
+                apiName= apiFunction
+                indexeddbname = 'TBankNameList'
+                tableheaderrecords = tableheaderrecords
+                exportfilename = 'Bank Name List'
+                istransaction = false
+                apiParams= apiParams
+                datahandler = datahandler
+                service=service
+                lowercaseDataName='tbanknamelist'
+                exIndexDBName = 'tbanknamelist'
+                exdatahandler = exDataHandler
+                searchAPI = searchAPI
             }}
-<!--          <div class="table-responsive">-->
-<!--            <table id="tblBankName" style="width:100%" class="table table-striped table-bordered tblBankName">-->
-<!--              <thead>-->
-<!--                <tr class="dnd-moved">-->
-<!--                  <th class="thAccountName">Account Name</th>-->
-<!--                  <th class="thDescription">Description</th>-->
-<!--                </tr>-->
-<!--              </thead>-->
-<!--              <tbody> -->
-<!--              </tbody>-->
-<!--            </table>-->
-<!--          </div>-->
         </div>
       </div>
       <div class="modal-footer"><button class="btn btn-light btnCancelEftBankName" type="button">Close</button></div>
