@@ -69,12 +69,10 @@ Template.allCardsLists.onRendered(function () {
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-id", card.fields.ID);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
                     if (card.fields.Active == false) {
-                        $(`[card-key='${card.fields.CardKey}']`).attr("card-active", false);
                         $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
                     } else {
-                        $(`[card-key='${card.fields.CardKey}']`).attr("card-active", true);
                         $(`[card-key='${card.fields.CardKey}']`).removeClass("hideelement");
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye');
