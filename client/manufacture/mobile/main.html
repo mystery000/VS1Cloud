@@ -58,7 +58,7 @@
 		}
 		.mobile-btn-number{
 			height: 10vw;
-			width: 15.8vw;
+			width: 14.8vw;
 			border: none;
 			font-weight: 800;
 			font-size: 2.5vw;
@@ -222,7 +222,7 @@
 				height: 100vw;
 			}
 			.colContent {
-			    overflow-x: unset !!important;
+			    overflow-x: unset !important;
 			}
 		}
 	</style>
@@ -259,10 +259,22 @@
 			{{#if isMobileDevices}}
 				<div>Capture copies of receipt's or take photo's of completed jobs.</div>
 			{{/if}}
+
 			<div class="mt-4 mobile-row mobile-left-employee-list mmw-100 mtw-50" style="display: none;">
 				<table id="tblEmployeeList" name="tblEmployeeList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
 				</table>
 			</div>
+			<div class="mt-4 mobile-row mobile-left-workorder-list mmw-100 mtw-50" style="display: none;">
+				<table id="tblWorkOrderList" name="tblWorkOrderList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
+				</table>
+			</div>
+			<div class="mt-4 mobile-row mobile-left-jobprocess-list mmw-100 mtw-50" style="display: none;">
+				<table id="tblJobProcessList" name="tblWorkOrderList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
+				</table>
+			</div>
+				
+				
+			
 			<div class="mt-4 mobile-row mobile-left-btn-containner mmw-100 mtw-50">
 				<button calcValue="7" class="mobile-btn-number m-mb-1 mobile-btn">7</button>
 				<button calcValue="8" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">8</button>
@@ -279,8 +291,8 @@
 			</div>
 			<div class="mt-4 mobile-row mobile-right-btn-containner mmw-100 mtw-50">
 				<button id="btnOpentList" class="m-mb-1 mobile-bg-color-grey mobile-btn">OPEN LIST</button>
-				<button id="btnClockIn" class="m-mb-1 mobile-bg-color-green mobile-color-white m-ml-1 mobile-btn">CLOCK IN</button>
-				<button id="btnClockOut" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn">CLOCK OUT</button>
+				<button id="btnClockIn" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK IN</button>
+				<button id="btnClockOut" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK OUT</button>
 				<button class="m-mb-1 mobile-bg-color-grey mobile-btn" id="mobileBtnQrCobeScan">SCAN</button>
 				<button id="btnStartBreak" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>START BREAK</button>
 				<button id="btnStopBreak" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>STOP BREAK</button>

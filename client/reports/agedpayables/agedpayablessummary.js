@@ -44,29 +44,15 @@ Template.agedpayablessummary.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-            { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "" },
-      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "" },
-      { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "" },
-      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "" },
-      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "" },
-      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "" },
-      { index: 7, label: '1-30 Days', class: 'col130Days', active: true, display: true, width: "" },
-      { index: 8, label: '30-60 Days', class: 'col3060Days', active: true, display: true, width: "" },
-      { index: 9, label: '60-90 Days', class: 'col6090Days', active: true, display: true, width: "" },
-      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "" },
-      { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "" },
-      { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "" },
-      { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "" },
-      { index: 14, label: 'Details', class: 'colDetails', active: false, display: true, width: "" },
-      { index: 15, label: 'Invoice Number', class: 'colInvoiceNumber', active: false, display: true, width: "" },
-      { index: 16, label: 'Account Name', class: 'colAccountName', active: false, display: true, width: "" },
-      { index: 17, label: 'Supplier ID', class: 'colSupplierID', active: false, display: true, width: "" },
-      { index: 18, label: 'Terms', class: 'colTerms', active: false, display: true, width: "" },
-      { index: 19, label: 'APNotes', class: 'colAPNotes', active: false, display: true, width: "" },
-      { index: 20, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "" },
-      { index: 21, label: 'PCStatus', class: 'colPCStatus', active: false, display: true, width: "" },
-      { index: 22, label: 'GlobalRef', class: 'colGlobalRef', active: false, display: true, width: "" },
-      { index: 23, label: 'POGlobalRef', class: 'colPOGlobalRef', active: false, display: true, width: "" },
+      { index: 1, label: 'Contact', class: 'colName', active: true, display: true, width: "150" },
+      { index: 2, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
+      { index: 3, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
+      { index: 4, label: 'Total Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
+      { index: 5, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
+      { index: 6, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
+      { index: 7, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
+      { index: 8, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
+      { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
     ];
     templateObject.agedpayablesth.set(reset_data);
   }
@@ -94,13 +80,28 @@ Template.agedpayablessummary.onRendered(() => {
     let currenctURL = FlowRouter.current().queryParams || '';
     let contactName = FlowRouter.current().queryParams.contact ||'';
     let contactID = FlowRouter.current().queryParams.contactid ||'';
+  templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
 
+    templateObject.setDateAs(dateFrom);
+    LoadingOverlay.show();
+    let data = await CachedHttp.get(erpObject.TAPReport, async () => {
+      return await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    templateObject.displayAgedPayablesData(data.response);
+
+  }
   templateObject.getAgedPayablesData = async function (dateFrom, dateTo, ignoreDate, contactID) {
 
     templateObject.setDateAs(dateFrom);
     getVS1Data('TAPReport').then(function (dataObject) {
       if (dataObject.length == 0) {
-        sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
+        reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
           await addVS1Data('TAPReport', JSON.stringify(data));
           templateObject.displayAgedPayablesData(data);
         }).catch(function (err) {
@@ -110,7 +111,7 @@ Template.agedpayablessummary.onRendered(() => {
         templateObject.displayAgedPayablesData(data);
       }
     }).catch(function (err) {
-      sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
+      reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
         await addVS1Data('TAPReport', JSON.stringify(data));
         templateObject.displayAgedPayablesData(data);
       }).catch(function (err) {
@@ -132,41 +133,17 @@ Template.agedpayablessummary.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-
-    for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
+    for (let i = 0; i < data.tapreport.length; i++) {
       var dataList = [
-        data.tcustomersummaryreport[i].ACCOUNTID || "",
-        data.tcustomersummaryreport[i].ACCOUNTNAME || "",
-        data.tcustomersummaryreport[i].ACCOUNTNUMBER || "",
-        data.tcustomersummaryreport[i].ACCOUNTS || "",
-        data.tcustomersummaryreport[i].AMOUNTEX || "",
-        data.tcustomersummaryreport[i].AMOUNTINC || "",
-        data.tcustomersummaryreport[i].CHEQUENUMBER || "",
-        data.tcustomersummaryreport[i].CLASS || "",
-        data.tcustomersummaryreport[i].CLASSID || "",
-        data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
-        data.tcustomersummaryreport[i].CREDITSEX || "",
-        data.tcustomersummaryreport[i].CREDITSINC || "",
-        data.tcustomersummaryreport[i].DATE || "",
-        data.tcustomersummaryreport[i].DEBITSEX || "",
-        data.tcustomersummaryreport[i].DEBITSINC || "",
-        data.tcustomersummaryreport[i].DETAILS || "",
-        data.tcustomersummaryreport[i].FIXEDASSETID || "",
-        data.tcustomersummaryreport[i].GLOBALREF || "",
-        data.tcustomersummaryreport[i].ID || "",
-        data.tcustomersummaryreport[i].MEMO || "",
-        data.tcustomersummaryreport[i].PAYMENTID || "",
-        data.tcustomersummaryreport[i].PREPAYMENTID || "",
-        data.tcustomersummaryreport[i].PRODUCTDESCRIPTION || "",
-        data.tcustomersummaryreport[i].PRODUCTNAME || "",
-        data.tcustomersummaryreport[i].PURCHASEORDERID || "",
-        data.tcustomersummaryreport[i].REFERENCENO || "",
-        data.tcustomersummaryreport[i].REPNAME || "",
-        data.tcustomersummaryreport[i].SALEID || "",
-        data.tcustomersummaryreport[i].TAXCODE || "",
-        data.tcustomersummaryreport[i].TAXRATE || "",
-        data.tcustomersummaryreport[i].TYPE || "",
-
+        data.tapreport[i].Name || "",
+        data.tapreport[i].PONumber || "",
+        GlobalFunctions.formatDate(data.tapreport[i].DueDate) || "",
+        data.tapreport[i].AmountDue || "",
+        data.tapreport[i].Current || "",
+        data.tapreport[i]["30Days"] || "",
+        data.tapreport[i]["60Days"] || "",
+        data.tapreport[i]["90Days"] || "",
+        data.tapreport[i]["120Days"] || "",
       ];
       splashArrayAgedPayablesReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
@@ -175,13 +152,13 @@ Template.agedpayablessummary.onRendered(() => {
 
     if (templateObject.transactiondatatablerecords.get()) {
       setTimeout(function () {
-        MakeNegative();
+        //MakeNegative();
       }, 100);
     }
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: splashArrayAgedPayablesReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1200,8 +1177,8 @@ Template.agedpayablessummary.events({
 });
 
 Template.agedpayablessummary.helpers({
-  agedpayablessummaryth: () => {
-    return Template.instance().agedpayablessummaryth.get();
+  agedpayablesth: () => {
+    return Template.instance().agedpayablesth.get();
   },
   transactiondatatablerecords : () => {
        return Template.instance().transactiondatatablerecords.get();

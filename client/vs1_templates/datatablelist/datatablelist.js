@@ -30,7 +30,7 @@ import 'jszip';
 
 
 import '../date_picker/transaction_list_date.html'
-
+let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
 
@@ -56,7 +56,7 @@ Template.datatablelist.onCreated(function () {
         templateObject.currentproductID.set(currentProductID);
         let currenttype = curdata.type || "";
         templateObject.currenttype.set(currenttype);
-        templateObject.apiParams.set(templateObject.data.apiParams);
+        templateObject.apiParams.set(templateObject.data.apiParams || []);
     });
 
 })
@@ -90,6 +90,30 @@ Template.datatablelist.onRendered(async function () {
         let reset_data = templateObject.reset_data.get();
         setTimeout(()=>{
             templateObject.showCustomFieldDisplaySettings(reset_data);
+            try {
+                getVS1Data("VS1_Customize").then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
+                            reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                            templateObject.showCustomFieldDisplaySettings(reset_data);
+                        }).catch(function(err) {});
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
+                            for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+                                if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
+                                    reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                                    templateObject.showCustomFieldDisplaySettings(reset_data);
+                                }
+                            }
+                        };
+                    }
+                });
+
+            } catch (error) {
+
+            }
+            return;
         }, 100)
     }
 
@@ -120,6 +144,9 @@ Template.datatablelist.onRendered(async function () {
         }
         await templateObject.displayfields.set(custFields);
         $('.dataTable').resizable();
+
+        let tableData = await templateObject.getTableData();
+        await templateObject.displayTableData(tableData);
     }
 
     templateObject.init_reset_data = function () {
@@ -137,9 +164,9 @@ Template.datatablelist.onRendered(async function () {
     await templateObject.init_reset_data();
 
     // set initial table rest_data
-    
 
-    
+
+
     // await templateObject.initCustomFieldDisplaySettings("", currenttablename);
 
     templateObject.resetData = function (dataVal) {
@@ -227,19 +254,24 @@ Template.datatablelist.onRendered(async function () {
                                 params[i] = deleteFilter
                             }
                         }
-
-                        templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
-                            addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
-                                resolve(dataReturn)
+                        if(templateObject.data.apiName) {
+                            templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                                addVS1Data(indexDBName, JSON.stringify(dataReturn)).then(function () {
+                                    resolve(dataReturn)
+                                })
+                            }).catch(function (e) {
+                                resolve([])
+                                $('.fullScreenSpin').css('display', 'none');
                             })
-                        }).catch(function (e) {
+                        } else {
+                            resolve([])
                             $('.fullScreenSpin').css('display', 'none');
-                        })
+                        }
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         resolve(data)
                     }
-                }).catch(function (e) {
+                }).catch(function (error) {
                     let params = cloneDeep(templateObject.apiParams.get());
                     for (let i = 0; i < params.length; i++) {
                         if (params[i] == 'ignoredate') {
@@ -303,36 +335,42 @@ Template.datatablelist.onRendered(async function () {
         })
     }
     templateObject.displayTableData = async function (data, isEx = false) {
-        if (data == [] || data.length == 0) { return }
         var splashDataArray = new Array();
         let deleteFilter = false;
-        if (data.Params) {
-            if (data.Params.Search.replace(/\s/g, "") == "") {
-                deleteFilter = false
+        if (data != [] && data.length != 0) {
+            if (data.Params) {
+                if (data.Params.Search.replace(/\s/g, "") == "") {
+                    deleteFilter = false
+                } else {
+                    deleteFilter = true
+                }
+            }
+            if (isEx == false) {
+                for (let i = 0; i < data[indexDBLowercase].length; i++) {
+                    let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
+                    if(dataList.length != 0) {
+                        splashDataArray.push(dataList);
+                    }
+                    templateObject.transactiondatatablerecords.set(splashDataArray);
+                }
             } else {
-                deleteFilter = true
+                let lowercaseData = templateObject.data.exIndexDBName;
+                for (let i = 0; i < data[lowercaseData].length; i++) {
+                    let dataList = templateObject.data.exdatahandler(data[lowercaseData][i])
+                    if(dataList.length != 0) {
+                        splashDataArray.push(dataList);
+                    }
+                    templateObject.transactiondatatablerecords.set(splashDataArray);
+                }
             }
-        }
-        if (isEx == false) {
-            for (let i = 0; i < data[indexDBLowercase].length; i++) {
-                let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
-                splashDataArray.push(dataList);
-                templateObject.transactiondatatablerecords.set(splashDataArray);
-            }
-        } else {
-            let lowercaseData = templateObject.data.exIndexDBName;
-            for (let i = 0; i < data[lowercaseData].length; i++) {
-                let dataList = templateObject.data.exdatahandler(data[lowercaseData][i])
-                splashDataArray.push(dataList);
-                templateObject.transactiondatatablerecords.set(splashDataArray);
-            }
-        }
 
 
-        if (templateObject.transactiondatatablerecords.get()) {
-            setTimeout(function () {
-                MakeNegative();
-            }, 100);
+
+            if (templateObject.transactiondatatablerecords.get()) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            }
         }
 
         let colDef = [];
@@ -340,13 +378,13 @@ Template.datatablelist.onRendered(async function () {
 
         const tabledraw = () => {
             $('#' + currenttablename).DataTable({
-                dom: 'Bfrtip',
+                dom: 'BRlfrtip',
                 data: splashDataArray,
                 // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 // columns: columns,
                 columnDefs: colDef,
                 buttons: [{
-                    extend: 'csv',
+                    extend: 'csvHtml5',
                     text: '',
                     download: 'open',
                     className: "btntabletocsv hiddenColumn",
@@ -356,7 +394,7 @@ Template.datatablelist.onRendered(async function () {
                         columns: ':visible'
                     }
                 }, {
-                    extend: 'pdf',
+                    extend: 'print',
                     download: 'open',
                     className: "btntabletopdf hiddenColumn",
                     text: '',
@@ -366,58 +404,58 @@ Template.datatablelist.onRendered(async function () {
                         columns: ':visible',
                         stripHtml: false
                     },
-                   
+
                 },
-                {
-                    extend: 'excelHtml5',
-                    title: '',
-                    download: 'open',
-                    className: "btntabletoexcel hiddenColumn",
-                    filename: templateObject.data.exportfilename,
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: ':visible'
-                    },
-                    // available: function () {
-                    //     return window.FileReader !== undefined;
-                    // },
-                    // action: function(e, dt, node, config ) {
-                    //     const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
-                    //         try {
-                    //             return window.self === window.top;
-                    //         } catch {
-                    //             return false;
-                    //         }
-                    //     })();
-            
-                    //     if (supportsFileSystemAccess) {
-                    //         try {
-                    //             const handle = showSaveFilePicker({
-                    //                 suggestedName: config.filename,
-                    //                 type: [{
-                    //                     description: 'XLSX file',
-                    //                     accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
-                    //                 }]
-                    //             });
-                    //             const writable = handle.createWritable();
-                    //             const Excel = fetch('downloads/Template FIles/' + config.filename).then((res) => res.blob())
-                    //             const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
-                    //             const apiData = dt.buttons.exportData();
-                    //             writable.write(apiData);
-                    //             writable.close();
-                    //             return;
-                    //         } catch (err) {
-                    //             if (err.name == 'AbortError') {
-                    //                 return;
-                    //             }
-                    //         }
-                    //     }
-                    // }
-    
-                }
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: templateObject.data.exportfilename,
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        // available: function () {
+                        //     return window.FileReader !== undefined;
+                        // },
+                        // action: function(e, dt, node, config ) {
+                        //     const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
+                        //         try {
+                        //             return window.self === window.top;
+                        //         } catch {
+                        //             return false;
+                        //         }
+                        //     })();
+
+                        //     if (supportsFileSystemAccess) {
+                        //         try {
+                        //             const handle = showSaveFilePicker({
+                        //                 suggestedName: config.filename,
+                        //                 type: [{
+                        //                     description: 'XLSX file',
+                        //                     accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
+                        //                 }]
+                        //             });
+                        //             const writable = handle.createWritable();
+                        //             const Excel = fetch('downloads/Template FIles/' + config.filename).then((res) => res.blob())
+                        //             const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
+                        //             const apiData = dt.buttons.exportData();
+                        //             writable.write(apiData);
+                        //             writable.close();
+                        //             return;
+                        //         } catch (err) {
+                        //             if (err.name == 'AbortError') {
+                        //                 return;
+                        //             }
+                        //         }
+                        //     }
+                        // }
+
+                    }
                 ],
-    
-    
+
+
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -429,9 +467,7 @@ Template.datatablelist.onRendered(async function () {
                 ],
                 info: true,
                 responsive: true,
-                "order": [
-                    [1, "asc"]
-                ],
+                "order": [[1, "asc"]],
                 // "autoWidth": false,
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -441,28 +477,28 @@ Template.datatablelist.onRendered(async function () {
                     $('#' + currenttablename + '_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                         }
                     } else {
-    
+
                     }
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
-    
+
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         //var splashArrayCustomerListDupp = new Array();
                         let dataLenght = oSettings._iDisplayLength;
                         let customerSearch = $('#' + currenttablename + '_filter input').val();
-    
+
                         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
                         var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    
+
                         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-    
-    
+
+
                         let params = cloneDeep(templateObject.apiParams.get());
                         for (let i = 0; i < params.length; i++) {
                             if (params[i] == 'ignoredate') {
@@ -494,7 +530,7 @@ Template.datatablelist.onRendered(async function () {
                             setTimeout(function () {
                                 $('#' + currenttablename).dataTable().fnPageChange('last');
                             }, 400);
-    
+
                             $('.fullScreenSpin').css('display', 'none');
                         }).catch(function (err) {
                             $('.fullScreenSpin').css('display', 'none');
@@ -524,18 +560,17 @@ Template.datatablelist.onRendered(async function () {
                     } else {
                         countTableData = splashDataArray.length
                     }
-    
+
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
-                }
-    
+                },
+
             }).on('page', function () {
                 setTimeout(function () {
                     MakeNegative();
                 }, 100);
             }).on('column-reorder', function () {
-    
             }).on('length.dt', function (e, settings, len) {
-    
+
                 $(".fullScreenSpin").css("display", "inline-block");
                 let dataLenght = settings._iDisplayLength;
                 if (dataLenght == -1) {
@@ -550,16 +585,54 @@ Template.datatablelist.onRendered(async function () {
                 setTimeout(function () {
                     MakeNegative();
                 }, 100);
-            });
-           
+            })
+
             $(".fullScreenSpin").css("display", "none");
-    
-            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); }, 0);
+
+            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); $('.dataTable').resizable();     }, 0);
         }
 
         function getColDef() {
             let items = templateObject.data.tableheaderrecords;
-          
+
+            for (let i = 0; i < $(".displaySettings").length; i ++) {
+                var $tblrow = $($(".displaySettings")[i]);
+                var fieldID = $tblrow.attr("custid") || 0;
+                var colTitle = $tblrow.find(".divcolumn").text() || "";
+                var colWidth = $tblrow.find(".custom-range").val() || 0;
+                var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+                var colHidden = false;
+                if ($tblrow.find(".custom-control-input").is(":checked")) {
+                    colHidden = true;
+                } else {
+                    colHidden = false;
+                }
+                let lineItemObj = {
+                    index: parseInt(fieldID),
+                    label: colTitle,
+                    active: colHidden,
+                    width: parseInt(colWidth),
+                    class: colthClass,
+                    display: true
+                };
+
+                for (let i = 0; i < items.length; i ++) {
+                    let tLabel = items[i].label.indexOf('#') >= 0 ? items[i].label.substr(1) : items[i].label;
+                    let rLabel = lineItemObj.label.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
+                    if (tLabel == rLabel) {
+                        if (lineItemObj.active) {
+                            if (items[i].label.indexOf('#') >= 0) {
+                                items[i].label = items[i].label.substr(1);
+                            }
+                        } else {
+                            if (items[i].label.indexOf('#') < 0) {
+                                items[i].label = '#' + items[i].label;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
@@ -573,18 +646,20 @@ Template.datatablelist.onRendered(async function () {
                 }
                 templateObject.columnDef.set(colDef)
                 tabledraw();
+                tableResize();
             } else {
                 setTimeout(()=>{
                     getColDef();
                 }, 1000);
             }
-         
+
         }
         getColDef();
-    }
 
-    let tableData = await templateObject.getTableData();
-    await templateObject.displayTableData(tableData);
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 1000);
+    }
 
 })
 
@@ -629,6 +704,10 @@ Template.datatablelist.events({
             $('.' + columnDataValue).addClass('hiddenColumn');
             $('.' + columnDataValue).removeClass('showColumn');
         }
+
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 500);
     },
     // "click .exportbtn": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -655,7 +734,7 @@ Template.datatablelist.events({
 
 
 
-        
+
 
 
 
@@ -715,7 +794,7 @@ Template.datatablelist.events({
         $("#dateFrom").val(toDateDisplayFrom);
         $("#dateTo").val(toDateDisplayTo);
 
-        let params = [toDateDisplayFrom, toDateDisplayTo, false];
+        let params = [toDateERPFrom, toDateERPTo, false];
         templateObject.getFilteredData(params)
 
         // if (currenttablename == "tblBankingOverview") {
@@ -748,10 +827,13 @@ Template.datatablelist.events({
         var fromDate = formatDate(prevMonthFirstDate);
         var toDate = formatDate(prevMonthLastDate);
 
+        let getDateFrom = formatDateERP(prevMonthFirstDate);
+        let getToDate = formatDateERP(prevMonthLastDate);
+
         $("#dateFrom").val(fromDate);
         $("#dateTo").val(toDate);
 
-        let params = [fromDate, toDate, false]
+        let params = [getDateFrom, getToDate, false]
         templateObject.getFilteredData(params)
         // if (currenttablename == "tblBankingOverview") {
         //     templateObject.getAllFilterbankingData(fromDate,toDate, false);
@@ -814,11 +896,29 @@ Template.datatablelist.events({
         }
 
         var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+
+
+
         $("#dateFrom").val(fromDate);
         $("#dateTo").val(begunDate);
 
-        let params = [fromDate, toDate, false];
-        templateObject.getFilteredData(params)
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+        let getDateFrom = formatDateERP(fromDate);
+        let getToDate = formatDateERP(begunDate);
+
+        let params = [getDateFrom, getToDate, false];
+        templateObject.getFilteredData(params);
         // if (currenttablename == "tblBankingOverview") {
         //     templateObject.getAllFilterbankingData(fromDate,begunDate, false);
         // }
@@ -867,7 +967,7 @@ Template.datatablelist.events({
         $("#dateFrom").val(toDateDisplayFrom);
         $("#dateTo").val(toDateDisplayTo);
 
-        let params = [toDateDisplayFrom, toDateDisplayTo, false]
+        let params = [toDateERPFrom, toDateERPTo, false]
         templateObject.getFilteredData(params)
 
         // if (currenttablename == "tblBankingOverview") {
@@ -900,11 +1000,14 @@ Template.datatablelist.events({
         var fromDate = formatDate(prevMonthFirstDate);
         var toDate = formatDate(prevMonthLastDate);
 
+        let getDateFrom = formatDateERP(prevMonthFirstDate);
+        let getToDate = formatDateERP(prevMonthLastDate);
+
         $("#dateFrom").val(fromDate);
         $("#dateTo").val(toDate);
 
-        let params = [fromDate, toDate, false]
-        templateObject.getFilteredData(params)
+        let params = [getDateFrom, getToDate, false]
+        templateObject.getFilteredData(params);
 
         // if (currenttablename == "tblBankingOverview") {
         //     templateObject.getAllFilterbankingData(fromDate,toDate, false);
@@ -942,7 +1045,22 @@ Template.datatablelist.events({
         $("#dateFrom").val(lastQuarterStartDateFormat);
         $("#dateTo").val(lastQuarterEndDateFormat);
 
-        let params = [lastQuarterStartDateFormat, lastQuarterEndDateFormat, false];
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+        let getDateFrom = formatDateERP(lastQuarterStartDateFormat);
+        let getToDate = formatDateERP(lastQuarterEndDateFormat);
+
+        let params = [getDateFrom, getToDate, false];
         templateObject.getFilteredData(params)
 
         // if (currenttablename == "tblBankingOverview") {
@@ -971,7 +1089,22 @@ Template.datatablelist.events({
         $("#dateFrom").val(fromDate);
         $("#dateTo").val(begunDate);
 
-        let params = [fromDate, begunDate, false];
+        var formatDateComponent = function(dateComponent) {
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        };
+
+        var formatDate = function(date) {
+            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+        };
+
+        var formatDateERP = function(date) {
+            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+        };
+
+        let getDateFrom = formatDateERP(fromDate);
+        let getToDate = formatDateERP(begunDate);
+
+        let params = [getDateFrom, getToDate, false];
         templateObject.getFilteredData(params)
 
         // if (currenttablename == "tblBankingOverview") {
@@ -1009,54 +1142,54 @@ Template.datatablelist.events({
         templateObject.getFilteredData(params)
         // templateObject.getAllFilterSalesOrderData(toDateERPFrom,toDateERPTo, false);
     },
-
-    'change #dateTo': function () {
+    'change .dateTo': function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        setTimeout(function () {
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        alert('here');
+        //setTimeout(function () {
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-            //templateObject.dateAsAt.set(formatDate);
-            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+        //templateObject.dateAsAt.set(formatDate);
+        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-            } else {
-                let params = [formatDateFrom, formatDateTo, false]
-                templateObject.getFilteredData(params)
-                // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
-            }
-        }, 500);
+        } else {
+            let params = [formatDateFrom, formatDateTo, false];
+            templateObject.getFilteredData(params)
+            // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
+        }
+        //}, 500);
     },
-    'change #dateFrom': function () {
+    'change .dateFrom': function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        setTimeout(function () {
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        //setTimeout(function () {
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-            //templateObject.dateAsAt.set(formatDate);
-            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+        //templateObject.dateAsAt.set(formatDate);
+        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-            } else {
-                let params = [formatDateFrom, formatDateTo, false];
-                templateObject.getFilteredData(params);
-                // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
-            }
-        }, 500);
+        } else {
+            let params = [formatDateFrom, formatDateTo, false];
+            templateObject.getFilteredData(params);
+            // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
+        }
+        //}, 500);
     },
 
     'change .custom-range': async function (event) {
@@ -1112,26 +1245,104 @@ Template.datatablelist.events({
     // custom field displaysettings
     'click .resetTable': function (event) {
         let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
-        reset_data = reset_data.filter(redata => redata.display);
+        let currenttranstablename = templateObject.data.tablename||"";
+        let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID')||0;
+        //let reset_data = await templateObject.reset_data.get();
+        //reset_data = reset_data.filter(redata => redata.display);
+        $('.fullScreenSpin').css('display', 'inline-block');
+        //Rasheed Add Reset Function (API)
+        var erpGet = erpDb();
+        let objResetData = {
+            Name:"VS1_Customize",
+            Params:
+                {
+                    EmployeeID:parseInt(loggedEmpID)||0,
+                    TableName:currenttranstablename,
+                    Columns:[
+                        {
+                            "Width":"0"
+                        }
+                    ],
+                    Reset:true
+                }
+        }
 
-        $(".displaySettings").each(function (index) {
-            let $tblrow = $(this);
-            $tblrow.find(".divcolumn").text(reset_data[index].label);
-            $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+        var oPost = new XMLHttpRequest();
+        oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_Customize"', true);
+        oPost.setRequestHeader("database", erpGet.ERPDatabase);
+        oPost.setRequestHeader("username", erpGet.ERPUsername);
+        oPost.setRequestHeader("password", erpGet.ERPPassword);
+        oPost.setRequestHeader("Accept", "application/json");
+        oPost.setRequestHeader("Accept", "application/html");
+        oPost.setRequestHeader("Content-type", "application/json");
+        var myString = JSON.stringify(objResetData);
 
-            let title = $("#tblSalesOrderlist").find("th").eq(index + 1);
-            $(title).html(reset_data[index].label);
+        oPost.send(myString);
 
-            if (reset_data[index].active) {
-                $('.col' + reset_data[index].class).addClass('showColumn');
-                $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-            } else {
-                $('.col' + reset_data[index].class).addClass('hiddenColumn');
-                $('.col' + reset_data[index].class).removeClass('showColumn');
+        oPost.onreadystatechange = function() {
+            if(oPost.readyState == 4 && oPost.status == 200) {
+
+                var myArrResponse = JSON.parse(oPost.responseText);
+                if(myArrResponse.ProcessLog.Error){
+                    $('.fullScreenSpin').css('display','none');
+                    swal('Oooops...', myArrResponse.ProcessLog.Error, 'error');
+                }else{
+                    sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(async function(dataCustomize) {
+                        await addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+                        templateObject.init_reset_data();
+                        templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
+                        $('#'+currenttranstablename+'_Modal').modal('hide');
+                        $('.modal-backdrop').css('display','none');
+                        $('.fullScreenSpin').css('display','none');
+                        swal({
+                            title: 'SUCCESS',
+                            text: "Display settings is updated!",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+
+                        });
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display','none');
+                    });
+
+
+                }
+
+            }else if(oPost.readyState == 4 && oPost.status == 403){
+                $('.fullScreenSpin').css('display','none');
+                swal({
+                    title: 'Oooops...',
+                    text: oPost.getResponseHeader('errormessage'),
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+            }else if(oPost.readyState == 4 && oPost.status == 406){
+                $('.fullScreenSpin').css('display','none');
+                var ErrorResponse = oPost.getResponseHeader('errormessage');
+                var segError = ErrorResponse.split(':');
+
+                if((segError[1]) == ' "Unable to lock object'){
+
+                    swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
+                }else{
+
+                    swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
+                }
+
+            }else if(oPost.readyState == '') {
+                $('.fullScreenSpin').css('display','none');
+                swal('Connection Failed', oPost.getResponseHeader('errormessage') +' Please try again!', 'error');
             }
-            $(".rngRange" + reset_data[index].class).val('');
-        });
+        }
     },
 
     // custom field displaysettings

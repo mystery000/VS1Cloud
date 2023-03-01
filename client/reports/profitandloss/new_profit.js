@@ -44,6 +44,7 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
   templateObject.daterange = new ReactiveVar();
+  templateObject.layoutgroupid = new ReactiveVar();
   FxGlobalFunctions.initVars(templateObject);
 });
 
@@ -87,7 +88,7 @@ Template.newprofitandloss.onRendered(function () {
       $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
       $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     }, 100);
-    
+
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
   };
@@ -99,6 +100,42 @@ Template.newprofitandloss.onRendered(function () {
       var dateTo = new Date($("#dateTo").datepicker("getDate"));
       templateObject.setReportOptions(0, dateFrom, dateTo);
     }, 100);
+  });
+
+  $(document).on("focusout", ".editRowGroup #editGroupName", function(e) {
+    let groupID = parseInt($("#editGroupID").val());
+    let groupName = $("#editGroupName").val();
+    
+    if(templateObject.layoutgroupid.get() && groupName != ""){
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let jsonObj = {
+        "Name": "VS1_PNLRenameGroup",
+        "Params":{
+          "LayoutID": 3,
+          "Selected": parseInt(templateObject.layoutgroupid.get()),
+          "NewName": groupName
+        }
+      }
+      reportService.editPNLGroup(jsonObj).then(function(res){
+        // templateObject.getProfitLossLayout();
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        templateObject.setReportOptions(3, dateFrom, dateTo);
+      }).catch(function(err) {
+          swal({
+              title: 'Oooops...',
+              text: err,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Try Again'
+          }).then((result) => {
+              if (result.value) {
+                  // Meteor._reload.reload();
+              } else if (result.dismiss === 'cancel') {}
+          });
+          $('.fullScreenSpin').css('display', 'none');
+      });
+    }
   });
 
   let utilityService = new UtilityService();
@@ -278,6 +315,7 @@ Template.newprofitandloss.onRendered(function () {
 
   templateObject.getProfitandLossReports = async () => {
     // if (!localStorage.getItem('VS1ProfitAndLoss_Report')) {
+      templateObject.getProfitLossLayout();
       const options = await templateObject.reportOptions.get();
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
@@ -287,79 +325,240 @@ Template.newprofitandloss.onRendered(function () {
           let periodMonths = `${options.compPeriod} Month`;
 
           reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths ).then(function(data) {
-            console.log("------------", data);
             let records = [];
             options.threcords = [];
             if (data.tprofitandlossperiodcomparereport) {
               let accountData = data.tprofitandlossperiodcomparereport;
-              
+
               let accountType = "";
               var dataList = "";
-              for (let i = 0; i < accountData.length; i++) {
-                if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
-                  accountType = "";
-                } else {
-                  accountType = accountData[i]["AccountTypeDesc"];
-                }
-                let compPeriod = options.compPeriod + 1;
-                let periodAmounts = [];
-                let totalAmount = 0;
-                for (let counter = 1; counter <= compPeriod; counter++) {
-                  if (i == 0) {
-                    options.threcords.push(accountData[i]["DateDesc_" + counter]);
-                  }
-                  totalAmount += accountData[i]["Amount_" + counter];
-                  let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
-                  let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
-                  let Percentage = accountData[i]["Percentage_" + counter];
-                  periodAmounts.push({
-                    decimalAmt: AmountEx,
-                    roundAmt: RoundAmount,
-                    percentage: Percentage,
-                  });
-                }
-                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
-                  let totalRoundAmount = Math.round(totalAmount) || 0;
-                  if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
-                    dataList = {
-                      id: accountData[i]["AccountID"] || "",
-                      accounttype: accountType || "",
-                      accounttypeshort: accountData[i]["AccountType"] || "",
-                      accountname: accountData[i]["AccountName"] || "",
-                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                      accountno: accountData[i]["AccountNo"] || "",
-                      totalamountex: "",
-                      totalroundamountex: "",
-                      periodAmounts: "",
-                      name: $.trim(accountData[i]["AccountName"])
-                        .split(" ")
-                        .join("_"),
-                    };
-                  } else {
-                    dataList = {
-                      id: accountData[i]["AccountID"] || "",
-                      accounttype: accountType || "",
-                      accounttypeshort: accountData[i]["AccountType"] || "",
-                      accountname: accountData[i]["AccountName"] || "",
-                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                      accountno: accountData[i]["AccountNo"] || "",
-                      totalamountex: totalAmountEx || 0.0,
-                      periodAmounts: periodAmounts,
-                      totalroundamountex: totalRoundAmount,
-                      name: $.trim(accountData[i]["AccountName"])
-                        .split(" ")
-                        .join("_"),
-                      // totaltax: totalTax || 0.00
-                    };
-                  }
+              let profitandlosslayout = templateObject.profitlosslayoutrecords.get();
+              for (let m = 0; m < profitandlosslayout.length; m++) {
+                for (let i = 0; i < accountData.length; i++) {
+                  if(profitandlosslayout[m].AccountName == accountData[i].AccountTypeDesc){
+                    if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+                      accountType = "";
+                    } else {
+                      accountType = accountData[i]["AccountTypeDesc"];
+                    }
+                    let compPeriod = options.compPeriod + 1;
+                    let periodAmounts = [];
+                    let totalAmount = 0;
+                    for (let counter = 1; counter <= compPeriod; counter++) {
+                      if (m == 0 && i == 0) {
+                        options.threcords.push(accountData[i]["DateDesc_" + counter]);
+                      }
+                      totalAmount += accountData[i]["Amount_" + counter];
+                      let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+                      let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                      let Percentage = accountData[i]["Percentage_" + counter];
+                      periodAmounts.push({
+                        decimalAmt: AmountEx,
+                        roundAmt: RoundAmount,
+                        percentage: Percentage,
+                      });
+                    }
+                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+                    let totalRoundAmount = Math.round(totalAmount) || 0;
 
-                  if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-                  } else {
+                    if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+                      dataList = {
+                        id: accountData[i]["AccountID"] || "",
+                        accounttype: accountType || "",
+                        accounttypeshort: accountData[i]["AccountType"] || "",
+                        accountname: accountData[i]["AccountName"] || "",
+                        accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                        accountno: accountData[i]["AccountNo"] || "",
+                        totalamountex: "",
+                        totalroundamountex: "",
+                        periodAmounts: "",
+                        name: $.trim(accountData[i]["AccountName"])
+                          .split(" ")
+                          .join("_"),
+                      };
+                    }
+                    else{
+                      dataList = {
+                        id: accountData[i]["AccountID"] || "",
+                        accounttype: accountType || "",
+                        accounttypeshort: accountData[i]["AccountType"] || "",
+                        accountname: accountData[i]["AccountName"] || "",
+                        accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                        accountno: accountData[i]["AccountNo"] || "",
+                        totalamountex: totalAmountEx || 0.0,
+                        periodAmounts: periodAmounts,
+                        totalroundamountex: totalRoundAmount,
+                        name: $.trim(accountData[i]["AccountName"])
+                          .split(" ")
+                          .join("_"),
+                        // totaltax: totalTax || 0.00
+                      };
+                    }
+                    
+
+                    if( dataList.totalroundamountex !== 0 ) {
+                      records.push(dataList);
+                    }
+                  }
+                }
+
+                let totalGroupPeriodAmounts = [];
+                let totalGroupAmount = 0;
+                let compPeriod = options.compPeriod + 1;
+                for (let n = 0; n < profitandlosslayout[m].subAccounts.length; n++) {
+                  for (let i = 0; i < accountData.length; i++) {
+                    if(profitandlosslayout[m].subAccounts[n].AccountName == $.trim(accountData[i].AccountName)){
+                      if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+                        accountType = "";
+                      } else {
+                        accountType = accountData[i]["AccountTypeDesc"];
+                      }
+                      let periodAmounts = [];
+                      let totalAmount = 0;
+                      for (let counter = 1; counter <= compPeriod; counter++) {
+                        totalAmount += accountData[i]["Amount_" + counter];
+                        let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+                        let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                        let Percentage = accountData[i]["Percentage_" + counter];
+
+                        periodAmounts.push({
+                          decimalAmt: AmountEx,
+                          roundAmt: RoundAmount,
+                          percentage: Percentage,
+                        });
+
+                        if(n == 0){
+                          totalGroupPeriodAmounts.push({
+                            decimalAmt: "",
+                            roundAmt: accountData[i]["Amount_" + counter],
+                            percentage: parseFloat(Percentage.slice(0, -1) || 0.0)
+                          });
+                        }
+                        else{
+                          totalGroupPeriodAmounts[counter-1].roundAmt += accountData[i]["Amount_" + counter];
+                          totalGroupPeriodAmounts[counter-1].percentage += parseFloat(Percentage.slice(0, -1) || 0.0);
+                        }
+                      }
+                      let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+                      let totalRoundAmount = Math.round(totalAmount) || 0;
+
+                      dataList = {
+                        id: accountData[i]["AccountID"] || "",
+                        accounttype: accountType || "",
+                        accounttypeshort: accountData[i]["AccountType"] || "",
+                        accountname: accountData[i]["AccountName"] || "",
+                        accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                        accountno: accountData[i]["AccountNo"] || "",
+                        totalamountex: totalAmountEx || 0.0,
+                        periodAmounts: periodAmounts,
+                        totalroundamountex: totalRoundAmount,
+                        name: $.trim(accountData[i]["AccountName"])
+                          .split(" ")
+                          .join("_"),
+                        // totaltax: totalTax || 0.00
+                      };
+  
                       if( dataList.totalroundamountex !== 0 ) {
                         records.push(dataList);
                       }
+
+                      totalGroupAmount += totalAmount;
+                    }
                   }
+                }
+
+                if(profitandlosslayout[m].subAccounts.length > 0){
+                  for (let counter = 1; counter <= compPeriod; counter++) {
+                    totalGroupPeriodAmounts[counter-1].decimalAmt = utilityService.modifynegativeCurrencyFormat( totalGroupPeriodAmounts[counter-1].roundAmt ) || 0.0;
+                    totalGroupPeriodAmounts[counter-1].percentage = totalGroupPeriodAmounts[counter-1].percentage.toFixed(1) + "%";
+                  }
+
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalGroupAmount ) || 0.0;
+                  let totalRoundAmount = Math.round(totalGroupAmount) || 0;
+
+                  dataList = {
+                    id: 0,
+                    accounttype: "Total "+profitandlosslayout[m].AccountName || "",
+                    accounttypeshort: profitandlosslayout[m].AccountName || "",
+                    accountname: "",
+                    accountheaderorder: profitandlosslayout[m].AccountName || "",
+                    accountno: "",
+                    totalamountex: totalAmountEx || 0.0,
+                    totalroundamountex: totalRoundAmount,
+                    periodAmounts: totalGroupPeriodAmounts,
+                    name: "",
+                  };
+  
+                  if( dataList.totalroundamountex !== 0 ) {
+                    records.push(dataList);
+                  }
+                }
               }
+              // for (let i = 0; i < accountData.length; i++) {
+              //   if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+              //     accountType = "";
+              //   } else {
+              //     accountType = accountData[i]["AccountTypeDesc"];
+              //   }
+              //   let compPeriod = options.compPeriod + 1;
+              //   let periodAmounts = [];
+              //   let totalAmount = 0;
+              //   for (let counter = 1; counter <= compPeriod; counter++) {
+              //     if (i == 0) {
+              //       options.threcords.push(accountData[i]["DateDesc_" + counter]);
+              //     }
+              //     totalAmount += accountData[i]["Amount_" + counter];
+              //     let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+              //     let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+              //     let Percentage = accountData[i]["Percentage_" + counter];
+              //     periodAmounts.push({
+              //       decimalAmt: AmountEx,
+              //       roundAmt: RoundAmount,
+              //       percentage: Percentage,
+              //     });
+              //   }
+              //     let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+              //     let totalRoundAmount = Math.round(totalAmount) || 0;
+              //     if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+              //       dataList = {
+              //         id: accountData[i]["AccountID"] || "",
+              //         accounttype: accountType || "",
+              //         accounttypeshort: accountData[i]["AccountType"] || "",
+              //         accountname: accountData[i]["AccountName"] || "",
+              //         accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+              //         accountno: accountData[i]["AccountNo"] || "",
+              //         totalamountex: "",
+              //         totalroundamountex: "",
+              //         periodAmounts: "",
+              //         name: $.trim(accountData[i]["AccountName"])
+              //           .split(" ")
+              //           .join("_"),
+              //       };
+              //     } else {
+              //       dataList = {
+              //         id: accountData[i]["AccountID"] || "",
+              //         accounttype: accountType || "",
+              //         accounttypeshort: accountData[i]["AccountType"] || "",
+              //         accountname: accountData[i]["AccountName"] || "",
+              //         accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+              //         accountno: accountData[i]["AccountNo"] || "",
+              //         totalamountex: totalAmountEx || 0.0,
+              //         periodAmounts: periodAmounts,
+              //         totalroundamountex: totalRoundAmount,
+              //         name: $.trim(accountData[i]["AccountName"])
+              //           .split(" ")
+              //           .join("_"),
+              //         // totaltax: totalTax || 0.00
+              //       };
+              //     }
+
+              //     if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+              //     } else {
+              //         if( dataList.totalroundamountex !== 0 ) {
+              //           records.push(dataList);
+              //         }
+              //     }
+              // }
 
               // Set Table Data
               options.showPercentage = true;
@@ -381,18 +580,18 @@ Template.newprofitandloss.onRendered(function () {
                       $(this).removeClass("fgrblue");
                     }
                   });
-                }, 100);
+                }, 50);
               }
               setTimeout(function () {
                 $(".pnlTable").show();
                 $(".fullScreenSpin").css("display", "none");
-              }, 300);
+              }, 100);
             }
           });
           // data = data.response;
 
           //let data = await reportService.getProfitandLossCompare( dateFrom, dateTo, false, periodMonths );
-          
+
         } catch (err) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -411,7 +610,6 @@ Template.newprofitandloss.onRendered(function () {
           let departments = options.departments.length ? options.departments.join(",") : "";
 
           reportService.getProfitandLoss( dateFrom, dateTo, false, departments ).then(function(data) {
-            console.log("==========", data);
             let records = [];
             if (data.profitandlossreport) {
               let accountData = data.profitandlossreport;
@@ -433,11 +631,12 @@ Template.newprofitandloss.onRendered(function () {
                   roundAmt: totalRoundAmount,
                   // percentage: Percentage,
                 });
+                
                 if( options.departments.length ){
                   options.departments.forEach(dept => {
-                    totalAmount += accountData[i][dept+"_AmountColumnInc"];
-                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
-                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
+                    totalAmount += accountData[i][dept+"_AmountColumnEx"];
+                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnEx"] ) || 0.0;
+                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnEx"]) || 0;
                     if( i == 0 ){
                       options.threcords.push( dept );
                     }
@@ -447,9 +646,11 @@ Template.newprofitandloss.onRendered(function () {
                     });
                   });
                 }
+
                 if (
                   accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
-                  accountType != ""
+                  accountType != "" &&
+                  accountData[i]["TotalAmountEx"] == ""
                 ) {
                   dataList = {
                     id: accountData[i]["AccountID"] || "",
@@ -511,15 +712,17 @@ Template.newprofitandloss.onRendered(function () {
                       $(this).removeClass("fgrblue");
                     }
                   });
-                }, 100);
+                }, 50);
               }
-              $(".pnlTable").show();
-              $(".fullScreenSpin").css("display", "none");
+              setTimeout(function () {
+                $(".pnlTable").show();
+                $(".fullScreenSpin").css("display", "none");
+              }, 100);
             }
           });
 
           // data = data.response;
-          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );          
+          //let data = await reportService.getProfitandLoss( dateFrom, dateTo, false, departments );
         } catch (error) {
           $(".fullScreenSpin").css("display", "none");
         }
@@ -662,88 +865,55 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
-      console.log("----------", data);
-    });
-    // return false
-
-    profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
-
-    const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
-    if (profitLossLayoutEndResponse.ok == true) {
-      let profitLossLayouts = [];
-      let jsonResponse = await profitLossLayoutEndResponse.json();
-      console.log("jsonResponse=", jsonResponse);
-      const profitLossLists = ProfitLossLayout.fromList(
-        jsonResponse.tprofitandlossreport
-      );
-
-      console.log("profitLossLists=", profitLossLists);
-            
-      // Save default list
-      templateObject.profitlosslayoutfields.set(profitLossLists);
-
-      profitLossLists.filter((item) => {
-        if (
-          item.fields.Level0Order != 0 &&
-          item.fields.Level1Order == 0 &&
-          item.fields.Level2Order == 0 &&
-          item.fields.Level3Order == 0
-        ) {
-          profitLossLayouts.push(item.fields);
-        }
-      });
-
       let newprofitLossLayouts = [];
-      // Fetch Subchilds According to the Above grouping
-      profitLossLayouts.forEach(function (item) {
-        let subAccounts = [];
-        let childAccounts = [];
-        let Level0Order = item.Level0Order;
-        let ID = item.ID;
-        profitLossLists.filter((subitem) => {
-          let subLevel0Order = subitem.fields.Level0Order;
-          let subID = subitem.fields.ID;
-          if (subLevel0Order == Level0Order && ID != subID) {
-            subitem.subAccounts = [];
-            subAccounts.push(subitem.fields);
-          }
-        });
-
-        childAccounts = subAccounts.filter((item) => {
-          let sLevel0Order = item.Level0Order;
-          let sLevel1Order = item.Level1Order;
-          let sLevel2Order = item.Level2Order;
-          let sID = item.ID;
-          if (
-            sLevel1Order != 0 &&
-            sLevel0Order == Level0Order &&
-            sLevel2Order == 0 &&
-            sID != ID
-          ) {
-            let subSubAccounts = subAccounts.filter((subitem) => {
-              let subID = subitem.ID;
-              let subLevel0Order = subitem.Level0Order;
-              let subLevel1Order = subitem.Level1Order;
-              let subLevel2Order = subitem.Level2Order;
-              if (
-                sLevel1Order === subLevel1Order &&
-                subLevel0Order == sLevel0Order &&
-                sID != subID &&
-                subLevel2Order != 0
-              ) {
-                return subitem;
+      if(data.ProcessLog.PNLLayout.Lines != undefined){
+        for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
+          if(data.ProcessLog.PNLLayout.Lines[i].Parent == 0){
+            let subAccounts = [];
+            for(var j=0; j<data.ProcessLog.PNLLayout.Lines.length; j++){
+              if(data.ProcessLog.PNLLayout.Lines[i].ID == data.ProcessLog.PNLLayout.Lines[j].Parent){
+                let subAccounts1 = [];
+                for(var k=0; k<data.ProcessLog.PNLLayout.Lines.length; k++){
+                  if(data.ProcessLog.PNLLayout.Lines[j].ID == data.ProcessLog.PNLLayout.Lines[k].Parent){
+                    let subAccounts2 = [];
+                    for(var m=0; m<data.ProcessLog.PNLLayout.Lines.length; m++){
+                      if(data.ProcessLog.PNLLayout.Lines[k].ID == data.ProcessLog.PNLLayout.Lines[m].Parent){
+                        let jsonObj3 = {
+                          ID: data.ProcessLog.PNLLayout.Lines[m].ID,
+                          AccountName: data.ProcessLog.PNLLayout.Lines[m].Level2,
+                          Pos: data.ProcessLog.PNLLayout.Lines[m].Pos,
+                        }
+                        subAccounts2.push(jsonObj3);
+                      }
+                    }
+                    let jsonObj2 = {
+                      ID: data.ProcessLog.PNLLayout.Lines[k].ID,
+                      AccountName: data.ProcessLog.PNLLayout.Lines[k].Level2,
+                      Pos: data.ProcessLog.PNLLayout.Lines[k].Pos,
+                      subAccounts: subAccounts2
+                    }
+                    subAccounts1.push(jsonObj2);
+                  }
+                }
+                let jsonObj1 = {
+                  ID: data.ProcessLog.PNLLayout.Lines[j].ID,
+                  AccountName: data.ProcessLog.PNLLayout.Lines[j].Level2,
+                  Pos: data.ProcessLog.PNLLayout.Lines[j].Pos,
+                  subAccounts: subAccounts1
+                }
+                subAccounts.push(jsonObj1);
               }
-            });
-            item.subAccounts = subSubAccounts;
-            return item;
+            }
+            let jsonObj = {
+              ID: data.ProcessLog.PNLLayout.Lines[i].ID,
+              AccountName: data.ProcessLog.PNLLayout.Lines[i].Level1,
+              Pos: data.ProcessLog.PNLLayout.Lines[i].Pos,
+              subAccounts: subAccounts,
+            }
+            newprofitLossLayouts.push(jsonObj);
           }
-        });
-
-        newprofitLossLayouts.push({
-          ...item,
-          subAccounts: childAccounts,
-        });
-      });
+        }
+      }
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
       // handle Dragging and sorting
@@ -754,7 +924,6 @@ Template.newprofitandloss.onRendered(function () {
         var group = $("ol.nested_with_switch").sortable({
           group: "customSortableDiv",
           exclude: ".noDrag",
-
           afterMove: function (placeholder, container) {
             if (oldContainer != container) {
               if (oldContainer) oldContainer.el.removeClass("active");
@@ -764,18 +933,50 @@ Template.newprofitandloss.onRendered(function () {
           },
           onDrop: function ($item, container, _super) {
             // On drag removing the dragged classs and colleps
-            if ($item.parents().hasClass("groupedListNew")) {
-            } else {
-              $item.find(".mainHeadingDiv").removeClass("collapsTogls");
-            }
+            // if ($item.parents().hasClass("groupedListNew")) {
+            // } else {
+            //   $item.find(".mainHeadingDiv").removeClass("collapsTogls");
+            // }
             container.el.removeClass("active");
             _super($item, container);
             let siblingClass = $item.siblings().attr("class");
-            $item.removeClass();
+            $item.removeClass("cSortItems");
+            $item.removeClass("scSortItems");
             $item.addClass(siblingClass);
             $item.addClass("selected");
 
-          },
+            let groupID = parseInt($item.attr("plid"));
+            let containerID = parseInt(container.el.parent().attr("plid")) || 0;
+            let containerName = container.el.parent().attr("data-group") || "";
+            
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let jsonObj = {
+              "Name": "VS1_PNLMoveAccount",
+              "Params":{
+                "LayoutID": 3,
+                "Selected": groupID,
+                "Destination": containerID,
+              }
+            }
+            reportService.movePNLGroup(jsonObj).then(function(res){
+              var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+              var dateTo = new Date($("#dateTo").datepicker("getDate"));
+              templateObject.setReportOptions(3, dateFrom, dateTo);
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        // Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {}
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+          }          
         });
 
         $(".collepsDiv").click(function () {
@@ -788,11 +989,137 @@ Template.newprofitandloss.onRendered(function () {
             .removeClass("selected");
           $(this).parents(".vertical").find(".selected").removeClass("dragged");
           $(this).parent().addClass("selected");
+          templateObject.layoutgroupid.set($(this).parent().attr("plid"));
         });
+        // $('.fullScreenSpin').css('display', 'none');
       }, 1000);
-    }
+      // $('.fullScreenSpin').css('display', 'none');
+    });
+    // return false
+
+    // profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
+
+    // const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
+    // if (profitLossLayoutEndResponse.ok == true) {
+    //   let profitLossLayouts = [];
+    //   let jsonResponse = await profitLossLayoutEndResponse.json();
+    //   const profitLossLists = ProfitLossLayout.fromList(
+    //     jsonResponse.tprofitandlossreport
+    //   );
+
+    //   // Save default list
+    //   templateObject.profitlosslayoutfields.set(profitLossLists);
+
+    //   profitLossLists.filter((item) => {
+    //     if (
+    //       item.fields.Level0Order != 0 &&
+    //       item.fields.Level1Order == 0 &&
+    //       item.fields.Level2Order == 0 &&
+    //       item.fields.Level3Order == 0
+    //     ) {
+    //       profitLossLayouts.push(item.fields);
+    //     }
+    //   });
+
+    //   let newprofitLossLayouts = [];
+    //   // Fetch Subchilds According to the Above grouping
+    //   profitLossLayouts.forEach(function (item) {
+    //     let subAccounts = [];
+    //     let childAccounts = [];
+    //     let Level0Order = item.Level0Order;
+    //     let ID = item.ID;
+    //     profitLossLists.filter((subitem) => {
+    //       let subLevel0Order = subitem.fields.Level0Order;
+    //       let subID = subitem.fields.ID;
+    //       if (subLevel0Order == Level0Order && ID != subID) {
+    //         subitem.subAccounts = [];
+    //         subAccounts.push(subitem.fields);
+    //       }
+    //     });
+
+    //     childAccounts = subAccounts.filter((item) => {
+    //       let sLevel0Order = item.Level0Order;
+    //       let sLevel1Order = item.Level1Order;
+    //       let sLevel2Order = item.Level2Order;
+    //       let sID = item.ID;
+    //       if (
+    //         sLevel1Order != 0 &&
+    //         sLevel0Order == Level0Order &&
+    //         sLevel2Order == 0 &&
+    //         sID != ID
+    //       ) {
+    //         let subSubAccounts = subAccounts.filter((subitem) => {
+    //           let subID = subitem.ID;
+    //           let subLevel0Order = subitem.Level0Order;
+    //           let subLevel1Order = subitem.Level1Order;
+    //           let subLevel2Order = subitem.Level2Order;
+    //           if (
+    //             sLevel1Order === subLevel1Order &&
+    //             subLevel0Order == sLevel0Order &&
+    //             sID != subID &&
+    //             subLevel2Order != 0
+    //           ) {
+    //             return subitem;
+    //           }
+    //         });
+    //         item.subAccounts = subSubAccounts;
+    //         return item;
+    //       }
+    //     });
+
+    //     newprofitLossLayouts.push({
+    //       ...item,
+    //       subAccounts: childAccounts,
+    //     });
+    //   });
+    //   templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
+
+    //   // handle Dragging and sorting
+    //   // setTimeout(function () {
+    //   //   // jquery-sortable js minified vversion v0.9.13
+    //   //   !function($,f,c,g){var d,h={drag:!0,drop:!0,exclude:"",nested:!0,vertical:!0},i={afterMove:function(a,b,c){},containerPath:"",containerSelector:"ol, ul",distance:0,delay:0,handle:"",itemPath:"",itemSelector:"li",bodyClass:"dragging",draggedClass:"dragged",isValidTarget:function(a,b){return!0},onCancel:function(a,b,c,d){},onDrag:function(a,b,c,d){a.css(b)},onDragStart:function(a,b,c,d){a.css({height:a.outerHeight(),width:a.outerWidth()}),a.addClass(b.group.options.draggedClass),$("body").addClass(b.group.options.bodyClass)},onDrop:function(b,a,c,d){b.removeClass(a.group.options.draggedClass).removeAttr("style"),$("body").removeClass(a.group.options.bodyClass)},onMousedown:function(b,c,a){if(!a.target.nodeName.match(/^(input|select|textarea)$/i))return a.preventDefault(),!0},placeholderClass:"placeholder",placeholder:'<li class="placeholder"></li>',pullPlaceholder:!0,serialize:function(c,b,d){var a=$.extend({},c.data());return d?[b]:(b[0]&&(a.children=b),delete a.subContainers,delete a.sortable,a)},tolerance:0},j={},k=0,l={left:0,top:0,bottom:0,right:0},d={start:"touchstart.sortable mousedown.sortable",drop:"touchend.sortable touchcancel.sortable mouseup.sortable",drag:"touchmove.sortable mousemove.sortable",scroll:"scroll.sortable"},m="subContainers";function n(a,b){var c=Math.max(0,a[0]-b[0],b[0]-a[1]),d=Math.max(0,a[2]-b[1],b[1]-a[3]);return c+d}function o(e,f,a,g){var c=e.length,h=g?"offset":"position";for(a=a||0;c--;){var d=e[c].el?e[c].el:$(e[c]),b=d[h]();b.left+=parseInt(d.css("margin-left"),10),b.top+=parseInt(d.css("margin-top"),10),f[c]=[b.left-a,b.left+d.outerWidth()+a,b.top-a,b.top+d.outerHeight()+a]}}function p(a,c){var b=c.offset();return{left:a.left-b.left,top:a.top-b.top}}function q(e,b,a){b=[b.left,b.top],a=a&&[a.left,a.top];for(var d,c=e.length,f=[];c--;)d=e[c],f[c]=[c,n(d,b),a&&n(d,a)];return f.sort(function(a,b){return b[1]-a[1]||b[2]-a[2]||b[0]-a[0]})}function a(a){this.options=$.extend({},i,a),this.containers=[],this.options.rootGroup||(this.scrollProxy=$.proxy(this.scroll,this),this.dragProxy=$.proxy(this.drag,this),this.dropProxy=$.proxy(this.drop,this),this.placeholder=$(this.options.placeholder),a.isValidTarget||(this.options.isValidTarget=g))}function b(c,e){this.el=c,this.options=$.extend({},h,e),this.group=a.get(this.options),this.rootGroup=this.options.rootGroup||this.group,this.handle=this.rootGroup.options.handle||this.rootGroup.options.itemSelector;var b=this.rootGroup.options.itemPath;this.target=b?this.el.find(b):this.el,this.target.on(d.start,this.handle,$.proxy(this.dragInit,this)),this.options.drop&&this.group.containers.push(this)}a.get=function(b){return j[b.group]||(g===b.group&&(b.group=k++),j[b.group]=new a(b)),j[b.group]},a.prototype={dragInit:function(a,b){this.$document=$(b.el[0].ownerDocument);var c=$(a.target).closest(this.options.itemSelector);if(c.length){if(this.item=c,this.itemContainer=b,this.item.is(this.options.exclude)||!this.options.onMousedown(this.item,i.onMousedown,a))return;this.setPointer(a),this.toggleListeners("on"),this.setupDelayTimer(),this.dragInitDone=!0}},drag:function(a){if(!this.dragging){if(!this.distanceMet(a)||!this.delayMet)return;this.options.onDragStart(this.item,this.itemContainer,i.onDragStart,a),this.item.before(this.placeholder),this.dragging=!0}this.setPointer(a),this.options.onDrag(this.item,p(this.pointer,this.item.offsetParent()),i.onDrag,a);var c=this.getPointer(a),b=this.sameResultBox,d=this.options.tolerance;(!b||b.top-d>c.top||b.bottom+d<c.top||b.left-d>c.left||b.right+d<c.left)&&(this.searchValidTarget()||(this.placeholder.detach(),this.lastAppendedItem=g))},drop:function(a){this.toggleListeners("off"),this.dragInitDone=!1,this.dragging&&(this.placeholder.closest("html")[0]?this.placeholder.before(this.item).detach():this.options.onCancel(this.item,this.itemContainer,i.onCancel,a),this.options.onDrop(this.item,this.getContainer(this.item),i.onDrop,a),this.clearDimensions(),this.clearOffsetParent(),this.lastAppendedItem=this.sameResultBox=g,this.dragging=!1)},searchValidTarget:function(a,b){a||(a=this.relativePointer||this.pointer,b=this.lastRelativePointer||this.lastPointer);for(var c=q(this.getContainerDimensions(),a,b),d=c.length;d--;){var h=c[d][0],i=c[d][1];if(!i||this.options.pullPlaceholder){var e=this.containers[h];if(!e.disabled){if(!this.$getOffsetParent()){var f=e.getItemOffsetParent();a=p(a,f),b=p(b,f)}if(e.searchValidTarget(a,b))return!0}}}this.sameResultBox&&(this.sameResultBox=g)},movePlaceholder:function(d,a,e,b){var c=this.lastAppendedItem;(b||!c||c[0]!==a[0])&&(a[e](this.placeholder),this.lastAppendedItem=a,this.sameResultBox=b,this.options.afterMove(this.placeholder,d,a))},getContainerDimensions:function(){return this.containerDimensions||o(this.containers,this.containerDimensions=[],this.options.tolerance,!this.$getOffsetParent()),this.containerDimensions},getContainer:function(a){return a.closest(this.options.containerSelector).data(c)},$getOffsetParent:function(){if(g===this.offsetParent){var a=this.containers.length-1,b=this.containers[a].getItemOffsetParent();if(!this.options.rootGroup){for(;a--;)if(b[0]!=this.containers[a].getItemOffsetParent()[0]){b=!1;break}}this.offsetParent=b}return this.offsetParent},setPointer:function(b){var a=this.getPointer(b);if(this.$getOffsetParent()){var c=p(a,this.$getOffsetParent());this.lastRelativePointer=this.relativePointer,this.relativePointer=c}this.lastPointer=this.pointer,this.pointer=a},distanceMet:function(b){var a=this.getPointer(b);return Math.max(Math.abs(this.pointer.left-a.left),Math.abs(this.pointer.top-a.top))>=this.options.distance},getPointer:function(a){var b=a.originalEvent||a.originalEvent.touches&&a.originalEvent.touches[0];return{left:a.pageX||b.pageX,top:a.pageY||b.pageY}},setupDelayTimer:function(){var a=this;this.delayMet=!this.options.delay,this.delayMet||(clearTimeout(this._mouseDelayTimer),this._mouseDelayTimer=setTimeout(function(){a.delayMet=!0},this.options.delay))},scroll:function(a){this.clearDimensions(),this.clearOffsetParent()},toggleListeners:function(a){var b=this;$.each(["drag","drop","scroll"],function(e,c){b.$document[a](d[c],b[c+"Proxy"])})},clearOffsetParent:function(){this.offsetParent=g},clearDimensions:function(){this.traverse(function(a){a._clearDimensions()})},traverse:function(a){a(this);for(var b=this.containers.length;b--;)this.containers[b].traverse(a)},_clearDimensions:function(){this.containerDimensions=g},_destroy:function(){j[this.options.group]=g}},b.prototype={dragInit:function(a){var b=this.rootGroup;!this.disabled&&!b.dragInitDone&&this.options.drag&&this.isValidDrag(a)&&b.dragInit(a,this)},isValidDrag:function(a){return 1==a.which||"touchstart"==a.type&&1==a.originalEvent.touches.length},searchValidTarget:function(c,f){var d=q(this.getItemDimensions(),c,f),a=d.length,b=this.rootGroup,g=!b.options.isValidTarget||b.options.isValidTarget(b.item,this);if(!a&&g)return b.movePlaceholder(this,this.target,"append"),!0;for(;a--;){var e=d[a][0];if(!d[a][1]&&this.hasChildGroup(e)){if(this.getContainerGroup(e).searchValidTarget(c,f))return!0}else if(g)return this.movePlaceholder(e,c),!0}},movePlaceholder:function(e,i){var b=$(this.items[e]),c=this.itemDimensions[e],f="after",g=b.outerWidth(),h=b.outerHeight(),d=b.offset(),a={left:d.left,right:d.left+g,top:d.top,bottom:d.top+h};if(this.options.vertical){var j=(c[2]+c[3])/2;i.top<=j?(f="before",a.bottom-=h/2):a.top+=h/2}else{var k=(c[0]+c[1])/2;i.left<=k?(f="before",a.right-=g/2):a.left+=g/2}this.hasChildGroup(e)&&(a=l),this.rootGroup.movePlaceholder(this,b,f,a)},getItemDimensions:function(){return this.itemDimensions||(this.items=this.$getChildren(this.el,"item").filter(":not(."+this.group.options.placeholderClass+", ."+this.group.options.draggedClass+")").get(),o(this.items,this.itemDimensions=[],this.options.tolerance)),this.itemDimensions},getItemOffsetParent:function(){var a=this.el;return"relative"===a.css("position")||"absolute"===a.css("position")||"fixed"===a.css("position")?a:a.offsetParent()},hasChildGroup:function(a){return this.options.nested&&this.getContainerGroup(a)},getContainerGroup:function(b){var a=$.data(this.items[b],m);if(a===g){var d=this.$getChildren(this.items[b],"container");if(a=!1,d[0]){var e=$.extend({},this.options,{rootGroup:this.rootGroup,group:k++});a=d[c](e).data(c).group}$.data(this.items[b],m,a)}return a},$getChildren:function(a,b){var c=this.rootGroup.options,d=c[b+"Path"],e=c[b+"Selector"];return a=$(a),d&&(a=a.find(d)),a.children(e)},_serialize:function(a,b){var d=this,c=this.$getChildren(a,b?"item":"container").not(this.options.exclude).map(function(){return d._serialize($(this),!b)}).get();return this.rootGroup.options.serialize(a,c,b)},traverse:function(a){$.each(this.items||[],function(c){var b=$.data(this,m);b&&b.traverse(a)}),a(this)},_clearDimensions:function(){this.itemDimensions=g},_destroy:function(){var a=this;this.target.off(d.start,this.handle),this.el.removeData(c),this.options.drop&&(this.group.containers=$.grep(this.group.containers,function(b){return b!=a})),$.each(this.items||[],function(){$.removeData(this,m)})}};var e={enable:function(){this.traverse(function(a){a.disabled=!1})},disable:function(){this.traverse(function(a){a.disabled=!0})},serialize:function(){return this._serialize(this.el,!0)},refresh:function(){this.traverse(function(a){a._clearDimensions()})},destroy:function(){this.traverse(function(a){a._destroy()})}};$.extend(b.prototype,e),$.fn[c]=function(a){var d=Array.prototype.slice.call(arguments,1);return this.map(function(){var f=$(this),h=f.data(c);return h&&e[a]?e[a].apply(h,d)||this:(h||a!==g&&"object"!=typeof a||f.data(c,new b(f,a)),this)})}}(jQuery,window,"sortable")
+    //   //   var oldContainer;
+    //   //   var group = $("ol.nested_with_switch").sortable({
+    //   //     group: "customSortableDiv",
+    //   //     exclude: ".noDrag",
+
+    //   //     afterMove: function (placeholder, container) {
+    //   //       if (oldContainer != container) {
+    //   //         if (oldContainer) oldContainer.el.removeClass("active");
+    //   //         container.el.addClass("active");
+    //   //         oldContainer = container;
+    //   //       }
+    //   //     },
+    //   //     onDrop: function ($item, container, _super) {
+    //   //       // On drag removing the dragged classs and colleps
+    //   //       if ($item.parents().hasClass("groupedListNew")) {
+    //   //       } else {
+    //   //         $item.find(".mainHeadingDiv").removeClass("collapsTogls");
+    //   //       }
+    //   //       container.el.removeClass("active");
+    //   //       _super($item, container);
+    //   //       let siblingClass = $item.siblings().attr("class");
+    //   //       $item.removeClass();
+    //   //       $item.addClass(siblingClass);
+    //   //       $item.addClass("selected");
+
+    //   //     },
+    //   //   });
+
+    //   //   $(".collepsDiv").click(function () {
+    //   //     $(this).parents(".mainHeadingDiv").toggleClass("collapsTogls");
+    //   //   });
+    //   //   $(".childInner, .mainHeadingDiv").mousedown(function () {
+    //   //     $(this)
+    //   //       .parents(".vertical")
+    //   //       .find(".selected")
+    //   //       .removeClass("selected");
+    //   //     $(this).parents(".vertical").find(".selected").removeClass("dragged");
+    //   //     $(this).parent().addClass("selected");
+    //   //   });
+    //   // }, 1000);
+    // }
   };
-  templateObject.getProfitLossLayout();
 
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
@@ -1040,11 +1367,11 @@ Template.newprofitandloss.events({
   },
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block');
-    
+
     playPrintAudio();
     setTimeout( async function(){
       let targetElement = document.getElementsByClassName('printReport')[0];
-    
+
       targetElement.style.display = "block";
       targetElement.style.width = "210mm";
       targetElement.style.backgroundColor = "#ffffff";
@@ -1119,7 +1446,7 @@ Template.newprofitandloss.events({
 
       async function checkBasedOnType() {
         return new Promise(async(resolve, reject)=>{
-          
+
           let values = [];
           let basedOnTypeStorages = Object.keys(localStorage);
           basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
@@ -1161,7 +1488,7 @@ Template.newprofitandloss.events({
             }
             if(j == values.length -1) {resolve()}
           }
-          
+
         })
       }
       await checkBasedOnType();
@@ -1179,7 +1506,7 @@ Template.newprofitandloss.events({
       targetElement.style.padding = "0px";
       targetElement.style.fontSize = "1rem";
 
-    
+
     }, delayTimeAfterSound);
   },
   "click .btnExportReportProfit": function () {
@@ -1229,17 +1556,17 @@ Template.newprofitandloss.events({
     playSaveAudio();
     let templateObject = Template.instance();
     setTimeout(async function(){
-    let periods = $("#comparisonPeriodNum").val();
-    $(".fullScreenSpin").css("display", "block");
+      let periods = $("#comparisonPeriodNum").val();
+      $(".fullScreenSpin").css("display", "block");
 
-    let defaultOptions = await templateObject.reportOptions.get();
-    if (defaultOptions) {
-      defaultOptions.compPeriod = periods;
-      defaultOptions.departments = [];
-    }
-    await templateObject.reportOptions.set(defaultOptions);
-    await templateObject.getProfitandLossReports();
-  }, delayTimeAfterSound);
+      let defaultOptions = await templateObject.reportOptions.get();
+      if (defaultOptions) {
+        defaultOptions.compPeriod = periods;
+        defaultOptions.departments = [];
+      }
+      await templateObject.reportOptions.set(defaultOptions);
+      await templateObject.getProfitandLossReports();
+    }, delayTimeAfterSound);
   },
 
   // Current Month
@@ -1372,7 +1699,7 @@ Template.newprofitandloss.events({
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $("#tblDepartmentCheckbox .chkServiceCard").each(function () {
-      if ($(this).is(":checked")) {        
+      if ($(this).is(":checked")) {
         let dpt = $(this).closest("tr").find(".colDeptName").text();
         departments.push(dpt);
       }
@@ -2022,7 +2349,55 @@ Template.newprofitandloss.events({
   // });
   //   },
   "click .btnDelSelected": function (event) {
-    $(".currSelectedItem:nth-child(n)").remove();
+    let templateObject = Template.instance();
+    if(templateObject.layoutgroupid.get()){
+      swal({
+          title: 'WARNING!',
+          text: 'Are you sure delete the selected group?',
+          type: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+      }).then((result) => {
+          if (result.value) {
+              $('.fullScreenSpin').css('display', 'inline-block');
+              let jsonObj = {
+                "Name": "VS1_PNLDeleteGroup",
+                "Params":{
+                  "LayoutID": 3,
+                  "Selected": parseInt(templateObject.layoutgroupid.get())
+                }
+              }
+              reportService.deletePNLGroup(jsonObj).then(function(res){
+                templateObject.layoutgroupid.set("");
+                // templateObject.getProfitLossLayout();
+                $(".editRowGroup").hide();
+                $("#editGroupName").val("");
+                $("#editGroupID").val("");
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                templateObject.setReportOptions(3, dateFrom, dateTo);
+              }).catch(function(err) {
+                  swal({
+                      title: 'Oooops...',
+                      text: err,
+                      type: 'error',
+                      showCancelButton: false,
+                      confirmButtonText: 'Try Again'
+                  }).then((result) => {
+                      if (result.value) {
+                          // Meteor._reload.reload();
+                      } else if (result.dismiss === 'cancel') {}
+                  });
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+          } else if (result.dismiss === 'cancel') {
+          }
+      });
+    }
+    else{
+      swal('WARNING', 'Please select the group you need to delete.', 'error');
+    }
   },
   "click .chkTotal": async function (event) {
     let templateObject = Template.instance();
@@ -2152,131 +2527,121 @@ Template.newprofitandloss.events({
       return false;
     }
     let accountName = $("#nplPlaceInMoveSelection").val();
-    let profitlosslayoutfields = templateObject.profitlosslayoutrecords.get();
-    if (profitlosslayoutfields) {
-      if (accountName == "none") {
-        profitlosslayoutfields.push({
-          Account: "",
-          AccountID: 0,
-          AccountLevel0GroupName: groupName,
-          AccountLevel1GroupName: "",
-          AccountLevel2GroupName: "",
-          AccountName: groupName,
-          Direction: "",
-          GlobalRef: "DEF1",
-          Group: "",
-          ID: 0,
-          ISEmpty: false,
-          IsAccount: false,
-          IsRoot: false,
-          KeyStringFieldName: "",
-          KeyValue: "",
-          LayoutID: 1,
-          LayoutToUse: "",
-          Level: "",
-          Level0Group: "",
-          Level1Group: "",
-          Level2Group: "",
-          Level0Order: 1,
-          Level1Order: 0,
-          Level2Order: 0,
-          Level3Order: 0,
-          MsTimeStamp: "2022-04-06 16:00:23",
-          MsUpdateSiteCode: "DEF",
-          Parent: 0,
-          Pos: "0",
-          Position: 0,
-          Recno: 3,
-          Up: false,
-          subAccounts: [],
-        });
-        $("#newGroupName").val("");
-        templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
-
-        let jsonObj = {
-            type: "VS1_PNLAddGroup",
-            fields: {
-              "LayoutID": 3,
-              "GropuName": groupName,
-              // "Destination": 83,
-            }
-            // type: "VS1_PNLAddGroup",
-            // fields: {
-            //     AccMethod: accMethod,
-            //     Active: true,
-            //     AllClass: allClass,
-            //     ClassID: classID,
-            //     VatSheetDesc: description,
-            //     Done: false,
-            //     HasTab1: hasTab1,
-            //     Tab1_Type: tab1_type,
-            // }
+    let jsonObj = {
+        Name: "VS1_PNLAddGroup",
+        Params: {
+          "LayoutID": 3,
+          "GroupName": groupName,
+          "Destination": 0
         }
-
-        reportService.savePNLNewGroup(jsonObj).then(function(res){
-            console.log("===========", res);
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {
-                    // Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {}
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        });
-      } else {
-        let updateLayouts = profitlosslayoutfields.filter(function (
-          item,
-          index
-        ) {
-          if (item.AccountName == accountName) {
-            item.subAccounts.push({
-              Account: "",
-              AccountID: 0,
-              AccountLevel0GroupName: item.AccountName,
-              AccountLevel1GroupName: groupName,
-              AccountLevel2GroupName: "",
-              AccountName: groupName,
-              Direction: "",
-              GlobalRef: "DEF1",
-              Group: "",
-              ID: 0,
-              ISEmpty: false,
-              IsAccount: false,
-              IsRoot: false,
-              KeyStringFieldName: "",
-              KeyValue: "",
-              LayoutID: 1,
-              LayoutToUse: "",
-              Level: "",
-              Level0Group: "",
-              Level1Group: "",
-              Level2Group: "",
-              Level0Order: 0,
-              Level1Order: 0,
-              Level2Order: 0,
-              Level3Order: 0,
-              MsTimeStamp: "2022-04-06 16:00:23",
-              MsUpdateSiteCode: "DEF",
-              Parent: item.ID,
-              Pos: "0",
-              Position: 0,
-              Recno: 3,
-              Up: false,
-            });
-          }
-          return item;
-        });
-        $("#newGroupName").val("");
-        templateObject.profitlosslayoutrecords.set(updateLayouts);
-      }
-      $("#nplAddGroupScreen").modal("hide");
     }
+    if (accountName == "none") {
+      // profitlosslayoutfields.push({
+      //   Account: "",
+      //   AccountID: 0,
+      //   AccountLevel0GroupName: groupName,
+      //   AccountLevel1GroupName: "",
+      //   AccountLevel2GroupName: "",
+      //   AccountName: groupName,
+      //   Direction: "",
+      //   GlobalRef: "DEF1",
+      //   Group: "",
+      //   ID: 0,
+      //   ISEmpty: false,
+      //   IsAccount: false,
+      //   IsRoot: false,
+      //   KeyStringFieldName: "",
+      //   KeyValue: "",
+      //   LayoutID: 1,
+      //   LayoutToUse: "",
+      //   Level: "",
+      //   Level0Group: "",
+      //   Level1Group: "",
+      //   Level2Group: "",
+      //   Level0Order: 1,
+      //   Level1Order: 0,
+      //   Level2Order: 0,
+      //   Level3Order: 0,
+      //   MsTimeStamp: "2022-04-06 16:00:23",
+      //   MsUpdateSiteCode: "DEF",
+      //   Parent: 0,
+      //   Pos: "0",
+      //   Position: 0,
+      //   Recno: 3,
+      //   Up: false,
+      //   subAccounts: [],
+      // });
+      // $("#newGroupName").val("");
+      // templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
+      // templateObject.profitlosslayoutrecords.set(updateLayouts);
+    } else {
+      // let updateLayouts = profitlosslayoutfields.filter(function (
+      //   item,
+      //   index
+      // ) {
+      //   if (item.AccountName == accountName) {
+      //     item.subAccounts.push({
+      //       Account: "",
+      //       AccountID: 0,
+      //       AccountLevel0GroupName: item.AccountName,
+      //       AccountLevel1GroupName: groupName,
+      //       AccountLevel2GroupName: "",
+      //       AccountName: groupName,
+      //       Direction: "",
+      //       GlobalRef: "DEF1",
+      //       Group: "",
+      //       ID: 0,
+      //       ISEmpty: false,
+      //       IsAccount: false,
+      //       IsRoot: false,
+      //       KeyStringFieldName: "",
+      //       KeyValue: "",
+      //       LayoutID: 1,
+      //       LayoutToUse: "",
+      //       Level: "",
+      //       Level0Group: "",
+      //       Level1Group: "",
+      //       Level2Group: "",
+      //       Level0Order: 0,
+      //       Level1Order: 0,
+      //       Level2Order: 0,
+      //       Level3Order: 0,
+      //       MsTimeStamp: "2022-04-06 16:00:23",
+      //       MsUpdateSiteCode: "DEF",
+      //       Parent: item.ID,
+      //       Pos: "0",
+      //       Position: 0,
+      //       Recno: 3,
+      //       Up: false,
+      //     });
+      //   }
+      //   return item;
+      // });
+      jsonObj.Params.Destination = parseInt(accountName);
+    }
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+    reportService.savePNLNewGroup(jsonObj).then(function(res){
+      // templateObject.getProfitLossLayout();
+      $("#newGroupName").val("");
+      $("#nplAddGroupScreen").modal("hide");
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      templateObject.setReportOptions(3, dateFrom, dateTo);
+    }).catch(function(err) {
+        swal({
+            title: 'Oooops...',
+            text: err,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Try Again'
+        }).then((result) => {
+            if (result.value) {
+                // Meteor._reload.reload();
+            } else if (result.dismiss === 'cancel') {}
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    });
   },
   ...FxGlobalFunctions.getEvents(),
 });
@@ -2395,7 +2760,7 @@ Template.newprofitandloss.helpers({
 
     if (activeArray.length == 1) {
 
-      if (activeArray[0].code == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) { 
         return !true;
       } else {
         return !false;
@@ -2409,12 +2774,6 @@ Template.newprofitandloss.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     return activeArray.length > 0;
-  },
-  isAccount(layout) {
-    if (layout.AccountID > 1) {
-      return true;
-    }
-    return false;
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";

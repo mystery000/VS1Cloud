@@ -43,7 +43,7 @@ Template.workorderlist.onCreated(function() {
       }
 
     let headerStructure = [
-        { index: 0, label: "#ID", class: "SortDate", width: "0", active: false, display: true },
+        { index: 0, label: "#ID", class: "colID", width: "0", active: false, display: true },
         { index: 1, label: "SalesOrderID", class: "colOrderNumber", width: "80", active: true, display: true },
         { index: 2, label: "Customer", class: "colCustomer", width: "80", active: true, display: true },
         { index: 3, label: "PO Number", class: "colPONumber", width: "100", active: true, display: true },
@@ -58,6 +58,20 @@ Template.workorderlist.onCreated(function() {
 
 Template.workorderlist.onRendered (function() {
     const templateObject = Template.instance();
+    templateObject.getAllWorkorders = async function() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TVS1Workorder').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    resolve([])
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    resolve(data.tvs1workorder)
+                }
+            }).catch(function(e) {
+                resolve([])
+            })
+        })
+    }
 });
 
 Template.workorderlist.helpers ({
@@ -93,14 +107,185 @@ Template.workorderlist.events({
         },
 
 
-        'click .workorderList #btnNewWorkorder': function (e) {
-            FlowRouter.go('/workordercard');
-        },
+    'click .workorderList #btnConvertSalesorder': function (e) {
+        // FlowRouter.go('/workordercard');
+        $('#salesOrderListModal').modal('toggle');
+    },
 
-        'click #tblWorkorderList tbody tr': function (event) {
-            var id = $(event.target).closest('tr').find('.colID').text();
-            FlowRouter.go('/workordercard?id='+id)
-        }
+    'click #salesOrderListModal table tbody tr': async function(event) {
+        let workorderRecords = [];
+        let templateObject = Template.instance();
+        let salesorderid = $(event.target).closest('tr').find('.colSalesNo').text();
+        workorderRecords = await templateObject.getAllWorkorders();
+        getVS1Data('TSalesOrderEx').then(function(dataObject){
+            if(dataObject.length == 0) {
+                accountService.getOneSalesOrderdataEx(salesorderid).then(function(data) {
+                  let lineItems = data.fields.Lines;
+                  for(let i = 0; i< lineItems.length; i ++ ) {
+                    let isExisting = false;
+                    workorderRecords.map(order => {
+                      if(order.fields.ProductName == lineItems[i].fields.ProductName && order.fields.SaleID == data.fields.ID) {
+                          isExisting = true
+                      }
+                    })
+                  //   if(lineItems[i].fields.isManufactured == true && isExisting == false) {
+                    if(isExisting == false) {
+                        let bomProducts = templateObject.bomProducts.get() || []
+                        let index = bomProducts.findIndex(product => {
+                          return product.Caption == lineItems[i].fields.ProductName;
+                        })
+                      if(index > -1) {
+                          $('#salesOrderListModal').modal('toggle');
+                          FlowRouter.go('workordercard?salesorderid='+salesorderid + '&lineId='+i)
+                          break;
+                      } else {
+                        productService.getOneBOMProductByName(name).then(function(data){
+                            if(data.tproctree.length>0) {
+                                $('#salesOrderListModal').modal('toggle');
+                                FlowRouter.go('workordercard?salesorderid='+salesorderid + '&lineId='+i)
+                            }
+                        })
+                      }
+                    }
+                  }
+
+                  if(templateObject.workOrderLineId.get() == -1) {
+                      swal({
+                          title: 'Oooops...',
+                          text: 'This record is not available to create work order.',
+                          type: 'error',
+                          showCancelButton: false,
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {}
+                          else if (result.dismiss === 'cancel') {
+
+                          }
+                      });
+                  } else {
+                    $('#salesOrderListModal').modal('toggle');
+                  }
+                })
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tsalesorderex;
+                for(let d = 0; d< useData.length; d++) {
+                    if(parseInt(useData[d].fields.ID) == salesorderid) {
+                       let lineItems = useData[d].fields.Lines;
+                        for(let i = 0; i< lineItems.length; i ++ ) {
+                            let isExisting = false;
+                            if(workorderRecords.length> 0) {
+                                    for(let j = 0; j< workorderRecords.length; j ++) {
+                                        if(workorderRecords[j].fields.ProductName == lineItems[i].fields.ProductName && workorderRecords[j].fields.SaleID == useData[d].fields.ID) {
+                                            isExisting = true
+                                        }
+                                    }
+                            }
+                          //   if(lineItems[i].fields.isManufactured == true && isExisting == false) {
+                            if(isExisting == false) {
+                                let bomProducts = templateObject.bomProducts.get();
+                                let index = bomProducts.findIndex(product => {
+                                    return product.Caption == lineItems[i].fields.ProductName;
+                                })
+                                if(index > -1) {
+                                    $('#salesOrderListModal').modal('toggle');
+                                    FlowRouter.go('workordercard?salesorderid='+salesorderid + '&lineId='+i)
+                                    break
+                                } else {
+                                    productService.getOneBOMProductByName(name).then(function(data){
+                                        if(data.tproctree.length>0) {
+                                            $('#salesOrderListModal').modal('toggle');
+                                            FlowRouter.go('workordercard?salesorderid='+salesorderid + '&lineId='+i)
+                                        }
+                                    })
+                                }
+                            }
+                          }
+
+                          if(templateObject.workOrderLineId.get() == -1) {
+                              swal({
+                                  title: 'Oooops...',
+                                  text: 'This record is not available to create work order.',
+                                  type: 'error',
+                                  showCancelButton: false,
+                                  confirmButtonText: 'Cancel'
+                              }).then((result) => {
+                                  if (result.value) {}
+                                  else if (result.dismiss === 'cancel') {
+
+                                  }
+                              });
+                          }else{
+                            $('#salesOrderListModal').modal('toggle');
+                          }
+                    }
+                }
+            }
+        }).catch(function(err){
+            accountService.getOneSalesOrderdataEx(salesorderid).then(function(data) {
+               let lineItems = data.fields.Lines;
+               for(let i = 0; i< lineItems.length; i ++ ) {
+                let isExisting = false;
+                workorderRecords.map(order => {
+                      if(order.fields.ProductName == lineItems[i].fields.ProductName && order.fields.SaleID == data.fields.ID) {
+                      isExisting = true
+                  }
+                })
+              //   if(lineItems[i].fields.isManufactured == true && isExisting == false) {
+                if(isExisting == false) {
+                    let bomProducts = templateObject.bomProducts.get()
+                    let index = bomProducts.findIndex(product => {
+                        return product.Caption == lineItems[i].fields.ProductName;
+                    })
+                    if(index > -1) {
+                        $('#salesOrderListModal').modal('toggle');
+                        templateObject.workOrderLineId.set(i);
+                        FlowRouter.go('workordercard?salesorderid='+salesorderid + '&lineId='+i)
+                        break
+                    }else {
+                        productService.getOneBOMProductByName(name).then(function(data){
+                            if(data.tproctree.length>0) {
+                               
+                                $('#salesOrderListModal').modal('toggle');
+                                FlowRouter.go('workordercard?salesorderid='+salesorderid + '&lineId='+i)
+                            }
+                        })
+                    }
+                }
+              }
+
+              if(templateObject.workOrderLineId.get() == -1) {
+                  swal({
+                      title: 'Oooops...',
+                      text: err,
+                      type: 'error',
+                      showCancelButton: false,
+                      confirmButtonText: 'This record is not available to create work order.'
+                  }).then((result) => {
+                      if (result.value) {}
+                      else if (result.dismiss === 'cancel') {
+
+                      }
+                  });
+              }else{
+                $('#salesOrderListModal').modal('toggle');
+              }
+            })
+        })
+
+        // consider the api for product has field named 'isManufactured'
+
+    },
+
+    'click #tblWorkorderList tbody tr': function (event) {
+        var id = $(event.target).closest('tr').find('.colID').text();
+        FlowRouter.go('/workordercard?id='+id)
+    },
+
+    'click .workorderList #btnNewWorkorder': function(e) {
+        let template = Template.instance();
+        FlowRouter.go('/workordercard')
+    }
 
         
 

@@ -387,8 +387,7 @@ Template.dashboardexe.onRendered(function() {
         // on edit mode false
         // $(".on-editor-change-mode").removeClass("showelement");
         // $(".on-editor-change-mode").addClass("hideelement");
-
-        var dimmedElements = document.getElementsByClassName("dimmedChart");
+        const dimmedElements = document.getElementsByClassName("dimmedChart");
         while (dimmedElements.length > 0) {
             dimmedElements[0].classList.remove("dimmedChart");
         }
@@ -1405,7 +1404,6 @@ Template.dashboardexe.events({
         $(".editcharts").trigger("click");
         chartsEditor.enable();
         const templateObject = Template.instance();
-        curChartActive = JSON.parse(localStorage.getItem("arrChartActive"));
         templateObject.showChartElements();
     },
     "click #btnReset2": async(event) => {
@@ -1462,13 +1460,12 @@ Template.dashboardexe.events({
     },
     "click #btnCancel2": async() => {
         playCancelAudio();
+        const templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "block");
             chartsEditor.disable();
-            const templateObject = Template.instance();
-            await templateObject.hideChartElements();
+            await templateObject.hideChartElements();     
             await templateObject.checkChartToDisplay();
-            $('.sortable-chart-widget-js').removeClass("editCharts");
             $(".fullScreenSpin").css("display", "none");
             //templateObject.deactivateDraggable();
         }, delayTimeAfterSound);

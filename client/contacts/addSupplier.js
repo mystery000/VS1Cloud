@@ -9,6 +9,7 @@ import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './addSupplier.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
@@ -620,24 +621,44 @@ Template.supplierscard.onCreated(function () {
   }
   let supplierID = '';
 
-  if (JSON.stringify(currentId) != '{}') {
-    if (currentId.id === "undefined" || currentId.name === "undefined") {
-      templateObject.setInitialForEmptyCurrentID();
-    } else {
-      if (!isNaN(currentId.id)) {
-        supplierID = currentId.id;
-        templateObject.getEmployeeData(supplierID);
-        templateObject.getReferenceLetters();
-      } else if ((currentId.name)) {
-        supplierID = currentId.name.replace(/%20/g, " ");
-        templateObject.getEmployeeDataByName(supplierID);
-      } else {
-        templateObject.setInitialForEmptyCurrentID();
-      }
-    }
+  if(templateObject.data.record) {
+    templateObject.records.set(templateObject.data.record)
   } else {
-    templateObject.setInitialForEmptyCurrentID();
+    if (JSON.stringify(currentId) != '{}') {
+      if (currentId.id === "undefined" || currentId.name === "undefined") {
+        templateObject.setInitialForEmptyCurrentID();
+      } else {
+        if (!isNaN(currentId.id)) {
+          supplierID = currentId.id;
+          templateObject.getEmployeeData(supplierID);
+          templateObject.getReferenceLetters();
+        } else if ((currentId.name)) {
+          supplierID = currentId.name.replace(/%20/g, " ");
+          templateObject.getEmployeeDataByName(supplierID);
+        } else {
+          templateObject.setInitialForEmptyCurrentID();
+        }
+      }
+    } else {
+      templateObject.setInitialForEmptyCurrentID();
+    }
   }
+
+  templateObject.getDataTableList = function(data) {
+
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
+    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+    { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+    { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+    { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+    { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 
 });
 
@@ -1223,12 +1244,12 @@ Template.supplierscard.onRendered(function () {
       })
 
       $(document).on("click", "#termsList tbody tr", function (e) {
-        $('#sltTerms').val($(this).find(".colTermName").text());
+        $('#sltTerms').val($(this).find(".colName").text());
         $('#termsListModal').modal('toggle');
       });
 
       $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editSupplierTitle').val($(this).find(".colTypeName").text());
+        $('#editSupplierTitle').val($(this).find(".colTitleName").text());
         $('#supplierTitlePopModal').modal('toggle');
       });
 
@@ -2687,7 +2708,42 @@ Template.supplierscard.helpers({
       isMobile = true;
     }
     return isMobile;
-  }
+  },
+
+  apiFunction:function() {
+    let crmService = new CRMService();
+    return crmService.getAllTasksByContactName;
+  },
+
+  searchAPI: function() {
+    return sideBarService.searchAllBankAccountDetails;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+  },
 });
 
 function getCheckPrefDetails(prefName) {
@@ -2844,24 +2900,29 @@ function openEditTaskModals(id, type) {
           $(".chkDetailLabel").prop("checked", false);
           if (selected_record.TaskLabel) {
             if (selected_record.TaskLabel.fields != undefined) {
-              taskmodalLabels =
-                `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-                selected_record.TaskLabel.fields.TaskLabelName +
-                "</a></span>";
-              $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-                "checked",
-                true
-              );
+                taskmodalLabels =
+                    `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+                    selected_record.TaskLabel.fields.TaskLabelName +
+                    "</a></span>";
+                $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                    "checked",
+                    true
+                );
+                $(".taskModalActionLableDropdown").css("color", selected_record.TaskLabel.fields.Color);
             } else {
-              selected_record.TaskLabel.forEach((lbl) => {
-                taskmodalLabels +=
-                  `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                  lbl.fields.TaskLabelName +
-                  "</a></span> ";
-                $("#detail_label_" + lbl.fields.ID).prop("checked", true);
-              });
-              taskmodalLabels = taskmodalLabels.slice(0, -2);
+                selected_record.TaskLabel.forEach((lbl) => {
+                    taskmodalLabels +=
+                        `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                        lbl.fields.TaskLabelName +
+                        "</a></span> ";
+                    $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                    $(".taskModalActionLableDropdown").css("color", lbl.fields.Color);
+                });
+                taskmodalLabels = taskmodalLabels.slice(0, -2);
             }
+          }
+          else{
+              $(".taskModalActionLableDropdown").css("color", "#858796");
           }
           $("#taskmodalLabels").html(taskmodalLabels);
           let subtasks = "";

@@ -32,6 +32,106 @@ Template.termsettings.onCreated(function () {
   templateObject.includePurchaseDefault = new ReactiveVar();
   templateObject.includePurchaseDefault.set(false);
   templateObject.selectedFile = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    };
+    let tdEOM = '';
+    let tdEOMPlus = '';
+    let tdCustomerDef = ''; //isSalesdefault
+    let tdSupplierDef = ''; //isPurchasedefault
+    let tdProgressPayment = ''; //isProgressPayment
+    let tdRequired = ''; //Required
+
+    //Check if EOM is checked
+    if (data.IsEOM == true) {
+      tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-' + data.ID + '" checked><label class="custom-control-label chkBox" for="iseom-' + data.ID + '"></label></div>';
+    } else {
+      tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-' + data.ID + '"><label class="custom-control-label chkBox" for="iseom-' + data.ID + '"></label></div>';
+    }
+    //Check if EOM Plus is checked
+    if (data.IsEOMPlus == true) {
+      tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '" checked><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
+    } else {
+      tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
+    }
+    //Check if Customer Default is checked // //isSalesdefault
+    if (data.isSalesdefault == true) {
+      tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-' + data.ID + '" checked><label class="custom-control-label chkBox" for="isSalesdefault-' + data.ID + '"></label></div>';
+    } else {
+      tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-' + data.ID + '"><label class="custom-control-label chkBox" for="isSalesdefault-' + data.ID + '"></label></div>';
+    }
+    //Check if Supplier Default is checked // isPurchasedefault
+    if (data.isPurchasedefault == true) {
+      tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-' + data.ID + '" checked><label class="custom-control-label chkBox" for="isPurchasedefault-' + data.ID + '"></label></div>';
+    } else {
+      tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="isPurchasedefault-' + data.ID + '"></label></div>';
+    }
+    //Check if is progress payment is checked
+    if (data.IsProgressPayment == true) {
+      tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-' + data.ID + '" checked><label class="custom-control-label chkBox" for="IsProgressPayment-' + data.ID + '"></label></div>';
+    } else {
+      tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-' + data.ID + '"><label class="custom-control-label chkBox" for="IsProgressPayment-' + data.ID + '"></label></div>';
+    }
+    //Check if Required is checked
+    if (data.Required == true) {
+      tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-' + data.ID + '" checked><label class="custom-control-label chkBox" for="Required-' + data.ID + '"></label></div>';
+    } else {
+      tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-' + data.ID + '"><label class="custom-control-label chkBox" for="Required-' + data.ID + '"></label></div>';
+    }
+
+    //Check if ProgressPaymentfirstPayonSaleDate is checked
+    // if (data.ProgressPaymentfirstPayonSaleDate == true) {
+    //   tdPayOnSale = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="ProgressPaymentfirstPayonSaleDate-' + data.ID + '" checked><label class="custom-control-label chkBox" for="ProgressPaymentfirstPayonSaleDate-' + data.ID + '"></label></div>';
+    // } else {
+    //   tdPayOnSale = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="ProgressPaymentfirstPayonSaleDate-' + data.ID + '"><label class="custom-control-label chkBox" for="ProgressPaymentfirstPayonSaleDate-' + data.ID + '"></label></div>';
+    // };
+
+    var dataList = [
+      data.ID || "",
+      data.Terms || "",
+      data.TermsAmount || "",
+      tdEOM,
+      tdEOMPlus,
+      data.Description || "",
+      tdCustomerDef,
+      tdSupplierDef,
+      linestatus,
+      tdProgressPayment,
+      tdRequired,
+      data.EarlyPaymentDiscount || 0.00,
+      data.EarlyPaymentDays || 0.00,
+      data.ProgressPaymentType || "",
+      data.ProgressPaymentDuration || 0.00,
+      data.ProgressPaymentInstallments || 0.00,
+      data.ProgressPaymentfirstPayonSaleDate || 0.00,
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
+    { index: 2, label: 'Terms Amount', class: 'colTermsAmount', active: true, display: true, width: "120" },
+    { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
+    { index: 4, label: 'EOM Plus', class: 'colIsEOMPlus', active: true, display: true, width: "80" },
+    { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "130" },
+    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "130" },
+    { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 9, label: 'Is Progress Payment', class: 'colIsProgressPayment', active: false, display: true, width: "200" },
+    { index: 10, label: 'Required', class: 'colRequired', active: false, display: true, width: "100" },
+    { index: 11, label: 'Early Payment Discount', class: 'colEarlyPayDiscount', active: false, display: true, width: "200" },
+    { index: 12, label: 'Early Payment Days', class: 'colEarlyPay', active: false, display: true, width: "150" },
+    { index: 13, label: 'Payment Type', class: 'colProgressPayType', active: false, display: true, width: "150" },
+    { index: 14, label: 'Payment Duration', class: 'colProgressPayDuration', active: false, display: true, width: "100" },
+    { index: 15, label: 'Pay On Sale Date', class: 'colPayOnSale', active: false, display: true, width: "150" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.termsettings.onRendered(function () {
@@ -43,7 +143,7 @@ Template.termsettings.onRendered(function () {
   const deptrecords = [];
   let deptprodlineItems = [];
 
-  $("#tblTermsList tbody").on("click", "tr", function () {
+  $("#tblTermsList tbody").on("click", "tr", function (event) {
     //var listData = $(this).closest('tr').attr('id');
     var is7days = false;
     var is30days = false;
@@ -52,12 +152,13 @@ Template.termsettings.onRendered(function () {
     var isSalesDefault = false;
     var isPurchaseDefault = false;
 
-    $("#add-terms-title").text("Edit Term Settings");
+    $("#termModalHeader").text("Edit Term Settings");
     let termsID = $(this).closest("tr").attr("id") || 0;
     let termsName = $(event.target).closest("tr").find(".colName").text() || "";
     let description =
       $(event.target).closest("tr").find(".colDescription").text() || "";
     let days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
+    let status = $(event.target).closest("tr").find(".colStatus").text();
     if (
       $(event.target).closest("tr").find(".colIsEOM .chkBox").is(":checked")
     ) {
@@ -130,13 +231,11 @@ Template.termsettings.onRendered(function () {
 
     //Make btnDelete "Make Active or In-Active"
     if (status == "In-Active") {
-      $("#view-in-active").html(
-        "<button class='btn btn-success btnActivateTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>"
-      );
+      $('.btnDeleteTerms').addClass('d-none')
+      $('.btnActiveTerms').removeClass('d-none')
     } else {
-      $("#view-in-active").html(
-        "<button class='btn btn-danger btnDeleteTerms vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>"
-      );
+      $('.btnActiveTerms').addClass('d-none')
+      $('.btnDeleteTerms').removeClass('d-none')      
     }
   });
 });
@@ -184,370 +283,7 @@ Template.termsettings.events({
       .catch(function (err) {
         Meteor._reload.reload();
       });
-  },
-  "click .btnDeleteTerms": function () {
-    playDeleteAudio();
-    let taxRateService = new TaxRateService();
-    setTimeout(function () {
-      //$('.fullScreenSpin').css('display', 'inline-block');
-      let termsId = $("#edtTermsID").val();
-      let objDetails = {
-        type: "TTermsVS1",
-        fields: {
-          Id: parseInt(termsId),
-          Active: false,
-        },
-      };
-
-      taxRateService
-        .saveTerms(objDetails)
-        .then(function (objDetails) {
-          sideBarService
-            .getTermsVS1()
-            .then(function (dataReload) {
-              addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                .then(function (datareturn) {
-                  Meteor._reload.reload();
-                })
-                .catch(function (err) {
-                  Meteor._reload.reload();
-                });
-            })
-            .catch(function (err) {
-              Meteor._reload.reload();
-            });
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
-            }
-          });
-          $(".fullScreenSpin").css("display", "none");
-        });
-    }, delayTimeAfterSound);
-  },
-  "click .btnActivateTerms": function () {
-    playSaveAudio();
-    let contactService = new ContactService();
-    setTimeout(function () {
-      $(".fullScreenSpin").css("display", "inline-block");
-      let termsID = $("#edtTermsID").val();
-      let termsName = $("#edtName").val();
-      let description = $("#edtDesc").val();
-      let termdays = $("#edtDays").val();
-
-      let isDays = false;
-      let is30days = false;
-      let isEOM = false;
-      let isEOMPlus = false;
-      let days = 0;
-
-      let isSalesdefault = false;
-      let isPurchasedefault = false;
-      if (termdays.replace(/\s/g, "") != "") {
-        isDays = true;
-      } else {
-        isDays = false;
-      }
-
-      if ($("#isEOM").is(":checked")) {
-        isEOM = true;
-      } else {
-        isEOM = false;
-      }
-
-      if ($("#isEOMPlus").is(":checked")) {
-        isEOMPlus = true;
-      } else {
-        isEOMPlus = false;
-      }
-
-      if ($("#chkCustomerDef").is(":checked")) {
-        isSalesdefault = true;
-      } else {
-        isSalesdefault = false;
-      }
-
-      if ($("#chkSupplierDef").is(":checked")) {
-        isPurchasedefault = true;
-      } else {
-        isPurchasedefault = false;
-      }
-      termsID = data.tterms[0].Id;
-      let objDetails = {
-        type: "TTermsVS1",
-        fields: {
-          ID: parseInt(termsID),
-          TermsName: termsName,
-          Description: description,
-          IsDays: isDays,
-          IsEOM: isEOM,
-          IsEOMPlus: isEOMPlus,
-          isPurchasedefault: isPurchasedefault,
-          isSalesdefault: isSalesdefault,
-          Days: termdays || 0,
-          Active: true,
-        },
-      };
-
-      taxRateService
-        .saveTerms(objDetails)
-        .then(function (objDetails) {
-          sideBarService
-            .getTermsVS1()
-            .then(function (dataReload) {
-              addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                .then(function (datareturn) {
-                  Meteor._reload.reload();
-                })
-                .catch(function (err) {
-                  Meteor._reload.reload();
-                });
-            })
-            .catch(function (err) {
-              Meteor._reload.reload();
-            });
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
-            }
-          });
-          $(".fullScreenSpin").css("display", "none");
-        });
-    }, delayTimeAfterSound);
-  },
-  "click .btnSaveTerms": function () {
-    playSaveAudio();
-    let taxRateService = new TaxRateService();
-    setTimeout(function () {
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      let termsID = $("#edtTermsID").val();
-      let termsName = $("#edtName").val();
-      let description = $("#edtDesc").val();
-      let termdays = $("#edtDays").val();
-
-      let isDays = false;
-      let is30days = false;
-      let isEOM = false;
-      let isEOMPlus = false;
-      let days = 0;
-
-      let isSalesdefault = false;
-      let isPurchasedefault = false;
-      if (termdays.replace(/\s/g, "") != "") {
-        isDays = true;
-      } else {
-        isDays = false;
-      }
-
-      if ($("#isEOM").is(":checked")) {
-        isEOM = true;
-      } else {
-        isEOM = false;
-      }
-
-      if ($("#isEOMPlus").is(":checked")) {
-        isEOMPlus = true;
-      } else {
-        isEOMPlus = false;
-      }
-
-      if ($("#chkCustomerDef").is(":checked")) {
-        isSalesdefault = true;
-      } else {
-        isSalesdefault = false;
-      }
-
-      if ($("#chkSupplierDef").is(":checked")) {
-        isPurchasedefault = true;
-      } else {
-        isPurchasedefault = false;
-      }
-
-      let objDetails = "";
-      if (termsName === "") {
-        $(".fullScreenSpin").css("display", "none");
-        Bert.alert(
-          "<strong>WARNING:</strong> Term Name cannot be blank!",
-          "warning"
-        );
-        e.preventDefault();
-      }
-
-      if (termsID == "") {
-        taxRateService
-          .checkTermByName(termsName)
-          .then(function (data) {
-            termsID = data.tterms[0].Id;
-            objDetails = {
-              type: "TTermsVS1",
-              fields: {
-                ID: parseInt(termsID),
-                TermsName: termsName,
-                Description: description,
-                IsDays: isDays,
-                IsEOM: isEOM,
-                IsEOMPlus: isEOMPlus,
-                isPurchasedefault: isPurchasedefault,
-                isSalesdefault: isSalesdefault,
-                Days: termdays || 0,
-                Active: true,
-              },
-            };
-
-            taxRateService
-              .saveTerms(objDetails)
-              .then(function (objDetails) {
-                sideBarService
-                  .getTermsVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    Meteor._reload.reload();
-                  } else if (result.dismiss === "cancel") {
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              });
-          })
-          .catch(function (err) {
-            objDetails = {
-              type: "TTermsVS1",
-              fields: {
-                TermsName: termsName,
-                Description: description,
-                IsDays: isDays,
-                IsEOM: isEOM,
-                IsEOMPlus: isEOMPlus,
-                Days: termdays || 0,
-                Active: true,
-              },
-            };
-
-            taxRateService
-              .saveTerms(objDetails)
-              .then(function (objDetails) {
-                sideBarService
-                  .getTermsVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    Meteor._reload.reload();
-                  } else if (result.dismiss === "cancel") {
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              });
-          });
-      } else {
-        objDetails = {
-          type: "TTermsVS1",
-          fields: {
-            ID: parseInt(termsID),
-            TermsName: termsName,
-            Description: description,
-            IsDays: isDays,
-            IsEOM: isEOM,
-            isPurchasedefault: isPurchasedefault,
-            isSalesdefault: isSalesdefault,
-            IsEOMPlus: isEOMPlus,
-            Days: termdays || 0,
-            Active: true,
-          },
-        };
-
-        taxRateService
-          .saveTerms(objDetails)
-          .then(function (objDetails) {
-            sideBarService
-              .getTermsVS1()
-              .then(function (dataReload) {
-                addVS1Data("TTermsVS1List", JSON.stringify(dataReload))
-                  .then(function (datareturn) {
-                    Meteor._reload.reload();
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                Meteor._reload.reload();
-              });
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
-              if (result.value) {
-                Meteor._reload.reload();
-              } else if (result.dismiss === "cancel") {
-              }
-            });
-            $(".fullScreenSpin").css("display", "none");
-          });
-      }
-    }, delayTimeAfterSound);
-  },
+  },  
   "click .btnAddTerms": function () {
     let templateObject = Template.instance();
     $("#add-terms-title").text("Add New Term");
@@ -688,7 +424,7 @@ Template.termsettings.events({
           var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
             header: 1,
           });
-          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
           templateObj.selectedFile.set(sCSV);
 
           if (roa.length) result[sheetName] = roa;
@@ -880,6 +616,41 @@ Template.termsettings.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getTermsDataList;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getTermsDataList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 });
 

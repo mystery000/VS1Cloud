@@ -25,8 +25,10 @@ Template.crmleadchart.onCreated(() => {
 Template.crmleadchart.onRendered(() => {
   const templateObject = Template.instance();
 
-  function chartClickEvent() {
+  function chartClickEvent(event, array) {
+      if (array[0] != undefined) {
     FlowRouter.go("/leadlist");
+    }
   }
 
   function getModdayOfCurrentWeek(date) {
@@ -71,7 +73,7 @@ Template.crmleadchart.onRendered(() => {
       options: {
         'onClick': chartClickEvent,
         maintainAspectRatio: false,
-        responsive: true, 
+        responsive: true,
         "legend": {
           "display": false
         },
@@ -138,7 +140,7 @@ Template.crmleadchart.onRendered(() => {
       labels.push(key);
       data.push(records[key].length);
       borderColors.push('#ffffff00');
-    } 
+    }
 
     var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
 
@@ -180,6 +182,23 @@ Template.crmleadchart.onRendered(() => {
     let crmService = new CRMService();
     let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
 
+    getVS1Data("TCRMLeadChart").then(function (dataObject) {
+      if (dataObject.length) {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.setLeadChartData(data);
+      }else{
+        crmService.getAllLeadCharts().then(function (data) {
+          addVS1Data("TCRMLeadChart", JSON.stringify(data));
+          templateObject.setLeadChartData(data);
+        });
+      }
+    }).catch(function (err) {
+      crmService.getAllLeadCharts().then(function (data) {
+        addVS1Data("TCRMLeadChart", JSON.stringify(data));
+        templateObject.setLeadChartData(data);
+      });
+    });
+  /*
     getVS1Data("TCRMLeadBarChart").then(function (dataObject) {
       if (dataObject.length) {
         let data = JSON.parse(dataObject[0].data);
@@ -239,12 +258,56 @@ Template.crmleadchart.onRendered(() => {
       }
 
       addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
-      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records)); 
+      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
 
     }).catch(function (err) {
-
     });
+    */
   }
+
+  templateObject.setLeadChartData = async function (data) {
+    let bar_records = [];
+    let pie_records = [];
+    if (data.tprospect.length) {
+
+      let accountData = data.tprospect;
+      for (let i = 0; i < accountData.length; i++) {
+        let recordObj = {};
+        recordObj.Id = data.tprospect[i].Id;
+        CreationDate = data.tprospect[i].CreationDate ? data.tprospect[i].CreationDate.substr(0, 10) : "";
+
+        recordObj.CreationDateSort = CreationDate ? CreationDate : "-";
+        recordObj.CreationDate = CreationDate ? getModdayOfCurrentWeek(CreationDate) + "~" : "-";
+        bar_records.push(recordObj);
+
+        let pieRecordObj = {};
+        pieRecordObj.Id = data.tprospect[i].Id;
+        pieRecordObj.SourceName = data.tprospect[i].SourceName ? data.tprospect[i].SourceName : "-";
+        pie_records.push(pieRecordObj);
+      }
+
+      bar_records = _.sortBy(bar_records, 'CreationDateSort');
+      bar_records = await _.groupBy(bar_records, 'CreationDate');
+
+      pie_records = _.sortBy(pie_records, 'SourceName');
+      pie_records = await _.groupBy(pie_records, 'SourceName');
+
+    } else {
+      let recordObj = {};
+      recordObj.Id = '';
+      recordObj.CreationDate = '-';
+
+      let pieRecordObj = {};
+      pieRecordObj.Id = '';
+      pieRecordObj.SourceName = '-';
+
+      await bar_records.push(recordObj);
+      await pie_records.push(pieRecordObj);
+    }
+
+     drawBarChart(bar_records);
+     drawPieChart(pie_records);
+  };
 
   templateObject.getLeadBarChartData();
 

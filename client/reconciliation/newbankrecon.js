@@ -1380,7 +1380,7 @@ Template.newbankrecon.onRendered(function() {
         templateObject.viewTransactionData.set(viewTransactionList);
     }
 
-    $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
+    $(document).on("click", ".newbankrecon #tblAccountListPop tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         $(".colAccount").removeClass('boldtablealertsborder');
         const table = $(this);

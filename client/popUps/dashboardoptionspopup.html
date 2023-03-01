@@ -22,7 +22,8 @@
                                 <tr class="dnd-moved">
                                     <th class="th colOptionsName" style="">Options Name</th>
                                     <th class="th colShowDef" style="">Show Dashboards</th>
-                                    <th class="th colLogginDef" style="">Dashboard load at login</th>
+                                    <!-- <th class="th colLogginDef" style="">Dashboard load at login</th> -->
+                                    <th class="th colLogginDef" style="">Go Here</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,28 +34,42 @@
                                             <td contenteditable="false" class="colShowDef text-center">
                                                 <div class="custom-control custom-switch">
                                                     {{#if equals item.isshowdefault true}}
-                                                        <input type="checkbox" class="custom-control-input optradioDL"
-                                                               name="optcheckboxDL" id="formShowP-{{item.id}}"
-                                                               value="{{item.name}}" checked><label
+                                                        <input 
+                                                            type="checkbox" 
+                                                            class="custom-control-input optradioDL"
+                                                            name="optcheckboxDL" 
+                                                            id="formShowP-{{item.id}}"
+                                                            value="{{item.name}}" checked>
+                                                        <label 
                                                             class="custom-control-label"
-                                                            for="formShowP-{{item.id}}"></label>
+                                                            for="formShowP-{{item.id}}">
+                                                        </label>
                                                     {{else}}
-                                                        <input type="checkbox" class="custom-control-input optradioDL"
-                                                               name="optcheckboxDL" id="formShowP-{{item.id}}"
-                                                               value="{{item.name}}"><label
+                                                        <input 
+                                                            type="checkbox" 
+                                                            class="custom-control-input optradioDL"
+                                                            name="optcheckboxDL" 
+                                                            id="formShowP-{{item.id}}"
+                                                            value="{{item.name}}">
+                                                        <label
                                                             class="custom-control-label"
-                                                            for="formShowP-{{item.id}}"></label>
+                                                            for="formShowP-{{item.id}}">
+                                                        </label>
                                                     {{/if}}
                                                 </div>
                                             </td>
                                             <td contenteditable="false" class="colLogginDef text-center">
                                               <div class="custom-control custom-switch">
-                                                  {{#if equals item.isdefault true}}
-                                                  <input type="radio" class="custom-control-input optradioDL"
-                                                      name="optradioDL" id="formCheckP-{{item.id}}"
-                                                      value="{{item.name}}" checked><label
-                                                      class="custom-control-label"
-                                                      for="formCheckP-{{item.id}}"></label>
+                                                    {{#if equals item.isdefault true}}
+                                                    <input 
+                                                        type="radio"
+                                                        class="custom-control-input optradioDL"
+                                                        name="optradioDL"
+                                                        id="formCheckP-{{item.id}}"
+                                                        value="{{item.name}}" checked>
+                                                    <label
+                                                        class="custom-control-label"
+                                                        for="formCheckP-{{item.id}}"></label>
                                                   {{else}}
                                                   <input type="radio" class="custom-control-input optradioDL"
                                                       name="optradioDL" id="formCheckP-{{item.id}}"

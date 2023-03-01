@@ -312,7 +312,7 @@ export class ReportService extends BaseService {
 
     getProfitLossLayout() {
         let options = {
-            LayoutID: 3
+            LayoutID: 3,
         };
         return this.getList('VS1_PNLGetLayout', options);
     }
@@ -889,13 +889,33 @@ export class ReportService extends BaseService {
         return this.POST(this.ERPObjects.TBASReturn, data);
     }
 
-    getAllBASReturn(data) {
-        let options = {
-            OrderBy: "ID desc",
-            ListType: "Detail",
-        };
+    getAllBASReturn(limitcount, limitfrom, deleteFilter, dateFrom, dateTo, ignoreDate) {
+        let options = "";
+
+        if (ignoreDate == true) {
+            options = {
+                IgnoreDates: true,
+                Search: "",
+                OrderBy: "ID desc",
+                LimitCount: parseInt(limitcount),
+                LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        } else {
+            options = {
+                OrderBy: "ID desc",
+                IgnoreDates: false,
+                Search: "",
+                DateFrom: '"' + dateFrom + '"',
+                DateTo: '"' + dateTo + '"',
+                LimitCount: parseInt(limitcount),
+                LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        }
+        if (deleteFilter) options.Search = "Active != true"
         return this.getList(this.ERPObjects.TBASReturn, options);
-    }
+    };
 
     getOneBASReturn(id) {
         let options = {
@@ -926,7 +946,35 @@ export class ReportService extends BaseService {
     }
 
     savePNLNewGroup(data) {
-        return this.POST(this.ERPObjects.VS1_PNLAddGroup, data);
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLAddGroup"', data);
+    }
+
+    deletePNLGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLDeleteGroup"', data);
+    }
+
+    movePNLGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLMoveAccount"', data);
+    }
+
+    editPNLGroup(data) {
+        return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLRenameGroup"', data);
+    }
+
+    getPNLLayout(layout=3) {
+        let options = {
+            select: "[ID]=" + layout,
+            ListType: "Detail",
+        };
+
+        return this.getList(
+            this.ERPObjects.TPNLLayout,
+            options
+        );
+    }
+
+    savePNLLayout(data) {
+        return this.POST(this.ERPObjects.TPNLLayout, data);
     }
 
 }

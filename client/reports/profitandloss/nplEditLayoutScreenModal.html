@@ -31,7 +31,8 @@
                     <div class="col-12">
                         <!-- <a href="#" class="btn btn-primary btnMoveAccount" role="button">Move selected accounts...</a> -->
                         <a data-toggle="modal" href="#nplAddGroupScreen" class="btn btn-primary btnAddGroup" role="button" onclick="$('#defineGrouping').hide();$('#nplAddGroupDefTag').show();  return false;">Add
-                            Group...</a>
+                            Group</a>
+                        <button class="btn btn-danger btnDelSelected" type="button" style="margin: 16px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
                         <!-- <a data-toggle="modal" href="#nplGroupAccounts" class="btn btn-primary btnGroupAccounts" role="button" onclick="$('#defineGrouping2').hide();$('#nplGroupAccountDefTag').show();  return false;">Group selected
                             accounts...</a> -->
                     </div>
@@ -331,7 +332,8 @@
                                     .collapsTogls ~ ol.groupedListNew {
                                         display: none;
                                     }
-                                    .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv {
+                                    /* .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv { */
+                                    li .mainHeadingDiv > .mainHeading > .collepsDiv {
                                         pointer-events: unset !important;
                                         cursor: pointer;
                                         opacity: 1;
@@ -361,10 +363,10 @@
                                                                             {{#each subacItem in acItem.subAccounts }}
                                                                                 {{#if isAccount subacItem }}
                                                                                 <li class="subChild scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
-                                                                                        <span class="childInner">
-                                                                                            <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
-                                                                                        </span>
-                                                                                    </li>
+                                                                                    <span class="childInner">
+                                                                                        <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
+                                                                                    </span>
+                                                                                </li>
                                                                                 {{else}}
                                                                                 <li class="subChild noDrag scSortItems" plid="{{ subacItem.ID }}" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                         <ol class="ddllkk"></ol>
@@ -456,13 +458,13 @@
                                 {{/if}}
 
 
-                                <!--
-                                <div class="sortableAccount pageBreakBar">
+                                
+                                <!-- <div class="sortableAccount pageBreakBar">
                                     <div class="draggable" id="pgBreak1">
                                         <label class="col-12 dragAcc" style=" text-align: center; background-color:#00a3d3; border-color: #00a3d3;color:#fff;">Page break (row)</label>
                                     </div>
-                                </div>
--->
+                                </div> -->
+
 
                                 <!--
                                 <div class="sortableAccount">
@@ -678,7 +680,7 @@
 
                             </div>
                             <div class="col-4 editor-Right">
-                                <div class="col-12">
+                                <div class="col-12" style="margin-bottom:25px;">
                                     <div class="container mb-3">
                                         <h2 style="font-size: 1.5rem;">Change the order and grouping of your report
                                         </h2>
@@ -687,19 +689,21 @@
                                             report.</p>
                                         <p>When you've finished customising your layout, click 'Save' below.</p>
                                         <a>Get more help on customising report layouts</a>
-
                                     </div>
                                     <div class="container">
                                         <h5>Layout Details</h5>
                                         <hr>
-                                        <label>Layout Name</label><br>
-                                        <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="">
-                                        <label>Layout Description</label><br>
-                                        <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="">
+                                        <div class="form-group">
+                                            <label>Layout Name</label>
+                                            <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="" value="{{layoutinfo.LName}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Layout Description</label>
+                                            <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="" value="{{layoutinfo.Description}}">
+                                        </div>
                                         <div class="custom-control custom-switch mt-3">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting">
-                                            <label style="width: 275px;" class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all
-                                                users</label>
+                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting" checked="{{layoutinfo.IsCurrentLayout}}">
+                                            <label class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all users</label>
                                         </div>
                                     </div>
                                 </div>
@@ -766,36 +770,39 @@
                                             <label class="custom-control-label" for="grpTotal">Total</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="container mb-3 editRowGroup" style="">
-                                    <h3>Group</h3>
-                                    <hr class="periodSelectorLine" />
-                                    <div>
-                                        <label>Row Heading</label><br>
-                                        <input id="fullName" type="text" class="form-control" name="nplNewLayoutName" value="" placeholder="">
-                                    </div>
-                                    <div class="mt-2">
-                                        <label style="width:100%;">Display Balance</label>
-                                        <div class="row m-2 dspBalanceControls">
-                                            <button class="btn btn-primary text-nowrap " type="button" id="btnDebitPositive">Debit Positive
-                                            </button>
-                                            <button class="btn btn-primary text-nowrap " type="button" id="btnCreditPositive">Credit Positive
-                                            </button>
-                                        </div>
+                                </div> -->
+                                <div class="col-12" style="margin-bottom:25px; margin-top:30px">
+                                    <div class="container mb-3 editRowGroup" style="">
+                                        <h5>Group</h5>
                                         <hr class="periodSelectorLine" />
-                                        <div class="m-1 col-12 p-1">
-                                            <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="" type="button" id="btnCancelLayoutCreation">Group Selection
-                                            </button>
-                                            <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="#nplSwitchRuleModal" type="button" id="btnCancelLayoutCreation">Add Switch Rule...
-                                            </button>
+                                        <div>
+                                            <label>Row Heading</label><br>
+                                            <input id="editGroupName" type="text" class="form-control" name="editGroupName" value="" placeholder="">
+                                            <input id="editGroupID" type="hidden" class="form-control" name="editGroupID">
                                         </div>
-                                        <div class="custom-control custom-switch grpTotal-container">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="grpTotal" checked="">
-                                            <label class="custom-control-label" for="grpTotal">Total</label>
-                                        </div>
+                                        <!-- <div class="mt-2">
+                                            <label style="width:100%;">Display Balance</label>
+                                            <div class="row m-2 dspBalanceControls">
+                                                <button class="btn btn-primary text-nowrap " type="button" id="btnDebitPositive">Debit Positive
+                                                </button>
+                                                <button class="btn btn-primary text-nowrap " type="button" id="btnCreditPositive">Credit Positive
+                                                </button>
+                                            </div>
+                                            <hr class="periodSelectorLine" />
+                                            <div class="m-1 col-12 p-1">
+                                                <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="" type="button" id="btnCancelLayoutCreation">Group Selection
+                                                </button>
+                                                <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="#nplSwitchRuleModal" type="button" id="btnCancelLayoutCreation">Add Switch Rule...
+                                                </button>
+                                            </div>
+                                            <div class="custom-control custom-switch grpTotal-container">
+                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="grpTotal" checked="">
+                                                <label class="custom-control-label" for="grpTotal">Total</label>
+                                            </div>
+                                        </div> -->
                                     </div>
-                                </div>
-                                <div class="container mb-3 scheduleColumn" style="">
+                                </div>                                
+                                <!-- <div class="container mb-3 scheduleColumn" style="">
                                     <h3>Schedule</h3>
                                     <hr class="periodSelectorLine" />
                                     <div>
@@ -1131,9 +1138,7 @@
                                         }
 
                                         .grpTotal-container {
-                                            padding: 1rem;
-                                            margin: 0rem;
-                                            background: #fff;
+                                            margin: 10px;
                                             display: flex;
                                         }
 
@@ -1163,7 +1168,7 @@
                                             color: #000a1e;
                                         }
 
-                                        .editGroup,
+                                        /* .editGroup,
                                         .edlayCalculator,
                                         .groupRow,
                                         .totalSelctor,
@@ -1171,7 +1176,7 @@
                                         .dateColumnTab,
                                         .textBlockColumn, .notesColumn,.scheduleColumn, .editRowGroup,.rowEdLayCalculator,.columnEdLayCalculator,.budgetColumnTab,.varianceColumnTab,.percentageColumnTab,.newDateColumnTab {
                                             padding: 1rem;
-                                        }
+                                        } */
 
                                         .sortableAccountParent .periodSelectorLine {
                                             margin-top: 0.7rem;

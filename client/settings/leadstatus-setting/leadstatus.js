@@ -20,6 +20,43 @@ Template.leadstatussettings.onCreated(function() {
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.leadStatusList = new ReactiveVar();
     templateObject.selectedFile = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let isDefault = "";
+        if (data.IsDefault == true) {
+            isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '" checked><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
+        } else {
+            isDefault = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
+        };
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+        let eqpm = Number(data.EQPM);
+        var dataList = [
+            data.ID || "",
+            data.TypeCode || "",
+            data.Name || "",
+            data.Description || "",
+            isDefault,
+            utilityService.negativeNumberFormat(eqpm) || 0,
+            linestatus
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "50" },
+        { index: 1, label: '#Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "120" },
+        { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
+        { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "400" },
+        { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "180" },
+        { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "250" },
+        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.leadstatussettings.onRendered(function() {
@@ -76,7 +113,7 @@ Template.leadstatussettings.onRendered(function() {
             const dataList = {
                 id: data.tleadstatustypelist[i].ID || '',
                 typeName: data.tleadstatustypelist[i].TypeCode || '',
-                typeName: data.tleadstatustypelist[i].Name || '',
+                // typeName: data.tleadstatustypelist[i].Name || '',
                 description: data.tleadstatustypelist[i].Description || data.tleadstatustypelist[i].Name,
                 isDefault: isDefault,
                 eqpm: utilityService.negativeNumberFormat(eqpm),
@@ -365,7 +402,7 @@ Template.leadstatussettings.onRendered(function() {
             }, 5000);
         }
     }
-    templateObject.getLeadStatusData();
+//    templateObject.getLeadStatusData();
 
     $(document).on('click', '.table-remove', function(event) {
         const targetID = $(event.target).closest('tr').attr('id'); // table row ID
@@ -375,7 +412,7 @@ Template.leadstatussettings.onRendered(function() {
 
     $('#tblLeadStatusList tbody').on('click', 'tr', function(event) {
         $('#add-leadstatus-title').text('Edit Lead Status');
-        let targetID = $(event.target).closest('tr').attr('id');
+        let targetID = $(event.target).closest('tr').find(".colLeadStatusID").text();
         let description = $(event.target).closest('tr').find('.colDescription').text();
         let statusName = $(event.target).closest('tr').find('.colStatusName').text();
         let quantity = $(event.target).closest('tr').find('.colQuantity').text();
@@ -693,7 +730,7 @@ Template.leadstatussettings.events({
                 var result = {};
                 workbook.SheetNames.forEach(function(sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -803,5 +840,40 @@ Template.leadstatussettings.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getLeadStatusDataList;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getLeadStatusDataList;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

@@ -54,17 +54,18 @@ import './js/purchase-service.js';
 // import './js/purchasedb.js';
 import './js/ratetype_service.js';
 import './js/refundcard.js';
-// import './js/register.js';
-// import './js/registerdb.js';
-// import './js/registersts.js';
-// import './js/resetpassword.js';
+import './js/register.js';
+import './js/registerdb.js';
+import './js/registersts.js';
+import './js/resetpassword.js';
 import './js/sales-service.js';
 import './js/sidebar-service.js';
+import '../collections/registerDB.js';
 // import './js/simonpurchasedb.js';
 import './js/sms-settings-service.js';
 // import './js/testLogin.js';
 // import './js/vs1check.js';
-// import './js/vs1greentracklogin.js';
+import './js/vs1greentracklogin.js';
 import './js/header.js';
 import './js/yodlee-service.js';
 import './js/new_bom_setup.js';
@@ -177,7 +178,6 @@ import './accounts/inventoryassetaccountpop.js';
 
 import './vs1_templates/init_form_page_script/init_form_page_script.html';
 import './vs1_templates/draggable_panel/draggable_panel.html';
-import './vs1_templates/title_list_pop/title_list_pop.html';
 import './vs1_templates/transaction_temp/all_transaction_modals.html';
 import './vs1_templates/kpi_card/kpi_card.html';
 import './vs1_templates/kpi_card/kpi_card_title.html';
@@ -277,7 +277,9 @@ import './eft/optionsModal/eftOptionsModal.js';
 import './eft/bankCodesModal/eftBankCodesModal.js';
 import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 import './settings/template-settings/templatesettings.js';
-// import './accesslevel/accesslevel.js';
+import './accesslevel/accesslevel.js';
+import './accesslevel/featureallocation.html';
+import './accounts/chartsofaccounts/chartofaccounts.html';
 // import './accounts/account-service.js';
 // import './packages/currency/CurrencyRate.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
@@ -331,6 +333,9 @@ import './vs1_templates/datatablelist/datatablelist.js'
 import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
+import './settings/manufacturingsettings/manufacturingsettings.js';
+import './vs1_templates/drop_down/vs1___dropdown.js';
+import './manufacture/bomlistpop.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -422,7 +427,6 @@ import './reports/supplierreports/suppliersummary.js';
 import './reports/fxreports/fxhistorylist.js';
 import './reports/jobreports/jobprofitabilityreport.js';
 import './reports/jobreports/jobsalessummary.js';
-import './reports/binlocations/binlocations.js';
 import './reports/stockreports/stockmovementreport.js';
 import './reports/stockreports/stockquantitybylocation.js';
 import './reports/stockreports/stockvaluereport.js';
@@ -443,6 +447,7 @@ import './cheque/cheque_list.js';
 import './settings/paymentmethod-setting/paymentmethods.js';
 import './salesorder/salesorder_express_list_tables.js';
 import './payroll/timesheet/timesheet.js';
+import './overviews/Modal/AddPayRunModal.js';
 /* Alex */
 
 /*Vladyslav*/
@@ -551,7 +556,7 @@ import '../public/js/cdnjs/pdfmake.min.js';
 import '../public/js/cdnjs/split.min.js';
 import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
-
+import './vs1_templates/title_list_pop/title_list_pop.js';
 /* Stefan */
 
 /* Arthlo */
@@ -621,7 +626,18 @@ import './reports/transactionjournal/transactionjournal.js';
 
 /* Scott */
 import './vs1_templates/template_buttons/spreadsheet_link.js';
+import './reports/executivesummary/executivesummary.js';
+import './reports/exebalancesheet/exebalancesheet.js';
+import './reports/execash/execash.js';
+import './reports/exeincome/exeincome.js';
+import './reports/exeperformance/exeperformance.js';
+import './reports/exeposition/exeposition.js';
+import './reports/exeprofitability/exeprofitability.js';
 /* Scott */
+
+/* Mainstar */
+import './inventory/binlocations/binlocations.js';
+/* Mainstar */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

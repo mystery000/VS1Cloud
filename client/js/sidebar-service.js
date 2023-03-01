@@ -1,6 +1,7 @@
 import { BaseService } from "../js/base-service.js";
 import { HTTP } from "meteor/http";
 import { Session } from 'meteor/session';
+import {BankNameList} from "../lib/global/bank-names";
 export class SideBarService extends BaseService {
 
   getRegionalOptionInfo() {
@@ -32,17 +33,45 @@ export class SideBarService extends BaseService {
         return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getAllProductClassQtyData() {
+      let options = {
+          PropertyList: "ID,ProductID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
+      };
+      return this.getList(this.ERPObjects.TProductClassQuantity, options);
+  }
+
+  getAllBOMProducts(limitcount, limitfrom) {
+      let options = "";
+      if (limitcount == "All") {
+          options = {
+            PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+            select: "[ProcStepItemRef]='vs1BOM'",
+              // orderby: '"Description asc"',
+          };
+      } else {
+          options = {
+              // orderby: '"Description asc"',
+              PropertyList: "ID, Caption, CustomInputClass, Description, Details, Info, ProcStepItemRef, QtyVariation, TotalQtyOriginal, Value",
+              LimitCount: parseInt(limitcount),
+              LimitFrom: parseInt(limitfrom),
+              select: "[ProcStepItemRef]='vs1BOM'",
+          };
+      }
+
+      return this.getList(this.ERPObjects.TProcTree, options);
+  }
+
   getProductListVS1(limitcount, limitfrom, deleteFilter) {
-    let options = "";    
+    let options = "";
     if (limitcount == "All") {
       options = {
-        ListType: "Detail",        
+        ListType: "Detail",
       };
     } else {
       options = {
         IgnoreDates: true,
         OrderBy: '"PARTSID desc"',
-        ListType: "Detail",        
+        ListType: "Detail",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
@@ -120,6 +149,11 @@ export class SideBarService extends BaseService {
   saveSerialNumber(data)
   {
     return this.POST(this.ERPObjects.TSerialNumberListCurrentReport, data);
+  }
+
+  savePayRunHistory(data)
+  {
+    return this.POST(this.ERPObjects.TPayRunHistory, data);
   }
 
   removeTempateData(data)
@@ -1106,8 +1140,8 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
-  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, typeFilter = 'all') {
-    let options = "";
+  getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, typeFilter = 'all', useReceiptClaim) {
+    let options = {};
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
       if (limitcount == "All") {
         options = {
@@ -1115,13 +1149,6 @@ export class SideBarService extends BaseService {
           orderby: '"AccountName asc"',
           Search: "Active = true",
         };
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "Active = true and AccountType='" + typeFilter+"'",
-          };
-        }
       } else {
         options = {
           IgnoreDates:true,
@@ -1130,31 +1157,19 @@ export class SideBarService extends BaseService {
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
-
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "Active = true and AccountType='" + typeFilter+"'",
-            LimitCount: parseInt(limitcount),
-            LimitFrom: parseInt(limitfrom),
-          };
-        }
       }
-
-    }else{
+      if(typeFilter != 'all') {
+        options.Search = options.Search + ` and AccountType='${typeFilter}'`
+      }
+      if (useReceiptClaim) {
+        options.Search = options.Search + ` and AllowExpenseClaim=true`
+      }
+    } else {
       if (limitcount == "All") {
         options = {
           orderby: '"AccountName asc"',
           IgnoreDates:true,
         };
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "AccountType='" + typeFilter+"'",
-          };
-        }
       } else {
         options = {
           IgnoreDates:true,
@@ -1162,15 +1177,15 @@ export class SideBarService extends BaseService {
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
-        if(typeFilter != 'all') {
-          options = {
-            IgnoreDates:true,
-            orderby: '"AccountName asc"',
-            Search: "AccountType='" + typeFilter+"'",
-            LimitCount: parseInt(limitcount),
-            LimitFrom: parseInt(limitfrom),
-          };
-        }
+      }
+      if(typeFilter != 'all') {
+        options.Search = `AccountType='${typeFilter}'`
+      }
+      if (useReceiptClaim) {
+        if (options.Search)
+          options.Search = options.Search + ` and AllowExpenseClaim=true`
+        else
+          options.Search = `AllowExpenseClaim=true`
       }
     }
 
@@ -3349,7 +3364,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: true,
         //IncludedataPriorToClosingDate:true,
-        Search: "Deleted != true",
+        Search: "Active != true",
         OrderBy: "Date desc",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
@@ -3358,7 +3373,7 @@ export class SideBarService extends BaseService {
       options = {
         IgnoreDates: false,
         //IncludedataPriorToClosingDate:true,
-        Search: "Deleted != true",
+        Search: "Active != true",
         OrderBy: "Date desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
@@ -3389,6 +3404,16 @@ export class SideBarService extends BaseService {
         };
       }
     }
+    return this.getList(this.ERPObjects.TBankAccountReport, options);
+  }
+
+  searchAllBankAccountDetails(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: '"name asc"',
+      IgnoreDates:true,
+      search: 'AccountName='+ dataSearchName+ ' OR Type="' + dataSearchName + '" OR TransID="' + dataSearchName + '" OR ClassName="' + dataSearchName + '" OR Notes="' + dataSearchName + '"',
+    };
     return this.getList(this.ERPObjects.TBankAccountReport, options);
   }
 
@@ -3726,14 +3751,14 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"TypeName asc"',
-            Search: "[Active]=true",
+            orderby: '"TypeDescription asc"',
+            Search: "Active=true",
         };
       } else {
         options = {
-          orderby: '"TypeName asc"',
+          orderby: '"TypeDescription asc"',
           ListType: "Detail",
-          Search: "[Active]=true",
+          Search: "Active=true",
           LimitCount: parseInt(limitcount),
           LimitFrom: parseInt(limitfrom),
         };
@@ -3742,11 +3767,11 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
             ListType: "Detail",
-            orderby: '"TypeName asc"',
+            orderby: '"TypeDescription asc"',
         };
       } else {
         options = {
-            orderby: '"TypeName asc"',
+            orderby: '"TypeDescription asc"',
             ListType: "Detail",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
@@ -3754,7 +3779,7 @@ export class SideBarService extends BaseService {
       }
     }
 
-    return this.getList(this.ERPObjects.TClientType, options);
+    return this.getList(this.ERPObjects.TClientTypeList, options);
   }
 
   getAllCustomerStatementData(dateFrom, dateTo, ignoreDate) {
@@ -4288,4 +4313,33 @@ export class SideBarService extends BaseService {
       send_data.fields['ID'] = parseInt(localStorage.getItem('TPreferenceMenuID'));
     return this.POST(this.ERPObjects.TPreference, send_data);
   }
+
+  getAllLeadCharts(){
+    let options = {
+        PropertyList: "ID,CreationDate,SourceName",
+        select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
+  }
+
+  getTitleList() {
+      return this.getManualTitleList();
+
+  }
+  getManualTitleList() {
+      return this.Wow();
+  }
+    Wow() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [
+                [1,"Mr",""],
+                [2,"Mrs",""],
+                [3,"Miss",""],
+                [4,"Ms",""],
+            ];
+            resolve({"ttitlelist" : splashArrayTitleList});
+        });
+        return promise;
+    }
 }

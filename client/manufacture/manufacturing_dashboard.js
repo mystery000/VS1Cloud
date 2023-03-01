@@ -27,10 +27,12 @@ Template.manufacturingoverview.onCreated(function(){
 
 Template.manufacturingoverview.onRendered(function(){
     $('.production_planner_chart .charts .draggable-panel').css('display', 'block !important')
+    let html = '<button class="btn btn-primary btn-toplanner" style="margin-right: 20px">To Production Planner</button>';
+    $('.mfgplannerchartheader .dropdown.no-arrow').prepend(html)
 })
 
 Template.manufacturingoverview.events({
-    'click .productionplannercard': function(e) {
+    'click .btn-toplanner': function(e) {
         FlowRouter.go('/productionplanner')
     },
 

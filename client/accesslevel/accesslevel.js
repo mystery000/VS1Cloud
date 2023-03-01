@@ -9,6 +9,9 @@ import {UtilityService} from "../utility-service";
 import {AccountService} from "../accounts/account-service";
 const _ = require('lodash');
 let addNewEmployeesList = [];
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { Template } from 'meteor/templating';
+import './accesslevel.html';
 
 Template.accesslevel.onCreated(()=>{
   const templateObject = Template.instance();

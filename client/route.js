@@ -2055,10 +2055,10 @@ authenticatedRoutes.route('/leaveaccruedreport', {
 });
 
 authenticatedRoutes.route('/fxhistorylist', {
-    name: 'fxhistorylist',
+    name: 'FxCurrencyHistory',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'fxhistorylist'
+            yield: 'FxCurrencyHistory'
         });
     }
 });
@@ -2483,3 +2483,12 @@ authenticatedRoutes.route('/mypayrollleave', {
         });
     }
 });
+
+authenticatedRoutes.route('/manufacturingsettings',  {
+    name: 'manufacturingsettings',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'manufacturingsettings'
+        })
+    }
+})

@@ -47,7 +47,22 @@
                 {{> export_import_print_display_button tablename="tblUOMList"}}
               </div>
             </div>
-            {{> non_transactional_list tablename="tblUOMList"}}
+<!--            {{> non_transactional_list tablename="tblUOMList"}}-->
+              {{>datatablelist
+                      tablename="tblUOMList"
+                      apiName= apiFunction
+                      indexeddbname = 'TUnitOfMeasureList'
+                      tableheaderrecords = tableheaderrecords
+                      exportfilename = 'UOM List'
+                      istransaction = false
+                      apiParams= apiParams
+                      datahandler = datahandler
+                      service=service
+                      lowercaseDataName='tunitofmeasurelist'
+                      exIndexDBName = 'tunitofmeasurelist'
+                      exdatahandler = exDataHandler
+                      searchAPI = searchAPI
+              }}
             <div class="row no-gutters">
               <div class="col">
                 <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px">

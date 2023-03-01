@@ -1,4 +1,7 @@
 import { Mongo } from 'meteor/mongo';
+import { Template } from 'meteor/templating';
+import '../Login/register.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 if (Meteor.isClient) {
 
 Template.register.events({
@@ -36,7 +39,7 @@ Template.register.events({
            }
          });
 
-      Bert.alert('<strong>Success:</strong> New server connection details successfully created!', 'success');
+      // Bert.alert('<strong>Success:</strong> New server connection details successfully created!', 'success');
       document.getElementById("addRegisterForm").reset();
        }
     } else {

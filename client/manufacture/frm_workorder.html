@@ -3,12 +3,11 @@
         <div class="fullScreenSpin fullScreenSpin_workorder" style="display:none;">
             <div class="spinner"></div>
         </div>
-
-        <!-- {{#if workorderrecord}} -->
-      
-            <form>
+        <form>
+                {{#if workorderrecord}}
                 {{> transaction_header
                     cardType="Sales Order"
+                    cardName='WO'
                     data=workorderrecord
                     uploadedFile=uploadedFile
                     isCurrencyEnable=isCurrencyEnable
@@ -25,6 +24,8 @@
                     poStatus=workorderrecord.poStatus
                     woStatus=workorderrecord.status
                     hideBalanceDue=true
+                    showSchedule=workorderrecord.showSchedule
+                    showUnschedule=workorderrecord.showUnschedule
                     showTimerStart=workorderrecord.showTimerStart
                     showTimerStop=workorderrecord.showTimerStop
                     showTimerPause=workorderrecord.showTimerPause
@@ -33,79 +34,10 @@
                     showQAResume = workorderrecord.showQAResume
                     showQAPause = workorderrecord.showQAPause
                     showQAStop = workorderrecord.showQAStop
+                    modal_id = 'customerListModal'
+                    colName='colCompany'
                 }}
-                <!-- <div class="row">
-                    <div class="col-12 col-xl-8">
-                        <div class="row" style="margin: 8px 16px 0px 16px;">
-                            <div class="col-12 col-md-6 col-lg-6 col-xl-4">
-                                <div class="formgoup">
-                                    <div class="form-group"><label>Customer</label>
-                                        {{> vs1_dropdown value=workorderrecord.customer}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-lg-3 col-xl-2">
-                                    {{> single_date_picker
-                                            label="Sale Date"
-                                            id="dtSODate"
-                                            name="dtSODate"
-                                            defaultValue=workorderrecord.saledate
-                                          }}
-                            </div>
-                        </div>
-
-
-                        
-                        <div class="row" style="margin: 16px 16px 0px 16px;">
-                            <div class="col-12 col-md-6 col-xl-4">
-                                <div class="form-group"><label>Billing Address</label>
-                                    <textarea class="form-control" rows="5" id="txabillingAddress" name="txabillingAddress">{{workorderrecord.orderTo}}</textarea>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4 col-xl-2">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label>Order Number</label>
-                                            <input class="form-control form-control" type="text" id="edtOrderNumber" name="edtOrderNumber" value="{{workorderrecord.salesorderid}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label>P.O. Number</label>
-                                            <input class="form-control form-control" type="text" id="ponumber" name="ponumber" value="{{salesorderrecord.ponumber}}">
-                                            <input class="form-control form-control" type="hidden" id="firstname" value="{{salesorderrecord.firstname}}">
-                                            <input class="form-control form-control" type="hidden" id="lastname" value="{{salesorderrecord.lastname}}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-xl-4">
-                        <div class="row mt-3" style="flex-direction: column; align-items: center; justify-content: space-between;">
-                            <div class="col-6 mb-3">
-                                <button type="button" class="w-100 btn btn-secondary btnBuildQty" id="btnBuildQty">Quantity Built</button>
-                            </div>
-                            {{#if equals quantityBuild true}}
-                            <div class="col-6 form-group">
-                                <input type="text" class="w-100 form-control text-center edtTotalQuantity" id="edtTotalQuantity" value="{{workorderrecord.line.fields.Qty}}"/>
-                            </div>
-                            {{/if}}
-                            <div class="col-6 mb-3">
-                                <button type="button" class="w-100 btn btn-primary btn-save-close" id="btn-save-close">Save & Close</button>
-                            </div>
-                            {{#if equals workorderrecord.isStarted true}}
-                            <div class="col-6 mb-3">
-                                <button type="button" class="w-100 btn btn-success btnCompleteProcess" id="btnCompleteProcess">Complete Process</button>
-                            </div>
-                            {{/if}}
-                        </div>
-                    </div>
-                </div> -->
-
+                {{/if}}
 
                 <div>
                     <div class="card-body rounded" style="padding-bottom: 0px !important;padding-top: 0px !important;">
@@ -558,30 +490,7 @@
                                     vertical-align: top;
                                 }
                             </style>
-                            <!-- {{> deletepop itemName1="Sales Order" itemName2="sales order" itemName3="Sales Order" button1="btnDeleteSO" button2="btnDeleteFollowingSOs"}} -->
-                            <!-- <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                        <div class="modal-header">
-                                            <h4>Delete</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Please select "Delete Line" to remove row or "Delete Sales Order" to delete the entire sales order</p>
-                                            <button class="btn btn-danger float-left btnDeleteLine" type="button">
-                                                <i class="fa fa-close" style="margin-right: 5px;"></i>Delete Line
-                                            </button>
-                                            <button class="btn btn-danger float-right btnDeleteSO" type="button">
-                                                <i class="fa fa-close" style="margin-right: 5px;"></i>Delete SO
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
-  
+                            
                             <style>
                                 th.colAmountEx {
                                     color: #00a3d3;
@@ -632,8 +541,7 @@
                                 .colPaid {
                                     display: block !important;
                                  }
-  
-  
+
                             </style>
   
                             <!-- {{#if displayfields}} -->
@@ -644,7 +552,7 @@
                                   <th class="th colDescription">Description</th>
                                   <th class="th colQty" style="width: 5%;">Qty</th>
                                   <th class="th colShipDate" style="width: 20%;">Ship Date</th>
-                                  <th class="th" style="width: 50px;"></th>
+                                  <th class="th" style="width: 10%"></th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -653,14 +561,30 @@
                                       class="es-input highlightSelect lineProductName" type="search" value="{{workorderrecord.productname}}"></td>
                                   <td contenteditable="false"
                                     class="lineProductDesc colDescription ">
-                                    {{workorderrecord.product_description}}</td>
+                                    {{workorderrecord.productDescription}}</td>
                                   <td class="colQty "><input
-                                      class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.quantity}}"></td>
-                                  
+                                      class="lineQty colQty highlightInput" type="number" value="{{workorderrecord.quantity}}" disabled={{isSaved}}></td>
+                                  <style>
+                                    #tblWorkOrderLine td.colShipDate label, #tblWorkOrderLine td.colShipDate .form-group {
+                                        margin-bottom: 0!important;
+                                    }
+                                  </style>
                                   <td contenteditable="false" class="lineShipDate colShipDate"
-                                    style="text-align: right!important;">{{workorderrecord.shipDate}}</td>
-                                  <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
-                                          class="fa fa-remove"></i></button></span></td>
+                                    style="text-align: right!important;">
+                                    {{>single_date_picker
+                                        id="edtWOShipDate"
+                                        name="edtWOShipDate"
+                                        defaultValue=workorderrecord.shipDate
+                                    }}
+                                    <!-- {{workorderrecord.shipDate}} -->
+                                    </td>
+                                  <td>{{>vs1_button
+                                    color='primary'
+                                    classes='btnShowBOM'
+                                    type='button'
+                                    id="btnShowBOM"
+                                    iconName='eye'
+                                    title='Show BOM'}}</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -756,12 +680,6 @@
 
 
             </form>
-        <!-- {{/if}} -->
-        <div class="modal fade salesOrderListModal" role="dialog" tabindex="-1" id="salesOrderListModal">
-            {{> salesorderslistpop}}
-        </div>
-
-
         <style>
             @media screen and (min-width: 1600px) {
                 #BOMSetupModal .modal-dialog {
@@ -780,93 +698,6 @@
                     </div>
                     <div class="modal-body">
                         {{>bom_template}}
-                        <!-- <style>
-                           #BOMSetupModal .productRow {
-                                margin-bottom: 0.5rem;
-                                gap: 0.5%;
-                            }
-                           #BOMSetupModal .productRow .colProduct{
-                                width: 34.5%;
-                                gap: 5px;
-                                text-align: left;
-                            }
-    
-                           #BOMSetupModal .productRow .colNote {
-                                width: 19%;
-                                text-align: left;
-                            }
-                           #BOMSetupModal .productRow .colQty {
-                                width: 10%;
-                                text-align: left;
-                            }
-                            #BOMSetupModal .productRow .colDelete {
-                                width: 4%;
-                                text-align: left;
-                            }
-    
-                           #BOMSetupModal .productRow .colProcess {
-                                width: 14%;
-                                text-align: left;
-                            }
-    
-                           #BOMSetupModal .productRow .colAttachment {
-                                width: 18%;
-                                text-align: left;
-                            }
-    
-                            div.form-group {
-                                margin-bottom: 0;
-                            }
-    
-                         
-    
-                        </style>
-                        <div class="d-flex productRow">
-                            <div class="th colProduct">Product</div>
-                            <div class="th colQty">Qty</div>
-                            <div class="th colProcess">Process</div>
-                            <div class="th colNote">Notes</div>
-                            <div class="th colAttachment"></div>
-                            <div class="th colDelete"></div>
-                        </div>
-                        <div class="product-content">
-                            <div class="d-flex productRow">
-                                <div class="colProduct form-group">
-                                    <input class="edtMainProductName form-control" id="edtMainProductName" disabled style="width: 60%" value="{{productrecord.productname}}"/>
-                                </div>
-                                <div class="colQty form-group">
-                                    <input type="text" id="edtMainQty" class="edtQuantity form-control w-100" value="1"/>
-                                </div>
-                                <div class="colProcess form-group">
-                                    <select type="search" id="edtProcess" class="edtProcess form-control w-100" disabled name="edtProcess"></select>
-                                </div>
-                                <div class="colNote form-group">
-                                    <input type="text" class="edtProcessNote form-control w-100"/>
-                                </div>
-                                <div class="colAttachment">
-                                   
-                                    <a class="btn btn-primary btnAddAttachment" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments</a>
-                                    <div class="attachedFiles d-none"></div>
-                                </div>
-                                <div class="colDelete"></div>
-                            </div>
-                        </div>
-                        <div class="product-content">
-                            <div class="d-flex productRow">
-                                <div class="colProduct form-group d-flex">
-                                    <button class="btn btn-primary btnAddProduct" style="width: 29%;">Product+</button>
-                                </div>
-                                <div class="colQty form-group">
-                                </div>
-                                <div class="colProcess form-group">
-                                </div>
-                                <div class="colNote form-group">
-                                </div>
-                                <div class="colAttachment form-group"></div>
-                                <div class="colDelete"></div>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="modal-footer d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
                         <button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
@@ -878,7 +709,9 @@
         </div>
         {{/if}}
 
-
+        <div class="modal fade" role="dialog" tabindex="-1" id="bomProductListModal">
+            {{> bomlistpop}}
+        </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
             {{> productlistpop}}
         </div>
@@ -887,8 +720,8 @@
             <!-- {{> statuspop}} -->
         </div>
 
-           <!-- Start Attachemt -->
-           <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
+        <!-- Start Attachemt -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -944,6 +777,8 @@
             </div>
         </div>
         <!-- END Attachments -->
+
+
     </div>
 
     {{> init_form_page_script}}

@@ -36,19 +36,19 @@ Template.jobsalessummary.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "100" },
-      { index: 2, label: 'Job Customer', class: 'colJobCustomer', active: true, display: true, width: "150" },
-      { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "100" },
-      { index: 4, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "100" },
-      { index: 5, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
-      { index: 6, label: 'Qty Shipped', class: 'colQtyShipped', active: true, display: true, width: "100" },
-      { index: 7, label: 'Discount', class: 'colDiscount', active: true, display: true, width: "100" },
-      { index: 8, label: 'Tax', class: 'colTax', active: true, display: true, width: "100" },
-      { index: 9, label: 'Amount Ex', class: 'colAmountEx', active: true, display: true, width: "100" },
-      { index: 10, label: 'Amount Inc', class: 'colAmountInc', active: true, display: true, width: "100" },
-      { index: 11, label: 'DetailType', class: 'colDetailType', active: false, display: true, width: "100" },
-      { index: 12, label: 'ParentClientID', class: 'colParentClientID', active: false, display: true, width: "100" },
-      { index: 13, label: 'ClientID', class: 'colClientID', active: false, display: true, width: "100" },
+      { index: 1, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "130" },
+      { index: 2, label: 'Job Customer', class: 'colJobCustomer', active: true, display: true, width: "130" },
+      { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "130" },
+      { index: 4, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "130" },
+      { index: 5, label: 'Product Name', class: 'colProductID', active: true, display: true, width: "130" },
+      { index: 6, label: 'Qty Shipped', class: 'colQtyShipped', active: true, display: true, width: "130" },
+      { index: 7, label: 'Discount', class: 'colDiscount', active: true, display: true, width: "130" },
+      { index: 8, label: 'Tax', class: 'colTax', active: true, display: true, width: "130" },
+      { index: 9, label: 'Amount (ex)', class: 'colAmountEx', active: true, display: true, width: "130" },
+      { index: 10, label: 'Amount (inc)', class: 'colAmountInc', active: true, display: true, width: "130" },
+      // { index: 11, label: 'DetailType', class: 'colDetailType', active: false, display: true, width: "100" },
+      // { index: 12, label: 'ParentClientID', class: 'colParentClientID', active: false, display: true, width: "100" },
+      // { index: 13, label: 'ClientID', class: 'colClientID', active: false, display: true, width: "100" },
     ]
 
     templateObject.jobsalessummaryth.set(reset_data);
@@ -111,39 +111,59 @@ Template.jobsalessummary.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-
-    for (let i = 0; i < data.tjobsalessummary.length; i++) {
-      var dataList = [
-        data.tjobsalessummary[i].Customer || "",
-        data.tjobsalessummary[i].JobCustomer || "",
-        data.tjobsalessummary[i].CustomerJobNumber || "",
-        data.tjobsalessummary[i].JobName || "",
-        data.tjobsalessummary[i].ProductName || "",
-        data.tjobsalessummary[i].QtyShipped || "",
-        data.tjobsalessummary[i].TotalDiscount || "",
-        data.tjobsalessummary[i].TotalTax || "",
-        data.tjobsalessummary[i].TotalAmountEx || "",
-        data.tjobsalessummary[i].TotalAmountInc || "",
-        data.tjobsalessummary[i].DetailType || "",
-        data.tjobsalessummary[i].ParentClientID || "",
-        data.tjobsalessummary[i].ClientID || "",
+    var dataList = [
+      GlobalFunctions.generateSpan("Other", "table-cells text-bold"),
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+    ];
+    splashArrayReport.push(dataList);
+    for (let i = 1; ; i++) {
+      let amountStyle = "text-success";
+      if(i == data.tjobsalessummary.length) {
+        i = 0;
+        amountStyle = "text-bold table-cells";
+      }
+      dataList = [
+        i == 0 ? GlobalFunctions.generateSpan("Total", "table-cells text-bold") : "",
+        GlobalFunctions.generateSpan(data.tjobsalessummary[i].JobCustomer || "", "text-primary"),
+        GlobalFunctions.generateSpan(data.tjobsalessummary[i].CustomerJobNumber || "","text-primary"),
+        GlobalFunctions.generateSpan(data.tjobsalessummary[i].JobName || "","text-primary"),
+        GlobalFunctions.generateSpan(data.tjobsalessummary[i].ProductName || "","text-primary"),
+        GlobalFunctions.generateSpan(data.tjobsalessummary[i].QtyShipped || "","text-primary"),
+        GlobalFunctions.generateSpan(data.tjobsalessummary[i].TotalDiscount || "","text-primary"),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tjobsalessummary[i].TotalTax - 0), amountStyle),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tjobsalessummary[i].TotalAmountEx - 0), amountStyle),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tjobsalessummary[i].TotalAmountInc - 0), amountStyle),
+        // data.tjobsalessummary[i].DetailType || "",
+        // data.tjobsalessummary[i].ParentClientID || "",
+        // data.tjobsalessummary[i].ClientID || "",
       ];
       splashArrayReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayReport);
+      if(i == 0)
+        break;
     }
 
 
     if (templateObject.transactiondatatablerecords.get()) {
       setTimeout(function () {
-        MakeNegative();
+        // MakeNegative();
       }, 100);
     }
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: splashArrayReport,
         searching: false,
+        "bsort": false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
           {
@@ -186,18 +206,18 @@ Template.jobsalessummary.onRendered(() => {
             targets: 9,
             className: "colAmountInc",
           },
-          {
-            targets: 10,
-            className: "colDetailType hiddenColumn",
-          },
-          {
-            targets: 11,
-            className: "colParentClientID hiddenColumn",
-          },
-          {
-            targets: 12,
-            className: "colClientID hiddenColumn",
-          },
+          // {
+          //   targets: 10,
+          //   className: "colDetailType hiddenColumn",
+          // },
+          // {
+          //   targets: 11,
+          //   className: "colParentClientID hiddenColumn",
+          // },
+          // {
+          //   targets: 12,
+          //   className: "colClientID hiddenColumn",
+          // },
         ],
         select: true,
         destroy: true,
@@ -206,14 +226,14 @@ Template.jobsalessummary.onRendered(() => {
         lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
         info: true,
         // responsive: true,
-        "order": [[1, "asc"]],
+        "order": [],
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
         },
 
       }).on('page', function () {
         setTimeout(function () {
-          MakeNegative();
+          // MakeNegative();
         }, 100);
       }).on('column-reorder', function () {
 
@@ -231,7 +251,7 @@ Template.jobsalessummary.onRendered(() => {
           $(".fullScreenSpin").css("display", "none");
         }
         setTimeout(function () {
-          MakeNegative();
+          // MakeNegative();
         }, 100);
       });
       $(".fullScreenSpin").css("display", "none");

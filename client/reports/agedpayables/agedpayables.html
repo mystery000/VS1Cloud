@@ -1,7 +1,7 @@
 <template name="agedpayables">
   {{# vs1_report_template tabledisplayname="Aged Payables" tablename="tblAgedPayables" dateAsAt=dateAsAt sheetname="Aged Payables Report Result"}}
     <div class="table-responsive">
-      <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
+      <table class="table table-sm" id="tableExport" name="tableExport">
         <thead>
           {{#if agedpayablesth}}
           {{#each c in agedpayablesth }}
@@ -14,270 +14,21 @@
           {{/if}}
         </thead>
         <tbody>
-          <!-- {{#if records}}
-            {{#each record in records}}
-                {{#if record.title}}
-                  <tr class="totalhr">
-                    <td style="font-weight: 800;">
-                      <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                {{/if}}
-
-                {{#each item in record.entries}}
-                  <tr data-type="{{item.type}}" id="{{item.Id}}">
-                    <div style="display:none;">{{item.SupplierName}}</div>
-                    <td></td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{item.type}}</a>
-                    </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-left">
-                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{item.entries.PurchaseOrderID}}</a>
-                    </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                      <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatDate item.entries.DueDate}}</a>
-                    </td>
-
-                    {{#if isOnlyDefaultActive }}
-                      {{#if currencyList}}
-                        {{#each c in currencyList }}
-                          {{# if c.active}}
-                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount item.entries.AmountDue }} text-danger {{else}} text-success {{/if}}">
-                              <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.entries.AmountDue c null}}</a>
+            {{#if transactiondatatablerecords}}
+                {{#each items in transactiondatatablerecords}}
+                    <tr>
+                        {{#each item in items}}
+                            <td class="{{item.indent}}">
+                                <span class={{item.className}}>{{item.string}}</span>
                             </td>
-                          {{/if}}
                         {{/each}}
-
-                        {{#each c in currencyList }}
-                          {{# if c.active}}
-                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount item.entries.Current}} text-danger {{else}} text-success {{/if}}">
-                              <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.entries.Current c null}}</a>
-                            </td>
-                          {{/if}}
-                        {{/each}}
-
-                        {{#each c in currencyList }}
-                          {{# if c.active}}
-                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount item.entries}} text-danger {{else}} text-success  {{/if}}">
-                              <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.entries c 30}}</a>
-                            </td>
-                          {{/if}}
-                        {{/each}}
-
-                        {{#each c in currencyList }}
-                          {{# if c.active}}
-                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount item.entries}} text-danger {{else}} text-success {{/if}}">
-                              <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.entries c 60}}</a>
-                            </td>
-                          {{/if}}
-                        {{/each}}
-
-                        {{#each c in currencyList }}
-                          {{# if c.active}}
-                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount item.entries }} text-danger {{else}} text-success {{/if}}">
-                              <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.entries c 90}}</a>
-                            </td>
-                          {{/if}}
-                        {{/each}}
-
-                        {{#each c in currencyList }}
-                          {{# if c.active}}
-                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 text-right {{#if isNegativeAmount item.entries }} text-danger {{else}} text-success {{/if}}">
-                              <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.entries c 120}}</a>
-                            </td>
-                          {{/if}}
-                        {{/each}}
-
-                      {{/if}}
-                    {{else}}
-
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.AmountDue }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.AmountDue}}</a>
-                      </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries.Current }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.Current}}</a>
-                      </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '30Days' }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '30Days' }}</a>
-                      </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '60Days' }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '60Days' }}</a>
-                      </td>
-                      <td class="Total1Indented MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '90Days' }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '90'}}</a>
-                      </td>
-                      <td class="Total1Indented xxxxx MenuLeft text-nowrap Indent1  text-right {{#if isNegativeAmount item.entries '120Days' }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPriceWithDays item.entries '120'}}</a>
-                      </td>
-
-                    {{/if}}
-
-                  </tr>
+                    </tr>
                 {{/each}}
-
-                  <tr class="TotalField">
-
-                      <td class="Total1Indented MenuLeft TotalField">
-                        <span class="table-cells">
-                          <strong>{{record.total.Title}}</strong></span></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-
-                      {{#if isOnlyDefaultActive }}
-                        {{#if currencyList}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="Total1Indented MenuLeft TotalField  text-right">
-                                <span class="table-cells">
-                                  <strong>{{ convertAmount record.total.TotalAmountDue c null}}</strong></span></td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="Total1Indented MenuLeft TotalField  text-right">
-                                <span class="table-cells">
-                                  <strong>{{ convertAmount record.total.TotalCurrent c null}}</strong></span></td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="Total1Indented MenuLeft TotalField  text-right">
-                                <span class="table-cells">
-                                  <strong>{{ convertAmount record.total.OneMonth c null}}</strong></span></td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="Total1Indented MenuLeft TotalField  text-right">
-                                <span class="table-cells">
-                                  <strong>{{ convertAmount record.total.TwoMonth c null}}</strong></span></td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="Total1Indented MenuLeft TotalField  text-right">
-                                <span class="table-cells">
-                                  <strong>{{ convertAmount record.total.ThreeMonth c null}}</strong></span></td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="Total1Indented MenuLeft TotalField  text-right">
-                                <span class="table-cells">
-                                  <strong>{{ convertAmount record.total.OlderMonth c null}}</strong></span></td>
-                            {{/if}}
-                          {{/each}}
-
-                        {{/if}}
-                      {{else}}
-                        <td class="Total1Indented MenuLeft TotalField  text-right">
-                          <span class="table-cells">
-                            <strong>{{ formatPrice record.total.TotalAmountDue}}</strong></span></td>
-                        <td class="Total1Indented MenuLeft TotalField  text-right">
-                          <span class="table-cells">
-                            <strong>{{ formatPrice record.total.TotalCurrent}}</strong></span></td>
-                        <td class="Total1Indented MenuLeft TotalField  text-right">
-                          <span class="table-cells">
-                            <strong>{{ formatPrice record.total.OneMonth}}</strong></span></td>
-                        <td class="Total1Indented MenuLeft TotalField  text-right">
-                          <span class="table-cells">
-                            <strong>{{ formatPrice record.total.TwoMonth}}</strong></span></td>
-                        <td class="Total1Indented MenuLeft TotalField  text-right">
-                          <span class="table-cells">
-                            <strong>{{ formatPrice record.total.ThreeMonth}}</strong></span></td>
-                        <td class="Total1Indented MenuLeft TotalField  text-right">
-                          <span class="table-cells">
-                            <strong>{{ formatPrice record.total.OlderMonth}}</strong></span></td>
-
-                      {{/if}}
-
-                  </tr>
-            {{/each}}
-            {{#if grandrecords}}
-              <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-
-                <td>{{grandrecords.Title}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-
-                {{#if isOnlyDefaultActive }}
-                        {{#if currencyList}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="text-right">{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="text-right">{{ convertAmount grandrecords.TotalCurrent c null}}</td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="text-right">{{ convertAmount grandrecords.OneMonth c null}}</td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="text-right">{{ convertAmount grandrecords.TwoMonth c null}}</td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="text-right">{{ convertAmount grandrecords.ThreeMonth c null}}</td>
-                            {{/if}}
-                          {{/each}}
-
-                          {{#each c in currencyList }}
-                            {{#if c.active}}
-                              <td class="text-right">{{ convertAmount grandrecords.OlderMonth c null}}</td>
-                            {{/if}}
-                          {{/each}}
-
-
-
-                        {{/if}}
-                {{else}}
-
-                  <td class="text-right">{{ formatPrice grandrecords.TotalAmountDue}}</td>
-                  <td class="text-right">{{ formatPrice grandrecords.TotalCurrent}}</td>
-                  <td class="text-right">{{ formatPrice grandrecords.OneMonth}}</td>
-                  <td class="text-right">{{ formatPrice grandrecords.TwoMonth}}</td>
-                  <td class="text-right">{{ formatPrice grandrecords.ThreeMonth}}</td>
-                  <td class="text-right">{{ formatPrice grandrecords.OlderMonth}}</td>
-
-                {{/if}}
-
-              </tr>
+            {{else}}
+                <tr class="odd" style="text-align: center;">
+                    <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                </tr>
             {{/if}}
-          {{else}}
-            <tr class="odd" style="text-align: center;">
-              <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
-            </tr>
-          {{/if}} -->
-
         </tbody>
       </table>
     </div>

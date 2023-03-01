@@ -318,7 +318,7 @@ Template.accountant_financialstatement.onRendered(() => {
                 });
             });
     };
-    templateObject.getCountryData();
+    // templateObject.getCountryData();
 
     templateObject.getAccountLists = function() {
         getVS1Data("TAccountVS1")
@@ -1846,7 +1846,7 @@ Template.accountant_financialstatement.events({
         let organisationService = new OrganisationService();
         setTimeout(function(){
         $(".fullScreenSpin").css("display", "inline-block");
-        
+
         let forTransaction = false;
         let isHeader = false;
         let useReceiptClaim = false;

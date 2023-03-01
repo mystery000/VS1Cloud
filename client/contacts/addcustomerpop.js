@@ -52,7 +52,7 @@ Template.addcustomerpop.onCreated(function() {
     templateObject.currentAttachLineIDJob = new ReactiveVar();
 });
 
-Template.addcustomerpop.onRendered(function() {
+Template.addcustomerpop.onRendered( async function() {
     let templateObject = Template.instance();
     let contactService = new ContactService();
     const countryService = new CountryService();
@@ -325,55 +325,306 @@ Template.addcustomerpop.onRendered(function() {
 
     //$('.addcustomerpop #sltCustomerType').append('<option value="' + lineItemObj.custometype + '">' + lineItemObj.custometype + '</option>');
     //if (currentId.id == "undefined") {
-    let lineItemObj = {
-        id: '',
-        lid: 'Add Customer',
-        company: '',
-        email: '',
-        title: '',
-        firstname: '',
-        middlename: '',
-        lastname: '',
-        tfn: '',
-        phone: '',
-        mobile: '',
-        fax: '',
-        shippingaddress: '',
-        scity: '',
-        sstate: '',
-        terms: loggedTermsSales || templateObject.defaultsaleterm.get() || '',
-        spostalcode: '',
-        scountry: LoggedCountry || '',
-        billingaddress: '',
-        bcity: '',
-        bstate: '',
-        bpostalcode: '',
-        bcountry: LoggedCountry || '',
-        custFld1: '',
-        custFld2: '',
-        jobbcountry: LoggedCountry || '',
-        jobscountry: LoggedCountry || '',
-        discount: 0
-    }
-    setTimeout(function() {
-        $('.customerTypeSelect').append('<option value="newCust">Add Customer Type</option>');
-    }, 500)
-    templateObject.isSameAddress.set(true);
-    templateObject.records.set(lineItemObj);
-    setTimeout(function() {
-        $('.addcustomerpop #tblTransactionlist').DataTable();
-        if (currentId.transTab == 'active') {
-            $('.customerTab').removeClass('active');
-            $('.transactionTab').trigger('click');
-        } else if (currentId.transTab == 'job') {
-            $('.customerTab').removeClass('active');
-            $('.jobTab').trigger('click');
-        } else {
-            $('.customerTab').addClass('active');
-            $('.customerTab').trigger('click');
+    templateObject.getCustomerData = async function() {
+        let lineItemObj = {
+            id: '',
+            lid: 'Add Customer',
+            company: '',
+            email: '',
+            title: '',
+            firstname: '',
+            middlename: '',
+            lastname: '',
+            tfn: '',
+            phone: '',
+            mobile: '',
+            fax: '',
+            shippingaddress: '',
+            scity: '',
+            sstate: '',
+            terms: loggedTermsSales || templateObject.defaultsaleterm.get() || '',
+            spostalcode: '',
+            scountry: LoggedCountry || '',
+            billingaddress: '',
+            bcity: '',
+            bstate: '',
+            bpostalcode: '',
+            bcountry: LoggedCountry || '',
+            custFld1: '',
+            custFld2: '',
+            jobbcountry: LoggedCountry || '',
+            jobscountry: LoggedCountry || '',
+            discount: 0
+        }
+        async function getCustomerFromName(customerID) {
+            return new Promise((resolve, reject)=> {
+                getVS1Data('TCustomerVS1').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                      contactService.getOneCustomerDataExByName(customerID).then(function (data) {
+                        resolve(data.tcustomer[0]);
+                      });
+                    } else {
+                      let data = JSON.parse(dataObject[0].data);
+                      let useData = data.tcustomervs1;
+                      let added = false;
+                      for (let i = 0; i < useData.length; i++) {
+                        if (useData[i].fields.ClientName  == customerID) {
+                          added = true;
+                          resolve(useData[i]);
+                          const rowCount = $('.results tbody tr').length;
+                          $('.counter').text(rowCount + ' items');
+                        }
+                      }
+                      if (!added) {
+                        contactService.getOneCustomerDataExByName(customerID).then(function (data) {
+                          resolve(data.tcustomer[0]);
+                        });
+                      }
+                    }
+                  }).catch(function (err) {
+                    contactService.getOneCustomerDataExByName(customerID).then(function (data) {
+                      $('.fullScreenSpin').css('display', 'none');
+                      resolve(data.tcustomer[0]);
+                    });
+                  });
+            })
+        }
+        async function getCustomerFromID(customerID) {
+            return new Promise((resolve, reject)=> {
+                getVS1Data("TCustomerVS1").then(function (dataObject) {
+                    if (dataObject.length === 0) {
+                        contactService.getOneCustomerDataEx(customerID).then(function (data) {
+                        resolve(data);
+                        });
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tcustomervs1;
+                        let added = false;
+                        for (let i = 0; i < useData.length; i++) {
+                        if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+                                added = true;
+                                resolve(useData[i]);
+                            }
+                        }
+                        if (!added) {
+                        contactService
+                            .getOneCustomerDataEx(customerID)
+                            .then(function (data) {
+                            resolve(data);
+                            });
+                        }
+                    }
+                }).catch(function (err) {
+                    contactService.getOneCustomerDataEx(customerID).then(function (data) {
+                        $(".fullScreenSpin").css("display", "none");
+                        resolve(data);
+                    });
+                });
+            })
+
+        }
+        if(templateObject.data.name != undefined) {
+            let data = await getCustomerFromName(templateObject.data.name)
+            lineItemObj = {
+                id: data.fields.ID || '',
+                lid: 'Edit Customer',
+                isjob: data.fields.IsJob || '',
+                issupplier: data.fields.IsSupplier || false,
+                iscustomer: data.fields.IsCustomer || false,
+                company: data.fields.ClientName || '',
+                email: data.fields.Email || '',
+                title: data.fields.Title || '',
+                firstname: data.fields.FirstName || '',
+                middlename: data.fields.CUSTFLD10 || '',
+                lastname: data.fields.LastName || '',
+                tfn: '' || '',
+                phone: data.fields.Phone || '',
+                mobile: data.fields.Mobile || '',
+                fax: data.fields.Faxnumber || '',
+                skype: data.fields.SkypeName || '',
+                website: data.fields.URL || '',
+                shippingaddress: data.fields.Street || '',
+                scity: data.fields.Street2 || '',
+                ssuburb: data.fields.Suburb || '',
+                sstate: data.fields.State || '',
+                spostalcode: data.fields.Postcode || '',
+                scountry: data.fields.Country || LoggedCountry,
+                billingaddress: data.fields.BillStreet || '',
+                bcity: data.fields.BillStreet2 || '',
+                bsuburb: data.fields.Billsuburb || '',
+                bstate: data.fields.BillState || '',
+                bpostalcode: data.fields.BillPostcode || '',
+                bcountry: data.fields.Billcountry || '',
+                notes: data.fields.Notes || '',
+                preferedpayment: data.fields.PaymentMethodName || '',
+                terms: data.fields.TermsName || localStorage.getItem('ERPTermsSales'),
+                deliverymethod: data.fields.ShippingMethodName || '',
+                clienttype: data.fields.ClientTypeName || '',
+                openingbalance: data.fields.RewardPointsOpeningBalance || 0.00,
+                openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                taxcode: data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get(),
+                custfield1: data.fields.CUSTFLD1 || '',
+                custfield2: data.fields.CUSTFLD2 || '',
+                custfield3: data.fields.CUSTFLD3 || '',
+                custfield4: data.fields.CUSTFLD4 || '',
+                status: data.fields.Status || '',
+                rep: data.fields.RepName || '',
+                source: data.fields.SourceName || '',
+                salesQuota: data.fields.CUSTFLD12 || '',
+                jobcompany: data.fields.ClientName || '',
+                jobCompanyParent: data.fields.ClientName || '',
+                jobemail: data.fields.Email || '',
+                jobtitle: data.fields.Title || '',
+                jobfirstname: data.fields.FirstName || '',
+                jobmiddlename: data.fields.CUSTFLD10 || '',
+                joblastname: data.fields.LastName || '',
+                jobtfn: '' || '',
+                jobphone: data.fields.Phone || '',
+                jobmobile: data.fields.Mobile || '',
+                jobfax: data.fields.Faxnumber || '',
+                jobskype: data.fields.SkypeName || '',
+                jobwebsite: data.fields.CUSTFLD9 || '',
+                jobshippingaddress: data.fields.Street || '',
+                jobscity: data.fields.Street2 || '',
+                jobsstate: data.fields.State || '',
+                jobspostalcode: data.fields.Postcode || '',
+                jobscountry: data.fields.Country || LoggedCountry,
+                jobbillingaddress: data.fields.BillStreet || '',
+                jobbcity: data.fields.BillStreet2 || '',
+                jobbstate: data.fields.BillState || '',
+                jobbpostalcode: data.fields.BillPostcode || '',
+                jobbcountry: data.fields.Billcountry || '',
+                jobnotes: data.fields.Notes || '',
+                jobpreferedpayment: data.fields.PaymentMethodName || '',
+                jobterms: data.fields.TermsName || '',
+                jobdeliverymethod: data.fields.ShippingMethodName || '',
+                jobopeningbalance: data.fields.RewardPointsOpeningBalance || 0.00,
+                jobopeningbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                jobtaxcode: data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get(),
+                jobcustFld1: '' || '',
+                jobcustFld2: '' || '',
+                job_Title: '',
+                jobName: '',
+                jobNumber: '',
+                jobRegistration: '',
+                discount: data.fields.Discount || 0,
+                jobclienttype: data.fields.ClientTypeName || '',
+                ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
+          
+            };
+        } else if (templateObject.data.id != undefined) {
+            let data = await getCustomerFromID(templateObject.data.id)
+            lineItemObj = {
+                id: data.fields.ID || '',
+                lid: 'Edit Customer',
+                isjob: data.fields.IsJob || '',
+                issupplier: data.fields.IsSupplier || false,
+                iscustomer: data.fields.IsCustomer || false,
+                company: data.fields.ClientName || '',
+                email: data.fields.Email || '',
+                title: data.fields.Title || '',
+                firstname: data.fields.FirstName || '',
+                middlename: data.fields.CUSTFLD10 || '',
+                lastname: data.fields.LastName || '',
+                tfn: '' || '',
+                phone: data.fields.Phone || '',
+                mobile: data.fields.Mobile || '',
+                fax: data.fields.Faxnumber || '',
+                skype: data.fields.SkypeName || '',
+                website: data.fields.URL || '',
+                shippingaddress: data.fields.Street || '',
+                scity: data.fields.Street2 || '',
+                ssuburb: data.fields.Suburb || '',
+                sstate: data.fields.State || '',
+                spostalcode: data.fields.Postcode || '',
+                scountry: data.fields.Country || LoggedCountry,
+                billingaddress: data.fields.BillStreet || '',
+                bcity: data.fields.BillStreet2 || '',
+                bsuburb: data.fields.Billsuburb || '',
+                bstate: data.fields.BillState || '',
+                bpostalcode: data.fields.BillPostcode || '',
+                bcountry: data.fields.Billcountry || '',
+                notes: data.fields.Notes || '',
+                preferedpayment: data.fields.PaymentMethodName || '',
+                terms: data.fields.TermsName || localStorage.getItem('ERPTermsSales'),
+                deliverymethod: data.fields.ShippingMethodName || '',
+                clienttype: data.fields.ClientTypeName || '',
+                openingbalance: data.fields.RewardPointsOpeningBalance || 0.00,
+                openingbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                taxcode: data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get(),
+                custfield1: data.fields.CUSTFLD1 || '',
+                custfield2: data.fields.CUSTFLD2 || '',
+                custfield3: data.fields.CUSTFLD3 || '',
+                custfield4: data.fields.CUSTFLD4 || '',
+                status: data.fields.Status || '',
+                rep: data.fields.RepName || '',
+                source: data.fields.SourceName || '',
+                salesQuota: data.fields.CUSTFLD12 || '',
+                jobcompany: data.fields.ClientName || '',
+                jobCompanyParent: data.fields.ClientName || '',
+                jobemail: data.fields.Email || '',
+                jobtitle: data.fields.Title || '',
+                jobfirstname: data.fields.FirstName || '',
+                jobmiddlename: data.fields.CUSTFLD10 || '',
+                joblastname: data.fields.LastName || '',
+                jobtfn: '' || '',
+                jobphone: data.fields.Phone || '',
+                jobmobile: data.fields.Mobile || '',
+                jobfax: data.fields.Faxnumber || '',
+                jobskype: data.fields.SkypeName || '',
+                jobwebsite: data.fields.CUSTFLD9 || '',
+                jobshippingaddress: data.fields.Street || '',
+                jobscity: data.fields.Street2 || '',
+                jobsstate: data.fields.State || '',
+                jobspostalcode: data.fields.Postcode || '',
+                jobscountry: data.fields.Country || LoggedCountry,
+                jobbillingaddress: data.fields.BillStreet || '',
+                jobbcity: data.fields.BillStreet2 || '',
+                jobbstate: data.fields.BillState || '',
+                jobbpostalcode: data.fields.BillPostcode || '',
+                jobbcountry: data.fields.Billcountry || '',
+                jobnotes: data.fields.Notes || '',
+                jobpreferedpayment: data.fields.PaymentMethodName || '',
+                jobterms: data.fields.TermsName || '',
+                jobdeliverymethod: data.fields.ShippingMethodName || '',
+                jobopeningbalance: data.fields.RewardPointsOpeningBalance || 0.00,
+                jobopeningbalancedate: data.fields.RewardPointsOpeningDate ? moment(data.fields.RewardPointsOpeningDate).format('DD/MM/YYYY') : "",
+                jobtaxcode: data.fields.TaxCodeName || templateObject.defaultsaletaxcode.get(),
+                jobcustFld1: '' || '',
+                jobcustFld2: '' || '',
+                job_Title: '',
+                jobName: '',
+                jobNumber: '',
+                jobRegistration: '',
+                discount: data.fields.Discount || 0,
+                jobclienttype: data.fields.ClientTypeName || '',
+                ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
+          
+            };
         }
 
-    }, 500);
+        setTimeout(function() {
+            $('.customerTypeSelect').append('<option value="newCust">Add Customer Type</option>');
+        }, 500)
+        templateObject.isSameAddress.set(true);
+        templateObject.records.set(lineItemObj);
+        setTimeout(function() {
+            $('.addcustomerpop #tblTransactionlist').DataTable();
+            if (currentId.transTab == 'active') {
+                $('.customerTab').removeClass('active');
+                $('.transactionTab').trigger('click');
+            } else if (currentId.transTab == 'job') {
+                $('.customerTab').removeClass('active');
+                $('.jobTab').trigger('click');
+            } else {
+                $('.customerTab').addClass('active');
+                $('.customerTab').trigger('click');
+            }
+    
+        }, 500);
+    }
+
+    await templateObject.getCustomerData();
 
     templateObject.getCustomersList = function() {
         getVS1Data('TCustomerVS1').then(function(dataObject) {

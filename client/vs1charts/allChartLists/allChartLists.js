@@ -102,6 +102,10 @@ let chartsPlaceList = {
         "crmleadchart",
         // "resalescomparision"
     ],
+
+    "All_Charts" :[
+        "",
+    ],
 };
 
 let sideBarService = new SideBarService();
@@ -793,10 +797,10 @@ Template.allChartLists.events({
     },
     "click #btnCancel": async() => {
         playCancelAudio();
+        const templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "block");
-            chartsEditor.disable();
-            const templateObject = Template.instance();
+            chartsEditor.disable();         
             await templateObject.hideChartElements();
             await templateObject.checkChartToDisplay();
             $('.sortable-chart-widget-js').removeClass("editCharts");
@@ -831,8 +835,8 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
+        if(current == 'All_Charts') return 1;
         return chartsPlaceList[current].includes(chart);
-        // return 1;
     },
 
     is_dashboard_check: (currentTemplate) => {

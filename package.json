@@ -47,6 +47,7 @@
     "highcharts": "^10.3.2",
     "html2canvas": "^1.4.1",
     "html5-qrcode": "^2.3.4",
+    "html-pdf": "^3.0.1",
     "jQuery.print": "^1.5.1",
     "jquery": "^3.5.1",
     "jquery-editable-select": "^2.2.5",

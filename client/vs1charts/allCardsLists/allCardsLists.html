@@ -3,12 +3,15 @@
         .dimmedChart>div {
             background-color: #dddfeb !important;
         }
+
         .hideelement {
             display: none !important;
         }
+
         .showelement {
             display: block;
         }
+
         .hideShowDiv {
             display: inline-block;
             width: 100%;
@@ -20,21 +23,31 @@
             left: 0;
             z-index: 2;
         }
+
         a {
             text-decoration: none !important;
         }
+
         .dimmedChart .text-dark *,
         .dimmedChart .text-dark,
         .dimmedChart .text-gray-300 {
             color: #666666 !important;
         }
+
+        .dimmedChart .fa-eye {
+            color: #1cc88a;
+        }
+
+        .dimmedChart .fa-eye-slash {
+            color: #e74a3b;
+        }
     </style>
     <div class="container-New">
         <div class="text-right actionButtonCardsTop hideelement">
-            <button class="btn btn-success editCardBtn" id="saveCards" type="button" style="margin:0 8px 16px;">
+            <button class="btn btn-success saveCards" id="saveCards" type="button" style="margin:0 8px 16px;">
                 <i class="fas fa-save" style="margin-right: 5px;"></i>Save Cards
             </button>
-            <button class="btn btn-warning resetcards" id="resetcards" type="button" style="margin:0 8px 16px;">
+            <button class="btn btn-warning resetCards" id="resetcards" type="button" style="margin:0 8px 16px;">
                 <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Cards
             </button>
             <button class="btn btn-secondary cancelCards" id="cancelCards" type="button" style="margin:0 8px 16px;">
@@ -43,21 +56,21 @@
         </div>
         <div class="row connectedCardSortable" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
             {{#if equals type "dashboardSales"}}
-                {{> dashboardSalesCards }}
+            {{> dashboardSalesCards }}
             {{else}}
-                {{#if equals type "dashboardSalesManager"}}
-                    {{> dashboardManagerCards }}
-                {{else}}
-                    {{> purchasesaleschart}}
-                    {{> bankingoverviewcards}}
-                    {{> paymentoverviewcards}}
-                    {{> crmoverviewcards }}
-                    {{> purchasesoverviewcards }}
-                    {{> seedtosalecards }}
-                    {{> shippingcards}}
-                    {{> paymentoverviewcardssupplier}}
-                    {{> paymentoverviewcardscustomer}}
-                {{/if}}
+            {{#if equals type "dashboardSalesManager"}}
+            {{> dashboardManagerCards }}
+            {{else}}
+            {{> purchasesaleschart}}
+            {{> bankingoverviewcards}}
+            {{> paymentoverviewcards}}
+            {{> crmoverviewcards }}
+            {{> purchasesoverviewcards }}
+            {{> seedtosalecards }}
+            {{> shippingcards}}
+            {{> paymentoverviewcardssupplier}}
+            {{> paymentoverviewcardscustomer}}
+            {{/if}}
             {{/if}}
         </div>
     </div>

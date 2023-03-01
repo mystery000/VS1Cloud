@@ -85,54 +85,6 @@ Template.refundcard.onCreated(() => {
   templateObject.defaultsaleterm = new ReactiveVar();
   templateObject.subtaxcodes = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
-
-  // setTimeout(function () {
-  //   const x = window.matchMedia("(max-width: 1024px)");
-  //   function mediaQuery(x) {
-  //     if (x.matches) {
-  //       $("#colInvnoReference").removeClass("col-auto");
-  //       $("#colInvnoReference").addClass("col-6");
-  //       $("#colTermsVia").removeClass("col-auto");
-  //       $("#colTermsVia").addClass("col-6");
-  //       $("#colStatusDepartment").removeClass("col-auto");
-  //       $("#colStatusDepartment").addClass("col-6");
-  //       $("#colBillingAddress").removeClass("col-auto");
-  //       $("#colBillingAddress").addClass("col-6");
-  //       $("#colOrderDue").removeClass("col-auto");
-  //       $("#colOrderDue").addClass("col-6");
-  //       $("#fieldwidth").removeClass("billaddressfield");
-  //       $("#fieldwidth").addClass("billaddressfield2");
-  //     }
-  //   }
-  //   mediaQuery(x);
-  //   x.addListener(mediaQuery);
-  // }, 10);
-  // setTimeout(function () {
-  //   const x = window.matchMedia("(max-width: 420px)");
-  //   function mediaQuery(x) {
-  //     if (x.matches) {
-  //       $("#colInvnoReference").removeClass("col-auto");
-  //       $("#colInvnoReference").addClass("col-12");
-  //       $("#colTermsVia").removeClass("col-auto");
-  //       $("#colTermsVia").addClass("col-12");
-  //       $("#colStatusDepartment").removeClass("col-auto");
-  //       $("#colStatusDepartment").addClass("col-12");
-  //       $("#colBillingAddress").removeClass("col-auto");
-  //       $("#colBillingAddress").addClass("col-12");
-  //       $("#colOrderDue").removeClass("col-auto");
-  //       $("#colOrderDue").addClass("col-12");
-  //       $("#colSupplierName").removeClass("col-auto");
-  //       $("#colSupplierName").addClass("col-12");
-  //       $("#colSupplierEmail").removeClass("col-auto");
-  //       $("#colSupplierEmail").addClass("col-12");
-  //       $("#fieldwidth").removeClass("billaddressfield");
-  //       $("#fieldwidth").addClass("billaddressfield2");
-  //     }
-  //   }
-  //   mediaQuery(x);
-  //   x.addListener(mediaQuery);
-  // }, 10);
-
   templateObject.customerRecord = new ReactiveVar();
 
   // Methods
@@ -150,16 +102,8 @@ Template.refundcard.onCreated(() => {
       templateObject.hasFollow.set(isRepeated);
     }
   };
-  templateObject.generateInvoiceData = function (template_title, number) {
-    object_invoce = [];
-    switch (template_title) {
-      case "Refunds":
-        showRefund1(template_title, number, false);
-        break;
-    }
-  };
 
-  function showRefund1(template_title, number, bprint) {
+  templateObject.showRefund1 = (template_title, number, bprint) => {
     var array_data = [];
     let lineItems = [];
     let taxItems = {};
@@ -510,6 +454,16 @@ Template.refundcard.onCreated(() => {
 
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
+
+  templateObject.generateInvoiceData = function (template_title, number) {
+    object_invoce = [];
+    switch (template_title) {
+      case "Refunds":
+        templateObject.showRefund1(template_title, number, false);
+        break;
+      default: null
+    }
+  };
 
   function loadTemplateBody1(object_invoce) {
     if (object_invoce[0]["taxItems"]) {
@@ -946,6 +900,472 @@ Template.refundcard.onCreated(() => {
         });
       });
   };
+
+  // send Email Part
+  templateObject.generatePdfForMail = async (invoiceId) => {
+    let file = "Refund-" + invoiceId + ".pdf"
+    return new Promise((resolve, reject) => {
+      const source = document.getElementById('html-2-pdfwrapper');
+      const opt = {
+        margin: 0,
+        filename: file,
+        image: {
+          type: 'jpeg',
+          quality: 0.98
+        },
+        html2canvas: {
+          scale: 2
+        },
+        jsPDF: {
+          unit: 'in',
+          format: 'a4',
+          orientation: 'portrait'
+        }
+      };
+      resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+    });
+  }
+  templateObject.addAttachment = async (objDetails) => {
+    let attachment = [];
+    let invoiceId = objDetails.fields.ID;
+    let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
+    let base64data = encodedPdf.split(',')[1];
+    let pdfObject = {
+      filename: 'Quote-' + invoiceId + '.pdf',
+      content: base64data,
+      encoding: 'base64'
+    };
+    attachment.push(pdfObject);
+    let erpInvoiceId = objDetails.fields.ID;
+    let mailFromName = localStorage.getItem("vs1companyName");
+    let mailFrom =
+        localStorage.getItem("VS1OrgEmail") ||
+        localStorage.getItem("VS1AdminUserName");
+    let customerEmailName = $("#edtCustomerName").val();
+    let checkEmailData = $("#edtCustomerEmail").val();
+
+    let grandtotal = $("#grandTotal").html();
+    let amountDueEmail = $("#totalBalanceDue").html();
+    let emailDueDate = $("#dtDueDate").val();
+    let mailSubject =
+        "Refund " +
+        erpInvoiceId +
+        " from " +
+        mailFromName +
+        " for " +
+        customerEmailName;
+    var htmlmailBody =
+        '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+        "    <tr>" +
+        '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+        '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+        "        </td>" +
+        "    </tr>" +
+        "    <tr>" +
+        '        <td style="padding: 40px 30px 40px 30px;">' +
+        '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+        "                <tr>" +
+        '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+        "                        Hello there <span>" +
+        customerEmailName +
+        "</span>," +
+        "                    </td>" +
+        "                </tr>" +
+        "                <tr>" +
+        '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+        "                        Please find refund <span>" +
+        erpInvoiceId +
+        "</span> attached below." +
+        "                    </td>" +
+        "                </tr>" +
+        "                <tr>" +
+        '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+        "                        The amount outstanding of <span>" +
+        amountDueEmail +
+        "</span> is due on <span>" +
+        emailDueDate +
+        "</span>" +
+        "                    </td>" +
+        "                </tr>" +
+        "                <tr>" +
+        '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+        "                        Kind regards," +
+        "                        <br>" +
+        "                        " +
+        mailFromName +
+        "" +
+        "                    </td>" +
+        "                </tr>" +
+        "            </table>" +
+        "        </td>" +
+        "    </tr>" +
+        "    <tr>" +
+        '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+        '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+        "                <tr>" +
+        '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+        "                        If you have any question, please do not hesitate to contact us." +
+        "                    </td>" +
+        '                    <td align="right">' +
+        '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' +
+        mailFrom +
+        '">Contact Us</a>' +
+        "                    </td>" +
+        "                </tr>" +
+        "            </table>" +
+        "        </td>" +
+        "    </tr>" +
+        "</table>";
+
+    // add to custom field
+    if ($(".chkEmailCopy").is(":checked") && $(".chkEmailRep").is(":checked")) {
+      Meteor.call(
+          "sendEmail",
+          {
+            from: "" + mailFromName + " <" + mailFrom + ">",
+            to: checkEmailData,
+            subject: mailSubject,
+            text: "",
+            html: htmlmailBody,
+            attachments: attachment,
+          },
+          function (error, result) {
+            if (error && error.error === "error") {
+              if (FlowRouter.current().queryParams.trans) {
+
+              } else {
+              }
+            }
+          }
+      );
+
+      Meteor.call(
+          "sendEmail",
+          {
+            from: "" + mailFromName + " <" + mailFrom + ">",
+            to: mailFrom,
+            subject: mailSubject,
+            text: "",
+            html: htmlmailBody,
+            attachments: attachment,
+          },
+          function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+              $("#html-2-pdfwrapper").css("display", "none");
+              swal({
+                title: "SUCCESS",
+                text:
+                    "Email Sent To Customer: " +
+                    checkEmailData +
+                    " and User: " +
+                    mailFrom +
+                    "",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.value) {
+                  if (FlowRouter.current().queryParams.trans) {
+
+                  } else {
+                  }
+                } else if (result.dismiss === "cancel") {
+                }
+              });
+
+              LoadingOverlay.hide();
+            }
+          }
+      );
+    } else if ($(".chkEmailCopy").is(":checked")) {
+      Meteor.call(
+          "sendEmail",
+          {
+            from: "" + mailFromName + " <" + mailFrom + ">",
+            to: checkEmailData,
+            subject: mailSubject,
+            text: "",
+            html: htmlmailBody,
+            attachments: attachment,
+          },
+          function (error, result) {
+            if (error && error.error === "error") {
+              FlowRouter.go("/refundlist?success=true");
+            } else {
+              $("#html-2-pdfwrapper").css("display", "none");
+              swal({
+                title: "SUCCESS",
+                text:
+                    "Email Sent To Customer: " + checkEmailData + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.value) {
+                  if (FlowRouter.current().queryParams.trans) {
+
+                  } else {
+                  }
+                }
+              });
+              LoadingOverlay.hide();
+            }
+          }
+      );
+    } else if ($(".chkEmailRep").is(":checked")) {
+      Meteor.call(
+          "sendEmail",
+          {
+            from: "" + mailFromName + " <" + mailFrom + ">",
+            to: mailFrom,
+            subject: mailSubject,
+            text: "",
+            html: htmlmailBody,
+            attachments: attachment,
+          },
+          function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+              $("#html-2-pdfwrapper").css("display", "none");
+              swal({
+                title: "SUCCESS",
+                text: "Email Sent To User: " + mailFrom + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+              }).then((result) => {
+                if (result.value) {
+                  if (FlowRouter.current().queryParams.trans) {
+
+                  } else {
+                  }
+                }
+              });
+              LoadingOverlay.hide();
+            }
+          }
+      );
+    }
+  }
+
+  templateObject.sendEmailWithAttachment = async () => {
+    const customername = $("#edtCustomerName");
+    const termname = $("#sltTerms").val() || "";
+    const payMethod = $("#sltPaymentMethod").val() || "Cash";
+    localStorage.setItem("paymentmethod", payMethod);
+    if (termname === "") {
+      swal("Terms has not been selected!", "", "warning");
+      event.preventDefault();
+      return false;
+    }
+
+    if (customername.val() === "") {
+      swal("Customer has not been selected!", "", "warning");
+      e.preventDefault();
+      return false;
+    }
+    const splashLineArray = new Array();
+    const lineItemsForm = [];
+    let lineItemObjForm = {};
+    const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+    const duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+    const saleDate =
+        saledateTime.getFullYear() +
+        "-" +
+        (saledateTime.getMonth() + 1) +
+        "-" +
+        saledateTime.getDate();
+    $("#tblInvoiceLine > tbody > tr").each(function () {
+      var lineID = this.id;
+      let tdproduct = $("#" + lineID + " .lineProductName").val();
+      let tddescription = $("#" + lineID + " .lineProductDesc").text();
+      let tdQty = $("#" + lineID + " .lineQty").val();
+      let tdunitprice = $("#" + lineID + " .colUnitPriceExChange").val();
+      let tdtaxCode =
+          $("#" + lineID + " .lineTaxCode").val() || loggedTaxCodeSalesInc;
+      let tdSerialNumber = $("#" + lineID + " .colSerialNo").attr(
+          "data-serialnumbers"
+      );
+      let tdLotNumber = $("#" + lineID + " .colSerialNo").attr(
+          "data-lotnumbers"
+      );
+      let tdLotExpiryDate = $("#" + lineID + " .colSerialNo").attr(
+          "data-expirydates"
+      );
+
+      if (tdproduct != "") {
+        lineItemObjForm = {
+          type: "TRefundSaleLine",
+          fields: {
+            ProductName: tdproduct || "",
+            ProductDescription: tddescription || "",
+            UOMOrderQty: -parseFloat(tdQty) || 0,
+            UOMQtySold: -parseFloat(tdQty) || 0,
+            UOMQtyShipped: -parseFloat(tdQty) || 0,
+            LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+            Headershipdate: saleDate,
+            LineTaxCode: tdtaxCode || "",
+            DiscountPercent:
+                parseFloat($("#" + lineID + " .lineDiscount").text()) || 0,
+          },
+        };
+
+        // Feature/ser-lot number tracking: Save Serial Numbers
+        if (tdSerialNumber) {
+          const serialNumbers = tdSerialNumber.split(",");
+          let tpqaList = [];
+          for (let i = 0; i < serialNumbers.length; i++) {
+            const tpqaObject = {
+              type: "TPQASN",
+              fields: {
+                Active: true,
+                Qty: 1,
+                SerialNumber: serialNumbers[i],
+              },
+            };
+            tpqaList.push(tpqaObject);
+          }
+          const pqaObject = {
+            type: "TPQA",
+            fields: {
+              Active: true,
+              PQASN: tpqaList,
+              Qty: serialNumbers.length,
+            },
+          };
+          lineItemObjForm.fields.PQA = pqaObject;
+        }
+
+        // Feature/ser-lot number tracking: Save Lot Number
+        if (tdLotNumber) {
+          const lotNumbers = tdLotNumber.split(",");
+          const expiryDates = tdLotExpiryDate.split(",");
+          let tpqaList = [];
+          for (let i = 0; i < lotNumbers.length; i++) {
+            const dates = expiryDates[i].split("/");
+            const tpqaObject = {
+              type: "PQABatch",
+              fields: {
+                Active: true,
+                BatchExpiryDate: new Date(
+                    parseInt(dates[2]),
+                    parseInt(dates[1]) - 1,
+                    parseInt(dates[0])
+                ).toISOString(),
+                Qty: 1,
+                BatchNo: lotNumbers[i],
+              },
+            };
+            tpqaList.push(tpqaObject);
+          }
+          const pqaObject = {
+            type: "TPQA",
+            fields: {
+              Active: true,
+              PQABatch: tpqaList,
+              Qty: lotNumbers.length,
+            },
+          };
+          lineItemObjForm.fields.PQA = pqaObject;
+        }
+
+        lineItemsForm.push(lineItemObjForm);
+        splashLineArray.push(lineItemObjForm);
+      }
+    });
+    let getchkcustomField1 = true;
+    let getchkcustomField2 = true;
+    let getcustomField1 = $(".customField1Text").html();
+    let getcustomField2 = $(".customField2Text").html();
+    if ($("#formCheck-one").is(":checked")) {
+      getchkcustomField1 = false;
+    }
+    if ($("#formCheck-two").is(":checked")) {
+      getchkcustomField2 = false;
+    }
+
+    const customer = $("#edtCustomerName").val();
+    const customerEmail = $("#edtCustomerEmail").val();
+    const billingAddress = $("#txabillingAddress").val();
+
+    const poNumber = $("#ponumber").val();
+    const reference = $("#edtRef").val();
+
+    const departement = $("#sltDept").val();
+    const shippingAddress = $("#txaShipingInfo").val();
+    const comments = $("#txaComment").val();
+    const pickingInfrmation = $("#txapickmemo").val();
+
+    const saleCustField1 = $("#edtSaleCustField1").val() || "";
+    const saleCustField2 = $("#edtSaleCustField2").val() || "";
+    const saleCustField3 = $("#edtSaleCustField3").val() || "";
+    const url = FlowRouter.current().path;
+    const getso_id = url.split("?id=");
+    let currentInvoice = getso_id[getso_id.length - 1];
+
+    const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    const ForeignExchangeRate = $("#exchange_rate").val() || 0;
+    let foreignCurrencyFields = {};
+    if (FxGlobalFunctions.isCurrencyEnabled()) {
+      foreignCurrencyFields = {
+        ForeignExchangeCode: currencyCode,
+        ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+      };
+    }
+    var objDetails = "";
+    if (getso_id[1]) {
+      currentInvoice = parseInt(currentInvoice);
+      objDetails = {
+        type: "TRefundSale",
+        fields: {
+          ID: currentInvoice,
+          CustomerName: customer,
+          ...foreignCurrencyFields,
+          Lines: splashLineArray,
+          InvoiceToDesc: billingAddress,
+          SaleDate: saleDate,
+          CustPONumber: poNumber,
+          TermsName: termname,
+          PayMethod: payMethod || "Cash",
+          SaleClassName: departement,
+          ShipToDesc: shippingAddress,
+          Comments: comments,
+          SaleCustField1: saleCustField1,
+          SaleCustField2: saleCustField2,
+          SaleCustField3: saleCustField3,
+          PickMemo: pickingInfrmation,
+          SalesStatus: $("#sltStatus").val(),
+        },
+      };
+    } else {
+      objDetails = {
+        type: "TRefundSale",
+        fields: {
+          CustomerName: customer,
+          ...foreignCurrencyFields,
+          Lines: splashLineArray,
+          InvoiceToDesc: billingAddress,
+          SaleDate: saleDate,
+          CustPONumber: poNumber,
+          TermsName: termname,
+          PayMethod: payMethod || "Cash",
+          SaleClassName: departement,
+          ShipToDesc: shippingAddress,
+          Comments: comments,
+          SaleCustField1: saleCustField1,
+          SaleCustField2: saleCustField2,
+          SaleCustField3: saleCustField3,
+          PickMemo: pickingInfrmation,
+          SalesStatus: $("#sltStatus").val(),
+        },
+      };
+    }
+
+    await templateObject.addAttachment(objDetails)
+  }
+
+
 });
 
 Template.refundcard.onRendered(() => {
@@ -1170,19 +1590,19 @@ Template.refundcard.onRendered(() => {
                           let lotno = "";
                           let expirydate = "";
                           if(data.fields.Lines[i].fields.PQA != null){
-                          if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
-                              for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                              serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                              }
+                            if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
+                                for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                                  serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                }
+                            }
+                            if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
+                                for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                                  lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                  let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                  expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                }
+                            }
                           }
-                          if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
-                              for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                              lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                              let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                              expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                              }
-                          }
-                        }
                           lineItemObj = {
                             lineID: Random.id(),
                             id: data.fields.Lines[i].fields.ID || "",
@@ -1290,6 +1710,23 @@ Template.refundcard.onRendered(() => {
                             currencySymbol +
                             "" +
                             data.fields.Lines.fields.LineTaxRate;
+                        let serialno = "";
+                        let lotno = "";
+                        let expirydate = "";
+                        if(data.fields.Lines.fields.PQA != null){
+                          if(data.fields.Lines.fields.PQA.fields.PQASN != null){
+                              for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                                serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                              }
+                          }
+                          if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
+                              for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                                lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                              }
+                          }
+                        }
                         lineItemObj = {
                           lineID: Random.id(),
                           id: data.fields.Lines.fields.ID || "",
@@ -1299,7 +1736,7 @@ Template.refundcard.onRendered(() => {
                           unitPrice:
                               utilityService
                                   .modifynegativeCurrencyFormat(
-                                      data.fields.Lines[i].fields.OriginalLinePrice
+                                      data.fields.Lines.fields.OriginalLinePrice
                                   )
                                   .toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
@@ -1307,7 +1744,7 @@ Template.refundcard.onRendered(() => {
                           unitPriceInc:
                               utilityService
                                   .modifynegativeCurrencyFormat(
-                                      data.fields.Lines[i].fields.OriginalLinePriceInc
+                                      data.fields.Lines.fields.OriginalLinePriceInc
                                   )
                                   .toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
@@ -1315,7 +1752,7 @@ Template.refundcard.onRendered(() => {
                           TotalAmt:
                               utilityService
                                   .modifynegativeCurrencyFormat(
-                                      data.fields.Lines[i].fields.TotalLineAmount
+                                      data.fields.Lines.fields.TotalLineAmount
                                   )
                                   .toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
@@ -1323,13 +1760,13 @@ Template.refundcard.onRendered(() => {
                           TotalAmtInc:
                               utilityService
                                   .modifynegativeCurrencyFormat(
-                                      data.fields.Lines[i].fields.TotalLineAmountInc
+                                      data.fields.Lines.fields.TotalLineAmountInc
                                   )
                                   .toLocaleString(undefined, {
                                     minimumFractionDigits: 2,
                                   }) || 0,
                           lineCost:
-                              data.fields.Lines[i].fields.LineCost.toLocaleString(
+                              data.fields.Lines.fields.LineCost.toLocaleString(
                                   undefined,
                                   {
                                     minimumFractionDigits: 2,
@@ -1341,6 +1778,9 @@ Template.refundcard.onRendered(() => {
                           curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                           TaxTotal: TaxTotalGbp || 0,
                           TaxRate: TaxRateGbp || 0,
+                          serialnumbers: serialno,
+                          lotnumbers: lotno,
+                          expirydates: expirydate
                         };
                         lineItems.push(lineItemObj);
                       }
@@ -1384,6 +1824,7 @@ Template.refundcard.onRendered(() => {
                       saleCustField2: data.fields.SaleCustField2,
                       totalPaid: totalPaidAmount,
                       ispaid: data.fields.IsPaid,
+                      CustomerID: data.fields.CustomerID
                     };
 
                     $("#edtCustomerName").val(data.fields.CustomerName);
@@ -1746,6 +2187,21 @@ Template.refundcard.onRendered(() => {
                       let TaxRateGbp = (
                           useData[d].fields.Lines[i].fields.LineTaxRate * 100
                       ).toFixed(2);
+                      let serialno = "";
+                      let lotno = "";
+                      let expirydate = "";
+                      if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                          for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                              serialno += (serialno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                          }
+                      }
+                      if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                          for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                              lotno += (lotno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                              let expirydateformat = useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                              expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                          }
+                      }
                       lineItemObj = {
                         lineID: Random.id(),
                         id: useData[d].fields.Lines[i].fields.ID || "",
@@ -1821,6 +2277,9 @@ Template.refundcard.onRendered(() => {
                             0,
                         pqaseriallotdata:
                             useData[d].fields.Lines[i].fields.PQA || "",
+                        serialnumbers: serialno,
+                        lotnumbers: lotno,
+                        expirydates: expirydate
                       };
                       var dataListTable = [
                         useData[d].fields.Lines[i].fields.ProductName || "",
@@ -1868,6 +2327,21 @@ Template.refundcard.onRendered(() => {
                         currencySymbol +
                         "" +
                         useData[d].fields.Lines.fields.LineTaxRate;
+                    let serialno = "";
+                    let lotno = "";
+                    let expirydate = "";
+                    if(useData[d].fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                        for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                            serialno += (serialno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(useData[d].fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                        for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                            lotno += (lotno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                            let expirydateformat = useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
                     lineItemObj = {
                       lineID: Random.id(),
                       id: useData[d].fields.Lines.fields.ID || "",
@@ -1924,6 +2398,9 @@ Template.refundcard.onRendered(() => {
                           useData[d].fields.Lines.fields.DiscountPercent || 0,
                       pqaseriallotdata:
                           useData[d].fields.Lines.fields.PQA || "",
+                      serialnumbers: serialno,
+                      lotnumbers: lotno,
+                      expirydates: expirydate
                     };
                     lineItems.push(lineItemObj);
                   }
@@ -1967,6 +2444,7 @@ Template.refundcard.onRendered(() => {
                     saleCustField2: useData[d].fields.SaleCustField2,
                     totalPaid: totalPaidAmount,
                     ispaid: useData[d].fields.IsPaid,
+                    CustomerID: useData[d].fields.CustomerID
                   };
 
                   $("#edtCustomerName").val(useData[d].fields.CustomerName);
@@ -1981,13 +2459,6 @@ Template.refundcard.onRendered(() => {
                       $("#sltCurrency").val(),
                       defaultCurrencyCode
                   );
-                  // tempcode
-                  // setTimeout(function () {
-                  //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                  //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                  //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                  // }, 2500);
-
                   /* START attachment */
                   templateObject.attachmentCount.set(0);
                   if (useData[d].fields.Attachments) {
@@ -2302,6 +2773,21 @@ Template.refundcard.onRendered(() => {
                             let TaxRateGbp = (
                                 data.fields.Lines[i].fields.LineTaxRate * 100
                             ).toFixed(2);
+                            let serialno = "";
+                            let lotno = "";
+                            let expirydate = "";
+                            if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                                for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                                    serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                }
+                            }
+                            if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                                for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                                    lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                    let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                    expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                }
+                            }
                             lineItemObj = {
                               lineID: Random.id(),
                               id: data.fields.Lines[i].fields.ID || "",
@@ -2365,6 +2851,9 @@ Template.refundcard.onRendered(() => {
                               TaxRate: TaxRateGbp || 0,
                               DiscountPercent:
                                   data.fields.Lines[i].fields.DiscountPercent || 0,
+                              serialnumbers: serialno,
+                              lotnumbers: lotno,
+                              expirydates: expirydate
                             };
                             var dataListTable = [
                               data.fields.Lines[i].fields.ProductName || "",
@@ -2409,6 +2898,21 @@ Template.refundcard.onRendered(() => {
                               currencySymbol +
                               "" +
                               data.fields.Lines.fields.LineTaxRate;
+                          let serialno = "";
+                          let lotno = "";
+                          let expirydate = "";
+                          if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                              for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                                  serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                              }
+                          }
+                          if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                              for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                                  lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                  let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                  expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                              }
+                          }
                           lineItemObj = {
                             lineID: Random.id(),
                             id: data.fields.Lines.fields.ID || "",
@@ -2461,6 +2965,9 @@ Template.refundcard.onRendered(() => {
                                 currencyAmountGbp || currencySymbol + "0",
                             TaxTotal: TaxTotalGbp || 0,
                             TaxRate: TaxRateGbp || 0,
+                            serialnumbers: serialno,
+                            lotnumbers: lotno,
+                            expirydates: expirydate
                           };
                           lineItems.push(lineItemObj);
                         }
@@ -2504,6 +3011,7 @@ Template.refundcard.onRendered(() => {
                         saleCustField2: data.fields.SaleCustField2,
                         totalPaid: totalPaidAmount,
                         ispaid: data.fields.IsPaid,
+                        CustomerID: data.fields.CustomerID
                       };
 
                       $("#edtCustomerName").val(data.fields.CustomerName);
@@ -2872,19 +3380,19 @@ Template.refundcard.onRendered(() => {
                         let lotno = "";
                         let expirydate = "";
                         if(data.fields.Lines[i].fields.PQA != null){
-                        if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
-                            for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                            serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                            }
+                          if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
+                              for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                              serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                              }
+                          }
+                          if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
+                              for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                              lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                              let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                              expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                              }
+                          }
                         }
-                        if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
-                            for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                            lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                            let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                            }
-                        }
-                      }
                         lineItemObj = {
                           lineID: Random.id(),
                           id: data.fields.Lines[i].fields.ID || "",
@@ -2990,6 +3498,23 @@ Template.refundcard.onRendered(() => {
                           currencySymbol +
                           "" +
                           data.fields.Lines.fields.LineTaxRate;
+                      let serialno = "";
+                      let lotno = "";
+                      let expirydate = "";
+                      if(data.fields.Lines.fields.PQA != null){
+                        if(data.fields.Lines.fields.PQA.fields.PQASN != null){
+                            for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                              serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                            }
+                        }
+                        if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
+                            for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                              lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                              let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                              expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                            }
+                        }
+                      }
                       lineItemObj = {
                         lineID: Random.id(),
                         id: data.fields.Lines.fields.ID || "",
@@ -3041,6 +3566,9 @@ Template.refundcard.onRendered(() => {
                         curTotalAmt: currencyAmountGbp || currencySymbol + "0",
                         TaxTotal: TaxTotalGbp || 0,
                         TaxRate: TaxRateGbp || 0,
+                        serialnumbers: serialno,
+                        lotnumbers: lotno,
+                        expirydates: expirydate
                       };
                       lineItems.push(lineItemObj);
                     }
@@ -3084,6 +3612,7 @@ Template.refundcard.onRendered(() => {
                     saleCustField2: data.fields.SaleCustField2,
                     totalPaid: totalPaidAmount,
                     ispaid: data.fields.IsPaid,
+                    CustomerID: data.field.CustomerID
                   };
 
                   $("#edtCustomerName").val(data.fields.CustomerName);
@@ -3425,6 +3954,7 @@ Template.refundcard.onRendered(() => {
       saleCustField2: "",
       totalPaid: Currency + "" + 0.0,
       ispaid: false,
+      CustomerID: 0
     };
     if (FlowRouter.current().queryParams.customerid) {
       getCustomerData(FlowRouter.current().queryParams.customerid);
@@ -4006,7 +4536,7 @@ Template.refundcard.onRendered(() => {
     $("#departmentModal").modal("toggle");
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $("#sltTerms").val($(this).find(".colTermName").text());
+    $("#sltTerms").val($(this).find(".colName").text());
     $("#termsListModal").modal("toggle");
   });
   $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
@@ -4336,7 +4866,7 @@ Template.refundcard.onRendered(() => {
       LoadingOverlay.hide();
     }, 1000);
   }
-
+$(document).ready(function () {
   $("#sltTerms")
       .editableSelect()
       .on("click.editable-select", function (e, li) {
@@ -4713,570 +5243,106 @@ Template.refundcard.onRendered(() => {
         }
       });
 
-  // $("#edtCustomerName")
-  //     .editableSelect()
-  //     .on("click.editable-select", function (e, li) {
-  //       var $earch = $(this);
-  //       var offset = $earch.offset();
-  //       $("#edtCustomerPOPID").val("");
-  //       var customerDataName = e.target.value || "";
-  //       if (e.pageX > offset.left + $earch.width() - 8) {
-  //         // X button 16px wide?
-  //         $("#customerListModal").modal();
-  //         $("#tblCustomerlist_filter .form-control-sm").focus();
-  //         $("#tblCustomerlist_filter .form-control-sm").val("");
-  //         $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-  //         var datatable = $("#tblCustomerlist").DataTable();
-  //         datatable.draw();
-  //         $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-  //       } else {
-  //         if (customerDataName.replace(/\s/g, "") != "") {
-  //           $("#edtCustomerPOPID").val("");
-  //           getVS1Data("TCustomerVS1")
-  //             .then(function (dataObject) {
-  //               if (dataObject.length == 0) {
-  //                 LoadingOverlay.show();
-  //                 sideBarService
-  //                     .getOneCustomerDataExByName(customerDataName)
-  //                     .then(function (data) {
-  //                       LoadingOverlay.hide();
-  //                       $("#add-customer-title").text("Edit Customer");
-  //                       let popCustomerID = data.tcustomer[0].fields.ID || "";
-  //                       let popCustomerName =
-  //                           data.tcustomer[0].fields.ClientName || "";
-  //                       let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-  //                       let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-  //                       let popCustomerFirstName =
-  //                           data.tcustomer[0].fields.FirstName || "";
-  //                       let popCustomerMiddleName =
-  //                           data.tcustomer[0].fields.CUSTFLD10 || "";
-  //                       let popCustomerLastName =
-  //                           data.tcustomer[0].fields.LastName || "";
-  //                       let popCustomertfn = "" || "";
-  //                       let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-  //                       let popCustomerMobile =
-  //                           data.tcustomer[0].fields.Mobile || "";
-  //                       let popCustomerFaxnumber =
-  //                           data.tcustomer[0].fields.Faxnumber || "";
-  //                       let popCustomerSkypeName =
-  //                           data.tcustomer[0].fields.SkypeName || "";
-  //                       let popCustomerURL = data.tcustomer[0].fields.URL || "";
-  //                       let popCustomerStreet =
-  //                           data.tcustomer[0].fields.Street || "";
-  //                       let popCustomerStreet2 =
-  //                           data.tcustomer[0].fields.Street2 || "";
-  //                       let popCustomerState = data.tcustomer[0].fields.State || "";
-  //                       let popCustomerPostcode =
-  //                           data.tcustomer[0].fields.Postcode || "";
-  //                       let popCustomerCountry =
-  //                           data.tcustomer[0].fields.Country || LoggedCountry;
-  //                       let popCustomerbillingaddress =
-  //                           data.tcustomer[0].fields.BillStreet || "";
-  //                       let popCustomerbcity =
-  //                           data.tcustomer[0].fields.BillStreet2 || "";
-  //                       let popCustomerbstate =
-  //                           data.tcustomer[0].fields.BillState || "";
-  //                       let popCustomerbpostalcode =
-  //                           data.tcustomer[0].fields.BillPostcode || "";
-  //                       let popCustomerbcountry =
-  //                           data.tcustomer[0].fields.Billcountry || LoggedCountry;
-  //                       let popCustomercustfield1 =
-  //                           data.tcustomer[0].fields.CUSTFLD1 || "";
-  //                       let popCustomercustfield2 =
-  //                           data.tcustomer[0].fields.CUSTFLD2 || "";
-  //                       let popCustomercustfield3 =
-  //                           data.tcustomer[0].fields.CUSTFLD3 || "";
-  //                       let popCustomercustfield4 =
-  //                           data.tcustomer[0].fields.CUSTFLD4 || "";
-  //                       let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-  //                       let popCustomerpreferedpayment =
-  //                           data.tcustomer[0].fields.PaymentMethodName || "";
-  //                       let popCustomerterms =
-  //                           data.tcustomer[0].fields.TermsName || "";
-  //                       let popCustomerTaxCode =
-  //                           data.tcustomer[0].fields.TaxCodeName || "";
-  //                       let popCustomerDiscount =
-  //                           data.tcustomer[0].fields.Discount || 0;
-  //                       let popCustomerType =
-  //                           data.tcustomer[0].fields.ClientTypeName || "";
-  //                       $("#edtCustomerCompany").val(popCustomerName);
-  //                       $("#edtCustomerPOPID").val(popCustomerID);
-  //                       $("#edtCustomerPOPEmail").val(popCustomerEmail);
-  //                       $("#edtTitle").val(popCustomerTitle);
-  //                       $("#edtFirstName").val(popCustomerFirstName);
-  //                       $("#edtMiddleName").val(popCustomerMiddleName);
-  //                       $("#edtLastName").val(popCustomerLastName);
-  //                       $("#edtCustomerPhone").val(popCustomerPhone);
-  //                       $("#edtCustomerMobile").val(popCustomerMobile);
-  //                       $("#edtCustomerFax").val(popCustomerFaxnumber);
-  //                       $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-  //                       $("#edtCustomerWebsite").val(popCustomerURL);
-  //                       $("#edtCustomerShippingAddress").val(popCustomerStreet);
-  //                       $("#edtCustomerShippingCity").val(popCustomerStreet2);
-  //                       $("#edtCustomerShippingState").val(popCustomerState);
-  //                       $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-  //                       $("#sedtCountry").val(popCustomerCountry);
-  //                       $("#txaNotes").val(popCustomernotes);
-  //                       $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-  //                       $("#sltTermsPOP").val(popCustomerterms);
-  //                       $("#sltCustomerType").val(popCustomerType);
-  //                       $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-  //                       $("#edtCustomeField1").val(popCustomercustfield1);
-  //                       $("#edtCustomeField2").val(popCustomercustfield2);
-  //                       $("#edtCustomeField3").val(popCustomercustfield3);
-  //                       $("#edtCustomeField4").val(popCustomercustfield4);
-
-  //                       $("#sltTaxCode").val(popCustomerTaxCode);
-
-  //                       if (
-  //                           data.tcustomer[0].fields.Street ==
-  //                           data.tcustomer[0].fields.BillStreet &&
-  //                           data.tcustomer[0].fields.Street2 ==
-  //                           data.tcustomer[0].fields.BillStreet2 &&
-  //                           data.tcustomer[0].fields.State ==
-  //                           data.tcustomer[0].fields.BillState &&
-  //                           data.tcustomer[0].fields.Postcode ==
-  //                           data.tcustomer[0].fields.BillPostcode &&
-  //                           data.tcustomer[0].fields.Country ==
-  //                           data.tcustomer[0].fields.Billcountry
-  //                       ) {
-  //                         $("#chkSameAsShipping2").attr("checked", "checked");
-  //                       }
-
-  //                       if (data.tcustomer[0].fields.IsSupplier == true) {
-  //                         $("#chkSameAsSupplier").attr("checked", "checked");
-  //                       } else {
-  //                         $("#chkSameAsSupplier").removeAttr("checked");
-  //                       }
-
-  //                       let customerRecord = {
-  //                         id: popCustomerID,
-  //                         phone: popCustomerPhone,
-  //                         firstname: popCustomerFirstName,
-  //                         middlename: popCustomerMiddleName,
-  //                         lastname: popCustomerLastName,
-  //                         company: data.tcustomer[0].fields.Companyname || "",
-  //                         email: popCustomerEmail,
-  //                         title: popCustomerTitle,
-  //                         tfn: popCustomertfn,
-  //                         mobile: popCustomerMobile,
-  //                         fax: popCustomerFaxnumber,
-  //                         shippingaddress: popCustomerStreet,
-  //                         scity: popCustomerStreet2,
-  //                         sstate: popCustomerCountry,
-  //                         terms: "",
-  //                         spostalcode: popCustomerPostcode,
-  //                         scountry: popCustomerState,
-  //                         billingaddress: popCustomerbillingaddress,
-  //                         bcity: popCustomerbcity,
-  //                         bstate: popCustomerbstate,
-  //                         bpostalcode: popCustomerbpostalcode,
-  //                         bcountry: popCustomerCountry,
-  //                         custFld1: popCustomercustfield1,
-  //                         custFld2: popCustomercustfield2,
-  //                         jobbcountry: "",
-  //                         jobscountry: "",
-  //                         discount: 0,
-  //                       };
-  //                       templateObject.customerRecord.set(customerRecord);
-  //                       setTimeout(function() {
-  //                         $("#addCustomerModal").modal("show");
-  //                       }, 200);
-  //                     })
-  //                     .catch(function (err) {
-  //                       LoadingOverlay.hide();
-  //                     });
-  //               } else {
-  //                 let data = JSON.parse(dataObject[0].data);
-
-  //                 var added = false;
-  //                 for (let i = 0; i < data.tcustomervs1.length; i++) {
-  //                   if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-  //                     added = true;
-  //                     LoadingOverlay.hide();
-  //                     $("#add-customer-title").text("Edit Customer");
-  //                     let popCustomerID = data.tcustomervs1[i].fields.ID || "";
-  //                     let popCustomerName =
-  //                         data.tcustomervs1[i].fields.ClientName || "";
-  //                     let popCustomerEmail =
-  //                         data.tcustomervs1[i].fields.Email || "";
-  //                     let popCustomerTitle =
-  //                         data.tcustomervs1[i].fields.Title || "";
-  //                     let popCustomerFirstName =
-  //                         data.tcustomervs1[i].fields.FirstName || "";
-  //                     let popCustomerMiddleName =
-  //                         data.tcustomervs1[i].fields.CUSTFLD10 || "";
-  //                     let popCustomerLastName =
-  //                         data.tcustomervs1[i].fields.LastName || "";
-  //                     let popCustomertfn = "" || "";
-  //                     let popCustomerPhone =
-  //                         data.tcustomervs1[i].fields.Phone || "";
-  //                     let popCustomerMobile =
-  //                         data.tcustomervs1[i].fields.Mobile || "";
-  //                     let popCustomerFaxnumber =
-  //                         data.tcustomervs1[i].fields.Faxnumber || "";
-  //                     let popCustomerSkypeName =
-  //                         data.tcustomervs1[i].fields.SkypeName || "";
-  //                     let popCustomerURL = data.tcustomervs1[i].fields.URL || "";
-  //                     let popCustomerStreet =
-  //                         data.tcustomervs1[i].fields.Street || "";
-  //                     let popCustomerStreet2 =
-  //                         data.tcustomervs1[i].fields.Street2 || "";
-  //                     let popCustomerState =
-  //                         data.tcustomervs1[i].fields.State || "";
-  //                     let popCustomerPostcode =
-  //                         data.tcustomervs1[i].fields.Postcode || "";
-  //                     let popCustomerCountry =
-  //                         data.tcustomervs1[i].fields.Country || LoggedCountry;
-  //                     let popCustomerbillingaddress =
-  //                         data.tcustomervs1[i].fields.BillStreet || "";
-  //                     let popCustomerbcity =
-  //                         data.tcustomervs1[i].fields.BillStreet2 || "";
-  //                     let popCustomerbstate =
-  //                         data.tcustomervs1[i].fields.BillState || "";
-  //                     let popCustomerbpostalcode =
-  //                         data.tcustomervs1[i].fields.BillPostcode || "";
-  //                     let popCustomercustfield1 =
-  //                         data.tcustomervs1[i].fields.CUSTFLD1 || "";
-  //                     let popCustomercustfield2 =
-  //                         data.tcustomervs1[i].fields.CUSTFLD2 || "";
-  //                     let popCustomercustfield3 =
-  //                         data.tcustomervs1[i].fields.CUSTFLD3 || "";
-  //                     let popCustomercustfield4 =
-  //                         data.tcustomervs1[i].fields.CUSTFLD4 || "";
-  //                     let popCustomernotes =
-  //                         data.tcustomervs1[i].fields.Notes || "";
-  //                     let popCustomerpreferedpayment =
-  //                         data.tcustomervs1[i].fields.PaymentMethodName || "";
-  //                     let popCustomerterms =
-  //                         data.tcustomervs1[i].fields.TermsName || "";
-  //                     let popCustomerTaxCode =
-  //                         data.tcustomervs1[i].fields.TaxCodeName || "";
-  //                     let popCustomerDiscount =
-  //                         data.tcustomervs1[i].fields.Discount || 0;
-  //                     let popCustomerType =
-  //                         data.tcustomervs1[i].fields.ClientTypeName || "";
-  //                     $("#edtCustomerCompany").val(popCustomerName);
-  //                     $("#edtCustomerPOPID").val(popCustomerID);
-  //                     $("#edtCustomerPOPEmail").val(popCustomerEmail);
-  //                     $("#edtTitle").val(popCustomerTitle);
-  //                     $("#edtFirstName").val(popCustomerFirstName);
-  //                     $("#edtMiddleName").val(popCustomerMiddleName);
-  //                     $("#edtLastName").val(popCustomerLastName);
-  //                     $("#edtCustomerPhone").val(popCustomerPhone);
-  //                     $("#edtCustomerMobile").val(popCustomerMobile);
-  //                     $("#edtCustomerFax").val(popCustomerFaxnumber);
-  //                     $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-  //                     $("#edtCustomerWebsite").val(popCustomerURL);
-  //                     $("#edtCustomerShippingAddress").val(popCustomerStreet);
-  //                     $("#edtCustomerShippingCity").val(popCustomerStreet2);
-  //                     $("#edtCustomerShippingState").val(popCustomerState);
-  //                     $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-  //                     $("#sedtCountry").val(popCustomerCountry);
-  //                     $("#txaNotes").val(popCustomernotes);
-  //                     $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-  //                     $("#sltTermsPOP").val(popCustomerterms);
-  //                     $("#sltCustomerType").val(popCustomerType);
-  //                     $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-  //                     $("#edtCustomeField1").val(popCustomercustfield1);
-  //                     $("#edtCustomeField2").val(popCustomercustfield2);
-  //                     $("#edtCustomeField3").val(popCustomercustfield3);
-  //                     $("#edtCustomeField4").val(popCustomercustfield4);
-
-  //                     $("#sltTaxCode").val(popCustomerTaxCode);
-
-  //                     if (
-  //                         data.tcustomervs1[i].fields.Street ==
-  //                         data.tcustomervs1[i].fields.BillStreet &&
-  //                         data.tcustomervs1[i].fields.Street2 ==
-  //                         data.tcustomervs1[i].fields.BillStreet2 &&
-  //                         data.tcustomervs1[i].fields.State ==
-  //                         data.tcustomervs1[i].fields.BillState &&
-  //                         data.tcustomervs1[i].fields.Postcode ==
-  //                         data.tcustomervs1[i].fields.BillPostcode &&
-  //                         data.tcustomervs1[i].fields.Country ==
-  //                         data.tcustomervs1[i].fields.Billcountry
-  //                     ) {
-  //                       $("#chkSameAsShipping2").attr("checked", "checked");
-  //                     }
-
-  //                     if (data.tcustomervs1[i].fields.IsSupplier == true) {
-  //                       $("#chkSameAsSupplier").attr("checked", "checked");
-  //                     } else {
-  //                       $("#chkSameAsSupplier").removeAttr("checked");
-  //                     }
-
-  //                     let customerRecord = {
-  //                       id: popCustomerID,
-  //                       phone: popCustomerPhone,
-  //                       firstname: popCustomerFirstName,
-  //                       middlename: popCustomerMiddleName,
-  //                       lastname: popCustomerLastName,
-  //                       company: data.tcustomervs1[i].fields.Companyname || "",
-  //                       email: popCustomerEmail,
-  //                       title: popCustomerTitle,
-  //                       tfn: popCustomertfn,
-  //                       mobile: popCustomerMobile,
-  //                       fax: popCustomerFaxnumber,
-  //                       shippingaddress: popCustomerStreet,
-  //                       scity: popCustomerStreet2,
-  //                       sstate: popCustomerCountry,
-  //                       terms: "",
-  //                       spostalcode: popCustomerPostcode,
-  //                       scountry: popCustomerState,
-  //                       billingaddress: popCustomerbillingaddress,
-  //                       bcity: popCustomerbcity,
-  //                       bstate: popCustomerbstate,
-  //                       bpostalcode: popCustomerbpostalcode,
-  //                       bcountry: popCustomerCountry,
-  //                       custFld1: popCustomercustfield1,
-  //                       custFld2: popCustomercustfield2,
-  //                       jobbcountry: "",
-  //                       jobscountry: "",
-  //                       discount: 0,
-  //                     };
-  //                     templateObject.customerRecord.set(customerRecord);
-  //                     setTimeout(function() {
-  //                       $("#addCustomerModal").modal("show");
-  //                     }, 200);
-  //                     break;
-  //                   }
-  //                 }
-  //                 if (!added) {
-  //                   LoadingOverlay.show();
-  //                   sideBarService
-  //                     .getOneCustomerDataExByName(customerDataName)
-  //                     .then(function (data) {
-  //                       LoadingOverlay.hide();
-  //                       $("#add-customer-title").text("Edit Customer");
-  //                       let popCustomerID = data.tcustomer[0].fields.ID || "";
-  //                       let popCustomerName =
-  //                           data.tcustomer[0].fields.ClientName || "";
-  //                       let popCustomerEmail =
-  //                           data.tcustomer[0].fields.Email || "";
-  //                       let popCustomerTitle =
-  //                           data.tcustomer[0].fields.Title || "";
-  //                       let popCustomerFirstName =
-  //                           data.tcustomer[0].fields.FirstName || "";
-  //                       let popCustomerMiddleName =
-  //                           data.tcustomer[0].fields.CUSTFLD10 || "";
-  //                       let popCustomerLastName =
-  //                           data.tcustomer[0].fields.LastName || "";
-  //                       let popCustomerPhone =
-  //                           data.tcustomer[0].fields.Phone || "";
-  //                       let popCustomerMobile =
-  //                           data.tcustomer[0].fields.Mobile || "";
-  //                       let popCustomerFaxnumber =
-  //                           data.tcustomer[0].fields.Faxnumber || "";
-  //                       let popCustomerSkypeName =
-  //                           data.tcustomer[0].fields.SkypeName || "";
-  //                       let popCustomerURL = data.tcustomer[0].fields.URL || "";
-  //                       let popCustomerStreet =
-  //                           data.tcustomer[0].fields.Street || "";
-  //                       let popCustomerStreet2 =
-  //                           data.tcustomer[0].fields.Street2 || "";
-  //                       let popCustomerState =
-  //                           data.tcustomer[0].fields.State || "";
-  //                       let popCustomerPostcode =
-  //                           data.tcustomer[0].fields.Postcode || "";
-  //                       let popCustomerCountry =
-  //                           data.tcustomer[0].fields.Country || LoggedCountry;
-  //                       let popCustomercustfield1 =
-  //                           data.tcustomer[0].fields.CUSTFLD1 || "";
-  //                       let popCustomercustfield2 =
-  //                           data.tcustomer[0].fields.CUSTFLD2 || "";
-  //                       let popCustomercustfield3 =
-  //                           data.tcustomer[0].fields.CUSTFLD3 || "";
-  //                       let popCustomercustfield4 =
-  //                           data.tcustomer[0].fields.CUSTFLD4 || "";
-  //                       let popCustomernotes =
-  //                           data.tcustomer[0].fields.Notes || "";
-  //                       let popCustomerpreferedpayment =
-  //                           data.tcustomer[0].fields.PaymentMethodName || "";
-  //                       let popCustomerterms =
-  //                           data.tcustomer[0].fields.TermsName || "";
-  //                       let popCustomerTaxCode =
-  //                           data.tcustomer[0].fields.TaxCodeName || "";
-  //                       let popCustomerDiscount =
-  //                           data.tcustomer[0].fields.Discount || 0;
-  //                       let popCustomerType =
-  //                           data.tcustomer[0].fields.ClientTypeName || "";
-  //                       $("#edtCustomerCompany").val(popCustomerName);
-  //                       $("#edtCustomerPOPID").val(popCustomerID);
-  //                       $("#edtCustomerPOPEmail").val(popCustomerEmail);
-  //                       $("#edtTitle").val(popCustomerTitle);
-  //                       $("#edtFirstName").val(popCustomerFirstName);
-  //                       $("#edtMiddleName").val(popCustomerMiddleName);
-  //                       $("#edtLastName").val(popCustomerLastName);
-  //                       $("#edtCustomerPhone").val(popCustomerPhone);
-  //                       $("#edtCustomerMobile").val(popCustomerMobile);
-  //                       $("#edtCustomerFax").val(popCustomerFaxnumber);
-  //                       $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-  //                       $("#edtCustomerWebsite").val(popCustomerURL);
-  //                       $("#edtCustomerShippingAddress").val(popCustomerStreet);
-  //                       $("#edtCustomerShippingCity").val(popCustomerStreet2);
-  //                       $("#edtCustomerShippingState").val(popCustomerState);
-  //                       $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-  //                       $("#sedtCountry").val(popCustomerCountry);
-  //                       $("#txaNotes").val(popCustomernotes);
-  //                       $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-  //                       $("#sltTermsPOP").val(popCustomerterms);
-  //                       $("#sltCustomerType").val(popCustomerType);
-  //                       $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-  //                       $("#edtCustomeField1").val(popCustomercustfield1);
-  //                       $("#edtCustomeField2").val(popCustomercustfield2);
-  //                       $("#edtCustomeField3").val(popCustomercustfield3);
-  //                       $("#edtCustomeField4").val(popCustomercustfield4);
-
-  //                       $("#sltTaxCode").val(popCustomerTaxCode);
-
-  //                       if (
-  //                           data.tcustomer[0].fields.Street ==
-  //                           data.tcustomer[0].fields.BillStreet &&
-  //                           data.tcustomer[0].fields.Street2 ==
-  //                           data.tcustomer[0].fields.BillStreet2 &&
-  //                           data.tcustomer[0].fields.State ==
-  //                           data.tcustomer[0].fields.BillState &&
-  //                           data.tcustomer[0].fields.Postcode ==
-  //                           data.tcustomer[0].fields.BillPostcode &&
-  //                           data.tcustomer[0].fields.Country ==
-  //                           data.tcustomer[0].fields.Billcountry
-  //                       ) {
-  //                         $("#chkSameAsShipping2").attr("checked", "checked");
-  //                       }
-
-  //                       if (data.tcustomer[0].fields.IsSupplier == true) {
-  //                         $("#chkSameAsSupplier").attr("checked", "checked");
-  //                       } else {
-  //                         $("#chkSameAsSupplier").removeAttr("checked");
-  //                       }
-  //                         $("#addCustomerModal").modal("show");
-  //                     })
-  //                     .catch(function (err) {
-  //                       LoadingOverlay.hide();
-  //                     });
-  //                 }
-  //               }
-  //             })
-  //             .catch(function (err) {
-  //               sideBarService
-  //                 .getOneCustomerDataExByName(customerDataName)
-  //                 .then(function (data) {
-  //                   LoadingOverlay.hide();
-  //                   let lineItems = [];
-  //                   $("#add-customer-title").text("Edit Customer");
-  //                   let popCustomerID = data.tcustomer[0].fields.ID || "";
-  //                   let popCustomerName =
-  //                       data.tcustomer[0].fields.ClientName || "";
-  //                   let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-  //                   let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-  //                   let popCustomerFirstName =
-  //                       data.tcustomer[0].fields.FirstName || "";
-  //                   let popCustomerMiddleName =
-  //                       data.tcustomer[0].fields.CUSTFLD10 || "";
-  //                   let popCustomerLastName =
-  //                       data.tcustomer[0].fields.LastName || "";
-  //                   let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-  //                   let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-  //                   let popCustomerFaxnumber =
-  //                       data.tcustomer[0].fields.Faxnumber || "";
-  //                   let popCustomerSkypeName =
-  //                       data.tcustomer[0].fields.SkypeName || "";
-  //                   let popCustomerURL = data.tcustomer[0].fields.URL || "";
-  //                   let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-  //                   let popCustomerStreet2 =
-  //                       data.tcustomer[0].fields.Street2 || "";
-  //                   let popCustomerState = data.tcustomer[0].fields.State || "";
-  //                   let popCustomerPostcode =
-  //                       data.tcustomer[0].fields.Postcode || "";
-  //                   let popCustomerCountry =
-  //                       data.tcustomer[0].fields.Country || LoggedCountry;
-  //                   let popCustomercustfield1 =
-  //                       data.tcustomer[0].fields.CUSTFLD1 || "";
-  //                   let popCustomercustfield2 =
-  //                       data.tcustomer[0].fields.CUSTFLD2 || "";
-  //                   let popCustomercustfield3 =
-  //                       data.tcustomer[0].fields.CUSTFLD3 || "";
-  //                   let popCustomercustfield4 =
-  //                       data.tcustomer[0].fields.CUSTFLD4 || "";
-  //                   let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-  //                   let popCustomerpreferedpayment =
-  //                       data.tcustomer[0].fields.PaymentMethodName || "";
-  //                   let popCustomerterms =
-  //                       data.tcustomer[0].fields.TermsName || "";
-  //                   let popCustomerTaxCode =
-  //                       data.tcustomer[0].fields.TaxCodeName || "";
-  //                   let popCustomerDiscount =
-  //                       data.tcustomer[0].fields.Discount || 0;
-  //                   let popCustomerType =
-  //                       data.tcustomer[0].fields.ClientTypeName || "";
-  //                   $("#edtCustomerCompany").val(popCustomerName);
-  //                   $("#edtCustomerPOPID").val(popCustomerID);
-  //                   $("#edtCustomerPOPEmail").val(popCustomerEmail);
-  //                   $("#edtTitle").val(popCustomerTitle);
-  //                   $("#edtFirstName").val(popCustomerFirstName);
-  //                   $("#edtMiddleName").val(popCustomerMiddleName);
-  //                   $("#edtLastName").val(popCustomerLastName);
-  //                   $("#edtCustomerPhone").val(popCustomerPhone);
-  //                   $("#edtCustomerMobile").val(popCustomerMobile);
-  //                   $("#edtCustomerFax").val(popCustomerFaxnumber);
-  //                   $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-  //                   $("#edtCustomerWebsite").val(popCustomerURL);
-  //                   $("#edtCustomerShippingAddress").val(popCustomerStreet);
-  //                   $("#edtCustomerShippingCity").val(popCustomerStreet2);
-  //                   $("#edtCustomerShippingState").val(popCustomerState);
-  //                   $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-  //                   $("#sedtCountry").val(popCustomerCountry);
-  //                   $("#txaNotes").val(popCustomernotes);
-  //                   $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-  //                   $("#sltTermsPOP").val(popCustomerterms);
-  //                   $("#sltCustomerType").val(popCustomerType);
-  //                   $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-  //                   $("#edtCustomeField1").val(popCustomercustfield1);
-  //                   $("#edtCustomeField2").val(popCustomercustfield2);
-  //                   $("#edtCustomeField3").val(popCustomercustfield3);
-  //                   $("#edtCustomeField4").val(popCustomercustfield4);
-
-  //                   $("#sltTaxCode").val(popCustomerTaxCode);
-
-  //                   if (
-  //                       data.tcustomer[0].fields.Street ==
-  //                       data.tcustomer[0].fields.BillStreet &&
-  //                       data.tcustomer[0].fields.Street2 ==
-  //                       data.tcustomer[0].fields.BillStreet2 &&
-  //                       data.tcustomer[0].fields.State ==
-  //                       data.tcustomer[0].fields.BillState &&
-  //                       data.tcustomer[0].fields.Postcode ==
-  //                       data.tcustomer[0].fields.BillPostcode &&
-  //                       data.tcustomer[0].fields.Country ==
-  //                       data.tcustomer[0].fields.Billcountry
-  //                   ) {
-  //                     $("#chkSameAsShipping2").attr("checked", "checked");
-  //                   }
-
-  //                   if (data.tcustomer[0].fields.IsSupplier == true) {
-  //                     $("#chkSameAsSupplier").attr("checked", "checked");
-  //                   } else {
-  //                     $("#chkSameAsSupplier").removeAttr("checked");
-  //                   }
-  //                   $("#addCustomerModal").modal("show");
-  //                 })
-  //                 .catch(function (err) {
-  //                   LoadingOverlay.hide();
-  //                 });
-  //             });
-  //         } else {
-  //           $("#customerListModal").modal();
-  //           $("#tblCustomerlist_filter .form-control-sm").focus();
-  //           $("#tblCustomerlist_filter .form-control-sm").val("");
-  //           $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-  //           var datatable = $("#tblCustomerlist").DataTable();
-  //           datatable.draw();
-  //           $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-  //         }
-  //       }
-  // });
-
+      $("#sltPaymentMethod")
+          .editableSelect()
+          .on("click.editable-select", function (e, li) {
+            var $earch = $(this);
+            var offset = $earch.offset();
+            var paymentDataName = e.target.value || "";
+            $("#edtPaymentMethodID").val("");
+            if (e.pageX > offset.left + $earch.width() - 8) {
+              // X button 16px wide?
+              $("#paymentMethodModal").modal("toggle");
+            } else {
+              if (paymentDataName.replace(/\s/g, "") != "") {
+                $("#paymentMethodHeader").text("Edit Payment Method");
+                getVS1Data("TPaymentMethod")
+                  .then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                      LoadingOverlay.show();
+                      sideBarService.getPaymentMethodDataVS1().then(function (data) {
+                        for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+                          if (
+                              data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
+                              paymentDataName
+                          ) {
+                            $("#edtPaymentMethodID").val(
+                                data.tpaymentmethodvs1[i].fields.ID
+                            );
+                            $("#edtPaymentMethodName").val(
+                                data.tpaymentmethodvs1[i].fields.PaymentMethodName
+                            );
+                            if (
+                                data.tpaymentmethodvs1[i].fields.IsCreditCard === true
+                            ) {
+                              $("#isformcreditcard").prop("checked", true);
+                            } else {
+                              $("#isformcreditcard").prop("checked", false);
+                            }
+                          }
+                        }
+                        setTimeout(function () {
+                          LoadingOverlay.hide();
+                          $("#newPaymentMethodModal").modal("toggle");
+                        }, 200);
+                      });
+                    } else {
+                      let data = JSON.parse(dataObject[0].data);
+                      for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+                        if (
+                            data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
+                            paymentDataName
+                        ) {
+                          $("#edtPaymentMethodID").val(
+                              data.tpaymentmethodvs1[i].fields.ID
+                          );
+                          $("#edtPaymentMethodName").val(
+                              data.tpaymentmethodvs1[i].fields.PaymentMethodName
+                          );
+                          if (
+                              data.tpaymentmethodvs1[i].fields.IsCreditCard === true
+                          ) {
+                            $("#isformcreditcard").prop("checked", true);
+                          } else {
+                            $("#isformcreditcard").prop("checked", false);
+                          }
+                        }
+                      }
+                      LoadingOverlay.hide();
+                      $("#newPaymentMethodModal").modal("toggle");
+                    }
+                  })
+                  .catch(function (err) {
+                    LoadingOverlay.show();
+                    sideBarService.getPaymentMethodDataVS1().then(function (data) {
+                      for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
+                        if ( data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName ) {
+                          $("#edtPaymentMethodID").val( data.tpaymentmethodvs1[i].fields.ID );
+                          $("#edtPaymentMethodName").val( data.tpaymentmethodvs1[i].fields.PaymentMethodName );
+                          if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
+                            $("#isformcreditcard").prop("checked", true);
+                          } else {
+                            $("#isformcreditcard").prop("checked", false);
+                          }
+                          break;
+                        }
+                      }
+                      LoadingOverlay.hide();
+                      $("#newPaymentMethodModal").modal("toggle");
+                    });
+                  });
+              } else {
+                $("#paymentMethodModal").modal();
+                $("#paymentmethodList_filter .form-control-sm").focus();
+                $("#paymentmethodList_filter .form-control-sm").val("");
+                $("#paymentmethodList_filter .form-control-sm").trigger("input");
+                var datatable = $("#paymentmethodList").DataTable();
+                datatable.draw();
+                $("#paymentmethodList_filter .form-control-sm").trigger("input");
+              }
+            }
+          });
+});
   $(document).on('click', '#edtCustomerName', function(e, li) {
     var $earch = $(this);
     var offset = $earch.offset();
@@ -5844,105 +5910,6 @@ Template.refundcard.onRendered(() => {
     $("#paymentMethodModal").modal("toggle");
   });
 
-  $("#sltPaymentMethod")
-      .editableSelect()
-      .on("click.editable-select", function (e, li) {
-        var $earch = $(this);
-        var offset = $earch.offset();
-        var paymentDataName = e.target.value || "";
-        $("#edtPaymentMethodID").val("");
-        if (e.pageX > offset.left + $earch.width() - 8) {
-          // X button 16px wide?
-          $("#paymentMethodModal").modal("toggle");
-        } else {
-          if (paymentDataName.replace(/\s/g, "") != "") {
-            $("#paymentMethodHeader").text("Edit Payment Method");
-            getVS1Data("TPaymentMethod")
-              .then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  LoadingOverlay.show();
-                  sideBarService.getPaymentMethodDataVS1().then(function (data) {
-                    for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                      if (
-                          data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
-                          paymentDataName
-                      ) {
-                        $("#edtPaymentMethodID").val(
-                            data.tpaymentmethodvs1[i].fields.ID
-                        );
-                        $("#edtPaymentMethodName").val(
-                            data.tpaymentmethodvs1[i].fields.PaymentMethodName
-                        );
-                        if (
-                            data.tpaymentmethodvs1[i].fields.IsCreditCard === true
-                        ) {
-                          $("#isformcreditcard").prop("checked", true);
-                        } else {
-                          $("#isformcreditcard").prop("checked", false);
-                        }
-                      }
-                    }
-                    setTimeout(function () {
-                      LoadingOverlay.hide();
-                      $("#newPaymentMethodModal").modal("toggle");
-                    }, 200);
-                  });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if (
-                        data.tpaymentmethodvs1[i].fields.PaymentMethodName ===
-                        paymentDataName
-                    ) {
-                      $("#edtPaymentMethodID").val(
-                          data.tpaymentmethodvs1[i].fields.ID
-                      );
-                      $("#edtPaymentMethodName").val(
-                          data.tpaymentmethodvs1[i].fields.PaymentMethodName
-                      );
-                      if (
-                          data.tpaymentmethodvs1[i].fields.IsCreditCard === true
-                      ) {
-                        $("#isformcreditcard").prop("checked", true);
-                      } else {
-                        $("#isformcreditcard").prop("checked", false);
-                      }
-                    }
-                  }
-                  LoadingOverlay.hide();
-                  $("#newPaymentMethodModal").modal("toggle");
-                }
-              })
-              .catch(function (err) {
-                LoadingOverlay.show();
-                sideBarService.getPaymentMethodDataVS1().then(function (data) {
-                  for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if ( data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName ) {
-                      $("#edtPaymentMethodID").val( data.tpaymentmethodvs1[i].fields.ID );
-                      $("#edtPaymentMethodName").val( data.tpaymentmethodvs1[i].fields.PaymentMethodName );
-                      if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                        $("#isformcreditcard").prop("checked", true);
-                      } else {
-                        $("#isformcreditcard").prop("checked", false);
-                      }
-                      break;
-                    }
-                  }
-                  LoadingOverlay.hide();
-                  $("#newPaymentMethodModal").modal("toggle");
-                });
-              });
-          } else {
-            $("#paymentMethodModal").modal();
-            $("#paymentmethodList_filter .form-control-sm").focus();
-            $("#paymentmethodList_filter .form-control-sm").val("");
-            $("#paymentmethodList_filter .form-control-sm").trigger("input");
-            var datatable = $("#paymentmethodList").DataTable();
-            datatable.draw();
-            $("#paymentmethodList_filter .form-control-sm").trigger("input");
-          }
-        }
-      });
 
   exportSalesToPdf1 = function () {
     let invoice_data = templateObject.invoicerecord.get();
@@ -6049,7 +6016,7 @@ Template.refundcard.onRendered(() => {
 
   exportSalesToPdf = async function (template_title, number) {
     if (template_title == "Refunds") {
-      await showRefund1(template_title, number, true);
+      await templateObject.showRefund1(template_title, number, true);
     }
     let invoice_data = templateObject.invoicerecord.get();
     var source;
@@ -6100,65 +6067,6 @@ Template.refundcard.onRendered(() => {
     html2pdf()
         .set(opt)
         .from(source)
-        .toPdf()
-        .output("datauristring")
-        .then((data) => {
-          let attachment = [];
-          let base64data = data.split(",")[1];
-          let refundId = FlowRouter.current().queryParams.id
-              ? FlowRouter.current().queryParams.id
-              : "";
-          pdfObject = {
-            filename: "Refund-" + refundId + ".pdf",
-            content: base64data,
-            encoding: "base64",
-          };
-          attachment.push(pdfObject);
-          let values = [];
-          let basedOnTypeStorages = Object.keys(localStorage);
-          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-            return storage.includes("BasedOnType_");
-          });
-          let j = basedOnTypeStorages.length;
-          if (j > 0) {
-            while (j--) {
-              values.push(localStorage.getItem(basedOnTypeStorages[j]));
-            }
-          }
-          if (values.length > 0) {
-            values.forEach((value) => {
-              let reportData = JSON.parse(value);
-              let temp = { ...reportData };
-
-              temp.HostURL = $(location).attr("protocal")
-                  ? $(location).attr("protocal") +
-                  "://" +
-                  $(location).attr("hostname")
-                  : "http://" + $(location).attr("hostname");
-              reportData.HostURL = $(location).attr("protocal")
-                  ? $(location).attr("protocal") +
-                  "://" +
-                  $(location).attr("hostname")
-                  : "http://" + $(location).attr("hostname");
-              temp.attachments = attachment;
-              if (temp.BasedOnType.includes("P")) {
-                if (temp.FormID == 1) {
-                  let formIds = temp.FormIDs.split(",");
-                  if (formIds.includes("74")) {
-                    temp.FormID = 74;
-                    Meteor.call("sendNormalEmail", temp);
-                  }
-                } else {
-                  if (temp.FormID == 74) Meteor.call("sendNormalEmail", temp);
-                }
-              }
-            });
-          }
-        });
-
-    html2pdf()
-        .set(opt)
-        .from(source)
         .save()
         .then(function (dataObject) {
           $("#html-2-pdfwrapper_new").css("display", "none");
@@ -6167,7 +6075,9 @@ Template.refundcard.onRendered(() => {
           $("#html-2-pdfwrapper_quotes2").hide();
           $("#html-2-pdfwrapper_quotes3").hide();
           $(".fullScreenSpin").css("display", "none");
-        });
+        })
+        .catch(error => {
+        })
 
     return true;
   };
@@ -7681,6 +7591,7 @@ Template.refundcard.events({
   },
   "click .printConfirm": async function (event) {
     playPrintAudio();
+    const templateObject = Template.instance();
     setTimeout(async function () {
       var printTemplate = [];
       LoadingOverlay.show();
@@ -7851,7 +7762,6 @@ Template.refundcard.events({
       ) {
         printTemplate.push("Refunds");
       }
-
       if (printTemplate.length > 0) {
         for (var i = 0; i < printTemplate.length; i++) {
           if (printTemplate[i] == "Refunds") {
@@ -7863,6 +7773,12 @@ Template.refundcard.events({
           );
         }
       }
+
+      const isCheckedEmail = $("#emailSend").is(":checked")
+      if(isCheckedEmail){
+        await templateObject.sendEmailWithAttachment()
+      }
+
     }, delayTimeAfterSound);
   },
   "keydown .lineQty, keydown .lineUnitPrice": function (event) {
@@ -8057,8 +7973,8 @@ Template.refundcard.events({
             $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var refundData = await salesService.getRefundSales(currentInvoice);
-            var saleDate = refundData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
+            var creationDate = refundData.fields.CreationDate;
+            var fromDate = creationDate.substring(0, 10);
             var toDate =
                 currentDate.getFullYear() +
                 "-" +
@@ -8301,7 +8217,6 @@ Template.refundcard.events({
   },
   "click .btnSave": (event, templateObject) => {
     playSaveAudio();
-    //let templateObject = Template.instance();
     let salesService = new SalesBoardService();
     let uploadedItems = templateObject.uploadedFiles.get();
     setTimeout(function () {

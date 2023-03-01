@@ -33,40 +33,40 @@ Template.payrollhistoryreport.onRendered(() => {
   LoadingOverlay.show();
 
   let reset_data = [
-    { index: 1, label: 'LastName', class: 'colLastName', active: true, display: true, width: "190" },
-    { index: 2, label: 'FirstName', class: 'colFirstName', active: true, display: true, width: "90" },
-    { index: 3, label: 'G/L', class: 'colGL', active: true, display: true, width: "140" },
-    { index: 4, label: 'Date Paid', class: 'colDatePaid', active: true, display: true, width: "100" },
-    { index: 5, label: 'Gross', class: 'colGross', active: true, display: true, width: "80" },
-    { index: 6, label: 'Tax', class: 'colTax', active: true, display: true, width: "80" },
-    { index: 7, label: 'Wages', class: 'colWages', active: true, display: true, width: "80" },
-    { index: 8, label: 'Commission', class: 'colCommission', active: true, display: true, width: "100" },
-    { index: 9, label: 'Deductions', class: 'colDeductions', active: true, display: true, width: "100" },
-    { index: 10, label: 'Allowances', class: 'colAllowances', active: true, display: true, width: "80" },
-    { index: 11, label: 'CDEP', class: 'colCDEP', active: true, display: true, width: "50" },
-    { index: 11, label: 'Sundries', class: 'colSundries', active: true, display: true, width: "80" },
-    { index: 12, label: 'Superannuation', class: 'colSuperannuation', active: true, display: true, width: "100" },
-    { index: 12, label: 'ClassName', class: 'colClassName', active: true, display: true, width: "80" },
-    { index: 13, label: 'PayPeriod', class: 'colPayPeriod', active: true, display: true, width: "80" },
-    { index: 14, label: 'PayNo', class: 'colPayNo', active: true, display: true, width: "50" },
-    { index: 15, label: 'Splits', class: 'colSplits', active: true, display: true, width: "50" },
-    { index: 16, label: 'Deleted', class: 'colDeleted', active: true, display: true, width: "60" },
-    { index: 17, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "100" },
-    { index: 18, label: 'Employee Name', class: 'colEmployeeName', active: false, display: true, width: "100" },
-    { index: 19, label: 'Pay Date', class: 'PayDate', active: false, display: true, width: "80" },
-    { index: 20, label: 'Pay Periods', class: 'colPayPeriods', active: false, display: true, width: "100" },
-    { index: 21, label: 'Salary Sacrifice', class: 'colSalarySacrifice', active: false, display: true, width: "120" },
-    { index: 22, label: 'Workplacegiving', class: 'colWorkplacegiving', active: false, display: true, width: "120" },
-    { index: 23, label: 'Net Comb', class: 'colNetComb', active: false, display: true, width: "60" },
-    { index: 24, label: 'Net Only', class: 'colNetOnly', active: false, display: true, width: "60" },
-    { index: 25, label: 'Paid', class: 'colPaid', active: false, display: true, width: "50" },
-    { index: 26, label: 'Pay', class: 'colPay', active: false, display: true, width: "50" },
-    { index: 27, label: 'Test staff', class: 'colTeststaff', active: false, display: true, width: "70" },
-    { index: 28, label: 'Customer ID Tax', class: 'colCustomerIDTax', active: false, display: true, width: "120" },
-    { index: 29, label: 'PAYG Tax', class: 'colPaygTax', active: false, display: true, width: "100" },
-    { index: 30, label: 'BSB', class: 'colBSB', active: false, display: true, width: "50" },
-    { index: 31, label: 'BankAccNo', class: 'colBankAccNo', active: false, display: true, width: "80" },
-    { index: 32, label: 'Employee ID', class: 'colEmployeeID', active: false, display: true, width: "100" },
+    { index: 1, label: 'Employee', class: 'colLastName', active: true, display: true, width: "150" },
+    { index: 2, label: 'Date', class: 'colFirstName', active: true, display: true, width: "150" },
+    { index: 3, label: 'Wages', class: 'colGL', active: true, display: true, width: "150" },
+    { index: 4, label: 'Tax', class: 'colDatePaid', active: true, display: true, width: "150" },
+    { index: 5, label: 'Super', class: 'colGross', active: true, display: true, width: "150" },
+    { index: 6, label: 'Gross', class: 'colTax', active: true, display: true, width: "150" },
+    { index: 7, label: 'Net Pay', class: 'colWages', active: true, display: true, width: "150" },
+    // { index: 8, label: 'Commission', class: 'colCommission', active: true, display: true, width: "100" },
+    // { index: 9, label: 'Deductions', class: 'colDeductions', active: true, display: true, width: "100" },
+    // { index: 10, label: 'Allowances', class: 'colAllowances', active: true, display: true, width: "80" },
+    // { index: 11, label: 'CDEP', class: 'colCDEP', active: true, display: true, width: "50" },
+    // { index: 11, label: 'Sundries', class: 'colSundries', active: true, display: true, width: "80" },
+    // { index: 12, label: 'Superannuation', class: 'colSuperannuation', active: true, display: true, width: "100" },
+    // { index: 12, label: 'ClassName', class: 'colClassName', active: true, display: true, width: "80" },
+    // { index: 13, label: 'PayPeriod', class: 'colPayPeriod', active: true, display: true, width: "80" },
+    // { index: 14, label: 'PayNo', class: 'colPayNo', active: true, display: true, width: "50" },
+    // { index: 15, label: 'Splits', class: 'colSplits', active: true, display: true, width: "50" },
+    // { index: 16, label: 'Deleted', class: 'colDeleted', active: true, display: true, width: "60" },
+    // { index: 17, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "100" },
+    // { index: 18, label: 'Employee Name', class: 'colEmployeeName', active: false, display: true, width: "100" },
+    // { index: 19, label: 'Pay Date', class: 'PayDate', active: false, display: true, width: "80" },
+    // { index: 20, label: 'Pay Periods', class: 'colPayPeriods', active: false, display: true, width: "100" },
+    // { index: 21, label: 'Salary Sacrifice', class: 'colSalarySacrifice', active: false, display: true, width: "120" },
+    // { index: 22, label: 'Workplacegiving', class: 'colWorkplacegiving', active: false, display: true, width: "120" },
+    // { index: 23, label: 'Net Comb', class: 'colNetComb', active: false, display: true, width: "60" },
+    // { index: 24, label: 'Net Only', class: 'colNetOnly', active: false, display: true, width: "60" },
+    // { index: 25, label: 'Paid', class: 'colPaid', active: false, display: true, width: "50" },
+    // { index: 26, label: 'Pay', class: 'colPay', active: false, display: true, width: "50" },
+    // { index: 27, label: 'Test staff', class: 'colTeststaff', active: false, display: true, width: "70" },
+    // { index: 28, label: 'Customer ID Tax', class: 'colCustomerIDTax', active: false, display: true, width: "120" },
+    // { index: 29, label: 'PAYG Tax', class: 'colPaygTax', active: false, display: true, width: "100" },
+    // { index: 30, label: 'BSB', class: 'colBSB', active: false, display: true, width: "50" },
+    // { index: 31, label: 'BankAccNo', class: 'colBankAccNo', active: false, display: true, width: "80" },
+    // { index: 32, label: 'Employee ID', class: 'colEmployeeID', active: false, display: true, width: "100" },
   ]
   templateObject.payrollhistoryth.set(reset_data);
 
@@ -80,14 +80,14 @@ Template.payrollhistoryreport.onRendered(() => {
 
   templateObject.initUploadedImage = () => {
     // let imageData = localStorage.getItem("Image");
-    let imageData;
-    getVS1Data("TVS1Image").then(function (dataObject) {
-      imageData =JSON.parse(dataObject[0]).data;
-    });
-    if (imageData) {
-      $("#uploadedImage").attr("src", imageData);
-      $("#uploadedImage").attr("width", "50%");
-    }
+    // let imageData;
+    // getVS1Data("TVS1Image").then(function (dataObject) {
+    //   imageData =JSON.parse(dataObject[0]).data;
+    // });
+    // if (imageData) {
+    //   $("#uploadedImage").attr("src", imageData);
+    //   $("#uploadedImage").attr("width", "50%");
+    // }
   };
   // templateObject.setReportOptions = async function ( ignoreDate = false, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
   //   let defaultOptions = templateObject.reportOptions.get();

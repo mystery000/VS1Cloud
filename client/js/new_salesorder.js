@@ -523,11 +523,13 @@ Template.new_salesorder.onCreated(function () {
     let po = $('#ponumber').val() || '.';
 
     $('#tblSalesOrderLine > tbody > tr').each(function () {
-      let lineID = templateObject.id;
-      let tdproduct = $('#' + lineID + " .lineProductName").val();
-      let tddescription = $('#' + lineID + " .lineProductDesc").text();
-      let tdQty = $('#' + lineID + " .lineQty").val();
-      let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+      const tdproduct = $(this).find(".lineProductName").val();
+      const tddescription = $(this).find('.lineProductDesc').text();
+      const tdQty = $(this).find('.lineQty').val();
+      const tdunitprice = $(this).find('.colUnitPriceExChange').val();
+      const taxamount = $(this).find('.lineTaxAmount').val();
+      const targetRow = $(this);
+      const targetTaxCode = targetRow.find('.lineTaxCode').val();
       array_data.push([
         tdproduct,
         tddescription,
@@ -951,7 +953,7 @@ Template.new_salesorder.onCreated(function () {
   }
   
   templateObject.exportSalesToPdf = function (template_title, number) {
-    if (template_title == 'Sales Order') {
+    if (template_title == 'Sales Orders') {
       showSealsOrder1(template_title, number, true);
     }
     if (template_title == 'Delivery Docket') {
@@ -978,7 +980,7 @@ Template.new_salesorder.onCreated(function () {
 
     let file = "SalesOrder.pdf";
     if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-      if (template_title == 'Sales Order') {
+      if (template_title == 'Sales Orders') {
         file = 'Sales Order-' + invoice_data_info.id + '.pdf';
       }
       else {
@@ -1009,7 +1011,8 @@ Template.new_salesorder.onCreated(function () {
       $("#html-2-pdfwrapper_quotes").hide();
       $("#html-2-pdfwrapper_quotes2").hide();
       $("#html-2-pdfwrapper_quotes3").hide();
-      $('.fullScreenSpin').css("display", "none");
+      $("#printModal").modal('hide');
+      LoadingOverlay.hide();
     });
     return true;
   };
@@ -1429,7 +1432,7 @@ Template.new_salesorder.onCreated(function () {
       let productName = $(line).find(".lineProductName").val();
       let existBOM = false;
       let index = bomProducts.findIndex((product) => {
-        return product.fields.Caption == productName;
+        return product.Caption == productName;
       });
       if (index > -1) {
         existBOM = true;
@@ -1692,7 +1695,7 @@ Template.new_salesorder.onCreated(function () {
     });
   };
 
-  templateObject.addAttachment = async function(objDetails) {
+  templateObject.addAttachment = async function(objDetails, isforced = false) {
     let attachment = [];
     let invoiceId = objDetails.fields.ID;
     let encodedPdf = await generatePdfForMail(invoiceId);
@@ -1720,7 +1723,8 @@ Template.new_salesorder.onCreated(function () {
     let customerNett = $('#subtotal_nett').html();
     let customerTotal = $('#grandTotal').html();
     let mailSubject = 'Sales Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-
+    let stringQuery ="?"
+   
     var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
       '        <tr>' +
       '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
@@ -1957,7 +1961,7 @@ Template.new_salesorder.onCreated(function () {
         }
       });
 
-    } else if (($('.chkEmailCopy').is(':checked'))) {
+    } else if (($('.chkEmailCopy').is(':checked')) || isforced) {
       Meteor.call('sendEmail', {
         from: "" + mailFromName + " <" + mailFrom + ">",
         to: checkEmailData,
@@ -2139,7 +2143,7 @@ Template.new_salesorder.onCreated(function () {
     });
   }
 
-  templateObject.sendEmailWithAttatchment = async function() {
+  templateObject.sendEmailWithAttatchment = async function(isforced = false) {
     let customername = $('#edtCustomerName');
     let termname = $('#sltTerms').val() || '';
     if (termname === '') {
@@ -2327,7 +2331,281 @@ Template.new_salesorder.onCreated(function () {
       };
     }
 
-    await templateObject.addAttachment(objDetails);
+    await templateObject.addAttachment(objDetails, true);
+  }
+
+  templateObject.print = async function (_template = '') {
+    LoadingOverlay.show();
+    setTimeout(async function () {
+      var printTemplate = [];
+      var sales_orders = $('input[name="Sales Orders"]:checked').val();
+      let emid = localStorage.getItem('mySessionEmployeeLoggedID');
+      var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
+      sideBarService.getTemplateNameandEmployeId("Sales Orders", emid, 1).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            ID: parseInt(id),
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Sales Orders",
+            GlobalRef: "Sales Orders",
+            Description: $('input[name="Sales Order_1"]').val(),
+            Template: "1",
+            Active: sales_orders == 1 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      }).catch(function (err) {
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Sales Orders",
+            Description: $('input[name="Sales Order_1"]').val(),
+            Template: "1",
+            Active: sales_orders == 1 ? true : false,
+          }
+        }
+
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      });
+      sideBarService.getTemplateNameandEmployeId("Sales Orders", emid, 2).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            ID: parseInt(id),
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Sales Orders",
+            GlobalRef: "Sales Orders",
+            Description: $('input[name="Sales Order_2"]').val(),
+            Template: "2",
+            Active: sales_orders == 2 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      }).catch(function (err) {
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Sales Orders",
+            Description: $('input[name="Sales Order_2"]').val(),
+            Template: "2",
+            Active: sales_orders == 2 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      });
+      sideBarService.getTemplateNameandEmployeId("Sales Orders", emid, 3).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            ID: parseInt(id),
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Sales Orders",
+            GlobalRef: "Sales Orders",
+            Description: $('input[name="Sales Order_3"]').val(),
+            Template: "3",
+            Active: sales_orders == 3 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      }).catch(function (err) {
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Sales Orders",
+            Description: $('input[name="Sales Order_3"]').val(),
+            Template: "3",
+            Active: sales_orders == 3 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      });
+
+      sideBarService.getTemplateNameandEmployeId("Delivery Docket", emid, 1).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            ID: parseInt(id),
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Delivery Docket",
+            GlobalRef: "Delivery Docket",
+            Description: $('input[name="Delivery Docket_1"]').val(),
+            Template: "1",
+            Active: delivery_docket == 1 ? true : false,
+          }
+        }
+
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      }).catch(function (err) {
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Delivery Docket",
+            Description: $('input[name="Delivery Docket_1"]').val(),
+            Template: "1",
+            Active: delivery_docket == 1 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+
+        })
+      });
+      sideBarService.getTemplateNameandEmployeId("Delivery Docket", emid, 2).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            ID: parseInt(id),
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Delivery Docket",
+            GlobalRef: "Delivery Docket",
+            Description: $('input[name="Delivery Docket_2"]').val(),
+            Template: "2",
+            Active: delivery_docket == 2 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      }).catch(function (err) {
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Delivery Docket",
+            Description: $('input[name="Delivery Docket_2"]').val(),
+            Template: "2",
+            Active: delivery_docket == 2 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      });
+      sideBarService.getTemplateNameandEmployeId("Delivery Docket", emid, 3).then(function (data) {
+        templateid = data.ttemplatesettings;
+        var id = templateid[0].fields.ID;
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            ID: parseInt(id),
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Delivery Docket",
+            GlobalRef: "Delivery Docket",
+            Description: $('input[name="Delivery Docket_3"]').val(),
+            Template: "3",
+            Active: delivery_docket == 3 ? true : false,
+          }
+        }
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display', 'none');
+        });
+      }).catch(function (err) {
+        objDetails = {
+          type: "TTemplateSettings",
+          fields: {
+            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
+            SettingName: "Delivery Docket",
+            Description: $('input[name="Delivery Docket_3"]').val(),
+            Template: "3",
+            Active: delivery_docket == 3 ? true : false,
+          }
+        }
+
+        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
+          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
+            addVS1Data('TTemplateSettings', JSON.stringify(data));
+          });
+        })
+      });
+
+      if(_template !== ''){
+        const _templateNumber = $(`input[name="${_template}"]:checked`).val();
+        await templateObject.exportSalesToPdf(_template, _templateNumber);
+        return;
+      }
+
+      if ($('#print_sales_order').is(':checked') || $('#print_sales_order_second').is(':checked')) {
+        printTemplate.push('Sales Orders');
+      }
+
+      if ($('#print_delivery_docket').is(':checked') || $('#print_delivery_docket_second').is(':checked')) {
+        printTemplate.push('Delivery Docket');
+      }
+
+      if(!printTemplate.length){
+        printTemplate.push("Sales Orders");
+      }
+
+      for (var i = 0; i < printTemplate.length; i++) {
+        if (printTemplate[i] == 'Sales Order') {
+          var template_number = $('input[name="Sales Orders"]:checked').val();
+        }
+        else if (printTemplate[i] == 'Delivery Docket') {
+          var template_number = $('input[name="Delivery Docket"]:checked').val();
+        }
+        await templateObject.exportSalesToPdf(printTemplate[i], template_number);
+      }
+
+      // Send email
+      const isEmailChecked = $("#printModal").find("#emailSend").is(":checked");
+      if(isEmailChecked) {
+        await templateObject.sendEmailWithAttatchment();
+      }
+
+    }, delayTimeAfterSound);
   }
 });
 
@@ -2489,14 +2767,14 @@ Template.new_salesorder.onRendered(function () {
                     let expirydate = "";
                     if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                        serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                          serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
                         }
                     }
                     if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                        lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                        let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                          lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                         }
                     }
                     lineItemObj = {
@@ -2538,6 +2816,21 @@ Template.new_salesorder.onRendered(function () {
                   let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                   let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines.fields.ID || '',
@@ -2554,7 +2847,10 @@ Template.new_salesorder.onRendered(function () {
                     taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                     TaxTotal: TaxTotalGbp || 0,
-                    TaxRate: TaxRateGbp || 0
+                    TaxRate: TaxRateGbp || 0,
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -2594,7 +2890,9 @@ Template.new_salesorder.onRendered(function () {
                 saleCustField2: data.fields.SaleCustField2,
                 totalPaid: totalPaidAmount,
                 isConverted: data.fields.Converted,
-                CustomerID: data.fields.CustomerID
+                CustomerID: data.fields.CustomerID,
+                ClientName: data.fields.CustomerName,
+                ClientEmail: data.fields.ContactEmail
               };
 
               $('#edtCustomerName').val(data.fields.CustomerName);
@@ -2635,52 +2933,6 @@ Template.new_salesorder.onRendered(function () {
                     }
                   }
                 }
-
-                // if (!checkISCustLoad) {
-                //   sideBarService.getCustomersDataByName(useData[d].fields.CustomerName).then(function (dataClient) {
-                //     for (var c = 0; c < dataClient.tcustomervs1.length; c++) {
-                //       var customerrecordObj = {
-                //         customerid: dataClient.tcustomervs1[c].Id || ' ',
-                //         firstname: dataClient.tcustomervs1[c].FirstName || ' ',
-                //         lastname: dataClient.tcustomervs1[c].LastName || ' ',
-                //         customername: dataClient.tcustomervs1[c].ClientName || ' ',
-                //         customeremail: dataClient.tcustomervs1[c].Email || ' ',
-                //         street: dataClient.tcustomervs1[c].Street || ' ',
-                //         street2: dataClient.tcustomervs1[c].Street2 || ' ',
-                //         street3: dataClient.tcustomervs1[c].Street3 || ' ',
-                //         suburb: dataClient.tcustomervs1[c].Suburb || ' ',
-                //         statecode: dataClient.tcustomervs1[c].State + ' ' + dataClient.tcustomervs1[c].Postcode || ' ',
-                //         country: dataClient.tcustomervs1[c].Country || ' ',
-                //         termsName: dataClient.tcustomervs1[c].TermsName || '',
-                //         taxCode: dataClient.tcustomervs1[c].TaxCodeName || 'E',
-                //         clienttypename: dataClient.tcustomervs1[c].ClientTypeName || 'Default',
-                //         discount: dataClient.tcustomervs1[c].Discount || 0
-                //       };
-                //       clientList.push(customerrecordObj);
-
-                //       salesorderrecord.firstname = dataClient.tcustomervs1[c].FirstName || '';
-                //       salesorderrecord.lastname = dataClient.tcustomervs1[c].LastName || '';
-                //       $('#edtCustomerEmail').val(dataClient.tcustomervs1[c].Email);
-                //       $('#edtCustomerEmail').attr('customerid', clientList[c].customerid);
-                //       $('#edtCustomerName').attr('custid', dataClient.tcustomervs1[c].Id);
-                //       $('#edtCustomerEmail').attr('customerfirstname', dataClient.tcustomervs1[c].FirstName);
-                //       $('#edtCustomerEmail').attr('customerlastname', dataClient.tcustomervs1[c].LastName);
-                //       $('#customerType').text(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                //       $('#customerDiscount').text(dataClient.tcustomervs1[c].Discount + '%' || 0 + '%');
-                //       $('#edtCustomerUseType').val(dataClient.tcustomervs1[c].ClientTypeName || 'Default');
-                //       $('#edtCustomerUseDiscount').val(dataClient.tcustomervs1[c].Discount || 0);
-                //     }
-
-                //     templateObject.clientrecords.set(clientList.sort(function (a, b) {
-                //       if (a.customername == 'NA') {
-                //         return 1;
-                //       } else if (b.customername == 'NA') {
-                //         return -1;
-                //       }
-                //       return (a.customername.toUpperCase() > b.customername.toUpperCase()) ? 1 : -1;
-                //     }));
-                //   });
-                // }
               }, 100);
               templateObject.salesorderrecord.set(salesorderrecord);
               templateObject.selectedCurrency.set(salesorderrecord.currency);
@@ -2768,6 +3020,23 @@ Template.new_salesorder.onRendered(function () {
                     let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
                     let TaxRateGbp = (useData[d].fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+
+                    let serialno = "";
+                    let lotno = "";
+                    let expirydate = "";
+                    if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                            serialno += (serialno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                            lotno += (lotno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                            let expirydateformat = useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
+
                     const lineItemObj = {
                       lineID: Random.id(),
                       id: useData[d].fields.Lines[i].fields.ID || '',
@@ -2789,6 +3058,9 @@ Template.new_salesorder.onRendered(function () {
                       TaxRate: TaxRateGbp || 0,
                       DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
                       pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
+                      serialnumbers: serialno,
+                      lotnumbers: lotno,
+                      expirydates: expirydate
                     };
                     var dataListTable = [
                       useData[d].fields.Lines[i].fields.ProductName || '',
@@ -2806,6 +3078,23 @@ Template.new_salesorder.onRendered(function () {
                   let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines.fields.LineTaxTotal);
                   let TaxRateGbp = currencySymbol + '' + useData[d].fields.Lines.fields.LineTaxRate;
+
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(useData[d].fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                          serialno += (serialno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(useData[d].fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                          lotno += (lotno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
+
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: useData[d].fields.Lines.fields.ID || '',
@@ -2824,6 +3113,9 @@ Template.new_salesorder.onRendered(function () {
                     TaxTotal: TaxTotalGbp || 0,
                     TaxRate: TaxRateGbp || 0,
                     pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -2862,7 +3154,9 @@ Template.new_salesorder.onRendered(function () {
                   saleCustField2: useData[d].fields.SaleCustField2,
                   totalPaid: totalPaidAmount,
                   isConverted: useData[d].fields.Converted,
-                  CustomerID: useData[d].fields.CustomerID
+                  CustomerID: useData[d].fields.CustomerID,
+                  ClientEmail: useData[d].fields.ContactEmail,
+                  ClientName: useData[d].fields.ClientName
                 };
 
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
@@ -3036,19 +3330,19 @@ Template.new_salesorder.onRendered(function () {
                   let lotno = "";
                   let expirydate = "";
                   if(data.fields.Lines[i].fields.PQA != null){
-                  if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
-                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                      serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                      }
+                    if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
+                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
+                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
                   }
-                  if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
-                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                      lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                      let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                      expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                      }
-                  }
-                }
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines[i].fields.ID || '',
@@ -3089,6 +3383,23 @@ Template.new_salesorder.onRendered(function () {
                 let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                 let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                let serialno = "";
+                let lotno = "";
+                let expirydate = "";
+                if(data.fields.Lines.fields.PQA != null){
+                  if(data.fields.Lines.fields.PQA.fields.PQASN != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
+                }
                 const lineItemObj = {
                   lineID: Random.id(),
                   id: data.fields.Lines.fields.ID || '',
@@ -3105,7 +3416,10 @@ Template.new_salesorder.onRendered(function () {
                   taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
                   curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                   TaxTotal: TaxTotalGbp || 0,
-                  TaxRate: TaxRateGbp || 0
+                  TaxRate: TaxRateGbp || 0,
+                  serialnumbers: serialno,
+                  lotnumbers: lotno,
+                  expirydates: expirydate
                 };
                 lineItems.push(lineItemObj);
               }
@@ -3145,7 +3459,9 @@ Template.new_salesorder.onRendered(function () {
               saleCustField2: data.fields.SaleCustField2,
               totalPaid: totalPaidAmount,
               isConverted: data.fields.Converted,
-              CustomerID: data.fields.CustomerID
+              CustomerID: data.fields.CustomerID,
+              ClientName: data.fields.ClientName,
+              ClientEmail: data.fields.ContactEmail
             };
             $('#edtCustomerName').val(data.fields.CustomerName);
             templateObject.CleintName.set(data.fields.CustomerName);
@@ -3366,7 +3682,7 @@ Template.new_salesorder.onRendered(function () {
     $('#departmentModal').modal('toggle');
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $('#sltTerms').val($(this).find(".colTermName").text());
+    $('#sltTerms').val($(this).find(".colName").text());
     $('#termsListModal').modal('toggle');
   });
   $(document).on("click", "#custListType tbody tr", function (e) {
@@ -6956,276 +7272,47 @@ Template.new_salesorder.events({
       }
     }
   },
+  "click #printModal .btn-check-template": function (event) {
+    const template = $(event.target).data('template');
+    const templateObject = Template.instance()
+    // $("#" + checkboxID).trigger("click");
+    templateObject.print(template)
+  },
+  "click #printModal #btnSendEmail" : async function (event) {
+    const templateObject = Template.instance()
+    const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
+    if ($("#edtCustomerEmail").val() != "") {
+      LoadingOverlay.show();
+      await templateObject.sendEmailWithAttatchment(true);
+      LoadingOverlay.hide();
+    } else {
+      swal({
+        title: "Customer Email Required",
+        text: "Please enter customer email",
+        type: "error",
+        showCancelButton: false,
+        confirmButtonText: "OK",
+      })
+    }
+  },
   'click .printConfirm': async function (event) {
+    const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
+    // if(checkedPrintOptions.length == 0){
+    //   return;
+    // }
     playPrintAudio();
     const templateObject = Template.instance();
-    setTimeout(async function () {
-      var printTemplate = [];
-      LoadingOverlay.show();
-      var sales_orders = $('input[name="Sales Orders"]:checked').val();
-      let emid = localStorage.getItem('mySessionEmployeeLoggedID');
-      var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
-      sideBarService.getTemplateNameandEmployeId("Sales Orders", emid, 1).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            ID: parseInt(id),
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Sales Orders",
-            GlobalRef: "Sales Orders",
-            Description: $('input[name="Sales Order_1"]').val(),
-            Template: "1",
-            Active: sales_orders == 1 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      }).catch(function (err) {
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Sales Orders",
-            Description: $('input[name="Sales Order_1"]').val(),
-            Template: "1",
-            Active: sales_orders == 1 ? true : false,
-          }
-        }
-
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      });
-      sideBarService.getTemplateNameandEmployeId("Sales Orders", emid, 2).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            ID: parseInt(id),
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Sales Orders",
-            GlobalRef: "Sales Orders",
-            Description: $('input[name="Sales Order_2"]').val(),
-            Template: "2",
-            Active: sales_orders == 2 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      }).catch(function (err) {
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Sales Orders",
-            Description: $('input[name="Sales Order_2"]').val(),
-            Template: "2",
-            Active: sales_orders == 2 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      });
-      sideBarService.getTemplateNameandEmployeId("Sales Orders", emid, 3).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            ID: parseInt(id),
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Sales Orders",
-            GlobalRef: "Sales Orders",
-            Description: $('input[name="Sales Order_3"]').val(),
-            Template: "3",
-            Active: sales_orders == 3 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      }).catch(function (err) {
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Sales Orders",
-            Description: $('input[name="Sales Order_3"]').val(),
-            Template: "3",
-            Active: sales_orders == 3 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      });
-
-      sideBarService.getTemplateNameandEmployeId("Delivery Docket", emid, 1).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            ID: parseInt(id),
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Delivery Docket",
-            GlobalRef: "Delivery Docket",
-            Description: $('input[name="Delivery Docket_1"]').val(),
-            Template: "1",
-            Active: delivery_docket == 1 ? true : false,
-          }
-        }
-
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      }).catch(function (err) {
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Delivery Docket",
-            Description: $('input[name="Delivery Docket_1"]').val(),
-            Template: "1",
-            Active: delivery_docket == 1 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-
-        })
-      });
-      sideBarService.getTemplateNameandEmployeId("Delivery Docket", emid, 2).then(function (data) {
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            ID: parseInt(id),
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Delivery Docket",
-            GlobalRef: "Delivery Docket",
-            Description: $('input[name="Delivery Docket_2"]').val(),
-            Template: "2",
-            Active: delivery_docket == 2 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      }).catch(function (err) {
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Delivery Docket",
-            Description: $('input[name="Delivery Docket_2"]').val(),
-            Template: "2",
-            Active: delivery_docket == 2 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      });
-      sideBarService.getTemplateNameandEmployeId("Delivery Docket", emid, 3).then(function (data) {
-        $('.fullScreenSpin').css('display', 'none');
-        templateid = data.ttemplatesettings;
-        var id = templateid[0].fields.ID;
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            ID: parseInt(id),
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Delivery Docket",
-            GlobalRef: "Delivery Docket",
-            Description: $('input[name="Delivery Docket_3"]').val(),
-            Template: "3",
-            Active: delivery_docket == 3 ? true : false,
-          }
-        }
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-        });
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-        objDetails = {
-          type: "TTemplateSettings",
-          fields: {
-            EmployeeID: localStorage.getItem('mySessionEmployeeLoggedID'),
-            SettingName: "Delivery Docket",
-            Description: $('input[name="Delivery Docket_3"]').val(),
-            Template: "3",
-            Active: delivery_docket == 3 ? true : false,
-          }
-        }
-
-        sideBarService.saveTemplateSetting(objDetails).then(function (objDetails) {
-          sideBarService.getTemplateInformation(initialBaseDataLoad, 0).then(function (data) {
-            addVS1Data('TTemplateSettings', JSON.stringify(data));
-          });
-        })
-      });
-
-      if ($('#print_sales_order').is(':checked') || $('#print_sales_order_second').is(':checked')) {
-        printTemplate.push('Sales Order');
-      }
-
-      if ($('#print_delivery_docket').is(':checked') || $('#print_delivery_docket_second').is(':checked')) {
-        printTemplate.push('Delivery Docket');
-      }
-
-      if (printTemplate.length > 0) {
-        for (var i = 0; i < printTemplate.length; i++) {
-          if (printTemplate[i] == 'Sales Order') {
-            var template_number = $('input[name="Sales Orders"]:checked').val();
-          }
-          else if (printTemplate[i] == 'Delivery Docket') {
-            var template_number = $('input[name="Delivery Docket"]:checked').val();
-          }
-          await templateObject.exportSalesToPdf(printTemplate[i], template_number);
-        }
-      }
-
-      // Send email
-      const isEmailChecked = $("#printModal").find("#emailSend").is(":checked");
-      if(isEmailChecked) {
-        await templateObject.sendEmailWithAttatchment();
-      }
-      $("#printModal").modal('hide');
-      LoadingOverlay.hide();
-
-    }, delayTimeAfterSound);
+    templateObject.print()
   },
   'keydown .lineQty, keydown .lineUnitPrice': function (event) {
     if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -7407,8 +7494,8 @@ Template.new_salesorder.events({
             $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
-            var saleDate = soData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
+            var creationDate = soData.fields.CreationDate;
+            var fromDate = creationDate.substring(0, 10);
             var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingSOs = await sideBarService.getAllTSalesOrderListData(
               fromDate,
@@ -7681,6 +7768,8 @@ Template.new_salesorder.events({
     }, delayTimeAfterSound);
   },
   'click .btnSave': (event, templateObject) => {
+    event.preventDefault();
+    event.stopPropagation();
     playSaveAudio();
     let salesService = new SalesBoardService();
     let uploadedItems = templateObject.uploadedFiles.get();
@@ -7913,7 +8002,7 @@ Template.new_salesorder.events({
           $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
           var ponumber = $('#ponumber').val() || '.';
           $('.po').text(ponumber);
-          const templateObject = Template.instance();
+          // const templateObject = Template.instance();
 
           templateObject.addAttachment(objDetails);
 
@@ -10412,7 +10501,7 @@ Template.new_salesorder.events({
             let isBOMProduct = false;
             let isExisting = false;
             let index = bomProducts.findIndex(product => {
-              return product.fields.Caption == lines[i].item
+              return product.Caption == lines[i].item
             })
             if (index > -1) {
               isBOMProduct = true;

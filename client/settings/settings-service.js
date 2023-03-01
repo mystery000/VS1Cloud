@@ -94,13 +94,13 @@ export class TaxRateService extends BaseService {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 RegionName: regionName,
                 ListType: "Detail",
-                select: "[Active]=" + activeFlag,
+                select: "[Active]=" + (activeFlag ? "true" : "false"),
             };
         }else{
             options = {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 ListType: "Detail",
-                select: "[Active]=" + activeFlag,
+                select: "[Active]=" + (activeFlag ? "true" : "false"),
             };
         }
 

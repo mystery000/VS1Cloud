@@ -2,6 +2,10 @@ import { ReportService } from "../report-service";
 import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 
+import { Template } from 'meteor/templating';
+import './profitandlossreport.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 Template.profitlossreport.onCreated(() => {

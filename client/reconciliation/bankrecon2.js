@@ -1324,7 +1324,7 @@ Template.bankrecon2.onRendered(function() {
 
     });
 
-    $(document).on("click", ".bankrecon #tblAccount tbody tr", function(e) {
+    $(document).on("click", ".bankrecon #tblAccountListPop tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         var table = $(this);
 

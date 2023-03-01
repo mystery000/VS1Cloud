@@ -1148,26 +1148,31 @@ Template.customerscard.onRendered(function () {
   templateObject.getTaxCodesList();
   templateObject.getCustomersList();
 
-  if (JSON.stringify(currentId) != '{}') {
-    if (currentId.id == "undefined") {
-      templateObject.setInitialForEmptyCurrentID();
-    } else {
-      if (!isNaN(currentId.id)) {
-        customerID = currentId.id;
-        templateObject.getEmployeeData(customerID);
-        templateObject.getReferenceLetters();
-      } else if ((currentId.name)) {
-        customerID = currentId.name.replace(/%20/g, " ");
-        templateObject.getEmployeeDataByName(customerID);
-      } else if (!isNaN(currentId.jobid)) {
-        customerID = currentId.jobid;
-        templateObject.getEmployeeData(customerID);
-      } else {
-        templateObject.setInitialForEmptyCurrentID();
-      }
-    }
+  if(templateObject.data.record) {
+    let temprecord = templateObject.data.record;
+    templateObject.records.set(temprecord)    
   } else {
-    templateObject.setInitialForEmptyCurrentID();
+    if (JSON.stringify(currentId) != '{}') {
+      if (currentId.id == "undefined") {
+        templateObject.setInitialForEmptyCurrentID();
+      } else {
+        if (!isNaN(currentId.id)) {
+          customerID = currentId.id;
+          templateObject.getEmployeeData(customerID);
+          templateObject.getReferenceLetters();
+        } else if ((currentId.name)) {
+          customerID = currentId.name.replace(/%20/g, " ");
+          templateObject.getEmployeeDataByName(customerID);
+        } else if (!isNaN(currentId.jobid)) {
+          customerID = currentId.jobid;
+          templateObject.getEmployeeData(customerID);
+        } else {
+          templateObject.setInitialForEmptyCurrentID();
+        }
+      }
+    } else {
+      templateObject.setInitialForEmptyCurrentID();
+    }
   }
 
   $(document).ready(function () {
@@ -1495,7 +1500,7 @@ Template.customerscard.onRendered(function () {
 
   $(document).on("click", "#termsList tbody tr", function (e) {
     let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
-    $('#' + selectedTermsDropdownID + '').val($(this).find(".colTermName").text());
+    $('#' + selectedTermsDropdownID + '').val($(this).find(".colName").text());
     $('#termsListModal').modal('toggle');
   });
   $(document).on("click", "#paymentmethodList tbody tr", function (e) {
@@ -2242,14 +2247,20 @@ Template.customerscard.events({
 
         let customerSaveID = objDetails.fields.ID;
         if (customerSaveID) {
-          sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
-            addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-              window.open('/customerlist', '_self');
-            }).catch(function (err) {
-              window.open('/customerlist', '_self');
-            });
+          sideBarService.getAllTCustomerList(initialBaseDataLoad, 0).then(async function (dataReload) {
+              addVS1Data('TCustomerVS1List', JSON.stringify(dataReload)).then(function() {
+                sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                  addVS1Data('TCustomerVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                    window.open('/customerlist', '_self');
+                  }).catch(function (err) {
+                    swal('Oooops...', err, 'error');
+                  });
+                }).catch(function (err) {
+                  swal('Oooops...', err, 'error');
+                });
+              });              
           }).catch(function (err) {
-            window.open('/customerlist', '_self');
+            swal('Oooops...', err, 'error');
           });
         }
       }).catch(function (err) {
@@ -3943,25 +3954,30 @@ function openEditTaskModals(id, type) {
           $(".chkDetailLabel").prop("checked", false);
           if (selected_record.TaskLabel) {
             if (selected_record.TaskLabel.fields != undefined) {
-              taskmodalLabels =
-                `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-                selected_record.TaskLabel.fields.TaskLabelName +
-                "</a></span>";
-              $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-                "checked",
-                true
-              );
+                taskmodalLabels =
+                    `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+                    selected_record.TaskLabel.fields.TaskLabelName +
+                    "</a></span>";
+                $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                    "checked",
+                    true
+                );
+                $(".taskModalActionLableDropdown").css("color", selected_record.TaskLabel.fields.Color);
             } else {
-              selected_record.TaskLabel.forEach((lbl) => {
-                taskmodalLabels +=
-                  `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                  lbl.fields.TaskLabelName +
-                  "</a></span> ";
-                $("#detail_label_" + lbl.fields.ID).prop("checked", true);
-              });
-              taskmodalLabels = taskmodalLabels.slice(0, -2);
+                selected_record.TaskLabel.forEach((lbl) => {
+                    taskmodalLabels +=
+                        `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                        lbl.fields.TaskLabelName +
+                        "</a></span> ";
+                    $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                    $(".taskModalActionLableDropdown").css("color", lbl.fields.Color);
+                });
+                taskmodalLabels = taskmodalLabels.slice(0, -2);
             }
           }
+          else{
+              $(".taskModalActionLableDropdown").css("color", "#858796");
+          }          
           $("#taskmodalLabels").html(taskmodalLabels);
           let subtasks = "";
           if (selected_record.subtasks) {

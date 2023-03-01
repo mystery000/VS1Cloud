@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import { loadStripe } from "@stripe/stripe-js";
 import './mailgun_config.js';
 import './mailchimp';
+import '../imports/api/signMethods'
 
 /*
 * damien99

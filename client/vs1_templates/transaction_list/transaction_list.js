@@ -211,48 +211,48 @@ Template.transaction_list.onRendered(function() {
         let templateObject = Template.instance();
         let reset_data = templateObject.reset_data.get();
         templateObject.showCustomFieldDisplaySettings(reset_data);
-        // if (listType === "tblBankingOverview" || listType === "tblchequelist") {
-        //     try {
-        //       getVS1Data("VS1_Customize").then(function (dataObject) {
-        //         if (dataObject.length == 0) {
-        //           sideBarService
-        //             .getNewCustomFieldsWithQuery(
-        //               parseInt(
-        //                 localStorage.getItem("mySessionEmployeeLoggedID")
-        //               ),
-        //               listType
-        //             )
-        //             .then(function (data) {
-        //               // reset_data = data.ProcessLog.CustomLayout.Columns;
-        //               reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-        //               templateObject.showCustomFieldDisplaySettings(reset_data);
-        //             })
-        //             .catch(function (err) {});
-        //         } else {
-        //           let data = JSON.parse(dataObject[0].data);
-        //           if (data.ProcessLog.Obj.CustomLayout.length > 0) {
-        //             for (
-        //               let i = 0;
-        //               i < data.ProcessLog.Obj.CustomLayout.length;
-        //               i++
-        //             ) {
-        //               if (
-        //                 data.ProcessLog.Obj.CustomLayout[i].TableName ==
-        //                 listType
-        //               ) {
-        //                 reset_data =
-        //                   data.ProcessLog.Obj.CustomLayout[i].Columns;
-        //                 templateObject.showCustomFieldDisplaySettings(
-        //                   reset_data
-        //                 );
-        //               }
-        //             }
-        //           }
-        //           // handle process here
-        //         }
-        //       });
-        //     } catch (error) {}
-        // }
+        if (listType === "tblBankingOverview" || listType === "tblchequelist") {
+            try {
+              getVS1Data("VS1_Customize").then(function (dataObject) {
+                if (dataObject.length == 0) {
+                  sideBarService
+                    .getNewCustomFieldsWithQuery(
+                      parseInt(
+                        localStorage.getItem("mySessionEmployeeLoggedID")
+                      ),
+                      listType
+                    )
+                    .then(function (data) {
+                      // reset_data = data.ProcessLog.CustomLayout.Columns;
+                      reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                      templateObject.showCustomFieldDisplaySettings(reset_data);
+                    })
+                    .catch(function (err) {});
+                } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  if (data.ProcessLog.Obj.CustomLayout.length > 0) {
+                    for (
+                      let i = 0;
+                      i < data.ProcessLog.Obj.CustomLayout.length;
+                      i++
+                    ) {
+                      if (
+                        data.ProcessLog.Obj.CustomLayout[i].TableName ==
+                        listType
+                      ) {
+                        reset_data =
+                          data.ProcessLog.Obj.CustomLayout[i].Columns;
+                        templateObject.showCustomFieldDisplaySettings(
+                          reset_data
+                        );
+                      }
+                    }
+                  }
+                  // handle process here
+                }
+              });
+            } catch (error) {}
+        }
     }
 
     templateObject.showCustomFieldDisplaySettings = async function(reset_data) {
@@ -347,8 +347,6 @@ Template.transaction_list.onRendered(function() {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         getVS1Data('TBankAccountReport').then(function(dataObject) {
-            $('#dateFrom').attr('readonly', false);
-            $('#dateTo').attr('readonly', false);
 
             if (dataObject.length == 0) {
                 sideBarService.getAllBankAccountDetails(prevMonth11Date,toDate, true,initialReportLoad,0, deleteFilter).then(function(data) {
@@ -416,7 +414,7 @@ Template.transaction_list.onRendered(function() {
                             amountInc || 0.00,
                             useData[i].ClassName || '',
                             useData[i].ChqRefNo || '',
-                            useData[i].Active == true ? '' : "In-Active",
+                            useData[i].Active == true ? '' : "Deleted",
                             useData[i].Notes || '',
                             // creditex: creditEx || 0.00,
                             // customername: useData[i].ClientName || '',
@@ -746,35 +744,16 @@ Template.transaction_list.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tbankaccountreport;
-
-                let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
-                let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-                let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                if(urlParametersDateFrom){
-                    if(urlParametersIgnoreDate == true){
-                        $('#dateFrom').attr('readonly', true);
-                        $('#dateTo').attr('readonly', true);
-                    }else
-                    {
-                        if (urlParametersDateFrom.indexOf("/") > 0) $("#dateFrom").val(urlParametersDateFrom);
-                        else
-                            $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
-                        if (urlParametersDateTo.indexOf("/") > 0) $("#dateTo").val(urlParametersDateTo);
-                        else
-                            $("#dateTo").val(urlParametersDateTo !=''? moment(urlParametersDateTo).format("DD/MM/YYYY"): urlParametersDateTo);
-                    }
+                if(data.Params.IgnoreDates == true){
+                    $('#dateFrom').attr('readonly', true);
+                    $('#dateTo').attr('readonly', true);
+                    //FlowRouter.go('/bankingoverview?ignoredate=true');
+                }else{
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
+                    $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                    $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
                 }
-
-                // if(data.Params.IgnoreDates == true){
-                //     $('#dateFrom').attr('readonly', true);
-                //     $('#dateTo').attr('readonly', true);
-                //     //FlowRouter.go('/bankingoverview?ignoredate=true');
-                // }else{
-                //     $('#dateFrom').attr('readonly', false);
-                //     $('#dateTo').attr('readonly', false);
-                //     $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
-                //     $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
-                // }
                 let lineItems = [];
                 let lineItemObj = {};
                 let lineID = "";
@@ -835,7 +814,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
-                        useData[i].Active == true ? '' : "In-Active",
+                        useData[i].Active == true ? '' : "Deleted",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -1223,7 +1202,7 @@ Template.transaction_list.onRendered(function() {
                         amountInc || 0.00,
                         useData[i].ClassName || '',
                         useData[i].ChqRefNo || '',
-                        useData[i].Active == true ? '' : "In-Active",
+                        useData[i].Active == true ? '' : "Deleted",
                         useData[i].Notes || '',
                         // creditex: creditEx || 0.00,
                         // customername: useData[i].ClientName || '',
@@ -3363,7 +3342,7 @@ Template.transaction_list.onRendered(function() {
                 $(`<button class="btn btn-primary btnRefresh${currenttablename}" type='button' id='btnRefresh${currenttablename}' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>`).insertAfter(`#${currenttablename}_filter`);
 
                 $('.myvarFilterForm').appendTo(".colDateFilter");
-            },            
+            },
             "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 let countTableData = data?.Params?.Count || 0; //get count from API data
 
@@ -3575,7 +3554,7 @@ Template.transaction_list.events({
             templateObject.getTimeSheetListData()
         }else if (currenttablename === "tblappointmentlist"){
             templateObject.getAllAppointmentListData();
-        } else if (currenttablename === 'productrecentlist') {            
+        } else if (currenttablename === 'productrecentlist') {
             templateObject.getAllProductRecentTransactions(true);
         }
     },

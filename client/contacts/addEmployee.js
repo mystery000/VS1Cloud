@@ -2080,7 +2080,7 @@ Template.employeescard.onRendered(function () {
           $('#edtDashboardOptions').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
-            $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
+            // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
             $('#dashboardOptionListModal').modal('toggle');
           } else {
             $('#dashboardOptionListModal').modal('toggle');
@@ -2112,7 +2112,7 @@ Template.employeescard.onRendered(function () {
       }
     });
 
-    $(document).on("click", "#tblDashboardOptions tbody tr", function (e) {
+    $(document).on("click", "#tblDashboardOptions tbody tr td.colOptionsName ", function (e) {
       const tblDashboardOptions = $(this);
       var listData = $(this).closest("tr").attr("id");
       var optionName = $(event.target).closest("tr").find(".colOptionsName").text() || 'All';
@@ -2121,6 +2121,7 @@ Template.employeescard.onRendered(function () {
       $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
       $('#dashboardOptionListModal').modal('toggle');
     });
+
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
       let prevValue = $('#editEmployeeTitle').val();
       let updatedValue = $(this).find(".colTypeName").text();
@@ -10001,9 +10002,9 @@ Template.employeescard.events({
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
   },
-  "click #tblAccount tbody tr": (e, ui) => {
+  "click #tblAccountListPop tbody tr": (e, ui) => {
     const id = $(e.currentTarget).find('.colAccountID').text();
-    const accountName = $(e.currentTarget).find('.productName').text();
+    const accountName = $(e.currentTarget).find('.colAccountName').text();
     $(".paste-expenses").val(accountName);
     $(".paste-expenses").attr('account-id', id);
     $(".paste-expenses").removeClass('paste-expenses')
@@ -10510,24 +10511,29 @@ function openEditTaskModals(id, type) {
           $(".chkDetailLabel").prop("checked", false);
           if (selected_record.TaskLabel) {
             if (selected_record.TaskLabel.fields != undefined) {
-              taskmodalLabels =
-                `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-                selected_record.TaskLabel.fields.TaskLabelName +
-                "</a></span>";
-              $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-                "checked",
-                true
-              );
+                taskmodalLabels =
+                    `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+                    selected_record.TaskLabel.fields.TaskLabelName +
+                    "</a></span>";
+                $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                    "checked",
+                    true
+                );
+                $(".taskModalActionLableDropdown").css("color", selected_record.TaskLabel.fields.Color);
             } else {
-              selected_record.TaskLabel.forEach((lbl) => {
-                taskmodalLabels +=
-                  `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                  lbl.fields.TaskLabelName +
-                  "</a></span> ";
-                $("#detail_label_" + lbl.fields.ID).prop("checked", true);
-              });
-              taskmodalLabels = taskmodalLabels.slice(0, -2);
+                selected_record.TaskLabel.forEach((lbl) => {
+                    taskmodalLabels +=
+                        `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                        lbl.fields.TaskLabelName +
+                        "</a></span> ";
+                    $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+                    $(".taskModalActionLableDropdown").css("color", lbl.fields.Color);
+                });
+                taskmodalLabels = taskmodalLabels.slice(0, -2);
             }
+          }
+          else{
+              $(".taskModalActionLableDropdown").css("color", "#858796");
           }
           $("#taskmodalLabels").html(taskmodalLabels);
           let subtasks = "";

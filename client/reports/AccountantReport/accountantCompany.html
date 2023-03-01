@@ -26,6 +26,43 @@
         .isNotCreditAccount {
             display: none !important;
         }
+
+        .sign-box-close {
+            position: absolute;
+            right: 0px;
+            top: -3px;
+            background-color: transparent;
+            border: 1px solid transparent;
+            box-shadow: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+        #context-menu {
+            position: fixed;
+            z-index: 10000;
+            width: 150px;
+            background: #00a3d3;
+            border-radius: 5px;
+            transform: scale(0);
+            transform-origin: top left;
+        }
+
+        #context-menu.visible {
+            transform: scale(1);
+            transition: transform 200ms ease-in-out;
+        }
+
+        #context-menu .item {
+            padding: 8px 10px;
+            font-size: 15px;
+            color: #eee;
+            cursor: pointer;
+            border-radius: inherit;
+        }
+
+        #context-menu .item:hover {
+            background: #00C2EF;
+        }
     </style>
     {{> accountant_header}}
     <div id="editReportsAccountant" style="display: block; padding: 0px 100px 0 40px">
@@ -36,6 +73,14 @@
                         <div id="page-1" style="display:block">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-1" id="signdiv-1" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row">
                                         <div class="col">
                                             <a
@@ -51,12 +96,14 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:250px">
-                                        <div class="col" id="page-1-content">
-                                            <h1 style="text-align:center">
-                                                <b>Trust - Non-Trading - Co as Trustee (Single Dir)</b>
-                                            </h1>
-                                            <h5 style="margin-top:20px; text-align:center">{{companyname}}</h5>
+                                    <div id="page-1-content">
+                                        <div class="row">
+                                            <div class="col">
+                                                <h1 style="text-align:center;margin-top:250px">
+                                                    <b>Trust - Non-Trading - Co as Trustee (Single Dir)</b>
+                                                </h1>
+                                                <h5 style="margin-top:20px; text-align:center">{{companyname}}</h5>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -65,6 +112,14 @@
                         <div id="page-2" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-2" id="signdiv-2" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" id="page_edit_2">
                                         <div class="col">
                                             <a
@@ -80,39 +135,41 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:50px">
-                                        <div class="col" id="page-2-content">
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">3</span>
-                                                Compilation Report
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">4</span>
-                                                Trustee Declaration
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">5</span>
-                                                Income Statement
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">6</span>
-                                                Trust Income Distribution
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">7</span>
-                                                Balance Sheet
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">8</span>
-                                                Beneficiary Accounts
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">9</span>
-                                                Notes to the Financial Statements
-                                            </div>
-                                            <div style="border:0; padding:8px">
-                                                <span style="width:30px; float:left">12</span>
-                                                Depreciation Schedule
+                                    <div id="page-2-content">
+                                        <div class="row" style="margin-top:50px;">
+                                            <div class="col">
+                                                <div style="border:0; padding:8px;">
+                                                    <span style="width:30px; float:left">3</span>
+                                                    Compilation Report
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">4</span>
+                                                    Trustee Declaration
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">5</span>
+                                                    Income Statement
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">6</span>
+                                                    Trust Income Distribution
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">7</span>
+                                                    Balance Sheet
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">8</span>
+                                                    Beneficiary Accounts
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">9</span>
+                                                    Notes to the Financial Statements
+                                                </div>
+                                                <div style="border:0; padding:8px">
+                                                    <span style="width:30px; float:left">12</span>
+                                                    Depreciation Schedule
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -128,6 +185,14 @@
                         <div id="page-3" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-3" id="signdiv-3" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" id="page_edit_3">
                                         <div class="col">
                                             <a
@@ -143,34 +208,36 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:20px; margin-bottom:15px">
-                                        <div class="col">
-                                            <h3>
-                                                <b>Compilation Report</b>
-                                            </h3>
-                                            <h6>
-                                                <b>{{companyname}}</b>
-                                            </h6>
-                                            <h6>
-                                                <b>For the year ended {{fiscalYearEnding}}</b>
-                                            </h6>
+                                    <div id="page-3-content">
+                                        <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                            <div class="col">
+                                                <h3>
+                                                    <b>Compilation Report</b>
+                                                </h3>
+                                                <h6>
+                                                    <b>{{companyname}}</b>
+                                                </h6>
+                                                <h6>
+                                                    <b>For the year ended {{fiscalYearEnding}}</b>
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" id="page-3-content">
-                                            <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
-                                            <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
-                                            <span style="float:left; padding-bottom:10px">
-                                                <b>The Responsibility of the Director</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
-                                            <span style="float:left; padding-bottom:10px">
-                                                <b>Our Responsibility</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
-                                            <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
-                                            <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
-                                            <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
+                                        <div class="row">
+                                            <div class="col">
+                                                <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
+                                                <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
+                                                <span style="float:left; padding-bottom:10px">
+                                                    <b>The Responsibility of the Director</b>
+                                                </span>
+                                                <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
+                                                <span style="float:left; padding-bottom:10px">
+                                                    <b>Our Responsibility</b>
+                                                </span>
+                                                <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
+                                                <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
+                                                <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
+                                                <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row" style="margin-top:40px; width:250px">
@@ -193,6 +260,14 @@
                         <div id="page-4" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-4" id="signdiv-4" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" id="page_edit_4">
                                         <div class="col">
                                             <a
@@ -208,31 +283,33 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:20px; margin-bottom:15px">
-                                        <div class="col">
-                                            <h3>
-                                                <b>Trustee Declaration</b>
-                                            </h3>
-                                            <h6>
-                                                <b>{{companyname}}</b>
-                                            </h6>
-                                            <h6>
-                                                <b>For the year ended {{fiscalYearEnding}}</b>
-                                            </h6>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" id="page-4-content">
-                                            <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
-                                            <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
-                                            <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
-                                            <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
-                                            <div style="float:left; margin-top:40px">
-                                                <span style="float:left; padding-bottom:10px">Director:</span>
-                                                <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
+                                    <div id="page-4-content">
+                                        <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                            <div class="col">
+                                                <h3>
+                                                    <b>Trustee Declaration</b>
+                                                </h3>
+                                                <h6>
+                                                    <b>{{companyname}}</b>
+                                                </h6>
+                                                <h6>
+                                                    <b>For the year ended {{fiscalYearEnding}}</b>
+                                                </h6>
                                             </div>
-                                            <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Director 1</span>
-                                            <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
+                                                <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
+                                                <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
+                                                <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
+                                                <div style="float:left; margin-top:40px">
+                                                    <span style="float:left; padding-bottom:10px">Director:</span>
+                                                    <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
+                                                </div>
+                                                <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Director 1</span>
+                                                <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
@@ -247,6 +324,14 @@
                         <div id="page-5" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-5" id="signdiv-5" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row">
                                         <div class="col" style="margin-bottom:20px">
                                             <div style="float:left; width:100%; border-bottom: 1px solid #858796;">
@@ -316,6 +401,14 @@
                         <div id="page-6" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-6" id="signdiv-6" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
                                             <h3>
@@ -499,6 +592,14 @@
                         <div id="page-7" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-7" id="signdiv-7" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
                                             <h3>
@@ -593,6 +694,14 @@
                         <div id="page-8" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-8" id="signdiv-8" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
                                             <h3>
@@ -641,6 +750,14 @@
                         <div id="page-9" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-9" id="signdiv-9" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row">
                                         <div class="col">
                                             <a
@@ -656,77 +773,79 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top:20px; margin-bottom:15px">
-                                        <div class="col">
-                                            <h3>
-                                                <b>Notes to the Financial Statements</b>
-                                            </h3>
-                                            <h6>
-                                                <b>{{companyname}}</b>
-                                            </h6>
-                                            <h6>
-                                                <b>For the year ended {{fiscalYearEnding}}</b>
-                                            </h6>
+                                    <div id="page-9-content">
+                                        <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                            <div class="col">
+                                                <h3>
+                                                    <b>Notes to the Financial Statements</b>
+                                                </h3>
+                                                <h6>
+                                                    <b>{{companyname}}</b>
+                                                </h6>
+                                                <h6>
+                                                    <b>For the year ended {{fiscalYearEnding}}</b>
+                                                </h6>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" style="margin-bottom:20px" id="page-9-content">
-                                            <label>
-                                                <b>1. Statement of Significant Accounting Policies</b>
-                                            </label>
-                                            <span style="float:left; padding-bottom:12px">The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on {{fiscalYearEnding}} by the directors of the trustee company.</span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Income Tax</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
-                                            Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
-                                            income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
-                                            measured at the amounts expected to be paid to / recovered from the relevant taxation authority
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Inventories</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
-                                            expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Property, Plant and Equipment</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired. 
-                                            The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets. 
-                                            The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal. 
-                                            The expected net cash flows have been discounted to their present values in estimating recoverable amounts. 
-                                            Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings. 
-                                            Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus. 
-                                            Decreases against previous increases of the same asset are charged against fair value reserves in equity. 
-                                            All other decreases are charged to profit or loss. 
-                                            Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Intangibles</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
-                                            of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Trade and Other Receivables</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Trade receivables and other receivables, including distributions receivable, are recognised at the nominal transaction value
-                                            without taking into account the time value of money. If required a provision for doubtful debt has been created.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Financial Assets</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
-                                            value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
-                                            through an equity reserve.
-                                            </span>
+                                        <div class="row">
+                                            <div class="col" style="margin-bottom:20px">
+                                                <p>
+                                                    <b>1. Statement of Significant Accounting Policies</b>
+                                                </p>
+                                                <p>The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on {{fiscalYearEnding}} by the directors of the trustee company.</p>
+                                                <p>
+                                                    <b>Income Tax</b>
+                                                </p>
+                                                <p>
+                                                    The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
+                                                Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
+                                                income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
+                                                measured at the amounts expected to be paid to / recovered from the relevant taxation authority
+                                                </p>
+                                                <p>
+                                                    <b>Inventories</b>
+                                                </p>
+                                                <p>
+                                                    Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
+                                                expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.
+                                                </p>
+                                                <p>
+                                                    <b>Property, Plant and Equipment</b>
+                                                </p>
+                                                <p style="float:left; padding-bottom:12px">
+                                                    Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired.
+                                                The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets.
+                                                The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal.
+                                                The expected net cash flows have been discounted to their present values in estimating recoverable amounts.
+                                                Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings.
+                                                Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus.
+                                                Decreases against previous increases of the same asset are charged against fair value reserves in equity.
+                                                All other decreases are charged to profit or loss.
+                                                Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.
+                                                </p>
+                                                <p>
+                                                    <b>Intangibles</b>
+                                                </p>
+                                                <p>
+                                                    Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
+                                                of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses
+                                                </p>
+                                                <p>
+                                                    <b>Trade and Other Receivables</b>
+                                                </p>
+                                                <p>
+                                                    Trade receivables and other receivables, including distributions receivable, are recognised at the nominal transaction value
+                                                without taking into account the time value of money. If required a provision for doubtful debt has been created.
+                                                </p>
+                                                <p>
+                                                    <b>Financial Assets</b>
+                                                </p>
+                                                <p>
+                                                    Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
+                                                value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
+                                                through an equity reserve.
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
@@ -744,6 +863,14 @@
                         <div id="page-10" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-10" id="signdiv-10" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row">
                                         <div class="col">
                                             <a
@@ -759,91 +886,93 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-bottom:40px">
-                                        <div class="col">
-                                            <span style="border-bottom: 1px solid #858796; float:left;">Notes to the Financial Statements</span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col" style="margin-bottom:20px" id="page-10-content">
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Trade and Other Payables</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px; letter-spacing: -0.2px">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Employee Benefits</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
-                                            Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Provisions</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
-                                            probable that there will be an outflow of economic benefits and that outflow can be reliably measured. Provisions are measured
-                                            using the best estimate available of the amounts required to settle the obligation at the end of the reporting period.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Cash and Cash Equivalents</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px">
-                                                Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
-                                            with original maturities of three months or less, and bank overdrafts.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px; clear:both">
-                                                <b>Revenue Recognition</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px; clear:both">
-                                                Revenue from the sale of goods is recognised upon the delivery of goods to customers.
-                                                <br>
-                                                Revenue from the rendering of services is recognised upon the delivery of the services to customers.
-                                                <br>
-                                                Revenue from commissions is recognised upon delivery of services to customers.
-                                                <br>
-                                                Revenue from interest is recognised using the effective interest rate method.
-                                                <br>
-                                                Revenue from dividends is recognised when the entity has a right to receive the dividend.
-                                                <br>
-                                                All revenue is stated net of the amount of goods and services tax (GST).
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px; clear:both">
-                                                <b>Goods and Services Tax</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px; clear:both">
-                                                Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
-                                            Taxation Office (ATO).
-                                            Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
-                                            from, or payable to, the ATO is included with other receivables or payables in the balance sheet.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Leases</b>
-                                            </span>
-                                            <span style="float:left; padding-bottom:12px;">
-                                                Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity. 
-                                            Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values. 
-                                            Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term. 
-                                            Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease. 
-                                            Lease incentives are deferred and amortised over the period of the lease. 
-                                            Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.
-                                            </span>
-                                            <span style="float:left; padding-bottom:8px">
-                                                <b>Grants</b>
-                                            </span>
-                                            <span style="float:left; font-size:14px; padding-bottom:12px">
-                                                Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
-                                            receive the economic benefits of the grant and the amount can be reliably measured.
-                                            If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
-                                            the revenue will be deferred until those conditions are satisfied.
-                                            Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
-                                            reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
-                                            completed, otherwise the income is recognised on receipt.
-                                            {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
-                                            zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
-                                            amount of income recognised in the income statement.
-                                            Donations and bequests are recognised as revenue when received.
-                                            </span>
+                                    <div id="page-10-content">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p style="margin-bottom:40px">
+                                                    <span style="border-bottom: 1px solid #858796; float:left;">Notes to the Financial Statements</span>
+                                                </p>
+                                                <br/><br/>
+                                                <p>
+                                                    <b>Trade and Other Payables</b>
+                                                </p>
+                                                <p>Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</p>
+                                                <p>
+                                                    <b>Employee Benefits</b>
+                                                </p>
+                                                <p>
+                                                    Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
+                                                Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.
+                                                </p>
+                                                <p>
+                                                    <b>Provisions</b>
+                                                </p>
+                                                <p>
+                                                    Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
+                                                probable that there will be an outflow of economic benefits and that outflow can be reliably measured. Provisions are measured
+                                                using the best estimate available of the amounts required to settle the obligation at the end of the reporting period.
+                                                </p>
+                                                <p>
+                                                    <b>Cash and Cash Equivalents</b>
+                                                </p>
+                                                <p>
+                                                    Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
+                                                with original maturities of three months or less, and bank overdrafts.
+                                                </p>
+                                                <p>
+                                                    <b>Revenue Recognition</b>
+                                                </p>
+                                                <p>
+                                                    Revenue from the sale of goods is recognised upon the delivery of goods to customers.
+                                                    <br>
+                                                    Revenue from the rendering of services is recognised upon the delivery of the services to customers.
+                                                    <br>
+                                                    Revenue from commissions is recognised upon delivery of services to customers.
+                                                    <br>
+                                                    Revenue from interest is recognised using the effective interest rate method.
+                                                    <br>
+                                                    Revenue from dividends is recognised when the entity has a right to receive the dividend.
+                                                    <br>
+                                                    All revenue is stated net of the amount of goods and services tax (GST).
+                                                </p>
+                                                <p>
+                                                    <b>Goods and Services Tax</b>
+                                                </p>
+                                                <p>
+                                                    Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
+                                                Taxation Office (ATO).
+                                                Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
+                                                from, or payable to, the ATO is included with other receivables or payables in the balance sheet.
+                                                </p>
+                                                <p>
+                                                    <b>Leases</b>
+                                                </p>
+                                                <p>
+                                                    Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity.
+                                                Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values.
+                                                Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term.
+                                                Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease.
+                                                Lease incentives are deferred and amortised over the period of the lease.
+                                                Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.
+                                                </p>
+                                                <p>
+                                                    <b>Grants</b>
+                                                </p>
+                                                <p>
+                                                    Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
+                                                receive the economic benefits of the grant and the amount can be reliably measured.
+                                                If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
+                                                the revenue will be deferred until those conditions are satisfied.
+                                                Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
+                                                reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
+                                                completed, otherwise the income is recognised on receipt.
+                                                            {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
+                                                zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
+                                                amount of income recognised in the income statement.
+                                                Donations and bequests are recognised as revenue when received.
+                                                </p>
+                                                <br/><br/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
@@ -861,6 +990,14 @@
                         <div id="page-11" style="display:none;">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-11" id="signdiv-11" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     {{#each pan in accountPanList}}
                                     <div class="row" style="font-size:13px">
                                         <div class="col" style="margin-bottom:20px">
@@ -904,7 +1041,7 @@
                                         tabindex="-1"
                                         id="accountList_{{pan.no}}"
                                     >
-                                        {{> accountlistpop}}                                        
+                                        {{> accountlistpop}}
                                     </div>
                                     {{/each}}
                                     <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
@@ -922,6 +1059,14 @@
                         <div id="page-12" style="display:none; font-size:13px">
                             <div class="card shadow mb-4" style="width:800px; min-height:1150px; padding:30px 30px 75px 30px; margin:auto">
                                 <div class="card-body">
+                                    <div class="signdiv signdiv-12" id="signdiv-12" style="position: absolute; z-index: 9; text-align: center; border: 1px solid #d3d3d3; top: 105px; left: 20px;">
+                                        <button type="button" class="sign-box-close">
+                                            <svg aria-hidden="true" class="svg-icon iconClearSm" width="14" height="14" viewBox="0 0 14 14" style="fill: darkred;">
+                                                <path d="M12 3.41 10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7 12 3.41Z"></path>
+                                            </svg>
+                                        </button>
+                                        <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                                    </div>
                                     <div class="row" style="margin-top:20px; margin-bottom:15px">
                                         <div class="col">
                                             <h3>
@@ -1095,87 +1240,102 @@
                 </div>
                 <style>
                 @media print {
-                    .pagebreak { page-break-before: always; } /* page-break-after works, as well */
+                    /*.pagebreak { page-break-before: always; } !* page-break-after works, as well *!*/
                 }
                 </style>
                 <div class="printReport" id="printReport" style="display:none; font-size:14px">
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
-                        <div class="row" style="margin-top:300px;">
-                            <div class="col" id="page-1-content-prt">
-                                <h1 style="text-align:center">
-                                    <b>Trust - Non-Trading - Co as Trustee (Single Dir)</b>
-                                </h1>
-                                <h5 style="margin-top:20px; text-align:center">{{companyname}}</h5>
-                            </div>
+                    <div class="pagebreak" style="position: relative; display:block; border:1px solid #fff">
+                        <div class="signdiv-1" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                         </div>
-                    </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
-                        <div class="row" style="margin-top:50px">
-                            <div class="col" id="page-2-content-prt">
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">3</span>
-                                    Compilation Report
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">4</span>
-                                    Trustee Declaration
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">5</span>
-                                    Income Statement
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">6</span>
-                                    Trust Income Distribution
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">7</span>
-                                    Balance Sheet
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">8</span>
-                                    Beneficiary Accounts
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">9</span>
-                                    Notes to the Financial Statements
-                                </div>
-                                <div style="border:0; padding:8px">
-                                    <span style="width:30px; float:left">12</span>
-                                    Depreciation Schedule
+                        <div id="page-1-content-prt">
+                            <div class="row">
+                                <div class="col" >
+                                    <h1 style="text-align:center;margin-top:250px">
+                                        <b>Trust - Non-Trading - Co as Trustee (Single Dir)</b>
+                                    </h1>
+                                    <h5 style="margin-top:20px; text-align:center">{{companyname}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
-                        <div class="row" style="margin-top:20px; margin-bottom:15px">
-                            <div class="col">
-                                <h3>
-                                    <b>Compilation Report</b>
-                                </h3>
-                                <h6>
-                                    <b>{{companyname}}</b>
-                                </h6>
-                                <h6>
-                                    <b>For the year ended {{fiscalYearEnding}}</b>
-                                </h6>
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-2" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
+                        <div id="page-2-content-prt">
+                            <div class="row" >
+                                <div class="col">
+                                    <div style="border:0; padding:8px;">
+                                        <span style="width:30px; float:left">3</span>
+                                        Compilation Report
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">4</span>
+                                        Trustee Declaration
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">5</span>
+                                        Income Statement
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">6</span>
+                                        Trust Income Distribution
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">7</span>
+                                        Balance Sheet
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">8</span>
+                                        Beneficiary Accounts
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">9</span>
+                                        Notes to the Financial Statements
+                                    </div>
+                                    <div style="border:0; padding:8px">
+                                        <span style="width:30px; float:left">12</span>
+                                        Depreciation Schedule
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col" id="page-3-content-prt">
-                                <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
-                                <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
-                                <span style="float:left; padding-bottom:10px">
-                                    <b>The Responsibility of the Director</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
-                                <span style="float:left; padding-bottom:10px">
-                                    <b>Our Responsibility</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
-                                <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
-                                <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
-                                <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
+                    </div>
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-3" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
+                        <div id="page-3-content-prt">
+                            <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                <div class="col">
+                                    <h3>
+                                        <b>Compilation Report</b>
+                                    </h3>
+                                    <h6>
+                                        <b>{{companyname}}</b>
+                                    </h6>
+                                    <h6>
+                                        <b>For the year ended {{fiscalYearEnding}}</b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" >
+                                    <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
+                                    <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
+                                    <span style="float:left; padding-bottom:10px">
+                                        <b>The Responsibility of the Director</b>
+                                    </span>
+                                    <span style="float:left; padding-bottom:12px">The director of Trustee 1 is solely responsible for the information contained in the special purpose financial statements, the reliability, accuracy and completeness of the information and for the determination that the basis of accounting used is appropriate to meet their needs and for the purpose that financial statements were prepared.</span>
+                                    <span style="float:left; padding-bottom:10px">
+                                        <b>Our Responsibility</b>
+                                    </span>
+                                    <span style="float:left; padding-bottom:12px">On the basis of information provided by the director we have compiled the accompanying special purpose financial statements in accordance with the basis of accounting as described in Note 1 to the financial statements and APES 315 Compilation of Financial Information.</span>
+                                    <span style="float:left; padding-bottom:12px">We have applied our expertise in accounting and financial reporting to compile these financial statements in accordance with the basis of accounting described in Note 1 to the financial statements. We have complied with the relevant ethical requirements of APES 110 Code of Ethics for Professional Accountants.</span>
+                                    <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
+                                    <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
+                                </div>
                             </div>
                         </div>
                         <div class="row" style="margin-top:40px; width:250px">
@@ -1187,36 +1347,44 @@
                             <span style="float:left;">Dated: {{fiscalYearEnding}}</span> --></div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
-                        <div class="row" style="margin-top:20px; margin-bottom:15px">
-                            <div class="col">
-                                <h3>
-                                    <b>Trustee Declaration</b>
-                                </h3>
-                                <h6>
-                                    <b>{{companyname}}</b>
-                                </h6>
-                                <h6>
-                                    <b>For the year ended {{fiscalYearEnding}}</b>
-                                </h6>
-                            </div>
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-4" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                         </div>
-                        <div class="row">
-                            <div class="col" id="page-4-content-prt">
-                                <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
-                                <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
-                                <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
-                                <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
-                                <div style="float:left; margin-top:40px;">
-                                    <span style="float:left; padding-bottom:10px">Director:</span>
-                                    <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
+                        <div id="page-4-content-prt">
+                            <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                <div class="col">
+                                    <h3>
+                                        <b>Trustee Declaration</b>
+                                    </h3>
+                                    <h6>
+                                        <b>{{companyname}}</b>
+                                    </h6>
+                                    <h6>
+                                        <b>For the year ended {{fiscalYearEnding}}</b>
+                                    </h6>
                                 </div>
-                                <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Director 1</span>
-                                <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <span style="float:left; padding-bottom:12px">The director of Trustee 1 declares that {{companyname}} is not a reporting entity and that this special purpose financial report should be prepared in accordance with the accounting policies outlined in Note 1 of the financial statements.</span>
+                                    <span style="float:left; padding-bottom:12px">In accordance with a resolution of the Board of Directors, the director of Trustee 1 declares that:</span>
+                                    <span style="float:left; padding-bottom:12px">1.&nbsp;&nbsp;&nbsp;The financial statements and notes present fairly {{companyname}}'s financial position as at {{fiscalYearEnding}} and its performance for the year ended on that date in accordance with the accounting policies described in Note 1 of the financial statements.</span>
+                                    <span style="float:left; padding-bottom:12px">2.&nbsp;&nbsp;&nbsp;In the directors' opinion there are reasonable grounds to believe that {{companyname}} will be able to pay its debts as and when they become due and payable.</span>
+                                    <div style="float:left; margin-top:40px;">
+                                        <span style="float:left; padding-bottom:10px">Director:</span>
+                                        <div style="float:left; width:215px; height:16px; border-bottom:2px solid #858796; margin-left:5px;"></div>
+                                    </div>
+                                    <span style="float:left; padding-left:65px; padding-bottom:30px; width:100%">Director 1</span>
+                                    <span style="float:left;">Dated: {{fiscalYearEnding}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-5" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
                         <div class="row" style="margin-top:20px; margin-bottom:15px">
                             <div class="col">
                                 <h3>
@@ -1285,7 +1453,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-6" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
                         <div class="row" style="margin-top:20px; margin-bottom:15px">
                             <div class="col">
                                 <h3>
@@ -1337,7 +1508,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-7" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
                         <div class="row" style="margin-top:20px; margin-bottom:15px">
                             <div class="col">
                                 <h3>
@@ -1418,7 +1592,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
+
+                    <div class="pagebreak" style="position: relative; page-break-before:always;">
+                        <span style="color:white;">x</span>
+                    </div>
+
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-8" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
                         <div class="row" style="margin-top:20px; margin-bottom:15px">
                             <div class="col">
                                 <h3>
@@ -1453,160 +1635,184 @@
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
-                        <div class="row" style="margin-top:20px; margin-bottom:15px">
-                            <div class="col">
-                                <h3>
-                                    <b>Notes to the Financial Statements</b>
-                                </h3>
-                                <h6>
-                                    <b>{{companyname}}</b>
-                                </h6>
-                                <h6>
-                                    <b>For the year ended {{fiscalYearEnding}}</b>
-                                </h6>
-                            </div>
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-9" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
                         </div>
-                        <div class="row">
-                            <div class="col" style="margin-bottom:20px" id="page-9-content-prt">
-                                <label>
-                                    <b>1. Statement of Significant Accounting Policies</b>
-                                </label>
-                                <span style="float:left; padding-bottom:12px">The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on {{fiscalYearEnding}} by the directors of the trustee company.</span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Income Tax</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
-                                Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
-                                income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
-                                measured at the amounts expected to be paid to / recovered from the relevant taxation authority
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Inventories</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
-                                expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Property, Plant and Equipment</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired. 
-                                The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets. 
-                                The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal. 
-                                The expected net cash flows have been discounted to their present values in estimating recoverable amounts. 
-                                Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings. 
-                                Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus. 
-                                Decreases against previous increases of the same asset are charged against fair value reserves in equity. 
-                                All other decreases are charged to profit or loss. 
-                                Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Intangibles</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
-                                of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Trade and Other Receivables</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Trade receivables and other receivables, including distributions receivable, are recognised at the nominal transaction value
-                                without taking into account the time value of money. If required a provision for doubtful debt has been created.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Financial Assets</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
-                                value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
-                                through an equity reserve.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Trade and Other Payables</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px; letter-spacing: -0.2px">Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Employee Benefits</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
-                                Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Provisions</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
-                                probable that there will be an outflow of economic benefits and that outflow can be reliably measured. Provisions are measured
-                                using the best estimate available of the amounts required to settle the obligation at the end of the reporting period.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Cash and Cash Equivalents</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px">
-                                    Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
-                                with original maturities of three months or less, and bank overdrafts.
-                                </span>
-                                <span style="float:left; padding-bottom:8px; clear: both;">
-                                    <b>Revenue Recognition</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px; clear: both;">
-                                    Revenue from the sale of goods is recognised upon the delivery of goods to customers.
-                                    <br>
-                                    Revenue from the rendering of services is recognised upon the delivery of the services to customers.
-                                    <br>
-                                    Revenue from commissions is recognised upon delivery of services to customers.
-                                    <br>
-                                    Revenue from interest is recognised using the effective interest rate method.
-                                    <br>
-                                    Revenue from dividends is recognised when the entity has a right to receive the dividend.
-                                    <br>
-                                    All revenue is stated net of the amount of goods and services tax (GST).
-                                </span>
-                                <span style="float:left; padding-bottom:8px; clear: both;">
-                                    <b>Goods and Services Tax</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px; clear: both;">
-                                    Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
-                                Taxation Office (ATO).
-                                Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
-                                from, or payable to, the ATO is included with other receivables or payables in the balance sheet.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Leases</b>
-                                </span>
-                                <span style="float:left; padding-bottom:12px;">
-                                    Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity. 
-                                Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values. 
-                                Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term. 
-                                Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease. 
-                                Lease incentives are deferred and amortised over the period of the lease. 
-                                Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.
-                                </span>
-                                <span style="float:left; padding-bottom:8px">
-                                    <b>Grants</b>
-                                </span>
-                                <span style="float:left; font-size:14px;">
-                                    Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
-                                receive the economic benefits of the grant and the amount can be reliably measured.
-                                If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
-                                the revenue will be deferred until those conditions are satisfied.
-                                Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
-                                reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
-                                completed, otherwise the income is recognised on receipt.
-                                {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
-                                zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
-                                amount of income recognised in the income statement.
-                                Donations and bequests are recognised as revenue when received.
-                                </span>
+                        <div id="page-9-content-prt">
+                            <div class="row" style="margin-top:20px; margin-bottom:15px">
+                                <div class="col">
+                                    <h3>
+                                        <b>Notes to the Financial Statements</b>
+                                    </h3>
+                                    <h6>
+                                        <b>{{companyname}}</b>
+                                    </h6>
+                                    <h6>
+                                        <b>For the year ended {{fiscalYearEnding}}</b>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" style="margin-bottom:20px">
+                                    <p>
+                                        <b>1. Statement of Significant Accounting Policies</b>
+                                    </p>
+                                    <p>The directors of the trustee company have prepared the financial statements of the trust on the basis that the trust is a non-reporting entity because there are no users dependent on general purpose financial statements. The financial statements are therefore special purpose financial statements that have been prepared in order to meet the requirements of the trust deed, the information needs of stakeholders and for the basis of preparation of the income tax return. The financial statements have been prepared in accordance with the significant accounting policies disclosed below, which the directors have determined are appropriate to meet the purposes of preparation. Such accounting policies are consistent with the previous period unless stated otherwise. The financial statements have been prepared on an accruals basis and are based on historical costs unless otherwise stated in the notes. The financial statements were authorised for issue on {{fiscalYearEnding}} by the directors of the trustee company.</p>
+                                    <p>
+                                        <b>Income Tax</b>
+                                    </p>
+                                    <p>
+                                        The income tax expense for the year comprises current income tax expense. The trust does not apply deferred tax.
+                                        Current income tax expense charged to the profit or loss is the tax payable on taxable income calculated using applicable
+                                        income tax rates enacted, or substantially enacted, as at the end of the reporting period. Current tax liabilities are therefore
+                                        measured at the amounts expected to be paid to / recovered from the relevant taxation authority
+                                    </p>
+                                    <p>
+                                        <b>Inventories</b>
+                                    </p>
+                                    <p>
+                                        Inventories are carried at the lower of cost or net realisable value. Cost is based on the first-in, first out method and includes
+                                        expenditure incurred in acquiring the inventories and bringing them to the existing condition and location.
+                                    </p>
+                                    <p>
+                                        <b>Property, Plant and Equipment</b>
+                                    </p>
+                                    <p style="float:left; padding-bottom:12px">
+                                        Property, plant and equipment is initially recorded at the cost of acquisition or fair value less, if applicable, any accumulated depreciation and impairment losses. Plant and equipment that has been contributed at no cost, or for nominal cost, is valued and recognised at the fair value of the asset at the date it is acquired.
+                                        The plant and equipment is reviewed annually by directors to ensure that the carrying amount is not in excess of the recoverable amount from these assets.
+                                        The recoverable amount is assessed on the basis of the expected net cash flows that will be received from the utilisation of the assets and the subsequent disposal.
+                                        The expected net cash flows have been discounted to their present values in estimating recoverable amounts.
+                                        Freehold land and buildings are measured at their fair value, based on periodic, but at least triennial, valuations by independent external valuers, less subsequent depreciation for buildings.
+                                        Increases in the carrying amount of land and buildings arising on revaluation are credited in equity to a revaluation surplus.
+                                        Decreases against previous increases of the same asset are charged against fair value reserves in equity.
+                                        All other decreases are charged to profit or loss.
+                                        Any accumulated depreciation at the date of revaluation is offset against the gross carrying amount of the asset and the net amount is restated to the revalued amount of the asset.
+                                    </p>
+                                    <p>
+                                        <b>Intangibles</b>
+                                    </p>
+                                    <p>
+                                        Goodwill is recognised as the excess of the purchase price for a business acquired over the fair value of the net assets at the date
+                                        of acquisition. Goodwill is assessed for impairment annually and is carried at cost less accumulated impairment losses
+                                    </p>
+                                    <p>
+                                        <b>Trade and Other Receivables</b>
+                                    </p>
+                                    <p>
+                                        Trade receivables and other receivables, including distributions receivable, are recognised at the nominal transaction value
+                                        without taking into account the time value of money. If required a provision for doubtful debt has been created.
+                                    </p>
+                                    <p>
+                                        <b>Financial Assets</b>
+                                    </p>
+                                    <p>
+                                        Investments held are originally recognised at cost, which includes transaction costs. They are subsequently measured at fair
+                                        value which is equivalent to their market bid price at the end of the reporting period. Movements in fair value are recognised
+                                        through an equity reserve.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-10" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
+                        <div id="page-10-content-prt">
+                            <div class="row">
+                                <div class="col">
+                                    <p style="margin-bottom:40px">
+                                        <span style="border-bottom: 1px solid #858796; float:left;">Notes to the Financial Statements</span>
+                                    </p>
+                                    <br/><br/>
+                                    <p>
+                                        <b>Trade and Other Payables</b>
+                                    </p>
+                                    <p>Trade and other payables represent the liabilities for goods and services received by the trust that remain unpaid at {{fiscalYearEnding}}. Trade payables are recognised at their transaction price. They are subject to normal credit terms and do not bear interest.</p>
+                                    <p>
+                                        <b>Employee Benefits</b>
+                                    </p>
+                                    <p>
+                                        Provision is made for the liability for employee entitlements arising from services rendered by employees to balance date.
+                                        Employee benefits have been measured at the amounts expected to be paid when the liability is settled, plus related costs.
+                                    </p>
+                                    <p>
+                                        <b>Provisions</b>
+                                    </p>
+                                    <p>
+                                        Provisions are recognised when the trust has a legal or constructive obligation resulting from past events, for which it is
+                                        probable that there will be an outflow of economic benefits and that outflow can be reliably measured. Provisions are measured
+                                        using the best estimate available of the amounts required to settle the obligation at the end of the reporting period.
+                                    </p>
+                                    <p>
+                                        <b>Cash and Cash Equivalents</b>
+                                    </p>
+                                    <p>
+                                        Cash and cash equivalents include cash on hand, deposits held on call with banks, other short-term highly liquid investments
+                                        with original maturities of three months or less, and bank overdrafts.
+                                    </p>
+                                    <p>
+                                        <b>Revenue Recognition</b>
+                                    </p>
+                                    <p>
+                                        Revenue from the sale of goods is recognised upon the delivery of goods to customers.
+                                        <br>
+                                        Revenue from the rendering of services is recognised upon the delivery of the services to customers.
+                                        <br>
+                                        Revenue from commissions is recognised upon delivery of services to customers.
+                                        <br>
+                                        Revenue from interest is recognised using the effective interest rate method.
+                                        <br>
+                                        Revenue from dividends is recognised when the entity has a right to receive the dividend.
+                                        <br>
+                                        All revenue is stated net of the amount of goods and services tax (GST).
+                                    </p>
+                                    <p>
+                                        <b>Goods and Services Tax</b>
+                                    </p>
+                                    <p>
+                                        Transactions are recognised net of GST, except where the amount of GST incurred is not recoverable from the Australian
+                                        Taxation Office (ATO).
+                                        Receivables and payables are stated inclusive of the amount of GST receivable or payable. The net amount of GST recoverable
+                                        from, or payable to, the ATO is included with other receivables or payables in the balance sheet.
+                                    </p>
+                                    <p>
+                                        <b>Leases</b>
+                                    </p>
+                                    <p>
+                                        Finance leases are leases of fixed assets where substantially all of the risks and benefits incidental to the ownership of the asset are transferred to the entity, but the legal ownership is not transferred to the entity.
+                                        Finance leases are capitalised by recording an asset and a corresponding liability at the lower of the amounts equal to the fair value of the leased asset, or the minimum lease payments measured at present value including any residual values.
+                                        Leased assets are depreciated on a straight-line basis over the shorter of their estimated useful lives or the lease term.
+                                        Operating lease payments are charged in the profit and loss on a straight-line basis over the term of the lease.
+                                        Lease incentives are deferred and amortised over the period of the lease.
+                                        Profits and losses on sale and leaseback transactions are recognised in the reporting period in which they occur.
+                                    </p>
+                                    <p>
+                                        <b>Grants</b>
+                                    </p>
+                                    <p>
+                                        Grant revenue is recognised in the income statement when the entity receives the grant, when it is probable that the entity will
+                                        receive the economic benefits of the grant and the amount can be reliably measured.
+                                        If the grant has conditions attached which must be satisfied before the entity is eligible to receive the grant, the recognition of
+                                        the revenue will be deferred until those conditions are satisfied.
+                                        Where the entity incurs an obligation to deliver economic value back to the grant contributor, the transaction is considered a
+                                        reciprocal transaction and the revenue is recognised as a liability in the balance sheet until the required service has been
+                                        completed, otherwise the income is recognised on receipt.
+                                        {{companyname}} receives non-reciprocal contributions of assets from the government and other parties for a nominal or
+                                        zero value. These assets are recognised at their fair value on the date of acquisition in the balance sheet, with an equivalent
+                                        amount of income recognised in the income statement.
+                                        Donations and bequests are recognised as revenue when received.
+                                    </p>
+                                    <br/><br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-11" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
                         <div class="row">
                             <div class="col" style="margin-bottom:20px"></div>
                         </div>
@@ -1639,7 +1845,10 @@
                         </div>
                         {{/each}}
                     </div>
-                    <div class="pagebreak" style="display:block; border:1px solid #fff">
+                    <div class="pagebreak" style="position: relative; page-break-before:always; display:block; border:1px solid #fff">
+                        <div class="signdiv-12" style="position: absolute; z-index: 9; text-align: center;  top: 105px; left: 20px;">
+                            <div class="signdivheader" style="padding: 10px;cursor: move;z-index: 10;">Agreed: <span style="color:white;">**signature_1**/</span></div>
+                        </div>
                         <div class="row" style="margin-top:22px; margin-bottom:15px">
                             <div class="col">
                                 <h3>
@@ -1690,21 +1899,26 @@
             </div>
         </div>
     </div>
-    <script>        
+    <div id="context-menu">
+        <div class="item" data-action="copy">Copy</div>
+        <div class="item" data-action="paste">Paste</div>
+        <div class="item" data-action="delete">Delete</div>
+    </div>
+    <script>
         let pageNum = 1;
         function go_page(action){
             if(action == "prev"){
                 if(pageNum > 1){
                     for(var i=1; i<=12; i++){
-                        $("#pageNum-"+pageNum).removeClass("active"); 
-                        $("#page-"+pageNum).css("display", "none"); 
+                        $("#pageNum-"+pageNum).removeClass("active");
+                        $("#page-"+pageNum).css("display", "none");
                     }
                     $("#pageNum-"+(pageNum-1)).addClass("active");
                     $("#page-"+(pageNum-1)).css("display", "block");
                     $("#nextPage").removeClass("disabled");
-    
+
                     pageNum = pageNum - 1;
-    
+
                     if(pageNum == 1){
                         $("#prevPage").addClass("disabled");
                     }
@@ -1713,15 +1927,15 @@
             else if(action == "next"){
                 if(pageNum < 12){
                     for(var i=1; i<=12; i++){
-                        $("#pageNum-"+pageNum).removeClass("active"); 
-                        $("#page-"+pageNum).css("display", "none"); 
+                        $("#pageNum-"+pageNum).removeClass("active");
+                        $("#page-"+pageNum).css("display", "none");
                     }
                     $("#pageNum-"+(pageNum+1)).addClass("active");
                     $("#page-"+(pageNum+1)).css("display", "block");
                     $("#prevPage").removeClass("disabled");
-    
+
                     pageNum = pageNum + 1;
-    
+
                     if(pageNum == 12){
                         $("#nextPage").addClass("disabled");
                     }
@@ -1729,8 +1943,8 @@
             }
             else{
                 for(var i=1; i<=12; i++){
-                    $("#pageNum-"+i).removeClass("active"); 
-                    $("#page-"+i).css("display", "none"); 
+                    $("#pageNum-"+i).removeClass("active");
+                    $("#page-"+i).css("display", "none");
                 }
                 $("#pageNum-"+action).addClass("active");
                 $("#page-"+action).css("display", "block");
@@ -1751,6 +1965,112 @@
                     $("#nextPage").removeClass("disabled");
                 }
             }
+            initContextMenu();
         }
+
+        // Alex : Add for docusign start
+        var copiedSignature = null;
+        const contextMenu = document.getElementById("context-menu");
+        var item = $(".context-menu .item");
+
+        function initContextMenu() {
+            const scope = $("#page-" + pageNum + " .card-body")[0];
+
+            const normalizePozition = (mouseX, mouseY) => {
+                // ? compute what is the mouse position relative to the container element (scope)
+                let {
+                    left: scopeOffsetX,
+                    top: scopeOffsetY,
+                } = scope.getBoundingClientRect();
+
+                scopeOffsetX = scopeOffsetX < 0 ? 0 : scopeOffsetX;
+                scopeOffsetY = scopeOffsetY < 0 ? 0 : scopeOffsetY;
+
+                const scopeX = mouseX - scopeOffsetX;
+                const scopeY = mouseY - scopeOffsetY;
+
+                // ? check if the element will go out of bounds
+                const outOfBoundsOnX =
+                        scopeX + contextMenu.clientWidth > scope.clientWidth;
+
+                const outOfBoundsOnY =
+                        scopeY + contextMenu.clientHeight > scope.clientHeight;
+
+                let normalizedX = mouseX;
+                let normalizedY = mouseY;
+
+                // ? normalize on X
+                if (outOfBoundsOnX) {
+                    normalizedX =
+                            scopeOffsetX + scope.clientWidth - contextMenu.clientWidth;
+                }
+
+                // ? normalize on Y
+                if (outOfBoundsOnY) {
+                    normalizedY =
+                            scopeOffsetY + scope.clientHeight - contextMenu.clientHeight;
+                }
+
+                return {normalizedX, normalizedY};
+            };
+
+            $(scope).unbind("contextmenu");
+            $(scope).bind("contextmenu", (event) => {
+                event.preventDefault();
+                if ($(event.target).parents('.signdiv').length != 1) {
+                    $(contextMenu).children(".item").hide();
+                    $(contextMenu).children("[data-action=paste]").show();
+                } else {
+                    $(contextMenu).children(".item").show();
+                }
+
+                const {clientX: mouseX, clientY: mouseY} = event;
+
+                const {normalizedX, normalizedY} = normalizePozition(mouseX, mouseY);
+
+                contextMenu.classList.remove("visible");
+
+                contextMenu.style.top = `${normalizedY}px`;
+                contextMenu.style.left = `${normalizedX}px`;
+
+                setTimeout(() => {
+                    contextMenu.classList.add("visible");
+                });
+            });
+            $('body').unbind("click");
+            $('body').bind("click", (e) => {
+                // ? close the menu if the user clicks outside of it
+                if (e.target.offsetParent != contextMenu) {
+                    contextMenu.classList.remove("visible");
+                } else {
+                    if ($(e.target).attr('data-action') == 'copy') {
+                        copiedSignature = pageNum;
+                    } else if ($(e.target).attr('data-action') == 'paste') {
+                        if (copiedSignature != null
+                            && $("#page-" + pageNum + " .signdiv").css('display') == 'none') {
+                            copiedSignature = null;
+                            let signatureBox = $("#page-" + pageNum + " .signdiv")[0];
+                            let signatures = $('.' + signatureBox.id);
+                            signatures.css('display', 'block');
+                            signatures.css('top', '105px');
+                            signatures.css('left', '20px');
+                        }
+                    } else if ($(e.target).attr('data-action') == 'delete') {
+                        let signatureBox = $("#page-" + pageNum + " .signdiv")[0];
+                        let signatures = $('.' + signatureBox.id);
+                        signatures.css('display', 'none');
+                        signatures.css('top', '105px');
+                        signatures.css('left', '20px');
+                    }
+                    contextMenu.classList.remove("visible");
+                }
+            });
+        }
+
+        initContextMenu();
+
+
+        // Alex Add for docusign end
+
     </script>
 </template>

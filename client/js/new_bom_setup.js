@@ -152,7 +152,7 @@ Template.bom_setup.events({
                     }
                 } else {
                     let bomProductIndex = bomProducts.findIndex(product => {
-                        return product.fields.productName == _name;
+                        return product.productName == _name;
                     })
                     if(bomProductIndex > -1) {
                         let subProduct = bomProducts[bomProductIndex];
@@ -205,8 +205,10 @@ Template.bom_setup.events({
             }else {
                 let data = JSON.parse(dataObject[0].data)
                 let useData = data.tproductvs1;
+                let added = false
                 for(let i = 0; i< useData.length; i++) {
                     if(useData[i].fields.ProductName == $('#edtMainProductName').val() ) {
+                        added = true
                         objDetails.Description = useData[i].fields.SalesDescription;
                         objDetails.TotalQtyOriginal = useData[i].fields.TotalQtyInStock;
                         saveBOMStructure(objDetails)
@@ -227,6 +229,13 @@ Template.bom_setup.events({
                         // }).catch(function(err){
                         // })
                     }
+                }
+                if(!added) {
+                    productService.getOneProductdatavs1byname($('#edtMainProductName').val()).then(function(data){
+                        objDetails.Description = data.tproduct[0].fields.SalesDescription;
+                        objDetails.TotalQtyOriginal = data.tproduct[0].fields.TotalQtyInStock;
+                        saveBOMStructure(objDetails)
+                    })
                 }
             }
         }).catch(function(e) {

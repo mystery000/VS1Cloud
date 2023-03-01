@@ -210,41 +210,45 @@
       {{else}}
       <div class="row" style="margin: 8px 16px 0px 16px;">
         {{#if showCustomer}}
-        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-          {{# if equals cardType 'Invoice'}}
-            {{> customer_selector
-              label=getUserLabel
-              value=data.CustomerID
-            }}
+          {{#if equals cardName 'WO'}}
+              <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                {{> customer_selector
+                  label=getUserLabel
+                  id=getCustomerID
+                  value=data.CustomerID
+                  data = data.ClientName
+                  email = data.ClientEmail
+                  modalId=modal_id
+                  list_template_name=getTemplate
+                  target_modal_id=getTargetModalID
+                  target_template_id=getTargetTemplate
+                  is_editable=true
+                  colNameForValue=colName
+                  modal_title=getModalTitle
+                }}
+              </div>
+              <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                {{> customer_email_input
+                  label=getUserLabel
+                }}
+              </div>
           {{else}}
-          {{# if equals cardType 'Sales Order'}}
-            {{> customer_selector
-              label=getUserLabel
-              value=data.CustomerID
-            }}
-          {{else}}
-          {{#if equals cardType 'Quote'}}
-            {{> customer_selector
-              label=getUserLabel
-              value=data.CustomerID
-            }}
-          {{else}}
-          {{> customer_selector
-            label=getUserLabel
-            id='edtSupplierName'
-            value=data.CustomerID
-          }}
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              {{> customer_selector
+                label=getUserLabel
+                id=getCustomerID
+                value=data.CustomerID
+              }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+              {{> customer_email_input
+                label=getUserLabel
+              }}
+            </div>
           {{/if}}
-          {{/if}}
-          {{/if}}
+        {{/if}}  
+        
         </div>
-        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-          {{> customer_email_input
-            label=getUserLabel
-          }}
-        </div>
-        {{/if}}
-      </div>
       {{/if}}
 
       <div class="row" style="margin: 16px 16px 0px 16px;">
@@ -401,7 +405,7 @@
                     id="edtTotalQuantity"
                     name="edtTotalQuantity"
                     defaultValue=data.quantity
-                    readonly=showCompleted
+                    readonly=true
                   }}
                 </div>
               {{/if}}
@@ -445,6 +449,8 @@
           data=data
           showCompleteProcess=showCompleteProcess
           showVendorService=showVendorService
+          showSchedule=showSchedule
+          showUnschedule=showUnschedule
           showTimerStart = showTimerStart
           showTimerPause = showTimerPause
           showTimerResume = showTimerResume

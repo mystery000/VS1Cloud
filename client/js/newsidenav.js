@@ -589,7 +589,7 @@ Template.newsidenav.onRendered(function () {
       (currentLoc == "/stockadjustmentcard") ||
       (currentLoc == "/stockadjustmentoverview") || (currentLoc == "/productlist") ||
       (currentLoc == "/stocktransfercard") || (currentLoc == "/stocktransferlist") ||
-      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist")) {
+      (currentLoc == "/serialnumberlist") || (currentLoc == "/lotnumberlist") || (currentLoc == "/binlocationslist")) {
         $('#sidenavaccounts').removeClass('active');
         $('#sidenavbanking').removeClass('active');
         $('#sidenavdashbaord').removeClass('active');
@@ -1548,18 +1548,19 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
   },
   'click .sidenavpayroll': function (event) {
 
@@ -1634,18 +1635,19 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
   },
   'click .sidenavbanking': function (event) {
 
@@ -1734,19 +1736,20 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
     // $('#contactsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
   },
   'click .sidenavcontacts': function (event) {
 
@@ -1776,19 +1779,20 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
     event.preventDefault();
     var url = window.location.pathname;
     if (url == "/bankrecon") {
@@ -1842,19 +1846,20 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
     event.preventDefault();
     var url = window.location.pathname;
     if (url == "/bankrecon") {
@@ -1908,19 +1913,20 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
     event.preventDefault();
     var url = window.location.pathname;
     if (url == "/bankrecon") {
@@ -1974,19 +1980,20 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
     event.preventDefault();
     var url = window.location.pathname;
     if (url == "/bankrecon") {
@@ -2040,19 +2047,20 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
     event.preventDefault();
     var url = window.location.pathname;
     if (url == "/bankrecon") {
@@ -2106,18 +2114,19 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#inventorySubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#inventorySubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
   },
   'click .sidenavappointment': function (event) {
     event.preventDefault();
@@ -2170,18 +2179,19 @@ Template.newsidenav.events({
     $('.seedtosaleLi').addClass('opacityNotActive');
     $('.settingsLi').addClass('opacityNotActive');
     $('.logoutLi').addClass('opacityNotActive');
-    $('#accountsSubmenu').collapse('hide');
-    $('#appointmentsSubmenu').collapse('hide');
-    $('#bankingSubmenu').collapse('hide');
-    $('#contactsSubmenu').collapse('hide');
-    $('#manufacturingSubmenu').collapse('hide');
-    $('#paymentsSubmenu').collapse('hide');
-    $('#payrollSubmenu').collapse('hide');
-    $('#purchasesSubmenu').collapse('hide');
-    $('#reportsSubmenu').collapse('hide');
-    $('#salesSubmenu').collapse('hide');
-    $('#seedToSaleSubmenu').collapse('hide');
-    $('#settingsSubmenu').collapse('hide');
+    // $('#accountsSubmenu').collapse('hide');
+    // $('#appointmentsSubmenu').collapse('hide');
+    // $('#bankingSubmenu').collapse('hide');
+    // $('#contactsSubmenu').collapse('hide');
+    // $('#manufacturingSubmenu').collapse('hide');
+    // $('#paymentsSubmenu').collapse('hide');
+    // $('#payrollSubmenu').collapse('hide');
+    // $('#purchasesSubmenu').collapse('hide');
+    // $('#reportsSubmenu').collapse('hide');
+    // $('#salesSubmenu').collapse('hide');
+    // $('#seedToSaleSubmenu').collapse('hide');
+    // $('#settingsSubmenu').collapse('hide');
+    $('.submenuItem').collapse('hide');
   },
   'click .sidenavinventory': function (event) {
 
@@ -2632,6 +2642,12 @@ Template.newsidenav.events({
   'click #sidenavstocktransfer': function (event) {
     event.preventDefault();
     FlowRouter.go('/stocktransferlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavbinlocationlist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/binlocationslist');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },

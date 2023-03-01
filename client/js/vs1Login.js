@@ -1558,12 +1558,12 @@ Template.vs1login.onRendered(function () {
             localStorage.setItem('CloudPayrollModule', isPayroll);
 
             localStorage.setItem('CloudAppointmentSchedulingModule', isAppointmentScheduling);
-            addVS1Data('CloudAppointmentStartStopAccessLevel', isAppointmentStartStop);
+            localStorage.setItem('CloudAppointmentStartStopAccessLevel', isAppointmentStartStop);
             localStorage.setItem('CloudAppointmentAppointmentLaunch', isAppointmentLaunch);
-            addVS1Data('CloudAppointmentAllocationLaunch', isAllocationLaunch);
+            localStorage.setItem('CloudAppointmentAllocationLaunch', isAllocationLaunch);
             localStorage.setItem('CloudAppointmentAddAttachment', isAddAttachment);
             localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly', isCanOnlySeeOwnAppointment);
-            addVS1Data('CloudAppointmentCreateAppointment', isCreateAppointment);
+            localStorage.setItem('CloudAppointmentCreateAppointment', isCreateAppointment);
             localStorage.setItem('CloudAppointmentNotes', isAppointmentNotes);
             localStorage.setItem('CloudEditTimesheetHours', isEditTimesheetHours);
 
@@ -2077,9 +2077,11 @@ Template.vs1login.onRendered(function () {
                                   title: 'You Seem To Have Missed a Payment Recently, Can You Please Update your Subscription Information!',
                                   text: '',
                                   type: 'error',
-                                  showCancelButton: true,
+                                  showCancelButton: false,
                                   confirmButtonText: 'Update Payment',
-                                  cancelButtonText: 'Cancel'
+                                  // cancelButtonText: 'Cancel'
+                                  allowOutsideClick: false,
+                                  allowEscapeKey: false,
                               }).then((result) => {
                                   if (result.value) {
                                       //window.open('https://www.payments.vs1cloud.com/customer/account/login/referer/aHR0cHM6Ly93d3cucGF5bWVudHMudnMxY2xvdWQuY29tLw%2C%2C?urppassname='+dataReturnRes.ProcessLog.VS1AdminUserName+'&urlpasstoken='+userLoginPassword+'', '_blank');

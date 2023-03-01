@@ -57,6 +57,7 @@ export default class GlobalFunctions {
   }
 
   static formatDate(date) {
+    if(!date) return "";
       return moment(date).format("DD/MM/YYYY");
   }
 
@@ -71,5 +72,26 @@ export default class GlobalFunctions {
         : 0;
     }
     return utilityService.modifynegativeCurrencyFormat(amount) || 0.0;
+  }
+  static sortFunction(a, b) {
+    if (a[0] === b[0]) {
+      return 0;
+    } else {
+      return (a[0] < b[0]) ? -1 : 1;
+    }
+  }
+  static convert2Digit(number){
+    return (number - 0) < 9 ? `0${number}` : number;
+  }
+  static covert2Comma(number){
+    return (number- 0).toLocaleString('en-US', {maximumFractionDigits:2, minimumFractionDigits:2});
+  }
+  static showCurrency(number){
+    if(number >= 0) return '$' + this.covert2Comma(number - 0);
+    return '-$' + this.covert2Comma(-number);
+  }
+  static generateSpan(string, className = "", indent = ""){
+    //return `&lt;span class='${className}'&gt;${string}&lt;/span&gt;`
+    return {string: string, className: className, indent: indent};
   }
 }

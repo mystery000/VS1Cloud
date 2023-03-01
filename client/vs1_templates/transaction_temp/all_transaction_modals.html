@@ -9,7 +9,7 @@
     </div>
     {{#if customerRecord}}
     <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
-        {{> addcustomerpop customerRecord=customerRecord}}
+        {{> addcustomerpop record=customerRecord}}
     </div>
     {{/if}}
 
@@ -77,6 +77,9 @@
             </div>
         </div>
     </div>
+
+    {{#if ignoreAccount}}
+    {{else}}
     <!-- Modal print-button -modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
@@ -85,6 +88,7 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
     </div>
+    {{/if}}
     <!-- End Modal Product -->
     <!-- Modal Tax Rate -modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
