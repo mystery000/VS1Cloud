@@ -89,7 +89,6 @@ Template.dashboard.helpers({
     return transactionTableLastUpdated;
   },
   isShowCharts: () => {
-    console.log("isShowCharts:", Template.instance().showChart.get())
     return Template.instance().showChart.get();
   }
 });

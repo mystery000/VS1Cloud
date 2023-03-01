@@ -3620,8 +3620,6 @@ Template.new_invoice.onCreated(function () {
             })
             .catch(function (err) { });
         });
-      
-        console.log("_template:", _template);
       if(_template !== ''){
         const _templateNumber = $(`input[name="${_template}"]:checked`).val();
         await templateObject.exportSalesToPdf(_template, _templateNumber);
