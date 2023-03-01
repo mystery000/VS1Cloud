@@ -7,7 +7,7 @@ import Tvs1CardPreferenceFields from "../../js/Api/Model/Tvs1CardPreferenceField
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 
-import {Session} from 'meteor/session';
+import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './allCardsLists.html';
 
@@ -19,10 +19,6 @@ Template.allCardsLists.onRendered(function () {
     _tabGroup = $(".connectedCardSortable").data("tabgroup");
     _chartGroup = $(".connectedCardSortable").data("chartgroup");
     const templateObject = Template.instance();
-
-    templateObject.deactivateDraggable = () => {
-        draggableCharts.disable();
-    };
 
     templateObject.saveCardsLocalDB = async () => {
         const cardsApis = new ChartsApi();
@@ -48,35 +44,35 @@ Template.allCardsLists.onRendered(function () {
     }
 
     templateObject.setCardPositions = async () => {
-        setTimeout(async function(){
+        setTimeout(async function () {
             $('.card-visibility').addClass('hideelement')
             let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
             let cardList = [];
             let employeeID = localStorage.getItem("mySessionEmployeeLoggedID");
-            if( Tvs1CardPref.length == 0 ){
+            if (Tvs1CardPref.length == 0) {
                 await templateObject.saveCardsLocalDB();
-                Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
             }
-            if( Tvs1CardPref.length > 0 ){
+            if (Tvs1CardPref.length > 0) {
                 let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
                 cardList = Tvs1CardPreference.fromList(
                     Tvs1CardPreferenceData.tvs1cardpreference
                 ).filter((card) => {
-                    if ( parseInt( card.fields.EmployeeID ) == employeeID && parseInt( card.fields.TabGroup ) == _tabGroup ) {
+                    if (parseInt(card.fields.EmployeeID) == employeeID && parseInt(card.fields.TabGroup) == _tabGroup) {
                         return card;
                     }
                 });
             }
-            if( cardList.length > 0 ){
+
+            if (cardList.length > 0) {
                 cardList.forEach((card) => {
                     $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-id", card.fields.ID);
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
-                    if( card.fields.Active == false ){
+                    if (card.fields.Active == false) {
                         $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
-                    }else{
+                    } else {
                         $(`[card-key='${card.fields.CardKey}']`).removeClass("hideelement");
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
                         $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye');
@@ -84,21 +80,21 @@ Template.allCardsLists.onRendered(function () {
                 });
                 let $chartWrappper = $(".connectedCardSortable");
                 $chartWrappper
-                .find(".card-visibility")
-                .sort(function (a, b) {
-                    return +a.getAttribute("position") - +b.getAttribute("position");
-                })
-                .appendTo($chartWrappper);
-            }else{
+                    .find(".card-visibility")
+                    .sort(function (a, b) {
+                        return +a.getAttribute("position") - +b.getAttribute("position");
+                    })
+                    .appendTo($chartWrappper);
+            } else {
                 // Set default cards list
-                $('.card-visibility').each(function(){
+                $('.card-visibility').each(function () {
                     $(this).find('.cardShowBtn .far').removeClass('fa-eye');
                     let position = $(this).data('default-position');
                     $(this).attr('position', position);
                     $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
-                    $(this).attr("card-active", 'false');
+                    $(this).attr("card-active", false);
                 })
-                $(`[chartgroup='${_chartGroup}']`).attr("card-active", 'true');
+                $(`[chartgroup='${_chartGroup}']`).attr("card-active", true);
                 $(`[chartgroup='${_chartGroup}']`).removeClass('hideelement');
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
                 $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
@@ -107,20 +103,21 @@ Template.allCardsLists.onRendered(function () {
     };
     templateObject.setCardPositions();
 
+    templateObject.deactivateDraggable = () => {
+        draggableCharts.disable();
+    };
+
     templateObject.activateDraggable = () => {
-        setTimeout(function(){
+        setTimeout(function () {
             $(".connectedCardSortable").sortable({
                 disabled: false,
                 scroll: false,
                 placeholder: "portlet-placeholder ui-corner-all",
                 tolerance: 'pointer',
                 stop: async (event, ui) => {
-                    if( $(ui.item[0]).hasClass("dimmedChart") == false ){
-                        // Here we rebuild positions tree in html
-                        await ChartHandler.buildCardPositions();
+                    if ($(ui.item[0]).hasClass("dimmedChart") == false) {
                         // Here we save card list
                         templateObject.saveCards();
-                        $(".fullScreenSpin").css("display", "none");
                     }
                 },
             }).disableSelection();
@@ -152,17 +149,17 @@ Template.allCardsLists.onRendered(function () {
                         CardKey: $(cards[i]).attr("card-key"),
                         Position: parseInt($(cards[i]).attr("position")),
                         TabGroup: parseInt(_tabGroup),
-                        Active: ( $(cards[i]).attr("card-active") == 'true' )? true : false
+                        Active: ($(cards[i]).attr("card-active") == 'true') ? true : false
                     })
                 })
             );
         }
-        if( cardList ){
+        if (cardList) {
 
-             let cardJSON = {
+            let cardJSON = {
                 type: "Tvs1CardPreference",
-                objects:cardList
-             };
+                objects: cardList
+            };
 
             try {
                 const ApiResponse = await apiEndpoint.fetch(null, {
@@ -174,25 +171,25 @@ Template.allCardsLists.onRendered(function () {
                 if (ApiResponse.ok == true) {
                     const jsonResponse = await ApiResponse.json();
                     await templateObject.saveCardsLocalDB();
-                    $(".fullScreenSpin").css("display", "none");
                 }
             } catch (error) {
                 $(".fullScreenSpin").css("display", "none");
             }
         }
+        $(".fullScreenSpin").css("display", "none");
     };
 });
 
 Template.allCardsLists.events({
-    'click .customerawaitingpayments':function(event){
+    'click .customerawaitingpayments': function (event) {
         const url = window.location.href;
         const newurl = new URL(window.location.href);
         let customerID = 0;
         if (url.indexOf("customerscard?id=") > 0) {
-            customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+            customerID = (!isNaN(newurl.searchParams.get("id"))) ? newurl.searchParams.get("id") : 0;
         }
         if (url.indexOf("customerscard?jobid=") > 0) {
-            customerID = ( !isNaN(newurl.searchParams.get("jobid")) )? newurl.searchParams.get("jobid") : 0;
+            customerID = (!isNaN(newurl.searchParams.get("jobid"))) ? newurl.searchParams.get("jobid") : 0;
         }
         if (customerID != 0) {
             window.location.href = 'customerawaitingpayments?id=' + customerID;
@@ -200,15 +197,15 @@ Template.allCardsLists.events({
             window.location.href = 'customerawaitingpayments';
         }
     },
-    'click .overduecustomerawaitingpayments':function(event){
+    'click .overduecustomerawaitingpayments': function (event) {
         const url = window.location.href;
         const newurl = new URL(window.location.href);
         let customerID = 0;
         if (url.indexOf("customerscard?id=") > 0) {
-            customerID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+            customerID = (!isNaN(newurl.searchParams.get("id"))) ? newurl.searchParams.get("id") : 0;
         }
         if (url.indexOf("customerscard?jobid=") > 0) {
-            customerID = ( !isNaN(newurl.searchParams.get("jobid")) )? newurl.searchParams.get("jobid") : 0;
+            customerID = (!isNaN(newurl.searchParams.get("jobid"))) ? newurl.searchParams.get("jobid") : 0;
         }
         if (customerID != 0) {
             window.location.href = 'overduecustomerawaitingpayments?id=' + customerID;
@@ -216,12 +213,12 @@ Template.allCardsLists.events({
             window.location.href = 'overduecustomerawaitingpayments';
         }
     },
-    'click .supplierawaitingpurchaseorder':function(event){
+    'click .supplierawaitingpurchaseorder': function (event) {
         const url = window.location.href;
         const newurl = new URL(window.location.href);
         let supplierID = 0;
         if (url.indexOf("supplierscard?id=") > 0) {
-            supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+            supplierID = (!isNaN(newurl.searchParams.get("id"))) ? newurl.searchParams.get("id") : 0;
         }
         if (supplierID != 0) {
             window.location.href = 'supplierawaitingpurchaseorder?id=' + supplierID;
@@ -229,12 +226,12 @@ Template.allCardsLists.events({
             window.location.href = 'supplierawaitingpurchaseorder';
         }
     },
-    'click .overduesupplierawaiting':function(event){
+    'click .overduesupplierawaiting': function (event) {
         const url = window.location.href;
         const newurl = new URL(window.location.href);
         let supplierID = 0;
         if (url.indexOf("supplierscard?id=") > 0) {
-            supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
+            supplierID = (!isNaN(newurl.searchParams.get("id"))) ? newurl.searchParams.get("id") : 0;
         }
         if (supplierID != 0) {
             window.location.href = 'overduesupplierawaiting?id=' + supplierID;
@@ -242,50 +239,44 @@ Template.allCardsLists.events({
             window.location.href = 'overduesupplierawaiting';
         }
     },
-    "click .editCardBtn": async function (e) {
-        playSaveAudio();
+    "click .cardSettingBtn": async function (e) {
         e.preventDefault();
-        let templateObject = Template.instance();
-        setTimeout(async function(){
         $(".card-visibility").removeClass('hideelement');
-        if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
-            $('.cardShowBtn').removeClass('hideelement');
-            $('.editCardBtn').find('i').removeClass('fa-cog')
-            $('.editCardBtn').find('i').addClass('fa-save')
-            $('.actionButtonCardsTop').removeClass('hideelement');
-        }else{
-            $(".fullScreenSpin").css("display", "block");
-            $('.cardShowBtn').addClass('hideelement');
-            $('.actionButtonCardsTop').addClass('hideelement');
-            $('.editCardBtn').find('i').removeClass('fa-save')
-            $('.editCardBtn').find('i').addClass('fa-cog');
-            // Save cards
-            await templateObject.saveCards();
-            await templateObject.setCardPositions();
-            $(".fullScreenSpin").css("display", "none");
-        }
-        if( $('.card-visibility').hasClass('dimmedChart') ){
-            $('.card-visibility').removeClass('dimmedChart');
-            $('.cardShowBtn').removeClass('hideelement');
-        }else{
-            $('.card-visibility').addClass('dimmedChart');
-        }
-    }, delayTimeAfterSound);
+        $(".card-visibility").addClass('dimmedChart');
+        $(".card-visibility").find(".cardSettingBtn").addClass("hideelement");
+        $(".card-visibility").find(".cardShowBtn").removeClass("hideelement");
+        $(".actionButtonCardsTop").removeClass("hideelement");
     },
-    "click .cardShowBtn": function(e){
+    "click .cardShowBtn": function (e) {
         e.preventDefault();
         let templateObject = Template.instance();
-        if( $(e.target).find('.far').hasClass('fa-eye') ){
+        if ($(e.target).find('.far').hasClass('fa-eye')) {
             $(e.target).find('.far').removeClass('fa-eye')
             $(e.target).find('.far').addClass('fa-eye-slash')
-            $(e.target).parents('.card-visibility').attr('card-active', 'false')
-        }else{
+            $(e.target).parents('.card-visibility').attr('card-active', false)
+        } else {
             $(e.target).find('.far').removeClass('fa-eye-slash')
             $(e.target).find('.far').addClass('fa-eye')
-            $(e.target).parents('.card-visibility').attr('card-active', 'true')
+            $(e.target).parents('.card-visibility').attr('card-active', true)
         }
     },
-    "click .resetcards": async function(e){
+    "click .saveCards": async function (e) {
+        e.preventDefault();
+        let templateObject = Template.instance();
+        setTimeout(async function () {
+            await templateObject.saveCards();
+            $('.card-visibility').removeClass('dimmedChart');
+            $(".card-visibility").find(".cardSettingBtn").removeClass("hideelement");
+            $(".card-visibility").find(".cardShowBtn").addClass("hideelement");
+            $('.actionButtonCardsTop').addClass('hideelement');
+            $(".card-visibility").addClass('hideelement');
+            let cards = $(".card-visibility");
+            $.each(cards, function (i, card) {
+                if ($(card).attr("card-active") == 'true') $(card).removeClass("hideelement");
+            });
+        }, 0);
+    },
+    "click .resetCards": async function (e) {
         e.preventDefault();
         $(".fullScreenSpin").css("display", "block");
         let templateObject = Template.instance();
@@ -301,15 +292,15 @@ Template.allCardsLists.events({
             type: "Tvs1CardPreference",
             delete: true,
             fields: {
-              EmployeeID: parseInt(employeeId),
-              TabGroup: _tabGroup,
+                EmployeeID: parseInt(employeeId),
+                TabGroup: _tabGroup,
             }
         }
         try {
             const ApiResponse = await apiEndpoint.fetch(null, {
-              method: "POST",
-              headers: ApiService.getPostHeaders(),
-              body: JSON.stringify(resetCards),
+                method: "POST",
+                headers: ApiService.getPostHeaders(),
+                body: JSON.stringify(resetCards),
             });
 
             if (ApiResponse.ok == true) {
@@ -329,20 +320,24 @@ Template.allCardsLists.events({
         }
 
     },
-    "click .cancelCards": async function(e){
+    "click .cancelCards": async function (e) {
         playCancelAudio();
         e.preventDefault();
         let templateObject = Template.instance();
-        setTimeout(async function(){
-        $(".fullScreenSpin").css("display", "block");
-        $('.cardShowBtn').addClass('hideelement');
-        $('.actionButtonCardsTop').addClass('hideelement');
-        $('.editCardBtn').find('i').removeClass('fa-save')
-        $('.editCardBtn').find('i').addClass('fa-cog');
-        await templateObject.setCardPositions();
-        $('.card-visibility').removeClass('dimmedChart');
-        $('.cardShowBtn').removeClass('hideelement');
-        $(".fullScreenSpin").css("display", "none");
+        setTimeout(async function () {
+            $(".fullScreenSpin").css("display", "block");
+            $('.cardShowBtn').addClass('hideelement');
+            $('.actionButtonCardsTop').addClass('hideelement');
+            $('.editCardBtn').find('i').removeClass('fa-save')
+            $('.editCardBtn').find('i').addClass('fa-cog');
+            await templateObject.setCardPositions();
+            $('.card-visibility').removeClass('dimmedChart');
+            $('.cardShowBtn').removeClass('hideelement');
+            $(".fullScreenSpin").css("display", "none");
         }, delayTimeAfterSound);
     }
+});
+
+Template.registerHelper('equals', function (a, b) {
+    return a === b;
 });

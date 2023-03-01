@@ -2760,7 +2760,7 @@ Template.newprofitandloss.helpers({
 
     if (activeArray.length == 1) {
 
-      if (activeArray[0].code == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) { 
         return !true;
       } else {
         return !false;
