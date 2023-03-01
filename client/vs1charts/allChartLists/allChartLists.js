@@ -103,7 +103,7 @@ let chartsPlaceList = {
         // "resalescomparision"
     ],
 
-    "All_Charts" :[
+    "All_Charts": [
         "",
     ],
 };
@@ -226,12 +226,12 @@ async function saveCharts() {
     // }
 }
 
-Template.allChartLists.onCreated(function() {
+Template.allChartLists.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.chartList = new ReactiveVar([]);
 });
 
-Template.allChartLists.onRendered(function() {
+Template.allChartLists.onRendered(function () {
     const templateObject = Template.instance();
     _tabGroup = $("#connectedSortable").data("tabgroup");
     _chartGroup = $("#connectedSortable").data("chartgroup");
@@ -245,13 +245,13 @@ Template.allChartLists.onRendered(function() {
             dimmedElements[0].classList.remove("dimmedChart");
         }
     };
-    templateObject.showChartElements = function() {
+    templateObject.showChartElements = function () {
         // on edit mode true
         // $(".on-editor-change-mode").addClass("showelement");
         // $(".on-editor-change-mode").removeClass("hideelement");
         $('.sortable-chart-widget-js').removeClass("col-md-12 col-md-8 col-md-6 col-md-4");
         $('.sortable-chart-widget-js').addClass("editCharts");
-        $('.sortable-chart-widget-js').each(function() {
+        $('.sortable-chart-widget-js').each(function () {
             let className = $(this).data('default-class');
             $(this).addClass(className);
             $(this).find('.portlet').addClass('minHeight100');
@@ -262,14 +262,14 @@ Template.allChartLists.onRendered(function() {
         $(".card").addClass("dimmedChart");
         $(".py-2").removeClass("dimmedChart");
     };
-    templateObject.checkChartToDisplay = async() => {
+    templateObject.checkChartToDisplay = async () => {
         let defaultChartList = [];
         let chartList = [];
         const dashboardApis = new DashboardApi(); // Load all dashboard APIS
         let displayedCharts = 0;
 
         let dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences');
-        if (dashboardpreferences.length == 0) {} else {
+        if (dashboardpreferences.length == 0) { } else {
             dashboardpreferences = JSON.parse(dashboardpreferences[0].data);
         };
 
@@ -683,14 +683,14 @@ Template.allChartLists.onRendered(function() {
         //     }
         // } else {
         // Set default chart list
-        $('.card-visibility').each(function() {
+        $('.chart-visibility').each(function () {
             $(this).find('.cardShowBtn .far').removeClass('fa-eye');
             // let position = $(this).data('default-position');
             // $(this).attr('position', position);
             $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
-            $(this).attr("card-active", 'false');
+            $(this).attr("card-active", 'true');
         })
-        $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
+        $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true')
         $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
         $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
         $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
@@ -704,7 +704,7 @@ Template.allChartLists.onRendered(function() {
             let $chartWrappper = $(".connectedChartSortable");
             $chartWrappper
                 .find(".sortable-chart-widget-js")
-                .sort(function(a, b) {
+                .sort(function (a, b) {
                     return +a.getAttribute("position") - +b.getAttribute("position");
                 })
                 .appendTo($chartWrappper);
@@ -740,7 +740,7 @@ Template.allChartLists.events({
     "mouseleave .card-header": (e) => {
         $(e.currentTarget).parent(".card").removeClass("hovered");
     },
-    "click .btnBatchUpdate": function() {
+    "click .btnBatchUpdate": function () {
         $(".fullScreenSpin").css("display", "inline-block");
         batchUpdateCall();
     },
@@ -750,7 +750,7 @@ Template.allChartLists.events({
         const templateObject = Template.instance();
         templateObject.showChartElements();
     },
-    "click .resetchartbtn": async(event) => {
+    "click .resetchartbtn": async (event) => {
         event.preventDefault();
         $(".fullScreenSpin").css("display", "block");
         chartsEditor.disable();
@@ -795,12 +795,12 @@ Template.allChartLists.events({
         }
         // templateObject.deactivateDraggable();
     },
-    "click #btnCancel": async() => {
+    "click #btnCancel": async () => {
         playCancelAudio();
         const templateObject = Template.instance();
-        setTimeout(async function() {
+        setTimeout(async function () {
             $(".fullScreenSpin").css("display", "block");
-            chartsEditor.disable();         
+            chartsEditor.disable();
             await templateObject.hideChartElements();
             await templateObject.checkChartToDisplay();
             $('.sortable-chart-widget-js').removeClass("editCharts");
@@ -808,10 +808,10 @@ Template.allChartLists.events({
             //templateObject.deactivateDraggable();
         }, delayTimeAfterSound);
     },
-    "click #btnDone": async() => {
+    "click #btnDone": async () => {
         playSaveAudio();
         let templateObject = Template.instance();
-        setTimeout(async function() {
+        setTimeout(async function () {
             $(".fullScreenSpin").css("display", "inline-block");
             await saveCharts();
             await chartsEditor.disable();
@@ -835,7 +835,7 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
-        if(current == 'All_Charts') return 1;
+        if (current == 'All_Charts') return 1;
         return chartsPlaceList[current].includes(chart);
     },
 
@@ -844,6 +844,6 @@ Template.allChartLists.helpers({
     },
 });
 
-Template.registerHelper('equals', function(a, b) {
+Template.registerHelper('equals', function (a, b) {
     return a === b;
 });
