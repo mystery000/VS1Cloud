@@ -35,72 +35,175 @@ let _ = require("lodash");
 
 let chartsPlaceList = {
     "Accounts_Overview": [
-        "accountrevenuestreams",
-        "profitandlosschart",
+        {
+            key: "accountrevenuestreams",
+            isShowDefault: true, 
+        },
+        {
+            key: 'profitandlosschart',
+            isShowDefault: true
+        },
     ],
-
     "Contacts_Overview": [
-        "top10Customers",
-        "top10Suppliers",
-        "activeEmployees",
+        {
+            key: "top10Customers",
+            isShowDefault: true, 
+        },
+        {
+            key: 'top10Suppliers',
+            isShowDefault: true
+        },
+        {
+            key: 'activeEmployees',
+            isShowDefault: true
+        },
     ],
 
     "Dashboard_Overview": [
-        "bankaccountschart",
-        "monthlyprofitandloss",
-        "profitandlosschart",
-        "resalescomparision",
-        "expenseschart",
-        "accountslistchart",
-        "mytaskswidgetchart",
+        {
+            key: "bankaccountschart",
+            isShowDefault: true, 
+        },
+        {
+            key: 'monthlyprofitandloss',
+            isShowDefault: false
+        },
+        {
+            key: 'profitandlosschart',
+            isShowDefault: false
+        },
+        {
+            key: "resalescomparision",
+            isShowDefault: false, 
+        },
+        {
+            key: 'expenseschart',
+            isShowDefault: false
+        },
+        {
+            key: 'accountslistchart',
+            isShowDefault: true
+        },
+        {
+            key: 'mytaskswidgetchart',
+            isShowDefault: true
+        },
     ],
 
     "DSMCharts_Overview": [
-        "mytaskswidgetchart",
-        "dashboardManagerCharts",
-        "dsmTop10Customers",
-        "dsmAppointmentsWidget",
-        "resalescomparision",
-        "opportunitiesStatus",
-        "dsmleadlistchart",
+        {
+            key: "mytaskswidgetchart",
+            isShowDefault: true, 
+        },
+        {
+            key: 'dashboardManagerCharts',
+            isShowDefault: true
+        },
+        {
+            key: 'dsmTop10Customers',
+            isShowDefault: true
+        },
+        {
+            key: "dsmAppointmentsWidget",
+            isShowDefault: true, 
+        },
+        {
+            key: 'resalescomparision',
+            isShowDefault: true
+        },
+        {
+            key: 'opportunitiesStatus',
+            isShowDefault: true
+        },
+        {
+            key: 'dsmleadlistchart',
+            isShowDefault: true
+        },
     ],
 
     "DSCharts_Overview": [
-        "dashboardSalesCharts",
-        "dsAppointmentsWidget",
-        "dsleadlistchart",
-        "mytaskswidgetchart",
+        {
+            key: "dashboardSalesCharts",
+            isShowDefault: true, 
+        },
+        {
+            key: 'dsAppointmentsWidget',
+            isShowDefault: true
+        },
+        {
+            key: 'dsleadlistchart',
+            isShowDefault: true
+        },
+        {
+            key: 'mytaskswidgetchart',
+            isShowDefault: true
+        },
     ],
 
     "Inventory_Overview": [
-        "invstockonhandanddemand",
-        "top10Suppliers",
+        {
+            key: 'invstockonhandanddemand',
+            isShowDefault: true
+        },
+        {
+            key: 'top10Suppliers',
+            isShowDefault: true
+        },
     ],
 
     "Manufacturing_Overview": [
-        "productionplannerChart"
+        {
+            key: 'productionplannerChart',
+            isShowDefault: true
+        },
     ],
 
     "Payroll_Overview": [
-        "employeeDaysAbsent",
-        "clockedOnEmployees",
-        "employeesOnLeave"
+        {
+            key: 'employeeDaysAbsent',
+            isShowDefault: true
+        },
+        {
+            key: 'clockedOnEmployees',
+            isShowDefault: true
+        },
+        {
+            key: 'employeesOnLeave',
+            isShowDefault: true
+        },
     ],
 
     "Purchases_Overview": [
-        "monthllyexpenses",
-        "expensebreakdown",
+        {
+            key: 'monthllyexpenses',
+            isShowDefault: true
+        },
+        {
+            key: 'expensebreakdown',
+            isShowDefault: true
+        },
     ],
 
     "Sales_Overview": [
-        "quotedsalesorderinvoicedamounts",
-        "top10Customers",
-        "resalescomparision",
+        {
+            key: 'quotedsalesorderinvoicedamounts',
+            isShowDefault: true
+        },
+        {
+            key: 'top10Customers',
+            isShowDefault: true
+        },
+        {
+            key: 'resalescomparision',
+            isShowDefault: true
+        },
     ],
 
     "CRM_Overview": [
-        "crmleadchart",
-        // "resalescomparision"
+        {
+            key: 'crmleadchart',
+            isShowDefault: true
+        },
     ],
 
     "All_Charts" :[
@@ -280,7 +383,6 @@ Template.allChartLists.onRendered(function() {
                 }
             });
         }
-
         if (chartList.length == 0) {
             chartList = await ChartHandler.getTvs1charts();
             if (chartList.length == 0) {
@@ -835,8 +937,13 @@ Template.allChartLists.helpers({
     },
 
     is_available_chart: (current, chart) => {
+        const parentData = Template.instance().parent()
+        const isShowCharts = parentData.isShowCharts;
         if(current == 'All_Charts') return 1;
-        return chartsPlaceList[current].includes(chart);
+        const chartItem = chartsPlaceList[current].find(_chart => _chart.key === chart);
+        if(!chartItem) return false;
+
+        return chartItem.isShowDefault || isShowCharts
     },
 
     is_dashboard_check: (currentTemplate) => {
