@@ -2585,16 +2585,18 @@ Template.new_salesorder.onCreated(function () {
         printTemplate.push('Delivery Docket');
       }
 
-      if (printTemplate.length > 0) {
-        for (var i = 0; i < printTemplate.length; i++) {
-          if (printTemplate[i] == 'Sales Order') {
-            var template_number = $('input[name="Sales Orders"]:checked').val();
-          }
-          else if (printTemplate[i] == 'Delivery Docket') {
-            var template_number = $('input[name="Delivery Docket"]:checked').val();
-          }
-          await templateObject.exportSalesToPdf(printTemplate[i], template_number);
+      if(!printTemplate.length){
+        printTemplate.push("Sales Orders");
+      }
+
+      for (var i = 0; i < printTemplate.length; i++) {
+        if (printTemplate[i] == 'Sales Order') {
+          var template_number = $('input[name="Sales Orders"]:checked').val();
         }
+        else if (printTemplate[i] == 'Delivery Docket') {
+          var template_number = $('input[name="Delivery Docket"]:checked').val();
+        }
+        await templateObject.exportSalesToPdf(printTemplate[i], template_number);
       }
 
       // Send email
@@ -7279,16 +7281,16 @@ Template.new_salesorder.events({
   "click #printModal #btnSendEmail" : async function (event) {
     const templateObject = Template.instance()
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     if ($("#edtCustomerEmail").val() != "") {
       LoadingOverlay.show();
       await templateObject.sendEmailWithAttatchment(true);
@@ -7305,9 +7307,9 @@ Template.new_salesorder.events({
   },
   'click .printConfirm': async function (event) {
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   return;
+    // }
     playPrintAudio();
     const templateObject = Template.instance();
     templateObject.print()
