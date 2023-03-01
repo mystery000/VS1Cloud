@@ -8,10 +8,12 @@ import {Template} from 'meteor/templating';
 import './alltaskdatatable.html';
 import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 import {ReportService} from "../../reports/report-service";
+import moment from "moment";
 
 let crmService = new CRMService();
 let sideBarService = new SideBarService();
 let contactService = new ContactService();
+let reportService = new ReportService();
 let templateObject = Template.instance();
 var clickCount = 0;
 
@@ -26,7 +28,7 @@ Template.alltaskdatatable.onCreated(function () {
     templateObject.allRecordsArray = new ReactiveVar([]);
     templateObject.todayRecordsArray = new ReactiveVar([]);
     templateObject.upcomingRecordsArray = new ReactiveVar([]);
-
+    templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.overdueRecords = new ReactiveVar([]);
     templateObject.selected_id = new ReactiveVar(0);
     templateObject.task_id = new ReactiveVar(0);
@@ -71,93 +73,91 @@ Template.alltaskdatatable.onCreated(function () {
         let chk_complete, completed = "";
         let completed_style = "";
 
-        task_array.forEach((item) => {
-            if (item.fields.Completed) {
-                completed = "checked";
-                chk_complete = "chk_uncomplete";
-            } else {
-                completed = "";
-                chk_complete = "chk_complete";
-            }
-            td0 = `
+        if (data.fields.Completed) {
+            completed = "checked";
+            chk_complete = "chk_uncomplete";
+        } else {
+            completed = "";
+            chk_complete = "chk_complete";
+        }
+        td0 = `
                 <div class="custom-control custom-checkbox chkBox pointer no-modal "
                 style="width:15px;margin-right: -6px;">
                 <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
-                    id="formCheck-${item.fields.ID}" ${completed}>
-                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
-                    for="formCheck-${item.fields.ID}"></label>
+                    id="formCheck-${data.fields.ID}" ${completed}>
+                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.fields.ID}"
+                    for="formCheck-${data.fields.ID}"></label>
                 </div>`;
 
-            tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+        tflag = `<i class="fas fa-flag task_modal_priority_${data.fields.priority}" data-id="${data.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
 
-            tcontact = item.fields.ContactName;
+        tcontact = data.fields.ContactName;
 
-            if (item.fields.due_date == "" || item.fields.due_date == null) {
-                td1 = "";
-                td11 = "";
-            } else {
-                td11 = moment(item.fields.due_date).format("MM/DD/YYYY");
-                td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
+        if (data.fields.due_date == "" || data.fields.due_date == null) {
+            td1 = "";
+            td11 = "";
+        } else {
+            td11 = moment(data.fields.due_date).format("MM/DD/YYYY");
+            td1 = `<label style="display:none;">${data.fields.due_date}</label>` + td11;
 
-                let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
-                if (tdue_date <= moment().format("YYYY-MM-DD")) {
-                    color_num = 3; // Red
-                } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
-                    color_num = 2; // Orange
-                } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
-                    color_num = 0; // Green
-                }
+            let tdue_date = moment(data.fields.due_date).format("YYYY-MM-DD");
+            if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                color_num = 3; // Red
+            } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                color_num = 2; // Orange
+            } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                color_num = 0; // Green
+            }
 
-                td0 = `
+            td0 = `
                     <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
                     style="width:15px;margin-right: -6px;${completed_style}">
                     <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
-                        id="formCheck-${item.fields.ID}" ${completed}>
-                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
-                        for="formCheck-${item.fields.ID}"></label>
+                        id="formCheck-${data.fields.ID}" ${completed}>
+                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.fields.ID}"
+                        for="formCheck-${data.fields.ID}"></label>
                     </div>`;
-            }
+        }
 
-            td2 = item.fields.TaskName;
-            td3 = item.fields.TaskDescription.length < 80 ? item.fields.TaskDescription : item.fields.TaskDescription.substring(0, 79) + "...";
+        td2 = data.fields.TaskName;
+        td3 = data.fields.TaskDescription.length < 80 ? data.fields.TaskDescription : data.fields.TaskDescription.substring(0, 79) + "...";
 
-            if (item.fields.TaskLabel) {
-                if (item.fields.TaskLabel.fields) {
-                    td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
-                        style="margin-right: 5px; color:${item.fields.TaskLabel.fields.Color}" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
-                    labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
-                } else {
-                    item.fields.TaskLabel.forEach((lbl) => {
-                        td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
+        if (data.fields.TaskLabel) {
+            if (data.fields.TaskLabel.fields) {
+                td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${data.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
+                        style="margin-right: 5px; color:${data.fields.TaskLabel.fields.Color}" data-id="${data.fields.TaskLabel.fields.ID}"></i>${data.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+                labelsForExcel = data.fields.TaskLabel.fields.TaskLabelName;
+            } else {
+                data.fields.TaskLabel.forEach((lbl) => {
+                    td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
                             style="margin-right: 5px; color:${lbl.fields.Color}" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
-                        labelsForExcel += lbl.fields.TaskLabelName + " ";
-                    });
-                }
-            } else {
-                td4 = "";
+                    labelsForExcel += lbl.fields.TaskLabelName + " ";
+                });
             }
+        } else {
+            td4 = "";
+        }
 
-            projectName = item.fields.ProjectName;
-            if (item.fields.ProjectName == "" || item.fields.ProjectName == "Default") {
-                projectName = "";
-            }
+        projectName = data.fields.ProjectName;
+        if (data.fields.ProjectName == "" || data.fields.ProjectName == "Default") {
+            projectName = "";
+        }
 
-            let all_projects = project_array;
-            let projectColor = 'transparent';
-            if (item.fields.ProjectID != 0) {
-                let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
-                if (projects.length && projects[0].fields.ProjectColour) {
-                    projectColor = projects[0].fields.ProjectColour;
-                }
+        let all_projects = templateObject.all_projects.get();
+        let projectColor = 'transparent';
+        if (data.fields.ProjectID != 0) {
+            let projects = all_projects.filter(project => project.fields.ID == data.fields.ProjectID);
+            if (projects.length && projects[0].fields.ProjectColour) {
+                projectColor = projects[0].fields.ProjectColour;
             }
+        }
 
-            td6 = ``;
-            if (item.fields.Active) {
-                td6 = "";
-            } else {
-                td6 = "In-Active";
-            }
-        });
+        td6 = ``;
+        if (data.fields.Active) {
+            td6 = "";
+        } else {
+            td6 = "In-Active";
+        }
         let dataList = [
             tflag,
             tcontact,
@@ -167,10 +167,10 @@ Template.alltaskdatatable.onCreated(function () {
             td4,
             projectName,
             td6,
-            item.fields.ID,
+            data.fields.ID,
             color_num,
             labelsForExcel,
-            item.fields.Completed,
+            data.fields.Completed,
             projectColor
         ];
         return dataList;
@@ -1159,8 +1159,6 @@ Template.alltaskdatatable.onRendered(function () {
         });
     };
 
-    templateObject.getInitialAllTaskList();
-
     function getContactDetailById(contactID, contactType) {
         if (contactType == 'Customer') {
             getVS1Data("TCustomerVS1").then(function (dataObject) {
@@ -1691,8 +1689,6 @@ Template.alltaskdatatable.onRendered(function () {
         $("#tblLabels_filter input").val(search);
     };
 
-    templateObject.getInitAllLabels();
-
     templateObject.makeLabelTableRows = function (task_array) {
         let taskRows = new Array();
         let td0, td1, td2 = "";
@@ -1932,8 +1928,6 @@ Template.alltaskdatatable.onRendered(function () {
         $("#tblNewProjectsDatatable_filter input").val(search);
     };
 
-    templateObject.getInitTProjectList();
-
     templateObject.makeProjectTableRows = function (task_array) {
         let taskRows = new Array();
         let td0, td1, td2, td3, td4 = "";
@@ -2126,6 +2120,12 @@ Template.alltaskdatatable.onRendered(function () {
             },
         });
     };
+
+
+    // templateObject.getInitialAllTaskList();
+    // templateObject.getInitAllLabels();
+    templateObject.getInitTProjectList();
+
     // projects tab ------------------- //
 
     // templateObject.getLeads = function () {
@@ -2415,7 +2415,7 @@ Template.alltaskdatatable.events({
         // $(".addTaskModalProjectName").html(projectName);
         $("#taskDetailModalCategoryLabel").val(projectName);
 
-        catg = `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+        let catg = `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
             "<span class='text-success'>" +
             projectName +
             "</span>";
@@ -3842,7 +3842,9 @@ Template.alltaskdatatable.helpers({
     allRecords: () => {
         return Template.instance().allRecords.get();
     },
-
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
     overdueRecords: () => {
         return Template.instance().overdueRecords.get();
     },
@@ -3924,7 +3926,6 @@ Template.alltaskdatatable.helpers({
     },
 
     apiFunction: function () {
-        let reportService = new ReportService();
         return reportService.getAllBASReturn;
     },
 
@@ -3933,9 +3934,7 @@ Template.alltaskdatatable.helpers({
     },
 
     service: () => {
-        let reportService = new ReportService();
         return reportService;
-
     },
 
     datahandler: function () {
