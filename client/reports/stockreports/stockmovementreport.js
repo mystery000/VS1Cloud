@@ -106,7 +106,6 @@ Template.stockmovementreport.onRendered(() => {
     false
   );
   templateObject.displayReportData = async function (data) {
-    console.log(data);
     var splashArrayReport = new Array();
     let deleteFilter = false;
 

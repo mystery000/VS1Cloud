@@ -2890,7 +2890,7 @@ Template.new_invoice.onCreated(function () {
       },
         function (error, result) {
           if (error && error.error === "error") {
-        
+
           } else {
             $("#html-Invoice-pdfwrapper").css("display", "none");
             swal({
@@ -2962,7 +2962,6 @@ Template.new_invoice.onCreated(function () {
       );
     } else {
       // window.open(url, "_self");
-      console.log("Someing went wront!")
     }
   }
 

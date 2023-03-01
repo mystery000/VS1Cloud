@@ -221,7 +221,7 @@ Template.transaction_print_modal.onCreated(async function () {
   };
 
   const getSMSSettings = async () => {
-    
+
     const smsSettings = this.smsSettings.get()
 
     const smsServiceSettings = await smsService.getSMSSettings();
@@ -318,7 +318,6 @@ Template.transaction_print_modal.onCreated(async function () {
           phoneNumber,
           message,
           function (error, result) {
-            console.log(error, result)
             LoadingOverlay.hide();
             if (error || !result.success) {
               swal({
@@ -434,7 +433,7 @@ Template.transaction_print_modal.events({
     // }
     const templateObject = Template.instance();
     templateObject.fnSendSMS()
-    
+
   },
   "click #printModal .chooseTemplateBtn": function (event, key, param) {
     const dataKey = $(event.target).attr("data-id");

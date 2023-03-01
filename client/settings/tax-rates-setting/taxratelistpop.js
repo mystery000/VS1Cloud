@@ -56,7 +56,7 @@ Template.taxratelistpop.events({
         var splashArrayTaxRateList = new Array();
         const dataTableList = [];
         const tableHeaderList = [];
-        
+
         let dataSearchName = $('#tblTaxRate_filter input').val();
         var currentLoc = FlowRouter.current().route.path;
         if (dataSearchName.replace(/\s/g, '') != '') {
