@@ -283,7 +283,6 @@ Template.jobprofitabilityreport.onRendered(() => {
       customerProductReport.push(splashArrayReport[i]);
     }
     templateObject.records.set(customerProductReport);
-    console.log(customerProductReport);
     if (templateObject.records.get()) {
       setTimeout(function () {
         MakeNegative();

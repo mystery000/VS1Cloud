@@ -3369,7 +3369,6 @@ Template.productview.helpers({
         if(retArray.length == 0)  retArray.push(item);
         else if(retArray[retArray.length - 1].binnumber != item.binnumber)  retArray.push(item);
       });
-      console.log(retArray);
       return retArray;
     },
     bindept: () => {

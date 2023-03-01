@@ -93,7 +93,6 @@ Template.invoicelistBO.onRendered(function() {
   }
 
   function showCustomFieldDisplaySettings(reset_data) {
-    console.log(reset_data);
     let custFields = [];
     let customData = {};
     let customFieldCount = reset_data.length;
@@ -109,7 +108,6 @@ Template.invoicelistBO.onRendered(function() {
       };
       custFields.push(customData);
     }
-    console.log(custFields);
     templateObject.displayfields.set(custFields);
   }
   templateObject.initCustomFieldDisplaySettings("", "tblInvoicelistBO");
@@ -208,7 +206,7 @@ Template.invoicelistBO.onRendered(function() {
         let customFieldCount = 3; // customfield tempcode
         let customData = {};
         let displayfields = templateObject.displayfields.get();
-    
+
         await sideBarService.getAllCustomFields().then(function (data) {
           for (let x = 0; x < data.tcustomfieldlist.length; x++) {
             if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
@@ -220,10 +218,10 @@ Template.invoicelistBO.onRendered(function() {
                 display: data.tcustomfieldlist[x].fields.Active || false,
                 width: "100"
               };
-              custFields.push(customData);  
+              custFields.push(customData);
             }
           }
-    
+
           if (custFields.length < customFieldCount) {
             let remainder = customFieldCount - custFields.length;
             let getRemCustomFields = parseInt(custFields.length);
@@ -242,13 +240,12 @@ Template.invoicelistBO.onRendered(function() {
               custFields.push(customData);
             }
           }
-          console.log(displayfields);
           displayfields = displayfields.concat(custFields);
           templateObject.custfields.set(custFields);
           // setTimeout(() => {
             templateObject.displayfields.set(displayfields);
           // }, 5000);
-          
+
         })
       }
 
@@ -1253,7 +1250,7 @@ Template.invoicelistBO.onRendered(function() {
 
     }
 
-    
+
 
     $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
         var listData = $(this).closest('tr').attr('id');
@@ -1300,7 +1297,7 @@ Template.invoicelistBO.onRendered(function() {
         LoadingOverlay.show();
          await templateObject.loadCustomFields();
          templateObject.getAllSalesOrderData();
-        
+
         LoadingOverlay.hide();
       }
       templateObject.initPage();
@@ -1887,7 +1884,6 @@ Template.invoicelistBO.helpers({
         });
     },
     tableheaderrecords: () => {
-        console.log(Template.instance().tableheaderrecords.get());
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
