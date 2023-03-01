@@ -645,31 +645,22 @@ Template.supplierscard.onCreated(function () {
   }
 
   templateObject.getDataTableList = function(data) {
-    let taskDescription = data.fields.TaskDescription || '';
+    let taskDescription = data.TaskDescription || '';
     taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-    let taskLabel = data.fields.TaskLabel;
-    let taskLabelArray = [];
-    if (taskLabel !== null) {
-      if (taskLabel.length === undefined || taskLabel.length === 0) {
-        taskLabelArray.push(taskLabel.fields);
-      } else {
-        for (let j = 0; j < taskLabel.length; j++) {
-          taskLabelArray.push(taskLabel[j].fields);
-        }
-      }
-    }
+
     const dataList = [
-      data.fields.ID || 0,
-      // data.fields.priority || 0,
-      data.fields.MsTimeStamp !== '' ? moment(data.fields.MsTimeStamp).format("DD/MM/YYYY") : '',
-      data.fields.ProjectID || '',
-      data.fields.TaskName || '',
-      //data.fields.ProjectName || '',
+      data.ID || 0,
+      // data.priority || 0,
+      data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+      data.ProjectID || '',
+      data.TaskName || '',
+      //data.ProjectName || '',
       taskDescription,
-      JSON.stringify(taskLabelArray),
+      //JSON.stringify(taskLabelArray),
       //category: 'Task',
-      data.fields.Completed ? "" : "In-Active",
-      data.fields.due_date ? moment(data.fields.due_date).format("DD/MM/YYYY") : "",
+      data.Completed ? "Completed" : "In-Completed",
+        data.Active ? "" : "In-Active",
+      data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
     ];
     return dataList;
   }
@@ -1985,7 +1976,8 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnRefresh': function () {
-    Meteor._reload.reload();
+    //Meteor._reload.reload();
+    window.location.reload()
   },
 
   'click .btnRefreshCrm': function () {
@@ -2738,11 +2730,11 @@ Template.supplierscard.helpers({
 
   apiFunction:function() {
     let crmService = new CRMService();
-    return crmService.getAllTasks;
+    return crmService.getAllTasksList;
   },
 
   searchAPI: function() {
-    return crmService.getAllTasksByContactName;
+    return crmService.getAllTasksByName;
   },
 
   service: ()=>{
@@ -2768,7 +2760,7 @@ Template.supplierscard.helpers({
   },
 
   apiParams: function() {
-    return ['dateFrom', 'dateTo', 'ignoredate'];
+    return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
   },
 });
 
