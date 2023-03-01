@@ -68,26 +68,36 @@ Template.vs1___dropdown.onRendered(async function(){
     }
     // $('#'+id).editableSelect().on('click', function(event) {
         $(document).on('click', '#'+id, function(event, li) {
-            // event.preventDefault();
-            // event.stopPropagation();
-            setTimeout(()=>{
-                let value = event.target.value;
-                if (value.replace(/\s/g, '') == '') {
-                // if($(event.target).val() == '') {
-                    templateObject.targetTemp.set('')
-                    $('#'+popupid).modal('toggle');
-                } else {
-
-                    if(templateObject.data.is_editable == true) {
-                        let edtModalId = templateObject.data.target_modal_id;
-                        $('#'+ edtModalId).modal('toggle');
-                    } else {
+            var $earch = $(this);
+            var offset = $earch.offset();
+            $("#"+popupid).val("");
+            if (event.pageX > offset.left + $earch.width() - 8) {
+                // X button 16px wide?
+                $("#"+popupid).modal();
+               
+            } else {
+                setTimeout(()=>{
+                    let value = event.target.value;
+                    if (value.replace(/\s/g, '') == '') {
+                    // if($(event.target).val() == '') {
+                        templateObject.targetTemp.set('')
                         $('#'+popupid).modal('toggle');
+                    } else {
+                        if(templateObject.data.is_editable == true) {
+                            let edtModalId = templateObject.data.target_modal_id;
+                            let params = templateObject.edtParam.get();
+                            if(!params.name || params.name == '' ) {
+                                params.name = value;
+                            }
+                            templateObject.edtParam.set(params)
+                            $('#'+ edtModalId).modal('toggle');
+                        } else {
+                            $('#'+popupid).modal('toggle');
+                        }
                     }
-                }
-            }, 1000)
+                }, 1000)
+            }
         })
-
     // })
 })
 
@@ -101,19 +111,14 @@ Template.vs1___dropdown.helpers({
     listTemp: ()=>{
         let templateObject = Template.instance();
         let listempname = templateObject.data.list_template_name;
-        if(!listempname) {
-            if(templateObject.data.label == 'Terms') {
-                return Template.termlistpop
-            }
-        } else {
-            return listempname
-        }
+        return listempname
     }
 })
 
 
 Template.vs1___dropdown.events({
     'click .vs1_dropdown_modal tbody tr': function(event) {
+        event.preventDefault();
         let templateObject = Template.instance();
         let id = templateObject.data.id;
         let colName = templateObject.data.colNameForValue;

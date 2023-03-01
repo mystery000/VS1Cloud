@@ -542,12 +542,19 @@ openDb = function (dbName) {
       db.createObjectStore("PrintDisplaySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TPNLLayout", { keyPath: "EmployeeEmail" });
       db.createObjectStore("ManufacturingSettings", { keyPath: "EmployeeEmail"});
-
+      db.createObjectStore("TDashboardExecData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData2", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData3", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData2", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData3", { keyPath: "EmployeeEmail"});
       db.createObjectStore("BuildProfitabilityReport", { keyPath: "EmployeeEmail"});
       db.createObjectStore("ProductionWorksheetReport", { keyPath: "EmployeeEmail"});
       db.createObjectStore("WorkOrderReport", { keyPath: "EmployeeEmail"});
       db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
       db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
 
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
