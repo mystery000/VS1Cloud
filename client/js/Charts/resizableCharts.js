@@ -20,13 +20,13 @@ export default class resizableCharts {
           /**
            * Build the positions of the widgets
            */
-          if( $(ui.element[0]).parents(".sortable-chart-widget-js").hasClass("editCharts") == false ){
-            $(".fullScreenSpin").css("display", "block");
+          if ($(ui.element[0]).parents(".sortable-chart-widget-js").hasClass("editCharts") == false) {
+
             ChartHandler.buildPositions();
             await ChartHandler.saveChart(
               $(ui.element[0]).parents(".sortable-chart-widget-js")
             );
-            $(".fullScreenSpin").css("display", "none");
+
           }
         },
         resize: function (event, ui) {
@@ -37,50 +37,50 @@ export default class resizableCharts {
             .parents(".sortable-chart-widget-js")
             .removeClass("col-md-6 col-md-8 col-md-4"); // when you'll star resizing, it will remove its size
           // if ($(ui.element[0]).parents(".sortable-chart-widget-js").attr("key") != "purchases__expenses_breakdown") {
-            $(ui.element[0])
+          $(ui.element[0])
             .parents(".sortable-chart-widget-js")
             .addClass("resizeAfterChart");
-            // Restrict width more than 100
-            if ( ChartHandler.calculateWidth(ui.element[0]) >= 100) {
-                $(this).resizable("option", "maxWidth", ui.size.width);
-            }
-            // Resctrict height screen size.
-            if ( ChartHandler.calculateHeight(ui.element[0]) >= 100) {
-                $(this).resizable("option", "maxHeight", ui.size.height);
-            }
+          // Restrict width more than 100
+          if (ChartHandler.calculateWidth(ui.element[0]) >= 100) {
+            $(this).resizable("option", "maxWidth", ui.size.width);
+          }
+          // Resctrict height screen size.
+          if (ChartHandler.calculateHeight(ui.element[0]) >= 100) {
+            $(this).resizable("option", "maxHeight", ui.size.height);
+          }
 
-            // resize all highcharts
-            try {
-              const allHighCharts = $('.ds-highcharts');
-              _.each(allHighCharts, chartElement => {
-                const index = $(chartElement).data('highcharts-chart');
-                let highChart = highCharts.charts[index];
-                if(highChart) {
-                  highChart.reflow();
-                }
-              });
-            }catch(e) {
+          // resize all highcharts
+          try {
+            const allHighCharts = $('.ds-highcharts');
+            _.each(allHighCharts, chartElement => {
+              const index = $(chartElement).data('highcharts-chart');
+              let highChart = highCharts.charts[index];
+              if (highChart) {
+                highChart.reflow();
+              }
+            });
+          } catch (e) {
 
-            }
+          }
 
-            // will not apply on Expenses breakdown
-            $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", chartWidth);
-            $(ui.element[0]).parents(".sortable-chart-widget-js").css("height", chartHeight);
+          // will not apply on Expenses breakdown
+          $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", chartWidth);
+          $(ui.element[0]).parents(".sortable-chart-widget-js").css("height", chartHeight);
 
-            if(localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'))){
-              let storeObj = JSON.parse(localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug')))
-              localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
-                position: storeObj.position,
-                width: chartWidth,
-                height: chartHeight
-              }));
-            }else{
-              localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
-                position: $(ui.element[0]).parents(".sortable-chart-widget-js").attr("position"),
-                width: chartWidth,
-                height: chartHeight
-              }));
-            }
+          if (localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'))) {
+            let storeObj = JSON.parse(localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug')))
+            localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
+              position: storeObj.position,
+              width: chartWidth,
+              height: chartHeight
+            }));
+          } else {
+            localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
+              position: $(ui.element[0]).parents(".sortable-chart-widget-js").attr("position"),
+              width: chartWidth,
+              height: chartHeight
+            }));
+          }
         },
       });
     }, timeOut);
