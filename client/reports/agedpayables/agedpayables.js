@@ -150,7 +150,6 @@ Template.agedpayables.onRendered(() => {
           data.tapreport[i]["120Days"] || 0,
       ];
       splashArrayAgedPayablesReport.push(dataList);
-      console.log(data.tapreport[i]);
     }
       splashArrayAgedPayablesReport.sort(GlobalFunctions.sortFunction);
 
