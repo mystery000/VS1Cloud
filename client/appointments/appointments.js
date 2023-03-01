@@ -11679,15 +11679,19 @@ Template.appointments.onRendered(function() {
         } catch (error) {}
     };
 
-    $(document).on("click", "#chkmyAppointments", function(e) {
+    $(document).on("change", "#chkmyAppointments", function(e) {
         if (seeOwnAppointments == true) {
+            seeOwnAppointments = false;
             localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', false);
         } else {
+            seeOwnAppointments = true;
             localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', true);
         }
-
+        
+        console.log('OK:',seeOwnAppointments)
         // FlowRouter.go('/dashboardsalesmanager', '_self');
-        Meteor._reload.reload();
+        // Meteor._reload.reload();
+        // FlowRouter.reload();
     });
 });
 
