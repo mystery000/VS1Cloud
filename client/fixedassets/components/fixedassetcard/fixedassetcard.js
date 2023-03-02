@@ -108,7 +108,7 @@ Template.fixedassetcard.onCreated(function () {
     SupplierName: '',
     DisposalAccumDeprec: 'number', DisposalAccumDeprec2: 'number',
     DisposalBookValue: 'number', DisposalBookValue2: 'number',
-    SalesPrice: 'number', SalesPrice2: 'number'
+    SalesPrice: 'number', SalesPrice2: 'number', 'Notes': ''
   });
 });
 
@@ -274,8 +274,10 @@ Template.fixedassetcard.onRendered(function () {
     $("#edtDisposalDate").val(getDatePickerForm(assetInfo.DisposalDate));
     $("#edtDisposalDate2").val(getDatePickerForm(assetInfo.DisposalDate2));
     
+    templateObject.chkDisposalAsset.set(assetInfo.Disposal);
+
     Object.keys(templateObject.inputFieldAry.get()).map((fieldName) => {
-      $("input#edt" + fieldName).val(assetInfo[fieldName]);
+      $("div#fixedAssetCardContainer #edt" + fieldName).val(assetInfo[fieldName]);
     });
     // -----------------Depreciation Information-----------------
     templateObject.edtDepreciationType.set(assetInfo.DepreciationOption); //Depreciation Type
@@ -367,6 +369,7 @@ Template.fixedassetcard.events({
         NextTestDate: templateObject.getDateStr($("#edtNextTestDate").datepicker("getDate")),
 
         WarrantyExpiresDate: templateObject.getDateStr($("#edtWarrantyExpiresDate").datepicker("getDate")),
+        Disposal: templateObject.chkDisposalAsset.get(),
         DisposalDate: templateObject.getDateStr($("#edtDisposalDate").datepicker("getDate")),
         DisposalDate2: templateObject.getDateStr($("#edtDisposalDate2").datepicker("getDate")),
         // Insurance Info
@@ -392,13 +395,13 @@ Template.fixedassetcard.events({
     Object.keys(inputFields).map((fieldName) => {
       switch (inputFields[fieldName]) {
         case 'double':
-          newFixedAsset.fields[fieldName] = parseFloat($('input#edt'+fieldName).val());
+          newFixedAsset.fields[fieldName] = parseFloat($('div#fixedAssetCardContainer #edt'+fieldName).val());
           break;
         case 'number':
-          newFixedAsset.fields[fieldName] = parseInt($('input#edt'+fieldName).val());
+          newFixedAsset.fields[fieldName] = parseInt($('div#fixedAssetCardContainer #edt'+fieldName).val());
           break;
         default:
-          newFixedAsset.fields[fieldName] = $('input#edt'+fieldName).val();
+          newFixedAsset.fields[fieldName] = $('div#fixedAssetCardContainer #edt'+fieldName).val();
           break;
       }
     });
