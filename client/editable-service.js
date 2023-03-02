@@ -411,5 +411,7 @@ export class EditableService {
     }
   }
 
-
+  clickDepartment = (e) =>{
+    $("#myModalDepartment").modal("toggle");
+  }
 }
