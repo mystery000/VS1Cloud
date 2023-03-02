@@ -9,6 +9,7 @@ import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './addSupplier.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
@@ -643,6 +644,22 @@ Template.supplierscard.onCreated(function () {
     }
   }
 
+  templateObject.getDataTableList = function(data) {
+
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
+    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+    { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+    { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+    { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+    { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
+
 });
 
 Template.supplierscard.onRendered(function () {
@@ -1227,12 +1244,12 @@ Template.supplierscard.onRendered(function () {
       })
 
       $(document).on("click", "#termsList tbody tr", function (e) {
-        $('#sltTerms').val($(this).find(".colTermName").text());
+        $('#sltTerms').val($(this).find(".colName").text());
         $('#termsListModal').modal('toggle');
       });
 
       $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editSupplierTitle').val($(this).find(".colTypeName").text());
+        $('#editSupplierTitle').val($(this).find(".colTitleName").text());
         $('#supplierTitlePopModal').modal('toggle');
       });
 
@@ -2691,7 +2708,42 @@ Template.supplierscard.helpers({
       isMobile = true;
     }
     return isMobile;
-  }
+  },
+
+  apiFunction:function() {
+    let crmService = new CRMService();
+    return crmService.getAllTasksByContactName;
+  },
+
+  searchAPI: function() {
+    return sideBarService.searchAllBankAccountDetails;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+  },
 });
 
 function getCheckPrefDetails(prefName) {

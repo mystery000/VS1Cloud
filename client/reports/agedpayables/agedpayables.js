@@ -153,12 +153,13 @@ Template.agedpayables.onRendered(() => {
     }
       splashArrayAgedPayablesReport.sort(GlobalFunctions.sortFunction);
 
-      let start = splashArrayAgedPayablesReport[0][0];
+      let start;
+      if(splashArrayAgedPayablesReport.length != 0) start = splashArrayAgedPayablesReport[0][0] || '';
       let sum, totalSum;
       sum = new Array(6);
       totalSum = new Array(6);
 
-      let T_AccountName = splashArrayAgedPayablesReport[0][0];
+      let T_AccountName = start;
       let agedPayableList = [];
       agedPayableList.push([
           GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
@@ -244,7 +245,6 @@ Template.agedpayables.onRendered(() => {
           "",
           "",
           "",
-          "",
           totalSum[0],
           totalSum[1],
           totalSum[2],
@@ -255,7 +255,7 @@ Template.agedpayables.onRendered(() => {
       templateObject.transactiondatatablerecords.set(agedPayableList);
 
       setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: agedPayableList,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1408,13 +1408,13 @@ Template.agedpayables.events({
         localStorage.setItem("VS1AgedPayables_Report", "");
         $("#dateFrom").attr("readonly", true);
         $("#dateTo").attr("readonly", true);
-        templateObject.getAgedPayableReports(null, null, true);
+        templateObject.getAgedPayablesData(null, null, true);
       },
       "change #dateTo, change #dateFrom": (e) => {
         let templateObject = Template.instance();
         LoadingOverlay.show();
         localStorage.setItem("VS1AgedPayables_Report", "");
-        templateObject.getAgedPayableReports(
+        templateObject.getAgedPayablesData(
           GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
           GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
           false

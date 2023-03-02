@@ -2617,7 +2617,6 @@ Template.new_invoice.onCreated(function () {
     let attachment = [];
     let invoiceId = objDetails.fields.ID;
     let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
-    console.log("generated PDf")
     let pdfObject = "";
     let base64data = encodedPdf.split(",")[1];
     pdfObject = {
@@ -2891,7 +2890,7 @@ Template.new_invoice.onCreated(function () {
       },
         function (error, result) {
           if (error && error.error === "error") {
-        
+
           } else {
             $("#html-Invoice-pdfwrapper").css("display", "none");
             swal({
@@ -2963,7 +2962,6 @@ Template.new_invoice.onCreated(function () {
       );
     } else {
       // window.open(url, "_self");
-      console.log("Someing went wront!")
     }
   }
 
@@ -3127,7 +3125,6 @@ Template.new_invoice.onCreated(function () {
         },
       };
     }
-    console.log("call add attachment!")
     await templateObject.addAttachment(objDetails, isforced);
   }
 
@@ -3622,7 +3619,6 @@ Template.new_invoice.onCreated(function () {
             })
             .catch(function (err) { });
         });
-
       if(_template !== ''){
         const _templateNumber = $(`input[name="${_template}"]:checked`).val();
         await templateObject.exportSalesToPdf(_template, _templateNumber);
@@ -3666,7 +3662,11 @@ Template.new_invoice.onCreated(function () {
         }
       }
 
-      var template_number = 0;
+      if(printTemplate.length === 0) {
+        printTemplate.push("Invoices");
+      }
+
+      var template_number = 1;
       if (printTemplate.length > 0) {
         for (var i = 0; i < printTemplate.length; i++) {
           if (printTemplate[i] == "Invoices") {
@@ -4104,7 +4104,7 @@ Template.new_invoice.onRendered(function () {
     $("#departmentModal").modal("toggle");
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $("#sltTerms").val($(this).find(".colTermName").text());
+    $("#sltTerms").val($(this).find(".colName").text());
     $("#termsListModal").modal("toggle");
   });
   $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
@@ -8075,16 +8075,16 @@ Template.new_invoice.events({
   "click #printModal #btnSendEmail" : async function (event) {
     const templateObject = Template.instance()
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     if ($("#edtCustomerEmail").val() != "") {
       LoadingOverlay.show();
       await templateObject.sendEmail(true);
@@ -8101,9 +8101,9 @@ Template.new_invoice.events({
   },
   "click .printConfirm": async function (event) {
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   return;
+    // }
     playPrintAudio();
     const templateObject = Template.instance();
     templateObject.print()

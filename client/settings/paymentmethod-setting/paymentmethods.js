@@ -50,10 +50,10 @@ Template.paymentmethodSettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "10" },
-    { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "" },
-    { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "105" },
-    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
+    { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "150" },
+    { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "100" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -662,7 +662,7 @@ Template.paymentmethodSettings.events({
           var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
             header: 1,
           });
-          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
           templateObj.selectedFile.set(sCSV);
 
           if (roa.length) result[sheetName] = roa;

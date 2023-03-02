@@ -35,14 +35,12 @@ Template.payrollleavetaken.onRendered(() => {
   LoadingOverlay.show();
 
   reset_data = [
-    { index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "140" },
-    { index: 2, label: 'Pay Date', class: 'colPayDate', active: true, display: true, width: "100" },
-    { index: 3, label: 'Date Taken', class: 'colDateTaken', active: true, display: true, width: "120" },
-    { index: 4, label: 'Leave Type', class: 'colLeaveType', active: true, display: true, width: "120" },
-    { index: 5, label: 'Hours', class: 'colHours', active: true, display: true, width: "80" },
-    { index: 6, label: 'Is Certified', class: 'colIsCertified', active: true, display: true, width: "110" },
-    { index: 7, label: 'Pay ID', class: 'colPayID', active: false, display: true, width: "100" },
-    { index: 8, label: 'Employee ID', class: 'colEmployeeED', active: false, display: true, width: "100" },
+    { index: 1, label: 'Employee', class: 'colEmployeeName', active: true, display: true, width: "140" },
+    { index: 2, label: 'Start Date', class: 'colPayDate', active: true, display: true, width: "100" },
+    { index: 3, label: 'End Date', class: 'colDateTaken', active: true, display: true, width: "120" },
+    { index: 4, label: 'Units', class: 'colLeaveType', active: true, display: true, width: "120" },
+    { index: 5, label: 'Amount Used', class: 'colHours', active: true, display: true, width: "80" },
+    { index: 6, label: 'Balance', class: 'colIsCertified', active: true, display: true, width: "110" },
   ]
   templateObject.leavetakenth.set(reset_data);
 

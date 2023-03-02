@@ -144,6 +144,9 @@ Template.datatablelist.onRendered(async function () {
         }
         await templateObject.displayfields.set(custFields);
         $('.dataTable').resizable();
+
+        let tableData = await templateObject.getTableData();
+        await templateObject.displayTableData(tableData);
     }
 
     templateObject.init_reset_data = function () {
@@ -335,39 +338,39 @@ Template.datatablelist.onRendered(async function () {
         var splashDataArray = new Array();
         let deleteFilter = false;
         if (data != [] && data.length != 0) {
-        if (data.Params) {
-            if (data.Params.Search.replace(/\s/g, "") == "") {
-                deleteFilter = false
+            if (data.Params) {
+                if (data.Params.Search.replace(/\s/g, "") == "") {
+                    deleteFilter = false
+                } else {
+                    deleteFilter = true
+                }
+            }
+            if (isEx == false) {
+                for (let i = 0; i < data[indexDBLowercase].length; i++) {
+                    let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
+                    if(dataList.length != 0) {
+                        splashDataArray.push(dataList);
+                    }
+                    templateObject.transactiondatatablerecords.set(splashDataArray);
+                }
             } else {
-                deleteFilter = true
-            }
-        }
-        if (isEx == false) {
-            for (let i = 0; i < data[indexDBLowercase].length; i++) {
-                let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
-                if(dataList.length != 0) {
-                    splashDataArray.push(dataList);
+                let lowercaseData = templateObject.data.exIndexDBName;
+                for (let i = 0; i < data[lowercaseData].length; i++) {
+                    let dataList = templateObject.data.exdatahandler(data[lowercaseData][i])
+                    if(dataList.length != 0) {
+                        splashDataArray.push(dataList);
+                    }
+                    templateObject.transactiondatatablerecords.set(splashDataArray);
                 }
-                templateObject.transactiondatatablerecords.set(splashDataArray);
             }
-        } else {
-            let lowercaseData = templateObject.data.exIndexDBName;
-            for (let i = 0; i < data[lowercaseData].length; i++) {
-                let dataList = templateObject.data.exdatahandler(data[lowercaseData][i])
-                if(dataList.length != 0) {
-                    splashDataArray.push(dataList);
-                }
-                templateObject.transactiondatatablerecords.set(splashDataArray);
+
+
+
+            if (templateObject.transactiondatatablerecords.get()) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
             }
-        }
-
-
-
-        if (templateObject.transactiondatatablerecords.get()) {
-            setTimeout(function () {
-                MakeNegative();
-            }, 100);
-        }
         }
 
         let colDef = [];
@@ -403,53 +406,53 @@ Template.datatablelist.onRendered(async function () {
                     },
 
                 },
-                {
-                    extend: 'excelHtml5',
-                    title: '',
-                    download: 'open',
-                    className: "btntabletoexcel hiddenColumn",
-                    filename: templateObject.data.exportfilename,
-                    orientation: 'portrait',
-                    exportOptions: {
-                        columns: ':visible'
-                    },
-                    // available: function () {
-                    //     return window.FileReader !== undefined;
-                    // },
-                    // action: function(e, dt, node, config ) {
-                    //     const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
-                    //         try {
-                    //             return window.self === window.top;
-                    //         } catch {
-                    //             return false;
-                    //         }
-                    //     })();
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: templateObject.data.exportfilename,
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        // available: function () {
+                        //     return window.FileReader !== undefined;
+                        // },
+                        // action: function(e, dt, node, config ) {
+                        //     const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
+                        //         try {
+                        //             return window.self === window.top;
+                        //         } catch {
+                        //             return false;
+                        //         }
+                        //     })();
 
-                    //     if (supportsFileSystemAccess) {
-                    //         try {
-                    //             const handle = showSaveFilePicker({
-                    //                 suggestedName: config.filename,
-                    //                 type: [{
-                    //                     description: 'XLSX file',
-                    //                     accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
-                    //                 }]
-                    //             });
-                    //             const writable = handle.createWritable();
-                    //             const Excel = fetch('downloads/Template FIles/' + config.filename).then((res) => res.blob())
-                    //             const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
-                    //             const apiData = dt.buttons.exportData();
-                    //             writable.write(apiData);
-                    //             writable.close();
-                    //             return;
-                    //         } catch (err) {
-                    //             if (err.name == 'AbortError') {
-                    //                 return;
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                        //     if (supportsFileSystemAccess) {
+                        //         try {
+                        //             const handle = showSaveFilePicker({
+                        //                 suggestedName: config.filename,
+                        //                 type: [{
+                        //                     description: 'XLSX file',
+                        //                     accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
+                        //                 }]
+                        //             });
+                        //             const writable = handle.createWritable();
+                        //             const Excel = fetch('downloads/Template FIles/' + config.filename).then((res) => res.blob())
+                        //             const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
+                        //             const apiData = dt.buttons.exportData();
+                        //             writable.write(apiData);
+                        //             writable.close();
+                        //             return;
+                        //         } catch (err) {
+                        //             if (err.name == 'AbortError') {
+                        //                 return;
+                        //             }
+                        //         }
+                        //     }
+                        // }
 
-                }
+                    }
                 ],
 
 
@@ -592,6 +595,44 @@ Template.datatablelist.onRendered(async function () {
         function getColDef() {
             let items = templateObject.data.tableheaderrecords;
 
+            for (let i = 0; i < $(".displaySettings").length; i ++) {
+                var $tblrow = $($(".displaySettings")[i]);
+                var fieldID = $tblrow.attr("custid") || 0;
+                var colTitle = $tblrow.find(".divcolumn").text() || "";
+                var colWidth = $tblrow.find(".custom-range").val() || 0;
+                var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+                var colHidden = false;
+                if ($tblrow.find(".custom-control-input").is(":checked")) {
+                    colHidden = true;
+                } else {
+                    colHidden = false;
+                }
+                let lineItemObj = {
+                    index: parseInt(fieldID),
+                    label: colTitle,
+                    active: colHidden,
+                    width: parseInt(colWidth),
+                    class: colthClass,
+                    display: true
+                };
+
+                for (let i = 0; i < items.length; i ++) {
+                    let tLabel = items[i].label.indexOf('#') >= 0 ? items[i].label.substr(1) : items[i].label;
+                    let rLabel = lineItemObj.label.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
+                    if (tLabel == rLabel) {
+                        if (lineItemObj.active) {
+                            if (items[i].label.indexOf('#') >= 0) {
+                                items[i].label = items[i].label.substr(1);
+                            }
+                        } else {
+                            if (items[i].label.indexOf('#') < 0) {
+                                items[i].label = '#' + items[i].label;
+                            }
+                        }
+                    }
+                }
+            }
+
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
@@ -614,10 +655,11 @@ Template.datatablelist.onRendered(async function () {
 
         }
         getColDef();
-    }
 
-    let tableData = await templateObject.getTableData();
-    await templateObject.displayTableData(tableData);
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 1000);
+    }
 
 })
 
@@ -662,6 +704,10 @@ Template.datatablelist.events({
             $('.' + columnDataValue).addClass('hiddenColumn');
             $('.' + columnDataValue).removeClass('showColumn');
         }
+
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 500);
     },
     // "click .exportbtn": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -1103,22 +1149,22 @@ Template.datatablelist.events({
         $('#dateTo').attr('readonly', false);
         alert('here');
         //setTimeout(function () {
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-            //templateObject.dateAsAt.set(formatDate);
-            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+        //templateObject.dateAsAt.set(formatDate);
+        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-            } else {
-                let params = [formatDateFrom, formatDateTo, false];
-                templateObject.getFilteredData(params)
-                // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
-            }
+        } else {
+            let params = [formatDateFrom, formatDateTo, false];
+            templateObject.getFilteredData(params)
+            // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
+        }
         //}, 500);
     },
     'change .dateFrom': function (event) {
@@ -1127,22 +1173,22 @@ Template.datatablelist.events({
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
         //setTimeout(function () {
-            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-            //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-            var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-            //templateObject.dateAsAt.set(formatDate);
-            if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+        //templateObject.dateAsAt.set(formatDate);
+        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-            } else {
-                let params = [formatDateFrom, formatDateTo, false];
-                templateObject.getFilteredData(params);
-                // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
-            }
+        } else {
+            let params = [formatDateFrom, formatDateTo, false];
+            templateObject.getFilteredData(params);
+            // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
+        }
         //}, 500);
     },
 
@@ -1198,105 +1244,105 @@ Template.datatablelist.events({
 
     // custom field displaysettings
     'click .resetTable': function (event) {
-      let templateObject = Template.instance();
-      let currenttranstablename = templateObject.data.tablename||"";
-      let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID')||0;
-      //let reset_data = await templateObject.reset_data.get();
-      //reset_data = reset_data.filter(redata => redata.display);
-      $('.fullScreenSpin').css('display', 'inline-block');
-      //Rasheed Add Reset Function (API)
-      var erpGet = erpDb();
-      let objResetData = {
-          Name:"VS1_Customize",
-          Params:
-          {
-              EmployeeID:parseInt(loggedEmpID)||0,
-              TableName:currenttranstablename,
-              Columns:[
-                 {
-                   "Width":"0"
-               }
-              ],
-              Reset:true
-          }
-      }
+        let templateObject = Template.instance();
+        let currenttranstablename = templateObject.data.tablename||"";
+        let loggedEmpID = localStorage.getItem('mySessionEmployeeLoggedID')||0;
+        //let reset_data = await templateObject.reset_data.get();
+        //reset_data = reset_data.filter(redata => redata.display);
+        $('.fullScreenSpin').css('display', 'inline-block');
+        //Rasheed Add Reset Function (API)
+        var erpGet = erpDb();
+        let objResetData = {
+            Name:"VS1_Customize",
+            Params:
+                {
+                    EmployeeID:parseInt(loggedEmpID)||0,
+                    TableName:currenttranstablename,
+                    Columns:[
+                        {
+                            "Width":"0"
+                        }
+                    ],
+                    Reset:true
+                }
+        }
 
-      var oPost = new XMLHttpRequest();
-      oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_Customize"', true);
-      oPost.setRequestHeader("database", erpGet.ERPDatabase);
-      oPost.setRequestHeader("username", erpGet.ERPUsername);
-      oPost.setRequestHeader("password", erpGet.ERPPassword);
-      oPost.setRequestHeader("Accept", "application/json");
-      oPost.setRequestHeader("Accept", "application/html");
-      oPost.setRequestHeader("Content-type", "application/json");
-      var myString = JSON.stringify(objResetData);
+        var oPost = new XMLHttpRequest();
+        oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_Customize"', true);
+        oPost.setRequestHeader("database", erpGet.ERPDatabase);
+        oPost.setRequestHeader("username", erpGet.ERPUsername);
+        oPost.setRequestHeader("password", erpGet.ERPPassword);
+        oPost.setRequestHeader("Accept", "application/json");
+        oPost.setRequestHeader("Accept", "application/html");
+        oPost.setRequestHeader("Content-type", "application/json");
+        var myString = JSON.stringify(objResetData);
 
-       oPost.send(myString);
+        oPost.send(myString);
 
-      oPost.onreadystatechange = function() {
-      if(oPost.readyState == 4 && oPost.status == 200) {
+        oPost.onreadystatechange = function() {
+            if(oPost.readyState == 4 && oPost.status == 200) {
 
-            var myArrResponse = JSON.parse(oPost.responseText);
-            if(myArrResponse.ProcessLog.Error){
-              $('.fullScreenSpin').css('display','none');
-              swal('Oooops...', myArrResponse.ProcessLog.Error, 'error');
-            }else{
-              sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(async function(dataCustomize) {
-                  await addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-                  templateObject.init_reset_data();
-                  templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
-                  $('#'+currenttranstablename+'_Modal').modal('hide');
-                  $('.modal-backdrop').css('display','none');
-                  $('.fullScreenSpin').css('display','none');
-                  swal({
-                      title: 'SUCCESS',
-                      text: "Display settings is updated!",
-                      type: 'success',
-                      showCancelButton: false,
-                      confirmButtonText: 'OK'
-                  }).then((result) => {
+                var myArrResponse = JSON.parse(oPost.responseText);
+                if(myArrResponse.ProcessLog.Error){
+                    $('.fullScreenSpin').css('display','none');
+                    swal('Oooops...', myArrResponse.ProcessLog.Error, 'error');
+                }else{
+                    sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(async function(dataCustomize) {
+                        await addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+                        templateObject.init_reset_data();
+                        templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
+                        $('#'+currenttranstablename+'_Modal').modal('hide');
+                        $('.modal-backdrop').css('display','none');
+                        $('.fullScreenSpin').css('display','none');
+                        swal({
+                            title: 'SUCCESS',
+                            text: "Display settings is updated!",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
 
-                  });
-              }).catch(function (err) {
+                        });
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display','none');
+                    });
+
+
+                }
+
+            }else if(oPost.readyState == 4 && oPost.status == 403){
                 $('.fullScreenSpin').css('display','none');
-              });
+                swal({
+                    title: 'Oooops...',
+                    text: oPost.getResponseHeader('errormessage'),
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
 
+                    } else if (result.dismiss === 'cancel') {
 
+                    }
+                });
+            }else if(oPost.readyState == 4 && oPost.status == 406){
+                $('.fullScreenSpin').css('display','none');
+                var ErrorResponse = oPost.getResponseHeader('errormessage');
+                var segError = ErrorResponse.split(':');
+
+                if((segError[1]) == ' "Unable to lock object'){
+
+                    swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
+                }else{
+
+                    swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
+                }
+
+            }else if(oPost.readyState == '') {
+                $('.fullScreenSpin').css('display','none');
+                swal('Connection Failed', oPost.getResponseHeader('errormessage') +' Please try again!', 'error');
             }
-
-        }else if(oPost.readyState == 4 && oPost.status == 403){
-            $('.fullScreenSpin').css('display','none');
-            swal({
-            title: 'Oooops...',
-            text: oPost.getResponseHeader('errormessage'),
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonText: 'Try Again'
-            }).then((result) => {
-            if (result.value) {
-
-            } else if (result.dismiss === 'cancel') {
-
-            }
-            });
-        }else if(oPost.readyState == 4 && oPost.status == 406){
-          $('.fullScreenSpin').css('display','none');
-          var ErrorResponse = oPost.getResponseHeader('errormessage');
-          var segError = ErrorResponse.split(':');
-
-        if((segError[1]) == ' "Unable to lock object'){
-
-          swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
-        }else{
-
-          swal('WARNING', oPost.getResponseHeader('errormessage')+'Please try again!', 'error');
         }
-
-        }else if(oPost.readyState == '') {
-          $('.fullScreenSpin').css('display','none');
-          swal('Connection Failed', oPost.getResponseHeader('errormessage') +' Please try again!', 'error');
-        }
-      }
     },
 
     // custom field displaysettings

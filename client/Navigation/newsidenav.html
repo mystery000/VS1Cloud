@@ -348,7 +348,10 @@
             }
 
             .menu-item-secondary {
-                padding-left: 10px;
+                padding-left: 20px;
+            }
+            .border-bottom-line {
+                border-bottom: 1px solid #d3d3d3;
             }
         </style>
         <div id="popperBounder"></div>
@@ -375,7 +378,7 @@
                                 <i class="fas fa-book"></i> BAS Return List
                             </a>
                             </li>
-                            <li class="menu-item-secondary" style="display:none">
+                            <li class="menu-item-secondary border-bottom-line" style="display:none">
                                 <a id="sidenavbasreturn" name="sidenavbasreturn" class="text-left"><i class="fas fa-plus"></i> BAS Return</a>
                             </li>
                            
@@ -387,7 +390,7 @@
                                     <i class="fas fa-book"></i> Journal Entries List
                                 </a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewjournalentry" name="sidenavnewjournalentry" class="text-left">
                                     <i class="fas fa-plus"></i> New Journal Entry
                                 </a>
@@ -421,7 +424,7 @@
                                         <i class="far fa-calendar-alt"></i> Appointment List
                                     </a>
                                 </li>
-                                <li class="menu-item-secondary">
+                                <li class="menu-item-secondary border-bottom-line">
                                     <a id="sidenavnewappointment" name="sidenavnewappointment" class="text-left">
                                         <i class="fas fa-plus"></i> New Appointment
                                     </a>
@@ -450,14 +453,14 @@
                             <li>
                                 <a id="sidenavcheque" name="sidenavcheque"  class="text-left"><i class="fas fa-list-ul"></i> Cheque List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewcheque" name="sidenavnewcheque" class="text-left"><i class="fas fa-plus"></i> New Cheque</a>
                             </li>
                             <li>
                                 <a id="sidenavdepositlist" name="sidenavdepositlist"  class="text-left"><i class="fas fa-list-ul"></i> Deposited List</a>
                             </li>
                             
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewdeposit" name="sidenavnewdeposit" class="text-left"><i class="fas fa-plus"></i> New Deposit</a>
                             </li>
                             <li>
@@ -483,17 +486,17 @@
                             <li>
                                 <a id="sidenavcustomers" name="sidenavcustomers" class="text-left"><i class="fas fa-user-friends"></i> Customer List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewcustomers" name="sidenavnewcustomers" class="text-left">
-                                    <i class="fas fa-user-plus"></i> New Customer
+                                    <i class="fas fa-plus"></i> New Customer
                                 </a>
                             </li>
                             <li>
                                 <a id="sidenavemployees" name="sidenavemployees" class="text-left"><i class="fas fa-user-tie"></i> Employee List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewemployees" name="sidenavnewemployees" class="text-left">
-                                    <i class="fas fa-user-plus"></i> New Employee
+                                    <i class="fas fa-plus"></i> New Employee
                                 </a>
                             </li>
                             <li>
@@ -502,9 +505,9 @@
                             <li>
                                 <a id="sidenavcontactleads" name="sidenavcontactleads" class="text-left"><i class="fas fa-briefcase"></i> Lead List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewleads" name="sidenavnewleads" class="text-left">
-                                    <i class="fas fa-user-plus"></i> New Lead
+                                    <i class="fas fa-plus"></i> New Lead
                                 </a>
                             </li>
                             <li>
@@ -598,7 +601,7 @@
                             </li>
                             {{/if}}
                             {{#if isNewProduct}}
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewinventory" name="sidenavnewinventory" class="text-left"><i class="fas fa-plus"></i> New Product</a>
                             </li>
                             {{/if}}
@@ -614,7 +617,7 @@
                             </li>
                             {{/if}}
                             {{#if includeStockAdjustment}}
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewstockadjust" name="sidenavnewstockadjust" class="text-left">
                                     <i class="fas fa-plus"></i> New Stock Adjustment
                                 </a>
@@ -696,7 +699,7 @@
                                     <i class="fas fa-hand-holding-usd"></i> Customer Payments
                                 </a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewcustomerP" name="sidenavnewcustomerP"  class="text-left"><i class="fas fa-plus"></i> New Customer Payment
                                 </a>
                             </li>
@@ -778,13 +781,13 @@
                             <li>
                                 <a id="sidenavBill" name="sidenavBill" class="text-left"><i class="fas fa-money-bill-alt"></i> Bill List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewBill" name="sidenavnewBill" class="text-left"><i class="fas fa-plus"></i> New Bill</a>
                             </li>
                             <li>
                                 <a id="sidenavCredit" name="sidenavCredit" class="text-left"><i class="far fa-credit-card"></i> Credit List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewCredit" name="sidenavnewCredit" class="text-left"><i class="fas fa-plus"></i> New Credit</a>
                             </li>
                             <li>
@@ -958,7 +961,7 @@
                             <li>
                                 <a id="sidenavInvoice" name="sidenavInvoice"><i class="fas fa-list-ul"></i> Invoice List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewInvoice" name="sidenavnewInvoice"><i class="fas fa-plus"></i> New Invoice</a>
                             </li>
                             <li>
@@ -968,13 +971,13 @@
                             <li>
                                 <a id="sidenavQuote" name="sidenavQuote"><i class="fas fa-quote-right"></i> Quote List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewQuote" name="sidenavnewQuote"><i class="fas fa-plus"></i> New Quote</a>
                             </li>
                             <li>
                                 <a id="sidenavRefund" name="sidenavRefund"><i class="fas fa-list-ul"></i> Refund List</a>
                             </li>
-                            <li class="menu-item-secondary">
+                            <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewRefund" name="sidenavnewRefund"><i class="fas fa-plus"></i> New Refund</a>
                             </li>
                             <li>

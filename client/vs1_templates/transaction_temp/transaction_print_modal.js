@@ -221,7 +221,7 @@ Template.transaction_print_modal.onCreated(async function () {
   };
 
   const getSMSSettings = async () => {
-    
+
     const smsSettings = this.smsSettings.get()
 
     const smsServiceSettings = await smsService.getSMSSettings();
@@ -318,7 +318,6 @@ Template.transaction_print_modal.onCreated(async function () {
           phoneNumber,
           message,
           function (error, result) {
-            console.log(error, result)
             LoadingOverlay.hide();
             if (error || !result.success) {
               swal({
@@ -422,19 +421,19 @@ Template.transaction_print_modal.events({
   },
   "click #printModal .printConfirm": async function (event) {
     const checkedPrintOptions = Template.instance().findAll('.chooseTemplateBtn:checked');
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     const templateObject = Template.instance();
     templateObject.fnSendSMS()
-    
+
   },
   "click #printModal .chooseTemplateBtn": function (event, key, param) {
     const dataKey = $(event.target).attr("data-id");

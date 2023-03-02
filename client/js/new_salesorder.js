@@ -2585,16 +2585,18 @@ Template.new_salesorder.onCreated(function () {
         printTemplate.push('Delivery Docket');
       }
 
-      if (printTemplate.length > 0) {
-        for (var i = 0; i < printTemplate.length; i++) {
-          if (printTemplate[i] == 'Sales Order') {
-            var template_number = $('input[name="Sales Orders"]:checked').val();
-          }
-          else if (printTemplate[i] == 'Delivery Docket') {
-            var template_number = $('input[name="Delivery Docket"]:checked').val();
-          }
-          await templateObject.exportSalesToPdf(printTemplate[i], template_number);
+      if(!printTemplate.length){
+        printTemplate.push("Sales Orders");
+      }
+
+      for (var i = 0; i < printTemplate.length; i++) {
+        if (printTemplate[i] == 'Sales Order') {
+          var template_number = $('input[name="Sales Orders"]:checked').val();
         }
+        else if (printTemplate[i] == 'Delivery Docket') {
+          var template_number = $('input[name="Delivery Docket"]:checked').val();
+        }
+        await templateObject.exportSalesToPdf(printTemplate[i], template_number);
       }
 
       // Send email
@@ -2765,14 +2767,14 @@ Template.new_salesorder.onRendered(function () {
                     let expirydate = "";
                     if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                        serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                          serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
                         }
                     }
                     if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
                         for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                        lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                        let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                          lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
                         }
                     }
                     lineItemObj = {
@@ -2814,6 +2816,21 @@ Template.new_salesorder.onRendered(function () {
                   let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                   let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines.fields.ID || '',
@@ -2830,7 +2847,10 @@ Template.new_salesorder.onRendered(function () {
                     taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                     TaxTotal: TaxTotalGbp || 0,
-                    TaxRate: TaxRateGbp || 0
+                    TaxRate: TaxRateGbp || 0,
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -3000,6 +3020,23 @@ Template.new_salesorder.onRendered(function () {
                     let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
                     let TaxRateGbp = (useData[d].fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+
+                    let serialno = "";
+                    let lotno = "";
+                    let expirydate = "";
+                    if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                            serialno += (serialno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                            lotno += (lotno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                            let expirydateformat = useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
+
                     const lineItemObj = {
                       lineID: Random.id(),
                       id: useData[d].fields.Lines[i].fields.ID || '',
@@ -3021,6 +3058,9 @@ Template.new_salesorder.onRendered(function () {
                       TaxRate: TaxRateGbp || 0,
                       DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
                       pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
+                      serialnumbers: serialno,
+                      lotnumbers: lotno,
+                      expirydates: expirydate
                     };
                     var dataListTable = [
                       useData[d].fields.Lines[i].fields.ProductName || '',
@@ -3038,6 +3078,23 @@ Template.new_salesorder.onRendered(function () {
                   let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines.fields.LineTaxTotal);
                   let TaxRateGbp = currencySymbol + '' + useData[d].fields.Lines.fields.LineTaxRate;
+
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(useData[d].fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                          serialno += (serialno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(useData[d].fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                          lotno += (lotno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
+
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: useData[d].fields.Lines.fields.ID || '',
@@ -3056,6 +3113,9 @@ Template.new_salesorder.onRendered(function () {
                     TaxTotal: TaxTotalGbp || 0,
                     TaxRate: TaxRateGbp || 0,
                     pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -3270,19 +3330,19 @@ Template.new_salesorder.onRendered(function () {
                   let lotno = "";
                   let expirydate = "";
                   if(data.fields.Lines[i].fields.PQA != null){
-                  if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
-                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                      serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                      }
+                    if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
+                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
+                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
                   }
-                  if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
-                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                      lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                      let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                      expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                      }
-                  }
-                }
                   const lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines[i].fields.ID || '',
@@ -3323,6 +3383,23 @@ Template.new_salesorder.onRendered(function () {
                 let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                 let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                let serialno = "";
+                let lotno = "";
+                let expirydate = "";
+                if(data.fields.Lines.fields.PQA != null){
+                  if(data.fields.Lines.fields.PQA.fields.PQASN != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
+                }
                 const lineItemObj = {
                   lineID: Random.id(),
                   id: data.fields.Lines.fields.ID || '',
@@ -3339,7 +3416,10 @@ Template.new_salesorder.onRendered(function () {
                   taxCode: data.fields.Lines[i].fields.LineTaxCode || '',
                   curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                   TaxTotal: TaxTotalGbp || 0,
-                  TaxRate: TaxRateGbp || 0
+                  TaxRate: TaxRateGbp || 0,
+                  serialnumbers: serialno,
+                  lotnumbers: lotno,
+                  expirydates: expirydate
                 };
                 lineItems.push(lineItemObj);
               }
@@ -3602,7 +3682,7 @@ Template.new_salesorder.onRendered(function () {
     $('#departmentModal').modal('toggle');
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $('#sltTerms').val($(this).find(".colTermName").text());
+    $('#sltTerms').val($(this).find(".colName").text());
     $('#termsListModal').modal('toggle');
   });
   $(document).on("click", "#custListType tbody tr", function (e) {
@@ -7201,16 +7281,16 @@ Template.new_salesorder.events({
   "click #printModal #btnSendEmail" : async function (event) {
     const templateObject = Template.instance()
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     if ($("#edtCustomerEmail").val() != "") {
       LoadingOverlay.show();
       await templateObject.sendEmailWithAttatchment(true);
@@ -7227,9 +7307,9 @@ Template.new_salesorder.events({
   },
   'click .printConfirm': async function (event) {
     const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
-    if(checkedPrintOptions.length == 0){
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   return;
+    // }
     playPrintAudio();
     const templateObject = Template.instance();
     templateObject.print()

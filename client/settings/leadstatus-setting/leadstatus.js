@@ -48,13 +48,13 @@ Template.leadstatussettings.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "10" },
-        { index: 1, label: '#Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "200" },
+        { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "50" },
+        { index: 1, label: '#Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "120" },
         { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
-        { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-        { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "100" },
+        { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "400" },
+        { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "180" },
         { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "250" },
-        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -730,7 +730,7 @@ Template.leadstatussettings.events({
                 var result = {};
                 workbook.SheetNames.forEach(function(sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;

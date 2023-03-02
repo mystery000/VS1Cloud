@@ -61,68 +61,21 @@
 
             </thead>
              <tbody>
-            <!--    {{#if records}}
-                {{#each arrayify records}}
-                <tr>
-                    <td class="fgrtotal">{{ value.ProductName }}</td>
-                    <td class="fgrtotal"></td>
-                    <td class="fgrtotal text-left"></td>
-                    <td class="fgrtotal text-left"></td>
-                    <td class="fgrtotal"></td>
-                    <td class="fgrtotal"></td>
-                    <td class="fgrtotal"></td>
-                    <td class="fgrtotal"></td>
-                    <td class="fgrtotal"></td>
-
-                </tr>
-                {{#each item in value.SubAccounts}}
-                <tr data-tr="{{ item.TranstypeDesc }}">
-                    <td></td>
-                    <td><a href="{{redirectionType item}}">{{ formatDate item.TransactionDate }}</a></td>
-
-                    <td class="text-left"><a href="{{redirectionType item}}">{{ item.TranstypeDesc }}</a></td>
-                    <td class="text-left"><a href="{{redirectionType item}}">{{ checkZero item.TransactionNo }}</a></td>
-                    <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
-                    <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
-                    <td class="text-right {{#if isNegativeAmount item.Qty }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}">{{ checkZero item.Qty }}</a></td>
-                    
-                    {{#if isOnlyDefaultActive }}
-                    {{#if currencyList}}
-                    {{#each c in currencyList }}
-                    {{# if c.active}}
-                    <td currency="{{c.code}}" currency-id="{{c.id}}"
-                        class="text-right {{#if isNegativeAmount item.Cost }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}">{{ convertAmount item.Cost c}}</a></td>
-                    {{/if}}
-                    {{/each}}
-                    {{#each c in currencyList }}
-                    {{# if c.active}}
-                    <td currency="{{c.code}}" currency-id="{{c.id}}"
-                        class="text-right {{#if isNegativeAmount item.TotalCost }} text-danger {{else}} text-success {{/if}}">
-                        <a href="{{redirectionType item}}">{{ convertAmount item.TotalCost c}}</a></td>
-                    {{/if}}
-                    {{/each}}
-
-
-                    {{/if}}
-                    {{else}}
-                    <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.Cost
-                            }}</a></td>
-                    <td class="text-right text-success"><a href="{{redirectionType item}}">{{ formatPrice item.TotalCost
-                            }}</a></td>
-                    {{/if}}
-                </tr>
-
-                {{/each}}
-                {{/each}}
-                {{else}}
-                <tr class="odd" style="text-align: center;">
-                    <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
-                </tr>
-                {{/if}} -->
+                 {{#if records}}
+                     {{#each items in records}}
+                         <tr>
+                             {{#each item in items}}
+                                 <td class="{{item.indent}}">
+                                     <span class={{item.className}}>{{item.string}}</span>
+                                 </td>
+                             {{/each}}
+                         </tr>
+                     {{/each}}
+                 {{else}}
+                     <tr class="odd" style="text-align: center;">
+                         <td valign="top" colspan="9" class="dataTables_empty text-left">No data available in table</td>
+                     </tr>
+                 {{/if}}
             </tbody>
         </table>
     </div>

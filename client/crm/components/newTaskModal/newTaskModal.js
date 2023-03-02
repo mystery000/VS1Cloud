@@ -5,6 +5,20 @@ Template.newTaskModal.inheritsHelpersFrom('alltaskdatatable');
 Template.newTaskModal.inheritsEventsFrom('alltaskdatatable');
 Template.newTaskModal.inheritsHooksFrom('alltaskdatatable');
 
+Template.newTaskModal.onRendered(function() {
+    let templateObject = Template.instance();
+  $(document).ready(function () {
+    $(".crmSelectEmployeeList").editableSelect();
+    $(".crmSelectEmployeeList").editableSelect().on("click.editable-select", function(e, li) {
+        $("#employeeListCRMModal").modal();
+    });
+
+    $(".crmSelectLeadList").editableSelect();
+    $(".crmSelectLeadList").editableSelect().on("click.editable-select", function(e, li) {
+        $("#customerListCrmModal").modal();
+    });
+  });
+});
 
 Template.newTaskModal.helpers({
 

@@ -117,7 +117,10 @@ Template.newprofitandloss.onRendered(function () {
         }
       }
       reportService.editPNLGroup(jsonObj).then(function(res){
-        templateObject.getProfitLossLayout();
+        // templateObject.getProfitLossLayout();
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+        templateObject.setReportOptions(3, dateFrom, dateTo);
       }).catch(function(err) {
           swal({
               title: 'Oooops...',
@@ -312,6 +315,7 @@ Template.newprofitandloss.onRendered(function () {
 
   templateObject.getProfitandLossReports = async () => {
     // if (!localStorage.getItem('VS1ProfitAndLoss_Report')) {
+      templateObject.getProfitLossLayout();
       const options = await templateObject.reportOptions.get();
       let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
       let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
@@ -328,71 +332,233 @@ Template.newprofitandloss.onRendered(function () {
 
               let accountType = "";
               var dataList = "";
-              for (let i = 0; i < accountData.length; i++) {
-                if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
-                  accountType = "";
-                } else {
-                  accountType = accountData[i]["AccountTypeDesc"];
-                }
-                let compPeriod = options.compPeriod + 1;
-                let periodAmounts = [];
-                let totalAmount = 0;
-                for (let counter = 1; counter <= compPeriod; counter++) {
-                  if (i == 0) {
-                    options.threcords.push(accountData[i]["DateDesc_" + counter]);
-                  }
-                  totalAmount += accountData[i]["Amount_" + counter];
-                  let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
-                  let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
-                  let Percentage = accountData[i]["Percentage_" + counter];
-                  periodAmounts.push({
-                    decimalAmt: AmountEx,
-                    roundAmt: RoundAmount,
-                    percentage: Percentage,
-                  });
-                }
-                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
-                  let totalRoundAmount = Math.round(totalAmount) || 0;
-                  if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
-                    dataList = {
-                      id: accountData[i]["AccountID"] || "",
-                      accounttype: accountType || "",
-                      accounttypeshort: accountData[i]["AccountType"] || "",
-                      accountname: accountData[i]["AccountName"] || "",
-                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                      accountno: accountData[i]["AccountNo"] || "",
-                      totalamountex: "",
-                      totalroundamountex: "",
-                      periodAmounts: "",
-                      name: $.trim(accountData[i]["AccountName"])
-                        .split(" ")
-                        .join("_"),
-                    };
-                  } else {
-                    dataList = {
-                      id: accountData[i]["AccountID"] || "",
-                      accounttype: accountType || "",
-                      accounttypeshort: accountData[i]["AccountType"] || "",
-                      accountname: accountData[i]["AccountName"] || "",
-                      accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                      accountno: accountData[i]["AccountNo"] || "",
-                      totalamountex: totalAmountEx || 0.0,
-                      periodAmounts: periodAmounts,
-                      totalroundamountex: totalRoundAmount,
-                      name: $.trim(accountData[i]["AccountName"])
-                        .split(" ")
-                        .join("_"),
-                      // totaltax: totalTax || 0.00
-                    };
-                  }
+              let profitandlosslayout = templateObject.profitlosslayoutrecords.get();
+              for (let m = 0; m < profitandlosslayout.length; m++) {
+                for (let i = 0; i < accountData.length; i++) {
+                  if(profitandlosslayout[m].AccountName == accountData[i].AccountTypeDesc){
+                    if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+                      accountType = "";
+                    } else {
+                      accountType = accountData[i]["AccountTypeDesc"];
+                    }
+                    let compPeriod = options.compPeriod + 1;
+                    let periodAmounts = [];
+                    let totalAmount = 0;
+                    for (let counter = 1; counter <= compPeriod; counter++) {
+                      if (m == 0 && i == 0) {
+                        options.threcords.push(accountData[i]["DateDesc_" + counter]);
+                      }
+                      totalAmount += accountData[i]["Amount_" + counter];
+                      let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+                      let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                      let Percentage = accountData[i]["Percentage_" + counter];
+                      periodAmounts.push({
+                        decimalAmt: AmountEx,
+                        roundAmt: RoundAmount,
+                        percentage: Percentage,
+                      });
+                    }
+                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+                    let totalRoundAmount = Math.round(totalAmount) || 0;
 
-                  if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-                  } else {
+                    if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+                      dataList = {
+                        id: accountData[i]["AccountID"] || "",
+                        accounttype: accountType || "",
+                        accounttypeshort: accountData[i]["AccountType"] || "",
+                        accountname: accountData[i]["AccountName"] || "",
+                        accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                        accountno: accountData[i]["AccountNo"] || "",
+                        totalamountex: "",
+                        totalroundamountex: "",
+                        periodAmounts: "",
+                        name: $.trim(accountData[i]["AccountName"])
+                          .split(" ")
+                          .join("_"),
+                      };
+                    }
+                    else{
+                      dataList = {
+                        id: accountData[i]["AccountID"] || "",
+                        accounttype: accountType || "",
+                        accounttypeshort: accountData[i]["AccountType"] || "",
+                        accountname: accountData[i]["AccountName"] || "",
+                        accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                        accountno: accountData[i]["AccountNo"] || "",
+                        totalamountex: totalAmountEx || 0.0,
+                        periodAmounts: periodAmounts,
+                        totalroundamountex: totalRoundAmount,
+                        name: $.trim(accountData[i]["AccountName"])
+                          .split(" ")
+                          .join("_"),
+                        // totaltax: totalTax || 0.00
+                      };
+                    }
+                    
+
+                    if( dataList.totalroundamountex !== 0 ) {
+                      records.push(dataList);
+                    }
+                  }
+                }
+
+                let totalGroupPeriodAmounts = [];
+                let totalGroupAmount = 0;
+                let compPeriod = options.compPeriod + 1;
+                for (let n = 0; n < profitandlosslayout[m].subAccounts.length; n++) {
+                  for (let i = 0; i < accountData.length; i++) {
+                    if(profitandlosslayout[m].subAccounts[n].AccountName == $.trim(accountData[i].AccountName)){
+                      if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+                        accountType = "";
+                      } else {
+                        accountType = accountData[i]["AccountTypeDesc"];
+                      }
+                      let periodAmounts = [];
+                      let totalAmount = 0;
+                      for (let counter = 1; counter <= compPeriod; counter++) {
+                        totalAmount += accountData[i]["Amount_" + counter];
+                        let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+                        let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+                        let Percentage = accountData[i]["Percentage_" + counter];
+
+                        periodAmounts.push({
+                          decimalAmt: AmountEx,
+                          roundAmt: RoundAmount,
+                          percentage: Percentage,
+                        });
+
+                        if(n == 0){
+                          totalGroupPeriodAmounts.push({
+                            decimalAmt: "",
+                            roundAmt: accountData[i]["Amount_" + counter],
+                            percentage: parseFloat(Percentage.slice(0, -1) || 0.0)
+                          });
+                        }
+                        else{
+                          totalGroupPeriodAmounts[counter-1].roundAmt += accountData[i]["Amount_" + counter];
+                          totalGroupPeriodAmounts[counter-1].percentage += parseFloat(Percentage.slice(0, -1) || 0.0);
+                        }
+                      }
+                      let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+                      let totalRoundAmount = Math.round(totalAmount) || 0;
+
+                      dataList = {
+                        id: accountData[i]["AccountID"] || "",
+                        accounttype: accountType || "",
+                        accounttypeshort: accountData[i]["AccountType"] || "",
+                        accountname: accountData[i]["AccountName"] || "",
+                        accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                        accountno: accountData[i]["AccountNo"] || "",
+                        totalamountex: totalAmountEx || 0.0,
+                        periodAmounts: periodAmounts,
+                        totalroundamountex: totalRoundAmount,
+                        name: $.trim(accountData[i]["AccountName"])
+                          .split(" ")
+                          .join("_"),
+                        // totaltax: totalTax || 0.00
+                      };
+  
                       if( dataList.totalroundamountex !== 0 ) {
                         records.push(dataList);
                       }
+
+                      totalGroupAmount += totalAmount;
+                    }
                   }
+                }
+
+                if(profitandlosslayout[m].subAccounts.length > 0){
+                  for (let counter = 1; counter <= compPeriod; counter++) {
+                    totalGroupPeriodAmounts[counter-1].decimalAmt = utilityService.modifynegativeCurrencyFormat( totalGroupPeriodAmounts[counter-1].roundAmt ) || 0.0;
+                    totalGroupPeriodAmounts[counter-1].percentage = totalGroupPeriodAmounts[counter-1].percentage.toFixed(1) + "%";
+                  }
+
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalGroupAmount ) || 0.0;
+                  let totalRoundAmount = Math.round(totalGroupAmount) || 0;
+
+                  dataList = {
+                    id: 0,
+                    accounttype: "Total "+profitandlosslayout[m].AccountName || "",
+                    accounttypeshort: profitandlosslayout[m].AccountName || "",
+                    accountname: "",
+                    accountheaderorder: profitandlosslayout[m].AccountName || "",
+                    accountno: "",
+                    totalamountex: totalAmountEx || 0.0,
+                    totalroundamountex: totalRoundAmount,
+                    periodAmounts: totalGroupPeriodAmounts,
+                    name: "",
+                  };
+  
+                  if( dataList.totalroundamountex !== 0 ) {
+                    records.push(dataList);
+                  }
+                }
               }
+              // for (let i = 0; i < accountData.length; i++) {
+              //   if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+              //     accountType = "";
+              //   } else {
+              //     accountType = accountData[i]["AccountTypeDesc"];
+              //   }
+              //   let compPeriod = options.compPeriod + 1;
+              //   let periodAmounts = [];
+              //   let totalAmount = 0;
+              //   for (let counter = 1; counter <= compPeriod; counter++) {
+              //     if (i == 0) {
+              //       options.threcords.push(accountData[i]["DateDesc_" + counter]);
+              //     }
+              //     totalAmount += accountData[i]["Amount_" + counter];
+              //     let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+              //     let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+              //     let Percentage = accountData[i]["Percentage_" + counter];
+              //     periodAmounts.push({
+              //       decimalAmt: AmountEx,
+              //       roundAmt: RoundAmount,
+              //       percentage: Percentage,
+              //     });
+              //   }
+              //     let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+              //     let totalRoundAmount = Math.round(totalAmount) || 0;
+              //     if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+              //       dataList = {
+              //         id: accountData[i]["AccountID"] || "",
+              //         accounttype: accountType || "",
+              //         accounttypeshort: accountData[i]["AccountType"] || "",
+              //         accountname: accountData[i]["AccountName"] || "",
+              //         accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+              //         accountno: accountData[i]["AccountNo"] || "",
+              //         totalamountex: "",
+              //         totalroundamountex: "",
+              //         periodAmounts: "",
+              //         name: $.trim(accountData[i]["AccountName"])
+              //           .split(" ")
+              //           .join("_"),
+              //       };
+              //     } else {
+              //       dataList = {
+              //         id: accountData[i]["AccountID"] || "",
+              //         accounttype: accountType || "",
+              //         accounttypeshort: accountData[i]["AccountType"] || "",
+              //         accountname: accountData[i]["AccountName"] || "",
+              //         accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+              //         accountno: accountData[i]["AccountNo"] || "",
+              //         totalamountex: totalAmountEx || 0.0,
+              //         periodAmounts: periodAmounts,
+              //         totalroundamountex: totalRoundAmount,
+              //         name: $.trim(accountData[i]["AccountName"])
+              //           .split(" ")
+              //           .join("_"),
+              //         // totaltax: totalTax || 0.00
+              //       };
+              //     }
+
+              //     if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+              //     } else {
+              //         if( dataList.totalroundamountex !== 0 ) {
+              //           records.push(dataList);
+              //         }
+              //     }
+              // }
 
               // Set Table Data
               options.showPercentage = true;
@@ -414,12 +580,12 @@ Template.newprofitandloss.onRendered(function () {
                       $(this).removeClass("fgrblue");
                     }
                   });
-                }, 100);
+                }, 50);
               }
               setTimeout(function () {
                 $(".pnlTable").show();
                 $(".fullScreenSpin").css("display", "none");
-              }, 300);
+              }, 100);
             }
           });
           // data = data.response;
@@ -465,11 +631,12 @@ Template.newprofitandloss.onRendered(function () {
                   roundAmt: totalRoundAmount,
                   // percentage: Percentage,
                 });
+                
                 if( options.departments.length ){
                   options.departments.forEach(dept => {
-                    totalAmount += accountData[i][dept+"_AmountColumnInc"];
-                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
-                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
+                    totalAmount += accountData[i][dept+"_AmountColumnEx"];
+                    let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnEx"] ) || 0.0;
+                    let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnEx"]) || 0;
                     if( i == 0 ){
                       options.threcords.push( dept );
                     }
@@ -479,9 +646,11 @@ Template.newprofitandloss.onRendered(function () {
                     });
                   });
                 }
+
                 if (
                   accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
-                  accountType != ""
+                  accountType != "" &&
+                  accountData[i]["TotalAmountEx"] == ""
                 ) {
                   dataList = {
                     id: accountData[i]["AccountID"] || "",
@@ -543,10 +712,12 @@ Template.newprofitandloss.onRendered(function () {
                       $(this).removeClass("fgrblue");
                     }
                   });
-                }, 100);
+                }, 50);
               }
-              $(".pnlTable").show();
-              $(".fullScreenSpin").css("display", "none");
+              setTimeout(function () {
+                $(".pnlTable").show();
+                $(".fullScreenSpin").css("display", "none");
+              }, 100);
             }
           });
 
@@ -694,7 +865,6 @@ Template.newprofitandloss.onRendered(function () {
     );
     // Fetch a default layout
     reportService.getProfitLossLayout().then(function(data){
-      console.log("--------", data);
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
@@ -775,8 +945,8 @@ Template.newprofitandloss.onRendered(function () {
             $item.addClass(siblingClass);
             $item.addClass("selected");
 
-            let groupID = $item.attr("plid");
-            let containerID = container.el.parent().attr("plid") || 0;
+            let groupID = parseInt($item.attr("plid"));
+            let containerID = parseInt(container.el.parent().attr("plid")) || 0;
             let containerName = container.el.parent().attr("data-group") || "";
             
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -789,7 +959,9 @@ Template.newprofitandloss.onRendered(function () {
               }
             }
             reportService.movePNLGroup(jsonObj).then(function(res){
-              templateObject.getProfitLossLayout();
+              var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+              var dateTo = new Date($("#dateTo").datepicker("getDate"));
+              templateObject.setReportOptions(3, dateFrom, dateTo);
             }).catch(function(err) {
                 swal({
                     title: 'Oooops...',
@@ -804,10 +976,7 @@ Template.newprofitandloss.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
-          },
-          activate: function ($item, container, _super) {
-            alert(1);
-          }
+          }          
         });
 
         $(".collepsDiv").click(function () {
@@ -822,8 +991,9 @@ Template.newprofitandloss.onRendered(function () {
           $(this).parent().addClass("selected");
           templateObject.layoutgroupid.set($(this).parent().attr("plid"));
         });
+        // $('.fullScreenSpin').css('display', 'none');
       }, 1000);
-      $('.fullScreenSpin').css('display', 'none');
+      // $('.fullScreenSpin').css('display', 'none');
     });
     // return false
 
@@ -950,7 +1120,6 @@ Template.newprofitandloss.onRendered(function () {
     //   // }, 1000);
     // }
   };
-  templateObject.getProfitLossLayout();
 
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
@@ -2199,13 +2368,15 @@ Template.newprofitandloss.events({
                   "Selected": parseInt(templateObject.layoutgroupid.get())
                 }
               }
-              console.log("=======", jsonObj);
               reportService.deletePNLGroup(jsonObj).then(function(res){
                 templateObject.layoutgroupid.set("");
-                templateObject.getProfitLossLayout();
+                // templateObject.getProfitLossLayout();
                 $(".editRowGroup").hide();
                 $("#editGroupName").val("");
                 $("#editGroupID").val("");
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                templateObject.setReportOptions(3, dateFrom, dateTo);
               }).catch(function(err) {
                   swal({
                       title: 'Oooops...',
@@ -2451,9 +2622,12 @@ Template.newprofitandloss.events({
 
     $('.fullScreenSpin').css('display', 'inline-block');
     reportService.savePNLNewGroup(jsonObj).then(function(res){
-      templateObject.getProfitLossLayout();
+      // templateObject.getProfitLossLayout();
       $("#newGroupName").val("");
       $("#nplAddGroupScreen").modal("hide");
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      templateObject.setReportOptions(3, dateFrom, dateTo);
     }).catch(function(err) {
         swal({
             title: 'Oooops...',
@@ -2586,7 +2760,7 @@ Template.newprofitandloss.helpers({
 
     if (activeArray.length == 1) {
 
-      if (activeArray[0].code == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) { 
         return !true;
       } else {
         return !false;

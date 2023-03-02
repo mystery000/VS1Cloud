@@ -14,6 +14,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let productService = new ProductService();
 
 Template.binlocationslist.onCreated(function () {
   const templateObject = Template.instance();
@@ -60,7 +61,25 @@ Template.binlocationslist.onRendered(function () {
     window.open('/binlocationslist?page=last', '_self');
   }
 
+  templateObject.getProductBinData = async function () {
+    getVS1Data('TProductBin').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        productService.getBins().then(async function (data) {
+          await addVS1Data('TProductBin', JSON.stringify(data));
+        }).catch(function (err) {
 
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+      }
+    }).catch(function (err) {
+      productService.getBins().then(async function (data) {
+        await addVS1Data('TProductBin', JSON.stringify(data));
+      }).catch(function (err) {
+      });
+    });
+  }
+  templateObject.getProductBinData();
   // $('.tblInventory tbody').on( 'click', 'tr', function () {
   //   var listData = $(this).closest('tr').find('.colProductID').text();
   //   if(listData){
@@ -643,7 +662,7 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
   },
-  
+
   // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
@@ -673,7 +692,7 @@ Template.binlocationslist.events({
             splashArrayProductList.push(dataList);
           }
 
-          
+
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
@@ -1012,14 +1031,14 @@ Template.binlocationslist.events({
     // }
   },
 
-  'click .btnSaveSelect': async function () {
-    playSaveAudio();
-    setTimeout(function () {
-      $('#myModalDepartment').modal('toggle');
-      // let templateObject = Template.instance();
-      // templateObject.getAllProductData('All');
-    }, delayTimeAfterSound);
-  },
+  // 'click .btnSaveSelect': async function () {
+  //   playSaveAudio();
+  //   setTimeout(function () {
+  //     $('#myModalDepartment').modal('toggle');
+  //     // let templateObject = Template.instance();
+  //     // templateObject.getAllProductData('All');
+  //   }, delayTimeAfterSound);
+  // },
 
   'click .printConfirm': function (event) {
     playPrintAudio();
@@ -1091,7 +1110,7 @@ Template.binlocationslist.events({
         var result = {};
         workbook.SheetNames.forEach(function (sheetName) {
           var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
           templateObj.selectedFile.set(sCSV);
 
           if (roa.length) result[sheetName] = roa;
@@ -1145,7 +1164,7 @@ Template.binlocationslist.events({
       }).catch(function (err) {
         window.open('/binlocationslist','_self');
       });
-       
+
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });
@@ -1188,7 +1207,7 @@ Template.binlocationslist.events({
       }).catch(function (err) {
         window.open('/binlocationslist','_self');
       });
-       
+
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });

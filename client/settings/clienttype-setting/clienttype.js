@@ -1,6 +1,7 @@
 import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { TaxRateService } from "../settings-service";
+import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import XLSX from "xlsx";
 import { Template } from 'meteor/templating';
@@ -23,21 +24,19 @@ Template.clienttypesettings.onCreated(function () {
 
   templateObject.getDataTableList = function(data) {
     let linestatus = '';
-    if (data.fields.Active == true) {
+    if (data.Active == true) {
       linestatus = "";
-    } else if (data.fields.Active == false) {
+    } else if (data.Active == false) {
       linestatus = "In-Active";
     };
     var dataList = [
-      data.fields.ID || "",
-      data.fields.TypeName || "",
-      data.fields.TypeDescription || "",
-      data.fields.CreditLimit || 0.0,
-      data.fields.DefaultPostAccount || "",
-      data.fields.GracePeriod || "",
-      data.fields.TermsName || "", //need to be replaced with Default Discount
-      data.fields.TermsName || "",
-      data.fields.TermsName || "", // need to be replaced with prefered payment method
+      data.ID || "",
+      data.TypeDescription || "",
+      data.TypeDescription || "",
+      data.CreditLimit || 0.0,
+      data.DefaultPostAccount || "",
+      data.GracePeriod || "",
+      data.TermsName || "",
       linestatus,
     ];
     return dataList;
@@ -47,13 +46,11 @@ Template.clienttypesettings.onCreated(function () {
     { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
     { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "200" },
-    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: false, display: true, width: "200" },
-    { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: false, display: true, width: "100" },
-    { index: 6, label: 'Default Discount', class: 'colDefaultDiscount', active: true, display: true, width: "200" },
-    { index: 7, label: 'Terms', class: 'colTerms', active: true, display: true, width: "200" },
-    { index: 8, label: 'Preferred Payment Method', class: 'colPreferedPaymentMethod', active: true, display: true, width: "300" },
-    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "200" },
+    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: true, display: true, width: "200" },
+    { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: true, display: true, width: "100" },
+    { index: 6, label: 'Terms', class: 'colTerms', active: true, display: true, width: "200" },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -83,9 +80,17 @@ Template.clienttypesettings.onRendered(function () {
       .find(".colDescription")
       .text();
     let typeName = $(event.target).closest("tr").find(".colTypeName").text();
+    let typeActive = $(event.target).closest("tr").find(".colStatus").text();
     $("#edtClientTypeID").val(targetID);
     $("#edtClientTypeName").val(typeName);
     $("#txaDescription").val(typeDescription);
+    if (typeActive === "In-Active") {
+      $('.btnDeleteClientType').addClass('d-none')
+      $('.btnActiveClientType').removeClass('d-none')
+    } else {
+      $('.btnActiveClientType').addClass('d-none')
+      $('.btnDeleteClientType').removeClass('d-none')
+    }
     $("#myModalClientType").modal("show");
   });
 });
@@ -408,7 +413,7 @@ Template.clienttypesettings.events({
           var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
             header: 1,
           });
-          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
           templateObj.selectedFile.set(sCSV);
 
           if (roa.length) result[sheetName] = roa;

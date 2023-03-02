@@ -1042,6 +1042,11 @@ Template.purchaseordercard.onRendered(() => {
 
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
+            if(tdpqa){
+                tddescription += " " + tdpqa;
+            }
+            
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
@@ -2470,6 +2475,21 @@ Template.purchaseordercard.onRendered(() => {
                                         let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
                                         let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
                                         let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                                        let serialno = "";
+                                        let lotno = "";
+                                        let expirydate = "";
+                                        if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                                            for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                                                serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                            }
+                                        }
+                                        if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                                            for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                                                lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                                let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                                expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                            }
+                                        }
                                         lineItemObj = {
                                             lineID: Random.id(),
                                             id: data.fields.Lines[i].fields.ID || '',
@@ -2497,6 +2517,9 @@ Template.purchaseordercard.onRendered(() => {
                                             costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
                                             fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
                                             costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                            serialnumbers: serialno,
+                                            lotnumbers: lotno,
+                                            expirydates: expirydate
                                         };
 
                                         lineItemsTable.push(dataListTable);
@@ -2507,6 +2530,21 @@ Template.purchaseordercard.onRendered(() => {
                                     let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmount);
                                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                                     let TaxRateGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxRate);
+                                    let serialno = "";
+                                    let lotno = "";
+                                    let expirydate = "";
+                                    if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                                        for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                                            serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                        }
+                                    }
+                                    if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                                        for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                                            lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                            let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                        }
+                                    }
                                     lineItemObj = {
                                         lineID: Random.id(),
                                         id: data.fields.Lines.fields.ID || '',
@@ -2528,6 +2566,9 @@ Template.purchaseordercard.onRendered(() => {
                                         costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
                                         fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
                                         costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                        serialnumbers: serialno,
+                                        lotnumbers: lotno,
+                                        expirydates: expirydate
                                     };
                                     lineItems.push(lineItemObj);
                                 }
@@ -2954,6 +2995,21 @@ Template.purchaseordercard.onRendered(() => {
                                             let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
                                             let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
                                             let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                                            let serialno = "";
+                                            let lotno = "";
+                                            let expirydate = "";
+                                            if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                                                for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                                                    serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                                }
+                                            }
+                                            if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                                                for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                                                    lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                                    let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                                    expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                                }
+                                            }
                                             lineItemObj = {
                                                 lineID: Random.id(),
                                                 id: data.fields.Lines[i].fields.ID || '',
@@ -2981,7 +3037,9 @@ Template.purchaseordercard.onRendered(() => {
                                                 costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
                                                 fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
                                                 costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
-
+                                                serialnumbers: serialno,
+                                                lotnumbers: lotno,
+                                                expirydates: expirydate
                                             };
 
                                             lineItemsTable.push(dataListTable);
@@ -2992,6 +3050,21 @@ Template.purchaseordercard.onRendered(() => {
                                         let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmount);
                                         let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                                         let TaxRateGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxRate);
+                                        let serialno = "";
+                                        let lotno = "";
+                                        let expirydate = "";
+                                        if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                                            for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                                                serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                            }
+                                        }
+                                        if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                                            for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                                                lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                                let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                                expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                            }
+                                        }
                                         lineItemObj = {
                                             lineID: Random.id(),
                                             id: data.fields.Lines.fields.ID || '',
@@ -3013,6 +3086,9 @@ Template.purchaseordercard.onRendered(() => {
                                             costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
                                             fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
                                             costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                            serialnumbers: serialno,
+                                            lotnumbers: lotno,
+                                            expirydates: expirydate
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -3183,6 +3259,21 @@ Template.purchaseordercard.onRendered(() => {
                                     let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
                                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
                                     let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                                    let serialno = "";
+                                    let lotno = "";
+                                    let expirydate = "";
+                                    if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                                            serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                        }
+                                    }
+                                    if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                                            lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                            let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                        }
+                                    }
                                     lineItemObj = {
                                         lineID: Random.id(),
                                         id: data.fields.Lines[i].fields.ID || '',
@@ -3210,7 +3301,9 @@ Template.purchaseordercard.onRendered(() => {
                                         costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
                                         fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
                                         costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
-
+                                        serialnumbers: serialno,
+                                        lotnumbers: lotno,
+                                        expirydates: expirydate
                                     };
 
                                     lineItemsTable.push(dataListTable);
@@ -3221,6 +3314,21 @@ Template.purchaseordercard.onRendered(() => {
                                 let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmount);
                                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                                 let TaxRateGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxRate);
+                                let serialno = "";
+                                let lotno = "";
+                                let expirydate = "";
+                                if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                                    }
+                                }
+                                if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                                    }
+                                }
                                 lineItemObj = {
                                     lineID: Random.id(),
                                     id: data.fields.Lines.fields.ID || '',
@@ -3242,6 +3350,9 @@ Template.purchaseordercard.onRendered(() => {
                                     costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
                                     fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
                                     costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                    serialnumbers: serialno,
+                                    lotnumbers: lotno,
+                                    expirydates: expirydate
                                 };
                                 lineItems.push(lineItemObj);
                             }
@@ -3948,7 +4059,7 @@ Template.purchaseordercard.onRendered(() => {
         $('#departmentModal').modal('toggle');
     });
     $(document).on("click", "#termsList tbody tr", function(e) {
-        $('#sltTerms').val($(this).find(".colTermName").text());
+        $('#sltTerms').val($(this).find(".colName").text());
         $('#termsListModal').modal('toggle');
     });
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {

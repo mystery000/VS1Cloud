@@ -20,6 +20,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './supplierlistpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -29,6 +30,69 @@ Template.supplierlistpop.onCreated(function () {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.fields.APBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.fields.ExcessAmount) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.fields.SupplierCreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance) || 0.00;
+        var dataList = [
+            data.fields.ClientName || '-',
+            data.fields.JobName || '',
+            data.fields.Phone || '',
+            arBalance || 0.00,
+            creditBalance || 0.00,
+            balance || 0.00,
+            creditLimit || 0.00,
+            salesOrderBalance || 0.00,
+            data.fields.Country || '',
+            data.fields.State || '',
+            data.fields.Street2 || '',
+            data.fields.Street || '',
+            data.fields.Postcode || '',
+            data.fields.Email || '',
+            data.fields.AccountNo || '',
+            data.fields.ClientNo || '',
+            data.fields.JobTitle || '',
+            data.fields.Notes || '',
+            data.fields.ID || '',
+            data.fields.ClientTypeName || 'Default',
+            data.fields.Discount || 0,
+            data.fields.TermsName || loggedTermsPurchase || 'COD',
+            data.fields.FirstName || '',
+            data.fields.LastName || ''
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        {index: 0, label: "Company", class: "colCompany", width: "50", active: true, display: true},
+        {index: 1, label: "#Job", class: "colJob", width: "80", active: false, display: true},
+        {index: 2, label: "Phone", class: "colPhone", width: "80", active: true, display: true},
+        {index: 3, label: "#AR Balance", class: "colARBalance", width: "100", active: false, display: true},
+        {index: 4, label: "#Credit Balance", class: "colCreditBalance", width: "120", active: false, display: true},
+        {index: 5, label: "Balance", class: "colBalance", width: "80", active: true, display: true},
+        {index: 6, label: "#Credit Limit", class: "colCreditLimit", width: "120", active: false, display: true},
+        {index: 7, label: "Order Balance", class: "colSalesOrderBalance", width: "100", active: true, display: true},
+        {index: 8, label: "Country", class: "colCountry", width: "80", active: true, display: true},
+        {index: 9, label: "#State", class: "colState", width: "80", active: false, display: true},
+        {index: 10, label: "#City", class: "colCity", width: "80", active: false, display: true},
+        {index: 11, label: "#Street Address", class: "colStreetAddress", width: "80", active: false, display: true},
+        {index: 12, label: "#Zip Code", class: "colZipCode", width: "60", active: false, display: true},
+        {index: 13, label: "#Email", class: "colEmail", width: "60", active: false, display: true},
+        {index: 14, label: "#Account No", class: "colAccountNo", width: "80", active: false, display: true},
+        {index: 15, label: "#Custom Field 1", class: "colClientNo", width: "80", active: false, display: true},
+        {index: 16, label: "#Custom Field 2", class: "colJobTitle", width: "80", active: false, display: true},
+        {index: 17, label: "Notes", class: "colNotes", width: "60", active: true, display: true},
+        {index: 18, label: "#ID", class: "colID", width: "60", active: false, display: true},
+        {index: 19, label: "#Supplier Type", class: "colSupplierType", width: "80", active: false, display: true},
+        {index: 20, label: "#Discount", class: "colSupplierDiscount", width: "90", active: false, display: true},
+        {index: 21, label: "#Term Name", class: "colSupplierTermName", width: "80", active: false, display: true},
+        {index: 22, label: "#First Name", class: "colSupplierFirstName", width: "80", active: false, display: true},
+        {index: 22, label: "#Last Name", class: "colSupplierLastName", width: "80", active: false, display: true},
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.supplierlistpop.onRendered(function () {
@@ -43,9 +107,9 @@ Template.supplierlistpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    templateObject.resetData = function (dataVal) {
-        location.reload();
-    }
+    // templateObject.resetData = function (dataVal) {
+    //     location.reload();
+    // }
 
     templateObject.getSuppliers = function () {
         getVS1Data('TSupplierVS1').then(function (dataObject) {
@@ -1324,7 +1388,7 @@ Template.supplierlistpop.onRendered(function () {
 
     }
 
-    templateObject.getSuppliers();
+//    templateObject.getSuppliers();
 
 
 
@@ -1559,54 +1623,54 @@ Template.supplierlistpop.events({
          $(".btnRefreshSupplier").trigger("click");
       }
     },
-    'click .chkDatatable': function (event) {
-        var columns = $('#tblSupplierlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function (i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblSupplierlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function (err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
+    // 'click .chkDatatable': function (event) {
+    //     var columns = $('#tblSupplierlist th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function (i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .resetTable': function (event) {
+    //     var getcurrentCloudDetails = CloudUser.findOne({
+    //         _id: localStorage.getItem('mycloudLogonID'),
+    //         clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
+    //     });
+    //     if (getcurrentCloudDetails) {
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({
+    //                 userid: clientID,
+    //                 PrefName: 'tblSupplierlist'
+    //             });
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.remove({
+    //                     _id: checkPrefDetails._id
+    //                 }, function (err, idTag) {
+    //                     if (err) {
+    //
+    //                     } else {
+    //                         Meteor._reload.reload();
+    //                     }
+    //                 });
+    //
+    //             }
+    //         }
+    //     }
+    // },
     'click .saveTable': function (event) {
         let lineItems = [];
         $('.columnSettings').each(function (index) {
@@ -1841,7 +1905,7 @@ Template.supplierlistpop.events({
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
                         header: 1
                     });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -1973,5 +2037,40 @@ Template.supplierlistpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllSuppliersDataVS1;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllSuppliersDataVS1;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom'];
+    },
 });
