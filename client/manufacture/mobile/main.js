@@ -45,9 +45,9 @@ Template.mobileapp.events({
           
             $(".mobile-left-btn-containner").css('display', 'none');
            
-            if ($.fn.DataTable.isDataTable( '#tblWorkOrderList' ) ) {
-                $("#tblWorkOrderList").DataTable().destroy();
-            }
+            // if ($.fn.DataTable.isDataTable( '#tblWorkOrderList' ) ) {
+            //     $("#tblWorkOrderList").DataTable().fnDestroy();
+            // }
 
             getVS1Data('TSalesOrderList').then(function (dataObject) {
                 $(".mobile-left-workorder-list").css('display', 'block');
@@ -58,6 +58,7 @@ Template.mobileapp.events({
                     data: workOrderData.tsalesorderlist,
                     paging: false,
                     searching: true,
+                    destroy:true,
                     dom: 't',
                     scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
                     scrollCollapse: true,
@@ -75,8 +76,7 @@ Template.mobileapp.events({
                     $(".mobile-main-input").val(data.SaleID);
                     
                 });
-                $("#startBreakContainer").css('display', 'none');
-                
+                $("#startBreakContainer").css('display', 'none');                
                 $("#btnOpentList").prop('disabled', true);
                 
             });
@@ -87,9 +87,10 @@ Template.mobileapp.events({
             $(".mobile-left-employee-list").css('display', 'none');
             $(".mobile-left-workorder-list").css('display', 'none');
 
-            if ($.fn.DataTable.isDataTable( '#tblJobProcessList' ) ) {
-                $("#tblJobProcessList").DataTable().destroy();
-            }
+            // if ($.fn.DataTable.isDataTable( '#tblJobProcessList' ) ) {
+            //     $("#tblJobProcessList").DataTable().destroy();
+            // }
+
             getVS1Data('TProcessStep').then(function (dataObject) {
                 $(".mobile-left-jobprocess-list").css('display', 'block');
                 let processData = JSON.parse(dataObject[0].data);
@@ -97,6 +98,7 @@ Template.mobileapp.events({
                     data: processData.tprocessstep,
                     paging: false,
                     searching: true,
+                    destroy:true,
                     dom: 't',
                     scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
                     scrollCollapse: true,
@@ -126,9 +128,9 @@ Template.mobileapp.events({
         }
         if(isSelectEmployeeNumber) {
             
-            if ($.fn.DataTable.isDataTable( '#tblEmployeeList' ) ) {
-                $("#tblEmployeeList").DataTable().destroy();
-            }
+            // if ($.fn.DataTable.isDataTable( '#tblEmployeeList' ) ) {
+            //     $("#tblEmployeeList").DataTable().destroy();
+            // }
             $(".mobile-left-workorder-list").css('display', 'none');
             $(".mobile-left-jobprocess-list").css('display', 'none');
 
@@ -140,6 +142,7 @@ Template.mobileapp.events({
                     data: empdata.temployee,
                     paging: false,
                     searching: true,
+                    destroy:true,
                     dom: 't',
                     scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
                     scrollCollapse: true,
@@ -461,11 +464,9 @@ Template.mobileapp.events({
             Template.instance().isEnterJobNumber.set(false);
             Template.instance().isSelectEmployeeNumber.set(false);
             Template.instance().isSelectEmployeeName.set(false);
-
-
+            $(".mobile-main-input").val("Clock Starting");
         }      
-      
-        
+             
     },
     'click #btnSaveClose': function(e, instance) {
         $('.mobile-stop-job-container').css('display', 'none');
@@ -486,7 +487,7 @@ Template.mobileapp.events({
         
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
-        $("#btnClockIn").removeAttr('disabled');
+        $("#btnClockIn").prop('disabled',true);
         $('#btnStartJob').prop('disabled', true);
         $('#btnStartBreak').prop('disabled', true);
         $("#btnClockIn").css('background', '#00AE00');
@@ -501,8 +502,10 @@ Template.mobileapp.events({
         $(".mobile-main-input").val(" ");
 
     },
-    'click #breakCheck': function(e, instance) {
+    'change #breakCheck': function(e, instance) {
+        
         if($('#breakCheck').is(":checked") == true){
+            
             $(".mobile-main-input").val("Job paused ");
          }else{
             $(".mobile-main-input").val("Job Started ");
