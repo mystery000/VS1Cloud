@@ -178,7 +178,6 @@ import './accounts/inventoryassetaccountpop.js';
 
 import './vs1_templates/init_form_page_script/init_form_page_script.html';
 import './vs1_templates/draggable_panel/draggable_panel.html';
-import './vs1_templates/title_list_pop/title_list_pop.html';
 import './vs1_templates/transaction_temp/all_transaction_modals.html';
 import './vs1_templates/kpi_card/kpi_card.html';
 import './vs1_templates/kpi_card/kpi_card_title.html';
@@ -557,7 +556,7 @@ import '../public/js/cdnjs/pdfmake.min.js';
 import '../public/js/cdnjs/split.min.js';
 import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
-
+import './vs1_templates/title_list_pop/title_list_pop.js';
 /* Stefan */
 
 /* Arthlo */

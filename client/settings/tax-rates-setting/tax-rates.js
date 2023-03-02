@@ -64,18 +64,21 @@ Template.taxRatesSettings.onCreated(function() {
             description,
             rate,
             purchasesDefault,
-            salesDefault
+            salesDefault,
+            data.active ? "" : "In-Active",
         ]
         return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: '#Id', class: 'colTaxRateId', active: false, display: true },
-        { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '80' },
-        { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, },
-        { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '100' },
-        { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '200' },
-        { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '200' }
+        { index: 0, label: '#Id', class: 'colTaxRateId', active: false, display: true, width: "50"},
+        { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '100' },
+        { index: 2, label: 'Description', class: 'colTaxRateDesc', active: true, display: true, width:'600'},
+        { index: 3, label: 'Rate', class: 'colTaxRate', active: true, display: true, width: '150' },
+        { index: 4, label: 'Purchase Default', class: 'colTaxRatePurchaseDefault', active: true, display: true, width: '100' },
+        { index: 5, label: 'Sales Default', class: 'colTaxRateSalesDefault', active: true, display: true, width: '100' },
+        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: '60' }
+
     ]
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -1127,7 +1130,7 @@ Template.taxRatesSettings.helpers({
     },
 
     apiParams: function() {
-        return ['regionName', 'activeFlag'];
+        return ['regionName', 'deleteFilter'];
     },
 });
 

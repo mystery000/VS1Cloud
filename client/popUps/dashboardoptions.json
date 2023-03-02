@@ -34,5 +34,11 @@
     "name": "Sales Manager",
     "isdefaultlogin": false,
     "isshowdefault": false
+},
+{
+    "Id": 7,
+    "name": "Manufacturing",
+    "isdefaultlogin": false,
+    "isshowdefault": false
 }
 ]

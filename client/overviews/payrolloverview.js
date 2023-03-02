@@ -187,7 +187,7 @@ Template.payrolloverview.onRendered(function () {
 
   templateObject.loadPayRunHistory = async () => {
     let payRunsHistory = PayRun.fromList(await templateObject.payRuns.get());
- 
+
     payRunsHistory = payRunsHistory.filter(p => p.stpFilling != PayRun.STPFilling.overdue);
 
     templateObject.payRunHistoryRecords.set(payRunsHistory);
@@ -841,7 +841,7 @@ Template.payrolloverview.onRendered(function () {
         // deduction: deduction || "0.00",
         // gross: gross || "0.00",
         netpay: netpay || "0.00"
-       
+
         // paid: data.tpayhistory[i].fields.Paid || "",
         // notes: data.tpayhistory[i].fields.Paynotes || "",
         // payid: data.tpayhistory[i].fields.PayID || "",
@@ -851,7 +851,6 @@ Template.payrolloverview.onRendered(function () {
     }
 
      templateObject.datatablerecords.set(dataTableList);
-    //  console.log(templateObject.datatablerecords.get())   
 
     // if (templateObject.datatablerecords.get()) {
     //   Meteor.call(
@@ -4159,7 +4158,7 @@ Template.payrolloverview.onRendered(function () {
   templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
     await templateObject.loadPayRuns();
-    
+
     // Timesheet
     await templateObject.loadTimeSheet(refresh);
 

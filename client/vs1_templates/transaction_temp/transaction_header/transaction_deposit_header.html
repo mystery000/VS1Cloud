@@ -96,12 +96,28 @@
   </style>
 
   <div class="row" style="padding: 0px 32px; padding-bottom: 0; background-color: #ededed;">
-    <div class="col-6 col-lg-2 col-md-3">
+    <!-- <div class="col-6 col-lg-2 col-md-3">
       {{> default_select
         label="Account"
         id="sltAccountName"
         type="search"
         name="sltAccountName"
+      }}
+    </div> -->
+    <div class="col-6 col-lg-2 col-md-3">
+      {{> vs1___dropdown
+        type='search'
+        id='sltAccountName'
+        name='sltAccountName'
+        modalId= 'accountListModal'
+        list_template_name='accountlistpop'
+        innerModal=true
+        modal_title='Account List'
+        label = 'Account'
+        colNameForValue = 'colAccountName'
+        target_modal_id= 'addAccountModal'
+        target_template_id='addaccountpop'
+        is_editable=true
       }}
     </div>
     <div class="col-6 col-lg-2 col-md-2">

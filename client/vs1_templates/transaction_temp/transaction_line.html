@@ -395,9 +395,19 @@
                             class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"
                                 itemid="{{item.itemID}}"></td>
+                        {{#if item.serialnumbers}}
+                        <td contenteditable="true"
+                            class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" data-pqa="(Serial Number: {{item.serialnumbers}})">
+                            {{item.description}}</td>
+                        {{else if item.lotnumbers}}
+                        <td contenteditable="true"
+                            class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" data-pqa="(LOT Number: {{item.lotnumbers}})">
+                            {{item.description}}</td>
+                        {{else}}
                         <td contenteditable="true"
                             class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.description}}</td>
+                        {{/if}}
                         <td contenteditable="false"
                             class="colAccountName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
                                 class="es-input highlightSelect lineAccountName" type="search"

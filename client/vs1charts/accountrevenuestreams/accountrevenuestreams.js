@@ -6,6 +6,7 @@ import { CoreService } from "../../js/core-service";
 
 import { Template } from 'meteor/templating';
 import './accountrevenuestreams.html';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let _ = require("lodash");
 let vs1chartService = new VS1ChartService();
@@ -25,7 +26,7 @@ Template.accountrevenuestreams.onCreated(() => {
 
 Template.accountrevenuestreams.onRendered(() => {
   const templateObject = Template.instance();
-
+  
   let topTenData1 = [];
   let topTenSuppData1 = [];
   let topData = this;
@@ -430,6 +431,12 @@ Template.accountrevenuestreams.onRendered(() => {
       $("#profitloss2").attr(
         "href",
         "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+      );
+      let report_date_from = moment(data[0].fields.DateFrom_1).format("YYYY-MM-DD");
+      let report_date_to = moment(data[0].fields.DateTo_7).format("YYYY-MM-DD");
+      $("#earnings").attr(
+        "href",
+        "/newprofitandloss?dateFrom=" + report_date_from + "&dateTo=" + report_date_to
       );
       let month_1 = data[0].fields.DateDesc_1 || "";
       let month_2 = data[0].fields.DateDesc_2 || "";
