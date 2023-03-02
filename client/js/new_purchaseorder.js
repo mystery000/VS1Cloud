@@ -1046,7 +1046,7 @@ Template.purchaseordercard.onRendered(() => {
             if(tdpqa){
                 tddescription += " " + tdpqa;
             }
-            
+
             let tdQty = $('#' + lineID + " .lineQty").val();
             let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
             let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
@@ -4355,7 +4355,7 @@ Template.purchaseordercard.onRendered(() => {
         }
     });
 
-
+    $(document).ready(function() {
     $('#shipvia').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
@@ -4730,6 +4730,8 @@ Template.purchaseordercard.onRendered(() => {
                 }
             }
         });
+
+    });
     // $('#edtSupplierName').editableSelect().on('click.editable-select', function(e, li) {
     //     var $earch = $(this);
     //     var offset = $earch.offset();

@@ -126,7 +126,6 @@ Template.agedpayablessummary.onRendered(() => {
     false
   );
   templateObject.displayAgedPayablesData = async function (data) {
-    console.log(data);
     var splashArrayAgedPayablesReport = new Array();
     let deleteFilter = false;
     if (data.Params.Search.replace(/\s/g, "") == "") {

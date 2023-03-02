@@ -111,9 +111,6 @@ Template.binlocationslist.onRendered(function () {
           department: data.tdeptclass[i].DeptClassName || ' ',
         };
 
-        // alert(1);
-        // console.log(deptrecordObj);
-
         deptrecords.push(deptrecordObj);
         templateObject.deptrecords.set(deptrecords);
       }
@@ -121,7 +118,6 @@ Template.binlocationslist.onRendered(function () {
   }
 
   templateObject.getDepartments();
-  console.log(templateObject.deptrecords.get());
 
   templateObject.getProductClassDeptData = function (deptname) {
     productService.getProductClassDataByDeptName(deptname).then(function (data) {
@@ -666,7 +662,7 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
   },
-  
+
   // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
@@ -696,7 +692,7 @@ Template.binlocationslist.events({
             splashArrayProductList.push(dataList);
           }
 
-          
+
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
@@ -1168,7 +1164,7 @@ Template.binlocationslist.events({
       }).catch(function (err) {
         window.open('/binlocationslist','_self');
       });
-       
+
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });
@@ -1211,7 +1207,7 @@ Template.binlocationslist.events({
       }).catch(function (err) {
         window.open('/binlocationslist','_self');
       });
-       
+
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });

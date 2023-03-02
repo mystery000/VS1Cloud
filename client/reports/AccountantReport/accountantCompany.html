@@ -2056,15 +2056,12 @@
                 if (e.target.offsetParent != contextMenu) {
                     contextMenu.classList.remove("visible");
                 } else {
-                    console.log('action: ' + $(e.target).attr('data-action'))
                     if ($(e.target).attr('data-action') == 'copy') {
                         copiedSignature = pageNum;
-                        console.log('copySIgnature page=' + pageNum);
                     } else if ($(e.target).attr('data-action') == 'paste') {
                         if (copiedSignature != null
                             && $("#page-" + pageNum + " .signdiv").css('display') == 'none') {
                             copiedSignature = null;
-                            console.log('pasteSignature page=' + pageNum);
                             let signatureBox = $("#page-" + pageNum + " .signdiv")[0];
                             let signatures = $('.' + signatureBox.id);
                             signatures.css('display', 'block');
@@ -2072,7 +2069,6 @@
                             signatures.css('left', '20px');
                         }
                     } else if ($(e.target).attr('data-action') == 'delete') {
-                        console.log('deleteSignature page=' + pageNum);
                         let signatureBox = $("#page-" + pageNum + " .signdiv")[0];
                         let signatures = $('.' + signatureBox.id);
                         signatures.css('display', 'none');
