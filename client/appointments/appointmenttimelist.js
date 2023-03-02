@@ -12,7 +12,6 @@ import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './appointmenttimelist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import moment from "moment";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.appointmenttimelist.onCreated(function() {
@@ -23,78 +22,6 @@ Template.appointmenttimelist.onCreated(function() {
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.selectedAppointment = new ReactiveVar([]);
     templateObject.appointmentInfo = new ReactiveVar([]);
-
-    // templateObject.getDataTableList = function(data) {
-    //     let dataList = [];
-    //     if (useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
-    //         useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime = moment(useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime).format('h:mm a')
-    //     }
-    //
-    //     if (useData[i].fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
-    //         useData[i].fields.AppointmentsTimeLog[a].fields.EndDatetime = moment(useData[i].fields.AppointmentsTimeLog[a].fields.EndDatetime).format('h:mm a')
-    //     }
-    //
-    //
-    //     let time = new Date();
-    //     let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime.split(' ')[0]);
-    //     let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + useData[i].fields.AppointmentsTimeLog[a].fields.EndDatetime.split(' ')[0]);
-    //     if (useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime != "" && useData[i].fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
-    //         Hours = templateObject.diff_hours1(dt2, dt1);
-    //     } else {
-    //         Hours = 0;
-    //     }
-    //     dataList = {
-    //         id: useData[i].fields.AppointmentsTimeLog[a].fields.AppointID || '',
-    //         appointmentdate,
-    //         accountname: useData[i].fields.ClientName || '',
-    //         statementno: useData[i].fields.TrainerName || '',
-    //         employeename: useData[i].fields.TrainerName || '',
-    //         department: useData[i].fields.DeptClassName || '',
-    //         phone: useData[i].fields.Phone || '',
-    //         mobile: useData[i].fields.ClientMobile || '',
-    //         suburb: useData[i].fields.Suburb || '',
-    //         street: useData[i].fields.Street || '',
-    //         state: useData[i].fields.State || '',
-    //         country: useData[i].fields.Country || '',
-    //         zip: useData[i].fields.Postcode || '',
-    //         timelog: new Array(useData[i].fields.AppointmentsTimeLog) || '',
-    //         startTime: useData[i].fields.StartTime.split(' ')[1] || '',
-    //         timeStart: useData[i].fields.AppointmentsTimeLog[a].fields.StartDatetime || '',
-    //         timeEnd: useData[i].fields.AppointmentsTimeLog[a].fields.EndDatetime || '',
-    //         totalHours: useData[i].fields.TotalHours || 0,
-    //         hours: Hours,
-    //         endTime: useData[i].fields.EndTime.split(' ')[1] || '',
-    //         startDate: useData[i].fields.StartTime || '',
-    //         endDate: useData[i].fields.EndTime || '',
-    //         frmDate: moment(useData[i].fields.StartTime).format('dddd') + ', ' + moment(useData[i].fields.StartTime).format('DD'),
-    //         toDate: moment(useData[i].fields.endTime).format('dddd') + ', ' + moment(useData[i].fields.endTime).format('DD'),
-    //         fromDate: useData[i].fields.Actual_EndTime != '' ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : useData[i].fields.Actual_EndTime,
-    //         openbalance: useData[i].fields.Actual_EndTime || '',
-    //         aStartTime: useData[i].fields.Actual_StartTime.split(' ')[1] || '',
-    //         aEndTime: useData[i].fields.Actual_EndTime.split(' ')[1] || '',
-    //         actualHours: '',
-    //         closebalance: '',
-    //         logid: useData[i].fields.AppointmentsTimeLog[a].fields.ID,
-    //         product: useData[i].fields.ProductDesc || '',
-    //         finished: useData[i].fields.Status || '',
-    //         employee: useData[i].fields.EndTime != '' ? moment(useData[i].fields.EndTime).format("DD/MM/YYYY") : useData[i].fields.EndTime,
-    //         notes: useData[i].fields.AppointmentsTimeLog[a].fields.Description || ''
-    //     };
-    //     return dataList;
-    // }
-    //
-    // let headerStructure = [
-    //     {index: 0, label: "ID", class: "colSortDate", width: "30", active: true, display: false},
-    //     {index: 1, label: "Date", class: "colDate", width: "100", active: true, display: true},
-    //     {index: 2, label: "Company", class: "colAccountName", width: "150", active: true, display: true},
-    //     {index: 3, label: "Rep", class: "colStatementNo", width: "90", active: true, display: true},
-    //     {index: 4, label: "From Time", class: "colOpenBalance", width: "80", active: true, display: true},
-    //     {index: 5, label: "To Time", class: "colEmployee", width: "80", active: true, display: true},
-    //     {index: 6, label: "Hours", class: "colHours", width: "80", active: true, display: true},
-    //     {index: 7, label: "Break", class: "colNotes", width: "100", active: true, display: true},
-    //     {index: 8, label: "#TimeLog ID", class: "colTimeLog", width: "100", active: false, display: true},
-    // ];
-    // templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.appointmenttimelist.onRendered(function() {
@@ -1368,7 +1295,7 @@ Template.appointmenttimelist.events({
         });
     },
     'click .resetTable': function(event) {
-      Meteor._reload.reload();
+        Meteor._reload.reload();
     },
     'submit #frmAppointment': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -1880,41 +1807,6 @@ Template.appointmenttimelist.helpers({
     },
     purchasesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblappointmenttimelist' });
-    },
+    }
 
-
-    apiFunction:function() {
-        let sideBarService = new SideBarService();
-        return sideBarService.getAllAppointmentList;
-    },
-
-    searchAPI: function() {
-        return sideBarService.getAllAppointmentList;
-    },
-
-    service: ()=>{
-        let sideBarService = new SideBarService();
-        return sideBarService;
-
-    },
-
-    datahandler: function () {
-        let templateObject = Template.instance();
-        return function(data) {
-            let dataReturn =  templateObject.getDataTableList(data)
-            return dataReturn
-        }
-    },
-
-    exDataHandler: function() {
-        let templateObject = Template.instance();
-        return function(data) {
-            let dataReturn =  templateObject.getDataTableList(data)
-            return dataReturn
-        }
-    },
-
-    apiParams: function() {
-        return ['limitCount', 'limitFrom'];
-    },
 });

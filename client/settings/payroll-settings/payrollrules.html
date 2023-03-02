@@ -73,8 +73,7 @@
                                                     <div class="form-group mb-0">
                                                         <label for="edtAllowanceType">Bank Account</label>
                                                         <input type="hidden" class="form-control" style="cursor: pointer;" id="payorgnization_id" value="0">
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editbankaccount" name="editbankaccount">
-
+                                                        {{> vs1_dropdown id='editbankaccount' name='editbankaccount' value='' type='search' classes=''}}
                                                    </div>
 
                                                 </div>
@@ -82,14 +81,13 @@
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group">
                                                         <label for="editpaygbankaccount">PAYG Liability Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editpaygbankaccount" name="editpaygbankaccount">
-
+                                                        {{> vs1_dropdown id='editpaygbankaccount' name='editpaygbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group">
                                                         <label for="editwagesexpbankaccount">Wages Expense Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editwagesexpbankaccount" name="editwagesexpbankaccount">
+                                                        {{> vs1_dropdown id='editwagesexpbankaccount' name='editwagesexpbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
 
@@ -97,19 +95,19 @@
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group">
                                                         <label for="editwagespaybankaccount">Wages Payable Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editwagespaybankaccount" name="editwagespaybankaccount">
+                                                        {{> vs1_dropdown id='editwagespaybankaccount' name='editwagespaybankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group">
                                                         <label for="editsuperliabbankaccount">Superannuation Liability Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editsuperliabbankaccount" name="editsuperliabbankaccount">
+                                                        {{> vs1_dropdown id='editsuperliabbankaccount' name='editsuperliabbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-4">
                                                     <div class="form-group">
                                                         <label for="editsuperexpbankaccount">Superannuation Expense Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editsuperexpbankaccount" name="editsuperexpbankaccount">
+                                                        {{> vs1_dropdown id='editsuperexpbankaccount' name='editsuperexpbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,7 +135,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mb-2">
-                                                    <button class="btn btn-primary float-rights" type="button" id="changeLogo" data-toggle="modal" data-target="#myModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Logo</button>
+                                                    <button class="btn btn-primary float-right" type="button" id="changeLogo" data-toggle="modal" data-target="#myModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Logo</button>
                                                 </div>
                                             </div>
                                             <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
@@ -214,16 +212,14 @@
                                             <div class="row">
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edtRateName">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                        <input type="search" style="cursor: pointer;" class="form-control" id="employegroup" name="employegroup" >
-
+                                                        <label for="employegroup">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
+                                                        {{> vs1_dropdown id='employegroup' name='employegroup' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group">
-                                                        <label for="edtRateName">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                        <input type="search" style="cursor: pointer;" class="form-control" id="timesheetcat" name="timesheetcat">
-
+                                                        <label for="timesheetcat">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
+                                                        {{> vs1_dropdown id='timesheetcat' name='timesheetcat' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,16 +232,10 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-12 mb-3">
-                                                    <div class="custom-control custom-switch">
-                                                        <input class="custom-control-input" type="checkbox" value="swtShowAnnualSalary" id="swtShowAnnualSalary" name="swtShowAnnualSalary" style="cursor: pointer;">
-                                                        <label class="custom-control-label" for="swtShowAnnualSalary" style="cursor: pointer;">Show Annual Salary</label>
-                                                    </div>
+                                                    {{> toggle_button className="" id="swtShowAnnualSalary" isChecked="true" width="100%" for="swtShowAnnualSalary" displayName="Show Annual Salary"}}
                                                 </div>
                                                 <div class="col-12">
-                                                    <div class="custom-control custom-switch">
-                                                        <input class="custom-control-input" type="checkbox" value="swtShowEmploymentBasis" id="swtShowEmploymentBasis" name="swtShowEmploymentBasis" style="cursor: pointer;">
-                                                        <label class="custom-control-label" for="swtShowEmploymentBasis" style="cursor: pointer;">Show Employment Basis</label>
-                                                    </div>
+                                                    {{> toggle_button className="" id="swtShowEmploymentBasis" isChecked="true" width="100%" for="swtShowEmploymentBasis" displayName="Show Employment Basis"}}
                                                 </div>
                                             </div>
                                         </div>
@@ -312,7 +302,15 @@
                                             <h4>Pay Calendars</h4>
                                         </div>
                                         <div class="col-12 col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button>
+                                            {{> vs1_button
+                                                color='primary'
+                                                classes='float-right btnAddNewPayCalender'
+                                                type='button'
+                                                id="btnAddNewPayCalender"
+                                                iconName='plus'
+                                                title='New Pay Calendar'
+                                            }}
+                                            <!-- <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button> -->
 
                                             <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2226,8 +2224,22 @@
                         </div>
                         <div class="row no-gutters">
                             <div class="col">
-                                <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                <button class="btn btn-success float-right btnSaveDefaultTax" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                {{> vs1_button
+                                    color='secondary'
+                                    classes='float-right btnBack m-2'
+                                    type='button'
+                                    id="btnBack"
+                                    iconName='close'
+                                    title='Cancel'
+                                }}
+                                {{> vs1_button
+                                    color='success'
+                                    classes='float-right btnSaveDefaultTax m-2'
+                                    type='button'
+                                    id="btnSaveDefaultTax"
+                                    iconName='save'
+                                    title='Save'
+                                }}
                             </div>
                         </div>
                     </div>

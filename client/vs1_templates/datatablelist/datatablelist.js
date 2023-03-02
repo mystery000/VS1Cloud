@@ -460,7 +460,7 @@ Template.datatablelist.onRendered(async function () {
                 destroy: true,
                 colReorder: true,
                 pageLength: initialDatatableLoad,
-                "bLengthChange": false,
+                // "bLengthChange": false,
                 lengthMenu: [
                     [initialDatatableLoad, -1],
                     [initialDatatableLoad, "All"]

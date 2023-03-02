@@ -47,7 +47,7 @@ export default class CronSetting {
     if (this.type == "Monthly") {
       
       if (this.months.length > 0) {
-        let lastMonth = this.months.pop();
+        let lastMonth = this.months[this.months.length - 1];
         // We on a monthly one
         text += "every " + this.dayNumberOfMonth + " day of the month";
         text += " of " + this.months.join(",") + " and " + lastMonth;
