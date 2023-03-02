@@ -66,7 +66,12 @@ Template.datatablelist.onRendered(async function () {
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     };
-
+    let isShowSelect = false;
+    if(templateObject.data.istransaction == true){
+      isShowSelect = false;
+    }else{
+      isShowSelect = true;
+    };
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
@@ -460,7 +465,7 @@ Template.datatablelist.onRendered(async function () {
                 destroy: true,
                 colReorder: true,
                 pageLength: initialDatatableLoad,
-                // "bLengthChange": false,
+                "bLengthChange": isShowSelect,
                 lengthMenu: [
                     [initialDatatableLoad, -1],
                     [initialDatatableLoad, "All"]
