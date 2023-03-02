@@ -53,6 +53,7 @@
       padding: 10px;
       border: 2px solid grey;
       border-radius: 5px;
+      height: 100%;
     }
     
     #fixedAssetCardContainer .input-tab > div {
@@ -158,10 +159,16 @@
                 <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-add-info">Add Info</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-deprec">Depreciation</a>
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-deprec1">Depreciation #1</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-insurance-info">Insurance Info</a>
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-deprec2">Depreciation #2</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-disposal">Disposal</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" role="tab" data-toggle="tab" data-target="#tab-notes">Notes</a>
               </li>
             </ul>
 
@@ -219,7 +226,7 @@
                 }
               </style>
               <div class="tab-pane active border rounded-0 tab-asset-info" role="tabpanel" id="tab-asset-info">
-                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <div class="row input-tab"> 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
@@ -394,8 +401,9 @@
                   </div>
                 </div>
               </div>
-              <div class="tab-pane active border rounded-0 tab-add-info" role="tabpanel" id="tab-add-info">
-                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+
+              <div class="tab-pane border rounded-0 tab-add-info" role="tabpanel" id="tab-add-info">
+                <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <div class="row" style="margin: 0px;">
                     <div class="col-12 col-md-6" style="padding: 0">
                       <div class="input-tab">
@@ -564,11 +572,51 @@
                   </div>
                 </div>
               </div>
-              <div class="tab-pane border rounded-0 tab-deprec" role="tabpanel" id="tab-deprec">
-                <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+
+              <div class="tab-pane border rounded-0 tab-deprec1" role="tabpanel" id="tab-deprec1">
+                <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <input type="hidden" id="edtAccountType" />
-                  <div class="row" style="margin: 4px 12px;">
-                    <div class="col-3" style="padding: 0;">
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="row input-tab">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Fixed Assets Cost Asset Account</label>
+                            <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Fixed Assets Bank Account</label>
+                            <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="row input-tab">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Depreciation Asset Account</label>
+                            <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Depreciation Expense Account</label>
+                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row input-tab">
+                    <div class="col-12 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Depreciation Type</label>
                         <select type="search" class="form-control" id="edtDepreciationType" name="edtDepreciationType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
@@ -578,49 +626,22 @@
                         </select>
                       </div>
                     </div>
-                    <div class="col-9" style="padding: 0;">
+                    
+                    <div class="col-12 col-md-4 col-lg-2 col-xl-2">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>&nbsp;</label>
+                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="row" style="margin: 4px 12px;">
-                    <div class="col-3" style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label> Cost Asset Account</label>
-                        <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-3" style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label> Bank Account</label>
-                        <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-3" style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label> Depreciation Asset Account</label>
-                        <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-3" style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label> Depreciation Expense Account</label>
-                        <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row" style="margin: 4px 12px;">
-                    <div class="col-3" style="padding: 0;">
+                    <div class="col-8 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
                         <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue" value="0" min="0">
                       </div>
                     </div>
-                    <div class="col-3" style="padding: 0;">
+
+                    <div class="col-4 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;"> 
                         <label>&nbsp;</label>
                         <select type="search" class="form-control" id="edtSalvageValueType" name="edtSalvageValueType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
@@ -629,13 +650,14 @@
                         </select>
                       </div>
                     </div>
-                    <div class="col-3" style="padding: 0;">
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Life (Years)</label>
                         <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" value="1" min="0">
                       </div>
                     </div>
-                    <div class="col-3" style="padding: 0;">
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Business Use (%)</label>
                         <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
@@ -643,32 +665,35 @@
                     </div>
                   </div>
 
-                  <div class="row" style="margin: 4px 12px;">
-                    <div class="col-3" style="padding: 0;">
-                      <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
-                        <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
-                        <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label> 
-                      </div>
-                    </div>
-                    <div class="col-9" style="padding: 0;">
-                    </div>
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="row input-tab">
+                        <div class="col-12">
+                          <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
+                            <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
+                            <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label> 
+                          </div>
+                        </div>
 
-                    <div class="col-3" style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label>Accumulated Depreciation</label>
-                          <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
-                          disabled="{{#if chkEnterAmount}}true{{/if}}">
-                      </div>
-                    </div>
-                    <div class="col-3" style="padding: 0;">
-                      <div class="form-group" style="margin: 4px;">
-                        <label>For Year Ending</label>
-                        <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding" disabled="{{#if chkEnterAmount}}true{{/if}}">
+                        <div class="col-12 col-md-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Accumulated Depreciation</label>
+                              <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
+                              disabled="{{#if chkEnterAmount}}true{{/if}}">
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>For Year Ending</label>
+                            <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding" disabled="{{#if chkEnterAmount}}true{{/if}}">
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="row" style="margin: 4px 12px;">
+                  <div class="row input-tab">
                     <div class="col-12">
                       <div class="table-responsive">
                         <table id="tblFixedAssetDepraciation" name="tblFixedAssetDepraciation"
@@ -701,6 +726,280 @@
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div class="tab-pane border rounded-0 tab-deprec2" role="tabpanel" id="tab-deprec2">
+                <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                  <input type="hidden" id="edtAccountType" />
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="row input-tab">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Fixed Assets Cost Asset Account</label>
+                            <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Fixed Assets Bank Account</label>
+                            <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="row input-tab">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Depreciation Asset Account</label>
+                            <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Depreciation Expense Account</label>
+                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row input-tab">
+                    <div class="col-12 col-md-8 col-lg-4 col-xl-2">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Depreciation Type</label>
+                        <select type="search" class="form-control" id="edtDepreciationType" name="edtDepreciationType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          <option value="0">No Depreciation</option>
+                          <option value="1">Straight Line Depreciation</option>
+                          <option value="2">Decling Balance</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div class="col-12 col-md-4 col-lg-2 col-xl-2">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>&nbsp;</label>
+                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                      </div>
+                    </div>
+
+                    <div class="col-8 col-md-8 col-lg-4 col-xl-2">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Salvage Value</label>
+                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue" value="0" min="0">
+                      </div>
+                    </div>
+
+                    <div class="col-4 col-md-4 col-lg-2 col-xl-2">
+                      <div class="form-group" style="margin: 4px;"> 
+                        <label>&nbsp;</label>
+                        <select type="search" class="form-control" id="edtSalvageValueType" name="edtSalvageValueType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
+                          <option value="1">Amount</option>
+                          <option value="2">Percent</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-2">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Asset Life (Years)</label>
+                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" value="1" min="0">
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-2">
+                      <div class="form-group" style="margin: 4px;">
+                        <label>Business Use (%)</label>
+                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="row input-tab">
+                        <div class="col-12">
+                          <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
+                            <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
+                            <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label> 
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>Accumulated Depreciation</label>
+                              <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
+                              disabled="{{#if chkEnterAmount}}true{{/if}}">
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                          <div class="form-group" style="margin: 4px;">
+                            <label>For Year Ending</label>
+                            <input type="text" class="form-control" id="edtForYearEnding" name="edtForYearEnding" disabled="{{#if chkEnterAmount}}true{{/if}}">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row input-tab">
+                    <div class="col-12">
+                      <div class="table-responsive">
+                        <table id="tblFixedAssetDepraciation" name="tblFixedAssetDepraciation"
+                          class="dataTable table table-hover table-striped table-bordered tblFixedAssetDepraciation">
+                          <thead>
+                            <tr class="dasnd-moved">
+                              <th class="th">Year</th>
+                              <th class="th">Depreciation</th>
+                              <th class="th">Acc Depreciation</th>
+                              <th class="th">Book Value</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {{#each history in deprecitationPlans}}
+                              <tr>
+                                <td>{{history.year}}</td>
+                                <td> - ${{history.depreciation}}</td>
+                                <td> - ${{history.accDepreciation}}</td>
+                                <td>${{history.bookValue}}</td>
+                              </tr>
+                            {{/each}}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    
+                    <div class="col-12">
+                      <button class="btn btn-success btnCalculate" type="button" style="margin: 14px 0; width: 100px; float: right;">
+                        Calculate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane border rounded-0 tab-disposal" role="tabpanel" id="tab-disposal">
+                <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                  <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
+                    <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
+                    <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Disposal of Asset</label> 
+                  </div>
+
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="input-tab">
+                        <label style="color: #00A3D3; font-size: 18px; margin-top: 15px;">Depreciation #1</label>
+                        <div class="d-flex align-items-center input-item justify-content-center">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Disposal Date</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Sales Price</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="input-tab">
+                        <div style="margin:10px">
+                          {{> vs1_button
+                            color='success'
+                            classes='btnSave btnFooter btn-depreciation1-calculate'
+                            type='button'
+                            id="btnCalculateDepreciation1"
+                            iconName='refresh'
+                            title='Calculate'
+                          }}
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:200px; text-align: right; margin-right: 10px;">Accumulated Depreciation</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:200px; text-align: right; margin-right: 10px;">Book Value</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" style="margin: 0px;">
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="input-tab">
+                        <label style="color: #00A3D3; font-size: 18px; margin-top: 15px;">Depreciation #2</label>
+                        <div class="d-flex align-items-center input-item justify-content-center">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Disposal Date</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Sales Price</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6" style="padding: 0">
+                      <div class="input-tab">
+                        <div style="margin:10px">
+                          {{> vs1_button
+                            color='success'
+                            classes='btn-depreciation1-calculate'
+                            type='button'
+                            id="btnCalculateDepreciation1"
+                            iconName='refresh'
+                            title='Calculate'
+                          }}
+                        </div>
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:200px; text-align: right; margin-right: 10px;">Accumulated Depreciation</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+
+                        <div class="d-flex align-items-center input-item">
+                          <div style="min-width:200px; text-align: right; margin-right: 10px;">Book Value</div>
+                          <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane border rounded-0 tab-notes" role="tabpanel" id="tab-notes">
+                <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
+                  <div>
+                    <label>Notes</label>
+                    {{> vs1_button
+                      color='primary'
+                      classes='btn-add-attachment'
+                      type='button'
+                      id="btnAddAttachment"
+                      iconName='file'
+                      title='Add Attachment'
+                    }}
+                  </div>
+                  <textarea>
+
+                  </textarea>
                 </div>
               </div>
             </div>
