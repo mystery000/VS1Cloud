@@ -36,9 +36,9 @@ Template.billlist.onCreated(function () {
         let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
         let orderstatus = data.OrderStatus || '';
         if (data.Deleted == true) {
-            orderstatus = "Deleted";
+            orderstatus = "In-Active";
         } else if (data.SupplierName == '') {
-            orderstatus = "Deleted";
+            orderstatus = "In-Active";
         }
         ;
         // var dataList = {
@@ -59,8 +59,10 @@ Template.billlist.onCreated(function () {
         //     comments: data.tbilllist[i].Comments || '',
         // };
         var dataList = [
-            data.OrderDate,
-            data.OrderDate,
+            // data.OrderDate,
+            // data.OrderDate,
+            data.OrderDate !=''? moment(data.OrderDate).format("YYYY/MM/DD"): data.OrderDate,
+            data.OrderDate !=''? moment(data.OrderDate).format("DD/MM/YYYY"): data.OrderDate,
             data.PurchaseOrderID,
             data.SupplierName,
             GlobalFunctions.formatPrice(data.TotalAmountEx),
@@ -68,7 +70,7 @@ Template.billlist.onCreated(function () {
             GlobalFunctions.formatPrice(data.TotalAmount),
             GlobalFunctions.formatPrice(data.Payment),
             GlobalFunctions.formatPrice(data.Balance),
-            data.OrderStatus,
+            orderstatus,
             data.EmployeeName,
             data.Comments,
         ];
@@ -2431,7 +2433,7 @@ Template.billlist.helpers({
     },
 
     searchAPI: function () {
-        return sideBarService.getAllBillListData;
+        return sideBarService.getTBillListDataByName;
     },
 
     service: () => {
@@ -2457,7 +2459,7 @@ Template.billlist.helpers({
     },
 
     apiParams: function () {
-        return ["dateFrom", "dateTo", "ignoredate", "limitCount", "limitFrom"];
+        return ["dateFrom", "dateTo", "ignoredate", "limitCount", "limitFrom", "deleteFilter"];
     },
 
 });

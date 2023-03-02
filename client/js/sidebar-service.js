@@ -2118,7 +2118,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillEx, options);
   }
 
-  getAllBillListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getAllBillListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2142,6 +2142,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "IsBill = true and IsCheque != true";
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
