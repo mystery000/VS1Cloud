@@ -2118,7 +2118,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillEx, options);
   }
 
-  getAllBillListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getAllBillListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2142,6 +2142,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "IsBill = true and IsCheque != true";
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
@@ -3572,15 +3573,13 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TReconciliation, options);
   }
 
-  getAllTReconcilationListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTReconcilationListData(dateFrom,dateTo,ignoreDate, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         OrderBy: "ReconciliationID desc",
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
         Search: "Deleted != true",
       };
     } else {
@@ -3589,11 +3588,10 @@ export class SideBarService extends BaseService {
         OrderBy: "ReconciliationID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
         Search: "Deleted != true",
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
 

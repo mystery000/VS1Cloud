@@ -58,37 +58,58 @@ Template.crmleadchart.onRendered(() => {
       colors.push('#01a2d3');
     }
 
-    var ctx = document.getElementById("chart_leadbarchart").getContext("2d");
-    var barChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Record Count ',
-          data: data,
-          backgroundColor: colors,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        'onClick': chartClickEvent,
-        maintainAspectRatio: false,
-        responsive: true,
-        "legend": {
-          "display": false
+    try {
+      var ctx = document.getElementById("chart_leadbarchart").getContext("2d");
+      var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Record Count ',
+            data: data,
+            backgroundColor: colors,
+            borderWidth: 1
+          }]
         },
-        "title": {},
-        "scales": {
-          "xAxes": [
-            {
+        options: {
+          'onClick': chartClickEvent,
+          maintainAspectRatio: false,
+          responsive: true,
+          "legend": {
+            "display": false
+          },
+          "title": {},
+          "scales": {
+            "xAxes": [
+              {
+                "gridLines": {
+                  "color": "rgb(234, 236, 244)",
+                  "zeroLineColor": "rgb(234, 236, 244)",
+                  "drawBorder": false,
+                  "drawTicks": false,
+                  "borderDash": ["2"],
+                  "zeroLineBorderDash": ["2"],
+                  "drawOnChartArea": false
+                },
+                "ticks": {
+                  "fontColor": "#858796",
+                  "beginAtZero": true,
+                  "padding": 20
+                },
+                "scaleLabel": {
+                  "display": true,
+                  "labelString": 'Created Date',
+                  "fontColor": "#546372"
+                }
+              }],
+            "yAxes": [{
               "gridLines": {
                 "color": "rgb(234, 236, 244)",
                 "zeroLineColor": "rgb(234, 236, 244)",
                 "drawBorder": false,
                 "drawTicks": false,
                 "borderDash": ["2"],
-                "zeroLineBorderDash": ["2"],
-                "drawOnChartArea": false
+                "zeroLineBorderDash": ["2"]
               },
               "ticks": {
                 "fontColor": "#858796",
@@ -97,33 +118,16 @@ Template.crmleadchart.onRendered(() => {
               },
               "scaleLabel": {
                 "display": true,
-                "labelString": 'Created Date',
-                "fontColor": "#546372"
+                "labelString": 'Record Count'
               }
-            }],
-          "yAxes": [{
-            "gridLines": {
-              "color": "rgb(234, 236, 244)",
-              "zeroLineColor": "rgb(234, 236, 244)",
-              "drawBorder": false,
-              "drawTicks": false,
-              "borderDash": ["2"],
-              "zeroLineBorderDash": ["2"]
-            },
-            "ticks": {
-              "fontColor": "#858796",
-              "beginAtZero": true,
-              "padding": 20
-            },
-            "scaleLabel": {
-              "display": true,
-              "labelString": 'Record Count'
             }
+            ]
           }
-          ]
         }
-      }
-    });
+      });
+    } catch (e) {
+    }
+
   }
 
 
@@ -142,9 +146,8 @@ Template.crmleadchart.onRendered(() => {
       borderColors.push('#ffffff00');
     }
 
-    var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
-
     try {
+      var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
       var pieChart = new Chart(ctx, {
         type: "pie",
         data: {
@@ -174,7 +177,6 @@ Template.crmleadchart.onRendered(() => {
       });
 
     } catch (error) {
-
     }
   };
 

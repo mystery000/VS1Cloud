@@ -6,6 +6,7 @@ import "../../lib/global/indexdbstorage.js";
 import { Template } from 'meteor/templating';
 import "./term.html";
 import XLSX from "xlsx";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 Template.termsettings.inheritsHooksFrom("non_transactional_list");
 
@@ -357,7 +358,7 @@ Template.termsettings.events({
     let rows = [];
     const filename = "SampleTermsSetting" + ".csv";
     rows[0] = [
-      "Term",
+      "Term Name",
       "Days",
       "EOM",
       "EOM+",
@@ -455,15 +456,16 @@ Template.termsettings.events({
     Papa.parse(templateObject.selectedFile.get(), {
       complete: function (results) {
         if (results.data.length > 0) {
+          console.log('import-term-setting');
           if (
-            results.data[0][0] == "Terms Name" &&
-            results.data[0][1] == "Description"
+            results.data[0][0] == "Term Name" &&
+            results.data[0][4] == "Description"
           ) {
             let dataLength = results.data.length * 500;
             setTimeout(function () {
               $(".importTemplateModal").hide();
               $(".modal-backdrop").hide();
-              FlowRouter.go("/departmentSettings?success=true");
+              FlowRouter.go("/termsettings?success=true");
               $(".fullScreenSpin").css("display", "none");
             }, parseInt(dataLength));
 
@@ -524,12 +526,12 @@ Template.termsettings.events({
                       }).then((result) => {
                         if (result.value) {
                           window.open(
-                            "/departmentSettings?success=true",
+                            "/termsettings?success=true",
                             "_self"
                           );
                         } else if (result.dismiss === "cancel") {
                           window.open(
-                            "/departmentSettings?success=false",
+                            "/termsettings?success=false",
                             "_self"
                           );
                         }

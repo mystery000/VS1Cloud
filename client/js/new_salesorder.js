@@ -268,6 +268,11 @@ Template.new_salesorder.onCreated(function () {
     $('#tblSalesOrderLine > tbody > tr').each(function () {
       const tdproduct = $(this).find(".lineProductName").val();
       const tddescription = $(this).find('.lineProductDesc').text();
+      let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
+      if(tdpqa){
+          tddescription += " " + tdpqa;
+      }
+      
       const tdQty = $(this).find('.lineQty').val();
       const tdunitprice = $(this).find('.colUnitPriceExChange').val();
       const taxamount = $(this).find('.lineTaxAmount').val();
@@ -951,7 +956,7 @@ Template.new_salesorder.onCreated(function () {
   function saveTemplateFields(key, value) {
     localStorage.setItem(key, value)
   }
-  
+
   templateObject.exportSalesToPdf = function (template_title, number) {
     if (template_title == 'Sales Orders') {
       showSealsOrder1(template_title, number, true);
@@ -1017,7 +1022,7 @@ Template.new_salesorder.onCreated(function () {
     return true;
   };
 
-  
+
   templateObject.getAllClients = function () {
     getVS1Data('TCustomerVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -1724,7 +1729,7 @@ Template.new_salesorder.onCreated(function () {
     let customerTotal = $('#grandTotal').html();
     let mailSubject = 'Sales Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
     let stringQuery ="?"
-   
+
     var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
       '        <tr>' +
       '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
@@ -1908,7 +1913,7 @@ Template.new_salesorder.onCreated(function () {
         attachments: attachment
       }, function (error, result) {
         if (error && error.error === "error") {
-          
+
         } else {
           $('#html-2-pdfwrapper').css('display', 'none');
           swal({
@@ -1971,7 +1976,7 @@ Template.new_salesorder.onCreated(function () {
         attachments: attachment
       }, function (error, result) {
         if (error && error.error === "error") {
-          
+
 
         } else {
           $('#html-2-pdfwrapper').css('display', 'none');
@@ -2044,7 +2049,7 @@ Template.new_salesorder.onCreated(function () {
             confirmButtonText: 'OK'
           }).then((result) => {
             if (result.value) {
-              
+
             } else if (result.dismiss === 'cancel') {
 
             }
@@ -2118,7 +2123,7 @@ Template.new_salesorder.onCreated(function () {
       });
     };
   }
-  
+
   function generatePdfForMail(invoiceId) {
     let file = "Sales Order-" + invoiceId + ".pdf"
     return new Promise((resolve, reject) => {
@@ -4136,7 +4141,7 @@ Template.new_salesorder.onRendered(function () {
     templateObject.setCustomerInfo(selectedTaxCodeName);
   });
 
-
+  $(document).ready(function() {
   $('#sltTerms').editableSelect()
     .on('click.editable-select', function (e, li) {
       var $earch = $(this);
@@ -4521,6 +4526,8 @@ Template.new_salesorder.onRendered(function () {
         }
       }
     });
+
+});
 
   // $('#edtCustomerName').editableSelect().on('click.editable-select', function (e, li) {
   //   var $earch = $(this);
