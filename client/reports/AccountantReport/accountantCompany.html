@@ -223,7 +223,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">
+                                            <div class="col" style="display: inline-block;">
                                                 <span style="float:left; padding-bottom:12px">Compilation report to {{companyname}}</span>
                                                 <span style="float:left; padding-bottom:12px">We have compiled the accompanying special purpose financial statements of {{companyname}}, which comprise the balance sheet as at {{fiscalYearEnding}}, the income statement, the statement of cash flows, a summary of significant accounting policies and other explanatory notes. The specific purpose for which the special purpose financial statements have been prepared is set out in Note 1.</span>
                                                 <span style="float:left; padding-bottom:10px">
@@ -238,15 +238,12 @@
                                                 <span style="float:left; padding-bottom:12px">Since a compilation engagement is not an assurance engagement, we are not required to verify the reliability, accuracy or completeness of the information provided to us by management to compile these financial statements. Accordingly, we do not express an audit opinion or a review conclusion on these financial statements</span>
                                                 <span style="float:left; padding-bottom:12px">The special purpose financial statements were compiled exclusively for the benefit of the director who is responsible for the reliability, accuracy and completeness of the information used to compile them. We do not accept responsibility for the contents of the special purpose financial statements.</span>
                                             </div>
+                                        </div>                                    
+                                        <div class="row" style="margin-top:40px; width:250px">                                            
+                                            <button type="button" class="d-none" id="sltAccountant" style="margin-bottom: 20px;">Change Accountant</button>
+                                            <div class="col" id="reportsAccountantHeader">                                               
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row" style="margin-top:40px; width:250px">
-                                        <div class="col" id="reportsAccountantHeader">
-                                            <!-- <div style="border-top:1px solid #858796; width:172px; margin-bottom:12px"></div>
-                                        <span style="float:left; padding-bottom:8px">Ashley Summerville, CPA</span>
-                                        <span style="float:left; padding-bottom:8px"><b>OnPoint Advisory</b></span>
-                                        <span style="float:left; padding-bottom:20px">PO Box 5190<br/>Q SUPER CENTRE QLD 4218</span>
-                                        <span style="float:left;">Dated: {{fiscalYearEnding}}</span> --></div>
                                     </div>
                                     <div class="row" style="position:absolute; bottom:25px; width: calc(100% - 80px)">
                                         <div class="col" style="font-size:12px">
@@ -1903,6 +1900,22 @@
         <div class="item" data-action="copy">Copy</div>
         <div class="item" data-action="paste">Paste</div>
         <div class="item" data-action="delete">Delete</div>
+    </div>
+    <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content supplierListContent">
+                <div class="modal-header">
+                    <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
+                    {{> supplierlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         let pageNum = 1;
