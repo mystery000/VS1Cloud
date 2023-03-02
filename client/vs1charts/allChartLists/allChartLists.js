@@ -1,4 +1,5 @@
-import { ReactiveVar } from "meteor/reactive-var";
+import { ReactiveVar, Reactive } from "meteor/reactive-var";
+import { ReactiveDict } from 'meteor/reactive-dict'
 import "gauge-chart";
 
 import DashboardApi from "../../js/Api/DashboardApi";
@@ -30,7 +31,7 @@ import '../top10Customers/dsm_top10Customers.html';
 import '../../Dashboard/appointments-widget/dsm-appointments-widget.html';
 import '../../Dashboard/appointments-widget/ds-appointments-widget.html';
 
-
+import moment from "moment";
 let _ = require("lodash");
 
 let chartsPlaceList = {
@@ -332,6 +333,7 @@ async function saveCharts() {
 Template.allChartLists.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.chartList = new ReactiveVar([]);
+    templateObject.updateChart = new ReactiveVar({update: false})
 });
 
 Template.allChartLists.onRendered(function () {
@@ -822,9 +824,45 @@ Template.allChartLists.onRendered(function () {
     };
     templateObject.checkChartToDisplay(); // we run this so we load the correct charts to diplay
     templateObject.activateDraggable(); // this will enable charts resiable features
+
+    // Define the new date picker for charts 
+    let previousDate = moment(new Date()).subtract(7, 'months').format("DD/MM/YYYY");
+    let currentDate = moment(new Date()).format("DD/MM/YYYY");
+    $("#dateFrom_charts").val(previousDate);
+    $("#dateTo_charts").val(currentDate);
+    $("#dateTo_charts, #dateFrom_charts").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy",
+        yearRange: "-90:+10",
+        minDate: "-7M",
+        maxDate: "+0D",
+        onSelect: function(selectedDate) {
+            let dateFrom = $("#dateFrom_charts").datepicker("getDate");
+            $("#dateTo_charts").datepicker("option", "minDate", dateFrom);
+            let dateTo = $("#dateTo_charts").datepicker("getDate");
+            $("#dateFrom_charts").datepicker("option", "maxDate", dateTo);   
+
+            const from = $("#dateFrom_charts").val().split('/');
+            const to = $("#dateTo_charts").val().split('/');
+
+            templateObject.updateChart.set({
+                update: true,
+                dateFrom: `${from[2]}-${from[1]}-${from[0]}`,
+                dateTo: `${to[2]}-${to[1]}-${to[0]}`,
+            });
+        }
+    }) 
 });
 
 Template.allChartLists.events({
+
     "click .on-editor-change-mode": (e) => {
         // this will toggle the visibility of the widget
         if ($(e.currentTarget).attr("is-hidden") == "true") {
@@ -834,7 +872,6 @@ Template.allChartLists.events({
             $(e.currentTarget).attr("is-hidden", "true");
             $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
         }
-        // const templateObject = Template.instance();
     },
     "mouseover .card-header": (e) => {
         $(e.currentTarget).parent(".card").addClass("hovered");
@@ -927,6 +964,9 @@ Template.allChartLists.events({
 });
 
 Template.allChartLists.helpers({
+    updateChart: () => {
+        return Template.instance().updateChart.get()
+    },
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;
