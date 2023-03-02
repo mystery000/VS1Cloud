@@ -390,7 +390,7 @@ Template.fixedassetcard.events({
     };
     const inputFields = templateObject.inputFieldAry.get();
     Object.keys(inputFields).map((fieldName) => {
-      switch (key) {
+      switch (inputFields[fieldName]) {
         case 'double':
           newFixedAsset.fields[fieldName] = parseFloat($('input#edt'+fieldName).val());
           break;
@@ -402,7 +402,6 @@ Template.fixedassetcard.events({
           break;
       }
     });
-    console.log(newFixedAsset);
     if (templateObject.currentAssetID.get() == 0) {
       fixedAssetService.saveTFixedAsset(newFixedAsset).then((data) => {
         fixedAssetService.getTFixedAssetsList().then(function (data) {
