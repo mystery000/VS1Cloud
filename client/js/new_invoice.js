@@ -1417,6 +1417,11 @@ Template.new_invoice.onCreated(function () {
     $("#tblInvoiceLine > tbody > tr").each(function () {
       const tdproduct = $(this).find(".lineProductName").val();
       const tddescription = $(this).find('.lineProductDesc').text();
+      let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
+      if(tdpqa){
+          tddescription += " " + tdpqa;
+      }
+      
       const tdQty = $(this).find('.lineQty').val();
       const tdunitprice = $(this).find('.colUnitPriceExChange').val();
       const tdtaxrate = $(this).find(".lineTaxRate").val();
@@ -2890,7 +2895,7 @@ Template.new_invoice.onCreated(function () {
       },
         function (error, result) {
           if (error && error.error === "error") {
-        
+
           } else {
             $("#html-Invoice-pdfwrapper").css("display", "none");
             swal({
@@ -2962,7 +2967,6 @@ Template.new_invoice.onCreated(function () {
       );
     } else {
       // window.open(url, "_self");
-      console.log("Someing went wront!")
     }
   }
 

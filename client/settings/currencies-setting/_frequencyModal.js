@@ -315,7 +315,7 @@ Template._frequencyModal.onRendered(function () {
       _formFequencyModal.save();
       LoadingOverlay.hide(0);
       swal({title: "Success", text: "Fx update was scheduled successfully", type: "success", showCancelButton: false, confirmButtonText: "OK"}).then(() => {
-        // window.open("/currenciessettings", "_self");
+        $('#frequencyModal').modal('hide')
       });
     } catch (exception) {
       LoadingOverlay.hide(0);
@@ -355,20 +355,16 @@ Template._frequencyModal.onRendered(function () {
     });
 
     const response = data.response;
-    const currencySettings = response.tcurrencyfrequencysettings;
-
-    return currencySettings.length > 0
-      ? currencySettings[0]
-      : null;
+    return response
   };
 
   templateObject._saveShedule = async body => {
-    // addVS1Data(erpObject.TCurrencyFrequencySettings, JSON.stringify(_formFequencyModal)).then(function (datareturn) {
-    //   location.reload(true);
-    //   $("#frequencyModal").modal("hide");
-    // }).catch(function (err) {
-    //   location.reload(true);
-    // });
+    addVS1Data(erpObject.TCurrencyFrequencySettings, JSON.stringify(body)).then(function (datareturn) {
+      // location.reload(true);
+      // $("#frequencyModal").modal("hide");
+    }).catch(function (err) {
+      swal("Oooops...", err, "error")
+    });
 
     try {
       const currencyApi = new CurrencyApi();
@@ -413,10 +409,7 @@ Template._frequencyModal.onRendered(function () {
       document.querySelector("#frequencyDaily").click(); // this is the default
       return;
     }
-    let defaultFormFrequency = new FormFrequencyModel(
-      defaultForm.length > 0
-      ? JSON.parse(defaultForm[0].data)
-      : {});
+    let defaultFormFrequency = new FormFrequencyModel(defaultForm);
 
     if (defaultFormFrequency.MonthlyStartDate) {
       // it is montly
@@ -482,7 +475,9 @@ Template._frequencyModal.onRendered(function () {
     }
   };
 
-  // templateObject.loadDefault();
+  $(document).on("shown.bs.modal",  "#frequencyModal", (e, ui) => {
+    templateObject.loadDefault();
+  })  
 });
 
 Template._frequencyModal.events({

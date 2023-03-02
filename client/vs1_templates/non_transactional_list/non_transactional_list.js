@@ -2441,7 +2441,7 @@ Template.non_transactional_list.onRendered(function() {
         await templateObject.initCustomFieldDisplaySettings("", "tblBinLocations");
         getVS1Data("TProductBin").then(function(dataObject) {
             if (dataObject.length == 0) {
-                productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(function(data) {
+                productService.getBins().then(function(data) {
                         addVS1Data("TProductBin", JSON.stringify(data));
                         templateObject.displayAllProductBinData(data, deptname);
                     });
@@ -2451,7 +2451,7 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayAllProductBinData(data, deptname);
             }
         }).catch(function(err) {
-            productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+            productService.getBins().then(async function(data) {
                 await addVS1Data('TProductBin', JSON.stringify(data));
                 templateObject.displayAllProductBinData(data, dpetname, );
             }).catch(function(err) {
@@ -2497,7 +2497,7 @@ Template.non_transactional_list.onRendered(function() {
             } else if (data.tproductbin[i].Active == false) {
                 linestatus = "In-Active";
             };
-
+            let flag = 0;
             for (let j = 0; j < productsData.length ; j++ ){
                 if(productsData[j].fields.ProductClass[0].fields.DefaultbinLocation == data.tproductbin[i].BinLocation && productsData[j].fields.ProductClass[0].fields.DefaultbinNumber == data.tproductbin[i].BinNumber) {
                     productDetail = productsData[j].fields;
@@ -2505,22 +2505,37 @@ Template.non_transactional_list.onRendered(function() {
                     productsalesdescription = productsData[j].fields.SalesDescription;
                     productinstock = productsData[j].fields.ProductClass[0].fields.OnOrderQuantity;
                     productId = productsData[j].fields.ID;
+                    flag = 1;
+                    var dataList = [
+                        data.tproductbin[i].Id || "",
+                        data.tproductbin[i].BinLocation || "-",
+                        data.tproductbin[i].BinNumber || "",
+                        data.tproductbin[i].BinClassName || "",
+                        productId || "",
+                        productname || "",
+                        productsalesdescription || "",
+                        productinstock || "",
+                        linestatus,
+                    ];
+                    splashArrayProductList.push(dataList);
+                    dataTableList.push(dataList);
                 }
             }
-
-            var dataList = [
-                data.tproductbin[i].Id || "",
-                data.tproductbin[i].BinLocation || "-",
-                data.tproductbin[i].BinNumber || "",
-                data.tproductbin[i].BinClassName || "",
-                productId || "",
-                productname || "",
-                productsalesdescription || "",
-                productinstock || "",
-                linestatus,
-            ];
-            splashArrayProductList.push(dataList);
-            dataTableList.push(dataList);
+            if(flag == 0) {
+                var dataList = [
+                    data.tproductbin[i].Id || "",
+                    data.tproductbin[i].BinLocation || "-",
+                    data.tproductbin[i].BinNumber || "",
+                    data.tproductbin[i].BinClassName || "",
+                    productId || "",
+                    productname || "",
+                    productsalesdescription || "",
+                    productinstock || "",
+                    linestatus,
+                ];
+                splashArrayProductList.push(dataList);
+                dataTableList.push(dataList);
+            }
         }
 
 

@@ -33,10 +33,10 @@ Template.taxratelistpop.onCreated(function () {
     }
 
     let headerStructure = [
-        {index: 0, label: "ID", class: "thID", width: "50", active: true, display: true},
-        {index: 1, label: "Name", class: "thName", width: "80", active: true, display: true},
+        {index: 0, label: "ID", class: "colID", width: "50", active: true, display: true},
+        {index: 1, label: "Name", class: "colName", width: "80", active: true, display: true},
         {index: 2, label: "Description", class: "colDescription", width: "180", active: true, display: true},
-        {index: 3, label: "Rate", class: "thRate", width: "100", active: true, display: true},
+        {index: 3, label: "Rate", class: "colRate", width: "100", active: true, display: true},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -56,7 +56,7 @@ Template.taxratelistpop.events({
         var splashArrayTaxRateList = new Array();
         const dataTableList = [];
         const tableHeaderList = [];
-        
+
         let dataSearchName = $('#tblTaxRate_filter input').val();
         var currentLoc = FlowRouter.current().route.path;
         if (dataSearchName.replace(/\s/g, '') != '') {
