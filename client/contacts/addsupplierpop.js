@@ -1157,7 +1157,8 @@ Template.addsupplierpop.events({
         }, delayTimeAfterSound);
     },
     "click .addsupplierpop .btnRefresh": function() {
-        Meteor._reload.reload();
+        //Meteor._reload.reload();
+        window.location.reload();
     },
 
     "click .addsupplierpop #formCheck-2": function() {

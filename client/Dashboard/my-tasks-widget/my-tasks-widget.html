@@ -168,9 +168,24 @@
         }
     </style>
 
+    {{>datatablelist
+            tablename="tblMyTaskDatatable"
+            apiName= apiFunction
+            indexeddbname = 'TCRMTaskList'
+            tableheaderrecords = tableheaderrecords
+            exportfilename = 'My Task Datatable List'
+            istransaction = false
+            apiParams= apiParams
+            datahandler = datahandler
+            service=service
+            lowercaseDataName='tprojecttaskslist'
+            exIndexDBName = 'tprojecttaskslist'
+            exdatahandler = exDataHandler
+            searchAPI = searchAPI
+    }}
     <div class="table-responsive" style="overflow-x: hidden!important;">
 
-        {{> non_transactional_list tablename = "tblMyTaskDatatable"}}
+<!--        {{> non_transactional_list tablename = "tblMyTaskDatatable"}}-->
 
 
         <style media="screen">
