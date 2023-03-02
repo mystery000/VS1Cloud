@@ -56,7 +56,7 @@
                                     <div class="row no-gutters">
                                         <div class="col-12 d-xl-flex align-items-xl-end">
                                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department</label>
-                                                <input class="form-control es-input" name="sltDepartmentList" id="sltDepartmentList" style="background-color:rgb(255, 255, 255); cursor: pointer;"/>
+                                                {{> vs1_dropdown id='sltDepartmentList' name='sltDepartmentList' type='search' classes='es-input'}}
                                             </div>
                                         </div>
                                     </div>
@@ -259,7 +259,7 @@
                     <div class="row no-gutters">
                         <div class="col-12 d-xl-flex align-items-xl-end">
                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department</label>
-                                <input class="form-control es-input" name="editBinDepartmentList" id="editBinDepartmentList" style="background-color:rgb(255, 255, 255); cursor: pointer;"/>
+                                {{> vs1_dropdown id='editBinDepartmentList' name='editBinDepartmentList' type='search' classes='es-input'}}
                             </div>
                         </div>
                     </div>
@@ -267,18 +267,6 @@
                         <div class="col-12 d-xl-flex align-items-xl-end">
                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Rack</label>
                                 <input class="form-control" name="editBinRack" id="editBinRack" style="background-color:rgb(255, 255, 255); cursor: pointer;"/>
-
-<!--                                <select type="search" class="form-control slt-bin es-input" id="editBinRack" name="editBinRack" value="{{binlocation}}" style="background-color:rgb(255, 255, 255); cursor: pointer;">-->
-<!--                                    {{#each itemtt in binlocationarray}}-->
-<!--                                        {{#if equals itemtt.binclass bindept}}-->
-<!--                                            {{#if equals itemtt.binlocation binlocation}}-->
-<!--                                                <option value="{{itemtt.binlocation}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binlocation}}</option>-->
-<!--                                            {{else}}-->
-<!--                                                <option value="{{itemtt.binlocation}}" data-location="{{itemtt.binlocation}}">{{itemtt.binlocation}}</option>-->
-<!--                                            {{/if}}-->
-<!--                                        {{/if}}-->
-<!--                                    {{/each}}-->
-<!--                                </select>-->
                             </div>
                         </div>
                     </div>
@@ -286,20 +274,6 @@
                         <div class="col-12 d-xl-flex align-items-xl-end">
                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Bin #</label>
                                 <input class="form-control" name="editBinNum" id="editBinNum" style="background-color:rgb(255, 255, 255); cursor: pointer;"/>
-
-<!--                                <select type="search" class="form-control slt-bin es-input" id="editBinNum" name="editBinNum" value="{{binnumber}}" style="background-color:rgb(255, 255, 255); cursor: pointer;">-->
-<!--                                    {{#each itemtt in binarray}}-->
-<!--                                        {{#if equals itemtt.binclass bindept}}-->
-<!--                                            {{#if equals itemtt.binlocation binlocation}}-->
-<!--                                                {{#if equals itemtt.binnumber binnumber}}-->
-<!--                                                    <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>-->
-<!--                                                {{else}}-->
-<!--                                                    <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>-->
-<!--                                                {{/if}}-->
-<!--                                            {{/if}}-->
-<!--                                        {{/if}}-->
-<!--                                    {{/each}}-->
-<!--                                </select>-->
                             </div>
                         </div>
                     </div>
