@@ -149,6 +149,7 @@ Template.newsidenav.onCreated(function () {
         $('#bodyContainer').removeClass('top');
         $('#sidebarToggleBtn .text').text('Top');
       }
+      localStorage.setItem('TPreferenceMenuID', latestAction.fields.ID);
     } else {
       templateObject.sideBarPositionClass.set('side');
       $('#sidebar').removeClass('top');
