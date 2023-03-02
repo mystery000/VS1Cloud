@@ -543,7 +543,7 @@ Template.datatablelist.onRendered(async function () {
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
                     if (data.Params) {
-                        if (data.Params.Search.replace(/\s/g, "") == "") {
+                        if (data.Params.Search.replace(/\s/g, "") == "" || (data.Params.Search.search("Active") < 0 && data.Params.Search.search("Delete") < 0)) {
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                         } else {
                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
