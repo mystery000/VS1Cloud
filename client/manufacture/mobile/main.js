@@ -56,13 +56,14 @@ Template.mobileapp.events({
                     autoWidth: true,
                     sScrollXInner: "100%",
                     columns: [
+                        { title: 'Employee No', mData: 'fields.EmployeeNo' },
                         { title: 'FirstName', mData: 'fields.FirstName' },
                         { title: 'LastName', mData: 'fields.LastName' },
                     ]
                 })
                 $('#tblEmployeeList tbody').on('click', 'tr', function () {
                     var data = table.row(this).data();
-                    $(".mobile-main-input").val(data.fields.EmployeeName)
+                    $(".mobile-main-input").val(data.fields.EmployeeNo)
                     Template.instance().employeeName.set(data);
                 });
 
@@ -82,11 +83,11 @@ Template.mobileapp.events({
             if ($.fn.DataTable.isDataTable( '#tblWorkOrderList' ) ) {
                 $("#tblWorkOrderList").DataTable().destroy();
             }
-            getVS1Data('TEmployee').then(function (dataObject) {
+            getVS1Data('TVS1Workorder').then(function (dataObject) {
                 $(".mobile-left-workorder-list").css('display', 'block');
-                let saleOrderData = JSON.parse(dataObject[0].data);
+                let workOrderData = JSON.parse(dataObject[0].data);
                 let table = $("#tblWorkOrderList").DataTable({
-                    data: saleOrderData.temployee,
+                    data: workOrderData.tvs1workorder,
                     paging: false,
                     searching: true,
                     dom: 't',
@@ -95,14 +96,15 @@ Template.mobileapp.events({
                     autoWidth: true,
                     sScrollXInner: "100%",
                     columns: [
-                        { title: 'Sales No.', mData: 'fields.FirstName' },
-                        { title: 'Customer', mData: 'fields.LastName' },
-                        { title: 'Sale Date', mData: 'fields.LastName' },
+                        { title: 'Sales No.', mData: 'fields.PONumber' },
+                        { title: 'Customer', mData: 'fields.Customer' },
+                        { title: 'Sale Date', mData: 'fields.SaleDate' },
                     ]
                 })
                 $('#tblWorkOrderList tbody').on('click', 'tr', function () {
                     var data = table.row(this).data();
-                    $(".mobile-main-input").val(data.fields.EmployeeName);
+                    console.log(data);                    
+                    $(".mobile-main-input").val(data.fields.PONumber);
                     
                 });
                 $("#startBreakContainer").css('display', 'none');
@@ -138,9 +140,9 @@ Template.mobileapp.events({
                 })
                 $('#tblJobProcessList tbody').on('click', 'tr', function () {
                     var data = table.row(this).data();
-                    $(".mobile-main-input").val(data.fields.KeyValue);
-                    
+                    $(".mobile-main-input").val(data.fields.KeyValue);                    
                 });
+
                 $("#startBreakContainer").css('display', 'none');
                 $(".mobile-left-btn-containner").css('display', 'none');
                 $("#btnOpentList").prop('disabled', true);
@@ -221,8 +223,11 @@ Template.mobileapp.events({
         $(".mobile-left-jobprocess-list").css('display','none');
 
         $(".mobile-left-btn-containner").css('display', 'block'); 
-        Template.instance().isEnterJobNumber.set(true);
+
+        $("#btnOpentList").removeAttr('disabled'); // when click cancel , openlist button will be active
         
+
+                     
         
         // html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
         // }).catch((err) => console.log(err));
@@ -233,6 +238,8 @@ Template.mobileapp.events({
     'click #btnClockIn': function(e, instance) {
 
         Template.instance().isClockin.set(true);
+        Template.instance().isEnterJobNumber.set(false);
+        Template.instance().isEnterJobProcess.set(false);
 
         $(".mobile-checkin-container").css('display', 'block');
         if (window.screen.width <= 480) {
@@ -272,6 +279,8 @@ Template.mobileapp.events({
         $("#btnStartJob").css('background', '#999');
         $("#btnStopJob").css('background', '#C5000B');
         $("#btnStopJob").removeAttr('disabled');
+        $(".mobile-header-status-text").text("Start Job");
+
     },
     'click #btnStartBreak': function(e, instance) {
         $("#startBreakContainer").css('display', 'block');
@@ -282,6 +291,9 @@ Template.mobileapp.events({
         $("#btnOpentList").removeAttr('disabled');
         $(".mobile-left-btn-containner").css('display', 'none');
         $(".mobile-left-employee-list").css('display', 'none');
+        $("#mobileBtnCancel").prop('disabled', true);
+        $(".mobile-header-status-text").text("Start Break");
+
     },
     'click #btnStopJob': function(e, instance) {
         $('#btnStopJob').prop('disabled', true);
@@ -290,6 +302,8 @@ Template.mobileapp.events({
         $("#btnStartJob").removeAttr('disabled');
         $('.mobile-stop-job-container').css('display', 'block');
         $('.mobile-right-btn-containner').css('display', 'none')
+        $(".mobile-header-status-text").text("Stop Job");
+
     },
     'click #btnStopBreak': function(e, instance) {
         $(".mobile-left-btn-containner").css('display', 'flex');
@@ -300,6 +314,8 @@ Template.mobileapp.events({
         $("#btnStopBreak").css('background', '#0084D1');
         $("#btnStartBreak").removeAttr('disabled');
         $("#btnOpentList").removeAttr('disabled');
+        $("#mobileBtnCancel").removeAttr('disabled');
+        $(".mobile-header-status-text").text("Stop Break");
     },
     'click #mobileBtnEnter': function(e, instance) {  // Click enter button
         
@@ -319,7 +335,7 @@ Template.mobileapp.events({
 
 
         if (isClockin) {
-            $('.mobile-header-status-text').text('Setting employee information.');
+            $('.mobile-header-status-text').text('Successfully Set employee information.');
             // let empId = $('.mobile-main-input').val();
             // getVS1Data('TEmployee').then(function (dataObject) {
             //     let empdata = JSON.parse(dataObject[0].data);
@@ -334,7 +350,7 @@ Template.mobileapp.events({
             $(".mobile-main-input").val("");
 
             Template.instance().isClockin.set(false);
-            Template.instance().isEnterJobNumber.set(true);
+            Template.instance().isEnterJobNumber.set(false);
             Template.instance().isEnterJobProcess.set(false);
             
         }
