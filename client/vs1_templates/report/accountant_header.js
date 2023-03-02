@@ -7,7 +7,6 @@ import { ReportService } from "../../reports/report-service";
 
 import { Template } from 'meteor/templating';
 import './accountant_header.html';
-import {Meteor} from "meteor/meteor";
 
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
