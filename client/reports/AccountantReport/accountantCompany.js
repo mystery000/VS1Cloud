@@ -2543,7 +2543,6 @@ Template.accountant_company.events({
                             .saveOrganisationSetting(saveOrganisationSettings)
                             .then(function (data) {
                                 localStorage.setItem("VS1Accountant", company);
-                                localStorage.setItem("yearEnd", sltYearEnd);                                
                                 swal({
                                     title: "Organisation details successfully updated!",
                                     text: "",
