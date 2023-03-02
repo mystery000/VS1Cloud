@@ -24,38 +24,6 @@ Template.accountant_header.onRendered(function() {
 Template.accountant_header.events({
     // Alex: Add for Docusign start
     'click .btnDocusign': function() {
-<<<<<<< HEAD
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-
-        let signerEmail = 'dev@vs1cloud.com';
-        let signerName = 'Dev VS1Cloud';
-        let ccEmail = 'babybear1280@proton.me';
-        let ccName = 'Phillips';
-
-        let chunkSize = 5 * 1024 * 1024; // 5 MB
-        let html = document.getElementById("printReport").outerHTML;
-        let chunks = [];
-
-        for (let i = 0; i < html.length; i += chunkSize) {
-            chunks.push(html.substring(i, i + chunkSize));
-        }
-
-        const sendChunk = (index) => {
-            Meteor.call('receiveHTMLChunk', chunks[index], function(error) {
-                if (error) {
-                    console.error(error);
-                } else {
-                    if (index + 1 < chunks.length) {
-                        sendChunk(index + 1);
-                    } else {
-                        Meteor.call('requestSign', signerEmail, signerName, ccEmail, ccName);
-                    }
-                }
-            });
-        };
-
-        sendChunk(0);
-=======
         $('#signerEmail').val('');
         $('#signerName').val('');
         $('#envelopModal').modal('show');
@@ -101,7 +69,6 @@ Template.accountant_header.events({
             $('.fullScreenSpin').css('display', 'none');
             $('#envelopModal').modal('hide');
         }, 2000);
->>>>>>> 1bd64683b42064efbd9608579d35590409191a78
     }
     // Alex: Add for Docusign end
 });

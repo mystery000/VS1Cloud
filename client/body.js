@@ -416,6 +416,10 @@ import './settings/inventory-setting/inventorySettings.js';
 import './settings/UOM-Settings/adduompop.js';
 /* Martin */
 
+/* Damien Begin */
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+/* Damien End */
+
 /* AlexV */
 import './reports/balancesheet/balancesheet.js';
 import './reports/customerreports/customerdetailsreport.js';
