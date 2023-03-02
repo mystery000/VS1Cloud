@@ -147,6 +147,10 @@ Template.refundcard.onCreated(() => {
       var lineID = this.id;
       let tdproduct = $("#" + lineID + " .lineProductName").val();
       let tddescription = $("#" + lineID + " .lineProductDesc").text();
+      let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
+      if(tdpqa){
+          tddescription += " " + tdpqa;
+      }
       let tdQty = $("#" + lineID + " .lineQty").val();
       let tdunitprice = $("#" + lineID + " .colUnitPriceExChange").val();
       let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
