@@ -473,7 +473,7 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" id="event-modal">
-        <form id="frmAppointment">
+        <form id="frmAppointment" class="frmAppointment">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable modalCreateOuter" role="document">
                 <div class="modal-content modalCreateAppointments" id="modalCreateAppointments">
                     <div class="modal-header">
@@ -738,7 +738,7 @@
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
                             <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button> -->
                         {{/if}}
-
+                        <input type="submit" id= "btnAppointmentSubmit" hidden/>
                         <!-- Start Appointment Modal to choose Start Appointment SMS Message -->
                         <div class="modal fade" role="dialog" id="startAppointmentModal">
                             <div class="modal-dialog modal-dialog-centered" role="document">
