@@ -31,7 +31,7 @@
 
     {{#if purchaseorderrecord}}
     <form>
-      {{> transaction_header cardType="PO" data=purchaseorderrecord
+      <!-- {{> transaction_header cardType="PO" data=purchaseorderrecord
       uploadedFile=uploadedFile isCurrencyEnable=isCurrencyEnable
       custfields=custfields
       showTransactionButtons=true
@@ -40,9 +40,23 @@
       showInvoiceNumber=true showVia=true showTerms=true showStatus=true
       showReference=true showDepartment=true showCustomFields=true
       showShippingInfo=true showPayment=true showCopyTransaction=true
-      showCopyToInvoice=false showCopyToOrder=false }}
+      showCopyToInvoice=false showCopyToOrder=false }} -->
 
-<!-- 
+      {{>transactionheader 
+        includeClient=true 
+        includeAddress=true 
+        Category='purchase' 
+        TranascationType='PO' 
+        clientType='Supplier' 
+        payment=true 
+        headerfields=headerfields 
+        headerbuttons=headerbuttons 
+        currency=true
+        balanceDue=purchaseorderrecord.balanceDue
+        isPaid=purchaseorderrecord.ispaid
+       }}
+
+<!--  
       {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
       itemName3="Purchase Order" button1="btnDeletePO"
       button2="btnDeleteFollowingPOs"}} -->
@@ -980,7 +994,8 @@
       </div>
     </div>
     <!-- END PDF -->
-    {{/if}} {{> all_transaction_modals supplierRecord=supplierRecord}}
+    {{/if}} 
+    <!-- {{> all_transaction_modals supplierRecord=supplierRecord}} -->
   </div>
   <!-- Start Help Video Modal -->
   <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
