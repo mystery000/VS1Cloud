@@ -93,22 +93,23 @@ Template.datatablelist.onRendered(async function () {
 
     templateObject.initCustomFieldDisplaySettings = function (data, listType) {
         let reset_data = templateObject.reset_data.get();
+        let savedHeaderInfo;
         setTimeout(()=>{
             templateObject.showCustomFieldDisplaySettings(reset_data);
             try {
                 getVS1Data("VS1_Customize").then(function(dataObject) {
                     if (dataObject.length == 0) {
                         sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
-                            reset_data = data.ProcessLog.Obj.CustomLayout[0].Columns;
-                            templateObject.showCustomFieldDisplaySettings(reset_data);
+                            savedHeaderInfo = data.ProcessLog.Obj.CustomLayout[0].Columns;
+                            templateObject.showCustomFieldDisplaySettings(savedHeaderInfo);
                         }).catch(function(err) {});
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
                             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
                                 if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
-                                    reset_data = data.ProcessLog.Obj.CustomLayout[i].Columns;
-                                    templateObject.showCustomFieldDisplaySettings(reset_data);
+                                    savedHeaderInfo = data.ProcessLog.Obj.CustomLayout[i].Columns;
+                                    templateObject.showCustomFieldDisplaySettings(savedHeaderInfo);
                                 }
                             }
                         };
@@ -122,27 +123,28 @@ Template.datatablelist.onRendered(async function () {
         }, 100)
     }
 
-    templateObject.showCustomFieldDisplaySettings = async function (reset_data) {
+    templateObject.showCustomFieldDisplaySettings = async function (savedHeaderInfo) {
         let custFields = [];
         let customData = {};
-        let customFieldCount = reset_data.length;
+        let customFieldCount = savedHeaderInfo.length;
+        let reset_data = templateObject.reset_data.get();
         for (let r = 0; r < customFieldCount; r++) {
             customData = {
-                active: reset_data[r].active,
-                id: reset_data[r].index,
-                custfieldlabel: reset_data[r].label,
-                class: reset_data[r].class,
-                display: reset_data[r].display,
-                width: reset_data[r].width ? reset_data[r].width : ''
+                active: savedHeaderInfo[r].active,
+                id: savedHeaderInfo[r].index,
+                custfieldlabel: savedHeaderInfo[r].label,
+                class: savedHeaderInfo[r].class,
+                display: reset_data[r].display,            //display have to set by default value
+                width: savedHeaderInfo[r].width ? savedHeaderInfo[r].width : ''
             };
             let currentTable = document.getElementById(currenttablename)
-            if (reset_data[r].active == true) {
+            if (savedHeaderInfo[r].active == true) {
                 if (currentTable) {
-                    $('#' + currenttablename + ' .' + reset_data[r].class).removeClass('hiddenColumn');
+                    $('#' + currenttablename + ' .' + savedHeaderInfo[r].class).removeClass('hiddenColumn');
                 }
-            } else if (reset_data[r].active == false) {
-                if (currentTable && reset_data[r].class) {
-                    $('#' + currenttablename + ' .' + reset_data[r].class).addClass('hiddenColumn');
+            } else if (savedHeaderInfo[r].active == false) {
+                if (currentTable && savedHeaderInfo[r].class) {
+                    $('#' + currenttablename + ' .' + savedHeaderInfo[r].class).addClass('hiddenColumn');
                 }
             };
             custFields.push(customData);
@@ -604,7 +606,7 @@ Template.datatablelist.onRendered(async function () {
                 var $tblrow = $($(".displaySettings")[i]);
                 var fieldID = $tblrow.attr("custid") || 0;
                 var colTitle = $tblrow.find(".divcolumn").text() || "";
-                var colWidth = $tblrow.find(".custom-range").val() || 0;
+                var colWidth = $tblrow.find(".custom-range").val() || 100;
                 var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
                 var colHidden = false;
                 if ($tblrow.find(".custom-control-input").is(":checked")) {
@@ -666,6 +668,12 @@ Template.datatablelist.onRendered(async function () {
         }, 1000);
     }
 
+    $(".divDisplaySettings").on("hide.bs.modal", function(){
+        setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 500);
+        // your function after closing modal goes here
+    })
 })
 
 Template.datatablelist.events({
@@ -697,7 +705,7 @@ Template.datatablelist.events({
         templateObject.displayTableData(tableData)
     },
 
-    'change .chkDatatable': function (event) {
+    'change .chkDatatable': async function (event) {
         event.preventDefault();
         // event.stopImmediatePropagation();
         event.stopImmediatePropagation();
@@ -709,6 +717,11 @@ Template.datatablelist.events({
             $('.' + columnDataValue).addClass('hiddenColumn');
             $('.' + columnDataValue).removeClass('showColumn');
         }
+
+        const tableHandler = new TableHandler();
+        let range = $(event.target).closest("div").next().find(".custom-range").val();
+        await $('.' + columnDataValue).css('width', range);
+        $('.dataTable').resizable();
 
         setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
@@ -1199,7 +1212,7 @@ Template.datatablelist.events({
 
     'change .custom-range': async function (event) {
         const tableHandler = new TableHandler();
-        let range = $(event.target).val() || 0;
+        let range = $(event.target).val() || 100;
         let colClassName = $(event.target).attr("valueclass");
         await $('.' + colClassName).css('width', range);
         $('.dataTable').resizable();
@@ -1360,7 +1373,7 @@ Template.datatablelist.events({
             var $tblrow = $(this);
             var fieldID = $tblrow.attr("custid") || 0;
             var colTitle = $tblrow.find(".divcolumn").text() || "";
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
+            var colWidth = $tblrow.find(".custom-range").val() || 100;
             var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
             var colHidden = false;
             if ($tblrow.find(".custom-control-input").is(":checked")) {
@@ -1391,21 +1404,21 @@ Template.datatablelist.events({
             let tableName = templateObject.data.tablename;
             let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
             let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-            $(".fullScreenSpin").css("display", "none");
             if (added) {
-                sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(function (dataCustomize) {
-                    addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-                });
-                swal({
-                    title: 'SUCCESS',
-                    text: "Display settings is updated!",
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {
-                        $('#myModal2').modal('hide');
-                    }
+                sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), '').then(async function (dataCustomize) {
+                    await addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                        title: 'SUCCESS',
+                        text: "Display settings is updated!",
+                        type: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#myModal2').modal('hide');
+                        }
+                    });
                 });
             } else {
                 swal("Something went wrong!", "", "error");
