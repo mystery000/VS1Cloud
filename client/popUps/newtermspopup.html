@@ -38,9 +38,9 @@
                 </div>
                 <div class="row no-gutters">
                     <div class="col-12 d-flex">
-                        <div class="form-group flex-grow-0 text-center" style="margin: 8px;">
+                        <div class="form-group flex-grow-0" style="margin: 8px; width: 130px;">
                             <label>Customer Default</label>
-                            <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px;">
+                            <div class="custom-control custom-switch chkBox text-center" style="height: 38px; padding-top: 7px;">
                                 {{#if equals includeSalesDefault true}}
                                 <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]" checked>
                                 {{else}}
@@ -51,13 +51,13 @@
                         </div>
                         <div class="form-group flex-grow-0" style="margin: 8px;">
                             <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Credit Limit</label>
-                            <input class="form-control" style="width: 100px;" id="edtCustomerCreditLimit" name="edtCustomerCreditLimit">
+                            <input class="form-control" style="width: 120px;" id="edtCustomerCreditLimit" name="edtCustomerCreditLimit">
                         </div>    
                     </div>
                     <div class="col-12 d-flex">
-                        <div class="form-group flex-grow-0 text-center" style="margin: 8px;">
+                        <div class="form-group flex-grow-0" style="margin: 8px; width: 130px;">
                             <label>Supplier Default</label>
-                            <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px;">
+                            <div class="custom-control custom-switch chkBox text-center" style="height: 38px; padding-top: 7px;">
                                 {{#if equals includePurchaseDefault true}}
                                 <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]" checked>
                                 {{else}}
@@ -68,7 +68,7 @@
                         </div>
                         <div class="form-group flex-grow-0" style="margin: 8px;">
                             <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Credit Limit</label>
-                            <input class="form-control" style="width: 100px;" id="edtSupplierCreditLimit" name="edtSupplierCreditLimit">
+                            <input class="form-control" style="width: 120px;" id="edtSupplierCreditLimit" name="edtSupplierCreditLimit">
                         </div>  
                     </div>
                 </div>
