@@ -10108,10 +10108,10 @@ Template.purchaseordercard.events({
                             let doc = new jsPDF('p', 'pt', 'a4');
                             doc.setFontSize(18);
                             var source = document.getElementById('html-2-pdfwrapper');
-                            doc.addHTML(source, function() {
-
-                                resolve(doc.output('blob'));
-
+                            doc.html(source, {
+                                callback: function(pdf) {
+                                    resolve(doc.output('blob'));    
+                                }
                             });
                         });
                     }
