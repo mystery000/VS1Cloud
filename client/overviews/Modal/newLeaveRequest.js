@@ -475,7 +475,9 @@ Template.newLeaveRequestModal.onRendered(() => {
             changeYear: true,
             yearRange: "-90:+10",
         });
+        let edate0 = new Date();
         let edate1 = new Date();
+        $("#edtLeaveStartDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
         edate1.setDate(edate1.getDate() + 7);
         $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate1);
         $("#edtLeaveTypeofRequest").val('Annual Leave');
