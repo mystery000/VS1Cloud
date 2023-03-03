@@ -4700,7 +4700,7 @@ Template.calender.onRendered(function() {
         }
 
         // FlowRouter.go('/dashboardsalesmanager', '_self');
-        Meteor._reload.reload();
+        // Meteor._reload.reload();
     });
 });
 

@@ -7,6 +7,7 @@ import { SideBarService } from "../../js/sidebar-service";
 
 import { Template } from 'meteor/templating';
 import './bankaccountschart.html';
+import {ReportService} from "../../reports/report-service";
 
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
@@ -24,6 +25,29 @@ Template.bankaccountschart.onCreated(() => {
     templateObject.salespercTotal = new ReactiveVar();
     templateObject.expensepercTotal = new ReactiveVar();
     templateObject.topTenData = new ReactiveVar([]);
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        var dataList = [
+            data.ReconciliationID,
+            data.AccountName,
+            data.OpenBalance,
+            data.Deleted,
+            data.Deleted ? "In-Active" : "",
+            data.ReconciliationDate,
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: "#ID", class: "colReconId", width: "80", active: false, display: true },
+        { index: 1, label: "Account Name", class: "colReconAccountName", width: "80", active: true, display: true },
+        { index: 2, label: "Balance", class: "colReconBalance", width: "80", active: true, display: true },
+        { index: 3, label: "Not Reconciled", class: "colNotReconcilied", width: "140", active: true, display: true },
+        { index: 4, label: "Status", class: "colStatus", width: "60", active: true, display: true },
+        { index: 5, label: "Last Reconciled", class: "colReconDate", width: "140", active: true, display: true },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.bankaccountschart.onRendered(() => {
@@ -33,85 +57,85 @@ Template.bankaccountschart.onRendered(() => {
     let topTenData1 = [];
     let topTenSuppData1 = [];
     let topData = this;
-  setTimeout(function() {
-    $(".bankaccountschart .portlet").removeClass("ui-widget ui-widget-content");
-  }, 500);
+  // setTimeout(function() {
+  //   $(".bankaccountschart .portlet").removeClass("ui-widget ui-widget-content");
+  // }, 500);
 
 
-    templateObject.setReconciliationListData = function(data) {
-
-      setTimeout(function() {
-      $(".tblBankAccountChartList").DataTable({
-          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          pageLength: initialDatatableLoad,
-          lengthMenu: [
-              [initialDatatableLoad, -1],
-              [initialDatatableLoad, "All"],
-          ],
-          select: true,
-          destroy: true,
-          colReorder: true,
-          info: true,
-          responsive: true,
-          fnDrawCallback: function(oSettings) {
-              // $('.dataTables_paginate').css('display', 'none');
-          },
-          language: { search: "",searchPlaceholder: "Search List..." },
-          fnInitComplete: function() {
-              $(
-                  "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-              ).insertAfter(".tblDashboardTaxRate_filter");
-              $(
-                  "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-              ).insertAfter(".tblDashboardTaxRate_filter");
-          },
-      });
-      $('div.dataTables_filter input').addClass('form-control form-control-sm');
-      }, 10);
-    }
-
-    templateObject.getAllReconData = function () {
-      var currentBeginDate = new Date();
-      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-      let fromDateMonth = (currentBeginDate.getMonth() + 1);
-      let fromDateDay = currentBeginDate.getDate();
-      if((currentBeginDate.getMonth()+1) < 10){
-          fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-      }else{
-        fromDateMonth = (currentBeginDate.getMonth()+1);
-      }
-
-      if(currentBeginDate.getDate() < 10){
-          fromDateDay = "0" + currentBeginDate.getDate();
-      }
-      var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-
-        getVS1Data('TReconciliationList').then(function (dataObject) {
-            if(dataObject.length == 0){
-
-              sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
-                //addVS1Data('TReconciliationList',JSON.stringify(data));
-                  templateObject.setReconciliationListData(data);
-              }).catch(function (err) {
-                  $('.fullScreenSpin').css('display','none');
-              });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                templateObject.setReconciliationListData(data);
-
-            }
-        }).catch(function (err) {
-
-          sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
-            //addVS1Data('TReconciliationList',JSON.stringify(data));
-              templateObject.setReconciliationListData(data);
-          }).catch(function (err) {
-              $('.fullScreenSpin').css('display','none');
-          });
-        });
-    }
-    templateObject.getAllReconData();
+    // templateObject.setReconciliationListData = function(data) {
+    //
+    //   setTimeout(function() {
+    //   $(".tblBankAccountChartList").DataTable({
+    //       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //       pageLength: initialDatatableLoad,
+    //       lengthMenu: [
+    //           [initialDatatableLoad, -1],
+    //           [initialDatatableLoad, "All"],
+    //       ],
+    //       select: true,
+    //       destroy: true,
+    //       colReorder: true,
+    //       info: true,
+    //       responsive: true,
+    //       fnDrawCallback: function(oSettings) {
+    //           // $('.dataTables_paginate').css('display', 'none');
+    //       },
+    //       language: { search: "",searchPlaceholder: "Search List..." },
+    //       fnInitComplete: function() {
+    //           $(
+    //               "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+    //           ).insertAfter(".tblDashboardTaxRate_filter");
+    //           $(
+    //               "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+    //           ).insertAfter(".tblDashboardTaxRate_filter");
+    //       },
+    //   });
+    //   $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //   }, 10);
+    // }
+    //
+    // templateObject.getAllReconData = function () {
+    //   var currentBeginDate = new Date();
+    //   var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+    //   let fromDateMonth = (currentBeginDate.getMonth() + 1);
+    //   let fromDateDay = currentBeginDate.getDate();
+    //   if((currentBeginDate.getMonth()+1) < 10){
+    //       fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+    //   }else{
+    //     fromDateMonth = (currentBeginDate.getMonth()+1);
+    //   }
+    //
+    //   if(currentBeginDate.getDate() < 10){
+    //       fromDateDay = "0" + currentBeginDate.getDate();
+    //   }
+    //   var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+    //   let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+    //
+    //     getVS1Data('TReconciliationList').then(function (dataObject) {
+    //         if(dataObject.length == 0){
+    //
+    //           sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+    //             //addVS1Data('TReconciliationList',JSON.stringify(data));
+    //               templateObject.setReconciliationListData(data);
+    //           }).catch(function (err) {
+    //               $('.fullScreenSpin').css('display','none');
+    //           });
+    //         }else{
+    //             let data = JSON.parse(dataObject[0].data);
+    //             templateObject.setReconciliationListData(data);
+    //
+    //         }
+    //     }).catch(function (err) {
+    //
+    //       sideBarService.getAllTReconcilationListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+    //         //addVS1Data('TReconciliationList',JSON.stringify(data));
+    //           templateObject.setReconciliationListData(data);
+    //       }).catch(function (err) {
+    //           $('.fullScreenSpin').css('display','none');
+    //       });
+    //     });
+    // }
+    //templateObject.getAllReconData();
 
 
 });
@@ -153,7 +177,45 @@ Template.bankaccountschart.helpers({
     },
     expensepercTotal: () => {
         return Template.instance().expensepercTotal.get() || 0;
-    }
+    },
+
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTReconcilationListData;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllTReconcilationListData;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["dateFrom","dateTo","ignoredate", "deleteFilter"];
+    },
 });
 Template.registerHelper('equals', function (a, b) {
     return a === b;

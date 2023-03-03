@@ -14,11 +14,16 @@ import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 import './accountantCompany.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { EditableService } from '../../editable-service';
 
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 let organisationService = new OrganisationService();
+let editableService = new EditableService();
+let accountService = new AccountService();
+let contactService = new ContactService();
+let organisationSettings
 
 Template.accountant_company.onCreated(() => {
     const templateObject = Template.instance();
@@ -183,14 +188,12 @@ Template.accountant_company.onRendered(() => {
     $("#dispCurrFiscYearToDate").append(yeartodate + " - " + monthCurr);
     // get 'financial year' to appear end
 
-    const templateObject = Template.instance();
-    let accountService = new AccountService();
-    let contactService = new ContactService();
+    const templateObject = Template.instance();    
     let countries = [];
     const accountTypeList = [];
     const dataTableList = [];
     let categories = [];
-    let categoryAccountList = [];
+    let categoryAccountList = [];    
 
     templateObject.getReceiptCategoryList = async function() {
         getVS1Data('TReceiptCategory').then(function(dataObject) {
@@ -224,8 +227,8 @@ Template.accountant_company.onRendered(() => {
     templateObject.getReceiptCategoryList();
 
     organisationService.getOrganisationDetail().then(function(data) {
-        let mainData = data.tcompanyinfo[0];
-        $("#pageTitle").html(mainData.CompanyName + " trading as " + mainData.TradingName);
+        organisationSettings = data.tcompanyinfo[0];
+        $("#pageTitle").html(organisationSettings.CompanyName + " trading as " + organisationSettings.TradingName);
     });
 
     templateObject.accountPanList.set([{
@@ -608,6 +611,33 @@ Template.accountant_company.onRendered(() => {
 
     templateObject.getAccountLists();
 
+    function createHeaderHtml(firstname, lastname, company, scity, spostalcode, sstate, scountry, shippingaddress) {
+        let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
+        headerHtml += `<span style='float:left; padding-bottom:8px'><span class="editheader-firstname">${firstname}</span> <span class="editheader-lasttname">${lastname}</span>, CPA</span>`;
+        headerHtml += "<span class='editheader-company' style='float:left; padding-bottom:8px; clear:both'><b>" + company + "</b></span>";
+        var address = `<span class='editheader-city'>${scity}</span>`;
+        if (scity != "" && spostalcode != "") {
+            address += ", ";
+        }
+        address += `<span class='editheader-postalcode'>${spostalcode}</span>`;
+        if (sstate != "" && (scity != "" || spostalcode != "")) {
+            address += ", ";
+        }
+        address += `<span class='editheader-state'>${sstate}</span>`;
+        if (scountry != "" && (scity != "" || spostalcode != "" || sstate != "")) {
+            address += ", ";
+        }
+        address += `<span class='editheader-country'>${scountry}</span>`;
+        
+        let endDate = $("#dateTo").val().split("/");
+        endDate = endDate[0] + " " + months[parseInt(endDate[1] - 1)] + " " + endDate[2];
+        templateObject.endDate.set(endDate);
+
+        headerHtml += `<span style='float:left; padding-bottom:20px; clear:both'><span class='editheader-shippingaddress'>${shippingaddress}</span><br/>${address}</span>`;
+        headerHtml += "<span style='float:left; clear:both' id='dispEndDate'>Dated: " + templateObject.endDate.get() + "</span>";
+        return headerHtml
+    }
+
     $(document).ready(function() {
         let imageData = localStorage.getItem("Image");
         if (imageData) {
@@ -660,7 +690,7 @@ Template.accountant_company.onRendered(() => {
             });
         });
 
-        function setOneSupplierDataEx(data) {
+        function setOneSupplierDataEx(data) {            
             let lineItemObj = {
                 id: data.fields.ID,
                 lid: 'Edit Supplier',
@@ -700,33 +730,11 @@ Template.accountant_company.onRendered(() => {
                 iscustomer: data.fields.IsCustomer || false,
             };
 
-            let headerHtml = "<div style='border-top:1px solid #858796; width:172px; margin-bottom:12px'></div>";
-            headerHtml += "<span style='float:left; padding-bottom:8px'>" + lineItemObj.firstname + " " + lineItemObj.lastname + ", CPA</span>";
-            headerHtml += "<span style='float:left; padding-bottom:8px; clear:both'><b>" + lineItemObj.company + "</b></span>";
-            var address = "";
-            if (lineItemObj.scity != "") {
-                address += lineItemObj.scity + ", ";
-            }
-            if (lineItemObj.spostalcode != "") {
-                address += lineItemObj.spostalcode + ", ";
-            }
-            if (lineItemObj.sstate != "") {
-                address += lineItemObj.sstate + ", ";
-            }
-            if (lineItemObj.scountry != "") {
-                address += lineItemObj.scountry + ", ";
-            }
-
-            let endDate = $("#dateTo").val().split("/");
-            endDate = endDate[0] + " " + months[parseInt(endDate[1] - 1)] + " " + endDate[2];
-            templateObject.endDate.set(endDate);
-
-            headerHtml += "<span style='float:left; padding-bottom:20px; clear:both'>" + lineItemObj.shippingaddress + "<br/>" + address.slice(0, -2) + "</span>";
-            headerHtml += "<span style='float:left; clear:both' id='dispEndDate'>Dated: " + templateObject.endDate.get() + "</span>";
+            let headerHtml = createHeaderHtml(lineItemObj.firstname, lineItemObj.lastname, lineItemObj.company, lineItemObj.scity, 
+                lineItemObj.spostalcode, lineItemObj.sstate, lineItemObj.scountry, lineItemObj.shippingaddress)
 
             $("#reportsAccountantHeader, #reportsAccountantHeaderPrt").html(headerHtml);
         }
-
     });
 
     $('#expenseCategory').on('click', function(e, li) {
@@ -1559,6 +1567,24 @@ Template.accountant_company.onRendered(() => {
     });
 
     // Alex: Add for Docusign end
+    
+    $(document).on('click', "#tblSupplierlist tbody tr", function (e) {
+        const tableSupplier = $(this);        
+        let supplierId = tableSupplier.find(".colID").text()
+        let firstName = tableSupplier.find(".colSupplierFirstName").text()
+        let lastName = tableSupplier.find(".colSupplierLastName").text()
+        let company = tableSupplier.find(".colCompany").text()
+        let scity = tableSupplier.find(".colCity").text()
+        let spostalcode = tableSupplier.find(".colZipCode").text()
+        let sstate = tableSupplier.find(".colState").text()
+        let scountry = tableSupplier.find(".colCountry").text()
+        let shippingaddress = tableSupplier.find(".colStreetAddress").text()
+        let headerHtml = createHeaderHtml(firstName, lastName, company, scity, spostalcode, sstate, scountry, shippingaddress)
+        let iframe = document.getElementById("editor_ifr");
+        $(iframe.contentWindow.document.getElementById("reportsAccountantHeader")).html(headerHtml);
+        $("#sltAccountant").data("suppid", supplierId);
+        $("#supplierListModal").modal("toggle");
+    })
 });
 
 Template.accountant_company.events({
@@ -2452,9 +2478,9 @@ Template.accountant_company.events({
     },
 
     "click #editSummary": function(event) {
-
         let iframe = document.getElementById("editor_ifr");
         $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html($("#page-3-content").html());
+        $(iframe.contentWindow.document.getElementById("sltAccountant")).on('click', editableService.clickAccountant)
         $("#editorType").val("summary");
     },
 
@@ -2493,6 +2519,48 @@ Template.accountant_company.events({
                 $("#page-2-content").html(elmnt);
                 $("#page-2-content-prt").html(elmnt);
             } else if ($("#editorType").val() == "summary") {
+                let accountantHeader = document.getElementById("editor_ifr").contentWindow.document.getElementById("reportsAccountantHeader")                
+                let firstname = $(accountantHeader.querySelector('span.editheader-firstname')).text()
+                let lastname = $(accountantHeader.querySelector('span.editheader-lastname')).text()
+                let company = $(accountantHeader.querySelector('span.editheader-company')).text()
+                let city = $(accountantHeader.querySelector('span.editheader-city')).text()
+                let postalcode = $(accountantHeader.querySelector('span.editheader-postalcode')).text()
+                let state = $(accountantHeader.querySelector('span.editheader-state')).text()
+                let country = $(accountantHeader.querySelector('span.editheader-country')).text()
+                let shippingaddress = $(accountantHeader.querySelector('span.editheader-shippingaddress')).text()
+                let supplierId = $("#sltAccountant").data("suppid")
+                $(".fullScreenSpin").css("display", "inline-block");
+                contactService.getOneSupplierDataEx(supplierId).then(function (data) {
+                    let saveSupplierData = {
+                        type: "TSupplierEx",
+                        fields: {...data.fields, FirstName: firstname, LastName: lastname, ClientName: company, 
+                            Street2: city, Postcode: postalcode, State: state, Country: country, Street: shippingaddress
+                        }
+                    }
+                    contactService.saveSupplierEx(saveSupplierData).then(function (objDetails) {
+                        let saveOrganisationSettings = {type: "TCompanyInfo", fields: {...organisationSettings, Contact: company}}
+                        organisationService
+                            .saveOrganisationSetting(saveOrganisationSettings)
+                            .then(function (data) {
+                                localStorage.setItem("VS1Accountant", company);
+                                swal({
+                                    title: "Organisation details successfully updated!",
+                                    text: "",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "OK",
+                                })
+                                $(".fullScreenSpin").css("display", "none");
+                            })
+                            .catch(function (err) {
+                                swal('Oooops...', err, 'error');
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                    }).catch(function (err) {
+                        swal('Oooops...', err, 'error');
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                });                
                 $("#page-3-content").html(elmnt);
                 $("#page-3-content-prt").html(elmnt);
             } else if ($("#editorType").val() == "declaration") {
