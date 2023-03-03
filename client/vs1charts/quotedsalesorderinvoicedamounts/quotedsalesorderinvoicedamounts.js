@@ -838,7 +838,6 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
         initialReportLoad = 100;
 
         sideBarService.getSalesListData(dateFrom, dateTo, false, initialReportLoad, 0).then((data) => {
-            console.dir(data)
             setTimeout(function() {
                 let filterData = _.filter(data.tsaleslist, function(data) {
                     return data.CustomerName
