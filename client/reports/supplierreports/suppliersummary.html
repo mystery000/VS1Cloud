@@ -59,7 +59,7 @@
 
                     </tr>
                 {{/if}} -->
-                <tr class="table-active tblAvoid customDoubleTableHeading">
+                <tr class="table-active">
                     {{#each c in suppliersummaryth}}
                     {{#if c.display}}
                     <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
@@ -128,8 +128,8 @@
                         </tr>
                         {{/each}}
                         <tr>
-                            <td style="font-weight: 800;" colspan="5">{{ value.Supplier_Name }} Total</td>
-
+                            <td style="font-weight: 800;" colspan="1">{{ value.Supplier_Name }} Total</td>
+                            <td colspan="4"></td>
 
                             {{#if isOnlyDefaultActive}}
 

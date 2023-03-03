@@ -88,10 +88,10 @@
       <tbody>
           {{#if transactiondatatablerecords}}
               {{#each items in transactiondatatablerecords}}
-                  <tr>
+                  <tr class="listhr">
                       {{#each item in items}}
-                          <td>
-                              {{item}}
+                          <td class="{{item.indent}}">
+                              <span class={{item.className}}>{{item.string}}</span>
                           </td>
                       {{/each}}
                   </tr>

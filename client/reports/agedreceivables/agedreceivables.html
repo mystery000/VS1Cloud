@@ -105,22 +105,22 @@
                     {{/if}}
                   {{else}}
 
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.AmountDue null}}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.Current null}}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '1-30Days' }}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '30-60Days' }}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '60-90Days' }}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '>90Days' }}</a>
                     </td>
 
@@ -195,22 +195,22 @@
 
                   {{/if}}
                 {{else}}
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.TotalAmountDue null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.TotalCurrent null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.OneMonth null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.TwoMonth null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.ThreeMonth null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.OlderMonth null}}</strong></span></td>
 

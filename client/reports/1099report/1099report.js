@@ -44,7 +44,7 @@ Template.report1099.onRendered(()=>{
     let reset_data = [
       { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "150" },
       { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
-      { index: 3, label: 'Payment', class: 'colPayment', active: true, display: true, width: "150" },
+      { index: 3, label: 'Payment #', class: 'colPayment', active: true, display: true, width: "150" },
       { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
       { index: 5, label: 'Method', class: 'colMethod', active: true, display: true, width: "150" },
       { index: 6, label: 'Bill Street', class: 'colBillStreet', active: true, display: true, width: "150" },

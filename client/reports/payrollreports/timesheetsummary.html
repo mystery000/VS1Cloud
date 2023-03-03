@@ -12,15 +12,17 @@
                         <th>Additional</th>
                         <th>Tips</th>
                     </tr> -->
-                    {{#if timesheetsummaryth}}
-                    {{#each c in timesheetsummaryth }}
-                    {{# if c.display}}
-                    <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
-                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                        style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
-                    {{/if}}
-                    {{/each}}
-                    {{/if}}
+                    <tr class="table-active">
+                        {{#if timesheetsummaryth}}
+                        {{#each c in timesheetsummaryth }}
+                        {{# if c.display}}
+                        <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                            class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                            style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+                        {{/if}}
+                        {{/each}}
+                        {{/if}}
+                    </tr>
                 </thead>
                 <tbody>
                     {{#if records}}
@@ -42,7 +44,7 @@
                         {{/each}}
                     {{else}}
                         <tr class="odd" style="text-align: center;">
-                            <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                            <td valign="top" colspan="7" class="dataTables_empty text-left">No data available in table</td>
                         </tr>
                     {{/if}}
                     <!-- {{#if records}}

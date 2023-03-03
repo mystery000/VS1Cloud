@@ -125,7 +125,7 @@ Template.agedpayablessummary.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.displayAgedPayablesData = async function (data) {console.log(data);
+  templateObject.displayAgedPayablesData = async function (data) {
     var splashArrayAgedPayablesReport = new Array();
     let deleteFilter = false;
     if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -133,6 +133,9 @@ Template.agedpayablessummary.onRendered(() => {
     } else {
       deleteFilter = false;
     };
+    let sum =  new Array(), total = new Array();
+    let contact, j;
+    for(j = 0 ; j < 6; j ++)  total[j] = 0;
     for (let i = 0; i < data.tapreport.length; i++) {
       var dataList = [
         data.tapreport[i].Name || "",
@@ -145,10 +148,42 @@ Template.agedpayablessummary.onRendered(() => {
         data.tapreport[i]["90Days"] || "",
         data.tapreport[i]["120Days"] || "",
       ];
-      splashArrayAgedPayablesReport.push(dataList);
-      templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
-    }console.log(splashArrayAgedPayablesReport);
-
+      if(contact != dataList[0]){
+        if(i != 0) {
+          for(j = 0 ; j < 6; j ++)
+            sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger", "text-right");
+          splashArrayAgedPayablesReport.push([
+              GlobalFunctions.generateSpan(contact, "text-primary"),
+              "",
+              "",
+              sum[0],
+              sum[1],
+              sum[2],
+              sum[3],
+              sum[4],
+              sum[5],
+          ]);
+        }
+        contact = dataList[0];
+        for(j = 0 ; j < 6; j ++)
+          sum[j] = 0;
+      }
+      for(j = 0 ; j < 6; j ++) sum[j] += dataList[3 + j] - 0, total[j] += dataList[3 + j] - 0;
+    }
+    for(j = 0 ; j < 6; j ++)
+      total[j] =  total[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total[j]), "table-cells text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total[j]), "text-danger text-bold", "text-right");
+    splashArrayAgedPayablesReport.push([
+      GlobalFunctions.generateSpan("Grand Total", "table-cells text-bold"),
+      "",
+      "",
+      total[0],
+      total[1],
+      total[2],
+      total[3],
+      total[4],
+      total[5],
+    ]);
+    templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
 
     if (templateObject.transactiondatatablerecords.get()) {
       setTimeout(function () {

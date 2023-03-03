@@ -11,15 +11,17 @@
                         <th class="text-right">Amount Used</th>
                         <th class="text-right">Balance</th>
                     </tr> -->
-                    {{#if leavetakenth}}
-                    {{#each c in leavetakenth }}
-                    {{# if c.display}}
-                    <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
-                        class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                        style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
-                    {{/if}}
-                    {{/each}}
-                    {{/if}}
+                    <tr class="table-active">
+                        {{#if leavetakenth}}
+                        {{#each c in leavetakenth }}
+                        {{# if c.display}}
+                        <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                            class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                            style="text-align: left; width:{{c.width}}px">{{ c.label }}</th>
+                        {{/if}}
+                        {{/each}}
+                        {{/if}}
+                    </tr>
                 </thead>
                 <tbody>
                     {{#if records}}
