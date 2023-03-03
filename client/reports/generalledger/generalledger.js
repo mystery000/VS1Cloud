@@ -675,14 +675,14 @@ Template.generalledger.onRendered(() => {
     let reset_data = [];
     reset_data = [
       // { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
-      { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
-      { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "" },
-      { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
-      { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "180" },
-      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "" },
-      { index: 6, label: 'Debits', class: 'colDebitsEx', active: true, display: true, width: "" },
-      { index: 7, label: 'Credits', class: 'colCreditEx', active: true, display: true, width: "" },
-      { index: 8, label: 'Amount', class: 'colAmountEx', active: true, display: true, width: "" },
+      { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "245" },
+      { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "105" },
+      { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "120" },
+      { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "220" },
+      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "200" },
+      { index: 6, label: 'Debits', class: 'colDebitsEx', active: true, display: true, width: "130" },
+      { index: 7, label: 'Credits', class: 'colCreditEx', active: true, display: true, width: "130" },
+      { index: 8, label: 'Amount', class: 'colAmountEx', active: true, display: true, width: "130" },
 
       // { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
       // { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
@@ -851,7 +851,7 @@ Template.generalledger.onRendered(() => {
       }
     }
     balanceSheetReport.push([
-      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells"),
+      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
       "",
       "",
       "",
@@ -863,7 +863,7 @@ Template.generalledger.onRendered(() => {
     creditSum += (credit - 0), debitSum += (debit - 0);
     totalSum = (creditSum - debitSum);
     balanceSheetReport.push([
-      GlobalFunctions.generateSpan(`Grand Total`, "table-cells"),
+      GlobalFunctions.generateSpan(`Grand Total`, "table-cells text-bold"),
       "",
       "",
       "",

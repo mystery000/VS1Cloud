@@ -253,6 +253,9 @@
                                     .text-bold {
                                         font-weight: 800;
                                     }
+                                    .text-lbold {
+                                        font-weight: 700;
+                                    }
                                     .totalhr {
                                         border-top: 2px #858999 solid;
                                     }
@@ -263,7 +266,7 @@
                                     .tableExportDetailDiv th,
                                     .tableExportDetailDiv td {
                                         white-space: nowrap;
-                                        padding: 12px;
+                                        padding: 5px 15px;
                                     }
                                     /* .tableExportDetailDiv th {
                                         text-align: center;
@@ -306,6 +309,15 @@
                                     }
                                     table.dataTable {
                                         border-collapse: collapse !important;
+                                    }
+                                    .table-sm td, .table-sm th{
+                                        padding: 5px 15px!important;
+                                    }
+                                    .table-sm th {
+                                        white-space: nowrap;
+                                    }
+                                    .customDoubleTableHeading th{
+                                        padding: 0px 15px!important;
                                     }
                                 </style>
                                 {{> Template.contentBlock}}

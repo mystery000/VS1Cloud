@@ -47,12 +47,12 @@ Template.agedpayablessummary.onRendered(() => {
       { index: 1, label: 'Contact', class: 'colName', active: true, display: true, width: "150" },
       { index: 2, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
       { index: 3, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
-      { index: 4, label: 'Total Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
-      { index: 5, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
-      { index: 6, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
-      { index: 7, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
-      { index: 8, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
-      { index: 9, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
+      { index: 4, label: 'Total Amount Due', class: 'colAmountDue text-right', active: true, display: true, width: "170" },
+      { index: 5, label: 'Current', class: 'colCurrent text-right', active: true, display: true, width: "150" },
+      { index: 6, label: '1 - 30 Days', class: 'col130Days text-right', active: true, display: true, width: "150" },
+      { index: 7, label: '30 - 60 Days', class: 'col3060Days text-right', active: true, display: true, width: "150" },
+      { index: 8, label: '60 - 90 Days', class: 'col6090Days text-right', active: true, display: true, width: "150" },
+      { index: 9, label: '> 90 Days', class: 'col90Days text-right', active: true, display: true, width: "150" },
     ];
     templateObject.agedpayablesth.set(reset_data);
   }
@@ -125,7 +125,7 @@ Template.agedpayablessummary.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.displayAgedPayablesData = async function (data) {
+  templateObject.displayAgedPayablesData = async function (data) {console.log(data);
     var splashArrayAgedPayablesReport = new Array();
     let deleteFilter = false;
     if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -147,7 +147,7 @@ Template.agedpayablessummary.onRendered(() => {
       ];
       splashArrayAgedPayablesReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
-    }
+    }console.log(splashArrayAgedPayablesReport);
 
 
     if (templateObject.transactiondatatablerecords.get()) {
