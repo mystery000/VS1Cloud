@@ -3,7 +3,6 @@ node_modules
 package-lock.json
 /package-lock.json
 .vscode
-/.meteor/local
 
 start-dev.sh
 server/vs1cloud.tar.gz
