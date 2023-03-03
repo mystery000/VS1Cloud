@@ -17863,7 +17863,7 @@ Template.appointments.events({
     //     });
     //   }
     // },
-    "submit form#frmAppointment": function(event) {
+    "submit form#frmAppointment": async function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
         event.preventDefault();
 
