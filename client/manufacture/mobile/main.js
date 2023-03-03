@@ -42,7 +42,6 @@ Template.mobileapp.events({
             
             $(".mobile-left-employee-list").css('display', 'none');
             $(".mobile-left-jobprocess-list").css('display', 'none');
-          
             $(".mobile-left-btn-containner").css('display', 'none');
            
             // if ($.fn.DataTable.isDataTable( '#tblWorkOrderList' ) ) {
@@ -52,13 +51,12 @@ Template.mobileapp.events({
             getVS1Data('TSalesOrderList').then(function (dataObject) {
                 $(".mobile-left-workorder-list").css('display', 'block');
                 let workOrderData = JSON.parse(dataObject[0].data);
-                console.log(workOrderData.tsalesorderlist);
-
+               
                 let table = $("#tblWorkOrderList").DataTable({
                     data: workOrderData.tsalesorderlist,
                     paging: false,
-                    searching: true,
-                    destroy:true,
+                    searching: false,
+                    destroy:true,                    
                     dom: 't',
                     scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
                     scrollCollapse: true,
@@ -97,7 +95,7 @@ Template.mobileapp.events({
                 let table = $("#tblJobProcessList").DataTable({
                     data: processData.tprocessstep,
                     paging: false,
-                    searching: true,
+                    searching: false,
                     destroy:true,
                     dom: 't',
                     scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
@@ -141,7 +139,7 @@ Template.mobileapp.events({
                 let table = $("#tblEmployeeList").DataTable({
                     data: empdata.temployee,
                     paging: false,
-                    searching: true,
+                    searching: false,
                     destroy:true,
                     dom: 't',
                     scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
@@ -326,9 +324,11 @@ Template.mobileapp.events({
         $("#btnStopJob").css('background', '#0084D1');
         $("#btnStartJob").removeAttr('disabled');
         $('.mobile-stop-job-container').css('display', 'block');
-        $('.mobile-right-btn-containner').css('display', 'none')
-        $(".mobile-header-status-text").text("Stop Job");
+        $('.mobile-right-btn-containner').css('display', 'none');
+        $("#startBreakContainer").css('display', 'none');
+        $(".mobile-left-btn-containner").css('display', 'block');
 
+        $(".mobile-header-status-text").text("Stop Job");
         $(".mobile-main-input").val("Stop Job");
 
     },
@@ -377,8 +377,8 @@ Template.mobileapp.events({
             // });
 
             Template.instance().jobNumber.set(inputValue);
-            $(".mobile-main-input").val("");
 
+            $(".mobile-main-input").val("");
             Template.instance().isEnterJobNumber.set(false);
             Template.instance().isEnterJobProcess.set(true);
             Template.instance().isClockin.set(false);
@@ -506,9 +506,14 @@ Template.mobileapp.events({
         
         if($('#breakCheck').is(":checked") == true){
             
-            $(".mobile-main-input").val("Job paused ");
+            $(".mobile-main-input").val("Job Paused ");
          }else{
             $(".mobile-main-input").val("Job Started ");
          }
+    },
+    'click #breakSave': function(e, instance) {
+        Template.instance().break.set(false);
+        Template.instance().breakMessage.set("dddddd");        
+
     }
 });
