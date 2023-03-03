@@ -142,21 +142,26 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     function checkBoxClick() {
         let currentTableData = templateObject.transactiondatatablerecords.get();
         let targetRows = [];
-        globalID.forEach(itemID => {
-            let index = currentTableData.findIndex(item => item[1] == itemID);
-            if (index > -1) {
-                let targetRow = currentTableData[index];
-                let chk = targetRow[0];
-                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
-                targetRow.splice(0, 1, chk);
-                currentTableData.splice(index, 1);
-                targetRows.push(targetRow);
-            }
-        });
-        let newTableData = [...targetRows, ...currentTableData];
-        templateObject.transactiondatatablerecords.set(newTableData);
-        $('#' + currenttablename).DataTable().clear();
-        $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+
+        if(globalID){
+            globalID.forEach(itemID => {
+                let index = currentTableData.findIndex(item => item[1] == itemID);
+                if (index > -1) {
+                    let targetRow = currentTableData[index];
+                    let chk = targetRow[0];
+                    chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                    targetRow.splice(0, 1, chk);
+                    currentTableData.splice(index, 1);
+                    targetRows.push(targetRow);
+                }
+            });
+
+            let newTableData = [...targetRows, ...currentTableData];
+            templateObject.transactiondatatablerecords.set(newTableData);
+            $('#' + currenttablename).DataTable().clear();
+            $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+        }
+
         let rows = $('#' + currenttablename).find('tbody tr');
         for (let i = 0; i < rows.length; i++) {
             if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
@@ -259,6 +264,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
                 { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
                 { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+            ];
+        } else if (currenttablename == "tblTransactionTypeCheckbox") {
+            reset_data = [
+                { index: 0, label: '#ID', class: 'colDeptID', active: false, display: true, width: "10" },
+                { index: 1, label: 'Type Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
             ];
         } else if (currenttablename == "tblAvailableSNCheckbox") {
             reset_data = [
@@ -971,6 +981,189 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 setTimeout(function() {
                     MakeNegative();
                 }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    templateObject.getTransactionTypeData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
+        var customerpage = 0;
+
+        let data = {
+            tdeptclasslist: [
+                {
+                    ClassID: 'Appointments',
+                    ClassName: 'Appointments'
+                },
+                {
+                    ClassID: 'Deposits',
+                    ClassName: 'Deposits'
+                },
+                {
+                    ClassID: 'Checks',
+                    ClassName: 'Checks'
+                },
+                {
+                    ClassID: 'Contacts',
+                    ClassName: 'Contacts'
+                },
+                {
+                    ClassID: 'Tasks',
+                    ClassName: 'Tasks'
+                },
+                {
+                    ClassID: 'Customer Payments',
+                    ClassName: 'Customer Payments'
+                },
+                {
+                    ClassID: 'Supplier Payments',
+                    ClassName: 'Supplier Payments'
+                },
+                {
+                    ClassID: 'Statements',
+                    ClassName: 'Statements'
+                },
+                {
+                    ClassID: 'Pays Bill',
+                    ClassName: 'Pays Bill'
+                },
+                {
+                    ClassID: 'Credit',
+                    ClassName: 'Credit'
+                },
+                {
+                    ClassID: 'Purchase Order',
+                    ClassName: 'Purchase Order'
+                },
+                {
+                    ClassID: 'Receipt Claims',
+                    ClassName: 'Receipt Claims'
+                },
+                {
+                    ClassID: 'Quote',
+                    ClassName: 'Quote'
+                },
+                {
+                    ClassID: 'Sales Order',
+                    ClassName: 'Sales Order'
+                },
+                {
+                    ClassID: 'Invoices',
+                    ClassName: 'Invoices'
+                },
+                {
+                    ClassID: 'Refund',
+                    ClassName: 'Refund'
+                },
+                {
+                    ClassID: 'Shipping',
+                    ClassName: 'Shipping'
+                },
+            ]
+        };
+
+        templateObject.displayTransactionTypeData(data);
+    }
+
+    templateObject.displayTransactionTypeData = async function(data) {
+        var splashArrayDepartmentsList = new Array();
+        let chkBox;
+
+        for (let i = 0; i < data.tdeptclasslist.length; i++) {
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
+                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tdeptclasslist[i].ClassID +
+                '"></label></div>'; //switchbox
+
+            var dataList = [
+                chkBox,
+                data.tdeptclasslist[i].ClassID || "",
+                data.tdeptclasslist[i].ClassName || "",
+            ];
+            splashArrayDepartmentsList.push(dataList);
+        }
+        templateObject.transactiondatatablerecords.set(splashArrayDepartmentsList);
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        //$('.fullScreenSpin').css('display','none');
+
+        setTimeout(async function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#' + currenttablename).DataTable({
+                data: templateObject.transactiondatatablerecords.get(),
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-7'f><'col-sm-12 col-md-5'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [{
+                        targets: 0,
+                        className: "colChkBox pointer",
+                        orderable: false,
+                        width: "15px",
+                    },
+                    {
+                        targets: 1,
+                        className: "colDeptID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[1]);
+                        }
+                    },
+                    {
+                        targets: 2,
+                        className: "colDeptName",
+                        width: "200px",
+                    },
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                // "order": [[1, "asc"]],
+                order: false,
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+
+                "fnDrawCallback": function(oSettings) {
+                    checkBoxClick();
+                },
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search List..."
+                },
+                "fnInitComplete": function(oSettings) {
+                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    if (data.Params.Search.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    checkBoxClickByName();
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    //
+                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
             });
             $(".fullScreenSpin").css("display", "none");
 
@@ -2009,6 +2202,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         templateObject.getAccountsListVS1();
     } else if (currenttablename == "tblDepartmentCheckbox") {
         templateObject.getDepartmentsData();
+    } else if (currenttablename == "tblTransactionTypeCheckbox") {
+        templateObject.getTransactionTypeData();
     } else if (currenttablename == "tblAvailableSNCheckbox") {
         templateObject.getSerialNumbersData();
     } else if (currenttablename == "tblAvailableLotCheckbox") {
@@ -2198,6 +2393,8 @@ Template.internal_transaction_list_with_switchbox.events({
         } else if (currenttablename == "tblDepartmentCheckbox") {
             await clearData('TDeptClassList');
             templateObject.getDepartmentsData(true);
+        } else if (currenttablename == "tblTransactionTypeCheckbox") {
+            templateObject.getTransactionTypeData(true);
         } else if (currentTablename == "tblEftExportCheckbox") {
             await clearData('TABADetailRecord');
             templateObject.getEftExportData(true);
@@ -2225,6 +2422,8 @@ Template.internal_transaction_list_with_switchbox.events({
         } else if (currenttablename == "tblDepartmentCheckbox") {
             await clearData('TDeptClassList');
             templateObject.getDepartmentsData(false);
+        } else if (currenttablename == "tblTransactionTypeCheckbox") {
+            templateObject.getTransactionTypeData(false);
         } else if (currentTablename == "tblEftExportCheckbox") {
             await clearData('TABADetailRecord');
             templateObject.getEftExportData(false);

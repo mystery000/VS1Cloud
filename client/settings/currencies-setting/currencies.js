@@ -43,7 +43,7 @@ Template.currenciessettings.onCreated(function () {
       data.BuyRate || 0.00,
       data.SellRate || 0.00,
       data.Country || "",
-      data.RateLastModified || "",
+      moment(data.RateLastModified).format("DD/MM/YYYY") || "",
       data.CurrencyDesc || "",
       linestatus,
       data.FixedRate || 0.00,
@@ -56,7 +56,7 @@ Template.currenciessettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: true, width: "30" },
+    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
     { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
     { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
     { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100" },

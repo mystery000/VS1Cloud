@@ -3237,6 +3237,7 @@ Template.emailsettings.onRendered(function () {
     $(document).on("click", "#tblCorrespondence tr", function (e) {
         let tempLabel = $(e.target).closest("tr").find(".colLabel").text();
         let tempSubject = $(e.target).closest("tr").find(".colSubject").text();
+        let tempAppointment = $(e.target).closest("tr").find(".colAppointment").text();
         let tempMemo = $(e.target).closest("tr").find(".colTemplateContent").text();
         let tempId = $(e.target).closest("tr").find(".colID").text();
         templateObject.isAdd.set(false);
@@ -3244,6 +3245,7 @@ Template.emailsettings.onRendered(function () {
         $("#addLetterTemplateModal").modal();
         $("#edtTemplateLbl").val(tempLabel);
         $("#edtTemplateSubject").val(tempSubject);
+        $("#edtTamplateAppointment").val(tempAppointment);
         // $("#edtTemplateContent").val(tempMemo);
         tinymce.get("edtTemplateContent").setContent(tempMemo);
     });
@@ -4191,17 +4193,42 @@ Template.emailsettings.events({
     },
 
     "click #edtTamplateAppointment": function (event) {
-        $("#appointmentListModal").modal();
-    },
-    // Click Appointment list table's recored
-    "click #tblAppointmentList tbody tr": function(e){
-        let id = e.currentTarget.children[0].innerText;
+        let temp = $("#appointmentId").val();
 
-        $("#edtTamplateAppointment").val(id);
-        $("#appointmentId").val(id);
+        if(temp){
 
-        $("#appointmentListModal").modal("hide");
+            const myModalEl = document.getElementById('myModalTransactionType')
+            myModalEl.addEventListener('hidden.bs.modal', event => {
+                let types = ',' + temp.trim() + ',';
+
+                $("#tblTransactionTypeCheckbox tr input.chkServiceCard").each(function () {
+                    let dpt = $(this).closest("tr").find(".colDeptName").text();
+
+                    if(types.indexOf(dpt) >= 0){
+                        this.checked = true;
+                    }
+                });
+            })
+        }
+
+        $("#myModalTransactionType").modal();
+
+        // $("#appointmentListModal").modal();
     },
+    "click #myModalTransactionType button.btnTransactionTypeSelect": function () {
+        let types = [];
+
+        $("#tblTransactionTypeCheckbox tr input.chkServiceCard").each(function () {
+            if ($(this).is(":checked")) {
+                let dpt = $(this).closest("tr").find(".colDeptName").text();
+                types.push(dpt);
+            }
+        });
+
+        $("#edtTamplateAppointment").val(types.join(',').trim());
+        $("#appointmentId").val(types.join(',').trim());
+    },
+
     "click #copy-correspondence": async function () {
         $("#copyTemplateModal").modal();
     },
@@ -4277,7 +4304,7 @@ Template.emailsettings.events({
                             ReferenceTxt: tempSubject,
                             Ref_Date: moment().format("YYYY-MM-DD"),
                             Status: "",
-                            Appointment: appointmentId,
+                            // Appointment: appointmentId,
                         };
                         let objDetails = {
                             type: "TCorrespondence",
@@ -4346,7 +4373,7 @@ Template.emailsettings.events({
                         ReferenceTxt: tempSubject,
                         Ref_Date: moment().format("YYYY-MM-DD"),
                         Status: "",
-                        Appointment: appointmentId,
+                        // Appointment: appointmentId,
                     };
                     let objDetails = {
                         type: "TCorrespondence",
