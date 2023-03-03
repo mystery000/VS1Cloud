@@ -53,5 +53,13 @@ export class ManufacturingService extends BaseService {
     saveWorkOrder(data){
       return this.POST(this.ERPObjects.TVS1Workorder, data)
     }
+
+    getWorkOrder() {
+        let options = "";
+        options = {
+            ListType: 'Detail',
+        }
+        return this.getList(this.ERPObjects.TVS1Workorder, options)
+    }
   
 }

@@ -15,6 +15,7 @@ import { Template } from 'meteor/templating';
 import './workorderList.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import moment from 'moment';
+import { ManufacturingService} from "./manufacturing-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -90,6 +91,33 @@ Template.workorderlist.helpers ({
             let dataReturn =  templateObject.getDataTableList(data)
             return dataReturn
         }
+    },
+
+    apiFunction:function() {
+        let manufacturingService = new ManufacturingService();
+        return manufacturingService.getWorkOrder;
+    },
+
+    searchAPI: function() {
+        return ManufacturingService.getWorkOrder;
+    },
+
+    service: ()=>{
+        let manufacturingService = new ManufacturingService();
+        return manufacturingService;
+
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom'];
     },
 
 })
