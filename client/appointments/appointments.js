@@ -1882,6 +1882,8 @@ Template.appointments.onRendered(function() {
                         templateObject
                     );
                 } else {
+                    console.log('OK')
+                     // $("#appointmentLeaveConfirmModal").modal("toggle");
                     $("#customerListModal").modal();
                 }
             },
@@ -2134,7 +2136,7 @@ Template.appointments.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                // $("#appointmentLeaveConfirmModal").modal("toggle");
+               
                 if (info.event._def.publicId != "") {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let appointmentData = templateObject.appointmentrecords.get();
