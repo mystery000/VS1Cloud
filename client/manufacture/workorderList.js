@@ -14,7 +14,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './workorderList.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import moment from 'moment';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -33,8 +33,8 @@ Template.workorderlist.onCreated(function() {
             data.fields.SaleID || '',
             data.fields.Customer || '',
             data.fields.PONumber || '',
-            data.fields.SaleDate || '',
-            data.fields.DueDate || '',
+            moment(data.fields.SaleDate).format("DD/MM/YYYY") || '',
+            moment(data.fields.DueDate).format("DD/MM/YYYY") || '',
             data.fields.ProductName || '',
             data.fields.Quantity || '',
             data.fields.Comment || '',
