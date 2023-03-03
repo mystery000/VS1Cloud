@@ -530,8 +530,8 @@ margin-top: 23%;
 }
 
 .table-responsive table {
-    max-width: 99.7% !important;
-    min-width: 99.7% !important;
+    /* max-width: 99.7% !important;
+    min-width: 99.7% !important; */
 }
 
 td.td-input {
@@ -588,6 +588,22 @@ td.td-input {
     background-color: #e74a3b !important;
     color: #fff;
 }
+
+.text-converted {
+    background-color: #f6c23e !important;
+    color: #fff;
+}
+
+.text-NotConverted {
+    background-color: #1cc88a !important;
+    color: #fff;
+}
+
+.text-completed {
+    background-color: #1cc88a !important;
+    color: #fff;
+}
+
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
     .chart-visibility {
         width: 50% !important;

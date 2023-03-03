@@ -83,6 +83,9 @@ Template.datatablelist.onRendered(async function () {
             if ($(this).text() == "Full") $(this).addClass("text-fullyPaid");
             if ($(this).text() == "Part") $(this).addClass("text-partialPaid");
             if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
+            if ($(this).text() == "Converted") $(this).addClass("text-converted");
+            if ($(this).text() == "Completed") $(this).addClass("text-completed");
+            if ($(this).text() == "Not Converted") $(this).addClass("text-deleted");
         });
     };
 

@@ -150,7 +150,9 @@
         .ui-datepicker {
             z-index: 9999 !important;
         }
-        .crmSelectLeadList, .crmSelectEmployeeList {
+
+        .crmSelectLeadList,
+        .crmSelectEmployeeList {
             height: 34px;
         }
         .editTaskDetailName {
@@ -166,43 +168,60 @@
             padding: 16px 32px;
             padding-bottom: 12px;
         }
+
+
+        div.no-gutters{
+            padding: 4px 6px;
+        }
+        div.taskline:hover{
+            background: #3fbbdf;
+        }
     </style>
-
-    {{>datatablelist
-            tablename="tblMyTaskDatatable"
-            apiName= apiFunction
-            indexeddbname = 'TCRMTaskList'
-            tableheaderrecords = tableheaderrecords
-            exportfilename = 'My Task Datatable List'
-            istransaction = false
-            apiParams= apiParams
-            datahandler = datahandler
-            service=service
-            lowercaseDataName='tprojecttaskslist'
-            exIndexDBName = 'tprojecttaskslist'
-            exdatahandler = exDataHandler
-            searchAPI = searchAPI
-    }}
-    <div class="table-responsive" style="overflow-x: hidden!important;">
-
-<!--        {{> non_transactional_list tablename = "tblMyTaskDatatable"}}-->
-
-
-        <style media="screen">
-            .colReconDate{
-                width:80px!Important;
-            }
-            .colNotReconcilied{
-                width:100px!Important;
-            }
-            .colReconBalance{
-                width:80px!Important;
-            }
-            .colReconAccountName{
-                width:120px!Important;
-            }
-        </style>
+    <div class="row no-gutters">
+        <!--        <div class="col-md-2">-->
+        <!--            <h5 class="font-weight-bold text-center"></h5>-->
+        <!--        </div>-->
+        <div class="col-md-3">
+            <h5 class="font-weight-bold">Date</h5>
+        </div>
+        <div class="col-md-3">
+            <h5 class="font-weight-bold">Priority</h5>
+        </div>
+        <div class="col-md-6">
+            <h5 class="font-weight-bold">Subject</h5>
+        </div>
     </div>
+    {{#if todayTasks}}
+    {{#each item in todayTasks}}
+    <div class="row no-gutters mb-1 align-items-center taskline" style="font-size: 16px; cursor: pointer;"
+        taskid="{{item.id}}">
+        <!--            <div class="col-md-2 no-gutters text-center">-->
+        <!--                <a class="mb-0" href="crmoverview?taskid={{item.id}}">View</a>-->
+        <!--            </div>-->
+        <div class="col-md-3 no-gutters duedate">
+            <p class="mb-0">{{item.dueDate}}</p>
+        </div>
+        <div class="col-md-3 no-gutters">
+            <p class="mb-0">{{item.priority}}</p>
+        </div>
+        <div class="col-md-3 no-gutters taskname">
+            <p class="mb-0">{{item.taskName}}</p>
+        </div>
+
+        <div class="d-none description">
+            {{item.description}}
+        </div>
+        <div class="d-none contact">
+            {{item.contact}}
+        </div>
+        <div class="d-none projectname">
+            {{item.projectname}}
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="text-center mt-2"><i>No tasks found.</i></div>
+    {{/if}}
 
     {{> taskDetailModal}}
     {{> newTaskModal}}
@@ -252,12 +271,15 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="employeeListModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
+            style="max-width: 90vw;">
             <div class="modal-content customerListContent">
                 <div class="modal-header">
-                    <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>Employee List</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
-                <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                <div class="modal-body mainCustomerModalBody appointmentCustomer"
+                    style="padding: 0px; overflow-x: hidden;">
                     {{> employeelistpop}}
                 </div>
                 <div class="modal-footer">
