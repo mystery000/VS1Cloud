@@ -262,6 +262,7 @@ import './contacts/addCustomer.js';
 import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
+import './popUps/layoutpop.js';
 
 /* Riley*/
 import './accounts/addApcaModal/addApcaModal.html';
@@ -640,7 +641,7 @@ import './inventory/binlocations/binlocations.js';
 /* Mainstar */
 
 /* Damien Begin */
-// import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
 /* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
