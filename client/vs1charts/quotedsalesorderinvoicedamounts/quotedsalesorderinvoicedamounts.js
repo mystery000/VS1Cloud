@@ -835,7 +835,6 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
         let totalInvPayment6 = 0;
         let totalInvPayment7 = 0;
         let totalInvPayment8 = 0;
-        initialReportLoad = 100;
 
         sideBarService.getSalesListData(dateFrom, dateTo, false, initialReportLoad, 0).then((data) => {
             setTimeout(function() {
