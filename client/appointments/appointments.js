@@ -17217,7 +17217,7 @@ Template.appointments.events({
                 templateObject.timeFormat(hours) || "";
         } else {}
     },
-    'submit #appointmentOptions': function(event) {
+    "submit #appointmentOptions": function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
         event.preventDefault();
 
@@ -17863,8 +17863,7 @@ Template.appointments.events({
     //     });
     //   }
     // },
-    "submit form": function(event) {
-        console.log()
+    "submit form#frmAppointment": function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
         event.preventDefault();
 
