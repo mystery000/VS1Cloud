@@ -142,21 +142,26 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     function checkBoxClick() {
         let currentTableData = templateObject.transactiondatatablerecords.get();
         let targetRows = [];
-        globalID.forEach(itemID => {
-            let index = currentTableData.findIndex(item => item[1] == itemID);
-            if (index > -1) {
-                let targetRow = currentTableData[index];
-                let chk = targetRow[0];
-                chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
-                targetRow.splice(0, 1, chk);
-                currentTableData.splice(index, 1);
-                targetRows.push(targetRow);
-            }
-        });
-        let newTableData = [...targetRows, ...currentTableData];
-        templateObject.transactiondatatablerecords.set(newTableData);
-        $('#' + currenttablename).DataTable().clear();
-        $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+
+        if(globalID){
+            globalID.forEach(itemID => {
+                let index = currentTableData.findIndex(item => item[1] == itemID);
+                if (index > -1) {
+                    let targetRow = currentTableData[index];
+                    let chk = targetRow[0];
+                    chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
+                    targetRow.splice(0, 1, chk);
+                    currentTableData.splice(index, 1);
+                    targetRows.push(targetRow);
+                }
+            });
+
+            let newTableData = [...targetRows, ...currentTableData];
+            templateObject.transactiondatatablerecords.set(newTableData);
+            $('#' + currenttablename).DataTable().clear();
+            $('#' + currenttablename).DataTable().rows.add(newTableData).draw();
+        }
+
         let rows = $('#' + currenttablename).find('tbody tr');
         for (let i = 0; i < rows.length; i++) {
             if ($(rows[i]).find('input.chkBox').prop('checked') == true) {
@@ -1130,6 +1135,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
 
                 "fnDrawCallback": function(oSettings) {
+                    checkBoxClick();
                 },
                 language: {
                     search: "",
@@ -1146,9 +1152,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     checkBoxClickByName();
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
-
-                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    //
+                    // return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
 
             }).on('page', function() {

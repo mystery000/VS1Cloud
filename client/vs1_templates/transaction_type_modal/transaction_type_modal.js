@@ -68,6 +68,10 @@ Template.transaction_type_modal.events({
 
         $("#myModalTransactionType").modal("hide");
     },
+
+    "change input.chkServiceCard": function() {
+        console.log('123123');
+    }
 });
 
 Template.transaction_type_modal.helpers({
