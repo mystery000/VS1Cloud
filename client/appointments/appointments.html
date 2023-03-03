@@ -2238,17 +2238,17 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         {{> copyfrequencypop}}
     </div>
     <div class="modal fade appointmentLeaveConfirmModal" role="dialog" tabindex="-1" id="appointmentLeaveConfirmModal">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>Choose request type</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>Choose request type</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
-                <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
-                    <button class="btn btn-primary btnCreateAppointmentRequest" type="button" style="margin: 14px;" id="btnCreateAppointmentRequest" name="btnCreateAppointmentRequest">Appointment</button>
-                    <button class="btn btn-primary btnCreateLeaveRequest" type="button" style="margin: 14px;" id="btnCreateLeaveRequest" name="btnCreateLeaveRequest">LeaveRequest</button>
+                <div class="modal-body d-flex align-items-center justify-content-center flex-column">
+                        <button class="btn btn-primary btnCreateAppointmentRequest w-50" type="button" id="btnCreateAppointmentRequest" name="btnCreateAppointmentRequest">Appointment</button>
+                        <button class="btn btn-primary btnCreateLeaveRequest w-50 mt-3" type="button" id="btnCreateLeaveRequest" name="btnCreateLeaveRequest">LeaveRequest</button>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
         </div>

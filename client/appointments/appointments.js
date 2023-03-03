@@ -1882,9 +1882,8 @@ Template.appointments.onRendered(function() {
                         templateObject
                     );
                 } else {
-                    console.log('OK')
-                     // $("#appointmentLeaveConfirmModal").modal("toggle");
-                    $("#customerListModal").modal();
+                     $("#appointmentLeaveConfirmModal").modal("toggle");
+                    // $("#customerListModal").modal();
                 }
             },
             eventClick: function(info) {
@@ -19091,6 +19090,15 @@ Template.appointments.events({
             }
         }
     },
+    "click #btnCreateAppointmentRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+    "click #btnCreateLeaveRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+
 });
 
 Template.appointments.helpers({
