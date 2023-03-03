@@ -337,25 +337,64 @@
             {{else}}
             <div class="row">
                 <div class="col-6 col-md-7 col-lg-8">
-                    <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0px"><i
-                            class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    {{> vs1_button
+                        color='primary'
+                        classes='btnNav btnRefresh mr-2'
+                        type='button'
+                        id="btnRefresh"
+                        iconName='lightbulb-o'
+                        title='Refresh'
+                    }}
+                    <!-- <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0px"><i
+                            class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button> -->
                     {{#if equals showTimesheet true}}
-                    <button class="btn btnNav btn-primary" id="btnTimesheet" name="btnTimesheet" type="button"
+                    {{> vs1_button
+                        color='primary'
+                        classes='btnNav ml-2 mr-2'
+                        type='button'
+                        id="btnTimesheet"
+                        iconName='clock'
+                        title='Timesheet List'
+                    }}
+                    <!-- <button class="btn btnNav btn-primary" id="btnTimesheet" name="btnTimesheet" type="button"
                         style="margin: 12px;"><i class="fas fa-clock"
-                            style="padding-right: 5px;"></i>Timesheet List</button>
+                            style="padding-right: 5px;"></i>Timesheet List</button> -->
                     {{/if}}
 
                     {{#if equals clockOnOff true}}
+                    <!-- {{> vs1_button
+                        color='primary'
+                        classes='btnNav ml-2 mr-2'
+                        type='button'
+                        id="btnClockOnOff"
+                        iconName='user-clock'
+                        title='Clock On/Off'
+                    }} -->
                     <button id="btnClockOnOff" name="btnClockOnOff" class="btn btnNav btn-primary" type="button"
                         role="button" style="margin: 12px;"><i class="fas fa-user-clock"
                             style="padding-right: 5px;"></i>Clock On/Off</button>
                     {{/if}}
 
-                    <button id="btnSingleTouchPayroll" name="btnSingleTouchPayroll" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-dollar-sign" style="padding-right: 5px;"></i>ST Payroll</button>
+                    {{> vs1_button
+                        color='primary'
+                        classes='btnNav ml-2 mr-2'
+                        type='button'
+                        id="btnSingleTouchPayroll"
+                        iconName='dollar-sign'
+                        title='ST Payroll'
+                    }}
+                    <!-- <button id="btnSingleTouchPayroll" name="btnSingleTouchPayroll" class="btn btnNav btn-primary" type="button" role="button" style="margin: 12px;"><i class="fas fa-dollar-sign" style="padding-right: 5px;"></i>ST Payroll</button> -->
                     <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a>
                     
-                    <button id="add-tblPayRunHistory" name="add-tblPayRunHistory" class="btn btnNav btn-primary add-tblPayRunHistory" type="button" role="button" style="margin: 12px;"><i class="fas fa-plus-sign" style="padding-right: 5px;"></i>Add Pay Run</button>
-                    <!-- <a href="/payrollleave" class="btn btnNav btn-primary">Payroll Leave</a> -->
+                    {{> vs1_button
+                        color='primary'
+                        classes='btnNav add-tblPayRunHistory ml-2 mr-2'
+                        type='button'
+                        id="add-tblPayRunHistory"
+                        iconName='plus'
+                        title='Add Pay Run'
+                    }}
+                    <!-- <button id="add-tblPayRunHistory" name="add-tblPayRunHistory" class="btn btnNav btn-primary add-tblPayRunHistory" type="button" role="button" style="margin: 12px;"><i class="fas fa-plus-sign" style="padding-right: 5px;"></i>Add Pay Run</button> -->
                 </div>
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                     {{> export_import_print_display_button tablename="tblDraftPayRun"}}
@@ -454,7 +493,7 @@
                     <div class="table-responsive">
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                                <h4 style="font-weight: 600;">Draft Pay Run</h4>
+                                <h4 style="font-weight: 600;">Pay Runs</h4>
                             </div>
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
                             </div>
