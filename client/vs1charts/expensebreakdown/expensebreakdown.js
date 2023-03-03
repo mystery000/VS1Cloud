@@ -25,10 +25,21 @@ Template.expensebreakdown.onCreated(function(){
 
 
 Template.expensebreakdown.onRendered(function() {
+
   let templateObject = Template.instance();
+
+  templateObject.autorun(function() {
+    const currentData = Template.currentData();
+    const context = currentData.updateChart;
+    if(context.update) {
+      templateObject.updateChart(context.dateFrom, context.dateTo);
+    }
+  });
+
   let totCreditCount = 0;
   let totBillCount = 0;
   let totPOCount = 0;
+
   function chartClickEvent(event, array) {
     if (array[0] != undefined) {
       FlowRouter.go("/newprofitandloss?daterange=ignore&?show=loss");
@@ -125,4 +136,33 @@ Template.expensebreakdown.onRendered(function() {
     }, 1000)
   };
   templateObject.getAllPurchaseOrderAll();
+  
+  templateObject.updateChart = async (dateFrom, dateTo) => {
+    let totalExpense = 0;
+    let useData = [];
+    setTimeout( async function () {
+      let data = await sideBarService.getAllPurchasesList(dateFrom, dateTo, false, initialReportLoad, 0);
+      useData = data.tbilllist;
+      // get common data from both request
+      if( useData.length ){
+        for (let i = 0; i < useData.length; i++) {
+          totalExpense += Number(useData[i].TotalAmountInc);
+          if (useData[i].IsCredit == true) {
+            totCreditCount++;
+          }
+          if (useData[i].IsBill == true) {
+            totBillCount++;
+          }
+          if (useData[i].IsPO == true) {
+            totPOCount++;
+          }
+        }
+      }
+      $(".spExpenseTotal").text(
+        utilityService.modifynegativeCurrencyFormat(totalExpense)
+      );
+      templateObject.displayExpenseChart();
+    }, 1000);
+  };
+
 });
