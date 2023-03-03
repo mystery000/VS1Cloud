@@ -83,19 +83,9 @@ Template.datatablelist.onRendered(async function () {
             if ($(this).text() == "Full") $(this).addClass("text-fullyPaid");
             if ($(this).text() == "Part") $(this).addClass("text-partialPaid");
             if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
-            if($(this).text() == "Converted" || $(this).text() == "Completed"){
-                $(this).css('background-color', '#1cc88a');
-                $(this).css('color', '#fff');
-            }else if($(this).text() == "Not Converted"){
-                $(this).css('background-color', '#f6c23e');
-                $(this).css('color', '#fff');
-            }else if($(this).text() == "Deleted"){
-                $(this).css('background-color', '#e74a3b');
-                $(this).css('color', '#fff');
-            }else{
-                $(this).css('background-color', '#f6c23e');
-                $(this).css('color', '#fff');
-            }
+            if ($(this).text() == "Converted") $(this).addClass("text-converted");
+            if ($(this).text() == "Completed") $(this).addClass("text-completed");
+            if ($(this).text() == "Not Converted") $(this).addClass("text-deleted");
         });
     };
 
