@@ -31,6 +31,25 @@ Template.mobileapp.onCreated(function() {
 })
 
 Template.mobileapp.events({
+    // table tr click 
+    'click #tblWorkOrderList tbody tr' : function(e, instance) {
+        let SaleID = $(e.target).closest('tr').find('td.sorting_1').text();
+        $(".mobile-main-input").val(SaleID);
+        
+    } ,
+
+    'click #tblJobProcessList tbody tr' : function(e, instance) {
+        let processName = $(e.target).closest('tr').find('td.sorting_1').text();
+        $(".mobile-main-input").val(processName);
+        
+    } ,
+
+    'click #tblEmployeeList tbody tr' : function(e, instance) {
+        let firstName = $(e.target).closest('tr').find('td:eq(0)').text();
+        let lastName = $(e.target).closest('tr').find('td:eq(1)').text();
+        $(".mobile-main-input").val(firstName + " " + lastName);
+       
+    } ,    
     
     'click #btnOpentList': function(e, instance) {
               
@@ -68,12 +87,7 @@ Template.mobileapp.events({
                         { title: 'Sale Date', mData: 'SaleDate' },
                     ]
                 })
-                $('#tblWorkOrderList tbody').on('click', 'tr', function () {
-                    var data = table.row(this).data();
-                    console.log(data);                    
-                    $(".mobile-main-input").val(data.SaleID);
-                    
-                });
+                
                 $("#startBreakContainer").css('display', 'none');                
                 $("#btnOpentList").prop('disabled', true);
                 
@@ -85,10 +99,7 @@ Template.mobileapp.events({
             $(".mobile-left-employee-list").css('display', 'none');
             $(".mobile-left-workorder-list").css('display', 'none');
 
-            // if ($.fn.DataTable.isDataTable( '#tblJobProcessList' ) ) {
-            //     $("#tblJobProcessList").DataTable().destroy();
-            // }
-
+            
             getVS1Data('TProcessStep').then(function (dataObject) {
                 $(".mobile-left-jobprocess-list").css('display', 'block');
                 let processData = JSON.parse(dataObject[0].data);
@@ -108,11 +119,7 @@ Template.mobileapp.events({
                     ]
                 })
 
-                $('#tblJobProcessList tbody').on('click', 'tr', function () {
-                    var data = table.row(this).data();
-                    $(".mobile-main-input").val(data.fields.KeyValue);                    
-                });
-
+                
                 $("#startBreakContainer").css('display', 'none');
                 $(".mobile-left-btn-containner").css('display', 'none');
                 $("#btnOpentList").prop('disabled', true);
@@ -126,9 +133,7 @@ Template.mobileapp.events({
         }
         if(isSelectEmployeeNumber) {
             
-            // if ($.fn.DataTable.isDataTable( '#tblEmployeeList' ) ) {
-            //     $("#tblEmployeeList").DataTable().destroy();
-            // }
+            
             $(".mobile-left-workorder-list").css('display', 'none');
             $(".mobile-left-jobprocess-list").css('display', 'none');
 
@@ -152,11 +157,11 @@ Template.mobileapp.events({
                         { title: 'LastName', mData: 'fields.LastName' },
                     ]
                 })
-                $('#tblEmployeeList tbody').on('click', 'tr', function () {
-                    var data = table.row(this).data();
-                   
-                    $(".mobile-main-input").val(data.fields.FirstName + "  " + data.fields.LastName);
-                });
+                // $('#tblEmployeeList tbody').on('click', 'tr', function () {
+                //     var data = table.row(this).data();
+               
+                //     $(".mobile-main-input").val(data.fields.FirstName + "  " + data.fields.LastName);
+                // });
 
                 $("#startBreakContainer").css('display', 'none');
                 $(".mobile-left-btn-containner").css('display', 'none');
