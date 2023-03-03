@@ -44,9 +44,9 @@ Template.departmentSettings.onCreated(function(){
     }
 
     let headerStructure = [
-        { index: 0, label: '#ID', class: 'colDeptID', active: false, display: true, width: "10" },
+        { index: 0, label: '#ID', class: 'colDeptID', active: false, display: false, width: "10" },
         { index: 1, label: 'Department Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
-        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
         { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
         { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
         { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
