@@ -1333,6 +1333,15 @@ export class SideBarService extends BaseService {
   }
 
 
+  searchAllCustomersDataVS1ByName(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: '"PrintName asc"',
+      Search: 'ClientName f7like "' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TCustomerVS1List, options);
+  }
+
   getClientVS1(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {

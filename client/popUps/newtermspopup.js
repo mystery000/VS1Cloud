@@ -962,9 +962,11 @@ Template.newtermspop.events({
             event.keyCode == 46 || event.keyCode == 190) {} else {
             event.preventDefault();
         }
+    },
+
+    'blur #edtCustomerCreditLimit, blur #edtSupplierCreditLimit': function(event) {
+        if ($(event.currentTarget).val().indexOf(Currency) !== 0) $(event.currentTarget).val(Currency + $(event.currentTarget).val())
     }
-
-
 });
 
 Template.newtermspop.helpers({

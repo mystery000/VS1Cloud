@@ -25,39 +25,39 @@ Template.global_customerlist.onCreated(function(){
     templateObject.reset_data = new ReactiveVar([]);
 
     templateObject.getDataTableList = function(data) {
-        let mobile = contactService.changeMobileFormat(data.fields.Mobile);
-        let arBalance = utilityService.modifynegativeCurrencyFormat(data.fields.ARBalance)|| 0.00;
-        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.fields.CreditBalance) || 0.00;
-        let balance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance)|| 0.00;
-        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.fields.CreditLimit)|| 0.00;
-        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.fields.SalesOrderBalance)|| 0.00;
+        let mobile = contactService.changeMobileFormat(data.Mobile);
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance)|| 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit)|| 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SOBalance)|| 0.00;
         let dataList = [
-            data.fields.ID || '',
-            data.fields.ClientName || '-',
-            data.fields.JobName || '',
-            data.fields.Phone || '',
+            data.ClientID || '',
+            data.Company || '-',
+            data.JobName || '',
+            data.Phone || '',
             mobile || '',
             arBalance || 0.00,
             creditBalance || 0.00,
             balance || 0.00,
             creditLimit || 0.00,
             salesOrderBalance || 0.00,
-            data.fields.Street || '',
-            data.fields.Street2 || data.fields.Suburb || '',
-            data.fields.State || '',
-            data.fields.Postcode || '',
-            data.fields.Country || '',
-            data.fields.Email || '',
-            data.fields.AccountNo || '',
-            data.fields.ClientTypeName || 'Default',
-            data.fields.Discount || 0,
-            data.fields.TermsName || loggedTermsSales || 'COD',
-            data.fields.FirstName || '',
-            data.fields.LastName || '',
-            data.fields.TaxCodeName || 'E',
-            data.fields.ClientNo || '',
-            data.fields.JobTitle || '',
-            data.fields.Notes || ''
+            data.Street || '',
+            data.Street2 || data.Suburb || '',
+            data.State || '',
+            data.Postcode || '',
+            data.Country || '',
+            data.Email || '',
+            data.AccountNo || '',
+            data.ClientTypeName || 'Default',
+            data.Discount || 0,
+            data.TermsName || loggedTermsSales || 'COD',
+            data.FirstName || '',
+            data.LastName || '',
+            data.TaxCodeName || 'E',
+            data.ClientNo || '',
+            data.JobTitle || '',
+            data.Notes || ''
         ];
         return dataList;
     }
@@ -844,11 +844,11 @@ Template.global_customerlist.helpers({
 
     apiFunction:function() {
         let sideBarService = new SideBarService();
-        return sideBarService.getAllCustomersDataVS1;
+        return sideBarService.getAllTCustomerList;
     },
 
     searchAPI: function() {
-        return sideBarService.getAllCustomersDataVS1ByName;
+        return sideBarService.searchAllCustomersDataVS1ByName;
     },
 
     service: ()=>{

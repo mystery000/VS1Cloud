@@ -9,6 +9,9 @@ import {
 } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
+import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import './supportpopup.html';
 
 Template.supportmodalpop.onCreated(function() {
 
