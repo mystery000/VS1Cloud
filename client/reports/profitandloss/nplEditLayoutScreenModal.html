@@ -680,15 +680,20 @@
 
                             </div>
                             <div class="col-4 editor-Right">
-                                <div class="col-12" style="margin-bottom:25px;">
-                                    <div class="container mb-3">
-                                        <h2 style="font-size: 1.5rem;">Change the order and grouping of your report
+                                <div class="col-12">
+                                    <div class="container mb-3" style="float:left">
+                                        <!-- <h2 style="font-size: 1.5rem;">Change the order and grouping of your report
                                         </h2>
                                         <p>Select one or more accounts to group or move. You can group accounts
                                             under headings of your choice, these will appear as subtotals in your
                                             report.</p>
                                         <p>When you've finished customising your layout, click 'Save' below.</p>
-                                        <a>Get more help on customising report layouts</a>
+                                        <a>Get more help on customising report layouts</a> -->
+                                        <div class="form-group">
+                                            <label>Select Layout</label>
+                                            <select type="search" class="form-control" id="sltLaybout" name="sltLaybout" style="float:left; background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="container">
                                         <h5>Layout Details</h5>
@@ -701,9 +706,14 @@
                                             <label>Layout Description</label>
                                             <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="" value="{{layoutinfo.Description}}">
                                         </div>
-                                        <div class="custom-control custom-switch mt-3">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting" checked="{{layoutinfo.IsCurrentLayout}}">
-                                            <label class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all users</label>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch mt-3">
+                                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting" checked="{{layoutinfo.IsCurrentLayout}}">
+                                                <label class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all users</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0; text-align: center;">
+                                            <button class="btn btn-primary btnCreateLayout" type="button" style="margin: 16px;" autocomplete="off">Create Layout</button>
                                         </div>
                                     </div>
                                 </div>
@@ -771,8 +781,8 @@
                                         </div>
                                     </div>
                                 </div> -->
-                                <div class="col-12" style="margin-bottom:25px; margin-top:30px">
-                                    <div class="container mb-3 editRowGroup" style="">
+                                <div class="col-12">
+                                    <div class="container mb-3 editRowGroup">
                                         <h5>Group</h5>
                                         <hr class="periodSelectorLine" />
                                         <div>
@@ -1382,5 +1392,5 @@
                 </button>
             </div>
         </div>
-    </div>    
+    </div>
 </template>

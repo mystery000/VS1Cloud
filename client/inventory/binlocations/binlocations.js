@@ -89,7 +89,6 @@ Template.binlocationslist.onRendered(function () {
     });
   }
   templateObject.setBinRecords = async function (data) {
-    console.log(data);
     let binrecords = [];
     for (let i in data.tproductbin) {
       let binrecordObj = {
@@ -477,7 +476,6 @@ Template.binlocationslist.helpers({
         return (a.binnumber - 0 < b.binnumber - 0) ? -1 : 1;
       }
     }
-    console.log(binData);
     return binData.sort(sortFunction);
   },
   binlocationarray: () =>{
@@ -764,7 +762,7 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
   },
-  
+
   // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
@@ -794,7 +792,7 @@ Template.binlocationslist.events({
             splashArrayProductList.push(dataList);
           }
 
-          
+
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
@@ -1327,7 +1325,7 @@ Template.binlocationslist.events({
             window.open('/binlocationslist', '_self');
           });
       });
-       
+
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });

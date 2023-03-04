@@ -1882,7 +1882,8 @@ Template.appointments.onRendered(function() {
                         templateObject
                     );
                 } else {
-                    $("#customerListModal").modal();
+                     $("#appointmentLeaveConfirmModal").modal("toggle");
+                    // $("#customerListModal").modal();
                 }
             },
             eventClick: function(info) {
@@ -2134,7 +2135,7 @@ Template.appointments.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                // $("#appointmentLeaveConfirmModal").modal("toggle");
+               
                 if (info.event._def.publicId != "") {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let appointmentData = templateObject.appointmentrecords.get();
@@ -15411,7 +15412,8 @@ Template.appointments.events({
                         moment().startOf("minute").format("mm")
                     );
                     $("#btnCloseStartAppointmentModal").trigger("click");
-                    $("#frmAppointment").trigger("submit");
+                    // $("#frmAppointment").trigger("submit");
+                    $("#btnAppointmentSubmit").click();
                 }
             } else {
                 $("#tActualStartTime").val(
@@ -15420,7 +15422,8 @@ Template.appointments.events({
                     moment().startOf("minute").format("mm")
                 );
                 $("#btnCloseStartAppointmentModal").trigger("click");
-                $("#frmAppointment").trigger("submit");
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
             }
         }
     },
@@ -15757,9 +15760,11 @@ Template.appointments.events({
             let emailUser = $("#userEmail").is(":checked");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
-                $("#frmAppointment").trigger("submit");
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
             } else {
-                $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
+                // $("#frmAppointment").trigger("submit");
             }
         }, delayTimeAfterSound);
     },
@@ -15840,17 +15845,21 @@ Template.appointments.events({
                 });
                 if (emailCustomer || emailUser) {
                     await sendAppointmentEmail();
-                    $("#frmAppointment").trigger("submit");
+                    // $("#frmAppointment").trigger("submit");
+                    $("#btnAppointmentSubmit").click();
                 } else {
-                    $("#frmAppointment").trigger("submit");
+                    // $("#frmAppointment").trigger("submit");
+                    $("#btnAppointmentSubmit").click();
                 }
             }
         } else {
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
-                $("#frmAppointment").trigger("submit");
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
             } else {
-                $("#frmAppointment").trigger("submit");
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
             }
         }
     },
@@ -16060,11 +16069,13 @@ Template.appointments.events({
                     confirmButtonText: "Ok",
                 });
                 $("#btnCloseStopAppointmentModal").trigger("click");
-                $("#frmAppointment").trigger("submit");
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
             }
         } else {
             $("#btnCloseStopAppointmentModal").trigger("click");
-            $("#frmAppointment").trigger("submit");
+            // $("#frmAppointment").trigger("submit");
+            $("#btnAppointmentSubmit").click();
         }
     },
     "click #btnHold": function(event) {
@@ -17853,7 +17864,7 @@ Template.appointments.events({
     //     });
     //   }
     // },
-    "submit #frmAppointment": async function(event) {
+    "submit form#frmAppointment": async function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
         event.preventDefault();
 
@@ -19079,6 +19090,15 @@ Template.appointments.events({
             }
         }
     },
+    "click #btnCreateAppointmentRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+    "click #btnCreateLeaveRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+
 });
 
 Template.appointments.helpers({

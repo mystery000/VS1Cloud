@@ -4099,17 +4099,17 @@ Template.purchaseordercard.onRendered(() => {
             }
             $('#' + selectLineID + " .lineProductName").val(lineProductName);
             $('#' + selectLineID + " .lineProductDesc").text(lineProductDesc);
-            $('#' + selectLineID + " .lineOrdered").val(1);
-            $('#' + selectLineID + " .lineQty").val(0);
-            $('#' + selectLineID + " .lineBackOrder").text(1);
+            // $('#' + selectLineID + " .lineOrdered").val(1);
+            // $('#' + selectLineID + " .lineQty").val(0);
+            // $('#' + selectLineID + " .lineBackOrder").text(1);
             $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
             $('#' + selectLineID + " .lineTaxCode").val(lineTaxRate);
 
             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
                 $('#' + selectLineID + " #lineProductName").text(lineProductName);
                 $('#' + selectLineID + " #lineProductDesc").text(lineProductDesc);
-                $('#' + selectLineID + " #lineOrdered").text(1);
-                $('#' + selectLineID + " #lineQty").text(1);
+                // $('#' + selectLineID + " #lineOrdered").text(1);
+                // $('#' + selectLineID + " #lineQty").text(1);
                 $('#' + selectLineID + " #lineUnitPrice").text(lineUnitPrice);
             }
 
@@ -10108,10 +10108,10 @@ Template.purchaseordercard.events({
                             let doc = new jsPDF('p', 'pt', 'a4');
                             doc.setFontSize(18);
                             var source = document.getElementById('html-2-pdfwrapper');
-                            doc.addHTML(source, function() {
-
-                                resolve(doc.output('blob'));
-
+                            doc.html(source, {
+                                callback: function(pdf) {
+                                    resolve(doc.output('blob'));    
+                                }
                             });
                         });
                     }

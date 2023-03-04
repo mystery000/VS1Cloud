@@ -851,6 +851,9 @@
                         #tblDepartmentCheckbox .chkBox{
                             margin: 0px!important
                         }
+                        #myModalDepartment .table-responsive{
+                            overflow-x: hidden!important
+                        }
                     </style>
                     {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
                 </div>
@@ -1498,4 +1501,8 @@
         {{> npladdgroupscreen profitlosslayoutrecords=profitlosslayoutrecords}}
     </div>
     <!--End New Profit and Loss, Group Selected Accounts modal -->
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="layoutModal">
+        <!-- {{> layoutpop}} -->
+    </div>
 </template>
