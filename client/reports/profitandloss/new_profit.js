@@ -34,6 +34,20 @@ const defaultPeriod = 3;
 const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
+const months = [];
+months["January"] = "01";
+months["February"] = "02";
+months["March"] = "03";
+months["April"] = "04";
+months["May"] = "05";
+months["June"] = "06";
+months["July"] = "07";
+months["August"] = "08";
+months["September"] = "09";
+months["October"] = "10";
+months["November"] = "11";
+months["December"] = "12";
+
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -45,7 +59,30 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
   templateObject.daterange = new ReactiveVar();
   templateObject.layoutgroupid = new ReactiveVar();
+  templateObject.tableheaderrecords = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
+
+  let headerStructure = [
+      { index: 0, label: "ID", class: "colID", width: "80", active: true, display: true },
+      { index: 1, label: "Layout Name", class: "colLayoutName", width: "250", active: true, display: true },
+      { index: 2, label: "Layout Description", class: "colLayoutDescription", width: "400", active: true, display: true },      
+      { index: 3, label: "Current Layout", class: "colCurrentLayout hiddenColumn", width: "100", active: false, display: false },
+  ];
+  
+  templateObject.tableheaderrecords.set(headerStructure);
+
+  templateObject.getDataTableList = function(data) {
+      var dataList;
+      {
+          dataList = [
+              data.fields.Recno || 0,
+              data.fields.LName || '',
+              data.fields.Description || '',
+              data.fields.IsCurrentLayout || false,
+          ];
+      }
+      return dataList;
+  }
 });
 
 
@@ -1244,6 +1281,25 @@ $('.tblAvoid').each(function(){
 
 
   // LoadingOverlay.hide();
+
+  $('#tblLayoutsList tbody').on('click', 'tr', function() {
+      var layoutID = $(this).closest('tr').find(".colID").text();
+      var layoutName = $(this).closest('tr').find(".colLayoutName").text();
+      var layoutDesc = $(this).closest('tr').find(".colLayoutDescription").text();
+      var currentLayout = $(this).closest('tr').find(".colCurrentLayout").text();
+
+      $("#sltLaybout").val(layoutName);
+      $("#nplLayoutID").val(layoutID);
+      $("#nplLayoutName").val(layoutName);
+      $("#nplLayoutDescr").val(layoutDesc);
+      if(currentLayout == "true"){
+        $("#npldefaultSettting").prop('checked', true);
+      }
+      else{
+        $("#npldefaultSettting").prop('checked', false);
+      }
+      $('#layoutModal').modal('toggle');
+  });
 });
 
 Template.newprofitandloss.events({
@@ -1424,7 +1480,7 @@ Template.newprofitandloss.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
-    Meteor._reload.reload();
+    // Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block');
@@ -2893,6 +2949,41 @@ Template.newprofitandloss.helpers({
       //   }
       //   return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
       // });
+  },
+
+  tableheaderrecords: () => {
+      return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+      return reportService.getPNLLayout;
+  },
+
+  searchAPI: function() {
+      return reportService.getPNLLayout;
+  },
+
+  service: ()=>{
+      return reportService;
+  },
+
+  datahandler: function () {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getDataTableList(data)
+          return dataReturn
+      }
+  },
+
+  exDataHandler: function() {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getDataTableList(data)
+          return dataReturn
+      }
+  },
+
+  apiParams: function() {
+      return ["limitCount", "limitFrom", "deleteFilter", "dateFrom", "dateTo", "ignoredate"];
   },
 });
 
