@@ -137,7 +137,7 @@ Template.datatablelist.onRendered(async function () {
                 id: savedHeaderInfo[r].index,
                 custfieldlabel: savedHeaderInfo[r].label,
                 class: savedHeaderInfo[r].class,
-                display: reset_data[r].display,            //display have to set by default value
+                display: savedHeaderInfo[r].display,            //display have to set by default value
                 width: savedHeaderInfo[r].width ? savedHeaderInfo[r].width : ''
             };
             let currentTable = document.getElementById(currenttablename)
@@ -1168,7 +1168,6 @@ Template.datatablelist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
-        alert('here');
         //setTimeout(function () {
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));

@@ -272,7 +272,7 @@ Template.new_salesorder.onCreated(function () {
       if(tdpqa){
           tddescription += " " + tdpqa;
       }
-      
+
       const tdQty = $(this).find('.lineQty').val();
       const tdunitprice = $(this).find('.colUnitPriceExChange').val();
       const taxamount = $(this).find('.lineTaxAmount').val();
@@ -3831,6 +3831,7 @@ Template.new_salesorder.onRendered(function () {
       let lineAmount = 0;
       let subGrandTotal = 0;
       let taxGrandTotal = 0;
+      let taxGrandTotalPrint = 0;
       let subDiscountTotal = 0; // New Discount
       if (taxcodeList) {
         for (var i = 0; i < taxcodeList.length; i++) {
@@ -3988,6 +3989,7 @@ Template.new_salesorder.onRendered(function () {
     let utilityService = new UtilityService();
     let $tblrows = $("#tblSalesOrderLine tbody tr");
     var $printrows = $(".sales_print tbody tr");
+    let taxGrandTotalPrint = 0;
     if (selectLineID) {
       let lineTaxCode = table.find(".taxName").text();
       let lineTaxRate = table.find(".taxRate").text();
@@ -6601,6 +6603,7 @@ Template.new_salesorder.events({
     var targetID = $(event.target).closest('tr').attr('id'); // table row ID
     let subGrandTotal = 0;
     let taxGrandTotal = 0;
+    let taxGrandTotalPrint = 0;
     let subDiscountTotal = 0; // New Discount
     $('#' + targetID + " #lineUnitPrice").text($('#' + targetID + " .colUnitPriceExChange").val());
     let subGrandTotalNet = 0;
@@ -7348,6 +7351,7 @@ Template.new_salesorder.events({
     let taxcodeList = templateObject.taxraterecords.get();
     let utilityService = new UtilityService();
     var targetID = $(event.target).closest('tr').attr('id'); // table row ID
+    let taxGrandTotalPrint = 0;
     $('#selectDeleteLineID').val(targetID);
     if (targetID != undefined) {
       times++;
@@ -7622,6 +7626,7 @@ Template.new_salesorder.events({
     playDeleteAudio();
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
+    let taxGrandTotalPrint = 0;
     setTimeout(function () {
       let taxcodeList = templateObject.taxraterecords.get();
       let selectLineID = $('#selectDeleteLineID').val();

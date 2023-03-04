@@ -27,12 +27,12 @@ Template.accountrevenuestreams.onCreated(() => {
 });
 
 Template.accountrevenuestreams.onRendered(() => {
- 
+
   const templateObject = Template.instance();
   let topTenData1 = [];
   let topTenSuppData1 = [];
   let topData = this;
-  
+
   templateObject.autorun(function() {
     const currentData = Template.currentData();
     const context = currentData.updateChart;
@@ -53,8 +53,6 @@ Template.accountrevenuestreams.onRendered(() => {
       callback();
     });
   }
-  // const updateChart = Template.instance().data.updateChart
-  // console.log(updateChart);
   if (!localStorage.getItem("VS1PNLPeriodReport_dash")) {
     getInvSales(function (data) {
       let currentDate = new Date();
@@ -419,7 +417,7 @@ Template.accountrevenuestreams.onRendered(() => {
             });
           }, 1000)
         });
-    });   
+    });
   } else {
     setTimeout(function () {
       let data = JSON.parse(localStorage.getItem("VS1PNLPeriodReport_dash"));
@@ -950,7 +948,7 @@ Template.accountrevenuestreams.onRendered(() => {
         });
     });
   }
-  
+
 });
 
 Template.accountrevenuestreams.helpers({
