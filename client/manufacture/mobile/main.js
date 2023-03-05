@@ -119,8 +119,11 @@ Template.mobileapp.events({
                     
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                  
-                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
-                       
+                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
+                                                                            console.log("TprocessStep data is inserted to server database.");
+                                                                        }).catch(function(err){
+                                                                            console.log("TprocessStep data inserting to database is failed.")
+                                                                        });
 
                         $(".mobile-left-jobprocess-list").css('display', 'block');
                         let processData = JSON.parse(data);
@@ -177,9 +180,12 @@ Template.mobileapp.events({
             }).catch(function(error) {
                     
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
-                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){}).catch(function(err){})
-                        templateObject.datatablerecords.set(data.tprocessstep);
-
+                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
+                            console.log("TprocessStep data is inserted to server database.");
+                        }).catch(function(err){
+                            console.log("TprocessStep data inserting to database is failed.")
+                        });
+                        
                         //console.log(data);
 
                         $(".mobile-left-jobprocess-list").css('display', 'block');
