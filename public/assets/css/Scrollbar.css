@@ -683,3 +683,7 @@ overflow-y: hidden!important;
 .loggedCompanyName h2 {
     padding: 16px 4px 0;
 }
+
+body{
+  overflow-x: hidden!important;
+}
