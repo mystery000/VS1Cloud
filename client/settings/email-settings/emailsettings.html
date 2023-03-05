@@ -5,6 +5,17 @@
         </div>
 
         <style>
+            .nav-tabs .nav-link.active {
+                color: rgb(0, 163, 211) !important;
+                background-color: #EDEDED !important;
+                border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
+            }
+
+            .nav-tabs .nav-link {
+                background-color: #fff !important;
+                border-color: #00a3d3 !important;
+            }
+
             .email-settings .table th,
             .email-settings .table td {
                 text-align: left;
@@ -23,6 +34,129 @@
                 display: flex;
                 margin-bottom: 0;
                 align-items: center;
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .tab-1,
+            .tab-2 {
+                width: 100%;
+            }
+
+            .hiddenColumn {
+                display: none;
+            }
+
+            .showColumn {
+                display: table-cell;
+                padding: .75rem;
+                vertical-align: top;
+            }
+
+            .s-input {
+                padding-right: 20px !important;
+                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG2YAABzjgAA4DIAAIM2AAB5CAAAxgwAADT6AAAgbL5TJ5gAAABGSURBVHjaYvz//z8DOYCJgUzA0tnZidPK8vJyRpw24pLEpwnuVHRFhDQxMDAwMPz//x+OOzo6/iPz8WFGuocqAAAA//8DAD/sORHYg7kaAAAAAElFTkSuQmCC) right center no-repeat;
+            }
+
+            #tblEssentialAutomatedEmails.table th,
+            #tblEssentialAutomatedEmails.table td {
+                min-width: 0px !important
+            }
+
+            .arrow {
+                cursor: default !important;
+            }
+
+            th.colTransType {
+                width: 25% !important;
+            }
+
+            th.colFrequency {
+                width: 20% !important;
+            }
+
+            th.colRecipients {
+                width: 40% !important;
+            }
+
+            th.colHistory {
+                width: 15% !important;
+            }
+
+            .print-wrapper-129 .customProfitLossTable table th {
+                min-width: 0 !important
+            }
+
+            .print-wrapper-129 .customProfitLossTable .table-sm th,
+            .print-wrapper-129 .customProfitLossTable .table-sm td {
+                white-space: unset;
+            }
+
+            .star {
+                visibility: hidden;
+                font-size: 30px;
+                cursor: pointer;
+                color: #00a3d3;
+                margin-left: 2px;
+            }
+
+            .star:before {
+                content: "\2606";
+                position: absolute;
+                visibility: visible;
+                margin-top: -14px;
+            }
+
+            .star:checked:before {
+                content: "\2605";
+                position: absolute;
+                color: #00a3d3;
+            }
+
+            .hiddenColumn {
+                display: none;
+            }
+
+            .showColumn {
+                display: table-cell;
+                padding: .75rem;
+                vertical-align: top;
+            }
+
+            .s-input {
+                padding-right: 20px !important;
+                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG2YAABzjgAA4DIAAIM2AAB5CAAAxgwAADT6AAAgbL5TJ5gAAABGSURBVHjaYvz//z8DOYCJgUzA0tnZidPK8vJyRpw24pLEpwnuVHRFhDQxMDAwMPz//x+OOzo6/iPz8WFGuocqAAAA//8DAD/sORHYg7kaAAAAAElFTkSuQmCC) right center no-repeat;
+            }
+
+            #tblCorrespondence.table tr th,
+            #tblCorrespondence.table tr td {
+                min-width: 0px !important;
+            }
+
+            .colLabel {
+                width: 100px !important;
+            }
+
+            .colSubject {
+                width: 100px !important;
+            }
+
+            .colRecipient {
+                width: 100px !important;
+            }
+
+            .colUsedOn {
+                width: 100px !important;
+            }
+
+            .colTemplateContent {
+                width: auto;
+            }
+
+            .colDelete {
+                width: 60px !important;
             }
         </style>
         <div class="row">
@@ -70,18 +204,6 @@
         </div>
 
         <div class="email-settings-wrapper">
-            <style>
-                .nav-tabs .nav-link.active {
-                    color: rgb(0, 163, 211) !important;
-                    background-color: #EDEDED !important;
-                    border-color: #00a3d3 #00a3d3 #ededed #00a3d3 !important;
-                }
-
-                .nav-tabs .nav-link {
-                    background-color: #fff !important;
-                    border-color: #00a3d3 !important;
-                }
-            </style>
             <ul class="nav nav-tabs nav-fill">
                 <li class="nav-item" style="cursor: pointer;"><a class="nav-link automatedEmailTab active" role="tab"
                         data-toggle="tab" data-target="#tab-1">Automated Email
@@ -91,16 +213,6 @@
             </ul>
 
             <div class="tab-content">
-                <style>
-                    .table-responsive {
-                        overflow-x: auto;
-                    }
-
-                    .tab-1,
-                    .tab-2 {
-                        width: 100%;
-                    }
-                </style>
                 <div class="tab-pane active border rounded-0 tab-1" role="tab-panel" id="tab-1"
                     style="background-color: #ededed; border-color: #00a3d3 !important; border-top-color: #ededed !important;">
                     <div class="row mt-5 mb-3">
@@ -120,49 +232,6 @@
                                         </div>
                                     </div>
                                     <div class="table-responsive">
-                                        <style>
-                                            .hiddenColumn {
-                                                display: none;
-                                            }
-
-                                            .showColumn {
-                                                display: table-cell;
-                                                padding: .75rem;
-                                                vertical-align: top;
-                                            }
-
-                                            .s-input {
-                                                padding-right: 20px !important;
-                                                background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG2YAABzjgAA4DIAAIM2AAB5CAAAxgwAADT6AAAgbL5TJ5gAAABGSURBVHjaYvz//z8DOYCJgUzA0tnZidPK8vJyRpw24pLEpwnuVHRFhDQxMDAwMPz//x+OOzo6/iPz8WFGuocqAAAA//8DAD/sORHYg7kaAAAAAElFTkSuQmCC) right center no-repeat;
-                                            }
-                                        </style>
-                                        <style>
-                                            #tblEssentialAutomatedEmails.table th,
-                                            #tblEssentialAutomatedEmails.table td {
-                                                min-width: 0px !important
-                                            }
-
-                                            .arrow {
-                                                cursor: default !important;
-                                            }
-
-                                            th.colTransType {
-                                                width: 25% !important;
-                                            }
-
-                                            th.colFrequency {
-                                                width: 20% !important;
-                                            }
-
-                                            th.colRecipients {
-                                                width: 40% !important;
-                                            }
-
-                                            th.colHistory {
-                                                width: 15% !important;
-                                            }
-                                        </style>
-
                                         <table id="tblEssentialAutomatedEmails" style="width:100%"
                                             class="dataTable table table-hover table-striped table-bordered tblEssentialAutomatedEmails">
                                             <thead>
@@ -236,16 +305,6 @@
                                                     </td>
                                                     {{#if equals item.formID 129}}
                                                     <div class="d-none print-wrapper print-wrapper-129" id="profitTemp">
-                                                        <style>
-                                                            .print-wrapper-129 .customProfitLossTable table th {
-                                                                min-width: 0 !important
-                                                            }
-
-                                                            .print-wrapper-129 .customProfitLossTable .table-sm th,
-                                                            .print-wrapper-129 .customProfitLossTable .table-sm td {
-                                                                white-space: unset;
-                                                            }
-                                                        </style>
                                                         {{> newprofitandloss}}
                                                     </div>
                                                     {{/if}}
@@ -297,28 +356,6 @@
                                                                 </th>
                                                             </tr>
                                                         </thead>
-                                                        <style>
-                                                            .star {
-                                                                visibility: hidden;
-                                                                font-size: 30px;
-                                                                cursor: pointer;
-                                                                color: #00a3d3;
-                                                                margin-left: 2px;
-                                                            }
-
-                                                            .star:before {
-                                                                content: "\2606";
-                                                                position: absolute;
-                                                                visibility: visible;
-                                                                margin-top: -14px;
-                                                            }
-
-                                                            .star:checked:before {
-                                                                content: "\2605";
-                                                                position: absolute;
-                                                                color: #00a3d3;
-                                                            }
-                                                        </style>
                                                         <tbody>
                                                             {{#each reportType in reportTypeData}}
                                                             {{#unless equals reportType.id 1}}
@@ -375,22 +412,6 @@
                                             </div>
                                         </div>
                                         <div class="table-responsive">
-                                            <style>
-                                                .hiddenColumn {
-                                                    display: none;
-                                                }
-
-                                                .showColumn {
-                                                    display: table-cell;
-                                                    padding: .75rem;
-                                                    vertical-align: top;
-                                                }
-
-                                                .s-input {
-                                                    padding-right: 20px !important;
-                                                    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAICAYAAADJEc7MAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAG2YAABzjgAA4DIAAIM2AAB5CAAAxgwAADT6AAAgbL5TJ5gAAABGSURBVHjaYvz//z8DOYCJgUzA0tnZidPK8vJyRpw24pLEpwnuVHRFhDQxMDAwMPz//x+OOzo6/iPz8WFGuocqAAAA//8DAD/sORHYg7kaAAAAAElFTkSuQmCC) right center no-repeat;
-                                                }
-                                            </style>
                                             <style>
                                                 #tblAutomatedEmails.table th,
                                                 #tblAutomatedEmails.table td {
@@ -658,16 +679,6 @@
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
-                                                                <!--<tbody>
-                                                                    {{#each item in essentialReportSchedules}}
-                                                                    <tr class="dnd-moved" id="history{{item.formID}}" data-id="{{item.formID}}">
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.Subject}}</td>
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.DateSent}}</td>
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.Memo}}</td>
-                                                                        <td contenteditable="false" class="arrow">{{item.fields.RecipientEmail}}</td>
-                                                                    </tr>
-                                                                    {{/each}}
-                                                                </tbody> -->
                                                             </table>
                                                         </div>
                                                         <div class="modal-footer">
@@ -685,14 +696,6 @@
                                                 <div class="modal-dialog modal-lg modal-dialog-centered"
                                                     role="document">
                                                     <div class="modal-content">
-                                                        <!-- <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="frequencyLabel">Frequency</h5>
-                                                                                        <button type="button" class="close" data-dismiss="modal"
-                                                                                            aria-label="Close">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                        </button>
-                                                                                    </div> -->
-                                                        <!-- <div class="modal-body"> -->
                                                         <style>
                                                             #ui-datepicker-div table.ui-datepicker-calendar tr th,
                                                             #ui-datepicker-div table.ui-datepicker-calendar tr td {
@@ -776,40 +779,6 @@
                                                                                     Settings</h5>
                                                                             </div>
                                                                         </div>
-                                                                        <!-- <div class="row" style="margin-bottom: 8px;">
-                                                                                                                    <div class="col-3">
-                                                                                                                        <div class="form-check" style="margin-top: 2px;">
-                                                                                                                            <input class="form-check-input" type="radio" name="settingsMonthlyRadio" id="settingsMonthlyEvery" checked>
-                                                                                                                            <label class="form-check-label" for="settingsMonthlyEvery">
-                                                                                                                                Every
-                                                                                                                            </label>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-9" style="display: inline-flex;">
-                                                                                                                        <div class="form-group" style="margin-bottom: 0px !important; width: 48%; margin-right: 3%;">
-                                                                                                                            <input type="number" class="settingsMonthlyEveryOccurence" name="sltDayOccurence" id="sltDayOccurence">
-                                                                                                                            <select class="form-control pointer settingsMonthlyEveryOccurence" id="sltDayOccurence" name="sltDayOccurence" style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                                <option value="first">First</option>
-                                                                                                                                <option value="second">Second</option>
-                                                                                                                                <option value="third">Third</option>
-                                                                                                                                <option value="fourth">Fourth</option>
-                                                                                                                                <option value="last">Last</option>
-                                                                                                                            </select>
-                                                                                                                        </div>
-                                                                                                                        <div class="form-group" style="margin-bottom: 0px !important; width: 48%;">
-                                                                                                                            <input type="number" class="settingsMonthlyDayOfWeek" name="sltDayOfWeek" id="sltDayOfWeek">
-                                                                                                                            <select class="form-control pointer settingsMonthlyDayOfWeek" id="sltDayOfWeek" name="sltDayOfWeek" style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                                <option value="monday">Monday</option>
-                                                                                                                                <option value="tuesday">Tuesday</option>
-                                                                                                                                <option value="wednesday">Wednesday</option>
-                                                                                                                                <option value="thursday">Thursday</option>
-                                                                                                                                <option value="friday">Friday</option>
-                                                                                                                                <option value="saturday">Saturday</option>
-                                                                                                                                <option value="sunday">Sunday</option>
-                                                                                                                            </select>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div> -->
                                                                         <div class="row" style="margin-bottom: 8px;">
                                                                             <div class="col-3">
                                                                                 <label class="form-check-label" for=""
@@ -1070,25 +1039,6 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <!--
-                                                                                                                <div class="row" style="margin-bottom: 8px;">
-                                                                                                                    <div class="col-3">
-                                                                                                                        <label class="form-check-label" for=""
-                                                                                                                            style="margin-top: 2px;">
-                                                                                                                            Start Time
-                                                                                                                        </label>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-3">
-                                                                                                                        <div class="form-group dateTimePickerMobile"
-                                                                                                                            style="margin-bottom: 0px !important;">
-                                                                                                                            <input type="time" class="form-control"
-                                                                                                                                id="edtMonthlyStartTime"
-                                                                                                                                name="edtMonthlyStartTime"
-                                                                                                                                style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                -->
                                                                         <div class="row" style="margin-bottom: 8px;">
                                                                             <div class="col-3">
                                                                                 <label class="form-check-label" for=""
@@ -1282,25 +1232,6 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <!--
-                                                                                                                <div class="row" style="margin-bottom: 8px;">
-                                                                                                                    <div class="col-3">
-                                                                                                                        <label class="form-check-label" for=""
-                                                                                                                            style="margin-top: 2px;">
-                                                                                                                            Start Time
-                                                                                                                        </label>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-3">
-                                                                                                                        <div class="form-group dateTimePickerMobile"
-                                                                                                                            style="margin-bottom: 0px !important;">
-                                                                                                                            <input type="time" class="form-control"
-                                                                                                                                id="edtWeeklyStartTime"
-                                                                                                                                name="edtWeeklyStartTime"
-                                                                                                                                style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                -->
                                                                         <div class="row" style="margin-bottom: 8px;">
                                                                             <div class="col-3">
                                                                                 <label class="form-check-label" for=""
@@ -1309,10 +1240,6 @@
                                                                                 </label>
                                                                             </div>
                                                                             <div class="col-3">
-                                                                                <!--
-                                                                                                                            <div class="form-group dateTimePickerMobile" style="margin-bottom: 0px !important; width: 48%; margin-right: 3%;">
-                                                                                                                                <input type="date" class="form-control" id="edtWeeklyStartDate" name="edtWeeklyStartDate" style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                            </div> -->
                                                                                 <div class="form-group dateTimePickerMobile"
                                                                                     data-toggle="tooltip"
                                                                                     data-placement="bottom"
@@ -1341,10 +1268,6 @@
                                                                                 </label>
                                                                             </div>
                                                                             <div class="col-3">
-                                                                                <!--
-                                                                                                                            <div class="form-group dateTimePickerMobile" style="margin-bottom: 0px !important; width: 48%; margin-right: 3%;">
-                                                                                                                                <input type="date" class="form-control" id="edtWeeklyStartDate" name="edtWeeklyStartDate" style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                            </div> -->
                                                                                 <div class="form-group dateTimePickerMobile"
                                                                                     data-toggle="tooltip"
                                                                                     data-placement="bottom"
@@ -1430,24 +1353,6 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <!--
-                                                                                                                <div class="row" style="margin-bottom: 8px;">
-                                                                                                                    <div class="col-3">
-                                                                                                                        <label class="form-check-label" for=""
-                                                                                                                            style="margin-top: 2px;">
-                                                                                                                            Start Time
-                                                                                                                        </label>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-3">
-                                                                                                                        <div class="form-group dateTimePickerMobile"
-                                                                                                                            style="margin-bottom: 0px !important;">
-                                                                                                                            <input type="time" class="form-control"
-                                                                                                                                id="edtDailyStartTime" name="edtDailyStartTime"
-                                                                                                                                style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                -->
                                                                         <div class="row" style="margin-bottom: 8px;">
                                                                             <div class="col-3">
                                                                                 <label class="form-check-label" for=""
@@ -1513,26 +1418,6 @@
                                                                                     Settings</h5>
                                                                             </div>
                                                                         </div>
-                                                                        <!--
-                                                                                                                <div class="row" style="margin-bottom: 8px;">
-                                                                                                                    <div class="col-3">
-                                                                                                                        <label class="form-check-label" for=""
-                                                                                                                            style="margin-top: 2px;">
-                                                                                                                            Start Time
-                                                                                                                        </label>
-                                                                                                                    </div>
-                                                                                                                    <div class="col-3">
-                                                                                                                        <div class="form-group dateTimePickerMobile"
-                                                                                                                            style="margin-bottom: 0px !important;">
-                                                                                                                            <input type="time" class="form-control"
-                                                                                                                                id="edtOneTimeOnlyTime"
-                                                                                                                                name="edtOneTimeOnlyTime"
-                                                                                                                                style="height: 30px !important; padding: 2px 6px;">
-                                                                                                                            <p id="edtOneTimeOnlyTimeError" style="display: none; color: darkred; margin: 0; font-size: 15px;">This field is required.</p>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                -->
                                                                         <div class="row" style="margin-bottom: 8px;">
                                                                             <div class="col-3">
                                                                                 <label class="form-check-label" for=""
@@ -1728,14 +1613,6 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <!-- </div> -->
-                                                        <!-- <div class="modal-footer">
-                                                                                        <button type="button" class="btn btn-success btnSaveFrequency"><i
-                                                                                                class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                                                                                class="fa fa-close"
-                                                                                                style="margin-right: 5px;"></i>Close</button>
-                                                                                    </div> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -1823,130 +1700,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="modal fade" id="basedOnModal" tabindex="-1" role="dialog"
-                                                                      aria-labelledby="basedOnModal" aria-hidden="true">
-                                                                      <div class="modal-dialog modal modal-dialog-centered" role="document">
-                                                                          <div class="modal-content">
-                                                                              <div class="modal-header">
-                                                                                  <h5 class="modal-title" id="basedOnLabel">Based On</h5>
-                                                                                  <button type="button" class="close" data-dismiss="modal"
-                                                                                      aria-label="Close">
-                                                                                      <span aria-hidden="true">&times;</span>
-                                                                                  </button>
-                                                                              </div>
-                                                                              <div class="modal-body">
-                                                                                  <div class="row">
-                                                                                      <div class="col-12 col-lg-5">
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnPrint" checked>
-                                                                                              <label class="form-check-label" for="basedOnPrint">
-                                                                                                  On Print
-                                                                                              </label>
-                                                                                          </div>
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnSave">
-                                                                                              <label class="form-check-label" for="basedOnSave">
-                                                                                                  On Save
-                                                                                              </label>
-                                                                                          </div>
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnTransactionDate">
-                                                                                              <label class="form-check-label"
-                                                                                                  for="basedOnTransactionDate">
-                                                                                                  On Transaction Date
-                                                                                              </label>
-                                                                                          </div>
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnDueDate">
-                                                                                              <label class="form-check-label" for="basedOnDueDate">
-                                                                                                  On Due Date
-                                                                                              </label>
-                                                                                          </div>
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnOutstanding">
-                                                                                              <label class="form-check-label" for="basedOnOutstanding">
-                                                                                                  If Outstanding
-                                                                                              </label>
-                                                                                          </div>
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnEvent">
-                                                                                              <label class="form-check-label" for="basedOnEvent">
-                                                                                                  On Event
-                                                                                              </label>
-                                                                                          </div>
-                                                                                      </div>
-                                                                                      <div class="col-12 col-lg-7" id="onEventSettings" style="display: none;">
-                                                                                          <div class="row">
-                                                                                              <div class="col-12">
-                                                                                                  <h5 style="margin-bottom: 8px;">Settings</h5>
-                                                                                              </div>
-                                                                                          </div>
-                                                                                          <div class="row" style="margin-bottom: 8px;">
-                                                                                              <div class="col-12">
-                                                                                                  <div class="form-check" style="margin-top: 2px;">
-                                                                                                      <input class="form-check-input" type="radio"
-                                                                                                          name="settingsOnEvents" id="settingsOnLogon"
-                                                                                                          checked>
-                                                                                                      <label class="form-check-label"
-                                                                                                          for="settingsOnLogon">
-                                                                                                          On Logon
-                                                                                                      </label>
-                                                                                                  </div>
-                                                                                              </div>
-                                                                                          </div>
-                                                                                          <div class="row" style="margin-bottom: 8px;">
-                                                                                              <div class="col-12">
-                                                                                                  <div class="form-check" style="margin-top: 2px;">
-                                                                                                      <input class="form-check-input" type="radio"
-                                                                                                          name="settingsOnEvents" id="settingsOnLogout">
-                                                                                                      <label class="form-check-label"
-                                                                                                          for="settingsOnLogout">
-                                                                                                          On Logout
-                                                                                                      </label>
-                                                                                                  </div>
-                                                                                              </div>
-                                                                                          </div>
-                                                                                      </div>
-                                                                                  </div>
-                                                                                  <div class="row">
-                                                                                      <div class="col-6 col-lg-5">
-                                                                                          <div class="form-check">
-                                                                                              <input class="form-check-input" type="radio"
-                                                                                                  name="basedOnRadio" id="basedOnDate">
-                                                                                              <label class="form-check-label" for="basedOnDate">
-                                                                                                  Time
-                                                                                              </label>
-                                                                                          </div>
-                                                                                      </div>
-                                                                                      <div class="col-6 col-lg-7">
-                                                                                          <div class="form-group" style="margin-bottom: 0px !important;">
-                                                                                              <input type="time" class="form-control" id="edtBasedOnDate"
-                                                                                                  name="edtBasedOnDate"
-                                                                                                  style="height: 30px !important; padding: 2px 6px;"
-                                                                                                  disabled>
-                                                                                              <p id="edtBasedOnDateRequiredText" style="color: darkred; display: none; margin: 0; font-size: 15px;">
-                                                                                                  This field is rquired.
-                                                                                              </p>
-                                                                                          </div>
-                                                                                      </div>
-                                                                                  </div>
-                                                                              </div>
-                                                                              <div class="modal-footer">
-                                                                                  <button type="button" class="btn btn-success btnSaveBasedOn"><i
-                                                                                          class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                                                                          class="fa fa-close"
-                                                                                          style="margin-right: 5px;"></i>Close</button>
-                                                                              </div>
-                                                                          </div>
-                                                                      </div>
-                                                                  </div> -->
                                         </div>
                                     </div>
                                     <div class="row no-gutters">
@@ -1982,32 +1735,6 @@
                                         </button>
                                     </div>
                                     <div class="table-responsive">
-                                        <style>
-                                            #tblCorrespondence.table tr th,
-                                            #tblCorrespondence.table tr td {
-                                                min-width: 0px !important;
-                                            }
-
-                                            .colLabel {
-                                                width: 15% !important;
-                                            }
-
-                                            .colSubject {
-                                                width: 25% !important;
-                                            }
-
-                                            .colRecipient {
-                                                width: 10% !important;
-                                            }
-
-                                            .colUsedOn {
-                                                width: 10% !important;
-                                            }
-
-                                            .colTemplateContent {
-                                                width: 40% !important
-                                            }
-                                        </style>
                                         <table id="tblCorrespondence" style="width:100%"
                                             class="dataTable table table-hover table-striped table-bordered tblCorrespondence">
                                             <thead>
@@ -2072,7 +1799,7 @@
                                                         id="edtTamplateAppointment"
                                                         name="edtTamplateAppointment"
                                                         }}
-                                                        <input type="hidden" id="appointmentId" />
+                                                        <input type="hidden" id="usedon_id" />
                                                     </div>
                                                     <!-- Recipient -->
                                                     <div class="form-group">
