@@ -42,14 +42,14 @@ Template.jobprofitabilityreport.onRendered(() => {
       { index: 1, label: 'Company', class: 'colCompanyName', active: true, display: true, width: "200" },
       { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "120" },
       { index: 3, label: 'Job No', class: 'colJobNo', active: true, display: true, width: "120" },
-      { index: 4, label: 'Cost (ex)', class: 'colCostEX', active: true, display: true, width: "120" },
-      { index: 5, label: 'Income (ex)', class: 'colIncomeEX', active: true, display: true, width: "120" },
-      { index: 6, label: 'Quoted (ex)', class: 'colQuotedEX', active: true, display: true, width: "120" },
-      { index: 7, label: 'Diff Inc Cost', class: 'colDiffIncCost', active: true, display: true, width: "120" },
+      { index: 4, label: 'Cost (ex)', class: 'colCostEX text-right', active: true, display: true, width: "120" },
+      { index: 5, label: 'Income (ex)', class: 'colIncomeEX text-right', active: true, display: true, width: "120" },
+      { index: 6, label: 'Quoted (ex)', class: 'colQuotedEX text-right', active: true, display: true, width: "120" },
+      { index: 7, label: 'Diff Inc Cost', class: 'colDiffIncCost text-right', active: true, display: true, width: "120" },
       { index: 8, label: 'Backorders', class: 'colBackorders', active: true, display: true, width: "120" },
-      { index: 9, label: 'Credit', class: 'colCredit', active: true, display: true, width: "120" },
+      { index: 9, label: 'Credit', class: 'colCredit text-right', active: true, display: true, width: "120" },
       { index: 10, label: 'Profit %', class: 'colProfit%', active: true, display: true, width: "120" },
-      { index: 11, label: 'Profit', class: 'colProfit', active: true, display: true, width: "120" },
+      { index: 11, label: 'Profit', class: 'colProfit text-right', active: true, display: true, width: "120" },
       // { index: 1, label: 'Company Name', class: 'colCompanyName', active: true, display: true, width: "120" },
       // { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "120" },
       // { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "120" },
@@ -246,7 +246,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     }
     let T_AccountName = "", j, customerProductReport = [];
     function currencySpan(tmp){
-      return (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+      return (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success', 'text-right') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger', 'text-right');
     }
     for(let i = 0 ; i < splashArrayReport.length ; i ++){
       if(T_AccountName != splashArrayReport[i][0]) {

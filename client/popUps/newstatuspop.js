@@ -10,9 +10,62 @@ import { Template } from 'meteor/templating';
 import './newstatuspop.html';
 
 let sideBarService = new SideBarService();
-Template.newstatuspop.onCreated(() => {});
-Template.newstatuspop.onRendered(() => {});
-Template.newstatuspop.helpers({});
+Template.newstatuspop.onCreated(() => {
+    let templateObject = Template.instance();
+    templateObject.record = new ReactiveVar();
+});
+Template.newstatuspop.onRendered(async () => {
+    let templateObject = Template.instance();
+    async function getStatusData(name){
+        return new Promise(async(resolve, reject) => {
+            getVS1Data('TLeadStatusType').then(function(dataObject) {
+                if (dataObject.length == 0) {
+                    sideBarService.getLeadStatusByName(name).then(function(data) {
+                        resolve(data.tleadstatustype[0])
+                    });
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tleadstatustype;
+                    let added = false
+                    for (let i in useData) {
+                        if (useData[i].TypeName === name) {
+                            added = true
+                            resolve(useData[i]);
+                        }
+                    }
+                    if(added == false) {
+                        sideBarService.getLeadStatusByName(name).then(function(data) {
+                            resolve(data.tleadstatustype[0])
+                        }); 
+                    }
+                }
+            }).catch(function(err) {
+                sideBarService.getLeadStatusByName(name).then(function(data) {
+                    resolve(data.tleadstatustype[0])
+                });
+            })
+        })
+    }
+    let record= {
+        id: '',
+        name: '',
+        description: '',
+        EPQM: 10
+    }
+    if(templateObject.data.name) {
+        let detail = await getStatusData(templateObject.data.name);
+        record.id= detail.ID;
+        record.name=detail.TypeName;
+        record.description=detail.Description
+        record.EPQM = detail.EPQM || 0;
+    }
+    templateObject.record.set(record)
+});
+Template.newstatuspop.helpers({
+    record:()=> {
+        return Template.instance().record.get()
+    }
+});
 Template.newstatuspop.events({
     'click .btnSaveStatus': function() {
         playSaveAudio();

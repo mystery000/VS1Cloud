@@ -2121,71 +2121,71 @@ Template.supplierpaymentcard.onRendered(() => {
     }, 1000);
   });
 
-  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-    let suppliers = templateObject.clientrecords.get();
-    var tableSupplier = $(this);
-    let $tblrows = $("#tblSupplierPaymentcard tbody tr");
-    $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
-    $("#eftUserName").val(tableSupplier.find(".colCompany").text());
-    $("#eftNumberUser").val(tableSupplier.find(".colID").text());
+  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+  //   let suppliers = templateObject.clientrecords.get();
+  //   var tableSupplier = $(this);
+  //   let $tblrows = $("#tblSupplierPaymentcard tbody tr");
+  //   $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
+  //   $("#eftUserName").val(tableSupplier.find(".colCompany").text());
+  //   $("#eftNumberUser").val(tableSupplier.find(".colID").text());
 
-    // $('#edtSupplierName').attr("custid", tableSupplier.find(".colID").text());
-    $("#supplierListModal").modal("toggle");
+  //   // $('#edtSupplierName').attr("custid", tableSupplier.find(".colID").text());
+  //   $("#supplierListModal").modal("toggle");
 
-    $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
-    $("#edtSupplierEmail").attr(
-      "customerid",
-      tableSupplier.find(".colID").text()
-    );
+  //   $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
+  //   $("#edtSupplierEmail").attr(
+  //     "customerid",
+  //     tableSupplier.find(".colID").text()
+  //   );
 
-    let postalAddress =
-      tableSupplier.find(".colCompany").text() +
-      "\n" +
-      tableSupplier.find(".colStreetAddress").text() +
-      "\n" +
-      tableSupplier.find(".colCity").text() +
-      " " +
-      tableSupplier.find(".colState").text() +
-      " " +
-      tableSupplier.find(".colZipCode").text() +
-      "\n" +
-      tableSupplier.find(".colCountry").text();
-    $("#txabillingAddress").val(postalAddress);
+  //   let postalAddress =
+  //     tableSupplier.find(".colCompany").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colStreetAddress").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colCity").text() +
+  //     " " +
+  //     tableSupplier.find(".colState").text() +
+  //     " " +
+  //     tableSupplier.find(".colZipCode").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colCountry").text();
+  //   $("#txabillingAddress").val(postalAddress);
 
-    let selectedCustomer = $("#edtSupplierName").val();
-    // if (clientList) {
-    //     $('#edtCustomerEmail').val(clientList[i].customeremail);
-    //     $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
-    //     let postalAddress = clientList[i].customername + '\n' + clientList[i].street + '\n' + clientList[i].street2 + '\n' + clientList[i].street3 + '\n' + clientList[i].suburb + '\n' + clientList[i].statecode + '\n' + clientList[i].country;
-    //     $('#txabillingAddress').val(postalAddress);
-    // }
-    let isEmptyData = false;
-    if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
-      if ($tblrows.length > 0) {
-        $tblrows.each(function (index) {
-          var $tblrow = $(this);
-          if ($tblrow.find(".colTransNo").val() == "") {
-            isEmptyData = true;
-          } else {
-            isEmptyData = false;
-          }
-        });
-      } else {
-        isEmptyData = true;
-      }
-      setTimeout(function () {
-        if (isEmptyData) {
-          $("#addRow").trigger("click");
-        }
-      }, 500);
-    }
+  //   let selectedCustomer = $("#edtSupplierName").val();
+  //   // if (clientList) {
+  //   //     $('#edtCustomerEmail').val(clientList[i].customeremail);
+  //   //     $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
+  //   //     let postalAddress = clientList[i].customername + '\n' + clientList[i].street + '\n' + clientList[i].street2 + '\n' + clientList[i].street3 + '\n' + clientList[i].suburb + '\n' + clientList[i].statecode + '\n' + clientList[i].country;
+  //   //     $('#txabillingAddress').val(postalAddress);
+  //   // }
+  //   let isEmptyData = false;
+  //   if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+  //     if ($tblrows.length > 0) {
+  //       $tblrows.each(function (index) {
+  //         var $tblrow = $(this);
+  //         if ($tblrow.find(".colTransNo").val() == "") {
+  //           isEmptyData = true;
+  //         } else {
+  //           isEmptyData = false;
+  //         }
+  //       });
+  //     } else {
+  //       isEmptyData = true;
+  //     }
+  //     setTimeout(function () {
+  //       if (isEmptyData) {
+  //         $("#addRow").trigger("click");
+  //       }
+  //     }, 500);
+  //   }
 
-    $("#tblSupplierlist_filter .form-control-sm").val("");
-    setTimeout(function () {
-      $(".btnRefreshSupplier").trigger("click");
-      LoadingOverlay.hide();
-    }, 1000);
-  });
+  //   $("#tblSupplierlist_filter .form-control-sm").val("");
+  //   setTimeout(function () {
+  //     $(".btnRefreshSupplier").trigger("click");
+  //     LoadingOverlay.hide();
+  //   }, 1000);
+  // });
 $(document).ready(function () {
   $("#sltDepartment").editableSelect();
   $("#sltPaymentMethod").editableSelect();
