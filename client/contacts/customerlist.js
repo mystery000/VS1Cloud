@@ -932,7 +932,9 @@ Template.customerlist.helpers({
         return Template.instance().setupFinished.get();
     },
     getSkippedSteps() {
+        console.log(localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP"));
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
+        console.log(setupUrl);
         return setupUrl[1];
     }
 });

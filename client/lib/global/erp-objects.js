@@ -321,8 +321,8 @@ const erpObject = {
     TPreference: "TPreference",
     BuildProfitabilityReport: "BuildProfitabilityReport",
     ProductionWorksheetReport: "ProductionWorksheetReport",
-    WorkOrderReport: "WorkOrderReport"
-
+    WorkOrderReport: "WorkOrderReport",
+    TProductQtyList:"TProductQtyList"
 };
 
 export default erpObject;

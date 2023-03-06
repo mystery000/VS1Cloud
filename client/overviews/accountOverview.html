@@ -134,11 +134,11 @@
                     </div>
                 </div>
             </div>
-            <!-- {{#if equals isSetupFinished false}} -->
+            {{#if equals isSetupFinished false}}
                 <div class="col-2 setupIncompleatedMsg text-danger">
                     <h2><a href="/setup?step={{getSkippedSteps}}">Set Up Wizard Incomplete</a></h2>
                 </div>
-            <!-- {{/if}} -->
+            {{/if}}
             <div class="col-5 col-md-5">
                 <div
                   class="col d-xl-flex justify-content-xl-end align-items-xl-start"
@@ -225,7 +225,7 @@
                 </div>
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
-        </div>        
+        </div>
         <div class="card-body p-0 rounded">
             {{> non_transactional_list tablename="tblAccountOverview"}}
             <div class="table-responsive d-none">
@@ -243,7 +243,7 @@
                     </thead>
                     <tbody>
                     </tbody>
-                </table>      
+                </table>
             </div>
         </div>
         <style>
