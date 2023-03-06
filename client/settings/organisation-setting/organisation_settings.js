@@ -992,12 +992,12 @@ Template.organisationsettings.onRendered(function () {
     $("#changeLogo").show();
   }
 
-  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-    const tableSupplier = $(this);
-    $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
-    $("#sltAccountant").attr("suppid", tableSupplier.find(".colID").text());
-    $("#supplierListModal").modal("toggle");
-  });
+  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+  //   const tableSupplier = $(this);
+  //   $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
+  //   $("#sltAccountant").attr("suppid", tableSupplier.find(".colID").text());
+  //   $("#supplierListModal").modal("toggle");
+  // });
 });
 
 Template.organisationsettings.helpers({
