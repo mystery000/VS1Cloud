@@ -88,35 +88,55 @@ function buildSubAccountJson( $sortContainer ){
 Template.npleditlayoutscreen.onRendered(function () {
   const templateObject = Template.instance();
 
-  templateObject.getPNLLayout = async () => {    
-    getVS1Data("TPNLLayout")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          reportService.getPNLLayout(3).then(function(data) {
-            addVS1Data("TPNLLayout", JSON.stringify(data));
-            if(data.tpnllayout.length > 0){
-              templateObject.layoutinfo.set(data.tpnllayout[0].fields);
-            }
-          });          
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          if(data.tpnllayout.length > 0){
-            templateObject.layoutinfo.set(data.tpnllayout[0].fields);
-          }
-        }
-      })
-      .catch(function (err) {
-        reportService.getPNLLayout(3).then(function(data) {
-          addVS1Data("TPNLLayout", JSON.stringify(data));
-          if(data.tpnllayout.length > 0){
-            templateObject.layoutinfo.set(data.tpnllayout[0].fields);
-          }
-        });
-      });
-    
-  }
+  // templateObject.getPNLLayout = async () => {    
+  //   getVS1Data("TPNLLayout")
+  //     .then(function (dataObject) {
+  //       if (dataObject.length == 0) {
+  //         reportService.getPNLLayout().then(function(data) {
+  //           addVS1Data("TPNLLayout", JSON.stringify(data));
+  //           if(data.tpnllayout.length > 0){
+  //             for(var i=0; i<data.tpnllayout.length; i++){
+  //               if(data.tpnllayout[i].IsCurrentLayout == true){                
+  //                 templateObject.layoutinfo.set(data.tpnllayout[i]);
+  //                 $("#nplLayoutID").val(data.tpnllayout[i].Id);
+  //                 $("#sltLaybout").val(data.tpnllayout[i].LName);
+  //                 break;
+  //               }
+  //             }
+  //           }
+  //         });          
+  //       } else {
+  //         let data = JSON.parse(dataObject[0].data);
+  //         if(data.tpnllayout.length > 0){
+  //           for(var i=0; i<data.tpnllayout.length; i++){
+  //             if(data.tpnllayout[i].IsCurrentLayout == true){                
+  //               templateObject.layoutinfo.set(data.tpnllayout[i]);
+  //               $("#nplLayoutID").val(data.tpnllayout[i].Id);
+  //               $("#sltLaybout").val(data.tpnllayout[i].LName);
+  //               break;
+  //             }
+  //           }
+  //         }
+  //       }
+  //     })
+  //     .catch(function (err) {
+  //       reportService.getPNLLayout().then(function(data) {
+  //         addVS1Data("TPNLLayout", JSON.stringify(data));
+  //         if(data.tpnllayout.length > 0){
+  //           for(var i=0; i<data.tpnllayout.length; i++){
+  //             if(data.tpnllayout[i].IsCurrentLayout == true){                
+  //               templateObject.layoutinfo.set(data.tpnllayout[i]);
+  //               $("#nplLayoutID").val(data.tpnllayout[i].Id);
+  //               $("#sltLaybout").val(data.tpnllayout[i].LName);
+  //               break;
+  //             }
+  //           }
+  //         }
+  //       });
+  //     });    
+  // }
 
-  templateObject.getPNLLayout();
+  // templateObject.getPNLLayout();
 
   $(document).on("click", "ol.nested_with_switch div.mainHeadingDiv, ol.nested_with_switch span.childInner", function(e) {
     let groupID = $(this).closest("li").attr("plid");
@@ -147,108 +167,154 @@ Template.npleditlayoutscreen.onRendered(function () {
 
 Template.npleditlayoutscreen.events({
   "click .saveProfitLossLayouts": async function () {
-
-    $('.fullScreenSpin').css('display', 'block');
-    // buildPositions();
-
-    // const profitLossLayoutApis = new ProfitLossLayoutApi();
-
-    // // make post request to save layout data
-    // const apiEndpoint = profitLossLayoutApis.collection.findByName(
-    //   profitLossLayoutApis.collectionNames.TProfitLossLayout
-    // );
-
-    // const pSortfields = $(".pSortItems");
-    // const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-    // let pSortList = [];
-    // pSortfields.each(function(){
-    //   let Position = $(this).attr('position');
-    //   let accountType = $(this).data('group');
-    //   pSortList.push({
-    //     "position": Position,
-    //     "accountType": accountType,
-    //     "employeeId": employeeId,
-    //     "subAccounts": buildSubAccountJson( $(this).find('ol li') )
-    //   });
-    // });
-
-    /**
-     *
-     * Update all layout fields index DB
-     */
+    let id = $("#nplLayoutID").val();
     let name = $("#nplLayoutName").val();
     let description = $("#nplLayoutDescr").val();
     let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
+    if(id != "" && (name != "" || description != "")){
+      $('.fullScreenSpin').css('display', 'block');
+      // buildPositions();
 
-    let jsonObj = {
-      type: "TPNLLayout",
-      fields: {
-        "ID": 3,
-        "LName": name,
-        "Description": description,
-        "IsCurrentLayout": isdefault
+      // const profitLossLayoutApis = new ProfitLossLayoutApi();
+
+      // // make post request to save layout data
+      // const apiEndpoint = profitLossLayoutApis.collection.findByName(
+      //   profitLossLayoutApis.collectionNames.TProfitLossLayout
+      // );
+
+      // const pSortfields = $(".pSortItems");
+      // const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
+      // let pSortList = [];
+      // pSortfields.each(function(){
+      //   let Position = $(this).attr('position');
+      //   let accountType = $(this).data('group');
+      //   pSortList.push({
+      //     "position": Position,
+      //     "accountType": accountType,
+      //     "employeeId": employeeId,
+      //     "subAccounts": buildSubAccountJson( $(this).find('ol li') )
+      //   });
+      // });
+
+      /**
+       *
+       * Update all layout fields index DB
+       */
+      
+      let jsonObj = {
+        type: "TPNLLayout",
+        fields: {
+          "ID": id,
+          "LName": name,
+          "Description": description,
+          "IsCurrentLayout": isdefault
+        }
       }
+
+      reportService.savePNLLayout(jsonObj).then(function(res) {
+        reportService.getPNLLayout().then(function(data) {
+          addVS1Data("TPNLLayout", JSON.stringify(data)).then(function(datareturn) {
+            if($("#npldefaultSettting").prop('checked') == true){
+              $("#nplEditLayoutScreen").modal("toggle");
+            }
+          }).catch(function(err) {
+            if($("#npldefaultSettting").prop('checked') == true){
+              $("#nplEditLayoutScreen").modal("toggle");
+            }
+          });
+          $('.fullScreenSpin').css('display', 'none');
+        });        
+      }).catch(function(err) {
+          swal({
+              title: 'Oooops...',
+              text: err,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Try Again'
+          }).then((result) => {
+              if (result.value) {
+                  // Meteor._reload.reload();
+              } else if (result.dismiss === 'cancel') {}
+          });
+          $('.fullScreenSpin').css('display', 'none');
+      });
+
+      // let profitLossLayoutData = {
+      //   "type": "TProfitLossLayout",
+      //   "action": "save",
+      //   "layout": pSortList
+      // }
+
+      // try {
+      //   const ApiResponse = await apiEndpoint.fetch(null, {
+      //       method: "POST",
+      //       headers: ApiService.getPostHeaders(),
+      //       body: JSON.stringify(profitLossLayoutData),
+      //   });
+
+      //   if (ApiResponse.ok == true) {
+      //       const jsonResponse = await ApiResponse.json();
+      //       LoadingOverlay.hide();
+      //   }else{
+      //       LoadingOverlay.hide();
+      //   }
+      // } catch (error) {
+      //     LoadingOverlay.hide();
+      // }
+
+      // "type": "TProfitLossLayout",
+      // "action": "save",
+      // "layout": [
+
+      // let layoutLists = {
+      //   Name: name,
+      //   Description: description,
+      //   Isdefault: isdefault,
+      //   EmployeeID: employeeID,
+      //   LayoutLists: profitlosslayoutfields,
+      // };
+      // await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
     }
+  },
+  "click .btnCreateLayout": async function () {
+    let name = $("#nplLayoutName").val();
+    let description = $("#nplLayoutDescr").val();
+    let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
+    if(name != "" || description != ""){
+      $('.fullScreenSpin').css('display', 'block');    
+      let jsonObj = {
+        type: "TPNLLayout",
+        fields: {
+          "LName": name,
+          "Description": description,
+          "IsCurrentLayout": isdefault
+        }
+      }
 
-    reportService.savePNLLayout(jsonObj).then(function(res) {
-      reportService.getPNLLayout(3).then(function(data) {
-        addVS1Data("TPNLLayout", JSON.stringify(data)).then(function(datareturn) {
-            $("#nplEditLayoutScreen").modal("toggle");
-        }).catch(function(err) {
-            $("#nplEditLayoutScreen").modal("toggle");
-        });
-        $('.fullScreenSpin').css('display', 'none');
-      });        
-    }).catch(function(err) {
-        swal({
-            title: 'Oooops...',
-            text: err,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonText: 'Try Again'
-        }).then((result) => {
-            if (result.value) {
-                // Meteor._reload.reload();
-            } else if (result.dismiss === 'cancel') {}
-        });
-        $('.fullScreenSpin').css('display', 'none');
-    });
-
-    // let profitLossLayoutData = {
-    //   "type": "TProfitLossLayout",
-    //   "action": "save",
-    //   "layout": pSortList
-    // }
-
-    // try {
-    //   const ApiResponse = await apiEndpoint.fetch(null, {
-    //       method: "POST",
-    //       headers: ApiService.getPostHeaders(),
-    //       body: JSON.stringify(profitLossLayoutData),
-    //   });
-
-    //   if (ApiResponse.ok == true) {
-    //       const jsonResponse = await ApiResponse.json();
-    //       LoadingOverlay.hide();
-    //   }else{
-    //       LoadingOverlay.hide();
-    //   }
-    // } catch (error) {
-    //     LoadingOverlay.hide();
-    // }
-
-    // "type": "TProfitLossLayout",
-    // "action": "save",
-    // "layout": [
-
-    // let layoutLists = {
-    //   Name: name,
-    //   Description: description,
-    //   Isdefault: isdefault,
-    //   EmployeeID: employeeID,
-    //   LayoutLists: profitlosslayoutfields,
-    // };
-    // await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
+      reportService.savePNLLayout(jsonObj).then(function(res) {
+        reportService.getPNLLayout().then(function(data) {
+          addVS1Data("TPNLLayout", JSON.stringify(data)).then(function(datareturn) {
+            $("#layoutModal #btnViewDeleted").click();
+          }).catch(function(err) {
+            $("#layoutModal #btnViewDeleted").click();
+          });
+          $('.fullScreenSpin').css('display', 'none');
+        });        
+      }).catch(function(err) {
+          swal({
+              title: 'Oooops...',
+              text: err,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonText: 'Try Again'
+          }).then((result) => {
+              if (result.value) {
+                  // Meteor._reload.reload();
+              } else if (result.dismiss === 'cancel') {}
+          });
+          $('.fullScreenSpin').css('display', 'none');
+      });
+    }
   },
 });
 

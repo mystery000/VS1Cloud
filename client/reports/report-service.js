@@ -310,9 +310,9 @@ export class ReportService extends BaseService {
         return this.getList(this.ERPObjects.TDeptClass, options);
     }
 
-    getProfitLossLayout() {
+    getProfitLossLayout(id) {
         let options = {
-            LayoutID: 3,
+            LayoutID: id,
         };
         return this.getList('VS1_PNLGetLayout', options);
     }
@@ -965,13 +965,13 @@ export class ReportService extends BaseService {
         let options = {};
         if(layout="All"){
             options = {
-                ListType: "Detail",
+                PropertyList: "ID, Description, LName, IsCurrentLayout",
             };
         }
         else{
             options = {
                 select: "[ID]=" + layout,
-                ListType: "Detail",
+                PropertyList: "ID, Description, LName, IsCurrentLayout",
             };
         }
 
