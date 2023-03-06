@@ -626,7 +626,7 @@ Template.allChartLists.onRendered(function() {
     templateObject.activateDraggable(); // this will enable charts resiable features
 
     // Define the new date picker for charts 
-    let previousDate = moment(new Date()).subtract(7, 'months').format("DD/MM/YYYY");
+    let previousDate = moment(new Date()).subtract(reportsloadMonths, 'months').format("DD/MM/YYYY");
     let currentDate = moment(new Date()).format("DD/MM/YYYY");
     $("#dateFrom_charts").val(previousDate);
     $("#dateTo_charts").val(currentDate);
@@ -641,7 +641,7 @@ Template.allChartLists.onRendered(function() {
         changeYear: true,
         dateFormat: "dd/mm/yy",
         yearRange: "-90:+10",
-        minDate: "-7M",
+        minDate: "-6M",
         maxDate: "+0D",
         onSelect: function(selectedDate) {
             let dateFrom = $("#dateFrom_charts").datepicker("getDate");
