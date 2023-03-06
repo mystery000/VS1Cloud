@@ -33,21 +33,21 @@ Template.supplierdetail.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Supplier', class: 'colAccountID', active: true, display: true, width: "85" },
-      { index: 2, label: 'PO No', class: 'colAccountName', active: true, display: true, width: "110" },
-      { index: 3, label: 'Trans Type', class: 'colAccountNo', active: true, display: true, width: "140" },
-      { index: 4, label: 'Product ID', class: 'colAccounts', active: true, display: true, width: "85" },
-      { index: 5, label: 'Product Desc', class: 'colAmountEx', active: true, display: true, width: "120" },
-      { index: 6, label: 'Cost (ex)', class: 'colAmountInc', active: true, display: true, width: "120" },
-      { index: 7, label: 'Tax', class: 'colChequeNumber', active: true, display: true, width: "85" },
-      { index: 8, label: 'Cost (inc)', class: 'colDepartment', active: true, display: true, width: "100" },
-      { index: 9, label: 'Tax Code', class: 'colClassID', active: true, display: true, width: "85" },
-      { index: 10, label: 'Qty Ordered', class: 'colProductDescription', active: true, display: true, width: "120" },
-      { index: 11, label: 'Qty Received', class: 'colCreditEx', active: true, display: true, width: "120" },
-      { index: 12, label: 'Qty BO', class: 'colCreditInc', active: true, display: true, width: "120" },
-      { index: 13, label: 'ETA Date', class: 'colDate', active: true, display: true, width: "85" },
-      { index: 14, label: 'Order Date', class: 'colDebitsEx', active: true, display: true, width: "120" },
-      { index: 15, label: 'Received Date', class: 'colDebitsInc', active: true, display: true, width: "120" },
+      { index: 1, label: 'Supplier', class: 'colAccountID', active: true, display: true, width: "150" },
+      { index: 2, label: 'PO No', class: 'colAccountName', active: true, display: true, width: "150" },
+      { index: 3, label: 'Trans Type', class: 'colAccountNo', active: true, display: true, width: "150" },
+      { index: 4, label: 'Product ID', class: 'colAccounts', active: true, display: true, width: "150" },
+      { index: 5, label: 'Product Desc', class: 'colAmountEx', active: true, display: true, width: "150" },
+      { index: 6, label: 'Cost (ex)', class: 'colAmountInc', active: true, display: true, width: "150" },
+      { index: 7, label: 'Tax', class: 'colChequeNumber', active: true, display: true, width: "150" },
+      { index: 8, label: 'Cost (inc)', class: 'colDepartment', active: true, display: true, width: "150" },
+      { index: 9, label: 'Tax Code', class: 'colClassID', active: true, display: true, width: "150" },
+      { index: 10, label: 'Qty Ordered', class: 'colProductDescription', active: true, display: true, width: "150" },
+      { index: 11, label: 'Qty Received', class: 'colCreditEx', active: true, display: true, width: "150" },
+      { index: 12, label: 'Qty BO', class: 'colCreditInc', active: true, display: true, width: "150" },
+      { index: 13, label: 'ETA Date', class: 'colDate', active: true, display: true, width: "150" },
+      { index: 14, label: 'Order Date', class: 'colDebitsEx', active: true, display: true, width: "150" },
+      { index: 15, label: 'Received Date', class: 'colDebitsInc', active: true, display: true, width: "150" },
     ];
     templateObject.supplierdetailth.set(reset_data);
   }

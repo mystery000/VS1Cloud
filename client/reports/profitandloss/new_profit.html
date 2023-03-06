@@ -16,7 +16,7 @@
             @media only screen and (max-width:370px) {
                 .periodSelector {
                     margin: 8px !important;
-                }
+                }tota
 
                 .nplSecondHead .btnExportReportProfit,
                 .nplSecondHead .btnPrintReport,
@@ -125,13 +125,17 @@
             }
             .customProfitLossTable .table-sm td,
             .customProfitLossTable .table-sm th {
-                padding: 7px 15px !important;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
                 /* color: #858796; */
                 white-space: nowrap;
             }
-
+            .customProfitLossTable .table-sm td{
+                padding: 7px 15px !important;
+            }
+            .customProfitLossTable .table-sm th {
+                padding: 0px 15px !important;
+            }
             .pnlTable td {
                 border-top: unset;
             }
@@ -311,7 +315,7 @@
             <table class="table table-hover table-sm textCenterAlign pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
                 <thead class="tblAvoid">
 
-                    <tr class="table-active tblAvoid customDoubleTableHeading">
+                    <tr class="tblAvoid customDoubleTableHeading">
                         <th class="textLeftTxt" rowspan="2"></th>
                         <!-- <th class="text-left" rowspan="2"></th> -->
                         {{#if reportOptions.threcords}}

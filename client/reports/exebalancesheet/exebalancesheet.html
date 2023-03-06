@@ -4,10 +4,10 @@
             <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                 <thead>
                     <tr class="table-secondary customDoubleTableHeading">
-                        <th></th>
-                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth1" style="font-weight: 800;"></th>
-                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth2" style="font-weight: 800;"></th>
-                        <th class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800;">Variance(%)</th>
+                        <th style="width: 240px;"></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth1" style="font-weight: 800; width: 240px;"></th>
+                        <th colspan="{{countActive currencyList }}" class="text-nowrap text-center text-center{{countActive currencyList }} titleMonth2" style="font-weight: 800; width: 240px;"></th>
+                        <th class="text-nowrap text-center text-center{{countActive currencyList }}" style="font-weight: 800; width: 300px;">Variance(%)</th>
                     </tr>
                     {{#if isOnlyDefaultActive equal "false" }}
                         <tr class="table-active tblAvoid customDoubleTableHeading">
