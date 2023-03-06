@@ -112,9 +112,7 @@ Template.expensebreakdown.onRendered(function() {
         useData = data.tbilllist;
       }else{
         let data = JSON.parse(billReportObj[0].data);
-     
         useData = data.tbilllist;
-        console.dir(useData);
       }
       // get common data from both request
       if( useData.length ){
