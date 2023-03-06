@@ -284,7 +284,7 @@ const erpObject = {
     TVATReturn: "TVATReturns",
     TVATReturnDetail: "TVATReturnDetail",
     VS1_Customize: "VS1_Customize",
-    TProductList: "TProductList",
+    TProductQtyList: "TProductQtyList",
     TProductMovementList: "TProductMovementList",
     TCardDataReport: "TCardDataReport",
     TProcTree: "TProcTree",

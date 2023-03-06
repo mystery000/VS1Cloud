@@ -77,7 +77,7 @@ export class SideBarService extends BaseService {
       };
     }
     if (!deleteFilter) options.Search = "Active = true"
-    return this.getList(this.ERPObjects.TProductList, options);
+    return this.getList(this.ERPObjects.TProductQtyList, options);
   }
 
 
@@ -428,9 +428,9 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       OrderBy: '"PARTSID desc"',
       LimitCount: parseInt(initialReportLoad),
-      search: 'PARTNAME="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
+      search: 'ProductName="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
     };
-    return this.getList(this.ERPObjects.TProductList, options);
+    return this.getList(this.ERPObjects.TProductQtyList, options);
   }
 
   getNewInvoiceByNameOrID(dataSearchName) {
@@ -1331,7 +1331,7 @@ export class SideBarService extends BaseService {
 
     return this.getList(this.ERPObjects.TCustomerVS1List, options);
   }
-  
+
   searchAllCustomersDataVS1ByName(dataSearchName) {
     let options = "";
     options = {
@@ -3194,7 +3194,7 @@ export class SideBarService extends BaseService {
       select: "[Active]=true and [TypeName]='"+keyword+"'",
     }
     return this.getList(this.ERPObjects.TLeadStatusType, options);
-  } 
+  }
 
   getLeadStatusDataList(limitcount, limitfrom, deleteFilter) {
     let options = "";

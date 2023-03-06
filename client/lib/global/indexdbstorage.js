@@ -38,7 +38,7 @@ openDb = function (dbName) {
       let db = event.target.result;
       db.createObjectStore("vscloudlogininfo", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProductVS1", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TProductQtyList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSupplierProduct", { keyPath: "EmployeeEmail" });
