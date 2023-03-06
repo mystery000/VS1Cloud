@@ -90,6 +90,7 @@ Template.expensebreakdown.onRendered(function() {
   templateObject.getAllPurchaseOrderAll = async (e) => {
     let totalExpense = 0;
     let useData = [];
+    let loadMonths = 7;
     setTimeout( async function () {
       let billReportObj = await getVS1Data("TPurchasesList");
       if (billReportObj.length == 0) {
@@ -106,12 +107,14 @@ Template.expensebreakdown.onRendered(function() {
           fromDateDay = "0" + currentBeginDate.getDate();
         }
         var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-        let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
-        let data = await sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false, initialReportLoad, 0 );
+        let prevMonthsDate = moment().subtract(loadMonths, "months").format("YYYY-MM-DD"); // load data for 7 months
+        let data = await sideBarService.getAllPurchasesList(prevMonthsDate, toDate, false, initialReportLoad, 0 );
         useData = data.tbilllist;
       }else{
         let data = JSON.parse(billReportObj[0].data);
+     
         useData = data.tbilllist;
+        console.dir(useData);
       }
       // get common data from both request
       if( useData.length ){
@@ -140,6 +143,7 @@ Template.expensebreakdown.onRendered(function() {
   templateObject.updateChart = async (dateFrom, dateTo) => {
     let totalExpense = 0;
     let useData = [];
+    totCreditCount = totBillCount = totPOCount = totalExpense = 0;
     setTimeout( async function () {
       let data = await sideBarService.getAllPurchasesList(dateFrom, dateTo, false, initialReportLoad, 0);
       useData = data.tbilllist;
@@ -161,6 +165,7 @@ Template.expensebreakdown.onRendered(function() {
       $(".spExpenseTotal").text(
         utilityService.modifynegativeCurrencyFormat(totalExpense)
       );
+      // show chart
       templateObject.displayExpenseChart();
     }, 1000);
   };
