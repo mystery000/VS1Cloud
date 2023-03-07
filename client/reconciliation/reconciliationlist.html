@@ -143,17 +143,27 @@
 
 
 
-            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; background-color: #ededed;">
-
-                <div class="col float-left flex-grow-1 mb-4">
+            <div class="row d-xl-flex flex-row justify-content-xl-center">
+                <div class="col-8 d-xl-flex flex-grow-1 align-items-xl-start">
                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 14px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button id="btnReconcile" name="btnReconcile" class="btn btn-primary" type="button" style="margin: 14px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>Reconcile</button>
+                    <button id="btnReconcile" name="btnReconcile" class="btn btn-primary" type="button" style="margin: 14px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>Reconciliation</button>
+                    <div class="btn-group" style="margin: 14px;">
+                        <button type="button" class="btn btn-primary " id=""><i class="fas fa-list-ul" style="margin-right: 5px;"></i>Recon Matching Rules List</button>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu" data-toggle="tooltip" data-bs-tooltip="" title="Once the Statement is Imported the Reconciliation Matching Rules will match transaction on the statement automatically to transactions within VS1Cloud">
+                            <a class="dropdown-item  pointer" id="">+ New Recon Matching Rule</a>
+                        </div>
+                    </div>
+                    <div class="btn-group" style="margin: 14px;">
+                        <button type="button" class="btn btn-primary " id=""><i class="fas fa-list-ul" style="margin-right: 5px;"></i>Statement Import Rules List</button>
+                        <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                        <div class="dropdown-menu" data-toggle="tooltip" data-bs-tooltip="" title="You can Manually Import a Bank Statement from any Bank In the World By Creating a Statement Import Rule for that Bank">
+                            <a class="dropdown-item  pointer" id="">+ New Statement Import Rule</a>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                    <button class="btn btn-primary export float-right" type="button" style="margin: 14px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
-                    <button class="btn btn-primary printConfirm float-right" type="button" style="margin: 14px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2"  style="margin: 14px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <div class="col-4 d-xl-flex justify-content-xl-end align-items-end">
+                    {{> export_import_print_display_button Import="hiddenButton" tablename="tblreconciliationlist"}}
                 </div>
 
             </div>
