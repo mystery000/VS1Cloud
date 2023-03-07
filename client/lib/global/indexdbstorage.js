@@ -38,7 +38,7 @@ openDb = function (dbName) {
       let db = event.target.result;
       db.createObjectStore("vscloudlogininfo", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProductVS1", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TProductQtyList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSupplierProduct", { keyPath: "EmployeeEmail" });
@@ -819,7 +819,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 244);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 245);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };

@@ -50,8 +50,8 @@ Template.stockmovementreport.onRendered(() => {
       { index: 5, label: 'Opening Qty', class: 'colCurrent', active: true, display: true, width: "100" },
       { index: 6, label: 'Trans Qty', class: 'colRunning', active: true, display: true, width: "100" },
       { index: 7, label: 'Running Qty', class: 'colAvUnitCost', active: true, display: true, width: "100" },
-      { index: 8, label: 'Unit Cost', class: 'colAvTotalCost', active: true, display: true, width: "100" },
-      { index: 9, label: 'Total Cost', class: 'colAmUnitCost', active: true, display: true, width: "100" },
+      { index: 8, label: 'Unit Cost', class: 'colAvTotalCost text-right', active: true, display: true, width: "100" },
+      { index: 9, label: 'Total Cost', class: 'colAmUnitCost text-right', active: true, display: true, width: "100" },
     ]
     templateObject.stockmovementreportth.set(reset_data);
   }
@@ -132,8 +132,8 @@ Template.stockmovementreport.onRendered(() => {
           tmp > 0 ? GlobalFunctions.generateSpan(tmp, "text-primary") : GlobalFunctions.generateSpan(tmp, "text-danger"),
           tmp > 0 ? GlobalFunctions.generateSpan(tmp, "text-primary") : GlobalFunctions.generateSpan(tmp, "text-danger"),
           tmp > 0 ? GlobalFunctions.generateSpan(tmp, "text-primary") : GlobalFunctions.generateSpan(tmp, "text-danger"),
-          GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tstockmovement[i].fields.Lines[j].fields.Cost), "text-primary"),
-          GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(""), "text-primary"),
+          GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tstockmovement[i].fields.Lines[j].fields.Cost), "text-primary", "text-right"),
+          GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(""), "text-primary", "text-right"),
         ];
         splashArrayReport.push(dataList);
       }

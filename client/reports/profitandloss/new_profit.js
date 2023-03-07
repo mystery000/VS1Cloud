@@ -34,6 +34,20 @@ const defaultPeriod = 3;
 const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
+const months = [];
+months["January"] = "01";
+months["February"] = "02";
+months["March"] = "03";
+months["April"] = "04";
+months["May"] = "05";
+months["June"] = "06";
+months["July"] = "07";
+months["August"] = "08";
+months["September"] = "09";
+months["October"] = "10";
+months["November"] = "11";
+months["December"] = "12";
+
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -45,7 +59,30 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
   templateObject.daterange = new ReactiveVar();
   templateObject.layoutgroupid = new ReactiveVar();
+  templateObject.tableheaderrecords = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
+
+  let headerStructure = [
+      { index: 0, label: "ID", class: "colID", width: "80", active: true, display: true },
+      { index: 1, label: "Layout Name", class: "colLayoutName", width: "250", active: true, display: true },
+      { index: 2, label: "Layout Description", class: "colLayoutDescription", width: "400", active: true, display: true },      
+      { index: 3, label: "Current Layout", class: "colCurrentLayout hiddenColumn", width: "100", active: false, display: false },
+  ];
+  
+  templateObject.tableheaderrecords.set(headerStructure);
+
+  templateObject.getDataTableList = function(data) {
+      var dataList;
+      {
+          dataList = [
+              data.Id || 0,
+              data.LName || '',
+              data.Description || '',
+              data.IsCurrentLayout || false,
+          ];
+      }
+      return dataList;
+  }
 });
 
 
@@ -94,9 +131,11 @@ Template.newprofitandloss.onRendered(function () {
   };
 
   $(document).on("click", ".saveProfitLossLayouts", function(e) {
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    templateObject.setReportOptions(3, dateFrom, dateTo);
+    if($("#npldefaultSettting").prop('checked') == true){
+      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+      templateObject.setReportOptions(3, dateFrom, dateTo);
+    }
   });
 
   $(document).on("change", "#dateFrom, #dateTo", function(e) {
@@ -109,7 +148,7 @@ Template.newprofitandloss.onRendered(function () {
   });
 
   $(document).on("focusout", ".editRowGroup #editGroupName", function(e) {
-    let groupID = parseInt($("#editGroupID").val());
+    let layoutID = parseInt($("#nplLayoutID").val());
     let groupName = $("#editGroupName").val();
     
     if(templateObject.layoutgroupid.get() && groupName != ""){
@@ -117,7 +156,7 @@ Template.newprofitandloss.onRendered(function () {
       let jsonObj = {
         "Name": "VS1_PNLRenameGroup",
         "Params":{
-          "LayoutID": 3,
+          "LayoutID": layoutID,
           "Selected": parseInt(templateObject.layoutgroupid.get()),
           "NewName": groupName
         }
@@ -776,7 +815,60 @@ Template.newprofitandloss.onRendered(function () {
       getLoadDate = currentUrl.dateTo
     }
     localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, getDateFrom, getLoadDate);
+    getVS1Data("TPNLLayout")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          reportService.getPNLLayout().then(function(data) {
+            addVS1Data("TPNLLayout", JSON.stringify(data));
+            if(data.tpnllayout.length > 0){
+              for(var i=0; i<data.tpnllayout.length; i++){
+                if(data.tpnllayout[i].IsCurrentLayout == true){                
+                  $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                  $("#sltLaybout").val(data.tpnllayout[i].LName);
+                  $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                  $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                  $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                  templateObject.setReportOptions(0, getDateFrom, getLoadDate);
+                  break;
+                }
+              }
+            }
+          });          
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.tpnllayout.length > 0){
+            for(var i=0; i<data.tpnllayout.length; i++){
+              if(data.tpnllayout[i].IsCurrentLayout == true){                
+                $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                $("#sltLaybout").val(data.tpnllayout[i].LName);
+                $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                templateObject.setReportOptions(0, getDateFrom, getLoadDate);
+                break;
+              }
+            }
+          }
+        }
+      })
+      .catch(function (err) {
+        reportService.getPNLLayout().then(function(data) {
+          addVS1Data("TPNLLayout", JSON.stringify(data));
+          if(data.tpnllayout.length > 0){
+            for(var i=0; i<data.tpnllayout.length; i++){
+              if(data.tpnllayout[i].IsCurrentLayout == true){                
+                $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                $("#sltLaybout").val(data.tpnllayout[i].LName);
+                $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                templateObject.setReportOptions(0, getDateFrom, getLoadDate);
+                break;
+              }
+            }
+          }
+        });
+      });
   } else if (url.indexOf("?daterange") > 0) {
     let currentDate2 = new Date();
     let fromDate = moment(currentDate2).subtract(3, "months").format("YYYY-MM-DD");
@@ -807,12 +899,118 @@ Template.newprofitandloss.onRendered(function () {
       templateObject.daterange.set("- YTD");
     }
     localStorage.setItem('VS1ProfitAndLoss_Report', '');
-    templateObject.setReportOptions(0, fromDate, endDate);
+    getVS1Data("TPNLLayout")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          reportService.getPNLLayout().then(function(data) {
+            addVS1Data("TPNLLayout", JSON.stringify(data));
+            if(data.tpnllayout.length > 0){
+              for(var i=0; i<data.tpnllayout.length; i++){
+                if(data.tpnllayout[i].IsCurrentLayout == true){                
+                  $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                  $("#sltLaybout").val(data.tpnllayout[i].LName);
+                  $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                  $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                  $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                  templateObject.setReportOptions(0, fromDate, endDate);
+                  break;
+                }
+              }
+            }
+          });          
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.tpnllayout.length > 0){
+            for(var i=0; i<data.tpnllayout.length; i++){
+              if(data.tpnllayout[i].IsCurrentLayout == true){                
+                $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                $("#sltLaybout").val(data.tpnllayout[i].LName);
+                $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                templateObject.setReportOptions(0, fromDate, endDate);
+                break;
+              }
+            }
+          }
+        }
+      })
+      .catch(function (err) {
+        reportService.getPNLLayout().then(function(data) {
+          addVS1Data("TPNLLayout", JSON.stringify(data));
+          if(data.tpnllayout.length > 0){
+            for(var i=0; i<data.tpnllayout.length; i++){
+              if(data.tpnllayout[i].IsCurrentLayout == true){                
+                $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                $("#sltLaybout").val(data.tpnllayout[i].LName);
+                $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                templateObject.setReportOptions(0, fromDate, endDate);
+                break;
+              }
+            }
+          }
+        });
+      });
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = moment(currentDate2).subtract(3, "months").format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+    getVS1Data("TPNLLayout")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          reportService.getPNLLayout().then(function(data) {
+            addVS1Data("TPNLLayout", JSON.stringify(data));
+            if(data.tpnllayout.length > 0){
+              for(var i=0; i<data.tpnllayout.length; i++){
+                if(data.tpnllayout[i].IsCurrentLayout == true){                
+                  $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                  $("#sltLaybout").val(data.tpnllayout[i].LName);
+                  $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                  $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                  $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                  templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+                  break;
+                }
+              }
+            }
+          });          
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if(data.tpnllayout.length > 0){
+            for(var i=0; i<data.tpnllayout.length; i++){
+              if(data.tpnllayout[i].IsCurrentLayout == true){                
+                $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                $("#sltLaybout").val(data.tpnllayout[i].LName);
+                $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+                break;
+              }
+            }
+          }
+        }
+      })
+      .catch(function (err) {
+        reportService.getPNLLayout().then(function(data) {
+          addVS1Data("TPNLLayout", JSON.stringify(data));
+          if(data.tpnllayout.length > 0){
+            for(var i=0; i<data.tpnllayout.length; i++){
+              if(data.tpnllayout[i].IsCurrentLayout == true){                
+                $("#nplLayoutID").val(data.tpnllayout[i].Id);
+                $("#sltLaybout").val(data.tpnllayout[i].LName);
+                $("#nplLayoutName").val(data.tpnllayout[i].LName);
+                $("#nplLayoutDescr").val(data.tpnllayout[i].Description);
+                $("#npldefaultSettting").prop('checked', data.tpnllayout[i].IsCurrentLayout);
+                templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+                break;
+              }
+            }
+          }
+        });
+      });
   }
 
   templateObject.initDate = () => {
@@ -871,13 +1069,15 @@ Template.newprofitandloss.onRendered(function () {
   TemplateInjector.addDepartments(templateObject);
 
   templateObject.getProfitLossLayout = async function () {
-    const profitLossLayoutApi = new ProfitLossLayoutApi();
+    // const profitLossLayoutApi = new ProfitLossLayoutApi();
 
-    const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
-      profitLossLayoutApi.collectionNames.TProfitLossLayout
-    );
+    // const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
+    //   profitLossLayoutApi.collectionNames.TProfitLossLayout
+    // );
+
     // Fetch a default layout
-    reportService.getProfitLossLayout().then(function(data){
+    let id = parseInt($("#nplLayoutID").val());
+    reportService.getProfitLossLayout(id).then(function(data){
       let newprofitLossLayouts = [];
       if(data.ProcessLog.PNLLayout.Lines != undefined){
         for(var i=0; i<data.ProcessLog.PNLLayout.Lines.length; i++){
@@ -1005,6 +1205,7 @@ Template.newprofitandloss.onRendered(function () {
             $item.addClass(siblingClass);
             $item.addClass("selected");
 
+            let layoutID = parseInt($("#nplLayoutID").val());
             let groupID = parseInt($item.attr("plid"));
             let containerID = parseInt(container.el.parent().attr("plid")) || 0;
             let containerName = container.el.parent().attr("data-group") || "";
@@ -1013,7 +1214,7 @@ Template.newprofitandloss.onRendered(function () {
             let jsonObj = {
               "Name": "VS1_PNLMoveAccount",
               "Params":{
-                "LayoutID": 3,
+                "LayoutID": layoutID,
                 "Selected": groupID,
                 "Destination": containerID,
               }
@@ -1244,9 +1445,88 @@ $('.tblAvoid').each(function(){
 
 
   // LoadingOverlay.hide();
+
+  $('#tblLayoutsList tbody').on('click', 'tr', function() {
+      $(".fullScreenSpin").css("display", "inline-block");
+      var layoutID = $(this).closest('tr').find(".colID").text();
+      var layoutName = $(this).closest('tr').find(".colLayoutName").text();
+      var layoutDesc = $(this).closest('tr').find(".colLayoutDescription").text();
+      var currentLayout = $(this).closest('tr').find(".colCurrentLayout").text();
+      $("#sltLaybout").val(layoutName);
+      $("#nplLayoutID").val(layoutID);
+      $("#nplLayoutName").val(layoutName);
+      $("#nplLayoutDescr").val(layoutDesc);
+      if(currentLayout == "true"){
+        $("#npldefaultSettting").prop('checked', true);
+      }
+      else{
+        $("#npldefaultSettting").prop('checked', false);
+      }
+      templateObject.getProfitLossLayout();
+      setTimeout(function () {
+          $('.fullScreenSpin').css('display','none');
+          templateObject.layoutgroupid.set("");
+      }, 4000);
+      $('#layoutModal').modal('toggle');
+  });
 });
 
 Template.newprofitandloss.events({
+  "click .deleteProfitLossLayouts": async function () {
+    let templateObject = Template.instance();
+    if($("#nplLayoutID").val() != ""){
+      swal({
+          title: 'Delete Layout',
+          text: "Are you sure you want to Delete this Layout?",
+          type: 'info',
+          showCancelButton: true,
+          confirmButtonText: 'Yes'
+      }).then((result) => {
+          if (result.value) {
+            $('.fullScreenSpin').css('display', 'block');
+            let id = parseInt($("#nplLayoutID").val());
+            let jsonObj = {
+              type: "TPNLLayout",
+              delete: true,
+              fields: {
+                "ID": id
+              }
+            }      
+            reportService.savePNLLayout(jsonObj).then(function(res) {
+              reportService.getPNLLayout().then(function(data) {
+                addVS1Data("TPNLLayout", JSON.stringify(data)).then(function(datareturn) {
+                  $("#layoutModal #btnViewDeleted").click();
+                }).catch(function(err) {
+                  $("#layoutModal #btnViewDeleted").click();
+                });
+                $('.fullScreenSpin').css('display', 'none');
+              });
+              $("#sltLaybout").val("");
+              $("#nplLayoutID").val("");
+              $("#nplLayoutName").val("");
+              $("#nplLayoutDescr").val("");
+              $("#npldefaultSettting").prop('checked', false);
+              templateObject.layoutgroupid.set("");
+              templateObject.profitlosslayoutrecords.set([]);
+              $("ol.nested_with_switch").empty();
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        // Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {}
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+          } else {}
+      });
+    }
+  },
   "click .nonePeriod": async function (e) {
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -1424,7 +1704,7 @@ Template.newprofitandloss.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
-    Meteor._reload.reload();
+    // Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block');
@@ -2421,11 +2701,12 @@ Template.newprofitandloss.events({
           cancelButtonText: 'No'
       }).then((result) => {
           if (result.value) {
+              let layoutID = parseInt($("#nplLayoutID").val());
               $('.fullScreenSpin').css('display', 'inline-block');
               let jsonObj = {
                 "Name": "VS1_PNLDeleteGroup",
                 "Params":{
-                  "LayoutID": 3,
+                  "LayoutID": layoutID,
                   "Selected": parseInt(templateObject.layoutgroupid.get())
                 }
               }
@@ -2581,6 +2862,7 @@ Template.newprofitandloss.events({
   },
   "click #savePnLFieldsLayout": function () {
     let templateObject = Template.instance();
+    let layoutID = parseInt($("#nplLayoutID").val());
     let groupName = $("#newGroupName").val();
     if (groupName == "") {
       swal({
@@ -2595,7 +2877,7 @@ Template.newprofitandloss.events({
     let jsonObj = {
         Name: "VS1_PNLAddGroup",
         Params: {
-          "LayoutID": 3,
+          "LayoutID": layoutID,
           "GroupName": groupName,
           "Destination": 0
         }
@@ -2893,6 +3175,41 @@ Template.newprofitandloss.helpers({
       //   }
       //   return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
       // });
+  },
+
+  tableheaderrecords: () => {
+      return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+      return reportService.getPNLLayout;
+  },
+
+  searchAPI: function() {
+      return reportService.getPNLLayout;
+  },
+
+  service: ()=>{
+      return reportService;
+  },
+
+  datahandler: function () {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getDataTableList(data)
+          return dataReturn
+      }
+  },
+
+  exDataHandler: function() {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getDataTableList(data)
+          return dataReturn
+      }
+  },
+
+  apiParams: function() {
+      return ["limitCount", "limitFrom", "deleteFilter", "dateFrom", "dateTo", "ignoredate"];
   },
 });
 

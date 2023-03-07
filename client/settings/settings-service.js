@@ -394,6 +394,13 @@ export class TaxRateService extends BaseService {
         return this.getList(this.ERPObjects.TDeptClass, options);
     }
 
+    getOneDepartmentByName(keyword) {
+        let options = {
+            PropertyList: "ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
+            select: "[Active]=true and [DeptClassName]='"+keyword + "'",
+        }
+    }
+
     getAccountantCategory() {
         let options = {
             PropertyList: "ID,FirstName,LastName,CompanyName,Address,DocName,TownCity,PostalZip,StateRegion,Country,Active",
