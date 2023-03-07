@@ -261,7 +261,23 @@
             </table>
         </div> -->
 
-        {{> non_transactional_list tablename="tblDashboardAccountChartList"}}
+
+        {{>datatablelist
+                tablename="tblDashboardAccountChartList"
+                apiName= apiFunction
+                indexeddbname = 'TAccountVS1List'
+                tableheaderrecords = tableheaderrecords
+                exportfilename = 'Account VS1 List'
+                istransaction = false
+                apiParams= apiParams
+                datahandler = datahandler
+                service=service
+                lowercaseDataName='taccountvs1list'
+                exIndexDBName = 'taccountvs1list'
+                exdatahandler = exDataHandler
+                searchAPI = searchAPI
+        }}
+<!--        {{> non_transactional_list tablename="tblDashboardAccountChartList"}}-->
     </div>
 </div>
 {{/draggablePanel}}

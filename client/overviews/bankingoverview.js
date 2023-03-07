@@ -204,166 +204,166 @@ Template.bankingoverview.events({
         //templateObject.getAllBankAccountData();
     },
 
-    'click #today': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-        let fromDateMonth = (currentBeginDate.getMonth() + 1);
-        let fromDateDay = currentBeginDate.getDate();
-        if((currentBeginDate.getMonth()+1) < 10){
-            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-        }else{
-          fromDateMonth = (currentBeginDate.getMonth()+1);
-        }
-
-        if(currentBeginDate.getDate() < 10){
-            fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        var toDateERPFrom = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-
-        var toDateDisplayFrom = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
-        templateObject.getAllFilterbankingData(toDateERPFrom,toDateERPTo, false);
-    },
-    'click #lastweek': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentBeginDate = new Date();
-        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-        let fromDateMonth = (currentBeginDate.getMonth() + 1);
-        let fromDateDay = currentBeginDate.getDate();
-        if((currentBeginDate.getMonth()+1) < 10){
-            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-        }else{
-          fromDateMonth = (currentBeginDate.getMonth()+1);
-        }
-
-        if(currentBeginDate.getDate() < 10){
-            fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        var toDateERPFrom = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay - 7);
-        var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-
-        var toDateDisplayFrom = (fromDateDay -7)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-        var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
-
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
-        templateObject.getAllFilterbankingData(toDateERPFrom,toDateERPTo, false);
-    },
-    'click #lastMonth': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-
-        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
-
-        var formatDateComponent = function(dateComponent) {
-          return (dateComponent < 10 ? '0' : '') + dateComponent;
-        };
-
-        var formatDate = function(date) {
-          return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
-        };
-
-        var formatDateERP = function(date) {
-          return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
-        };
-
-
-        var fromDate = formatDate(prevMonthFirstDate);
-        var toDate = formatDate(prevMonthLastDate);
-
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(toDate);
-
-        var getLoadDate = formatDateERP(prevMonthLastDate);
-        let getDateFrom = formatDateERP(prevMonthFirstDate);
-        templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
-    },
-    'click #lastQuarter': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        function getQuarter(d) {
-            d = d || new Date();
-            var m = Math.floor(d.getMonth() / 3) + 2;
-            return m > 4 ? m - 4 : m;
-        }
-
-        var quarterAdjustment = (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment().subtract({
-            months: quarterAdjustment
-        }).endOf('month');
-        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
-            months: 2
-        }).startOf('month');
-
-        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-
-        $("#dateFrom").val(lastQuarterStartDateFormat);
-        $("#dateTo").val(lastQuarterEndDateFormat);
-
-        let fromDateMonth = getQuarter(currentDate);
-        var quarterMonth = getQuarter(currentDate);
-        let fromDateDay = currentDate.getDate();
-
-        var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-        let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-        templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
-    },
-    'click #last12Months': function () {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-        let fromDateDay = currentDate.getDate();
-        if ((currentDate.getMonth()+1) < 10) {
-            fromDateMonth = "0" + (currentDate.getMonth()+1);
-        }
-        if (currentDate.getDate() < 10) {
-            fromDateDay = "0" + currentDate.getDate();
-        }
-
-        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(begunDate);
-
-        var currentDate2 = new Date();
-        if ((currentDate2.getMonth()+1) < 10) {
-            fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
-        }
-        if (currentDate2.getDate() < 10) {
-            fromDateDay2 = "0" + currentDate2.getDate();
-        }
-        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-        let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + fromDateMonth2 + "-" + currentDate2.getDate();
-        templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
-
-    },
+    // 'click #today': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     var currentBeginDate = new Date();
+    //     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+    //     let fromDateMonth = (currentBeginDate.getMonth() + 1);
+    //     let fromDateDay = currentBeginDate.getDate();
+    //     if((currentBeginDate.getMonth()+1) < 10){
+    //         fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+    //     }else{
+    //       fromDateMonth = (currentBeginDate.getMonth()+1);
+    //     }
+    //
+    //     if(currentBeginDate.getDate() < 10){
+    //         fromDateDay = "0" + currentBeginDate.getDate();
+    //     }
+    //     var toDateERPFrom = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+    //     var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+    //
+    //     var toDateDisplayFrom = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+    //     var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+    //
+    //     $("#dateFrom").val(toDateDisplayFrom);
+    //     $("#dateTo").val(toDateDisplayTo);
+    //     templateObject.getAllFilterbankingData(toDateERPFrom,toDateERPTo, false);
+    // },
+    // 'click #lastweek': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     var currentBeginDate = new Date();
+    //     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+    //     let fromDateMonth = (currentBeginDate.getMonth() + 1);
+    //     let fromDateDay = currentBeginDate.getDate();
+    //     if((currentBeginDate.getMonth()+1) < 10){
+    //         fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+    //     }else{
+    //       fromDateMonth = (currentBeginDate.getMonth()+1);
+    //     }
+    //
+    //     if(currentBeginDate.getDate() < 10){
+    //         fromDateDay = "0" + currentBeginDate.getDate();
+    //     }
+    //     var toDateERPFrom = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay - 7);
+    //     var toDateERPTo = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+    //
+    //     var toDateDisplayFrom = (fromDateDay -7)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+    //     var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
+    //
+    //     $("#dateFrom").val(toDateDisplayFrom);
+    //     $("#dateTo").val(toDateDisplayTo);
+    //     templateObject.getAllFilterbankingData(toDateERPFrom,toDateERPTo, false);
+    // },
+    // 'click #lastMonth': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     var currentDate = new Date();
+    //
+    //     var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+    //     var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+    //
+    //     var formatDateComponent = function(dateComponent) {
+    //       return (dateComponent < 10 ? '0' : '') + dateComponent;
+    //     };
+    //
+    //     var formatDate = function(date) {
+    //       return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+    //     };
+    //
+    //     var formatDateERP = function(date) {
+    //       return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+    //     };
+    //
+    //
+    //     var fromDate = formatDate(prevMonthFirstDate);
+    //     var toDate = formatDate(prevMonthLastDate);
+    //
+    //     $("#dateFrom").val(fromDate);
+    //     $("#dateTo").val(toDate);
+    //
+    //     var getLoadDate = formatDateERP(prevMonthLastDate);
+    //     let getDateFrom = formatDateERP(prevMonthFirstDate);
+    //     templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
+    // },
+    // 'click #lastQuarter': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     var currentDate = new Date();
+    //     var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    //
+    //     var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    //     function getQuarter(d) {
+    //         d = d || new Date();
+    //         var m = Math.floor(d.getMonth() / 3) + 2;
+    //         return m > 4 ? m - 4 : m;
+    //     }
+    //
+    //     var quarterAdjustment = (moment().month() % 3) + 1;
+    //     var lastQuarterEndDate = moment().subtract({
+    //         months: quarterAdjustment
+    //     }).endOf('month');
+    //     var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+    //         months: 2
+    //     }).startOf('month');
+    //
+    //     var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+    //     var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+    //
+    //
+    //     $("#dateFrom").val(lastQuarterStartDateFormat);
+    //     $("#dateTo").val(lastQuarterEndDateFormat);
+    //
+    //     let fromDateMonth = getQuarter(currentDate);
+    //     var quarterMonth = getQuarter(currentDate);
+    //     let fromDateDay = currentDate.getDate();
+    //
+    //     var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+    //     let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
+    //     templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
+    // },
+    // 'click #last12Months': function () {
+    //     let templateObject = Template.instance();
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     $('#dateFrom').attr('readonly', false);
+    //     $('#dateTo').attr('readonly', false);
+    //     var currentDate = new Date();
+    //     var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    //
+    //     let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+    //     let fromDateDay = currentDate.getDate();
+    //     if ((currentDate.getMonth()+1) < 10) {
+    //         fromDateMonth = "0" + (currentDate.getMonth()+1);
+    //     }
+    //     if (currentDate.getDate() < 10) {
+    //         fromDateDay = "0" + currentDate.getDate();
+    //     }
+    //
+    //     var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+    //     $("#dateFrom").val(fromDate);
+    //     $("#dateTo").val(begunDate);
+    //
+    //     var currentDate2 = new Date();
+    //     if ((currentDate2.getMonth()+1) < 10) {
+    //         fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
+    //     }
+    //     if (currentDate2.getDate() < 10) {
+    //         fromDateDay2 = "0" + currentDate2.getDate();
+    //     }
+    //     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    //     let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + fromDateMonth2 + "-" + currentDate2.getDate();
+    //     templateObject.getAllFilterbankingData(getDateFrom,getLoadDate, false);
+    //
+    // },
     // 'click #ignoreDate': function () {
     //     let templateObject = Template.instance();
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -420,109 +420,109 @@ Template.bankingoverview.events({
 
 
   // custom field displaysettings
-  "click .saveTable": async function(event) {
-    let lineItems = [];
-    $(".fullScreenSpin").css("display", "inline-block");
-
-    $(".customDisplaySettings").each(function (index) {
-      var $tblrow = $(this);
-      var fieldID = $tblrow.attr("custid") || 0;
-      var colTitle = $tblrow.find(".divcolumn").text() || "";
-      var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-      var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = true;
-      } else {
-        colHidden = false;
-      }
-      let lineItemObj = {
-        index: parseInt(fieldID),
-        label: colTitle,
-        active: colHidden,
-        width: parseInt(colWidth),
-        class: colthClass,
-        display: true
-      };
-
-      lineItems.push(lineItemObj);
-    });
-
-    let templateObject = Template.instance();
-    let reset_data = templateObject.reset_data.get();
-    reset_data = reset_data.filter(redata => redata.display == false);
-    lineItems.push(...reset_data);
-    lineItems.sort((a,b) => a.index - b.index);
-
-    try {
-      let erpGet = erpDb();
-      let tableName = "tblBankingOverview";
-      let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
-
-      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-      $(".fullScreenSpin").css("display", "none");
-      if(added) {
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-        });
-          swal({
-            title: 'SUCCESS',
-            text: "Display settings is updated!",
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonText: 'OK'
-          }).then((result) => {
-              if (result.value) {
-                $('#myModal2').modal('hide');
-              }
-          });
-      } else {
-        swal("Something went wrong!", "", "error");
-      }
-    } catch (error) {
-      $(".fullScreenSpin").css("display", "none");
-      swal("Something went wrong!", "", "error");
-    }
-  },
+  // "click .saveTable": async function(event) {
+  //   let lineItems = [];
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //
+  //   $(".customDisplaySettings").each(function (index) {
+  //     var $tblrow = $(this);
+  //     var fieldID = $tblrow.attr("custid") || 0;
+  //     var colTitle = $tblrow.find(".divcolumn").text() || "";
+  //     var colWidth = $tblrow.find(".custom-range").val() || 0;
+  //     var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+  //     var colHidden = false;
+  //     if ($tblrow.find(".custom-control-input").is(":checked")) {
+  //       colHidden = true;
+  //     } else {
+  //       colHidden = false;
+  //     }
+  //     let lineItemObj = {
+  //       index: parseInt(fieldID),
+  //       label: colTitle,
+  //       active: colHidden,
+  //       width: parseInt(colWidth),
+  //       class: colthClass,
+  //       display: true
+  //     };
+  //
+  //     lineItems.push(lineItemObj);
+  //   });
+  //
+  //   let templateObject = Template.instance();
+  //   let reset_data = templateObject.reset_data.get();
+  //   reset_data = reset_data.filter(redata => redata.display == false);
+  //   lineItems.push(...reset_data);
+  //   lineItems.sort((a,b) => a.index - b.index);
+  //
+  //   try {
+  //     let erpGet = erpDb();
+  //     let tableName = "tblBankingOverview";
+  //     let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
+  //
+  //     let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+  //     $(".fullScreenSpin").css("display", "none");
+  //     if(added) {
+  //       sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+  //           addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+  //       });
+  //         swal({
+  //           title: 'SUCCESS',
+  //           text: "Display settings is updated!",
+  //           type: 'success',
+  //           showCancelButton: false,
+  //           confirmButtonText: 'OK'
+  //         }).then((result) => {
+  //             if (result.value) {
+  //               $('#myModal2').modal('hide');
+  //             }
+  //         });
+  //     } else {
+  //       swal("Something went wrong!", "", "error");
+  //     }
+  //   } catch (error) {
+  //     $(".fullScreenSpin").css("display", "none");
+  //     swal("Something went wrong!", "", "error");
+  //   }
+  // },
 
   // custom field displaysettings
-  "click .resetTable": async function (event) {
-      let templateObject = Template.instance();
-        let reset_data = templateObject.reset_data.get();
-        reset_data = reset_data.filter(redata => redata.display);
-
-        $(".customDisplaySettings").each(function (index) {
-          let $tblrow = $(this);
-          $tblrow.find(".divcolumn").text(reset_data[index].label);
-          $tblrow
-            .find(".custom-control-input")
-            .prop("checked", reset_data[index].active);
-
-          let title = $("#tblQuoteLine").find("th").eq(index);
-          if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
-            $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-          } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
-            $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-          } else {
-            $(title).html(reset_data[index].label);
-          }
-
-
-          if (reset_data[index].active) {
-            $('.col' + reset_data[index].class).addClass('showColumn');
-            $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-          } else {
-            $('.col' + reset_data[index].class).addClass('hiddenColumn');
-            $('.col' + reset_data[index].class).removeClass('showColumn');
-          }
-          $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-        });
-    },
-    'change .custom-range': function(event) {
-      let range = $(event.target).val();
-      let colClassName = $(event.target).attr("valueclass");
-      $('.col' + colClassName).css('width', range);
-    },
+  // "click .resetTable": async function (event) {
+  //     let templateObject = Template.instance();
+  //       let reset_data = templateObject.reset_data.get();
+  //       reset_data = reset_data.filter(redata => redata.display);
+  //
+  //       $(".customDisplaySettings").each(function (index) {
+  //         let $tblrow = $(this);
+  //         $tblrow.find(".divcolumn").text(reset_data[index].label);
+  //         $tblrow
+  //           .find(".custom-control-input")
+  //           .prop("checked", reset_data[index].active);
+  //
+  //         let title = $("#tblQuoteLine").find("th").eq(index);
+  //         if(reset_data[index].class === 'AmountEx' || reset_data[index].class === 'UnitPriceEx') {
+  //           $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+  //         } else if( reset_data[index].class === 'AmountInc' || reset_data[index].class === 'UnitPriceInc') {
+  //           $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+  //         } else {
+  //           $(title).html(reset_data[index].label);
+  //         }
+  //
+  //
+  //         if (reset_data[index].active) {
+  //           $('.col' + reset_data[index].class).addClass('showColumn');
+  //           $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+  //         } else {
+  //           $('.col' + reset_data[index].class).addClass('hiddenColumn');
+  //           $('.col' + reset_data[index].class).removeClass('showColumn');
+  //         }
+  //         $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
+  //       });
+  //   },
+  //   'change .custom-range': function(event) {
+  //     let range = $(event.target).val();
+  //     let colClassName = $(event.target).attr("valueclass");
+  //     $('.col' + colClassName).css('width', range);
+  //   },
     // 'click .custom-control-input': function(event) {
     //   let colClassName = $(event.target).attr("id");
     //   if ($(event.target).is(':checked')) {
@@ -562,37 +562,37 @@ Template.bankingoverview.events({
     //     });
 
     // },
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblBankingOverview th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden === false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    // 'click .btnOpenSettings': function(event) {
+    //     let templateObject = Template.instance();
+    //     var columns = $('#tblBankingOverview th');
+    //
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i, v) {
+    //         if (v.hidden === false) {
+    //             columVisible = true;
+    //         }
+    //         if ((v.className.includes("hiddenColumn"))) {
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || 0,
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click .exportbtn': function() {
 
         $('.fullScreenSpin').css('display', 'inline-block');

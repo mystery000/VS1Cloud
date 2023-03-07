@@ -338,6 +338,7 @@ import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
+import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
