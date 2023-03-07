@@ -13,6 +13,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import treeTable from './treeTable.js'
 
 import { ReceiptService } from "../receipts/receipt-service";
+import {CRMService} from "../crm/crm-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
@@ -3003,5 +3004,40 @@ Template.accountsoverview.helpers({
     },
     treeColumnHeader: () => {
         return Template.instance().treeColumnHeader.get();
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTAccountVS1List;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllTAccountVS1List;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["limitCount", "limitFrom", "deleteFilter", "typeFilter", "useReceiptClaim"];
+    },
 });
