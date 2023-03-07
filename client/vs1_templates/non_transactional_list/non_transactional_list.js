@@ -980,7 +980,8 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Category Name', class: 'colName', active: true, display: true, width: "" },
                 { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
                 { index: 3, label: 'Post Account', class: 'colPostAccount', active: true, display: true, width: "" },
-                { index: 4, label: '', class: 'colDelete', active: true, display: true, width: "" }
+                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 5, label: '', class: 'colDelete', active: true, display: true, width: "" },                
             ]
         }
         templateObject.reset_data.set(reset_data);
@@ -16815,28 +16816,29 @@ Template.non_transactional_list.onRendered(function() {
     templateObject.getAllReceiptCategoryList = async function (deleteFilter = false) {
         //GET Data here from Web API or IndexDB
         getVS1Data("TReceiptCategory")
-          .then(function (dataObject) {
+            .then(function (dataObject) {
             if (dataObject.length == 0) {
                 receiptService.getAllReceiptCategorys(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
-                  await addVS1Data("TReceiptCategory", JSON.stringify(data));
-                  templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
+                    await addVS1Data("TReceiptCategory", JSON.stringify(data));
+                    templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
                 })
                 .catch(function (err) {
 
                 });
             } else {
-              let data = JSON.parse(dataObject[0].data);
-              templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
             }
-          })
-          .catch(function (err) {
+            })
+            .catch(function (err) {
             receiptService.getAllReceiptCategorys(initialBaseDataLoad, 0, deleteFilter).then(async function(data){
                 await addVS1Data("TReceiptCategory", JSON.stringify(data));
                 templateObject.displayAllReceiptCategoryList(data);
             });
-          });
-      };
-      templateObject.displayAllReceiptCategoryList = async function (data) {
+            });
+    };
+    
+    templateObject.displayAllReceiptCategoryList = async function (data) {
         let splashArrayList = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -16865,6 +16867,7 @@ Template.non_transactional_list.onRendered(function() {
             currentData.CategoryName || "",
             currentData.CategoryDesc || "",
             currentData.CategoryPostAccount || "",
+            linestatus,
             deleteBtn
           ];
           splashArrayList.push(dataList);
@@ -17421,6 +17424,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblMyTaskDatatable") {
             templateObject.getMyTasksList(true);
         } else if(currenttablename === 'tblReceiptCategoryList'){
+            await clearData('TReceiptCategory');
             templateObject.getAllReceiptCategoryList(true);
         }
     },
@@ -17542,6 +17546,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblMyTaskDatatable") {
             templateObject.getMyTasksList(false);
         } else if(currenttablename === 'tblReceiptCategoryList'){
+            await clearData('TReceiptCategory');            
             templateObject.getAllReceiptCategoryList(false);
         }
     },
