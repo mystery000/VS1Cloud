@@ -290,7 +290,7 @@ const erpObject = {
     TProcTree: "TProcTree",
     TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
     TRateTypes: "TRateTypes",
-    TEarningData: "TEarningData",
+    TEarnings: "TEarnings",
     TTimeSheetDetails: "TTimeSheetDetails",
     TCurrencyFrequencySettings: "TCurrencyFrequencySettings",
     TLeavRequest: "TLeavRequest",
