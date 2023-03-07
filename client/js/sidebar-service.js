@@ -1453,7 +1453,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLeads, options);
   }
 
-  getAllEmployeesDataVS1(limitcount, limitfrom) {
+  getAllEmployeesDataVS1(limitcount, limitfrom, deleteFilter) {
     let options = "";
     if (limitcount == "All") {
       options = {
