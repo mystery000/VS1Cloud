@@ -17184,16 +17184,25 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colCheck",
                         targets: 3,
                         width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-button");
+                        }
                     },
                     {
                         className: "colRestart",
                         targets: 4,
                         width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-button");
+                        }
                     },
                     {
                         className: "colEdit",
                         targets: 5,
                         width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-button");
+                        }
                     },                    
                 ],
                 buttons: [{
