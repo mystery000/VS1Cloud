@@ -113,7 +113,7 @@ Template.billcard.onRendered(() => {
 
     templateObject.setSupplierInfo = () => {
         if (!FlowRouter.current().queryParams.supplierid) {
-            $('#supplierListModal').modal('toggle');
+            // $('#supplierListModal').modal('toggle');
         }
         let utilityService = new UtilityService();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -5252,7 +5252,7 @@ Template.billcard.onRendered(() => {
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
         templateObject.setSupplierInfo();
-        $('#supplierListModal').modal('hide');
+        // $('#supplierListModal').modal('hide');
     });
 
 

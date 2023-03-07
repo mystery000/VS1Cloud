@@ -999,7 +999,7 @@ Template.customerscard.onCreated(function () {
       status: '',
       rep: '',
       source: '',
-      salesQuota: 5000,
+      salesQuota: 10000,
       jobbcountry: LoggedCountry || '',
       jobscountry: LoggedCountry || '',
       discount: 0

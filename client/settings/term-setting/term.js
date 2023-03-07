@@ -238,7 +238,7 @@ Template.termsettings.onRendered(function () {
       $('.btnActiveTerms').removeClass('d-none')
     } else {
       $('.btnActiveTerms').addClass('d-none')
-      $('.btnDeleteTerms').removeClass('d-none')      
+      $('.btnDeleteTerms').removeClass('d-none')
     }
   });
 });
@@ -286,7 +286,7 @@ Template.termsettings.events({
       .catch(function (err) {
         Meteor._reload.reload();
       });
-  },  
+  },
   "click .btnAddTerms": function () {
     let templateObject = Template.instance();
     $("#add-terms-title").text("Add New Term");
@@ -458,7 +458,6 @@ Template.termsettings.events({
     Papa.parse(templateObject.selectedFile.get(), {
       complete: function (results) {
         if (results.data.length > 0) {
-          console.log('import-term-setting');
           if (
             results.data[0][0] == "Term Name" &&
             results.data[0][4] == "Description"

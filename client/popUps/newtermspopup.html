@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h4 >
                     <div id="add-terms-title" name="add-terms-title" style="float: left;">
-                        <div id="termModalHeader" name="termModalHeader">Add New Term</div>
+                        {{#if equals record.termname ''}}<div id="termModalHeader" name="termModalHeader">Add New Term</div>{{else}}<div id="termModalHeader" name="termModalHeader">Add New Term</div>{{/if}}
                     </div>
                     {{> helpbutton}}
                 </h4>
@@ -12,6 +12,7 @@
             </div>
             <div class="modal-body" style="background-color: #ededed;">
                 <input type="hidden" class="form-control" id="edtTermsID" name="edtTermsID" style="display:none;">
+                {{#if record}}
                 <div class="row no-gutters">
                     <div class="col d-xl-flex align-items-xl-end">
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >Days</label>
@@ -21,18 +22,18 @@
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
                             <input type="text" class="form-control" id="edtDesc" name="edtDesc"></div>
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM</label>
-                            {{#if equals includeEOM true}}
-                            <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]" checked><label class="custom-control-label chkBox" for="isEOM"></label></div>
-                            {{else}}
+                            <!-- {{#if equals includeEOM true}} -->
+                            <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]" checked="{{record.isEOM}}"><label class="custom-control-label chkBox" for="isEOM"></label></div>
+                            <!-- {{else}}
                             <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]"><label class="custom-control-label chkBox" for="isEOM"></label></div>
-                            {{/if}}
+                            {{/if}} -->
                         </div>
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM+</label>
-                            {{#if equals includeEOMPlus true}}
-                            <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]" checked><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
-                            {{else}}
+                            <!-- {{#if equals includeEOMPlus true}} -->
+                            <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]" checked="{{record.isEOMPlus}}"><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
+                            <!-- {{else}}
                             <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]"><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
-                            {{/if}}
+                            {{/if}} -->
                         </div>
                     </div>
                 </div>
@@ -41,11 +42,11 @@
                         <div class="form-group flex-grow-0" style="margin: 8px; width: 130px;">
                             <label>Customer Default</label>
                             <div class="custom-control custom-switch chkBox text-center" style="height: 38px; padding-top: 7px;">
-                                {{#if equals includeSalesDefault true}}
-                                <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]" checked>
-                                {{else}}
+                                <!-- {{#if equals includeSalesDefault true}} -->
+                                <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]" checked="{{record.customerDefault}}">
+                                <!-- {{else}}
                                 <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]">
-                                {{/if}}                                
+                                {{/if}}                                 -->
                                 <label class="custom-control-label chkBox" for="chkCustomerDef"></label>
                             </div>                                                    
                         </div>
@@ -58,11 +59,11 @@
                         <div class="form-group flex-grow-0" style="margin: 8px; width: 130px;">
                             <label>Supplier Default</label>
                             <div class="custom-control custom-switch chkBox text-center" style="height: 38px; padding-top: 7px;">
-                                {{#if equals includePurchaseDefault true}}
-                                <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]" checked>
-                                {{else}}
+                                <!-- {{#if equals includePurchaseDefault true}} -->
+                                <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]" checked="{{record.supplierDefault}}">
+                                <!-- {{else}}
                                 <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]">
-                                {{/if}}
+                                {{/if}} -->
                                 <label class="custom-control-label chkBox" for="chkSupplierDef"></label>
                             </div>
                         </div>
@@ -72,7 +73,7 @@
                         </div>  
                     </div>
                 </div>
-
+                {{/if}}
             </div>
             <div class="modal-footer" style="background-color: #ededed;">
                 <button class="btn btn-success btnSaveTerms" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>

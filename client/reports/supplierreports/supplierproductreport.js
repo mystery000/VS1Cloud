@@ -604,7 +604,6 @@ Template.supplierproductreport.events({
     Meteor._reload.reload();
   },
   "click .btnExportReport": function () {
-    alert();
     $(".fullScreenSpin").css("display", "inline-block");
     let utilityService = new UtilityService();
     let templateObject = Template.instance();

@@ -33,22 +33,57 @@ Template.payrollrules.onCreated(function() {
 
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.datatableallowancerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.tableheaderrecords2 = new ReactiveVar([]);
+    templateObject.datatableallowancerecords = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
     // templateObject.Ratetypes = new ReactiveVar([]);
     templateObject.imageFileData=new ReactiveVar();
     templateObject.Accounts = new ReactiveVar([]);
-
-
     templateObject.overtimes = new ReactiveVar([]);
     templateObject.rateTypes = new ReactiveVar([]);
     templateObject.earnings = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data){
+        let dataList = [
+            data.fields.ID || "",
+            data.fields.PayrollCalendarName || "",
+            data.fields.PayrollCalendarPayPeriod || "",
+            moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
+            moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
+        ]
+        // let dataList = [];
+        return dataList;
+    }
+    let headerStructure  = [
+        { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
+        { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "100" },
+        { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
+        { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "150" },
+        { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "150" }
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+
+    templateObject.getDataTableList2 = function(data){
+        let dataList = [
+            data.fields.ID || "",
+            data.fields.PayrollHolidaysName || "",
+            moment(data.fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
+            data.fields.PayrollHolidaysGroupName || "",
+        ]
+        // let dataList = [];
+        return dataList;
+    }
+    let headerStructure2  = [
+        { index: 0, label: 'ID', class: 'colHolidayID', active: false, display: true, width: "" },
+        { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "100" },
+        { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "100" },
+        { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "150" }
+    ];
+    templateObject.tableheaderrecords2.set(headerStructure2);
 });
 
 Template.payrollrules.onRendered(function() {
-
-
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     let accountService = new AccountService();
@@ -85,7 +120,6 @@ Template.payrollrules.onRendered(function() {
         $('#holidays').removeClass('active show');
         $('#payitems').removeClass('active show');
         $('#superannuation').removeClass('active show');
-
     }
     else if(tabid == "super"){
         $('#sup-tab').addClass('active');
@@ -100,7 +134,6 @@ Template.payrollrules.onRendered(function() {
         $('#payitems').removeClass('active show');
     }
     else if(tabid == "holiday"){
-
         $('#hol-tab').addClass('active');
         $('#holidays').addClass('active show');
 
@@ -117,11 +150,8 @@ Template.payrollrules.onRendered(function() {
     else if(tabid == "payitem"){
         let itemtype = FlowRouter.current().queryParams.itemtype;
 
-
-
         $('#pay-tab').addClass('active');
         $('#payitems').addClass('active show');
-
 
         if(itemtype === 'deduction')
         {
@@ -169,8 +199,6 @@ Template.payrollrules.onRendered(function() {
 
         }
 
-
-
         $('#cal-tab').removeClass('active');
         $('#calendars').removeClass('active show');
         $('#org-tab').removeClass('active');
@@ -179,7 +207,6 @@ Template.payrollrules.onRendered(function() {
         $('#organisation').removeClass('active show');
         $('#holidays').removeClass('active show');
         $('#superannuation').removeClass('active show');
-
     }
     else
     {
@@ -221,7 +248,6 @@ Template.payrollrules.onRendered(function() {
     // This has been improved
     templateObject.getPayrollOrgainzations = async (refresh = false) =>
     {
-
         let data = await CachedHttp.get(erpObject.TPayrollOrganization, async () => {
             return await sideBarService.getPayrollinformation(initialBaseDataLoad, 0);
         }, {
@@ -15073,7 +15099,6 @@ Template.payrollrules.onRendered(function() {
 });
 
 Template.payrollrules.events({
-
     'click .btnAddNewPayCalender':function(){
         let id = $('#paycalendarId').val();
         var today = new Date();
@@ -15102,7 +15127,6 @@ Template.payrollrules.events({
     },
 
     'click .btnAddNewHoliday':function(){
-
         let id = $('#holidayid').val();
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -15127,10 +15151,7 @@ Template.payrollrules.events({
              $('#holidayname').val('');
              $('#holidayid').val(0);
              $('#holidaygroup').val('');
-
-
         }
-
     },
 
     'click #btnEarnings': function() {
@@ -21415,16 +21436,16 @@ Template.payrollrules.events({
     },
 
    'keyup #tblHolidays_filter input': function (event) {
-    if($(event.target).val() != ''){
-      $(".btnRefreshHoliday").addClass('btnSearchAlert');
-    }else{
-      $(".btnRefreshHoliday").removeClass('btnSearchAlert');
-    }
-    if (event.keyCode == 13) {
-       $(".btnRefreshHoliday").trigger("click");
-    }
+        if($(event.target).val() != ''){
+        $(".btnRefreshHoliday").addClass('btnSearchAlert');
+        }else{
+        $(".btnRefreshHoliday").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+        $(".btnRefreshHoliday").trigger("click");
+        }
     },
-   'click .btnRefreshHoliday':function(event){
+    'click .btnRefreshHoliday':function(event){
 
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
@@ -21521,7 +21542,7 @@ Template.payrollrules.events({
 
     },
 
-   'keyup #tblSuperannuation_filter input': function (event) {
+    'keyup #tblSuperannuation_filter input': function (event) {
     if($(event.target).val() != ''){
       $(".btnRefreshSuperannuation").addClass('btnSearchAlert');
     }else{
@@ -21530,10 +21551,9 @@ Template.payrollrules.events({
     if (event.keyCode == 13) {
          $(".btnRefreshSuperannuation").trigger("click");
         }
-     },
+    },
 
-     'click .btnRefreshSuperannuation':function(event){
-
+    'click .btnRefreshSuperannuation':function(event){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let tableProductList;
@@ -21636,8 +21656,7 @@ Template.payrollrules.events({
 
      },
 
-    'click  .filterholiday':function(event) {
-
+    'click  .filterHoliday':function(event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let tableProductList;
@@ -22398,6 +22417,67 @@ Template.payrollrules.helpers({
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
+    
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        return sideBarService.getCalender;
+    },
+    searchAPI: function() {
+        return sideBarService.getNewCalenderByNameOrPayPeriod;
+    },
+    service: ()=>{
+        return sideBarService;
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data);
+            return dataReturn;
+        }
+    },
+    apiParams: ()=>{
+        return ['limitCount', 'limitFrom'];
+    },
+
+    tableheaderrecords2: () => {
+        return Template.instance().tableheaderrecords2.get();
+    },
+    apiFunction2:function() {
+        return sideBarService.getHolidayData;
+    },
+    searchAPI2: function() {
+        return sideBarService.getNewHolidayByName;
+    },
+    service2: ()=>{
+        return sideBarService;
+    },
+    datahandler2: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList2(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler2: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList2(data);
+            return dataReturn;
+        }
+    },
+    apiParams2: ()=>{
+        return ['limitCount', 'limitFrom'];
+    },
+
     overtimes: () => {
         return Template.instance().overtimes.get();
     },
@@ -22407,8 +22487,6 @@ Template.payrollrules.helpers({
     earnings: () => {
         return Template.instance().earnings.get();
     }
-
-
 });
 
 

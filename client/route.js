@@ -809,6 +809,15 @@ authenticatedRoutes.route('/accesslevel', {
     }
 });
 
+authenticatedRoutes.route('/serviceChecker', {
+    name: 'serviceChecker',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serviceChecker'
+        });
+    }
+});
+
 authenticatedRoutes.route('/companyappsettings', {
     name: 'companyappsettings',
     action() {

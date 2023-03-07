@@ -33,10 +33,10 @@
     </div>
 
     {{#if is_editable}}
-        <div class="modal fade {{target_modal_id}}" id="{{target_modal_id}}">
-            {{#if targetTemp}}
+        {{#if targetTemp}}
+            <div class="modal fade {{target_modal_id}}" id="{{target_modal_id}}">
                 {{> Template.dynamic template=targetTemp data=edtTemplateParams}}
-            {{/if}}
-        </div>
+            </div>
+        {{/if}}
     {{/if}}
 </template>

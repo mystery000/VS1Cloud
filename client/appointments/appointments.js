@@ -1882,7 +1882,8 @@ Template.appointments.onRendered(function() {
                         templateObject
                     );
                 } else {
-                    $("#customerListModal").modal();
+                     $("#appointmentLeaveConfirmModal").modal("toggle");
+                    // $("#customerListModal").modal();
                 }
             },
             eventClick: function(info) {
@@ -2134,7 +2135,7 @@ Template.appointments.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                // $("#appointmentLeaveConfirmModal").modal("toggle");
+               
                 if (info.event._def.publicId != "") {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let appointmentData = templateObject.appointmentrecords.get();
@@ -19089,6 +19090,15 @@ Template.appointments.events({
             }
         }
     },
+    "click #btnCreateAppointmentRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+    "click #btnCreateLeaveRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+
 });
 
 Template.appointments.helpers({
