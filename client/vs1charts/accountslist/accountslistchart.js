@@ -63,7 +63,7 @@ Template.accountslistchart.onCreated(() => {
             data.BSB || '',
             data.BankAccountNumber || "",
             data.CarNumber || "",
-            data.ExpiryDate || "",
+            moment(data.ExpiryDate).format("DD/MM/YYYY") || "",
             data.CVC || "",
             data.Extra || "",
             data.BankNumber || "",
