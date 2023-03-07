@@ -18,9 +18,22 @@
             </div>
             <!-- End -->
 
-            <div class="table-responsive">
-              {{> global_customerlist}}
-            </div>
+            {{>datatablelist
+                    tablename="tblCustomerlist"
+                    apiName= apiFunction
+                    indexeddbname = 'TCustomerVS1List'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Customer VS1 List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tcustomervs1list'
+                    exIndexDBName = 'tcustomervs1list'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
+
         </div>
     </div>
 

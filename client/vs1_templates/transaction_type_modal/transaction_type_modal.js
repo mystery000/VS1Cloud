@@ -70,7 +70,6 @@ Template.transaction_type_modal.events({
     },
 
     "change input.chkServiceCard": function() {
-        console.log('123123');
     }
 });
 

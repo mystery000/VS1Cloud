@@ -729,14 +729,14 @@ Template.inventorylist.events({
           let records = [];
 
           let inventoryData = [];
-          if (data.tproductlist.length > 0) {
-            for (let i = 0; i < data.tproductlist.length; i++) {
-              let availableQty = data.tproductlist[i].AvailableQty || 0;
+          if (data.tproductqtylist.length > 0) {
+            for (let i = 0; i < data.tproductqtylist.length; i++) {
+              let availableQty = data.tproductqtylist[i].Available || 0;
               let onBOOrder = 0;
-              if (data.tproductlist[i].SNTracking == true) {
+              if (data.tproductqtylist[i].SNTracking == true) {
                 checkIfSerialorLot =
                   '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-              } else if (data.tproductlist[i].batch == true) {
+              } else if (data.tproductqtylist[i].batch == true) {
                 checkIfSerialorLot =
                   '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
               } else {
@@ -744,26 +744,26 @@ Template.inventorylist.events({
                   '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
               }
 
-              onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+              onBOOrder = data.tproductqtylist[i].TotalQtyInStock - availableQty;
               var dataList = [
-                data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAME || "-",
-                data.tproductlist[i].PARTSDESCRIPTION || "",
+                data.tproductqtylist[i].PARTSID || "",
+                data.tproductqtylist[i].ProductName || "-",
+                data.tproductqtylist[i].SalesDescription || "",
                 availableQty,
-                data.tproductlist[i].SOBOQty || 0,
-                data.tproductlist[i].POBOQty || 0,
-                data.tproductlist[i].InstockQty,
-                data.tproductlist[i].AllocatedBOQty,
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) / 100),
+                data.tproductqtylist[i].SOBOQty || 0,
+                data.tproductqtylist[i].POBOQty || 0,
+                data.tproductqtylist[i].InstockQty,
+                data.tproductqtylist[i].AllocatedBOQty,
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].CostExA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].CostIncA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PriceExA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PriceIncA * 100) / 100),
                 checkIfSerialorLot || "",
-                data.tproductlist[i].BARCODE || "",
+                data.tproductqtylist[i].BARCODE || "",
                 departmentData,
-                data.tproductlist[i].PURCHASEDESC || "",
-                data.tproductlist[i].CUSTFLD1 || "",
-                data.tproductlist[i].CUSTFLD2 || "",
+                data.tproductqtylist[i].PurchaseDescription || "",
+                data.tproductqtylist[i].CUSTFLD1 || "",
+                data.tproductqtylist[i].CUSTFLD2 || "",
               ];
               splashArrayProductList.push(dataList);
               dataTableList.push(dataList);
@@ -805,37 +805,37 @@ Template.inventorylist.events({
       // sideBarService.getProductListVS1(initialBaseDataLoad, 0).then(function(data) {
       //         let records = [];
       //         let inventoryData = [];
-      //         for (let i = 0; i < data.tproductlist.length; i++) {
-      //       let availableQty = data.tproductlist[i].AvailableQty||0;
+      //         for (let i = 0; i < data.tproductqtylist.length; i++) {
+      //       let availableQty = data.tproductqtylist[i].AvailableQty||0;
       //       let onBOOrder = 0;
-      //       if(data.tproductlist[i].SNTracking == true){
+      //       if(data.tproductqtylist[i].SNTracking == true){
       //         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-      //       }else if(data.tproductlist[i].batch == true){
+      //       }else if(data.tproductqtylist[i].batch == true){
       //         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
       //       }else{
       //         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
       //       }
       //
-      //        onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+      //        onBOOrder = data.tproductqtylist[i].TotalQtyInStock - availableQty;
       //         var dataList = [
-      //             data.tproductlist[i].PARTSID || "",
-      //             data.tproductlist[i].PARTNAME || "-",
-      //             data.tproductlist[i].PARTSDESCRIPTION || "",
+      //             data.tproductqtylist[i].PARTSID || "",
+      //             data.tproductqtylist[i].PARTNAME || "-",
+      //             data.tproductqtylist[i].PARTSDESCRIPTION || "",
       //             availableQty,
-      //             data.tproductlist[i].SOBOQty||0,
-      //             data.tproductlist[i].POBOQty||0,
-      //             data.tproductlist[i].InstockQty,
-      //             data.tproductlist[i].AllocatedBOQty,
-      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
-      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
-      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
-      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+      //             data.tproductqtylist[i].SOBOQty||0,
+      //             data.tproductqtylist[i].POBOQty||0,
+      //             data.tproductqtylist[i].InstockQty,
+      //             data.tproductqtylist[i].AllocatedBOQty,
+      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].COST1 * 100) / 100),
+      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].COSTINC1 * 100) /100),
+      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PRICE1 * 100) / 100),
+      //             utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PRICEINC1 * 100) /100),
       //             checkIfSerialorLot||'',
-      //             data.tproductlist[i].BARCODE || "",
+      //             data.tproductqtylist[i].BARCODE || "",
       //             "All",,
-      //             data.tproductlist[i].PURCHASEDESC || "",
-      //             data.tproductlist[i].CUSTFLD1 || "",
-      //             data.tproductlist[i].CUSTFLD2 || "",
+      //             data.tproductqtylist[i].PURCHASEDESC || "",
+      //             data.tproductqtylist[i].CUSTFLD1 || "",
+      //             data.tproductqtylist[i].CUSTFLD2 || "",
       //         ];
       //         splashArrayProductList.push(dataList);
       //         dataTableList.push(dataList);
@@ -904,7 +904,7 @@ Template.inventorylist.events({
         sideBarService
           .getProductListVS1(initialBaseDataLoad, 0)
           .then(function (dataProdList) {
-            addVS1Data("TProductList", JSON.stringify(dataProdList))
+            addVS1Data("TProductQtyList", JSON.stringify(dataProdList))
               .then(function (datareturn) {
                 window.open("/inventorylist", "_self");
               })
@@ -920,7 +920,7 @@ Template.inventorylist.events({
         sideBarService
           .getProductListVS1(initialBaseDataLoad, 0)
           .then(function (dataProdList) {
-            addVS1Data("TProductList", JSON.stringify(dataProdList))
+            addVS1Data("TProductQtyList", JSON.stringify(dataProdList))
               .then(function (datareturn) {
                 window.open("/inventorylist", "_self");
               })

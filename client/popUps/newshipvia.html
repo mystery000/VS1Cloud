@@ -8,14 +8,16 @@
                 </div>
                 <div class="modal-body" style="padding: 8px 24px;">
                     <input type="hidden" id="edtShipViaID" name="edtShipViaID" class="form-control">
+                    {{#if record}}
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group flex-grow-1" style="margin: 8px 0px;">
                                 <label>Ship Via Method</label>
-                                <input type="text" id="edtShipVia" name="edtShipVia" class="form-control">
+                                <input type="text" id="edtShipVia" name="edtShipVia" class="form-control" value="{{record.shipViaMethodName}}">
                             </div>
                         </div>
                     </div>
+                    {{/if}}
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success btnSaveShipVia" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>

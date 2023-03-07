@@ -184,7 +184,7 @@
 
         {{#if is_available_chart currentTemplate "monthlyprofitandloss"}}
         {{> monthlyprofitandloss
-        md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
+        md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "mytaskswidgetchart"}}
@@ -248,7 +248,7 @@
 
         {{#if is_available_chart currentTemplate "expenseschart"}}
         {{> expenseschart
-        md=8 defaultPosition=14 key="dashboard__expenses" }}
+        md=8 defaultPosition=14 key="dashboard__expenses" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "monthlyearnings"}}
@@ -278,12 +278,12 @@
 
         {{#if is_available_chart currentTemplate "monthllyexpenses"}}
         {{> monthllyexpenses
-        md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
+        md=8 defaultPosition=21 key="purchases__monthly_expenses" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "expensebreakdown"}}
         {{> expensebreakdown
-        md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
+        md=4 defaultPosition=22 key="purchases__expenses_breakdown" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "absenteeRate"}}

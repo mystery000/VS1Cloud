@@ -51,12 +51,12 @@
 
             </tr>
           {{/if}} -->
-          <tr class="table-active tblAvoid customDoubleTableHeading">
+          <tr class="table-active">
             {{#each c in salessummaryreportth}}
             {{#if c.display}}
             <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
               class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-              style="text-align: left!important; width:{{c.width}}px">
+              style="text-align: left; width:{{c.width}}px">
               {{c.label}}
             </th>
             {{/if}}
@@ -66,7 +66,7 @@
         <tbody>
           {{#if reportrecords}}
             {{#each items in reportrecords}}
-              <tr>
+              <tr class="listhr">
                 <!-- customerscard?id={{items.clientid}} -->
                 <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
                   <span class="table-cells">
@@ -124,19 +124,19 @@
                   {{/if}}
                 {{else}}
 
-                  <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
+                  <td class="Total1Indented MenuLeft TotalField totalhr text-right" style="border-top: 0px!important">
                     <span class="table-cells">
                       <a href="/salesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatPrice items.totalamountex}}</a></span></td>
 
-                  <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
+                  <td class="Total1Indented MenuLeft TotalField totalhr text-right" style="border-top: 0px!important">
                     <span class="table-cells">
                       <a href="/salesreportsalesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatTax items.totaltax}}</a></span></td>
 
-                  <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
+                  <td class="Total1Indented MenuLeft TotalField totalhr text-right" style="border-top: 0px!important">
                     <span class="table-cells">
                       <a href="/salesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatPrice items.totalamount}}</a></span></td>
 
-                  <td class="Total1Indented MenuLeft TotalField totalhr" style="border-top: 0px!important">
+                  <td class="Total1Indented MenuLeft TotalField totalhr text-right" style="border-top: 0px!important">
                     <span class="table-cells">
                       <a href="/salesreport?contact={{items.contact}}" style="text-decoration:none!important;">{{ formatPrice items.balance}}</a></span></td>
 
@@ -194,10 +194,10 @@
 
                 {{else}}
 
-                  <td>{{ formatPrice grandRecords.total.AmountEx}}</td>
-                  <td>{{ formatTax grandRecords.total.Tax}}</td>
-                  <td>{{ formatPrice grandRecords.total.AmountInc}}</td>
-                  <td>{{ formatPrice grandRecords.total.Balance}}</td>
+                  <td class="text-right">{{ formatPrice grandRecords.total.AmountEx}}</td>
+                  <td class="text-right">{{ formatTax grandRecords.total.Tax}}</td>
+                  <td class="text-right">{{ formatPrice grandRecords.total.AmountInc}}</td>
+                  <td class="text-right">{{ formatPrice grandRecords.total.Balance}}</td>
 
 
                 {{/if}}

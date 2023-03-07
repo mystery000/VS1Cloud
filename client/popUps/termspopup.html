@@ -8,7 +8,22 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
-                    {{> non_transactional_list tablename='termsList'}}
+                    <!-- {{> non_transactional_list tablename='termsList'}} -->
+                    {{>datatablelist 
+                        tablename="tblTermsList"
+                        apiName= apiFunction
+                        service = service
+                        indexeddbname = 'TTermsVS1List'
+                        datahandler = datahandler
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Terms List'
+                        istransaction = false
+                        apiParams=apiParams
+                        lowercaseDataName='ttermsvs1list'
+                        exIndexDBName = 'ttermsvs1list'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                    }}
                 </div>
             </div>
             <div class="modal-footer">

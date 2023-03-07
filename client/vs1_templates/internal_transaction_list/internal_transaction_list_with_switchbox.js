@@ -364,11 +364,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     //Products Data
     templateObject.getProductsData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TProductList').then(function(dataObject) {
+        getVS1Data('TProductQtyList').then(function(dataObject) {
 
             if (dataObject.length == 0) {
                 sideBarService.getProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                    await addVS1Data('TProductList', JSON.stringify(data));
+                    await addVS1Data('TProductQtyList', JSON.stringify(data));
                     templateObject.displayProductsData(data); //Call this function to display data on the table
                 }).catch(function(err) {
 
@@ -379,7 +379,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             }
         }).catch(function(err) {
             sideBarService.getProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TProductList', JSON.stringify(data));
+                await addVS1Data('TProductQtyList', JSON.stringify(data));
                 templateObject.displayProductsData(data); //Call this function to display data on the table
             }).catch(function(err) {
 
@@ -400,33 +400,33 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         } else {
             deleteFilter = false;
         };
-        for (let i = 0; i < data.tproductlist.length; i++) {
-            if (data.tproductlist[i].Active == true) {
+        for (let i = 0; i < data.tproductqtylist.length; i++) {
+            if (data.tproductqtylist[i].Active == true) {
                 linestatus = "";
-            } else if (data.tproductlist[i].Active == false) {
+            } else if (data.tproductqtylist[i].Active == false) {
                 linestatus = "In-Active";
             };
-            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID +
-                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[i].PARTSID +
+                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[i].PARTSID +
                 '"></label></div>'; //switchbox
 
             costprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                Math.floor(data.tproductqtylist[i].BuyQTY1 * 100) / 100); //Cost Price
             sellprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
+                Math.floor(data.tproductqtylist[i].SellQTY1 * 100) / 100); //Sell Price
 
             var dataList = [
                 chkBox,
-                data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAME || "",
-                data.tproductlist[i].PARTSDESCRIPTION || "",
-                data.tproductlist[i].BARCODE || "",
+                data.tproductqtylist[i].PARTSID || "",
+                data.tproductqtylist[i].ProductName || "",
+                data.tproductqtylist[i].SalesDescription || "",
+                data.tproductqtylist[i].BARCODE || "",
                 costprice,
                 sellprice,
-                data.tproductlist[i].InstockQty,
-                data.tproductlist[i].PURCHTAXCODE || "",
-                data.tproductlist[i].PRODUCTCODE || "",
-                data.tproductlist[i].Ex_Works || null,
+                data.tproductqtylist[i].InstockQty,
+                data.tproductqtylist[i].PurchaseTaxcode || "",
+                data.tproductqtylist[i].PRODUCTCODE || "",
+                data.tproductqtylist[i].Ex_Works || null,
                 linestatus,
             ];
 
@@ -584,37 +584,37 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         let customerSearch = $('#' + currenttablename + '_filter input').val();
 
                         sideBarService.getProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-                            for (let j = 0; j < dataObjectnew.tproductlist.length; j++) {
+                            for (let j = 0; j < dataObjectnew.tproductqtylist.length; j++) {
                                 let chkBox;
                                 let costprice = 0.00;
                                 let sellrate = 0.00;
                                 let linestatus = '';
-                                if (dataObjectnew.tproductlist[j].Active == true) {
+                                if (dataObjectnew.tproductqtylist[j].Active == true) {
                                     linestatus = "";
-                                } else if (dataObjectnew.tproductlist[j].Active == false) {
+                                } else if (dataObjectnew.tproductqtylist[j].Active == false) {
                                     linestatus = "In-Active";
                                 };
-                                chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductlist[j].PARTSID +
-                                    '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[j].PARTSID +
+                                chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                    '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[j].PARTSID +
                                     '"></label></div>'; //switchbox
 
                                 costprice = utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductlist[j].BuyQTY1 * 100) / 100); //Cost Price
+                                    Math.floor(data.tproductqtylist[j].BuyQTY1 * 100) / 100); //Cost Price
                                 sellprice = utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductlist[j].SellQTY1 * 100) / 100); //Sell Price
+                                    Math.floor(data.tproductqtylist[j].SellQTY1 * 100) / 100); //Sell Price
 
                                 var dataListDupp = [
                                     chkBox,
-                                    dataObjectnew.tproductlist[j].PARTSID || "",
-                                    dataObjectnew.tproductlist[j].PARTNAM || "",
-                                    dataObjectnew.tproductlist[j].PARTSDESCRIPTION || "",
-                                    dataObjectnew.tproductlist[j].BARCODE || "",
+                                    dataObjectnew.tproductqtylist[j].PARTSID || "",
+                                    dataObjectnew.tproductqtylist[j].ProductName || "",
+                                    dataObjectnew.tproductqtylist[j].SalesDescription || "",
+                                    dataObjectnew.tproductqtylist[j].BARCODE || "",
                                     costprice,
                                     sellprice,
-                                    dataObjectnew.tproductlist[j].InstockQty,
-                                    dataObjectnew.tproductlist[j].PURCHTAXCODE || "",
-                                    dataObjectnew.tproductlist[j].PRODUCTCODE || "",
-                                    dataObjectnew.tproductlist[j].Ex_Works || null,
+                                    dataObjectnew.tproductqtylist[j].InstockQty,
+                                    dataObjectnew.tproductqtylist[j].PURCHTAXCODE || "",
+                                    dataObjectnew.tproductqtylist[j].PRODUCTCODE || "",
+                                    dataObjectnew.tproductqtylist[j].Ex_Works || null,
                                     linestatus
                                 ];
 
@@ -2223,7 +2223,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         // if (currenttablename === "tblAvailableSNCheckbox") {
             var target = e.target;
             let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
-            getVS1Data("TProductList").then(function (dataObject) {
+            getVS1Data("TProductQtyList").then(function (dataObject) {
                 if (dataObject.length == 0) {
                     productService.getProductStatus(selectedProductName).then(async function (data) {
                         if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
@@ -2239,14 +2239,14 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 }
                 else{
                     let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tproductlist.length; i++) {
-                        if(data.tproductlist[i].PARTNAME == selectedProductName){
-                            if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+                    for (let i = 0; i < data.tproductqtylist.length; i++) {
+                        if(data.tproductqtylist[i].ProductName == selectedProductName){
+                            if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                                 return false;
-                            } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                            } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
                                 currenttablename = "tblAvailableLotCheckbox";
                                 templateObject.getLotNumbersData(selectedProductName);
-                            } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                            } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
                                 currenttablename = "tblAvailableSNCheckbox";
                                 templateObject.getSerialNumbersData(selectedProductName);
                             }
@@ -2382,7 +2382,7 @@ Template.internal_transaction_list_with_switchbox.events({
         // $('.btnHideDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblInventoryCheckbox") {
-            await clearData('TProductList');
+            await clearData('TProductQtyList');
             templateObject.getProductsData(true);
         } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             await clearData('TTaxcodeVS1');
@@ -2411,7 +2411,7 @@ Template.internal_transaction_list_with_switchbox.events({
         // $('.btnViewDeleted').css('display', 'inline-block');
 
         if (currenttablename == "tblInventoryCheckbox") {
-            await clearData('TProductList');
+            await clearData('TProductQtyList');
             templateObject.getProductsData(false);
         } else if (currenttablename.includes("tbltaxCodeCheckbox")) {
             await clearData('TTaxcodeVS1');
