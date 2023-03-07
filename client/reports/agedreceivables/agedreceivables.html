@@ -3,15 +3,17 @@
     <div class="table-responsive">
       <table class="table table-sm" id="tableExport" name="tableExport">
         <thead>
-          {{#if agedreceivablesth}}
-          {{#each c in agedreceivablesth }}
-          {{# if c.display}}
-          <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
-              class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-              style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
-          {{/if}}
-          {{/each}}
-          {{/if}}
+            <tr class="table-active">
+              {{#if agedreceivablesth}}
+              {{#each c in agedreceivablesth }}
+              {{# if c.display}}
+              <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                  class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                  style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
+              {{/if}}
+              {{/each}}
+              {{/if}}
+            </tr>
         </thead>
         <tbody>
           {{#if records}}
@@ -103,22 +105,22 @@
                     {{/if}}
                   {{else}}
 
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.AmountDue null}}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries.Current null}}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '1-30Days' }}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '30-60Days' }}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '60-90Days' }}</a>
                     </td>
-                    <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                    <td class="Total1Indented MenuLeft text-nowrap Indent1 text-right">
                       <a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.entries '>90Days' }}</a>
                     </td>
 
@@ -193,22 +195,22 @@
 
                   {{/if}}
                 {{else}}
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.TotalAmountDue null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.TotalCurrent null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.OneMonth null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.TwoMonth null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.ThreeMonth null}}</strong></span></td>
-                  <td class="Total1Indented MenuLeft TotalField">
+                  <td class="Total1Indented MenuLeft TotalField text-right">
                     <span class="table-cells">
                       <strong>{{ formatPrice record.total.OlderMonth null}}</strong></span></td>
 

@@ -67,37 +67,42 @@ Template.vs1___dropdown.onRendered(async function(){
      
     }
     // $('#'+id).editableSelect().on('click', function(event) {
-        $(document).on('click', '#'+id, function(event, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            $("#"+popupid).val("");
-            if (event.pageX > offset.left + $earch.width() - 8) {
-                // X button 16px wide?
-                $("#"+popupid).modal();
-               
-            } else {
-                setTimeout(()=>{
-                    let value = event.target.value;
-                    if (value.replace(/\s/g, '') == '') {
-                    // if($(event.target).val() == '') {
-                        templateObject.targetTemp.set('')
-                        $('#'+popupid).modal('toggle');
-                    } else {
-                        if(templateObject.data.is_editable == true) {
-                            let edtModalId = templateObject.data.target_modal_id;
-                            let params = templateObject.edtParam.get();
-                            if(!params.name || params.name == '' ) {
-                                params.name = value;
-                            }
-                            templateObject.edtParam.set(params)
-                            $('#'+ edtModalId).modal('toggle');
-                        } else {
-                            $('#'+popupid).modal('toggle');
+    $(document).on('click', '#'+id, function(event, li) {
+        event.preventDefault();
+        event.stopPropagation();
+        var $earch = $(this);
+        var offset = $earch.offset();
+        // $("#"+popupid).val("");
+        if (event.pageX > offset.left + $earch.width() - 8) {
+            // X button 16px wide?
+            templateObject.targetTemp.set('')
+            $("#"+popupid).modal('toggle');
+            
+        } else {
+            setTimeout(()=>{
+                let value = event.target.value;
+                if (value.replace(/\s/g, '') == '') {
+                // if($(event.target).val() == '') {
+                    
+                    templateObject.targetTemp.set('')
+                    $('#'+popupid).modal('toggle');
+                } else {
+                    
+                    if(templateObject.data.is_editable == true) {
+                        let edtModalId = templateObject.data.target_modal_id;
+                        let params = templateObject.edtParam.get();
+                        if(!params.name || params.name == '' ) {
+                            params.name = value;
                         }
+                        templateObject.edtParam.set(params)
+                        $('#'+ edtModalId).modal('toggle');
+                    } else {
+                        $('#'+popupid).modal('toggle');
                     }
-                }, 1000)
-            }
-        })
+                }
+            }, 1000)
+        }
+    })
     // })
 })
 
@@ -129,6 +134,7 @@ Template.vs1___dropdown.events({
         let email = $(event.target).closest('tr').find('.colEmail')?.text();
        
         templateObject.edtParam.set({name: value, id: objectId, email: email })
+        
         templateObject.targetTemp.set(templateObject.data.target_template_id)
         
         $('#'+id).val(value)
@@ -146,13 +152,25 @@ Template.vs1___dropdown.events({
                 $(billingAddressField).val(address)
             }
             let clientEmailInput = 'edtCustomerEmail';
+            let colTerms = 'colCustomerTermName'
             if(label == 'Supplier') {
                 clientEmailInput = 'edtSupplierEmail';
+                colTerms = 'colSupplierTermName'
             }
             let email = $(event.target).closest('tr').find('.colEmail').text();
             $('#'+clientEmailInput).val(email)
+            let termsField = $('#selectTerms');
+            if(termsField && termsField.length > 0) {
+                $(termsField).val($(event.target).closest('tr').find('.'+ colTerms).text())
+            }
         } 
         $('#'+modalId).modal('toggle');
+
+        $("#"+modalId + '> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
+        setTimeout(function() {
+            $("#"+modalId + '> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .btnRefreshTable').trigger('click')
+        }, 1000)
+        
     },
 
 })

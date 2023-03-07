@@ -33,7 +33,7 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
                 <div class="card shadow mb-3">
-                    <div class="card-header" style="padding: 0px !important;background-color: rgba(0,0,0,0); border-top: 0px; border-left: 0px; border-right: 0px;">
+                    <div class="card-header" style="padding: 0px !important; border-top: 0px; border-left: 0px; border-right: 0px;">
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist" style="border-bottom: 0px;">
                             <li class="nav-item">
                                 <a class="nav-link" id="org-tab" data-toggle="tab" href="#organisation" role="tab" aria-controls="home" aria-selected="true">Organisation</a>
@@ -63,49 +63,43 @@
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="row">
-                                                <div class="col-12 mb-4">
+                                                <div class="col-12">
                                                     <h4>Organisation</h4>
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <input type="hidden" class="form-control"  name='payrollsettingor' id="payrollsettingor" />
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group mb-0">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="edtAllowanceType">Bank Account</label>
                                                         <input type="hidden" class="form-control" style="cursor: pointer;" id="payorgnization_id" value="0">
                                                         {{> vs1_dropdown id='editbankaccount' name='editbankaccount' value='' type='search' classes=''}}
-                                                   </div>
-
+                                                    </div>
                                                 </div>
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editpaygbankaccount">PAYG Liability Account</label>
                                                         {{> vs1_dropdown id='editpaygbankaccount' name='editpaygbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editwagesexpbankaccount">Wages Expense Account</label>
                                                         {{> vs1_dropdown id='editwagesexpbankaccount' name='editwagesexpbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editwagespaybankaccount">Wages Payable Account</label>
                                                         {{> vs1_dropdown id='editwagespaybankaccount' name='editwagespaybankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editsuperliabbankaccount">Superannuation Liability Account</label>
                                                         {{> vs1_dropdown id='editsuperliabbankaccount' name='editsuperliabbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editsuperexpbankaccount">Superannuation Expense Account</label>
                                                         {{> vs1_dropdown id='editsuperexpbankaccount' name='editsuperexpbankaccount' value='' type='search' classes=''}}
                                                     </div>
@@ -114,24 +108,21 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="row">
-                                                <div class="col-12 mb-4">
+                                                <div class="col-12">
                                                     <h4>Company Logo</h4>
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <style>
                                                     .imgTextArea {
                                                         border: 1px solid #d1d3e2;
                                                         border-radius: 0.35rem;
                                                         padding: 16px;
                                                         height: 160px;
+                                                        display: table;
                                                     }
                                                 </style>
                                                 <div class="col-12 mb-4">
                                                     <div class="imgTextArea">
-                                                        <img class="imageUpload" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" style="    max-width: fit-content;
-                                                        width: 100%;
-                                                        height: 100%;">
+                                                        <img class="imageUpload" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" style="max-width: fit-content; width: 100%; height: 100%;">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mb-2">
@@ -141,8 +132,9 @@
                                             <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Upload logo</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <div class="modal-header" style="padding-bottom: 8px;">
+                                                            <h4 class="modal-title">Upload logo</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 0px !important;"><span aria-hidden="true">×</span></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
@@ -182,15 +174,45 @@
                                                                 </style>
                                                                 <div id="row1">
                                                                     <div id="column1"></div>
-                                                                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;">
-                                                                    <i class="fa fa-cloud-upload" style="margin-right: 5px;"></i> Browse </button>
+                                                                    {{> vs1_button
+                                                                        color='primary'
+                                                                        classes='btnUploadFile new_attachment_btn'
+                                                                        type='button'
+                                                                        id="btnUploadFile"
+                                                                        iconName='cloud-upload'
+                                                                        title='Browse'
+                                                                    }}
+                                                                    <!-- <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;">
+                                                                    <i class="fa fa-cloud-upload" style="margin-right: 5px;"></i> Browse </button> -->
                                                                     <div class="file-name" id="column2"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer"><button class="btn btn-primary btnImport" data-dismiss="modal" type="button" id="uploadImg" disabled><i class="fas fa-file-import"
-                                                                    style="margin-right: 5px;"></i>Upload</button>
-                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                                        <div class="modal-footer">
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='primary'
+                                                                    classes='btnImport'
+                                                                    type='button'
+                                                                    id="uploadImg"
+                                                                    iconName2='fas fa-file-import'
+                                                                    disabled="disabled"
+                                                                    title='Upload'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button class="btn btn-primary btnImport" data-dismiss="modal" type="button" id="uploadImg" disabled><i class="fas fa-file-import"
+                                                                    style="margin-right: 5px;"></i>Upload</button> -->
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='secondary'
+                                                                    classes=''
+                                                                    type='button'
+                                                                    id="btnCancel"
+                                                                    iconName='close'
+                                                                    title='Cancel'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -205,19 +227,19 @@
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="row">
-                                                <div class="col-12 mb-4">
+                                                <div class="col-12 mb-0">
                                                     <h4>Payroll Tracking</h4>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 col-md-6">
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="employegroup">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
                                                         {{> vs1_dropdown id='employegroup' name='employegroup' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
-                                                    <div class="form-group">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="timesheetcat">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
                                                         {{> vs1_dropdown id='timesheetcat' name='timesheetcat' value='' type='search' classes=''}}
                                                     </div>
@@ -293,7 +315,6 @@
                                             <hr />
                                         </div>
                                     </div> -->
-
                                 </div>
 
                                 <div class="tab-pane fade" id="calendars" role="tabpanel" aria-labelledby="calendars-tab">
@@ -302,14 +323,16 @@
                                             <h4>Pay Calendars</h4>
                                         </div>
                                         <div class="col-12 col-md-6 mb-3">
-                                            {{> vs1_button
-                                                color='primary'
-                                                classes='float-right btnAddNewPayCalender'
-                                                type='button'
-                                                id="btnAddNewPayCalender"
-                                                iconName='plus'
-                                                title='New Pay Calendar'
-                                            }}
+                                            <a href="#newPayCalendarModal" data-toggle="modal">
+                                                {{> vs1_button
+                                                    color='primary'
+                                                    classes='float-right btnAddNewPayCalender'
+                                                    type='button'
+                                                    id="btnAddNewPayCalender"
+                                                    iconName='plus'
+                                                    title='New Pay Calendar'
+                                                }}
+                                            </a>
                                             <!-- <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button> -->
 
                                             <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
@@ -325,15 +348,32 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="edtRateName">Pay Period</label>
+                                                                        {{> default_input 
+                                                                            label="Pay Period" 
+                                                                            classes="payperiod" 
+                                                                            id="payperiod" 
+                                                                            name="payperiod" 
+                                                                            defaultValue="" 
+                                                                            type="search"
+                                                                            placeholder="How often will you pay your employees?"
+                                                                        }}
                                                                         <input type="hidden" id="paycalendarId" name="paycalendarId" value="0" />
-                                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?">
+                                                                        <!-- <label for="edtRateName">Pay Period</label>
+                                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?"> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="edtRateName">Name</label>
-                                                                        <input type="text" class="form-control" id="calender_name">
+                                                                        {{> default_input 
+                                                                            label="Name" 
+                                                                            classes="" 
+                                                                            id="calender_name" 
+                                                                            name="calender_name" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                        <!-- <label for="edtRateName">Name</label>
+                                                                        <input type="text" class="form-control" id="calender_name"> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-6">
@@ -346,7 +386,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <div class="form-group">
@@ -358,20 +397,65 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-success savenewcalender"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                            {{> vs1_button
+                                                                color='success'
+                                                                classes='savenewcalender'
+                                                                type='button'
+                                                                id="savenewcalender"
+                                                                iconName='save'
+                                                                title='Save'
+                                                            }}
+                                                            <!-- <button type="button" class="btn btn-success savenewcalender"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='secondary'
+                                                                    classes='btnCancel'
+                                                                    type='button'
+                                                                    id="btnCancel"
+                                                                    iconName='close'
+                                                                    title='Close'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <div class="table-responsive">
+                                            <!-- <style>
+                                                .colPayCalendarName{
+                                                    width: 25%;
+                                                }
+                                                .colPayPeriod{
+                                                    width: 25%;
+                                                }
+                                                .colNextPayPeriod{
+                                                    width: 25%;
+                                                }
+                                                .colNextPaymentDate{
+                                                    width: 25%;
+                                                }
+                                            </style> -->
+                                            {{> datatablelist
+                                                tablename="tblPayCalendars"
+                                                apiName=apiFunction
+                                                indexeddbname='TPayrollCalendars'
+                                                tableheaderrecords=tableheaderrecords
+                                                exportfilename='Pay Calendars'
+                                                apiParams=apiParams
+                                                datahandler=datahandler
+                                                service=service
+                                                lowercaseDataName='tpayrollcalendars'
+                                                exIndexDBName='tpayrollcalendars'
+                                                exdatahandler=exDataHandler
+                                                searchAPI=searchAPI
+                                            }}
+                                            <!-- <div class="table-responsive">
                                                 <style>
                                                     th {
                                                       background-color: #ededed;
@@ -421,7 +505,6 @@
                                                     }
 
                                                 </style>
-
                                                 <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
@@ -442,27 +525,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                               <style>
-                                               .colPayCalendarName{
-                                                   width: 25%;
-                                                }
-                                               .colPayPeriod{
-                                                width: 25%;
-                                               }
-
-                                               .colNextPayPeriod{
-                                                width: 25%;
-                                               }
-
-                                               .colNextPaymentDate{
-
-                                                width: 25%;
-                                               }
-
-                                               </style>
-                                                 {{> non_transactional_list tablename="tblPayCalendars"}} 
-                                                <!-- <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
+                                                <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
                                                     <thead>
                                                         <tr class="dnd-moved">
                                                             <th class="th colCalenderID hiddenColumn" >ID</th>
@@ -484,9 +547,8 @@
                                                             </td>
                                                         </tr>
                                                     </tbody>
-
-                                                </table> -->
-                                            </div>
+                                                </table>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -498,8 +560,17 @@
                                             <p>Holidays help us to be more accurate when calculating leave for your employees.</p>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-                                            <button type="button" class="btn btn-primary btnAddNewHoliday float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button>
-
+                                            <a href="#newHolidayModal" data-toggle="modal">
+                                                {{> vs1_button
+                                                    color='primary'
+                                                    classes='float-right btnAddNewHoliday'
+                                                    type='button'
+                                                    id="btnAddNewHoliday"
+                                                    iconName='plus'
+                                                    title='New Holiday'
+                                                }}
+                                            </a>
+                                            <!-- <button type="button" class="btn btn-primary btnAddNewHoliday float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button> -->
                                             <div class="modal fade" id="newHolidayModal" tabindex="-1" role="dialog" aria-labelledby="newHolidayLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -547,7 +618,7 @@
                                         </div>
                                         <div class="col-12">
                                             <div class="row">
-                                                <div class="col-3">
+                                                <div class="col-4">
                                                     <div class="card shadow">
                                                         <div class="card-header">
                                                             <h6 class="text-primary font-weight-bold">All Holidays</h6>
@@ -555,7 +626,7 @@
                                                         <div class="card-body text-nowrap cardB customerListCard" id="customerListCard">
                                                             <div class="sideSearch">
                                                                 <div class="form-group">
-                                                                    <input type="search"  id="holidaygroup2" class="search form-control" placeholder="Filter by group">
+                                                                    <input type="search" id="holidaygroup2" class="search form-control" placeholder="Filter by group">
                                                                 </div>
                                                                 <span class="counter pull-right"></span>
                                                                 <table id="tblHolidayCategories" name="tblCustomerSideList" class="table table-hover table-bordered results tblHolidayCategories">
@@ -577,8 +648,26 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                            <button class="btn btn-primary filterholiday float-left" >Filter</button>
-                                                            <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button>
+                                                            {{> vs1_button
+                                                                color='primary'
+                                                                classes='float-left filterHoliday'
+                                                                type='button'
+                                                                id="filterHoliday"
+                                                                iconName='filter'
+                                                                title='Filter'
+                                                            }}
+                                                            <!-- <button class="btn btn-primary filterHoliday float-left" >Filter</button> -->
+                                                            <a href="#newGroupModal" data-toggle="modal">
+                                                                {{> vs1_button
+                                                                    color='primary'
+                                                                    classes='float-right btnNewGroup'
+                                                                    type='button'
+                                                                    id="btnNewGroup"
+                                                                    iconName='plus'
+                                                                    title='New Group'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button> -->
 
                                                             <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupLabel" aria-hidden="true">
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -600,7 +689,6 @@
                                                                                 <div class="col-12">
                                                                                     <div class="form-group">
                                                                                         <label for="edtRateName">Add existing holidays from group</label>
-                                                                                     
                                                                                         <input type="text" style="cursor: pointer;" class="form-control" id="addexistgroup">
                                                                                     </div>
                                                                                 </div>
@@ -616,20 +704,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-9">
-                                                    <div class="table-responsive">
+                                                <div class="col-8">
+                                                    {{> datatablelist
+                                                        tablename="tblHolidays"
+                                                        apiName=apiFunction2
+                                                        indexeddbname='TPayrollHolidays'
+                                                        tableheaderrecords=tableheaderrecords2
+                                                        exportfilename='Holidays'
+                                                        apiParams=apiParams2
+                                                        datahandler=datahandler2
+                                                        service=service2
+                                                        lowercaseDataName='tpayrollholidays'
+                                                        exIndexDBName='tpayrollholidays'
+                                                        exdatahandler=exDataHandler2
+                                                        searchAPI=searchAPI2
+                                                    }}
+                                                    <!-- <div class="table-responsive">
                                                         <style>
                                                             .hiddenColumn {
                                                                 display: none;
                                                             }
-
                                                             .showColumn {
                                                                 display: table-cell;
                                                                 padding: .75rem;
                                                                 vertical-align: top;
                                                             }
                                                         </style>
-
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                 <div class="modal-content">
@@ -650,8 +750,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        {{> non_transactional_list tablename="tblHolidays"}}
-                                                        <!-- <table id="tblHolidays" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblHolidays">
+                                                        <table id="tblHolidays" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblHolidays">
                                                             <thead>
                                                                 <tr class="dnd-moved">
                                                                     <th class="th colHolidayID hiddenColumn" >ID</th>
@@ -672,9 +771,8 @@
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
-
-                                                        </table> -->
-                                                    </div>
+                                                        </table>
+                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>

@@ -53,7 +53,7 @@ Template.balancesheetreport.onRendered(() => {
             // { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
             // { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
             // { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
-            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "320" },
+            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "400" },
             { index: 2, label: 'Sub Account Totals', class: 'colSubAccountTotals text-right', active: true, display: true, width: "" },
             { index: 3, label: 'Header Account Totals', class: 'colHeaderAccountTotals text-right', active: true, display: true, width: "" },
         ]
@@ -104,7 +104,14 @@ Template.balancesheetreport.onRendered(() => {
             });
         });
     }
+    templateObject.getBalanceRefreshData = async function (dateAsOf, ignoreDate = false) {
+        reportService.getBalanceSheetReport(dateAsOf).then(async function (data) {
+            await addVS1Data('BalanceSheetReport', JSON.stringify(data));
+            templateObject.displayBalanceSheetData(data);
+        }).catch(function (err) {
 
+        });
+    }
     templateObject.getBalanceSheetData(
         GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
         false
@@ -657,7 +664,7 @@ Template.balancesheetreport.events({
         let comparePeriod = templateObject.$("#comparePeriod").val();
         let sort = templateObject.$("#sort").val();
         let Date = moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD");
-        templateObject.getBalanceSheetReports(Date);
+        templateObject.getBalanceRefreshData(Date);
         let url =
             "/reports/balance-sheet?balanceDate=" +
             moment(balanceDate).clone().endOf("month").format("YYYY-MM-DD") +
@@ -676,13 +683,13 @@ Template.balancesheetreport.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         $("#dateFrom").attr("readonly", true);
-        templateObject.getBalanceSheetReports(null, true);
+        templateObject.getBalanceRefreshData(null, true);
     },
     "change .edtReportDates": (e) => {
         let templateObject = Template.instance();
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
-        templateObject.getBalanceSheetReports(
+        templateObject.getBalanceRefreshData(
             GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
             false
         )

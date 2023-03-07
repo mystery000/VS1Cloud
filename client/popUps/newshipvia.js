@@ -24,9 +24,27 @@ import './newshipvia.html';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
-Template.newshipvia.onCreated(() => {});
-Template.newshipvia.onRendered(() => {});
-Template.newshipvia.helpers({});
+Template.newshipvia.onCreated(() => {
+    const templateObject = Template.instance();
+    templateObject.record = new ReactiveVar();
+});
+Template.newshipvia.onRendered(() => {
+    let templateObject = Template.instance();
+    if(templateObject.data.name) {
+        let record = {
+            shipViaMethodName: templateObject.data.name
+        }
+        templateObject.record.set(record)
+    }else {
+        templateObject.record.set({shipViaMethodName: ''})
+    }
+});
+Template.newshipvia.helpers({
+
+    record:()=> {
+        return Template.instance().record.get()
+    }
+});
 Template.newshipvia.events({
     'click .btnSaveShipVia': function() {
         playSaveAudio();

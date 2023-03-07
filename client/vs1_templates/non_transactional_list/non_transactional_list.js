@@ -829,8 +829,8 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
                 { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
             ]
-        } 
-        
+        }
+
         else if (currenttablename === 'taxRatesList') {
             reset_data = [
                 { index: 0, label: 'Id', class: 'colTaxRateId', active: false, display: true },
@@ -2230,12 +2230,12 @@ Template.non_transactional_list.onRendered(function() {
     //InventoryOverview Data
     templateObject.getAllProductData = async function(deleteFilter=false) {
         // await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
-        getVS1Data("TProductList").then(function (dataObject) {
+        getVS1Data("TProductQtyList").then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService
                 .getProductListVS1(initialBaseDataLoad, 0, deleteFilter)
                 .then(async function (data) {
-                    await addVS1Data("TProductList", JSON.stringify(data));
+                    await addVS1Data("TProductQtyList", JSON.stringify(data));
                     templateObject.displayAllProductData(data);
                 })
                 .catch(function (err) {});
@@ -2254,37 +2254,37 @@ Template.non_transactional_list.onRendered(function() {
         let checkIfSerialorLot = '';
         var dataList = {};
         departmentData = "All";
-        for (let i = 0; i < data.tproductlist.length; i++) {
-          let availableQty = data.tproductlist[i].AvailableQty||0;
-          if(data.tproductlist[i].SNTracking == true){
+        for (let i = 0; i < data.tproductqtylist.length; i++) {
+          let availableQty = data.tproductqtylist[i].AvailableQty||0;
+          if(data.tproductqtylist[i].SNTracking == true){
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-          }else if(data.tproductlist[i].batch == true){
+          }else if(data.tproductqtylist[i].batch == true){
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
           }else{
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
           }
 
-           onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+           onBOOrder = data.tproductqtylist[i].TotalQtyInStock - availableQty;
             var dataList = [
-                data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAME || "-",
-                data.tproductlist[i].PARTSDESCRIPTION || "",
+                data.tproductqtylist[i].PARTSID || "",
+                data.tproductqtylist[i].ProductName || "-",
+                data.tproductqtylist[i].SalesDescription || "",
                 availableQty,
-                data.tproductlist[i].SOBOQty||0,
-                data.tproductlist[i].POBOQty||0,
-                data.tproductlist[i].InstockQty,
-                data.tproductlist[i].AllocatedBOQty,
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+                data.tproductqtylist[i].AllocatedSO||0,
+                data.tproductqtylist[i].AllocatedBO||0,
+                data.tproductqtylist[i].InStock,
+                data.tproductqtylist[i].OnOrder,
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].CostExA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].CostIncA * 100) /100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PriceExA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PriceIncA * 100) /100),
                 checkIfSerialorLot||'',
-                data.tproductlist[i].BARCODE || "",
+                data.tproductqtylist[i].BARCODE || "",
                 departmentData,
-                data.tproductlist[i].PURCHASEDESC || "",
-                data.tproductlist[i].CUSTFLD1 || "",
-                data.tproductlist[i].CUSTFLD2 || "",
-                data.tproductlist[i].Active ? "" : "In-Active"
+                data.tproductqtylist[i].PurchaseDescription || "",
+                data.tproductqtylist[i].CUSTFLD1 || "",
+                data.tproductqtylist[i].CUSTFLD2 || "",
+                data.tproductqtylist[i].Active ? "" : "In-Active"
             ];
             splashArrayProductList.push(dataList);
             dataTableList.push(dataList);
@@ -2367,18 +2367,18 @@ Template.non_transactional_list.onRendered(function() {
                       $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                           $(".fullScreenSpin").css("display", "inline-block");
                           sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                            getVS1Data("TProductList").then(function (dataObjectold) {
+                            getVS1Data("TProductQtyList").then(function (dataObjectold) {
                                 if (dataObjectold.length == 0) {
                                 } else {
                                   let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductqtylist),dataOld.tproductqtylist);
                                   let objCombineData = {
                                     Params: dataOld.Params,
-                                    tproductlist: thirdaryData,
+                                    tproductqtylist: thirdaryData,
                                   };
 
-                                  addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                  addVS1Data("TProductQtyList",JSON.stringify(objCombineData)).then(function (datareturn) {
                                       templateObject.resetData(objCombineData);
                                       $(".fullScreenSpin").css("display", "none");
                                     }).catch(function (err) {
@@ -9090,13 +9090,13 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.getCustomerCrmListDataWithDate = function(deleteFilter = false, datefrom="", dateto="") {
-        let dataTableList = [];        
+        let dataTableList = [];
         let customerName = $('#edtCustomerCompany').val() || "";
         if(customerName == ""){
             customerName = $('#edtJobCustomerCompany').val() || "";
         }
         let fromDate = datefrom == "" ? moment(new Date()).subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
-        let toDate = dateto == "" ? moment(new Date()).format("DD/MM/YYYY") : dateto;        
+        let toDate = dateto == "" ? moment(new Date()).format("DD/MM/YYYY") : dateto;
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
         if (FlowRouter.current().path === "/customerscard") return templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
@@ -13460,7 +13460,7 @@ Template.non_transactional_list.onRendered(function() {
 
            data = data.response.tpayhistory;
           templateObject.displayPayRunsHistoryList(data);
-          
+
       }
 
       templateObject.displayPayRunsHistoryList = function(data){
@@ -17204,7 +17204,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getPayRunsList();
     }  else if (currenttablename === "tblPayRunHistory"){
         templateObject.getPayRunsHistoryList();
-    } 
+    }
     else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetList();
     } else if (currenttablename === 'taxRatesList'){
@@ -17389,7 +17389,7 @@ Template.non_transactional_list.events({
         }else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(true);
         }else if(currenttablename === "tblInventoryOverview"){
-            await clearData('TProductList');
+            await clearData('TProductQtyList');
             templateObject.getAllProductData(true);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();
@@ -17511,7 +17511,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(false);
         } else if(currenttablename === "tblInventoryOverview"){
-            await clearData('TProductList');
+            await clearData('TProductQtyList');
             templateObject.getAllProductData(false);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();

@@ -940,14 +940,14 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
   
                 const diff = Math.ceil(moment(dateTo).diff(moment(dateFrom), 'months', true)) + 1;            
                 let list_prevMonth = [prevMonth7,prevMonth6,prevMonth5,prevMonth4,prevMonth3,prevMonth2,prevMonth1];
-                let totalQuotePayment = [totalQuotePayment7,totalQuotePayment6,totalQuotePayment5,totalQuotePayment4,totalQuotePayment3,totalQuotePayment2,totalQuotePayment1];
-                let totalSOPayment = [totalSOPayment7,totalSOPayment6,totalSOPayment5,totalSOPayment4,totalSOPayment3,totalSOPayment2,totalSOPayment1];
-                let totalInvPayment = [totalInvPayment7,totalInvPayment6,totalInvPayment5,totalInvPayment4,totalInvPayment3,totalInvPayment2,totalInvPayment1];
+                let list_totalQuotePayment = [totalQuotePayment7,totalQuotePayment6,totalQuotePayment5,totalQuotePayment4,totalQuotePayment3,totalQuotePayment2,totalQuotePayment1];
+                let list_totalSOPayment = [totalSOPayment7,totalSOPayment6,totalSOPayment5,totalSOPayment4,totalSOPayment3,totalSOPayment2,totalSOPayment1];
+                let list_totalInvPayment = [totalInvPayment7,totalInvPayment6,totalInvPayment5,totalInvPayment4,totalInvPayment3,totalInvPayment2,totalInvPayment1];
                 
                 list_prevMonth = list_prevMonth.slice(-diff);
-                totalQuotePayment = totalQuotePayment.slice(-diff);
-                totalSOPayment = totalSOPayment.slice(-diff);
-                totalInvPayment = totalInvPayment.slice(-diff);
+                list_totalQuotePayment = list_totalQuotePayment.slice(-diff);
+                list_totalSOPayment = list_totalSOPayment.slice(-diff);
+                list_totalInvPayment = list_totalInvPayment.slice(-diff);
 
                 var ctx = document.getElementById("quotedsoinvoicedamounts").getContext("2d");
                 var myChart = new Chart(ctx, {
@@ -957,21 +957,21 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
                         datasets: [{
                                 "label": "Quotes",
                                 "fill": true,
-                                "data": totalQuotePayment,
+                                "data": list_totalQuotePayment,
                                 "backgroundColor": "rgba(28,200,138,0.16)",
                                 "borderColor": "#1cc88a"
                             },
                             {
                                 "label": "Sales Orders",
                                 "fill": true,
-                                "data": totalSOPayment,
+                                "data": list_totalSOPayment,
                                 "borderColor": "#36b9cc",
                                 "backgroundColor": "rgba(54,185,204,0.17)"
                             },
                             {
                                 "label": "Invoices",
                                 "fill": true,
-                                "data": totalInvPayment,
+                                "data": list_totalInvPayment,
                                 "borderColor": "#f6c23e",
                                 "backgroundColor": "rgba(246,194,62,0.17)"
                             }

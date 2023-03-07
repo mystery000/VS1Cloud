@@ -38,7 +38,7 @@ Template.transaction_line.onRendered(function() {
             { index: 6,  label: "Shipped",            class: "Shipped",       width: "75",        active: true,   display: true },
             { index: 7,  label: "BO",                 class: "BackOrder",     width: "75",        active: true,   display: true },
             { index: 8, label: "Units",              class: "Units",         width: "95",        active: true,   display: true },
-            { index: 9,  label: "Serial/Lot No",      class: "SerialNo",      width: "100",       active: true,   display: true },
+            { index: 9,  label: "Serial/Lot No",      class: "SerialNo",      width: "110",       active: true,   display: true },
             { index: 10,  label: "Fixed Asset",        class: "FixedAsset",    width: "100",       active: true,   display: true },
             { index: 11, label: "Customer/Job",       class: "CustomerJob",   width: "110",       active: true,   display: true },
             { index: 12, label: "Unit Price (Ex)",    class: "UnitPriceEx",   width: "152",       active: true,   display: true },
@@ -413,7 +413,8 @@ Template.transaction_line.events({
 Template.transaction_line.helpers({
     isForeignEnabled: () => {
         let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicenceModule') ? true : false;
-        return isFxCurrencyLicence;
+        // return isFxCurrencyLicence;
+        return false;
     },
     displayfields: () => {
       return Template.instance().displayfields.get();
