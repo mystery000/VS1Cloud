@@ -77,8 +77,8 @@
             </div>
             <div class="row no-gutters">
                 <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="text-align:center">
-                    <button class="btn btn-success btnSave btn-auto-save" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Admin</button>
-                    <button class="btn btn-secondary btnBack" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Log Off</button>
+                    <button class="btn btn-success btnAdmin" type="button" style="margin: 16px;">Admin</button>
+                    <button class="btn btn-secondary btnBack" type="button" style="margin: 16px;">Log Off</button>
                 </div>
             </div>
         </div>
@@ -87,32 +87,6 @@
     <script>
         modalDraggable();
     </script>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <style>
-                        #tblDepartmentCheckbox .colChkBox{
-                            width: 40px!important
-                        }
-                        #tblDepartmentCheckbox .chkBox{
-                            margin: 0px!important
-                        }
-                    </style>
-                    
-                    {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Ok</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="editServiceChecker">
         {{> editServiceCheckerModal}}
@@ -138,7 +112,86 @@
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="machineSummaryList">
-        {{> non_transactional_list tablename = "tblMachineSummaryList"}}
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Machine Summary</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        #tblMachineSummaryList .colDate{
+                            width: 50%!important
+                        }
+                        #tblMachineSummaryList .colCountStatus{
+                            width: 50%!important
+                        }
+                    </style>                    
+                    {{> non_transactional_list tablename = "tblMachineSummaryList"}}
+                </div>
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Ok</button> -->
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="machineDetailList">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Machine Detail</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        #tblMachineDetailList .colTime{
+                            width: 50%!important
+                        }
+                        #tblMachineDetailList .colStatus{
+                            width: 50%!important
+                        }
+                    </style>                    
+                    {{> non_transactional_list tablename = "tblMachineDetailList"}}
+                </div>
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Ok</button> -->
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+        {{> copyfrequencypop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="adminService">
+        <!-- {{> adminServiceModal}} -->
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Who Receives Messages</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        #tblAdminServiceList .colAddress{
+                            width: 40%!important
+                        }
+                        #tblAdminServiceList .colPassword{
+                            width: 30%!important
+                        }
+                        #tblAdminServiceList .colSMS{
+                            width: 30%!important
+                        }
+                    </style>                    
+                    {{> non_transactional_list tablename = "tblAdminServiceList"}}
+                </div>
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Ok</button> -->
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- End Help Video Modal -->
