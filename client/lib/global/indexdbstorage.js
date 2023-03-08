@@ -446,7 +446,6 @@ openDb = function (dbName) {
         keyPath: "EmployeeEmail",
       });
       db.createObjectStore("TRateTypes", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TEarnings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTimeSheetDetails", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
@@ -819,7 +818,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 245);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 247);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };
