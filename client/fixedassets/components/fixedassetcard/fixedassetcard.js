@@ -6,7 +6,6 @@ import { AccountService } from "../../../accounts/account-service";
 import { FixedAssetService } from '../../fixedasset-service';
 import './fixedassetcard.html';
 import { Template } from 'meteor/templating';
-import { template } from 'lodash';
 
 let sideBarService = new SideBarService();
 let accountService = new AccountService();

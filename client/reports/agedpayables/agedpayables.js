@@ -52,12 +52,12 @@ Template.agedpayables.onRendered(() => {
         { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
         { index: 3, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
         { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
-        { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
-        { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
-        { index: 7, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
-        { index: 8, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
-        { index: 9, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
-        { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
+        { index: 5, label: 'Amount Due', class: 'colAmountDue text-right', active: true, display: true, width: "150" },
+        { index: 6, label: 'Current', class: 'colCurrent text-right', active: true, display: true, width: "150" },
+        { index: 7, label: '1 - 30 Days', class: 'col130Days text-right', active: true, display: true, width: "150" },
+        { index: 8, label: '30 - 60 Days', class: 'col3060Days text-right', active: true, display: true, width: "150" },
+        { index: 9, label: '60 - 90 Days', class: 'col6090Days text-right', active: true, display: true, width: "150" },
+        { index: 10, label: '> 90 Days', class: 'col90Days text-right', active: true, display: true, width: "150" },
         // { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "120" },
         // { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "120" },
         // { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "120" },
@@ -180,13 +180,13 @@ Template.agedpayables.onRendered(() => {
               start = splashArrayAgedPayablesReport[i][0];
               for(j = 0 ; j < 6; j ++){
                   totalSum[j] += (sum[j] - 0);
-                  sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold");
+                  sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold", "text-right listhr");
               }
               agedPayableList.push([
-                  GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
-                  "",
-                  "",
-                  "",
+                  GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold", "listhr"),
+                  GlobalFunctions.generateSpan("","","listhr"),
+                  GlobalFunctions.generateSpan("","","listhr"),
+                  GlobalFunctions.generateSpan("","","listhr"),
                   sum[0],
                   sum[1],
                   sum[2],
@@ -216,20 +216,20 @@ Template.agedpayables.onRendered(() => {
           let tmp;
           for(j = 0 ; j < 6; j ++) {
               tmp = splashArrayAgedPayablesReport[i][4 + j] - 0;
-              splashArrayAgedPayablesReport[i][4 + j] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+              splashArrayAgedPayablesReport[i][4 + j] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success', "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger', "text-right");
               sum[j] += tmp;
           }
           agedPayableList.push(splashArrayAgedPayablesReport[i]);
       }
       for(j = 0 ; j < 6; j ++){
           totalSum[j] += sum[j] - 0;
-          sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold");
+          sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold", "text-right listhr");
       }
       agedPayableList.push([
-          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold'),
-          "",
-          "",
-          "",
+          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold', "listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
           sum[0],
           sum[1],
           sum[2],
@@ -238,13 +238,13 @@ Template.agedpayables.onRendered(() => {
           sum[5],
       ]);
       for(j = 0 ; j < 6; j ++){
-          totalSum[j] = totalSum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "text-danger text-bold");
+          totalSum[j] = totalSum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "text-danger text-bold", "text-right listhr");
       }
       agedPayableList.push([
-          GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold'),
-          "",
-          "",
-          "",
+          GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold', "listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
           totalSum[0],
           totalSum[1],
           totalSum[2],

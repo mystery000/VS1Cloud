@@ -42,11 +42,11 @@ Template.trialbalance.onRendered(() => {
     let reset_data = [];
     reset_data = [
       // { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },
-      { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "40" },
+      { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "41" },
       { index: 2, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "15" },
       { index: 3, label: 'Account', class:'colAccount', active: true, display: true, width: "15" },
       { index: 4, label: 'Credits (Ex)', class:'colCreditsEx text-center0', active: true, display: true, width: "15" },
-      { index: 5, label: 'Debits (Ex)', class:'colDebitsEx text-center0', active: true, display: true, width: "15" },
+      { index: 5, label: 'Debits (Ex)', class:'colDebitsEx text-center0', active: true, display: true, width: "14" },
       // { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
       // { index: 7, label: 'Credits (Inc)', class:'colCreditsInc', active: false, display: true, width: "120" },
       // { index: 9, label: 'Debits (Inc)', class:'colDebitsInc', active: false, display: true, width: "120" },
@@ -150,11 +150,10 @@ Template.trialbalance.onRendered(() => {
       if(start != splashArrayTrialBalanceReport[i][0]) {
         creditSum += (credit - 0), debitSum += (debit - 0);
         start = splashArrayTrialBalanceReport[i][0];
-        credit = credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-danger text-bold", "text-right");
-        debit = debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-danger text-bold", "text-right");
+        credit = credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-lbold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-danger text-bold", "text-right");
+        debit = debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-lbold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-danger text-bold", "text-right");
         trialBalanceReport.push([
-          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
-
+          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-lbold"),
           "",
           "",
           credit,
@@ -1316,7 +1315,6 @@ Template.trialbalance.events({
   },*/
   "click .btnExportReport": function () {
     LoadingOverlay.show();
-    debugger
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -1336,7 +1334,8 @@ Template.trialbalance.events({
         dateTo.getDate();
 
     const filename = loggedCompany + "-Trial Balance" + ".csv";
-    utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+    utilityService.exportReportToCsvTable("trialbalance", filename, "csv");
+    LoadingOverlay.hide();
     let rows = [];
     // reportService.getTrialBalanceDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {
     //     if(data.ttrialbalancereport){

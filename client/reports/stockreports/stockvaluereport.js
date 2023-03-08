@@ -34,14 +34,14 @@ Template.stockvaluereport.onRendered(() => {
     Datehandler.initOneMonth();
 
     let reset_data = [
-      { index: 1, label: 'Department', class: 'colDepartmentName', active: true, display: true, width: "200" },
-      { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "130" },
-      { index: 3, label: 'Trans', class: 'colTransType', active: true, display: true, width: "130" },
-      { index: 4, label: 'Date', class: 'colQty', active: true, display: true, width: "130" },
-      { index: 5, label: 'Qty', class: 'colQty text-right', active: true, display: true, width: "70" },
-      { index: 6, label: 'Running Qty', class: 'colRunningQty text-right', active: true, display: true, width: "130" },
-      { index: 7, label: 'Orignal Cost', class: 'colUnitCostWhenPosted text-right', active: true, display: true, width: "200" },
-      { index: 8, label: 'Current Cost', class: 'colTodaysUnitAvgCost text-right', active: true, display: true, width: "200" },
+      { index: 1, label: 'Department', class: 'colDepartmentName', active: true, display: true, width: "150" },
+      { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "150" },
+      { index: 3, label: 'Trans', class: 'colTransType', active: true, display: true, width: "150" },
+      { index: 4, label: 'Date', class: 'colQty', active: true, display: true, width: "150" },
+      { index: 5, label: 'Qty', class: 'colQty text-right', active: true, display: true, width: "150" },
+      { index: 6, label: 'Running Qty', class: 'colRunningQty text-right', active: true, display: true, width: "150" },
+      { index: 7, label: 'Orignal Cost', class: 'colUnitCostWhenPosted text-right', active: true, display: true, width: "150" },
+      { index: 8, label: 'Current Cost', class: 'colTodaysUnitAvgCost text-right', active: true, display: true, width: "150" },
       // { index: 8, label: 'Total Cost~When Posted', class: 'colTotalCostWhenPosted', active: true, display: true, width: "200" },
       // { index: 9, label: 'Todays Total~Avg Cost', class: 'colTodaysTotalAvgCost', active: true, display: true, width: "200" },
       // { index: 10, label: 'Trans Date', class: 'colTransDate', active: true, display: true, width: "100" },

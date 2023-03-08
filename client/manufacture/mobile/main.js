@@ -21,7 +21,7 @@ Template.mobileapp.onCreated(function() {
     templateObject.jobProcess = new ReactiveVar();
     templateObject.employeeName = new ReactiveVar();
     templateObject.breakMessage = new ReactiveVar();
-    
+
 
     templateObject.isEnterJobNumber = new ReactiveVar();
     templateObject.isEnterJobNumber.set(true);
@@ -40,7 +40,7 @@ Template.mobileapp.onCreated(function() {
 
     templateObject.breakState = new ReactiveVar();
     templateObject.breakState.set(false);
-      
+
 })
 
 Template.mobileapp.events({
@@ -113,10 +113,10 @@ Template.mobileapp.events({
             $(".mobile-left-workorder-list").css('display', 'none');
 
             let manufacturingService = new ManufacturingService();
-            
+
             getVS1Data('TProcessStep').then(function (dataObject) {
                 if(dataObject.length == 0) {
-                    
+
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                  
                         addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
@@ -139,11 +139,11 @@ Template.mobileapp.events({
                             sScrollXInner: "100%",
                             columns: [
                                 { title: 'Process Name', mData: 'fields.KeyValue' },
-                                
+
                             ]
                         })
 
-                        
+
                         $("#startBreakContainer").css('display', 'none');
                         $(".mobile-left-btn-containner").css('display', 'none');
                         $("#btnOpentList").prop('disabled', true);
@@ -166,19 +166,19 @@ Template.mobileapp.events({
                         sScrollXInner: "100%",
                         columns: [
                             { title: 'Process Name', mData: 'fields.KeyValue' },
-                            
+
                         ]
                     })
 
-                    
+
                     $("#startBreakContainer").css('display', 'none');
                     $(".mobile-left-btn-containner").css('display', 'none');
                     $("#btnOpentList").prop('disabled', true);
                 }
-                
-                
+
+
             }).catch(function(error) {
-                    
+
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                         addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
                             console.log("TprocessStep data is inserted to server database.");
@@ -202,11 +202,11 @@ Template.mobileapp.events({
                             sScrollXInner: "100%",
                             columns: [
                                 { title: 'Process Name', mData: 'fields.KeyValue' },
-                                
+
                             ]
                         })
 
-                        
+
                         $("#startBreakContainer").css('display', 'none');
                         $(".mobile-left-btn-containner").css('display', 'none');
                         $("#btnOpentList").prop('disabled', true);
@@ -219,8 +219,8 @@ Template.mobileapp.events({
             $("#btnOpentList").prop('disabled', true);
 
         }
-        if(isSelectEmployeeNumber) {            
-            
+        if(isSelectEmployeeNumber) {
+
             $(".mobile-left-workorder-list").css('display', 'none');
             $(".mobile-left-jobprocess-list").css('display', 'none');
 
@@ -335,7 +335,7 @@ Template.mobileapp.events({
         $(".mobile-left-btn-containner").css('display', 'block');
 
         $("#btnOpentList").removeAttr('disabled'); // when click cancel , openlist button will be active
-        
+
         if(Template.instance().isSelectEmployeeName.get()) {  //after employ number not find result, click cancel
             Template.instance().isSelectEmployeeNumber.set(true);
         }
@@ -509,7 +509,7 @@ Template.mobileapp.events({
         if(isSelectEmployeeNumber) {
 
             let empId = $('.mobile-main-input').val();
-            let employeeDetail ;    
+            let employeeDetail ;
             getVS1Data('TEmployee').then(function (dataObject) {
                 if (dataObject.length == 0) {
                   contactService.getOneEmployeeDataEx(empId).then(function (data) {
@@ -523,24 +523,23 @@ Template.mobileapp.events({
                       employeeDetail = useData[i];
                     }
                   }
-                  
-                 
+
+
                 }
                 $(".mobile-left-employee-list").css('display', 'block');
 
-                console.log(employeeDetail);
                 let table = $("#tblEmployeeList").DataTable({
                         data: employeeDetail,
                         paging: false,
                         searching: true,
-                       
+
                         dom: 't',
                         scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
                         scrollCollapse: true,
                         autoWidth: true,
                         sScrollXInner: "100%",
                         columns: [
-                            
+
                             { title: 'FirstName', mData: 'fields.FirstName' },
                             { title: 'LastName', mData: 'fields.LastName' },
                         ]
@@ -555,14 +554,13 @@ Template.mobileapp.events({
                   employeeDetail = data;
                 });
             });
-                
+
 
             // getVS1Data('TEmployee').then(function (dataObject) {
             //     $(".mobile-left-employee-list").css('display', 'block');
 
             //     let empdata = JSON.parse(dataObject[0].data);
-            //     console.log(empdata.temployee);
-            
+
             //     let table = $("#tblEmployeeList").DataTable({
             //         data: empdata.temployee,
             //         paging: false,
@@ -573,7 +571,7 @@ Template.mobileapp.events({
             //         autoWidth: true,
             //         sScrollXInner: "100%",
             //         columns: [
-                        
+
             //             { title: 'FirstName', mData: 'fields.FirstName' },
             //             { title: 'LastName', mData: 'fields.LastName' },
             //         ]
@@ -582,15 +580,15 @@ Template.mobileapp.events({
             //     $('#tblEmployeeList tbody').on('click', 'tr', function () {
             //         var data = table.row(this).data();
             //         $(".mobile-main-input").val(data.fields.FirstName + "  " + data.fields.LastName);
-                    
+
             //     });
 
             //     $("#startBreakContainer").css('display', 'none');
             //     $(".mobile-left-btn-containner").css('display', 'none');
             //     $("#btnOpentList").prop('disabled', true);
-        
 
-            // }); 
+
+            // });
 
             Template.instance().isSelectEmployeeName.set(true);
             Template.instance().isSelectEmployeeNumber.set(false);
@@ -653,7 +651,7 @@ Template.mobileapp.events({
     },
     'click #breakSave': function(e, instance) {
         Template.instance().breakState.set(false);
-        Template.instance().breakMessage.set("dddddd");        
+        Template.instance().breakMessage.set("dddddd");
 
     }
 });
