@@ -52,6 +52,8 @@ Template.non_transactional_list.onCreated(function() {
     templateObject.tablename = new ReactiveVar();
     templateObject.currentproductID = new ReactiveVar();
     templateObject.currenttype = new ReactiveVar();
+
+    templateObject.correspondences = new ReactiveVar([]);
 });
 
 Template.non_transactional_list.onRendered(function() {
@@ -174,12 +176,12 @@ Template.non_transactional_list.onRendered(function() {
         } else if (currenttablename == 'tblCorrespondence') { // Damien
             reset_data = [
                 { index: 1, label: '#ID', class: 'colContactID', active: false, display: true, width: "10" },
-                { index: 2, label: 'Reference Letter Label', class: 'colLabel', active: true, display: true, width: "100" },
-                { index: 3, label: 'Subject', class: 'colSubject', active: true, display: true, width: "100" },
-                { index: 4, label: 'Recipient', class: 'colRecipient', active: true, display: true, width: "100" },
-                { index: 5, label: 'Used on', class: 'colUsedOn', active: true, display: true, width: "100" },
+                { index: 2, label: 'Reference Letter Label', class: 'colLabel', active: true, display: true, width: "80" },
+                { index: 3, label: 'Subject', class: 'colSubject', active: true, display: true, width: "80" },
+                { index: 4, label: 'Recipient', class: 'colRecipient', active: true, display: true, width: "80" },
+                { index: 5, label: 'Used on', class: 'colUsedOn', active: true, display: true, width: "80" },
                 { index: 6, label: 'Memo', class: 'colTemplateContent', active: true, display: true, width: "" },
-                { index: 7, label: '', class: 'colDelete', active: true, display: true, width: "60" },
+                { index: 7, label: '', class: 'colDelete', active: true, display: true, width: "40" },
             ];
         } else if (currenttablename == "tblEmployeelist") {
             reset_data = [
@@ -2034,6 +2036,8 @@ Template.non_transactional_list.onRendered(function() {
 
         employeeCorrespondences.sort((a, b) => a.Ref_Type.localeCompare(b.Ref_Type));
 
+        templateObject.correspondences.set(employeeCorrespondences);
+
         for (let i = 0; i < employeeCorrespondences.length; i++) {
             var dataList = [
                 employeeCorrespondences[i].MessageId || "",
@@ -2070,22 +2074,22 @@ Template.non_transactional_list.onRendered(function() {
                 {
                     targets: 1,
                     className: "colLabel",
-                    width: "100px",
+                    width: "80px",
                 },
                 {
                     targets: 2,
                     className: "colSubject",
-                    width: "100px",
+                    width: "80px",
                 },
                 {
                     targets: 3,
                     className: "colRecipient",
-                    width: "100px",
+                    width: "80px",
                 },
                 {
                     targets: 4,
                     className: "colUsedOn",
-                    width: "100px",
+                    width: "80px",
                 },
                 {
                     targets: 5,
@@ -2095,7 +2099,7 @@ Template.non_transactional_list.onRendered(function() {
                 {
                     targets: 6,
                     className: "colDelete",
-                    width: "60px",
+                    width: "40px",
                 },
             ],
             buttons: [
@@ -17798,6 +17802,69 @@ Template.non_transactional_list.events({
         setTimeout(function() {
             templateObject.getSubtaskData(false);
         }, 10);
+    },
+    // Damien
+    "click #tblCorrespondence tr .btn-remove-raw": async function(e) {
+        const templateObject = Template.instance();
+
+        e.preventDefault();
+        e.stopPropagation();
+        $(".fullScreenSpin").css("display", "inline-block");
+        let tempId = $(e.target).closest("tr").find(".colID").text();
+
+        let correspondenceTemp = templateObject.correspondences.get();
+        let index = correspondenceTemp.findIndex((item) => {
+            return item.MessageId == tempId;
+        });
+
+        if (index > -1) {
+            let objDetail = correspondenceTemp[index];
+            objDetail.Active = false;
+            let objectData = {
+                type: "TCorrespondence",
+                fields: objDetail,
+            };
+            sideBarService
+                .saveCorrespondence(objectData)
+                .then(function () {
+                    sideBarService.getCorrespondences().then(function (dataUpdate) {
+                        addVS1Data("TCorrespondence", JSON.stringify(dataUpdate))
+                            .then(function () {
+                                $(".fullScreenSpin").css("display", "none");
+                                swal({
+                                    title: "Success",
+                                    text: "Template has been removed successfully ",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Continue",
+                                }).then((result) => {
+                                    if (result.value) {
+                                        templateObject.getCorrespondenceListData();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                });
+                            })
+                            .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                    });
+                })
+                .catch(function (error) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                        title: "Ooops",
+                        text: "Template has not been removed",
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Continue",
+                    }).then((result) => {
+                        if (result.value) {
+                            templateObject.getCorrespondenceListData();
+                        } else if (result.dismiss === "cancel") {
+                        }
+                    });
+                });
+        }
     },
     "click .btnViewDeleted": async function(e) {
         $(".fullScreenSpin").css("display", "inline-block");
