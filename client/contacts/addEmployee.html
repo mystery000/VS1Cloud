@@ -384,7 +384,7 @@
                           </div>
                           <div class="col-12 col-md-3" style="padding: 0px;">
                             <div class="form-group" style="margin: 4px; padding-left:4px;">
-                              {{> dashboard_options target="edtDashboardOptions" value=record.dashboardOptions}}
+                              {{> dashboard_options target="edtDashboardOptions" value=record.loginDefault}}
                             </div>
                           </div>
                           <div class="col-12 col-md-2" style="padding: 0px;">
@@ -3904,15 +3904,17 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="dashboardOptionListModal">
+      {{> dashboardoptionspopup options=record.dashboardOptions}}
+    </div>
     {{/if}}
   </div>
+
   <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
     {{> employeeproductlistpop}}
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="dashboardOptionListModal">
-    {{> dashboardoptionspopup}}
-  </div>
+
 
   <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
     {{> newproductpop}}

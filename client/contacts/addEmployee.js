@@ -1449,10 +1449,12 @@ Template.employeescard.onRendered(function () {
       custfield14: data.fields.CustFld14 || '',
       website: '',
       notes: data.fields.Notes || '',
-      dashboardOptions: data.fields.CustFld11 || '',
       salesQuota: data.fields.CustFld12 || '',
       isEmployee: true,
+      loginDefault: data.fields.LoginDefault,
+      dashboardOptions: data.fields.DashboardOption || '',
     };
+
     templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 
     templateObject.records.set(lineItemObj);
@@ -4745,6 +4747,22 @@ Template.employeescard.events({
       let utilityService = new UtilityService();
       let edtSalesQuota = $('#edtSalesQuota').val() || '';
       edtSalesQuota = utilityService.removeCurrency(edtSalesQuota);
+      // Get dashboard options
+      const $dashboardOptionsTable = $("#tblDashboardOptions tbody");
+      const updatedDashboardOptions = [];
+      $dashboardOptionsTable.find("tr").map((index, tr) => {
+          $tr = $(tr);
+          const id = $tr.attr('id');
+          const optionName = $tr.find('td.colOptionsName').text();
+          const isdefaultlogin = $tr.find('td.colLogginDef input[type=radio]').is(":checked");
+          const isshowdefault = $tr.find('td.colShowDef input[type=checkbox]').is(':checked');
+          updatedDashboardOptions.push([
+            id,
+            isdefaultlogin ? 1 : 0,
+            isshowdefault ? 1 : 0
+          ])
+      });
+      // end dashboard options
       if (!isNaN(currentId.id)) {
         currentEmployee = parseInt(currentId.id);
         objDetails = {
@@ -4781,8 +4799,9 @@ Template.employeescard.events({
             CustFld14: overrideGlobalCalendarSet,
             CustFld7: useProductCostaspayRate,
             CustFld8: includeAllProducts,
-            CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
-            CustFld12: edtSalesQuota // tempcode
+            CustFld12: edtSalesQuota, // tempcode,
+            LoginDefault: edtDashboardOptions,
+            DashboardOption: JSON.stringify(updatedDashboardOptions)
           }
         };
       } else {
@@ -4820,8 +4839,9 @@ Template.employeescard.events({
             CustFld7: useProductCostaspayRate,
             CustFld8: includeAllProducts,
             CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
-            CustFld12: edtSalesQuota // tempcode
-
+            CustFld12: edtSalesQuota, // tempcode
+            LoginDefault: edtDashboardOptions,
+            DashboardOption: JSON.stringify(updatedDashboardOptions)
           }
         };
       }
@@ -10160,6 +10180,7 @@ Template.employeescard.helpers({
       })
       temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
     }
+
     return temp;
   },
   employeePayInfo: () => {
