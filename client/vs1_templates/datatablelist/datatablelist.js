@@ -359,7 +359,14 @@ Template.datatablelist.onRendered(async function () {
                 for (let i = 0; i < data[indexDBLowercase].length; i++) {
                     let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
                     if(dataList.length != 0) {
-                        splashDataArray.push(dataList);
+                        if(templateObject.data.isMultipleRows){
+                            dataList.map((item) => {
+                                splashDataArray.push(item);
+                            }) 
+                        }else{
+                            splashDataArray.push(dataList);
+                        }
+                     
                     }
                     templateObject.transactiondatatablerecords.set(splashDataArray);
                 }
