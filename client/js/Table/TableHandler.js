@@ -11,21 +11,21 @@ export default class TableHandler {
     // });
     this.refreshDatatableResizable();
 
-    // $(".dataTable thead tr th").on("mousedown", () => {
-    //   this.refreshDatatableResizable();
-    // });
-    //
-    // $(".dataTable thead tr th").on("mouseover", () => {
-    //   this.refreshDatatableResizable();
-    // });
-    //
-    // $(".dataTable tbody tr td").on("mouseup", () => {
-    //   this.refreshDatatableResizable();
-    // });
-    //
-    // $(".dataTable tbody tr td").on("mouseover", () => {
-    //   this.refreshDatatableResizable();
-    // });
+    $(".dataTable thead tr th").on("mousedown", () => {
+      this.refreshDatatableResizable();
+    });
+
+    $(".dataTable thead tr th").on("mouseover", () => {
+      this.refreshDatatableResizable();
+    });
+
+    $(".dataTable tbody tr td").on("mouseup", () => {
+      this.refreshDatatableResizable();
+    });
+
+    $(".dataTable tbody tr td").on("mouseover", () => {
+      this.refreshDatatableResizable();
+    });
   }
 
   /**
