@@ -1370,7 +1370,7 @@ Template.datatablelist.events({
                             showCancelButton: false,
                             confirmButtonText: 'OK'
                         }).then((result) => {
-
+                          location.reload();
                         });
                     }).catch(function (err) {
                         $('.fullScreenSpin').css('display','none');
