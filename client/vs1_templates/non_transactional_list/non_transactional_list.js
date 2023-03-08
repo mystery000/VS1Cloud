@@ -991,6 +991,11 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 4, label: 'Restart', class: 'colRestart', active: true, display: true, width: "" },
                 { index: 5, label: 'Edit', class: 'colEdit', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblMachineSummaryList"){
+            reset_data = [
+                { index: 0, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 1, label: 'Count of Status', class: 'colCountOfStatus', active: true, display: true, width: "" },
+            ]
         }
         templateObject.reset_data.set(reset_data);
     }
@@ -17056,9 +17061,9 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function () {
           $("div.dataTables_filter input").addClass("form-control form-control-sm");
         }, 0);
-      };
+    };
 
-      templateObject.getServicesList = function(deleteFilter=false){
+    templateObject.getServicesList = function(deleteFilter=false){
         getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
             if (dataObject.length == 0) {
                 stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
@@ -17203,6 +17208,178 @@ Template.non_transactional_list.onRendered(function() {
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).addClass("td-button");
                         }
+                    },                    
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter == true) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+    
+    templateObject.getMachineSummaryList = function(deleteFilter=false){
+        getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    templateObject.displayMachineSummaryList(data, deleteFilter);
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayMachineSummaryList(data, deleteFilter);
+            }
+        }).catch(function (err) {
+            stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                templateObject.displayMachineSummaryList(data, deleteFilter);
+            }).catch(function (err) {
+
+            });
+        });
+    }
+
+    templateObject.displayMachineSummaryList = function(data, deleteFilter=false){
+        let splashArrayTimeSheetList = new Array();
+        var url = FlowRouter.current().path;
+        let cssclass = '';
+        cssclass = "bgcolor-green";
+        var dataTimeSheetList = [
+            "06/03/2023 20:30:30",
+            1,
+        ];            
+        
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        cssclass = "bgcolor-red";
+        var dataTimeSheetList = [
+            "04/03/2023 10:30:30",
+            2,            
+        ];            
+        
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colDate",
+                        targets: 0,
+                        width:'14%',
+                    },
+                    {
+                        className: "colCountOfStatus",
+                        targets: 1,
+                        width:'8%',
                     },                    
                 ],
                 buttons: [{
@@ -17508,6 +17685,10 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {
             templateObject.getServicesList(false);
         }, 100);
+    } else if (currenttablename === "tblMachineSummaryList"){
+        setTimeout(function() {
+            templateObject.getMachineSummaryList(false);
+        }, 100);
     }
 
     tableResize();
@@ -17690,6 +17871,8 @@ Template.non_transactional_list.events({
             templateObject.getAllReceiptCategoryList(true);
         } else if (currenttablename === "tblServicesList"){
             templateObject.getServicesList(true);
+        } else if (currenttablename === "tblMachineSummaryList"){
+            templateObject.getMachineSummaryList(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -17813,6 +17996,8 @@ Template.non_transactional_list.events({
             templateObject.getAllReceiptCategoryList(false);
         } else if (currenttablename === "tblServicesList"){
             templateObject.getServicesList(false);
+        } else if (currenttablename === "tblMachineSummaryList"){
+            templateObject.getMachineSummaryList(false);
         }
     },
     'change .custom-range': async function(event) {

@@ -57,6 +57,9 @@ Template.serviceChecker.onRendered(function() {
 });
 
 Template.serviceChecker.events({
+    'click .btnServiceEdit': function(event) {
+        $("#editServiceChecker").modal("toggle");
+    },
     // 'click .btnRefresh': function() {
     //     $('.fullScreenSpin').css('display', 'inline-block');
     //     stockTransferService.getAllSerialNumber(initialDataLoad, 0).then(function(data) {
