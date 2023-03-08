@@ -232,11 +232,11 @@ Template.appointmenttimelist.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 0, label: 'ID', class: 'colSortDate', active: true, display: true, width: "200" },
-        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "200" },
-        { index: 2, label: 'Company', class: 'colCompany', active: true, display: true, width: "" },
-        { index: 3, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
-        { index: 4, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "100" },
+        { index: 0, label: 'ID', class: 'colSortDate', active: true, display: true, width: "150" },
+        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
+        { index: 2, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 3, label: 'Rep', class: 'colReq', active: true, display: true, width: "150" },
+        { index: 4, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "150" },
         { index: 5, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
         { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
         { index: 7, label: 'Break', class: 'colNotes', active: true, display: true, width: "100" },
