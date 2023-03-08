@@ -100,6 +100,7 @@ Template.datatablelist.onRendered(async function () {
         setTimeout(()=>{
             templateObject.showCustomFieldDisplaySettings(reset_data);
             try {
+
                 getVS1Data("VS1_Customize").then(function(dataObject) {
                     if (dataObject.length == 0) {
                         sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')), listType).then(function(data) {
@@ -110,6 +111,7 @@ Template.datatablelist.onRendered(async function () {
                         let data = JSON.parse(dataObject[0].data);
                         if (data.ProcessLog.Obj != undefined && data.ProcessLog.Obj.CustomLayout.length > 0) {
                             for (let i = 0; i < data.ProcessLog.Obj.CustomLayout.length; i++) {
+
                                 if (data.ProcessLog.Obj.CustomLayout[i].TableName == listType) {
                                     savedHeaderInfo = data.ProcessLog.Obj.CustomLayout[i].Columns;
                                     templateObject.showCustomFieldDisplaySettings(savedHeaderInfo);
@@ -120,13 +122,13 @@ Template.datatablelist.onRendered(async function () {
                 });
 
             } catch (error) {
-
             }
             return;
         }, 100)
     }
 
     templateObject.showCustomFieldDisplaySettings = async function (savedHeaderInfo) {
+      // console.log(savedHeaderInfo);
         let custFields = [];
         let customData = {};
         let customFieldCount = savedHeaderInfo.length;
@@ -359,7 +361,13 @@ Template.datatablelist.onRendered(async function () {
                 for (let i = 0; i < data[indexDBLowercase].length; i++) {
                     let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
                     if(dataList.length != 0) {
-                        splashDataArray.push(dataList);
+                      if(templateObject.data.isMultipleRows){
+                          dataList.map((item) => {
+                              splashDataArray.push(item);
+                          })
+                      }else{
+                          splashDataArray.push(dataList);
+                      }
                     }
                     templateObject.transactiondatatablerecords.set(splashDataArray);
                 }
@@ -384,14 +392,19 @@ Template.datatablelist.onRendered(async function () {
         }
 
         let colDef = [];
+        let acolDef = [];
         let items = [];
+        let aitems = [];
 
         const tabledraw = () => {
+          console.log(acolDef);
             $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,
                 // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 // columns: columns,
+                // aoColumns:acolDef,
+                columns: acolDef,
                 columnDefs: colDef,
                 buttons: [{
                     extend: 'csvHtml5',
@@ -465,7 +478,8 @@ Template.datatablelist.onRendered(async function () {
                     }
                 ],
 
-
+                // autoWidth: false,
+                fixedColumns: true,
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -556,7 +570,11 @@ Template.datatablelist.onRendered(async function () {
                         if (data.Params.Search.replace(/\s/g, "") == "") {
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                         } else {
+                          if (data.Params.Search == "IsBill = true and IsCheque != true") {
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                          }else{
                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                          }
                         }
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -599,7 +617,20 @@ Template.datatablelist.onRendered(async function () {
 
             $(".fullScreenSpin").css("display", "none");
 
-            setTimeout(function () { $('div.dataTables_filter input').addClass('form-control form-control-sm'); $('.dataTable').resizable();     }, 0);
+            setTimeout(async function () {
+              await $('div.dataTables_filter input').addClass('form-control form-control-sm');
+              $('#' + currenttablename+'_filter .form-control-sm').focus();
+              $('#' + currenttablename+'_filter .form-control-sm').trigger("input");
+            }, 0);
+            // setTimeout(function () {
+            //   for (let c = 0; c < acolDef.length; c ++) {
+            //       let activeHeaderClass = acolDef[c].class;
+            //       let activeHeaderWitdh = acolDef[c].sWidth;
+            //       $('.'+activeHeaderClass).css('width',activeHeaderWitdh);
+            //   }
+            //
+            //   $('.colComment').css('width','262px');
+            // }, 1000);
         }
 
         function getColDef() {
@@ -630,10 +661,13 @@ Template.datatablelist.onRendered(async function () {
                     let tLabel = items[i].label.indexOf('#') >= 0 ? items[i].label.substr(1) : items[i].label;
                     let rLabel = lineItemObj.label.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
                     if (tLabel == rLabel) {
+                        items[i].width = lineItemObj.width;
                         if (lineItemObj.active) {
                             if (items[i].label.indexOf('#') >= 0) {
                                 items[i].label = items[i].label.substr(1);
                             }
+
+
                         } else {
                             if (items[i].label.indexOf('#') < 0) {
                                 items[i].label = '#' + items[i].label;
@@ -650,9 +684,17 @@ Template.datatablelist.onRendered(async function () {
                         className: items[i].label.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
                         // className: items[i].class,
                         title: items[i].label,
+                        width: items[i].width+'px'
+                    };
+
+                    let aitem = {
+                        targets: i,
                         width: items[i].width
                     };
+
+                    acolDef.push(aitem);
                     colDef.push(item);
+
                 }
                 templateObject.columnDef.set(colDef)
                 tabledraw();
@@ -666,15 +708,15 @@ Template.datatablelist.onRendered(async function () {
         }
         getColDef();
 
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        }, 1000);
+        // setTimeout(() => {
+        //     window.dispatchEvent(new Event('resize'));
+        // }, 1000);
     }
 
     $(".divDisplaySettings").on("hide.bs.modal", function(){
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        }, 500);
+        // setTimeout(() => {
+        //     window.dispatchEvent(new Event('resize'));
+        // }, 500);
         // your function after closing modal goes here
     })
 })
@@ -724,11 +766,11 @@ Template.datatablelist.events({
         const tableHandler = new TableHandler();
         let range = $(event.target).closest("div").next().find(".custom-range").val();
         await $('.' + columnDataValue).css('width', range);
-        $('.dataTable').resizable();
+        // $('.dataTable').resizable();
 
-        setTimeout(() => {
-            window.dispatchEvent(new Event('resize'));
-        }, 500);
+        // setTimeout(() => {
+        //     window.dispatchEvent(new Event('resize'));
+        // }, 500);
     },
     // "click .exportbtn": async function () {
     //     $(".fullScreenSpin").css("display", "inline-block");
@@ -1217,7 +1259,7 @@ Template.datatablelist.events({
         let range = $(event.target).val() || 100;
         let colClassName = $(event.target).attr("valueclass");
         await $('.' + colClassName).css('width', range);
-        $('.dataTable').resizable();
+        // $('.dataTable').resizable();
     },
 
     'keyup .dataTables_filter input': function (event) {

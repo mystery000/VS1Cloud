@@ -9,23 +9,23 @@ export default class TableHandler {
     // $(".dataTable").on("DOMSubtreeModified",  () => {
     //   this.refreshDatatableResizable();
     // });
-    //this.refreshDatatableResizable();
+    this.refreshDatatableResizable();
 
-    $(".dataTable thead tr th").on("mousedown", () => {
-      this.refreshDatatableResizable();
-    });
-
-    $(".dataTable thead tr th").on("mouseover", () => {
-      this.refreshDatatableResizable();
-    });
-
-    $(".dataTable tbody tr td").on("mouseup", () => {
-      this.refreshDatatableResizable();
-    });
-
-    $(".dataTable tbody tr td").on("mouseover", () => {
-      this.refreshDatatableResizable();
-    });
+    // $(".dataTable thead tr th").on("mousedown", () => {
+    //   this.refreshDatatableResizable();
+    // });
+    //
+    // $(".dataTable thead tr th").on("mouseover", () => {
+    //   this.refreshDatatableResizable();
+    // });
+    //
+    // $(".dataTable tbody tr td").on("mouseup", () => {
+    //   this.refreshDatatableResizable();
+    // });
+    //
+    // $(".dataTable tbody tr td").on("mouseover", () => {
+    //   this.refreshDatatableResizable();
+    // });
   }
 
   /**
@@ -112,6 +112,7 @@ export default class TableHandler {
       let erpGet = erpDb();
       let employeeId = parseInt(localStorage.getItem("mySessionEmployeeLoggedID")) || 0;
       let sideBarService = new SideBarService();
+
       let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
       //$(".fullScreenSpin").css("display", "none");
       if (added) {
