@@ -324,6 +324,7 @@ Template.mobileapp.events({
             });
         });
     },
+    
     'click #mobileBtnCancel': function(e, instance) {
         $("#qr-reader-productmodal").css('display', 'none');
         $(".mobile-main-input").val("");
@@ -341,10 +342,10 @@ Template.mobileapp.events({
 
 
         // html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
-        // }).catch((err) => console.log(err));
-      
+        // }).catch((err) => console.log(err));    
         
     },    
+
     'click #btnClockIn': function(e, instance) {
         Template.instance().isClockin.set(true);
         Template.instance().isEnterJobNumber.set(false);
