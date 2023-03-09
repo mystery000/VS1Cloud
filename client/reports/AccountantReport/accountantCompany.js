@@ -658,7 +658,8 @@ Template.accountant_company.onRendered(() => {
         templateObject.currentDate.set(new Date().getDate() + " " + months[new Date().getMonth()] + " " + new Date().getFullYear());
 
         var currentDate2 = new Date(new Date().getFullYear(), (parseInt(endMonth)), 0);
-        templateObject.fiscalYearEnding.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
+        // templateObject.fiscalYearEnding.set(currentDate2.getDate() + " " + months[parseInt(endMonth) - 1] + " " + new Date().getFullYear());
+        templateObject.fiscalYearEnding.set(new Date().getDate() + " " + months[new Date().getMonth()] + " " + new Date().getFullYear());
         var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
 
         getVS1Data('TSupplierVS1').then(function(dataObject) {
