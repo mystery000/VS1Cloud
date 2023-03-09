@@ -4017,8 +4017,9 @@ Template.frmappointmentpop.onRendered(function() {
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
     };
-
-    smsService
+    getVS1Data("TERPPreference").then(function(dataObject) {
+        if(dataObject.length == 0){
+            smsService
         .getSMSSettings()
         .then((result) => {
             if (result.terppreference.length > 0) {
@@ -4056,6 +4057,44 @@ Template.frmappointmentpop.onRendered(function() {
             }
         })
         .catch((error) => {});
+        }else{
+            let data = JSON.parse(dataObject[0].data);
+            if (data.terppreference.length > 0) {
+                for (let i = 0; i < data.terppreference.length; i++) {
+                    switch (data.terppreference[i].PrefName) {
+                        case "VS1SMSID":
+                            smsSettings.twilioAccountId = data.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1SMSToken":
+                            smsSettings.twilioAccountToken =
+                                data.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1SMSPhone":
+                            smsSettings.twilioTelephoneNumber =
+                                data.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1HEADERSMSMSG":
+                            smsSettings.headerAppointmentSMSMessage =
+                                data.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1SAVESMSMSG":
+                            smsSettings.saveAppointmentSMSMessage =
+                                data.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1STARTSMSMSG":
+                            smsSettings.startAppointmentSMSMessage =
+                                data.terppreference[i].Fieldvalue;
+                            break;
+                        case "VS1STOPSMSMSG":
+                            smsSettings.stopAppointmentSMSMessage =
+                                data.terppreference[i].Fieldvalue;
+                    }
+                }
+                templateObject.defaultSMSSettings.set(smsSettings);
+            }
+        }
+    })
+    
 
     getVS1Data('TERPPreference').then(function(dataObject) {
         if (dataObject.length == 0) {
